@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deep Learning Stack &#8212; Research Notebook</title>
+    
+  <link rel="stylesheet" href="../../../_static/css/index.d431a4ee1c1efae0e38bdfebc22debff.css">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../../../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../../../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../../../_static/sphinx-book-theme.bfb7730f9caf2ec0b46a44615585038c.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.30270b6e4c972e43c488.js">
+
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/sphinx-book-theme.be0a4a0c39cd630af62a2fcf693f3f06.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Scaling Stack" href="scale_stack.html" />
+    <link rel="prev" title="Earth Science Stack" href="earthsci_stack.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../../../index.html">
+  
+  <img src="../../../_static/book.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Research Notebook</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="overview.html">
+   Python
+  </a>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../notes/bayesian/overview.html">
+   Bayesian
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../notes/concepts/overview.html">
+   Sleeper Concepts
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../notes/kernels/overview.html">
+   Kernel Methods
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/resources/python/dl_stack.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#core-packages">
+   Core Packages
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tensorflow-tf">
+     TensorFlow (TF)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pytorch">
+     PyTorch
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#jax">
+     JAX
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#other-packages">
+     Other Packages
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="deep-learning-stack">
+<h1>Deep Learning Stack<a class="headerlink" href="#deep-learning-stack" title="Permalink to this headline">¶</a></h1>
+<p>These programs are mainly focused on automatic differentiation (a.k.a. AutoGrad). Each package is backed by some big company (e.g. Google, Facebook, Microsoft or Amazon).There are many packages nowadays, each with their pros and cons, but I will recommend the most popular. In the beginning, static graphs (define first then run after) was the standard but nowadays the dynamic method (define/run as you go) is more standard due to its popularity amongst the research community. So the differences between many of the libraries are starting to converge.</p>
+<div class="section" id="core-packages">
+<h2>Core Packages<a class="headerlink" href="#core-packages" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tensorflow-tf">
+<h3><a class="reference external" href="https://www.tensorflow.org/">TensorFlow</a> (TF)<a class="headerlink" href="#tensorflow-tf" title="Permalink to this headline">¶</a></h3>
+<p>This is by far the most popular autograd library currently. Backed by Google (Alphabet, Inc), it is the go to python package for production and it is very popular for researchers as well. Recently (mid-2019) there was a huge update which made the python API much easier to use by having a tight keras integration and allowing for a more pythonic-style of coding.</p>
+<p><strong><a class="reference external" href="https://www.tensorflow.org/probability">TensorFlow Probability</a></strong> (TFP)</p>
+<p>As the name suggests, this is a probabilistic library that is built on top of TensorFlow. It has many distributions, priors, and inference methods. In addition, it uses the same <code class="docutils literal notranslate"><span class="pre">layers</span></code> as the <code class="docutils literal notranslate"><span class="pre">tf.keras</span></code> library with some <code class="docutils literal notranslate"><span class="pre">edward2</span></code> integration.</p>
+<p><strong><a class="reference external" href="https://github.com/google/edward2">Edward2</a></strong> (Ed2)</p>
+<p>While there is some integration of <code class="docutils literal notranslate"><span class="pre">edward2</span></code> into the TFP library, there are some stand alone functions in the original Ed2 library. Some more advanced <code class="docutils literal notranslate"><span class="pre">layers</span></code> such as Sparse Gaussian processes and Noise contrastive priors. It all works seemlessly with TF and TFP.</p>
+<p><strong><a class="reference external" href="https://github.com/GPflow/GPflow">GPFlow</a></strong> (GPF)</p>
+<p>This is a special library for SOTA GPs that’s built on top of TF. It is the success to the original GP library, GPy but it has a much cleaner code base and a bit better documentation due to its use of autograd.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="pytorch">
+<h3><a class="reference external" href="https://pytorch.org/">PyTorch</a><a class="headerlink" href="#pytorch" title="Permalink to this headline">¶</a></h3>
+<p>This is the most popular DL library for the machine learning community. Backed by Facebook, this is a rather new library that came out 2 years ago. It took a bit of time, but eventually people started using it more and more especially in a research setting. The reason is because it is very pythonic, it was designed by researchers and for researchers, and it keeps the design simple even sacrificing speed if needed. If you’re starting out, most people will recommend you start with PyTorch.</p>
+<p><strong><a class="reference external" href="https://docs.fast.ai/">PyTorch-Lightning</a></strong></p>
+<p>This is a DL library that was created to facilate people using some of the SOTA NN methods to solve problems. It was created by Jeremy Howard and has gained popularity due to its simplicity. It has all of the SOTA parameters by default and there are many options to tune your models as you see fit. In addition, it has a huge community with a very active <a class="reference external" href="https://forums.fast.ai/">forum</a>. I think it’s a good first pass if you’re looking to solve real problems and get your feet wet while not getting too hung up on the model building code. They also have 2 really good <a class="reference external" href="https://course18.fast.ai/">courses</a> that teach you the mechanics of ML and DL while still giving you enough tools to make you a competitive.</p>
+<p><strong><a class="reference external" href="https://pyro.ai/">Pyro</a></strong></p>
+<p>This is a popular Bayesian DL library that is built on top of PyTorch. Backed by Uber, you’ll find a lot of different inference scheme. This library is a bit of a learning curve because their API. But, their documentation and tutorial section is great so if you take your time you should pick it up. Unfortunately I don’t find too many papers with Pyro code examples, but when the Bayesian community gets bigger, I’m sure this will change.</p>
+<p><strong><a class="reference external" href="https://gpytorch.ai/">GPyTorch</a></strong></p>
+<p>This is the most scalable GP library currently that’s built on top of PyTorch. They mainly use Matrix-Vector-Multiplication strategies to scale exact GPs up to 1 million points using multiple GPUs. They recently just revamped their documentation as well with many examples. If you plan to put GPs in production, you should definitely check out this library.</p>
+<p><strong><a class="reference external" href="https://docs.fast.ai/">fastai</a></strong></p>
+<p>This is a DL library that was created to facilate people using some of the SOTA NN methods to solve problems. It was created by Jeremy Howard and has gained popularity due to its simplicity. It has all of the SOTA parameters by default and there are many options to tune your models as you see fit. In addition, it has a huge community with a very active <a class="reference external" href="https://forums.fast.ai/">forum</a>. I think it’s a good first pass if you’re looking to solve real problems and get your feet wet while not getting too hung up on the model building code. They also have 2 really good <a class="reference external" href="https://course18.fast.ai/">courses</a> that teach you the mechanics of ML and DL while still giving you enough tools to make you a competitive.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="jax">
+<h3><a class="reference external" href="https://github.com/google/jax">JAX</a><a class="headerlink" href="#jax" title="Permalink to this headline">¶</a></h3>
+<p>This is the successor for the popular <a class="reference external" href="https://github.com/HIPS/autograd">autograd</a> package that is now backed by Google. It is basically <code class="docutils literal notranslate"><span class="pre">numpy</span></code> on steroids giving you access to an autograd function and it can be used on CPUs, GPUs and TPUs. The gradients are very intuitive as it is just using a <code class="docutils literal notranslate"><span class="pre">grad</span></code> function; recursively if you want high-order gradients. It’s still fairly early in development but it’s gaining popularity very fast and has shown to be <a class="reference external" href="https://github.com/dionhaefner/pyhpc-benchmarks"><strong>very</strong> competitive</a>. It’s fast. Really fast. To really take advantage of this library, you will need to do a more functional-style of programming but there have been many benefits, e.g. using it for MCMC sampling schemes has become <a class="reference external" href="https://twitter.com/remilouf/status/1215740986195922944">popular</a>.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="other-packages">
+<h3>Other Packages<a class="headerlink" href="#other-packages" title="Permalink to this headline">¶</a></h3>
+<p>Although these are in the ‘other’ category, it doesn’t mean that they are lower tier by any means. I just put them here because I’m not too familiar with them outside of the media.</p>
+<p><strong><a class="reference external" href="https://chainer.org/">Chainer</a></strong></p>
+<p>Preferred Networks (<em>Japanese Company</em>)</p>
+<p><strong><a class="reference external" href="https://mxnet.apache.org/">MXNet</a></strong></p>
+<p>Amazon</p>
+<p><strong><span class="xref myst">Theano</span></strong></p>
+<p>maintained by the PyMC3 developers.</p>
+<p><strong><span class="xref myst">PyMC3</span></strong> &amp; <strong><span class="xref myst">PyMC4</span></strong></p>
+<p><strong><span class="xref myst">CNTK</span></strong></p>
+<p>Microsoft</p>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/resources/python"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="earthsci_stack.html" title="previous page">Earth Science Stack</a>
+    <a class='right-next' id="next-link" href="scale_stack.html" title="next page">Scaling Stack</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="../../../_static/js/index.30270b6e4c972e43c488.js"></script>
+
+
+    
+  </body>
+</html>

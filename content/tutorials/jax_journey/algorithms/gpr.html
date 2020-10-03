@@ -1,0 +1,1122 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GP from Scratch &#8212; Research Notebook</title>
+    
+  <link rel="stylesheet" href="../../../../_static/css/index.d431a4ee1c1efae0e38bdfebc22debff.css">
+
+    
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../../../../_static/sphinx-book-theme.bfb7730f9caf2ec0b46a44615585038c.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../../../_static/js/index.30270b6e4c972e43c488.js">
+
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/togglebutton.js"></script>
+    <script src="../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../../_static/sphinx-book-theme.be0a4a0c39cd630af62a2fcf693f3f06.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Remote Computing" href="../../remote/overview.html" />
+    <link rel="prev" title="Kernel Derivatives" href="kernel_derivatives.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../../../../index.html">
+  
+  <img src="../../../../_static/book.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Research Notebook</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../resources/python/overview.html">
+   Python
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../overview.html">
+   My JAX Journey
+  </a>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="overview.html">
+     Algorithms
+    </a>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       GP from Scratch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../remote/overview.html">
+   Remote Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../notes/bayesian/overview.html">
+   Bayesian
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../notes/concepts/overview.html">
+   Sleeper Concepts
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../notes/kernels/overview.html">
+   Kernel Methods
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../../_sources/content/tutorials/jax_journey/algorithms/gpr.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#definition">
+   Definition
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bayesian-inference-problem">
+   Bayesian Inference Problem
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#objective">
+     Objective
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model">
+     Model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bayesian-treatment">
+     Bayesian Treatment
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gaussian-process-regression">
+   Gaussian Process Regression
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gaussian-process-prior">
+   Gaussian Process Prior
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mean-function">
+     Mean Function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kernel-function">
+     Kernel Function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kernel-matrix">
+     Kernel Matrix
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sampling-from-prior">
+     Sampling from Prior
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#likelihood-noise-model">
+   Likelihood (noise model)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#posterior">
+   Posterior
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cholesky">
+     Cholesky
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#variance-term">
+     Variance Term
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#joint-probability-distribution">
+     Joint Probability Distribution
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#marginal-log-likelihood">
+   Marginal Log-Likelihood
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#marginal-likelihood-evidence">
+     Marginal Likelihood (Evidence)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Marginal Log-Likelihood
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#cholesky-components">
+       Cholesky Components
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#training">
+   Training
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#training-step">
+     Training Step
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#experimental-loop">
+     Experimental Loop
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="gp-from-scratch">
+<h1>GP from Scratch<a class="headerlink" href="#gp-from-scratch" title="Permalink to this headline">¶</a></h1>
+<p>This post will go through how we can build a GP regression model from scratch. I will be going over the formulation as well as how we can code this up from scratch. I did this before a long time ago but I’ve learned a lot about GPs since then. So I’m putting all of my knowledge together so that I can get a good implementation that goes in parallel with the theory. I am also interested in furthering my research on <span class="xref myst">uncertain GPs</span> where I go over how we can look at input error in GPs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The full code can be found in the colab notebook. Later I will refactor everything into a script so I can use it in the future.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://colab.research.google.com/drive/1JQy7nsNOmkfDm_ovCQQ0zUtx2hwAI4ll">Colab Notebook</a></p></li>
+</ul>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Resources
+It took me approximately 12 hours in total to code this up from scratch. That’s significantly better than last time as that time easily took me a week and some change. And I still had problems with the code afterwards. That’s progress, no?</p>
+</div>
+<div class="toggle admonition note">
+<p class="admonition-title">Note</p>
+<p>I saw quite a few tutorials that inspired me to do this tutorial.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://krasserm.github.io/2018/03/19/gaussian-processes/">Blog Post</a> -</p></li>
+</ul>
+<blockquote>
+<div><p>Excellent blog post that goes over GPs with step-by-step. Necessary equations only.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><a class="reference external" href="https://peterroelants.github.io/posts/gaussian-process-tutorial/">Blog Post Series</a> - Peter Roelants</p></li>
+</ul>
+<blockquote>
+<div><p>Good blog post series that go through more finer details of GPs using TensorFlow.</p>
+</div></blockquote>
+</div>
+<div class="section" id="definition">
+<h2>Definition<a class="headerlink" href="#definition" title="Permalink to this headline">¶</a></h2>
+<p>The first thing to understand about GPs is that we are actively placing a distribution <span class="math notranslate nohighlight">\(\mathcal{P}(f)\)</span> on functions <span class="math notranslate nohighlight">\(f\)</span> where these functions can be infinitely long function values <span class="math notranslate nohighlight">\(f=[f_1, f_2, \ldots]\)</span>. A GP generalizes the multivariate Gaussian distribution to infinitely many variables.</p>
+<blockquote>
+<div><p>A GP is a collection of random variables <span class="math notranslate nohighlight">\(f_1, f_2, \ldots\)</span>, any finite number of which is Gaussian distributed.</p>
+</div></blockquote>
+<blockquote>
+<div><p>A GP defines a distribution over functions <span class="math notranslate nohighlight">\(p(f)\)</span> which can be used for Bayesian regression. (Zhoubin)</p>
+</div></blockquote>
+<p>Another nice definition is:</p>
+<blockquote>
+<div><p><strong>Gaussian Process</strong>: Any set of function variables <span class="math notranslate nohighlight">\(\{f_n \}^{N}_{n=1}\)</span> has a joint Gaussian distribution with mean function <span class="math notranslate nohighlight">\(m\)</span>. (Deisenroth)</p>
+</div></blockquote>
+<p>The nice thing is that this is provided by a mean function <span class="math notranslate nohighlight">\(\mu\)</span> and covariance matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span></p>
+</div>
+<hr class="docutils" />
+<div class="section" id="bayesian-inference-problem">
+<h2>Bayesian Inference Problem<a class="headerlink" href="#bayesian-inference-problem" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="objective">
+<h3>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">¶</a></h3>
+<p>Let’s have some data set, <span class="math notranslate nohighlight">\(\mathcal{D}= \left\{ (x_i, y_i)^N_{i=1} \right\}=(X,y)\)</span></p>
+</div>
+<div class="section" id="model">
+<h3>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+y_i &amp;= f(x_i) + \epsilon_i \\
+f &amp;\sim \mathcal{GP}(\cdot | 0, K) \\
+\epsilon_i &amp;\sim \mathcal{N}(\cdot | 0, \sigma^2)
+\end{aligned}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathcal{P}(f_N) &amp;= \int_{f_\infty}\mathcal{P}(f_N,f_\infty)df_\infty \\
+&amp;= \mathcal{N}(\mu_{f_N},\Sigma_{NN})
+\end{aligned}
+\end{split}\]</div>
+<p>The prior on <span class="math notranslate nohighlight">\(f\)</span> is a GP distribution, the likelihood is Gaussian, therefore the posterior on <span class="math notranslate nohighlight">\(f\)</span> is also a GP,</p>
+<div class="math notranslate nohighlight">
+\[
+P(f|\mathcal{D}) \propto P(\mathcal{D}|f)P(f) = \mathcal{GP \propto G \cdot GP}
+\]</div>
+<p>So we can make predictions:</p>
+<div class="math notranslate nohighlight">
+\[
+P(y_*|x_*, \mathcal{D}) = \int P(y_*|x_*, \mathcal{D})P(f|\mathcal{D})df
+\]</div>
+<p>We can also do model comparison by way of the marginal likelihood (evidence) so that we can compare and tune the covariance functions</p>
+<div class="math notranslate nohighlight">
+\[
+P(y|X) = \int P(y|f,X)P(f)df
+\]</div>
+</div>
+<div class="section" id="bayesian-treatment">
+<h3>Bayesian Treatment<a class="headerlink" href="#bayesian-treatment" title="Permalink to this headline">¶</a></h3>
+<p>So now how does this look in terms of the Bayes theorem in words:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Posterior} = \frac{\text{Likelihood}\cdot\text{Prior}}{\text{Evidence}}
+\]</div>
+<p>And mathematically:</p>
+<div class="math notranslate nohighlight">
+\[
+p(f|X,y) = \frac{p(y|f, X) \: p(f|X, \theta)}{p(y| X)}
+\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p>Prior: <span class="math notranslate nohighlight">\(p(f|X, \theta)=\mathcal{GP}(m_\theta, \mathbf{K}_\theta)\)</span></p></li>
+<li><p>Likelihood (noise model): <span class="math notranslate nohighlight">\(p(y|f,X)=\mathcal{N}(y|f(x), \sigma_n^2\mathbf{I})\)</span></p></li>
+<li><p>Marginal Likelihood (Evidence): <span class="math notranslate nohighlight">\(p(y|X)=\int_f p(y|f,X)p(f|X)df\)</span></p></li>
+<li><p>Posterior: <span class="math notranslate nohighlight">\(p(f|X,y) = \mathcal{GP}(\mu_*, \mathbf{K}_*)\)</span></p></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="gaussian-process-regression">
+<h2>Gaussian Process Regression<a class="headerlink" href="#gaussian-process-regression" title="Permalink to this headline">¶</a></h2>
+<p>We only need a few elements to define a Gaussian process in itself. Just a mean function <span class="math notranslate nohighlight">\(\mu\)</span>, a covariance matrix <span class="math notranslate nohighlight">\(\mathbf{K}_\theta\)</span> and some data, <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>.</p>
+<details>
+<summary>
+    <font color="blue">Code
+    </font>
+</summary>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">GPR</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">noise_variance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train</span> <span class="o">=</span> <span class="n">y_train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_variance</span> <span class="o">=</span> <span class="n">noise_variance</span>
+</pre></div>
+</div>
+</details>
+</div>
+<hr class="docutils" />
+<div class="section" id="gaussian-process-prior">
+<h2>Gaussian Process Prior<a class="headerlink" href="#gaussian-process-prior" title="Permalink to this headline">¶</a></h2>
+<p>This is the basis of the GP method. Under the assumption that we mentioned above:</p>
+<div class="math notranslate nohighlight">
+\[
+p(f|X, \theta)=\mathcal{GP}(m_\theta , \mathbf{K}_\theta)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(m_\theta\)</span> is a mean function and <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> is a covariance function</p>
+<p>We kind of treat these functions as a vector of function values up to infinity in theory <span class="math notranslate nohighlight">\(f=[f_1, f_2, \ldots]\)</span>. But in particular we look at the distribution over the function values, for example <span class="math notranslate nohighlight">\(f_i=f(x_i)\)</span>. So let’s look at the joint distribution between <span class="math notranslate nohighlight">\(N\)</span> function values <span class="math notranslate nohighlight">\(f_N\)</span> and all other function values <span class="math notranslate nohighlight">\(f_\infty\)</span>. This is ‘normally distributed’ so we can write the joint distribution roughly as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathcal{P}(f_N, f_\infty)=\mathcal{N}
+\left(\begin{bmatrix}
+\mu_N \\ \mu_\infty
+\end{bmatrix}, 
+\begin{bmatrix}
+\Sigma_{NN} &amp; \Sigma_{N\infty} \\
+\Sigma_{N\infty}^{\top} &amp; \Sigma_{\infty\infty}
+\end{bmatrix}\right)
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Sigma_{NN}\in \mathbb{R}^{N\times N}\)</span> and <span class="math notranslate nohighlight">\(\Sigma_{\infty\infty} \in \mathbb{R}^{\infty \times \infty}\)</span> (or <span class="math notranslate nohighlight">\(m\rightarrow \infty\)</span>) to be more precise.</p>
+<p>So again, any marginal distribution of a joint Gaussian distribution is still a Gaussian distribution. So if we integrate over all of the functions from the infinite portion, we get:</p>
+<p>We can even get more specific and split the <span class="math notranslate nohighlight">\(f_N\)</span> into training <span class="math notranslate nohighlight">\(f_{\text{train}}\)</span> and testing <span class="math notranslate nohighlight">\(f_{\text{test}}\)</span>. It’s simply a matter of manipulating joint Gaussian distributions. So again, calculating the marginals:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mathcal{P}(f_{\text{train}}, f_{\text{test}})
+ &amp;= \int_{f_\infty}\mathcal{P}(f_{\text{train}}, f_{\text{test}},f_\infty)df_\infty \\
+&amp;= \mathcal{N}
+\left(\begin{bmatrix}
+f_{\text{train}} \\ f_{\text{test}}
+\end{bmatrix}, 
+\begin{bmatrix}
+\Sigma_{\text{train} \times \text{train}} &amp; \Sigma_{\text{train} \times \text{test}} \\
+\Sigma_{\text{train} \times \text{test}}^{\top} &amp; \Sigma_{\text{test} \times \text{test}}
+\end{bmatrix}\right)
+\end{aligned}
+\end{split}\]</div>
+<p>and we arrive at a joint Gaussian distribution of the training and testing which is still normally distributed due to the marginalization.</p>
+<div class="section" id="mean-function">
+<h3>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this headline">¶</a></h3>
+<p>Honestly, I never work with mean functions. I always assume a zero-mean function and that’s it. I don’t really know anyone who works with mean functions either. I’ve seen it used in deep Gaussian processes but I have no expertise in which mean functions to use. So, we’ll follow the community standard for now: zero mean function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">zero_mean</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The output of the mean function is size <span class="math notranslate nohighlight">\(\mathbb{R}^{N}\)</span>.</p>
+</div>
+<div class="section" id="kernel-function">
+<h3>Kernel Function<a class="headerlink" href="#kernel-function" title="Permalink to this headline">¶</a></h3>
+<p>The most common kernel function you will see in the literature is the Radial Basis Function (RBF). It’s a universal approximator and it performs fairly well on <strong>most</strong> datasets. If your dataset becomes non-linear, then it may start to fail as it is a really smooth function. The kernel function is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+k(x,y) = \sigma_f \exp \left( - \gamma || x - y||^2_2 \right)
+\]</div>
+<div class="toggle highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Squared Euclidean Distance Formula</span>
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">sqeuclidean_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># RBF Kernel</span>
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">rbf_kernel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;gamma&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">sqeuclidean_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We also have the more robust version of the RBF with a separate length scale per dimension called the Automatic Relavance Determination (ARD) kernel.</p>
+<div class="math notranslate nohighlight">
+\[
+k(x,y) = \sigma_f \exp \left( - || x / \sigma_\lambda - y / \sigma_\lambda ||^2_2 \right)
+\]</div>
+<div class="toggle highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ARD Kernel</span>
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">ard_kernel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    
+    <span class="c1"># divide by the length scale</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;length_scale&#39;</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;length_scale&#39;</span><span class="p">]</span>
+    
+    <span class="c1"># return the ard kernel</span>
+    <span class="k">return</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;var_f&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="n">sqeuclidean_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Remember</strong>: These are functions so they take in vectors <span class="math notranslate nohighlight">\(\mathbf{x} \in  \mathbb{R}^{D}\)</span> and output a scalar value.</p>
+</div>
+<div class="section" id="kernel-matrix">
+<h3>Kernel Matrix<a class="headerlink" href="#kernel-matrix" title="Permalink to this headline">¶</a></h3>
+<p>The kernel function in the tab over shows how we can calculate the kernel for an input vector. But we need every single combination</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gram Matrix</span>
+<span class="k">def</span> <span class="nf">gram</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x1</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y1</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">))(</span><span class="n">y</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The matrix has been completed.</p>
+</div>
+<div class="section" id="sampling-from-prior">
+<h3>Sampling from Prior<a class="headerlink" href="#sampling-from-prior" title="Permalink to this headline">¶</a></h3>
+<p>Now, something a bit more practical, generally speaking when we program the sampling portion of the prior, we need data. The kernel function is as is and has already been defined with its appropriate parameters. Furthermore, we already have defined the mean function <span class="math notranslate nohighlight">\(\mu\)</span> when we initialized the mean function above. So we just need to pass the function through the multivariate normal function along with the number of samples we would like to draw from the prior.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> 
+    <span class="s1">&#39;length_scale&#39;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span> 
+<span class="p">}</span>
+
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">10</span>                   <span class="c1"># condition on 10 samples </span>
+<span class="n">test_X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="n">n_samples</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># random samples from data distribution</span>
+
+<span class="c1"># GP Prior functions (mu, sigma)</span>
+<span class="n">mu_f</span> <span class="o">=</span> <span class="n">zero_mean</span>                            
+<span class="n">cov_f</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">gram</span><span class="p">,</span> <span class="n">rbf_kernel</span><span class="p">)</span>
+<span class="n">mu_x</span><span class="p">,</span> <span class="n">cov_x</span> <span class="o">=</span> <span class="n">gp_prior</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">mu_f</span><span class="o">=</span><span class="n">mu_f</span><span class="p">,</span> <span class="n">cov_f</span><span class="o">=</span><span class="n">cov_f</span> <span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">test_X</span><span class="p">)</span>
+
+<span class="c1"># make it semi-positive definite with jitter</span>
+<span class="n">jitter</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<span class="n">cov_x_</span> <span class="o">=</span> <span class="n">cov_x</span> <span class="o">+</span> <span class="n">jitter</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">cov_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">n_functions</span> <span class="o">=</span> <span class="mi">10</span>                <span class="c1"># number of random functions to draw</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>     <span class="c1"># Jax random numbers boilerplate code</span>
+
+<span class="n">y_samples</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">mu_x</span><span class="p">,</span> <span class="n">cov_x_</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_functions</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="likelihood-noise-model">
+<h2>Likelihood (noise model)<a class="headerlink" href="#likelihood-noise-model" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[
+p(y|f,X)=\prod_{i=1}^{N}\mathcal{N}(y_i|f_i,\sigma_\epsilon^2)= \mathcal{N}(y|f(x), \sigma_\epsilon^2\mathbf{I}_N)
+\]</div>
+<p>This comes from our assumption as stated above from <span class="math notranslate nohighlight">\(y=f(x)+\epsilon\)</span>.</p>
+<p>Alternative Notation:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(y\sim \mathcal{N}(f, \sigma_n^2)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{N}(f, \sigma_n^2) = \prod_{i=1}^N\mathcal{P}(y_i, f_i)\)</span></p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="posterior">
+<h2>Posterior<a class="headerlink" href="#posterior" title="Permalink to this headline">¶</a></h2>
+<p>Alternative Notation:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{P}(f|y)\propto \mathcal{N}(y|f, \sigma_n^2\mathbf{I})\cdot \mathcal{N}(f|\mu, \mathbf{K}_{ff})\)</span></p>
+<p>This will easily be the longest function that we need for the GP. In my version, it’s not necessary for training the GP. But it is necessary for testing.</p>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">posterior</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">prior_params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_new</span><span class="p">,</span> <span class="n">likelihood_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">mu_func</span><span class="p">,</span> <span class="n">cov_func</span><span class="p">)</span> <span class="o">=</span> <span class="n">prior_params</span>
+
+    <span class="c1"># ==========================</span>
+    <span class="c1"># 1. GP PRIOR</span>
+    <span class="c1"># ==========================</span>
+    <span class="n">mu_x</span><span class="p">,</span> <span class="n">Kxx</span> <span class="o">=</span> <span class="n">gp_prior</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">mu_f</span><span class="o">=</span><span class="n">mu_func</span><span class="p">,</span> <span class="n">cov_f</span><span class="o">=</span><span class="n">cov_func</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="c1"># ===========================</span>
+    <span class="c1"># 2. CHOLESKY FACTORIZATION</span>
+    <span class="c1"># ===========================</span>
+
+    <span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">lower</span><span class="p">),</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">cholesky_factorization</span><span class="p">(</span>
+        <span class="n">Kxx</span> <span class="o">+</span> <span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;likelihood_noise&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">Kxx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> 
+        <span class="n">Y</span><span class="o">-</span><span class="n">mu_func</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ================================</span>
+    <span class="c1"># 4. PREDICTIVE MEAN DISTRIBUTION</span>
+    <span class="c1"># ================================</span>
+
+    <span class="c1"># calculate transform kernel</span>
+    <span class="n">KxX</span> <span class="o">=</span> <span class="n">cov_func</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X_new</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+    <span class="c1"># Calculate the Mean</span>
+    <span class="n">mu_y</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">KxX</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+
+    <span class="c1"># =====================================</span>
+    <span class="c1"># 5. PREDICTIVE COVARIANCE DISTRIBUTION</span>
+    <span class="c1"># =====================================</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cho_solve</span><span class="p">((</span><span class="n">L</span><span class="p">,</span> <span class="n">lower</span><span class="p">),</span> <span class="n">KxX</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate kernel matrix for inputs</span>
+    <span class="n">Kxx</span> <span class="o">=</span> <span class="n">cov_func</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X_new</span><span class="p">,</span> <span class="n">X_new</span><span class="p">)</span>
+    
+    <span class="n">cov_y</span> <span class="o">=</span> <span class="n">Kxx</span> <span class="o">-</span> <span class="n">jnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">KxX</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+    <span class="c1"># Likelihood Noise</span>
+    <span class="k">if</span> <span class="n">likelihood_noise</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">cov_y</span> <span class="o">+=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;likelihood_noise&#39;</span><span class="p">]</span>
+
+    <span class="c1"># return variance (diagonals of covariance)</span>
+    <span class="k">if</span> <span class="n">return_cov</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">cov_y</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_y</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mu_y</span><span class="p">,</span> <span class="n">cov_y</span>
+</pre></div>
+</div>
+<div class="section" id="cholesky">
+<h3>Cholesky<a class="headerlink" href="#cholesky" title="Permalink to this headline">¶</a></h3>
+<p>A lot of times just straight solving the <span class="math notranslate nohighlight">\(K^{-1}y=\alpha\)</span> will give you problems. Many times you’ll get an error about the matrix being ill-conditioned and non positive semi-definite. So we have to rectify that with the Cholesky decomposition. <span class="math notranslate nohighlight">\(K\)</span> should be a positive semi-definite matrix so, there are more stable ways to solve this. We can use the cholesky decomposition which decomposes <span class="math notranslate nohighlight">\(K\)</span> into a product of two lower triangular matrices:</p>
+<div class="math notranslate nohighlight">
+\[K = LL^\top\]</div>
+<p>We do this because:</p>
+<ol class="simple">
+<li><p>it’s less expensive to calculate the inverse of a triangular matrix</p></li>
+<li><p>it’s easier to solve systems of equations <span class="math notranslate nohighlight">\(Ax=b\)</span>.</p></li>
+</ol>
+<p>There are two convenience terms that allow you to calculate the cholesky decomposition:</p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cho_factor</span></code> - calculates the decomposition <span class="math notranslate nohighlight">\(K \rightarrow L\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cho_solve</span></code> - solves the system of equations problem <span class="math notranslate nohighlight">\(LL^\top \alpha=y\)</span></p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cholesky_factorization</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+
+    <span class="c1"># cho factor the cholesky, K = LL^T</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cho_factor</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># alpha, LL^T alpha=y</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cho_solve</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">L</span><span class="p">,</span> <span class="n">alpha</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: If you want to get the cholesky matrix by itself and operator on it without the <code class="docutils literal notranslate"><span class="pre">cho_factor</span></code> function, then you should call the <code class="docutils literal notranslate"><span class="pre">cholesky</span></code> function directly. The <code class="docutils literal notranslate"><span class="pre">cho_factor</span></code> puts random (inexpensive) values in the part of the triangle that’s not necessary. Whereas the <code class="docutils literal notranslate"><span class="pre">cholesky</span></code> adds zeros there instead.</p>
+</div>
+<div class="section" id="variance-term">
+<h3>Variance Term<a class="headerlink" href="#variance-term" title="Permalink to this headline">¶</a></h3>
+<p>The variance term also makes use of the <span class="math notranslate nohighlight">\(K^{-1}\)</span>. So naturally, we can use the already factored cholesky decompsition to calculate the term.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+k_* K^{-1}k_*
+&amp;= (Lv)^\top K^{-1}Lv\\
+&amp;= v^\top L^\top (LL^\top)^{-1} Lv\\
+&amp;= v^{\top}L^\top L^{-\top}L^{-1}v\\
+&amp;= v^\top v
+\end{aligned}
+\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cho_solve</span><span class="p">((</span><span class="n">L</span><span class="p">,</span> <span class="n">lower</span><span class="p">),</span> <span class="n">KxX</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">KxX</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="joint-probability-distribution">
+<h3>Joint Probability Distribution<a class="headerlink" href="#joint-probability-distribution" title="Permalink to this headline">¶</a></h3>
+<p>To make GPs useful, we want to actually make predictions. This stems from the using the joint distribution of the training data and test data with the formula shown above used to condition on multivariate Gaussians. In terms of the GP function space, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathcal{P}\left(\begin{bmatrix}f \\ f_*\end{bmatrix} \right) &amp;= 
+ \mathcal{N}\left( 
+    \begin{bmatrix}
+    \mu \\ \mu_*
+    \end{bmatrix},
+    \begin{bmatrix}
+    K_{xx} &amp; K_{x*} \\ K_{*x} &amp; K_{**}
+    \end{bmatrix} \right)
+\end{aligned}
+\end{split}\]</div>
+<p>Then solving for the marginals, we can come up with the predictive test points.</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(f_* |X_*, y, X, \theta)= \mathcal{N}(f_* | \mu_*, \nu^2_*  )\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mu*=K_* (K + \sigma^2 I)^{-1}y=K_* \alpha\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\nu^2_*= K_{**} - K_*(K + \sigma^2I)^{-1}K_*^{\top}\)</span></p></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="marginal-log-likelihood">
+<h2>Marginal Log-Likelihood<a class="headerlink" href="#marginal-log-likelihood" title="Permalink to this headline">¶</a></h2>
+<p>The prior <span class="math notranslate nohighlight">\(m(x), K\)</span> have hyper-parameters <span class="math notranslate nohighlight">\(\theta\)</span>. So learning a <span class="math notranslate nohighlight">\(\mathcal{GP}\)</span> implies inferring hyper-parameters from the model.</p>
+<div class="math notranslate nohighlight">
+\[p(Y|X,\theta)=\int p(Y|f)p(f|X, \theta)df\]</div>
+<p>However, we are not interested in <span class="math notranslate nohighlight">\(f\)</span> directly. We can marginalize it out via the integral equation. The marginal of a Gaussian is Gaussian.</p>
+<p><strong>Note</strong>: Typically we use the <span class="math notranslate nohighlight">\(\log\)</span> likelihood instead of a pure likelihood. This is purely for computational purposes. The <span class="math notranslate nohighlight">\(\log\)</span> function is monotonic so it doesn’t alter the location of the extreme points of the function. Furthermore we typically minimize the <span class="math notranslate nohighlight">\(-\log\)</span> instead of the maximum <span class="math notranslate nohighlight">\(\log\)</span> for purely practical reasons.</p>
+<p>One way to train these functions is to use Maximum A Posterior (MAP) of the hyper-parameters</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\theta^* &amp;= \underset{\theta}{\text{argmax}}\log p(y|X,\theta) \\
+&amp;= \underset{\theta}{\text{argmax}}\log \mathcal{N}(y | 0, K + \sigma^2 I)
+\end{aligned}
+\end{split}\]</div>
+<div class="section" id="marginal-likelihood-evidence">
+<h3>Marginal Likelihood (Evidence)<a class="headerlink" href="#marginal-likelihood-evidence" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[
+p(y|X, \theta)=\int_f p(y|f,X)\: p(f|X, \theta)\: df
+\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(p(y|f,X)=\mathcal{N}(y|f, \sigma_n^2\mathbf{I})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(p(f|X, \theta)=\mathcal{N}(f|m_\theta, K_\theta)\)</span></p></li>
+</ul>
+<p>Note that all we’re doing is simply describing each of these elements specifically because all of these quantities are Gaussian distributed.</p>
+<div class="math notranslate nohighlight">
+\[
+p(y|X, \theta)=\int_f \mathcal{N}(y|f, \sigma_n^2\mathbf{I})\cdot \mathcal{N}(f|m_\theta, K_\theta) \: df
+\]</div>
+<p>So the product of two Gaussians is simply a Gaussian. That along with the notion that the integral of all the functions is a normal distribution with mean <span class="math notranslate nohighlight">\(\mu\)</span> and covariance <span class="math notranslate nohighlight">\(K\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+p(y|X, \theta)=\mathcal{N}(y|m_\theta, K_\theta + \sigma_n^2 \mathbf{I})
+\]</div>
+<div class="toggle admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Using the Gaussian identities:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+p(x) &amp;= \mathcal{N} (x | \mu, \Lambda^{-1}) \\
+p(y|x) &amp;= \mathcal{N} (y | Ax+b, L^{-1}) \\
+p(y) &amp;= \mathcal{N} (y|A\mu + b, L^{-1} + A \Lambda^{-1}A^T) \\
+p(x|y) &amp;= \mathcal{N} (x|\Sigma \{ A^T L(y-b) + \Lambda\mu \}, \Sigma) \\
+\Sigma &amp;= (\Lambda + A^T LA)^{-1}
+\end{aligned}
+\end{split}\]</div>
+<p>So we can use the same reasoning to combine the prior and the likelihood to get the posterior</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+p(f) &amp;= \mathcal{N} (f | m_\theta, \mathbf{K}_\theta) \\
+p(y|X) &amp;= \mathcal{N} (y | f(X), \sigma^2\mathbf{I}) \\
+p(y) &amp;= \mathcal{N} (y|m_\theta, \sigma_y^2\mathbf{I} + \mathbf{K}_\theta) \\
+p(f|y) &amp;= \mathcal{N} (f|\Sigma \{ K^{-1}y + \mathbf{K}_\theta m_\theta \}, \Sigma) \\
+\Sigma &amp;= (K^{-1} + \sigma^{-2}\mathbf{I})^{-1}
+\end{aligned}\end{split}\]</div>
+<p><strong>Source</strong>:</p>
+<ul class="simple">
+<li><p>Alternative Derivation for Log Likelihood - <a class="reference external" href="http://jrmeyer.github.io/machinelearning/2017/08/18/mle.html">blog</a></p></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id1">
+<h3>Marginal Log-Likelihood<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Now we need a cost function that will allow us to get the best hyperparameters that fit our data.</p>
+<div class="math notranslate nohighlight">
+\[
+\log p(y|x, \theta) = - \frac{N}{2} \log 2\pi - \frac{1}{2}y^{\top}(K+\sigma^2I)^{-1}y - \frac{1}{2} \log \left| K+\sigma^2I \right| 
+\]</div>
+<p>Inverting <span class="math notranslate nohighlight">\(N\times N\)</span> matrices is the worse part about GPs in general. There are many techniques to be able to handle them, but for basics, it can become a problem. Furthermore, inverting this Kernel matrix tends to have problems being <em>positive semi-definite</em>. One way we can make this more efficient is to do the cholesky decomposition and then solve our problem that way.</p>
+<div class="section" id="cholesky-components">
+<h4>Cholesky Components<a class="headerlink" href="#cholesky-components" title="Permalink to this headline">¶</a></h4>
+<p>Let <span class="math notranslate nohighlight">\(\mathbf{L}=\text{cholesky}(\mathbf{K}+\sigma_n^2\mathbf{I})\)</span>. We can write the log likelihood in terms of the cholesky decomposition.</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\log p(y|x, \theta) &amp;= - \frac{N}{2} \log 2\pi - \frac{1}{2} ||\underbrace{\mathbf{L}^{-1}y}_{\alpha}||^2 - \sum_i \log \mathbf{L}_{ii}
+\end{aligned}
+\]</div>
+<p>This gives us a computational complexity of <span class="math notranslate nohighlight">\(\mathcal{O}(N + N^2 + N^3)=\mathcal{O}(N^3)\)</span></p>
+<p>I will demonstrate two ways to do this:</p>
+<ol class="simple">
+<li><p>We will use the equations above</p></li>
+<li><p>We will refactor this and use the built-in function</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">nll_scratch</span><span class="p">(</span><span class="n">gp_priors</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    
+    <span class="p">(</span><span class="n">mu_func</span><span class="p">,</span> <span class="n">cov_func</span><span class="p">)</span> <span class="o">=</span> <span class="n">gp_priors</span>
+    
+    <span class="c1"># ==========================</span>
+    <span class="c1"># 1. GP PRIOR</span>
+    <span class="c1"># ==========================</span>
+    <span class="n">mu_x</span><span class="p">,</span> <span class="n">Kxx</span> <span class="o">=</span> <span class="n">gp_prior</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">mu_f</span><span class="o">=</span><span class="n">mu_func</span><span class="p">,</span> <span class="n">cov_f</span><span class="o">=</span><span class="n">cov_func</span> <span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
+    
+    <span class="c1"># ===========================</span>
+    <span class="c1"># 2. CHOLESKY FACTORIZATION</span>
+    <span class="c1"># ===========================</span>
+    <span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">lower</span><span class="p">),</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">cholesky_factorization</span><span class="p">(</span>
+        <span class="n">Kxx</span> <span class="o">+</span> <span class="p">(</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;likelihood_noise&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1e-5</span> <span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">Kxx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">Y</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ===========================</span>
+    <span class="c1"># 3. Marginal Log-Likelihood</span>
+    <span class="c1"># ===========================</span>
+    <span class="n">log_likelihood</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ik,ik-&gt;k&quot;</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span> <span class="c1"># same as dot(Y.T, alpha)</span>
+    <span class="n">log_likelihood</span> <span class="o">-=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">L</span><span class="p">)))</span>
+    <span class="n">log_likelihood</span> <span class="o">-=</span> <span class="p">(</span> <span class="n">Kxx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="o">-</span> <span class="n">log_likelihood</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="toggle admonition note">
+<p class="admonition-title">Note</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">marginal_likelihood</span><span class="p">(</span><span class="n">prior_params</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span>  <span class="n">Xtrain</span><span class="p">,</span> <span class="n">Ytrain</span><span class="p">):</span>
+    
+    <span class="c1"># unpack params</span>
+    <span class="p">(</span><span class="n">mu_func</span><span class="p">,</span> <span class="n">cov_func</span><span class="p">)</span> <span class="o">=</span> <span class="n">prior_params</span>
+    
+    <span class="c1"># ==========================</span>
+    <span class="c1"># 1. GP Prior, mu(), cov(,)</span>
+    <span class="c1"># ==========================</span>
+    <span class="n">mu_x</span> <span class="o">=</span> <span class="n">mu_f</span><span class="p">(</span><span class="n">Ytrain</span><span class="p">)</span>
+    <span class="n">Kxx</span> <span class="o">=</span> <span class="n">cov_f</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">Xtrain</span><span class="p">,</span> <span class="n">Xtrain</span><span class="p">)</span>
+    
+    <span class="c1"># ===========================</span>
+    <span class="c1"># 2. GP Likelihood</span>
+    <span class="c1"># ===========================</span>
+    <span class="n">K_gp</span> <span class="o">=</span> <span class="n">Kxx</span> <span class="o">+</span> <span class="p">(</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;likelihood_noise&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1e-6</span> <span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">Kxx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="c1"># ===========================</span>
+    <span class="c1"># 3. Marginal Log-Likelihood</span>
+    <span class="c1"># ===========================</span>
+    <span class="c1"># get log probability</span>
+    <span class="n">log_prob</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">Ytrain</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu_x</span><span class="p">,</span> <span class="n">cov</span><span class="o">=</span><span class="n">K_gp</span><span class="p">)</span>
+
+    <span class="c1"># sum dimensions and return neg mll</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">log_prob</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>source - Dai, <a class="reference external" href="http://zhenwendai.github.io/slides/gpss2018_slides.pdf">GPSS 2018</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="training">
+<h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>We often have problems when it comes to using optimizers. A lot of times they just don’t seem to want to converge and the gradients seem to not change no matter what happens. One trick we can do is to make the optimizer solve a transformed version of the parameters. And then we can take a softmax so that they converge properly.</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) = \ln (1 + \exp(x))
+\]</div>
+</div>
+<p>Jax has a built-in function so we’ll just use that.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">saturate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">ikey</span><span class="p">:</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">ivalue</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">ikey</span><span class="p">,</span> <span class="n">ivalue</span><span class="p">)</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+</div>
+<p>So now we can set up our parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">Xtest</span><span class="p">,</span> <span class="n">ytest</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+
+
+<span class="c1"># PRIOR FUNCTIONS (mean, covariance)</span>
+<span class="n">mu_f</span> <span class="o">=</span> <span class="n">zero_mean</span>
+<span class="n">cov_f</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">gram</span><span class="p">,</span> <span class="n">rbf_kernel</span><span class="p">)</span>
+<span class="n">gp_priors</span> <span class="o">=</span> <span class="p">(</span><span class="n">mu_f</span><span class="p">,</span> <span class="n">cov_f</span><span class="p">)</span>
+
+<span class="c1"># Kernel, Likelihood parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+    <span class="c1"># &#39;length_scale&#39;: 1.0,</span>
+    <span class="c1"># &#39;var_f&#39;: 1.0,</span>
+    <span class="s1">&#39;likelihood_noise&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1"># saturate parameters with likelihoods</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">saturate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+<span class="c1"># LOSS FUNCTION</span>
+<span class="n">mll_loss</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">marginal_likelihood</span><span class="p">,</span> <span class="n">gp_priors</span><span class="p">))</span>
+
+<span class="c1"># GRADIENT LOSS FUNCTION</span>
+<span class="n">dloss</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">mll_loss</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="section" id="training-step">
+<h3>Training Step<a class="headerlink" href="#training-step" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># STEP FUNCTION</span>
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">opt_state</span><span class="p">):</span>
+    <span class="c1"># calculate loss</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">mll_loss</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># calculate gradient of loss</span>
+    <span class="n">grads</span> <span class="o">=</span> <span class="n">dloss</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># update optimizer state</span>
+    <span class="n">opt_state</span> <span class="o">=</span> <span class="n">opt_update</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">grads</span><span class="p">,</span> <span class="n">opt_state</span><span class="p">)</span>
+
+    <span class="c1"># update params</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">get_params</span><span class="p">(</span><span class="n">opt_state</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">params</span><span class="p">,</span> <span class="n">opt_state</span><span class="p">,</span> <span class="n">loss</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="experimental-loop">
+<h3>Experimental Loop<a class="headerlink" href="#experimental-loop" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize optimizer</span>
+<span class="n">opt_init</span><span class="p">,</span> <span class="n">opt_update</span><span class="p">,</span> <span class="n">get_params</span> <span class="o">=</span> <span class="n">optimizers</span><span class="o">.</span><span class="n">rmsprop</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+
+<span class="c1"># initialize parameters</span>
+<span class="n">opt_state</span> <span class="o">=</span> <span class="n">opt_init</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+<span class="c1"># get initial parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">get_params</span><span class="p">(</span><span class="n">opt_state</span><span class="p">)</span>
+
+<span class="c1"># TRAINING PARARMETERS</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">losses</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">postfix</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="kn">import</span> <span class="nn">tqdm</span>
+
+<span class="k">with</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">trange</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">)</span> <span class="k">as</span> <span class="n">bar</span><span class="p">:</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+        <span class="c1"># 1 step - optimize function</span>
+        <span class="n">params</span><span class="p">,</span> <span class="n">opt_state</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">opt_state</span><span class="p">)</span>
+
+        <span class="c1"># update params</span>
+        <span class="n">postfix</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ikey</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">postfix</span><span class="p">[</span><span class="n">ikey</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">ikey</span><span class="p">])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># save loss values</span>
+        <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+        <span class="c1"># update progress bar</span>
+        <span class="n">postfix</span><span class="p">[</span><span class="s2">&quot;Loss&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">losses</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">bar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">postfix</span><span class="p">)</span>
+        <span class="c1"># saturate params</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">saturate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Surrogates: GP Modeling, Design, and Optimization for the Applied Sciences - Gramacy - <a class="reference external" href="https://bookdown.org/rbg/surrogates/">Online Book</a></p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/tutorials/jax_journey/algorithms"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="kernel_derivatives.html" title="previous page">Kernel Derivatives</a>
+    <a class='right-next' id="next-link" href="../../remote/overview.html" title="next page">Remote Computing</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="../../../../_static/js/index.30270b6e4c972e43c488.js"></script>
+
+
+    
+  </body>
+</html>

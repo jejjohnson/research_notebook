@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gaussian Distributions &#8212; Research Notebook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="../../../_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Regression" href="regression.html" />
+    <link rel="prev" title="Bayesian: Language of Uncertainty" href="intro.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../../../index.html">
+  
+  <img src="../../../_static/book.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Research Notebook</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="overview.html">
+   Bayesian
+  </a>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="intro.html">
+     Bayesian: Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="#gaussian-distribution">
+     Gaussian Distribution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="regression.html">
+     Regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inference/inference.html">
+     Solving Hard Integral Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inference/inference.html#inference">
+     Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/notes/bayesian/gaussian.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#univariate-gaussian">
+   Univariate Gaussian
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#multivariate-gaussian">
+   Multivariate Gaussian
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#joint-gaussian-distribution">
+   Joint Gaussian Distribution
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#marginal-distribution-mathcal-p-cdot">
+   Marginal Distribution
+   <span class="math notranslate nohighlight">
+    \(\mathcal{P}(\cdot)\)
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conditional-distribution-mathcal-p-cdot-cdot">
+   Conditional Distribution
+   <span class="math notranslate nohighlight">
+    \(\mathcal{P}(\cdot | \cdot)\)
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bandwidth-selection">
+   Bandwidth Selection
+  </a>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="gaussian-distributions">
+<h1>Gaussian Distributions<a class="headerlink" href="#gaussian-distributions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="univariate-gaussian">
+<h2>Univariate Gaussian<a class="headerlink" href="#univariate-gaussian" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(x|\mu, \sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}}\text{exp}\left( -\frac{1}{2\sigma^2}(x - \mu)^2 \right)\]</div>
+</div>
+<div class="section" id="multivariate-gaussian">
+<h2>Multivariate Gaussian<a class="headerlink" href="#multivariate-gaussian" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mathcal{P}(x | \mu, \Sigma) &amp;= \mathcal{N}(\mu, \Sigma) \\
+&amp;= \frac{1}{(2\pi)^{\frac{D}{2}}}\frac{1}{\sqrt{\text{det}|\Sigma|}}\text{exp}\left( -\frac{1}{2}(x-\mu)^{\top}\Sigma^{-1}(x-\mu) \right)
+\end{aligned}\end{split}\]</div>
+</div>
+<div class="section" id="joint-gaussian-distribution">
+<h2>Joint Gaussian Distribution<a class="headerlink" href="#joint-gaussian-distribution" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}\mathcal{P}(x, y) &amp;= 
+\mathcal{P}\left(\begin{bmatrix}x \\ y\end{bmatrix} \right) \\
+&amp;= \mathcal{N}\left( 
+    \begin{bmatrix}
+    a \\ b
+    \end{bmatrix},
+    \begin{bmatrix}
+    A &amp; B \\ B^{\top} &amp; C
+    \end{bmatrix} \right)
+    \end{aligned}\end{split}\]</div>
+</div>
+<div class="section" id="marginal-distribution-mathcal-p-cdot">
+<h2>Marginal Distribution <span class="math notranslate nohighlight">\(\mathcal{P}(\cdot)\)</span><a class="headerlink" href="#marginal-distribution-mathcal-p-cdot" title="Permalink to this headline">¶</a></h2>
+<p>We have the marginal distribution of <span class="math notranslate nohighlight">\(x\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(x) \sim \mathcal{N}(a, A)\]</div>
+<p>and in integral form:</p>
+<p><span class="math notranslate nohighlight">\(\mathcal{P}(x) = \int_y \mathcal{P}(x,y)dy\)</span></p>
+<p>and we have the marginal distribution of <span class="math notranslate nohighlight">\(y\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y) \sim \mathcal{N}(b, B)\]</div>
+</div>
+<div class="section" id="conditional-distribution-mathcal-p-cdot-cdot">
+<h2>Conditional Distribution <span class="math notranslate nohighlight">\(\mathcal{P}(\cdot | \cdot)\)</span><a class="headerlink" href="#conditional-distribution-mathcal-p-cdot-cdot" title="Permalink to this headline">¶</a></h2>
+<p>We have the conditional distribution of <span class="math notranslate nohighlight">\(x\)</span>  given <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(x|y) \sim \mathcal{N}(\mu_{a|b}, \Sigma_{a|b})\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mu_{a|b} = a + BC^{-1}(y-b)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma_{a|b} = A - BC^{-1}B^T\)</span></p></li>
+</ul>
+<p>and we have the marginal distribution of <span class="math notranslate nohighlight">\(y\)</span> given <span class="math notranslate nohighlight">\(x\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y|x) \sim \mathcal{N}(\mu_{b|a}, \Sigma_{b|a})\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mu_{b|a} = b + AC^{-1}(x-a)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma_{b|a} = B - AC^{-1}A^T\)</span></p></li>
+</ul>
+<p>basically mirror opposites of each other. But this might be useful to know later when we deal with trying to find the marginal distributions of Gaussian process functions.</p>
+<p><strong>Source</strong>:</p>
+<ul>
+<li><p>Sampling from a Normal Distribution - <a class="reference external" href="https://juanitorduz.github.io/multivariate_normal/">blog</a></p>
+<blockquote>
+<div><p>A really nice blog with nice plots of joint distributions.</p>
+</div></blockquote>
+</li>
+<li><p>Two was to derive the conditional distributions - <a class="reference external" href="https://stats.stackexchange.com/questions/30588/deriving-the-conditional-distributions-of-a-multivariate-normal-distribution?noredirect=1&amp;lq=1">stack</a></p></li>
+<li><p>How to generate Gaussian samples = <a class="reference external" href="https://medium.com/mti-technology/how-to-generate-gaussian-samples-347c391b7959s">blog</a></p></li>
+</ul>
+<p>Multivariate Gaussians and Detereminant - <a class="reference external" href="http://courses.washington.edu/b533/lect4.pdf">Lecturee Notes</a></p>
+</div>
+<hr class="docutils" />
+<div class="section" id="bandwidth-selection">
+<h2>Bandwidth Selection<a class="headerlink" href="#bandwidth-selection" title="Permalink to this headline">¶</a></h2>
+<p><strong>Scotts</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">d_dimensions</span> <span class="o">+</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Silverman</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="p">(</span><span class="n">d_dimensions</span> <span class="o">+</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">d_dimensions</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="gaussian-distribution">
+<h1>Gaussian Distribution<a class="headerlink" href="#gaussian-distribution" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pdf">
+<h2><strong>PDF</strong><a class="headerlink" href="#pdf" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[f(X)=
+\frac{1}{\sqrt{(2\pi)^D|\Sigma|}}
+\text{exp}\left( -\frac{1}{2} (x-\mu)^\top \Sigma^{-1} (x-\mu)\right)\]</div>
+</div>
+<div class="section" id="likelihood">
+<h2><strong>Likelihood</strong><a class="headerlink" href="#likelihood" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[- \ln L = \frac{1}{2}\ln|\Sigma| + \frac{1}{2}(x-\mu)^\top \Sigma^{-1} (x - \mu) + \frac{D}{2}\ln 2\pi \]</div>
+</div>
+<div class="section" id="alternative-representation">
+<h2>Alternative Representation<a class="headerlink" href="#alternative-representation" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[X \sim \mathcal{N}(\mu, \Sigma)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> is the mean function and <span class="math notranslate nohighlight">\(\Sigma\)</span> is the covariance. Let’s decompose <span class="math notranslate nohighlight">\(\Sigma\)</span> as with an eigendecomposition like so</p>
+<div class="math notranslate nohighlight">
+\[\Sigma = U\Lambda U^\top = U \Lambda^{1/2}(U\Lambda^{-1/2})^\top\]</div>
+<p>Now we can represent our Normal distribution as:</p>
+<div class="math notranslate nohighlight">
+\[X \sim \mu + U\Lambda^{1/2}Z\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(U\)</span> is a rotation matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Lambda^{-1/2}\)</span> is a scale matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu\)</span> is a translation matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z \sim \mathcal{N}(0,I)\)</span></p></li>
+</ul>
+<p>or also</p>
+<div class="math notranslate nohighlight">
+\[X \sim \mu + UZ\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(U\)</span> is a rotation matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Lambda\)</span> is a scale matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu\)</span> is a translation matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z_n \sim \mathcal{N}(0,\Lambda)\)</span></p></li>
+</ul>
+<div class="section" id="reparameterization">
+<h3>Reparameterization<a class="headerlink" href="#reparameterization" title="Permalink to this headline">¶</a></h3>
+<p>So often in deep learning we will learn this distribution by a reparameterization like so:</p>
+<div class="math notranslate nohighlight">
+\[X = \mu + AZ \]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mu \in \mathbb{R}^{d}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(A \in \mathbb{R}^{d\times l}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Z_n \sim \mathcal{N}(0, I)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma=AA^\top\)</span> - the cholesky decomposition</p></li>
+</ul>
+<hr class="docutils" />
+</div>
+</div>
+<div class="section" id="entropy">
+<h2><strong>Entropy</strong><a class="headerlink" href="#entropy" title="Permalink to this headline">¶</a></h2>
+<p><strong>1 dimensional</strong></p>
+<div class="math notranslate nohighlight">
+\[H(X) = \frac{1}{2} \log(2\pi e \sigma^2)\]</div>
+<p><strong>D dimensional</strong>
+$<span class="math notranslate nohighlight">\(H(X) = \frac{D}{2} + \frac{D}{2} \ln(2\pi) + \frac{1}{2}\ln|\Sigma|\)</span>$</p>
+</div>
+<div class="section" id="kl-divergence-relative-entropy">
+<h2><strong>KL-Divergence (Relative Entropy)</strong><a class="headerlink" href="#kl-divergence-relative-entropy" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[
+KLD(\mathcal{N}_0||\mathcal{N}_1) = \frac{1}{2}
+ \left[ 
+ \text{tr}(\Sigma_1^{-1}\Sigma_0) + 
+ (\mu_1 - \mu_0)^\top \Sigma_1^{-1} (\mu_1 - \mu_0) -
+D + \ln \frac{|\Sigma_1|}{\Sigma_0|}
+\right]
+\]</div>
+<p>if <span class="math notranslate nohighlight">\(\mu_1=\mu_0\)</span> then:</p>
+<div class="math notranslate nohighlight">
+\[
+KLD(\Sigma_0||\Sigma_1) = \frac{1}{2} \left[ 
+\text{tr}(\Sigma_1^{-1} \Sigma_0)  - D  + \ln \frac{|\Sigma_1|}{|\Sigma_0|} \right]
+\]</div>
+<p><strong>Mutual Information</strong></p>
+<div class="math notranslate nohighlight">
+\[I(X)= - \frac{1}{2} \ln | \rho_0 |\]</div>
+<p>where <span class="math notranslate nohighlight">\(\rho_0\)</span> is the correlation matrix from <span class="math notranslate nohighlight">\(\Sigma_0\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[I(X)\]</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/bayesian"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="intro.html" title="previous page">Bayesian: Language of Uncertainty</a>
+    <a class='right-next' id="next-link" href="regression.html" title="next page">Regression</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="../../../_static/js/index.js"></script>
+    
+  </body>
+</html>

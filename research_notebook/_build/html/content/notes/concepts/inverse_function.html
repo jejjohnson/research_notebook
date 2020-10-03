@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inverse Function Theorem &#8212; Research Notebook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="../../../_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Jensens Inequality" href="jensens.html" />
+    <link rel="prev" title="Identity Trick" href="identity_trick.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../../../index.html">
+  
+  <img src="../../../_static/book.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Research Notebook</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../bayesian/overview.html">
+   Bayesian
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="overview.html">
+   Sleeper Concepts
+  </a>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/notes/concepts/inverse_function.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#derivative-of-an-inverse-function">
+   Derivative of an Inverse Function
+  </a>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="inverse-function-theorem">
+<h1>Inverse Function Theorem<a class="headerlink" href="#inverse-function-theorem" title="Permalink to this headline">¶</a></h1>
+<p><strong>Resources</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Inverse_function_theorem">Wiki</a></p></li>
+<li><p>YouTube</p>
+<ul>
+<li><p>Prof Ghist Math - <a class="reference external" href="https://www.youtube.com/watch?v=LWk7hvY1Goc">Inverse Function Theorem</a></p></li>
+<li><p>The Infinite Looper - <a class="reference external" href="https://www.youtube.com/watch?v=gS0TYC78lnw&amp;t=186s">Inv Fun Theorem</a></p></li>
+<li><p>Professor Leonard - <a class="reference external" href="https://www.youtube.com/watch?v=xjtEfS0vY2o&amp;list=PLF797E961509B4EB5&amp;index=29&amp;t=0s">Fundamental Theorem of Calculus</a> | <a class="reference external" href="https://www.youtube.com/watch?v=HnsUNWNYZ28">Derivatives of Inverse Functions</a></p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Source</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://mml-book.github.io/book/chapter06.pdf">Mathematics for Machine Learning</a> - Deisenroth (2019)</p></li>
+<li><p><a class="reference external" href="http://ruishu.io/2018/05/19/change-of-variables/">Change of Variables: A Precursor to Normalizing Flow</a> - Rui Shu</p></li>
+<li><p><a class="reference external" href="http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf">Pattern Recognition and Machine Learning</a> - Bishop (2006)</p></li>
+</ul>
+<p>Often we are faced with the situation where we do not know the distribution of our data. But perhaps we know the distribution of a transformation of our data, e.g. if we know that <span class="math notranslate nohighlight">\(X\)</span> is a r.v. that is uniformly distributed, then what is the distribution of <span class="math notranslate nohighlight">\(X^2 + X + c\)</span>? In this case, we want to understand what’s the relationship between the distribution we know and the transformed distribution. One way to do so is to use the inverse transform theorem which directly uses the cumulative distribution function (CDF).</p>
+<p>Let’s say we have <span class="math notranslate nohighlight">\(u \sim \mathcal U(0,1)\)</span> and some invertible function <span class="math notranslate nohighlight">\(f(\cdot)\)</span> that maps <span class="math notranslate nohighlight">\(X \sim \mathcal P\)</span> to <span class="math notranslate nohighlight">\(u\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[x = f(u)\]</div>
+<p>Now, we want to know the probability of <span class="math notranslate nohighlight">\(x\)</span> when all we know is the probability of <span class="math notranslate nohighlight">\(u\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\mathcal P(x)=\mathcal P(f(u)=x)\]</div>
+<p>So solving for <span class="math notranslate nohighlight">\(u\)</span> in that equation gives us:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal P(x) = \mathcal P(u=f^{-1}(x))\]</div>
+<p>Now we see that <span class="math notranslate nohighlight">\(u=f^{-1}(x)\)</span> which gives us a direct formulation for moving from the uniform distribution space <span class="math notranslate nohighlight">\(\mathcal U\)</span> to a different probability distribution space <span class="math notranslate nohighlight">\(\mathcal P\)</span>.</p>
+<p><strong>Probability Integral Transform</strong></p>
+<p><strong>Resources</strong></p>
+<ul>
+<li><p><a class="reference external" href="https://brilliant.org/wiki/inverse-transform-sampling/">Brilliant</a></p>
+<blockquote>
+<div><p>Does a nice example where they talk about the problems with fat-tailed distributions.</p>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">Wiki</a></p></li>
+<li><p>CrossValidated</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://stats.stackexchange.com/questions/184325/how-does-the-inverse-transform-method-work">How does the inverse transform method work</a></p></li>
+<li><p><a class="reference external" href="https://stats.stackexchange.com/questions/212813/help-me-understand-the-quantile-inverse-cdf-function">Help me understand the quantile (inverse CDF) function</a></p></li>
+</ul>
+</li>
+<li><p>Youtube</p>
+<ul class="simple">
+<li><p>Ben Hambert - <a class="reference external" href="https://www.youtube.com/watch?v=rnBbYsysPaU">Intro to Inv Transform Sampling</a></p></li>
+<li><p>Mathematical Monk</p>
+<ul>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=rnBbYsysPaU&amp;t=1s">Intro</a> | <a class="reference external" href="https://www.youtube.com/watch?v=S7EXgOomvgc">General Case</a> | <a class="reference external" href="https://www.youtube.com/watch?v=irheiVXJRm8">Invertible Case</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Code Review - <a class="reference external" href="https://codereview.stackexchange.com/questions/196286/inverse-transform-sampling">Inverse Transform Sampling</a></p></li>
+<li><p>R Markdown - <a class="reference external" href="https://stephens999.github.io/fiveMinuteStats/inverse_transform_sampling.html">Inverse Transform Sampling</a></p></li>
+<li><p>Using Chebyshev - <a class="reference external" href="http://www.pwills.com/blog/posts/2018/06/24/sampling.html">Blog</a> | <a class="reference external" href="https://github.com/peterewills/itsample">Code</a></p></li>
+<li><p><strong>CDFs</strong> - Super powerful way to visualize data and also is uniformly distriuted</p>
+<ul class="simple">
+<li><p>Histograms and CDFs - <a class="reference external" href="https://iandzy.com/histograms-cumulative-distribution/">blog</a></p></li>
+<li><p>Why We Love CDFS so Much and not histograms - <a class="reference external" href="https://www.andata.at/en/software-blog-reader/why-we-love-the-cdf-and-do-not-like-histograms-that-much.html">Blog</a></p></li>
+</ul>
+</li>
+<li><p><strong>Boundary Issues</strong></p>
+<ul class="simple">
+<li><p>Confidence Band from DKW inequality - <a class="reference external" href="http://www.statsmodels.org/devel/_modules/statsmodels/distributions/empirical_distribution.html#_conf_set">code</a></p></li>
+<li><p>Make Monotonic - <a class="reference external" href="https://stackoverflow.com/questions/28563711/make-a-numpy-array-monotonic-without-a-python-loop">code</a></p></li>
+<li><p>Matplotlib example of CDF bins versus theoretical (not smooth) - <a class="reference external" href="https://matplotlib.org/gallery/statistics/histogram_cumulative.html">Code</a></p></li>
+</ul>
+</li>
+<li><p><strong>Alternatives</strong></p>
+<ul class="simple">
+<li><p><em>KDE</em></p>
+<ul>
+<li><p>Statsmodels Implementation - <a class="reference external" href="http://www.statsmodels.org/devel/_modules/statsmodels/nonparametric/kde.html">code</a> | <a class="reference external" href="https://www.statsmodels.org/dev/generated/statsmodels.nonparametric.kde.KDEUnivariate.html">Univariate</a></p></li>
+<li><p>KDE vs Histograms - <a class="reference external" href="https://mglerner.github.io/posts/histograms-and-kernel-density-estimation-kde-2.html?p=28">blog</a></p></li>
+</ul>
+</li>
+<li><p><em>Empirical CDF</em></p>
+<ul>
+<li><p>The Empirical Distribution Function - <a class="reference external" href="http://bjlkeng.github.io/posts/the-empirical-distribution-function/">blog</a></p></li>
+<li><p>Plotting an Empirical CDF In python - <a class="reference external" href="https://www.jddata22.com/home//plotting-an-empirical-cdf-in-python">blog</a></p></li>
+<li><p>Scipy histogram - <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_histogram.html#scipy.stats.rv_histogram">code</a></p></li>
+<li><p>Empirical CDF Function - <a class="reference external" href="http://www.statsmodels.org/devel/_modules/statsmodels/distributions/empirical_distribution.html#ECDF">code</a></p></li>
+<li><p>ECDFs - <a class="reference external" href="https://github.com/ericmjl/bayesian-analysis-recipes/blob/master/notebooks/ecdfs.ipynb">notebook</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="section" id="derivative-of-an-inverse-function">
+<h2>Derivative of an Inverse Function<a class="headerlink" href="#derivative-of-an-inverse-function" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>MathInsight - <a class="reference external" href="https://mathinsight.org/derivative_inverse_function">Link</a></p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/concepts"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="identity_trick.html" title="previous page">Identity Trick</a>
+    <a class='right-next' id="next-link" href="jensens.html" title="next page">Jensens Inequality</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="../../../_static/js/index.js"></script>
+    
+  </body>
+</html>

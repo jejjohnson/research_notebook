@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linear Algebra Tricks &#8212; Research Notebook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="../../../_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Kernel Methods" href="../kernels/overview.html" />
+    <link rel="prev" title="Jensens Inequality" href="jensens.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../../../index.html">
+  
+  <img src="../../../_static/book.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Research Notebook</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../bayesian/overview.html">
+   Bayesian
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="overview.html">
+   Sleeper Concepts
+  </a>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/notes/concepts/lin_alg.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#frobenius-norm-hilbert-schmidt-norm">
+   Frobenius Norm (Hilbert-Schmidt Norm)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#intiution">
+     Intiution
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#formulation">
+     Formulation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#code">
+     Code
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#frobenius-norm">
+   Frobenius Norm
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#frobenius-norm-or-hilbert-schmidt-norm-a-matrix">
+     Frobenius Norm (or Hilbert-Schmidt Norm) a matrix
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="linear-algebra-tricks">
+<h1>Linear Algebra Tricks<a class="headerlink" href="#linear-algebra-tricks" title="Permalink to this headline">¶</a></h1>
+<hr class="docutils" />
+<ul class="simple">
+<li><p><a class="reference external" href="#frobenius-norm-hilbert-schmidt-norm">Frobenius Norm (Hilbert-Schmidt Norm)</a></p>
+<ul>
+<li><p><a class="reference external" href="#intiution">Intiution</a></p></li>
+<li><p><a class="reference external" href="#formulation">Formulation</a></p></li>
+<li><p><a class="reference external" href="#code">Code</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#frobenius-norm">Frobenius Norm</a></p>
+<ul>
+<li><p><a class="reference external" href="#frobenius-norm-or-hilbert-schmidt-norm-a-matrix">Frobenius Norm (or Hilbert-Schmidt Norm) a matrix</a></p></li>
+</ul>
+</li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="frobenius-norm-hilbert-schmidt-norm">
+<h2>Frobenius Norm (Hilbert-Schmidt Norm)<a class="headerlink" href="#frobenius-norm-hilbert-schmidt-norm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="intiution">
+<h3>Intiution<a class="headerlink" href="#intiution" title="Permalink to this headline">¶</a></h3>
+<p>The Frobenius norm is the common matrix-based norm.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="formulation">
+<h3>Formulation<a class="headerlink" href="#formulation" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+||A||_F &amp;= \sqrt{\langle A, A \rangle_F} \\
+||A|| &amp;= \sqrt{\sum_{i,j}|a_{ij}|^2} \\
+&amp;= \sqrt{\text{tr}(A^\top A)} \\
+&amp;= \sqrt{\sum_{i=1}\lambda_i^2}
+\end{aligned}\end{split}\]</div>
+<details>
+<summary>
+    <font color="red">Proof
+    </font>
+</summary>
+<p>Let <span class="math notranslate nohighlight">\(A=U\Sigma V^\top\)</span> be the Singular Value Decomposition of A. Then</p>
+<div class="math notranslate nohighlight">
+\[||A||_{F}^2 = ||\Sigma||_F^2 = \sum_{i=1}^r \lambda_i^2\]</div>
+<p>If <span class="math notranslate nohighlight">\(\lambda_i^2\)</span> are the eigenvalues of <span class="math notranslate nohighlight">\(AA^\top\)</span> and <span class="math notranslate nohighlight">\(A^\top A\)</span>, then we can show</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+||A||_F^2 &amp;= tr(AA^\top) \\
+&amp;= tr(U\Lambda V^\top V\Lambda^\top U^\top) \\
+&amp;= tr(\Lambda \Lambda^\top U^\top U) \\
+&amp;= tr(\Lambda \Lambda^\top) \\
+&amp;= \sum_{i}\lambda_i^2
+\end{aligned}
+\end{split}\]</div>
+</details>
+</div>
+<hr class="docutils" />
+<div class="section" id="code">
+<h3>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h3>
+<p><strong>Eigenvalues</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sigma_xy</span> <span class="o">=</span> <span class="n">covariance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">eigvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">sigma_xy</span><span class="p">)</span>
+<span class="n">f_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eigvals</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Trace</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sigma_xy</span> <span class="o">=</span> <span class="n">covariance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">f_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p><strong>Einsum</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">f_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji-&gt;&#39;</span><span class="p">,</span> <span class="n">X</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Refactor</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="frobenius-norm">
+<h2>Frobenius Norm<a class="headerlink" href="#frobenius-norm" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[||X + Y||^2_F = ||X||_F^2 + ||Y||_F^2 + 2 \langle X, Y \rangle_F\]</div>
+<div class="section" id="frobenius-norm-or-hilbert-schmidt-norm-a-matrix">
+<h3>Frobenius Norm (or Hilbert-Schmidt Norm) a matrix<a class="headerlink" href="#frobenius-norm-or-hilbert-schmidt-norm-a-matrix" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+||A|| &amp;= \sqrt{\sum_{i,j}|a_{ij}|^2} \\
+&amp;= \sqrt{\text{tr}(A^\top A)} \\
+&amp;= \sqrt{\sum_{i=1}\lambda_i^2}
+\end{aligned}\end{split}\]</div>
+<!-- <details> -->
+<summary>
+    <font color="black">Details
+    </font>
+</summary>
+<p>Let <span class="math notranslate nohighlight">\(A=U\Sigma V^\top\)</span> be the Singular Value Decomposition of A. Then</p>
+<div class="math notranslate nohighlight">
+\[||A||_{F}^2 = ||\Sigma||_F^2 = \sum_{i=1}^r \lambda_i^2\]</div>
+<p>If <span class="math notranslate nohighlight">\(\lambda_i^2\)</span> are the eigenvalues of <span class="math notranslate nohighlight">\(AA^\top\)</span> and <span class="math notranslate nohighlight">\(A^\top A\)</span>, then we can show</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+||A||_F^2 &amp;= tr(AA^\top) \\
+&amp;= tr(U\Lambda V^\top V\Lambda^\top U^\top) \\
+&amp;= tr(\Lambda \Lambda^\top U^\top U) \\
+&amp;= tr(\Lambda \Lambda^\top) \\
+&amp;= \sum_{i}\lambda_i^2
+\end{aligned}
+\end{split}\]</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/concepts"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="jensens.html" title="previous page">Jensens Inequality</a>
+    <a class='right-next' id="next-link" href="../kernels/overview.html" title="next page">Kernel Methods</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="../../../_static/js/index.js"></script>
+    
+  </body>
+</html>

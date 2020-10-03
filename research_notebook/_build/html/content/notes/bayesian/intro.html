@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bayesian: Language of Uncertainty &#8212; Research Notebook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="../../../_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Gaussian Distributions" href="gaussian.html" />
+    <link rel="prev" title="Bayesian" href="overview.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../../../index.html">
+  
+  <img src="../../../_static/book.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Research Notebook</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="overview.html">
+   Bayesian
+  </a>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Bayesian: Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="gaussian.html#gaussian-distribution">
+     Gaussian Distribution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="regression.html">
+     Regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inference/inference.html">
+     Solving Hard Integral Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inference/inference.html#inference">
+     Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/notes/bayesian/intro.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#formulation">
+   Formulation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bayes-rule-in-words">
+     Bayes Rule in Words
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#maximum-a-posteriori-map-estimation">
+     Maximum A Posteriori (MAP) Estimation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-comparison">
+     Model Comparison
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#questions">
+   QUESTIONS
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#supplementary">
+   Supplementary
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bait-and-switch">
+     Bait and Switch
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tips-and-tricks-for-practicioners">
+     Tips and Tricks for Practicioners
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#definitiions">
+   Definitiions
+  </a>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="bayesian-language-of-uncertainty">
+<h1>Bayesian: Language of Uncertainty<a class="headerlink" href="#bayesian-language-of-uncertainty" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="formulation">
+<h2>Formulation<a class="headerlink" href="#formulation" title="Permalink to this headline">¶</a></h2>
+<p>A model is something that links inputs to outputs. If we are given data, <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{NxD}\)</span>, and observations, <span class="math notranslate nohighlight">\(y\)</span>, we ideally would want to know these two entities are related. That relationship (or transformation) from the data <span class="math notranslate nohighlight">\(X\)</span> to the observations <span class="math notranslate nohighlight">\(y\)</span> is what we would call a model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>.</p>
+<p align="center">
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>graph LR
+A[X] --&gt; B[Model];
+B --&gt; C[y]
+</pre></div>
+</div>
+</p>
+<p><img alt="alt text" src="content/notes/bayesian/pics/model_map.png" /></p>
+<p>More concretely, let <span class="math notranslate nohighlight">\(X\in \mathbb{R}^{NxD}\)</span> and <span class="math notranslate nohighlight">\(y \in \mathbb{R}^{N}\)</span> where <span class="math notranslate nohighlight">\(N\)</span> is the number of samples and <span class="math notranslate nohighlight">\(D\)</span> is the number of dimensions/features. In a transformation sense, we could think of it as a function, <span class="math notranslate nohighlight">\(f\)</span> that maps the data from <span class="math notranslate nohighlight">\(X\)</span> to <span class="math notranslate nohighlight">\(y\)</span>, or <span class="math notranslate nohighlight">\(f:\mathbb{X}\rightarrow \mathbb{Y}, \mathbb{R}^{NxD}\rightarrow \mathbb{R}^{N}\)</span>. To put it simply, we have the following equation to describe our model.</p>
+<div class="math notranslate nohighlight">
+\[y = f(X)\]</div>
+<p>But if we put a statistical spin on it and say that <span class="math notranslate nohighlight">\(X\)</span> is a random variabe (r.v.), <span class="math notranslate nohighlight">\(X \sim \mathbb{P}\)</span>. We typically don’t know <span class="math notranslate nohighlight">\(\mathbb{P}\)</span> or else there really would not be a problem. Or even worse, let’s say that there is actually noise in our observation so we’re not entirely 100% sure that each input, <span class="math notranslate nohighlight">\(x\)</span> corresponds to each output, <span class="math notranslate nohighlight">\(y\)</span>. Fortunately, we have mathematics where we can easily find some mathematical framework to transform our problem into a way we can easily solve. In this case, we can use the mathematics of probability theory to express the uncertainty and noise that come with our model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>. More specifically, we can use Bayes rule to give us inverse probabilities that allow us to use inference; basically using our data to infer unknown quantities, model aspects and (most importantly) make predictions.</p>
+<div class="section" id="bayes-rule-in-words">
+<h3>Bayes Rule in Words<a class="headerlink" href="#bayes-rule-in-words" title="Permalink to this headline">¶</a></h3>
+<p>In a Machine Learning problem, we almost always have the following components:</p>
+<ul class="simple">
+<li><p>Data</p></li>
+<li><p>Model which we believe can describe our data,</p>
+<ul>
+<li><p>parameters which can be changed/tuned to fit the data</p></li>
+</ul>
+</li>
+<li><p>Goal</p>
+<ul>
+<li><p>Learn the parameters given the data</p></li>
+<li><p>which points belong to which cluster</p></li>
+<li><p>predict function outputs</p></li>
+<li><p>predict future labels</p></li>
+<li><p>predict the lower dimensional embedding/representation</p></li>
+</ul>
+</li>
+</ul>
+<p>The Bayesian framework works best when you think about it from a probabilistic standpoint.</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}P(\text{ Model }|\text{ Data })=
+\frac{P(\text{ Data }|\text{ Model })P(\text{ Model })}{P(\text{ Data })}\end{aligned}\]</div>
+<blockquote>
+<div><p>I’ve seen some people (<a class="reference external" href="https://work.caltech.edu/library/012.html">here</a>, <a class="reference external" href="https://youtu.be/5KdWhDpeQvU?t=1310">here</a>) have some sort of equivalence between Model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> and Hypothesis, <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>. In this particular instance, think of the <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> as the best possible outcome that we can achieve to map <span class="math notranslate nohighlight">\(x\)</span> to <span class="math notranslate nohighlight">\(y\)</span> <strong>correctly</strong>. And think of <span class="math notranslate nohighlight">\(\mathcal{H}\)</span> as a set of possible formulas we could use; like in a Universe where we have all of the possible formulas and collection of parameters. I quite like the term Hypothesis because it adds another level of abstraction when thinking about the problem. But at the same time I feel like this extra layer of abstraction is not something I like to think about all of the time.</p>
+</div></blockquote>
+<p>Let’s break down each of these components.</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(P(\text{ Model })\)</span> - Prior Probability</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(\text{ Data } | \text{})\)</span> - Evidence, Normalization Constant</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(\text{ Model } | \text{ Data })\)</span> - Posterior Probability</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(\text{ Data } | \text{ Model })\)</span> - Likelihood</p></li>
+</ul>
+<p>Let’s change the notation to something a bit more common.</p>
+<div class="math notranslate nohighlight">
+\[P(\theta | \mathcal{D}, \mathcal{M})=
+\frac{P(\mathcal{D}|\theta, \mathcal{M})P(\theta | \mathcal{M})}{P(\mathcal{D}|\mathcal{M})}\]</div>
+<p>where:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(P(\mathcal{D}|\theta, \mathcal{M})\)</span> - Likelihood of the parameters, <span class="math notranslate nohighlight">\(\theta\)</span> in model <span class="math notranslate nohighlight">\(\mathcal{M}\)</span></p>
+<blockquote>
+<div><p>Likelihood of the parameters (<strong>not of the data</strong>). For every set of parameters, I can assign a probability to some observable data.</p>
+</div></blockquote>
+</li>
+<li><p><span class="math notranslate nohighlight">\(P(\theta | \mathcal{M})\)</span> - prior probability of <span class="math notranslate nohighlight">\(\theta\)</span></p>
+<blockquote>
+<div><p>This expresses the distribution and the uncertainty of the parameters that define my model. It’s a way of constraining the range of values that can occur. Expert knowledge in this area is crucial if you would like Physics-aware machine learning models.</p>
+</div></blockquote>
+</li>
+<li><p><span class="math notranslate nohighlight">\(P(\mathcal{D}|\mathcal{M})\)</span> - The normalization constant (the marginal likelihood)</p>
+<blockquote>
+<div><p>This term seems to give us a lot of problems <strong>???</strong> but this is an artifact of Bayes Rule where in order to obtain my Posterior, I need to renormalize.</p>
+</div></blockquote>
+</li>
+<li><p><span class="math notranslate nohighlight">\(P(\theta | \mathcal{D,M})\)</span> - Posterior of <span class="math notranslate nohighlight">\(\theta\)</span> given data <span class="math notranslate nohighlight">\(\mathcal{D}\)</span></p>
+<blockquote>
+<div><p>T</p>
+</div></blockquote>
+</li>
+</ul>
+<p>There are few things that are different. First of all, every single component is conditioned on a model <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>. This is to say, given that I have described my model, here are the configurations that this model requires. So we’re really staying true to the model based Machine Learning instead of the Toolbox method. Also, I’ve changed the data to be denoted as <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> where <span class="math notranslate nohighlight">\(\mathcal{D}=\left\{ (x_1, y_1), \ldots, (x_N, y_N) \right\}^{N}_{1}\)</span>.</p>
+</div>
+<div class="section" id="maximum-a-posteriori-map-estimation">
+<h3>Maximum A Posteriori (MAP) Estimation<a class="headerlink" href="#maximum-a-posteriori-map-estimation" title="Permalink to this headline">¶</a></h3>
+<p>Notice how this doesn’t really help us <strong>use</strong> or <strong>evaluate</strong> the parameters for the model that we’ve learned. That’s when it comes to predictions. If we look at the sum for Bayes rule <span class="math notranslate nohighlight">\(P(x)=\int P(x,y)dy\approx\sum_y P(x,y)\)</span>, we can write something similar for actual datapoints, <span class="math notranslate nohighlight">\(P(x|\mathcal{D,M})\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[P(x|\mathcal{D,M})=\int P(x, \theta|\mathcal{D,M})d\theta\]</div>
+<p>This integral is by <span class="math notranslate nohighlight">\(d\theta\)</span> because we want to integrate out the parameters <strong>(WHY???)</strong>. There is now a joint distribution between <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(\theta\)</span>. We actually don’t have access to that. But we do have access to the posterior probability of <span class="math notranslate nohighlight">\(\theta\)</span> given the data <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>. So using the product rule (<span class="math notranslate nohighlight">\(P(x,y)=P(x)P(y|x)\)</span>), we can split apart that quantity to obtain:</p>
+<div class="math notranslate nohighlight">
+\[P(x|\mathcal{D},\mathcal{M})=
+\int P(x|\theta, \mathcal{D},\mathcal{M})
+P(\theta|\mathcal{D}, \mathcal{M})d\theta\]</div>
+<p>Now dissecting this formula a little further, we now have the average predictions for all <span class="math notranslate nohighlight">\(\theta\)</span>’s which we weight by the posteriors. This arises a natural ensemble scheme where we are averaging models. Also worth noting is that there is no optimization within any of these quantities. Practically, my brain is telling me that that is a bit useless but I guess in the Bayesian framework, that’s not really all that necessary. But yes, optimal model parameters would be needed for actually making decisions on future data.</p>
+<p>We can write a loss function <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> w.r.t. <span class="math notranslate nohighlight">\(\theta\)</span> to express how one would optimize this quantity:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\theta^*)=\]</div>
+</div>
+<div class="section" id="model-comparison">
+<h3>Model Comparison<a class="headerlink" href="#model-comparison" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[P(\mathcal{M}|\mathcal{D})=\frac{P(\mathcal{D}|\mathcal{M})P(\mathcal{M})}{P(\mathcal{D})}\]</div>
+<p>The most interesting one is deriving the maximum likelihood formulation (Ocamz Razer, Model Evidence, Integrated Likelihood): what’s the probability that the data I have came from the model <span class="math notranslate nohighlight">\(P(\mathcal{D|M})\)</span>. Again using Bayes sum rule:</p>
+<div class="math notranslate nohighlight">
+\[P(\mathcal{D}|\mathcal{M})=\int P(\mathcal{D},\theta|\mathcal{M})d\theta\]</div>
+<p>Once again, we don’t have access to this joint distribution, but we do have access to the likelihood and the prior. So, again, we can decompose this joint distribution by using the Bayes product rule:</p>
+<div class="math notranslate nohighlight">
+\[P(\mathcal{D}|\mathcal{M})=\int P(\mathcal{D}|\theta,\mathcal{M})P(\mathcal{\theta}|\mathcal{M})d\theta\]</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="questions">
+<h2>QUESTIONS<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Marginalize? Normalize? Why is it so hard?</p></li>
+<li><p>Intractability?</p></li>
+<li><p>Posterior</p></li>
+<li><p>Likelihood</p></li>
+<li><p>Prior</p></li>
+</ul>
+<hr class="docutils" />
+</div>
+<hr class="docutils" />
+<div class="section" id="supplementary">
+<h2>Supplementary<a class="headerlink" href="#supplementary" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bait-and-switch">
+<h3>Bait and Switch<a class="headerlink" href="#bait-and-switch" title="Permalink to this headline">¶</a></h3>
+<p>MAP estimate is easy to make it work but can do some weird stuff.
+Bayesian - hard to make it work but sometimes makes more sense.</p>
+<ul class="simple">
+<li><p>Maximum Likelihood</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\underset{w}{\text{argmax }} \mathcal{P}(y|x,w)
+\]</div>
+<ul class="simple">
+<li><p>MAP</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\underset{w}{\text{argmax }} \mathcal{P}(y|x,w)\mathcal{P}(w)
+\]</div>
+<ul class="simple">
+<li><p>Type II Maximum Likelihood</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\underset{\alpha}{\text{argmax }} \mathcal{P}(y|x,\alpha)=\int \mathcal{P}(y|x,w)\mathcal{P}(w|\alpha)dw
+\]</div>
+<ul class="simple">
+<li><p>Type II MAP:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\underset{\alpha}{\text{argmax }} \mathcal{P}(y|x,\alpha)\mathcal{P}(\alpha)
+\]</div>
+</div>
+<div class="section" id="tips-and-tricks-for-practicioners">
+<h3>Tips and Tricks for Practicioners<a class="headerlink" href="#tips-and-tricks-for-practicioners" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Set initial hyper-parameters with domain knowledge</p></li>
+<li><p>Standardize input data</p>
+<ul>
+<li><p>Set initial length scales to <span class="math notranslate nohighlight">\(\sigma_l \approx 0.5\)</span></p></li>
+</ul>
+</li>
+<li><p>Standardize targets <span class="math notranslate nohighlight">\(\mathbf{y}\)</span></p>
+<ul>
+<li><p>Set initial signal variance to <span class="math notranslate nohighlight">\(\sigma_f\approx 1.0\)</span></p></li>
+</ul>
+</li>
+<li><p>Set noise level initially high <span class="math notranslate nohighlight">\(\sigma_n \approx 0.5 \times \sigma_f\)</span></p></li>
+<li><p>Random restarts</p></li>
+<li><p>Penalize high signal-to-noise ratios (<span class="math notranslate nohighlight">\(\frac{\sigma_f}{\sigma_n}\)</span>)</p></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Deisenroth - <a class="reference external" href="https://drive.google.com/file/d/1svE5SWZB3GO9aa5wStnXy_M_pHmLma3X/view">Model Selection</a></p></li>
+<li><p><a class="reference external" href="https://www.bayestheorem.net/">Bayes Theorem Net</a></p></li>
+<li><p>Probabilistic World - <a class="reference external" href="https://www.probabilisticworld.com/what-is-bayes-theorem/">What is Bayes Theorem</a> | <a class="reference external" href="https://www.probabilisticworld.com/anatomy-bayes-theorem/">The Anatomy of Bayes Theorem</a></p></li>
+<li><p>Zhoubin Gharamani - <a class="reference external" href="https://www.youtube.com/watch?v=5KdWhDpeQvU&amp;index=2&amp;list=PLAbhVprf4VPlqc8IoCi7Qk0YQ5cPQz9fn&amp;t=3s">YouTube Talk</a></p></li>
+<li><p>Learning From Data - <a class="reference external" href="https://work.caltech.edu/telecourse">Website</a>
+TODO: FlowChart of <a class="reference external" href="https://work.caltech.edu/library/012.html">Learning</a> and <a class="reference external" href="https://work.caltech.edu/library/025.html">Probabilistic Learning</a></p></li>
+<li><p><a class="reference external" href="http://blog.booleanbiotech.com/linear_regression_experiments.html">Linear Regression Experiments</a></p></li>
+<li><p>A Probabilistic View of Linear Regression - Keng (2016) - <a class="reference external" href="http://bjlkeng.github.io/posts/a-probabilistic-view-of-regression/">blog</a></p></li>
+<li><p>A Probabilistic Interpretation of Regularization - Brian Keng (2016) - <a class="reference external" href="http://bjlkeng.github.io/posts/probabilistic-interpretation-of-regularization/">blog</a></p></li>
+</ul>
+<p><strong>Code</strong>:</p>
+<ul class="simple">
+<li><p>FlowCharts - <a class="reference external" href="https://mermaidjs.github.io/flowchart.html">Mermaid</a> | <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid">VSC Ext</a></p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="definitiions">
+<h2>Definitiions<a class="headerlink" href="#definitiions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Bayes Rule</p></li>
+<li><p>Inference - Some conclusion reached given by some evidence or reasoning</p></li>
+<li><p>Probability - An expression of belief</p></li>
+<li><p>Probabilistic Modeling</p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/bayesian"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="overview.html" title="previous page">Bayesian</a>
+    <a class='right-next' id="next-link" href="gaussian.html" title="next page">Gaussian Distributions</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="../../../_static/js/index.js"></script>
+    
+  </body>
+</html>

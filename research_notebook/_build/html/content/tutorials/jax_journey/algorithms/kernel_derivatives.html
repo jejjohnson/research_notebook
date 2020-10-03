@@ -1,0 +1,1073 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kernel Derivatives &#8212; Research Notebook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="../../../../_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/togglebutton.js"></script>
+    <script src="../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../_static/copybutton.js"></script>
+    <script src="../../../../_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="GP from Scratch" href="gpr.html" />
+    <link rel="prev" title="Bisection search" href="bisection.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../../../../index.html">
+  
+  <img src="../../../../_static/book.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Research Notebook</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../resources/python/overview.html">
+   Python
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../overview.html">
+   My JAX Journey
+  </a>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="overview.html">
+     Algorithms
+    </a>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="gpr.html">
+       GP from Scratch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../remote/overview.html">
+   Remote Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../notes/bayesian/overview.html">
+   Bayesian
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../notes/concepts/overview.html">
+   Sleeper Concepts
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../notes/kernels/overview.html">
+   Kernel Methods
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../../_sources/content/tutorials/jax_journey/algorithms/kernel_derivatives.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kernel-function">
+   Kernel Function
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#rbf-kernel">
+     RBF Kernel
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kernel-matrix">
+     Kernel Matrix
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cross-covariance-term-1st-derivative">
+   1. Cross-Covariance Term - 1st Derivative
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#single-sample">
+     Single Sample
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#from-scratch">
+       From Scratch
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#jax">
+       Jax
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multiple-dimensions">
+     Multiple Dimensions
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       From Scratch
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id2">
+       Jax
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multiple-samples-batches">
+     Multiple Samples (Batches)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       From Scratch
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id4">
+       Jax
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cross-covariance-term-2nd-derivative">
+   2. Cross-Covariance Term - 2nd Derivative
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     From Scratch
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     Jax
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cross-covariance-term-2nd-derivative-partial-derivatives">
+   3. Cross-Covariance Term - 2nd Derivative (Partial Derivatives)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     From Scratch
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     Jax
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="kernel-derivatives">
+<h1>Kernel Derivatives<a class="headerlink" href="#kernel-derivatives" title="Permalink to this headline">¶</a></h1>
+<p><strong>Linear Operators and Stochastic Partial Differential Equations in GPR</strong> - Simo Särkkä - <a class="reference external" href="https://users.aalto.fi/~ssarkka/pub/spde.pdf">PDF</a></p>
+<blockquote>
+<div><p>Expresses derivatives of GPs as operators</p>
+</div></blockquote>
+<p><a class="reference external" href="https://colab.research.google.com/drive/1pbb0qlypJCqPTN_cu2GEkkKLNXCYO9F2"><strong>Demo Colab Notebook</strong></a></p>
+<p>He looks at ths special case where we have a GP with a mean function zero and a covariance matrix <span class="math notranslate nohighlight">\(K\)</span> defined as:
+$<span class="math notranslate nohighlight">\(
+\mathbb{E}[f(\mathbf{x})f^\top(\mathbf{x'})] = K_{ff}(\mathbf{x,x'})
+\)</span><span class="math notranslate nohighlight">\(
+So in GP terminology:
+\)</span><span class="math notranslate nohighlight">\(
+f(\mathbf(x)) \sim \mathcal{GP}(\mathbf{0}, K_{ff}(\mathbf{x,x'}))
+\)</span>$
+We use the rulse for linear transformations of GPs to obtain the different transformations of the kernel matrix.</p>
+<p>Let’s define the notation for the derivative of a kernel matrix. Let <span class="math notranslate nohighlight">\(g(\cdot)\)</span> be the derivative operator on a function <span class="math notranslate nohighlight">\(f(\cdot)\)</span>. So:
+$<span class="math notranslate nohighlight">\(
+g(\mathbf{x}) = \mathcal{L}_x f(\mathbf{x})
+\)</span>$</p>
+<p>So now, we want to define the cross operators between the derivative <span class="math notranslate nohighlight">\(g(\cdot)\)</span> and the function <span class="math notranslate nohighlight">\(f(\cdot)\)</span>.</p>
+<p><strong>Example</strong>: He draws a distinction between the two operators with an example of how this works in practice. So let’s take the linear operator <span class="math notranslate nohighlight">\(\mathcal{L}_{x}=(1, \frac{\partial}{\partial x})\)</span>. This operator:</p>
+<ul class="simple">
+<li><p>acts on a scalar GP <span class="math notranslate nohighlight">\(f(x)\)</span></p></li>
+<li><p>a scalar input <span class="math notranslate nohighlight">\(x\)</span></p></li>
+<li><p>a covariance function <span class="math notranslate nohighlight">\(k_{ff}(x,x')\)</span></p></li>
+<li><p>outputs a scalar value <span class="math notranslate nohighlight">\(y\)</span></p></li>
+</ul>
+<p>We can get the following transformations:
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+K_{gf}(\mathbf{x,x'})
+&amp;= \mathcal{L}_x f(\mathbf{x}) f(\mathbf{x}) = \mathcal{L}_xK_{ff}(\mathbf{x,x'}) \\
+K_{fg}(\mathbf{x,x'})
+&amp;= f(\mathbf{x}) f(\mathbf{x'}) \mathcal{L}_{x'} = K_{ff}(\mathbf{x,x'})\mathcal{L}_{x'} \\
+K_{gg}(\mathbf{x,x'})
+&amp;= \mathcal{L}_x f(\mathbf{x}) f(\mathbf{x'}) \mathcal{L}_{x'}
+= \mathcal{L}_xK_{ff}(\mathbf{x,x'})\mathcal{L}_{x'}^\top \\
+\end{aligned}
+\)</span>$</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Packages</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">onp</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">rbf_kernel</span> <span class="k">as</span> <span class="n">rbf_sklearn</span>
+<span class="c1"># Plotting libraries</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">([</span><span class="s1">&#39;seaborn-paper&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Plot Functions</span>
+
+<span class="k">def</span> <span class="nf">plot_kernel_mat</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
+    <span class="c1"># plot</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Reds&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$K_</span><span class="si">{ff}</span><span class="s1">$, (rbf)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Data</span>
+
+<span class="k">def</span> <span class="nf">get_1d_data</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">sigma_inputs</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">N_test</span><span class="o">=</span><span class="mi">400</span><span class="p">):</span>
+    <span class="n">onp</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="c1"># Y = X + 0.2 * np.power(X, 3.0) + 0.5 * np.power(0.5 + X, 2.0) * np.sin(4.0 * X)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">1.6</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">5</span> <span class="o">+</span> <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">X</span><span class="p">))</span>
+    <span class="n">Y</span> <span class="o">+=</span> <span class="n">sigma_obs</span> <span class="o">*</span> <span class="n">onp</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">+=</span> <span class="n">sigma_inputs</span> <span class="o">*</span> <span class="n">onp</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">-=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">/=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+
+
+
+    <span class="n">X_test</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">N_test</span><span class="p">)</span> 
+    <span class="n">X_test</span> <span class="o">+=</span> <span class="n">sigma_inputs</span> <span class="o">*</span> <span class="n">onp</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N_test</span><span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">N</span><span class="p">,)</span>
+
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span>
+
+<span class="k">def</span> <span class="nf">get_2d_data</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">N_test</span><span class="o">=</span><span class="mi">400</span><span class="p">):</span>
+    <span class="n">onp</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">X1</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">X2</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="c1"># Y = X + 0.2 * np.power(X, 3.0) + 0.5 * np.power(0.5 + X, 2.0) * np.sin(4.0 * X)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">1.6</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">5</span> <span class="o">+</span> <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">X1</span><span class="p">))</span> <span class="o">+</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">X2</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">+=</span> <span class="n">sigma_obs</span> <span class="o">*</span> <span class="n">onp</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">-=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">/=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+
+
+
+    <span class="n">X1_test</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">N_test</span><span class="p">)</span>
+    <span class="n">X2_test</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">N_test</span><span class="p">)</span> 
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X1</span><span class="p">,</span><span class="n">X2</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">X_test</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X1_test</span><span class="p">,</span><span class="n">X2_test</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">assert</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">N</span><span class="p">,)</span>
+
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span>
+
+<span class="c1"># Get Data</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_1d_data</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">sigma_inputs</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">N_test</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.6/dist-packages/jax/lib/xla_bridge.py:116: UserWarning: No GPU/TPU found, falling back to CPU.
+  warnings.warn(&#39;No GPU/TPU found, falling back to CPU.&#39;)
+</pre></div>
+</div>
+<div class="section" id="kernel-function">
+<h2>Kernel Function<a class="headerlink" href="#kernel-function" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[
+\text{dist} = \sum_{i=1}^D (\mathbf{x_i} - \mathbf{y_i})^2
+\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Kernel Functions</span>
+
+<span class="c1"># Squared Euclidean Distance Formula</span>
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">sqeuclidean_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># RBF Kernel</span>
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">rbf_kernel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;gamma&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">sqeuclidean_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+    
+<span class="c1"># Covariance Matrix</span>
+<span class="k">def</span> <span class="nf">covariance_matrix</span><span class="p">(</span><span class="n">kernel_func</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">mapx1</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">kernel_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">out_axes</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mapx2</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">mapx1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">out_axes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapx2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="rbf-kernel">
+<h3>RBF Kernel<a class="headerlink" href="#rbf-kernel" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(10, 2)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_2d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">test_X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">test_Y</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+<span class="n">rbf_x_sk</span> <span class="o">=</span> <span class="n">rbf_sklearn</span><span class="p">(</span>
+    <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)),</span> 
+    <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_Y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)),</span> 
+    <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rbf_x_sk</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;var_f&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">rbf_k_</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="n">rbf_x</span> <span class="o">=</span> <span class="n">rbf_k_</span><span class="p">(</span>
+    <span class="n">test_X</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> 
+    <span class="n">test_Y</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">onp</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_almost_equal</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rbf_x</span><span class="p">),</span> <span class="n">rbf_x_sk</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(1, 1) (1, 2)
+</pre></div>
+</div>
+</div>
+<div class="section" id="kernel-matrix">
+<h3>Kernel Matrix<a class="headerlink" href="#kernel-matrix" title="Permalink to this headline">¶</a></h3>
+<p>We defined all of our functions above with only dimensions in mind, not the number of samples or the batch size. So we need to account for that. So if we wanted to calculate the kernel matrix, we would have to loop through all of the samples and calculate the products individually, which would take a long time; especially for large amounts of data.</p>
+<blockquote>
+<div><p>Avoid Loops at all cost in python…</p>
+</div></blockquote>
+<p>Fortunately, Jax has this incredible function <code class="docutils literal notranslate"><span class="pre">vmap</span></code> which handles batching automatically at apparently, no extra cost. So we can write our functions to account for vectors without having to care about the batch size and then use the <code class="docutils literal notranslate"><span class="pre">vmap</span></code> function to essentially “vectorize” our functions. It essentially allows us to take a product between a matrix and a sample or two vectors of multiple samples. Let’s go through an example of how we can construct our kernel matrix.</p>
+<ol class="simple">
+<li><p>We need to map all points with one vector to another.</p></li>
+</ol>
+<p>We’re going to take a single sample from <span class="math notranslate nohighlight">\(X'\)</span> and take the rbf kernel between it and all of <span class="math notranslate nohighlight">\(X\)</span>. So:</p>
+<div class="math notranslate nohighlight">
+\[\text{vmap}_f(\mathbf{X}, \mathbf{x})\]</div>
+<p>where <span class="math notranslate nohighlight">\(X\in \mathbb{R}^{N \times D}\)</span> is a matrix and <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D}\)</span> is a vector.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gram Matrix</span>
+<span class="k">def</span> <span class="nf">gram</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x1</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y1</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">))(</span><span class="n">y</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># map function 1</span>
+<span class="n">mapx1</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">rbf_kernel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">out_axes</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># test the mapping</span>
+<span class="n">x1_mapped</span> <span class="o">=</span> <span class="n">mapx1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+
+<span class="c1"># Check output shapes, # of dimensions</span>
+<span class="k">assert</span> <span class="n">x1_mapped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>   
+<span class="k">assert</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">x1_mapped</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>   
+</pre></div>
+</div>
+<p>This that’s good: we have an array of size <span class="math notranslate nohighlight">\(N\)</span>. So we’ve effectively mapped all points from one array to the other.</p>
+<p>So now we can do another vector mapping which allows us to take all samples of <span class="math notranslate nohighlight">\(X'\)</span> and map them against all samples of <span class="math notranslate nohighlight">\(X\)</span>. So it’ll be a <code class="docutils literal notranslate"><span class="pre">vmap</span></code> of a <code class="docutils literal notranslate"><span class="pre">vmap</span></code>. Then we’ll get the <span class="math notranslate nohighlight">\(N\times N\)</span> kernel matrix.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mapx2</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">mapx1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">out_axes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">K</span> <span class="o">=</span> <span class="n">mapx2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Check output shapes, # of dimensions</span>
+<span class="k">assert</span> <span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>   
+<span class="k">assert</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>     
+
+<span class="n">rbf_x_sk</span> <span class="o">=</span> <span class="n">rbf_sklearn</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+
+<span class="n">onp</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_almost_equal</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rbf_x_sk</span><span class="p">),</span> <span class="n">K</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>So great! We now have our kernel matrix. Let’s plot it and check to see if it matches the manually constructed kernel matrix.</p>
+<p>Great! We have a vectorized kernel function and we were still able to construct our functions in terms of vectors only! This is nice for me personally because I’ve always struggled with understanding some of the coding when trying to deal with samples/batch-sizes. Most pseudo-code is written in vector format so paper <span class="math notranslate nohighlight">\(\rightarrow\)</span> has always been a painful transition for me. So now, let’s wrap this in a nice function so that we can finish “wrap up” this model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_2d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">test_X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="c1">#[:2, :]</span>
+<span class="n">test_Y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1">#[:2, :]</span>
+
+<span class="n">rbf_x_sk</span> <span class="o">=</span> <span class="n">rbf_sklearn</span><span class="p">(</span>
+    <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_X</span><span class="p">),</span> 
+    <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_Y</span><span class="p">),</span> 
+    <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="p">)</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;var_f&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+<span class="n">rbf_k_</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="n">rbf_x</span> <span class="o">=</span> <span class="n">covariance_matrix</span><span class="p">(</span>
+    <span class="n">rbf_k_</span><span class="p">,</span>
+    <span class="n">test_X</span><span class="p">,</span> 
+    <span class="n">test_Y</span>
+<span class="p">)</span>
+
+<span class="n">onp</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_almost_equal</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rbf_x</span><span class="p">),</span> <span class="n">rbf_x_sk</span><span class="p">)</span>
+
+<span class="n">plot_kernel_mat</span><span class="p">(</span><span class="n">rbf_x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="png" src="content/tutorials/jax_journey/algorithms/kernel_derivatives_files/kernel_derivatives_15_0.png" /></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Tests</span>
+
+<span class="n">kx</span> <span class="o">=</span> <span class="n">rbf_kernel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># check, the output should be 1.0</span>
+<span class="k">assert</span> <span class="n">kx</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Output: </span><span class="si">{</span><span class="n">kx</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">kx</span> <span class="o">=</span> <span class="n">rbf_kernel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># check, the output should NOT be 1.0</span>
+<span class="k">assert</span> <span class="n">kx</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Output: </span><span class="si">{</span><span class="n">kx</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="c1"># dk_dx = drbf_kernel(gamma, X[0], X[0])</span>
+
+<span class="c1"># # check, the output should be 0.0</span>
+<span class="c1"># assert dk_dx == 0.0, f&quot;Output: {dk_dx}&quot;</span>
+
+<span class="c1"># dk_dx = drbf_kernel(gamma, X[0], X[1])</span>
+
+<span class="c1"># # check, the output should NOT be 0.0</span>
+<span class="c1"># assert dk_dx != 0.0, f&quot;Output: {dk_dx}&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Speed Test</span>
+    
+<span class="c1"># Covariance Matrix</span>
+<span class="k">def</span> <span class="nf">covariance_matrix</span><span class="p">(</span><span class="n">kernel_func</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">mapx1</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">kernel_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">out_axes</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mapx2</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">mapx1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">out_axes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapx2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">gram</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x1</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y1</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">))(</span><span class="n">x</span><span class="p">))(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">rbf_K</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="n">rbf_cov</span> <span class="o">=</span>  <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">covariance_matrix</span><span class="p">,</span> <span class="n">rbf_K</span><span class="p">))</span>
+<span class="n">rbf_x</span> <span class="o">=</span> <span class="n">rbf_cov</span><span class="p">(</span><span class="n">test_X</span><span class="p">,</span>  <span class="n">test_Y</span><span class="p">)</span>
+
+
+<span class="n">rbf_cov2</span> <span class="o">=</span>  <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">gram</span><span class="p">,</span> <span class="n">rbf_K</span><span class="p">))</span>
+<span class="n">rbf_x2</span> <span class="o">=</span> <span class="n">rbf_cov2</span><span class="p">(</span><span class="n">test_X</span><span class="p">,</span>  <span class="n">test_Y</span><span class="p">)</span>
+
+<span class="n">onp</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_almost_equal</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rbf_x</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rbf_x2</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">timeit</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rbf_cov</span><span class="p">(</span><span class="n">test_X</span><span class="p">,</span>  <span class="n">test_Y</span><span class="p">)</span>
+<span class="o">%</span><span class="n">timeit</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rbf_cov2</span><span class="p">(</span><span class="n">test_X</span><span class="p">,</span>  <span class="n">test_Y</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1000 loops, best of 3: 201 µs per loop
+10000 loops, best of 3: 203 µs per loop
+</pre></div>
+</div>
+<p>Seems like they are comparable and there is no real difference.</p>
+</div>
+</div>
+<div class="section" id="cross-covariance-term-1st-derivative">
+<h2>1. Cross-Covariance Term - 1st Derivative<a class="headerlink" href="#cross-covariance-term-1st-derivative" title="Permalink to this headline">¶</a></h2>
+<p>We can calculate the cross-covariance term <span class="math notranslate nohighlight">\(K_{fg}(\mathbf{x,x})\)</span>. We apply the following operation</p>
+<div class="math notranslate nohighlight">
+\[
+K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})(1, \frac{\partial}{\partial x'})
+\]</div>
+<p>If we multiply the terms across, we get:
+$<span class="math notranslate nohighlight">\(
+K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\partial x'}
+\)</span>$</p>
+<p>For the RBF Kernel, it’s this:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)\]</div>
+<p>Note: I did the derivations from scratch.</p>
+<div class="section" id="single-sample">
+<h3>Single Sample<a class="headerlink" href="#single-sample" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_1d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">test_X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">test_Y</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+</pre></div>
+</div>
+<div class="section" id="from-scratch">
+<h4>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">¶</a></h4>
+<p>From scratch, we’re going to be using loops. There are more efficient ways to implement this but it’s harder to mess up loops and it’s also clearer what’s going on. Tricks with broadcasting are often hard to read and very hard to interpret because of the change in dimensions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">drbf_kernel_scratch</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+    <span class="c1"># initialize matrix</span>
+    <span class="n">dK_fg_</span> <span class="o">=</span> <span class="n">onp</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="n">constant</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">gamma</span>
+    
+    <span class="c1"># calculate kernel matrix w. sklearn kernel</span>
+    <span class="n">k_val</span> <span class="o">=</span> <span class="n">rbf_sklearn</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+    
+    <span class="c1"># loop through features/dimensions</span>
+    <span class="k">for</span> <span class="n">idim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        
+        <span class="n">x_val</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">idim</span><span class="p">]</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[:,</span> <span class="n">idim</span><span class="p">]</span>
+
+        <span class="n">dK_fg_</span><span class="p">[</span><span class="n">idim</span><span class="p">]</span> <span class="o">=</span> <span class="n">constant</span> <span class="o">*</span> <span class="n">k_val</span> <span class="o">*</span>  <span class="n">x_val</span> 
+    <span class="k">return</span> <span class="n">dK_fg_</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dK_fg_</span> <span class="o">=</span> <span class="n">drbf_kernel_scratch</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">test_Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="jax">
+<h4>Jax<a class="headerlink" href="#jax" title="Permalink to this headline">¶</a></h4>
+<p>For Jax, we’re going to use the built-in Jacobian function. <strong>Note</strong>: this function only allows us take the derivative of functions that output a scalar value.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rbf_kernel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">test_X</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">test_Y</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>DeviceArray(1., dtype=float32)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">drbf_kernel_fg</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;function jax.api.jacrev.&lt;locals&gt;.jacfun&gt;
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
+<span class="n">drbf_kernel_fg</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># calculate for a single sample</span>
+<span class="n">dK_fg</span> <span class="o">=</span> <span class="n">drbf_kernel_fg</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">test_X</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">test_Y</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+
+<span class="c1"># check theyre the same</span>
+<span class="k">assert</span> <span class="n">dK_fg</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">==</span> <span class="n">dK_fg_</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="multiple-dimensions">
+<h3>Multiple Dimensions<a class="headerlink" href="#multiple-dimensions" title="Permalink to this headline">¶</a></h3>
+<p>Now, we have the same problem but for a vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> instead of a single sample <span class="math notranslate nohighlight">\(x\)</span>. In this example, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> has 2 features, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^2\)</span>. We’re still going to do it for a single sample.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate some data</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_2d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># extract a single sample</span>
+<span class="n">test_X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">test_Y</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h4>From Scratch<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dK_fg_</span> <span class="o">=</span> <span class="n">drbf_kernel_scratch</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">test_Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h4>Jax<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
+<span class="n">drbf_kernel_fg</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># calculate for a single sample</span>
+<span class="n">dK_fg</span> <span class="o">=</span> <span class="n">drbf_kernel_fg</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">test_X</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">test_Y</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+
+<span class="c1"># check theyre the same</span>
+<span class="k">assert</span> <span class="n">dK_fg</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">==</span> <span class="n">dK_fg_</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="multiple-samples-batches">
+<h3>Multiple Samples (Batches)<a class="headerlink" href="#multiple-samples-batches" title="Permalink to this headline">¶</a></h3>
+<p>Now, we’re going to input a matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> which are stacked samples of multiple features. So <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{N\times D}\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_2d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">test_X</span> <span class="o">=</span> <span class="n">X</span>
+<span class="n">test_Y</span> <span class="o">=</span> <span class="n">X</span>
+</pre></div>
+</div>
+<div class="section" id="id3">
+<h4>From Scratch<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dK_fg_</span> <span class="o">=</span> <span class="n">onp</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        
+        <span class="n">dK_fg_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">drbf_kernel_scratch</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_Y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h4>Jax<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
+<span class="n">drbf_kernel_fg</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">K_func</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">drbf_kernel_fg</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+<span class="c1"># calculate kernel matrix</span>
+<span class="n">dK_fg</span> <span class="o">=</span> <span class="n">gram</span><span class="p">(</span><span class="n">K_func</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">test_Y</span><span class="p">)</span>
+
+
+<span class="c1"># check</span>
+<span class="n">onp</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_almost_equal</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dK_fg</span><span class="p">),</span> <span class="n">dK_fg_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="cross-covariance-term-2nd-derivative">
+<h2>2. Cross-Covariance Term - 2nd Derivative<a class="headerlink" href="#cross-covariance-term-2nd-derivative" title="Permalink to this headline">¶</a></h2>
+<p>Recall the 1st derivative is:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)\]</div>
+<p>So now we repeat. First we decompose the function using the product rule:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\frac{\partial^2 k(x,y)}{\partial x^{j^2}} &amp;=
+-2 \gamma (x^j - y^j) \frac{\partial }{\partial x^j} k(x,y) + k(x,y) \frac{\partial }{\partial x^j} \left[ -2 \gamma (x^j - y^j) \right]\\
+\end{aligned}
+\end{split}\]</div>
+<p>The first term is basically the 1st Derivative squared and the 2nd term is a constant. So after applying the derivative and simplifying, we get:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\frac{\partial^2 k(x,y)}{\partial x^{j^2}} &amp;=
+4 \gamma^2 (x^j - y^j)^2 k(x,y) -2 \gamma k(x,y)\\
+&amp;=
+\left[ 4\gamma^2(x^j - y^j)^2 - 2\gamma\right] k(\mathbf{x}, \mathbf{y}) \\
+&amp;=
+2 \gamma \left[ 2\gamma(x^j - y^j)^2 - 1\right] k(\mathbf{x}, \mathbf{y}) \\
+\end{aligned}
+\end{split}\]</div>
+<div class="section" id="id5">
+<h3>From Scratch<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>Recall, this is a Jacobian so we have</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">d2rbf_kernel_scratch_jac</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+    <span class="n">d2K_fg2_</span> <span class="o">=</span> <span class="n">onp</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="n">constant</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">gamma</span>
+    
+    <span class="n">k_val</span> <span class="o">=</span> <span class="n">rbf_sklearn</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">idim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        
+        <span class="c1"># compute the xterm: 2 gamma (xj - yj)^2</span>
+        <span class="n">x_val</span> <span class="o">=</span> <span class="n">constant</span> <span class="o">*</span> <span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">idim</span><span class="p">]</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[:,</span> <span class="n">idim</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># compute the derivative term</span>
+        <span class="n">d2K_fg2_</span><span class="p">[</span><span class="n">idim</span><span class="p">]</span> <span class="o">=</span> <span class="n">constant</span> <span class="o">*</span> <span class="n">x_val</span> <span class="o">*</span> <span class="n">k_val</span> 
+    <span class="k">return</span> <span class="n">d2K_fg2_</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize matrix</span>
+<span class="n">d2K_fg2_</span> <span class="o">=</span> <span class="n">onp</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        
+        <span class="n">d2K_fg2_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">d2rbf_kernel_scratch_jac</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_Y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>Jax<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>So with jax, we’re computing the hessian so we’ll get a matrix of size <span class="math notranslate nohighlight">\(N \times N \times D \times D\)</span>. So the 2nd derivative is just the diagonal terms of <span class="math notranslate nohighlight">\(D\times D\)</span> part.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
+<span class="n">dK_fg_func</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># fix params for kernel function</span>
+<span class="n">K_func</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">dK_fg_func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+<span class="c1"># calculate kernel matrix</span>
+<span class="n">d2K_fg2</span> <span class="o">=</span> <span class="n">covariance_matrix</span><span class="p">(</span><span class="n">K_func</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">test_Y</span><span class="p">)</span>
+
+<span class="c1"># get the diagonal terms</span>
+<span class="n">d2K_fg2</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">d2K_fg2</span><span class="p">,</span> <span class="n">axis1</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis2</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">d2K_fg2</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(10, 10, 2)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">onp</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_almost_equal</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d2K_fg2</span><span class="p">),</span> <span class="n">d2K_fg2_</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Awesome, they’re the same! So that gives me hope!</p>
+</div>
+</div>
+<div class="section" id="cross-covariance-term-2nd-derivative-partial-derivatives">
+<h2>3. Cross-Covariance Term - 2nd Derivative (Partial Derivatives)<a class="headerlink" href="#cross-covariance-term-2nd-derivative-partial-derivatives" title="Permalink to this headline">¶</a></h2>
+<p>Recall the 1st derivative is:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)\]</div>
+<p>So now we repeat. First we decompose the function using the product rule. But this time, we need to do the product rule first w.r.t. <span class="math notranslate nohighlight">\(x^j\)</span> and then w.r.t. <span class="math notranslate nohighlight">\(y^k\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\frac{\partial^2 k(x,y)}{\partial x^j y^k} &amp;=
+-2 \gamma (x^j - y^j) \frac{\partial }{\partial y^k} k(x,y) + k(x,y) \frac{\partial }{\partial y^k} \left[ -2 \gamma (x^j - y^j) \right]\\
+\end{aligned}
+\end{split}\]</div>
+<p>So now let’s start expanding and collapsing terms:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\frac{\partial^2 k(x,y)}{\partial x^j y^k} &amp;=
+4 \gamma^2 (x^j - y^j)(x^k - y^k) k(x,y) \\
+\end{aligned}
+\end{split}\]</div>
+<p>The second term should go to zero and the first term is the same except it has different dimensions (w.r.t. <span class="math notranslate nohighlight">\(y\)</span> instead of <span class="math notranslate nohighlight">\(x\)</span>).</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial^2 k(x,y)}{\partial x^j \partial y^k} =
+4 \gamma^2 (x^k - y^k)(x^j - y^j) k(\mathbf{x}, \mathbf{y})
+\]</div>
+<div class="section" id="id7">
+<h3>From Scratch<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">d2rbf_kernel_scratch_hessian</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+    <span class="n">d2K_fg2_</span> <span class="o">=</span> <span class="n">onp</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    
+    <span class="n">constant</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">gamma</span>
+    <span class="n">constant_sq</span> <span class="o">=</span> <span class="n">constant</span> <span class="o">**</span> <span class="mi">2</span>
+    
+    <span class="n">k_val</span> <span class="o">=</span> <span class="n">rbf_sklearn</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">idim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">jdim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        
+            <span class="c1"># x_val = constant * (1 - constant * (X[:, idim] - Y[:, idim]) * (X[:, jdim] - Y[:, jdim]))# - constant</span>
+            <span class="n">x_val</span> <span class="o">=</span> <span class="n">constant_sq</span> <span class="o">*</span> <span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">idim</span><span class="p">]</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[:,</span> <span class="n">idim</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">jdim</span><span class="p">]</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[:,</span> <span class="n">jdim</span><span class="p">])</span>
+
+            <span class="n">d2K_fg2_</span><span class="p">[</span><span class="n">idim</span><span class="p">,</span> <span class="n">jdim</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_val</span> <span class="o">*</span>  <span class="n">x_val</span> 
+    <span class="k">return</span> <span class="n">d2K_fg2_</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d2K_fg2_</span> <span class="o">=</span> <span class="n">onp</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">test_Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        
+        <span class="n">d2K_fg2_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2rbf_kernel_scratch_hessian</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_Y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>Jax<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
+<span class="n">dK_fg_func</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">K_func</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">dK_fg_func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="n">d2K_fg2</span> <span class="o">=</span> <span class="n">covariance_matrix</span><span class="p">(</span><span class="n">K_func</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">test_Y</span><span class="p">)</span>
+
+<span class="n">d2K_fg2</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(10, 10, 2, 2)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">onp</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_almost_equal</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">d2K_fg2</span><span class="p">,</span> <span class="n">axis1</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis2</span><span class="o">=</span><span class="mi">3</span> <span class="p">)),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">d2K_fg2</span><span class="p">,</span> <span class="n">axis1</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis2</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>So this is good. The diagonal terms are correct but the off-diagonal entries are incorrect. I’m not entirely sure how to fix this. I can’t point to the part of the equation where you would actually calculate the off-diagonal entries</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">onp</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_almost_equal</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d2K_fg2</span><span class="p">),</span> <span class="n">d2K_fg2_</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>---------------------------------------------------------------------------
+
+AssertionError                            Traceback (most recent call last)
+
+&lt;ipython-input-55-92393160b45e&gt; in &lt;module&gt;()
+----&gt; 1 onp.testing.assert_array_almost_equal(onp.array(d2K_fg2), d2K_fg2_, decimal=4)
+
+
+/usr/local/lib/python3.6/dist-packages/numpy/testing/_private/utils.py in assert_array_almost_equal(x, y, decimal, err_msg, verbose)
+   1045     assert_array_compare(compare, x, y, err_msg=err_msg, verbose=verbose,
+   1046              header=(&#39;Arrays are not almost equal to %d decimals&#39; % decimal),
+-&gt; 1047              precision=decimal)
+   1048 
+   1049 
+
+
+/usr/local/lib/python3.6/dist-packages/numpy/testing/_private/utils.py in assert_array_compare(comparison, x, y, err_msg, verbose, header, precision, equal_nan, equal_inf)
+    844                                 verbose=verbose, header=header,
+    845                                 names=(&#39;x&#39;, &#39;y&#39;), precision=precision)
+--&gt; 846             raise AssertionError(msg)
+    847     except ValueError:
+    848         import traceback
+
+
+AssertionError: 
+Arrays are not almost equal to 4 decimals
+
+Mismatched elements: 92 / 400 (23%)
+Max absolute difference: 2.
+Max relative difference: 2.00000007
+ x: array([[[[-2.0000e+00,  0.0000e+00],
+         [ 0.0000e+00, -2.0000e+00]],
+...
+ y: array([[[[-0.0000e+00, -0.0000e+00],
+         [-0.0000e+00, -0.0000e+00]],
+...
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/tutorials/jax_journey/algorithms"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="bisection.html" title="previous page">Bisection search</a>
+    <a class='right-next' id="next-link" href="gpr.html" title="next page">GP from Scratch</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="../../../../_static/js/index.js"></script>
+    
+  </body>
+</html>

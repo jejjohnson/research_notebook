@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JupyterLab + VSCode &#8212; Research Notebook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+    <link href="../../../_static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../_static/sphinx-book-theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/sphinx-book-theme.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Bayesian" href="../../notes/bayesian/overview.html" />
+    <link rel="prev" title="Remote Computing" href="overview.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../../../index.html">
+  
+  <img src="../../../_static/book.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Research Notebook</h1>
+  
+</a>
+</div>
+
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../jax_journey/overview.html">
+   My JAX Journey
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="overview.html">
+   Remote Computing
+  </a>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     JupyterLab + VSCode
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../notes/bayesian/overview.html">
+   Bayesian
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../notes/concepts/overview.html">
+   Sleeper Concepts
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../notes/kernels/overview.html">
+   Kernel Methods
+  </a>
+ </li>
+</ul>
+
+</nav>
+
+ <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        <div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/tutorials/remote/vscode_jlab.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+    
+</div>
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-vscode-to-your-vm">
+   1. Connect VSCode to your VM
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup-your-jupyterlab-environment">
+   2. Setup Your JupyterLab Environment
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-a-yml-file-with-requirements">
+     2.1 Create a
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       .yml
+      </span>
+     </code>
+     file with requirements
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#jupyterlab-and-other-python-kernels">
+     2.2 JupyterLab and other python kernels
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-a-conda-environment">
+     2.1 Create a Conda Environment
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#install-and-the-jupyterlab-manager">
+     2.3 Install and the Jupyterlab Manager
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#start-your-jupyterlab-instance-through-vscode-terminal">
+   3 Start your Jupyterlab Instance through VSCode terminal
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#what-happened">
+     What Happened?
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bonus-automatic-function">
+     3.1 Bonus - Automatic Function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bonus-outside-of-vscode">
+     3.2 Bonus - Outside of VSCode
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="jupyterlab-vscode">
+<h1>JupyterLab + VSCode<a class="headerlink" href="#jupyterlab-vscode" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>J. Emmanuel Johnson</p></li>
+<li><p>Last Updated: 17-07-2020</p></li>
+</ul>
+<hr class="docutils" />
+<hr class="docutils" />
+<p>So most people like to use a combination of a dedicated IDE as well as JupyterLab. If you don’t you probably should… But it’s a bit annoying when we need both. Some people try to use the built-in jupyter notebook support from VSCode. But it sucks. It’s not good enough and it’s quite slow compared to JupyterLab. Another thing people do is they use the Notebook Instances from the GCP webpage. This is convenient but the biggest problem with this is that it’s not in your home directory. So you have to play games with the directories which is a pain in the butt. In addition, the permissions are weird so some python code doesn’t play nice when you want to do execute commands using python (and sometimes the terminal - need <code class="docutils literal notranslate"><span class="pre">sudo</span></code>).</p>
+<p>So this tutorial provides the following:</p>
+<ul class="simple">
+<li><p>a simple way to open jupyterlab with your vscode ide</p></li>
+<li><p>you don’t have to do the <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">server</span> <span class="pre">-L</span> <span class="pre">xxxx:localhost:xxxx</span></code> with the extra port</p></li>
+<li><p>you will be able to access all of your other conda environments using this jupyterlab</p></li>
+<li><p>makes working with jupyterlab in conjunction with vscode a lot easier.</p></li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="connect-vscode-to-your-vm">
+<h2>1. Connect VSCode to your VM<a class="headerlink" href="#connect-vscode-to-your-vm" title="Permalink to this headline">¶</a></h2>
+<p><img alt="pics/vscode_jlab/vscode.png" src="content/tutorials/remote/pics/vscode_jlab/vscode.png" /></p>
+</div>
+<div class="section" id="setup-your-jupyterlab-environment">
+<h2>2. Setup Your JupyterLab Environment<a class="headerlink" href="#setup-your-jupyterlab-environment" title="Permalink to this headline">¶</a></h2>
+<p><strong>Note</strong>:</p>
+<ul class="simple">
+<li><p>You only have to do this once!</p></li>
+<li><p>Make sure conda is already installed.</p></li>
+</ul>
+<div class="section" id="create-a-yml-file-with-requirements">
+<h3>2.1 Create a <code class="docutils literal notranslate"><span class="pre">.yml</span></code> file with requirements<a class="headerlink" href="#create-a-yml-file-with-requirements" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jupyterlab</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">defaults</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">python=3.8</span>
+<span class="c1"># GUI</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyterlab</span>           <span class="c1"># JupyterLab GUI</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::nb_conda_kernels</span>     <span class="c1"># Access to other conda kernels</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::spyder-kernels</span>       <span class="c1"># Access via spyder kernels</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::nodejs</span>               <span class="c1"># for extensions in jupyterlab</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pyviz::holoviews</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">bokeh</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">bokeh::jupyter_bokeh</span>              <span class="c1"># Bokeh</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">tqdm</span>                              <span class="c1"># For status bars</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip</span>                               <span class="c1"># To install other packages</span>
+<span class="p p-Indicator">-</span> <span class="nt">pip</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ipykernel</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ipywidgets</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">jupyter-server-proxy</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dask_labextension</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nbserverproxy</span>
+</pre></div>
+</div>
+<p>I’ve typed it out but you can also check out the file on <a class="reference external" href="https://github.com/jejjohnson/dot_files/blob/master/jupyter_scripts/jupyterlab.yml">github</a>.</p>
+</div>
+<div class="section" id="jupyterlab-and-other-python-kernels">
+<h3>2.2 JupyterLab and other python kernels<a class="headerlink" href="#jupyterlab-and-other-python-kernels" title="Permalink to this headline">¶</a></h3>
+<p>So you may be wondering if we need to do this with every conda environment we create. No. We just need to have a general JupyterLab environment that calls other environments. The important thing here is that we have the jupyterlab package installed as well as <code class="docutils literal notranslate"><span class="pre">nb_conda_kernels</span></code> package. This allows the jupyterlab to be able to use any other python kernel that’s in your user space (sometimes common shared ones but it depends).</p>
+<p>Now, all other conda environments will need to have the <code class="docutils literal notranslate"><span class="pre">ipykernel</span></code> package installed and it will be visible from your JupyterLab environment.</p>
+</div>
+<div class="section" id="create-a-conda-environment">
+<h3>2.1 Create a Conda Environment<a class="headerlink" href="#create-a-conda-environment" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the environment with your .yml file</span>
+conda env create --name jupyterlab -f jupyterlab.yml
+<span class="c1"># activate the environment</span>
+<span class="nb">source</span> activate jupyterlab
+<span class="c1"># or perhaps</span>
+<span class="c1"># conda activate jupyterlab</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-and-the-jupyterlab-manager">
+<h3>2.3 Install and the Jupyterlab Manager<a class="headerlink" href="#install-and-the-jupyterlab-manager" title="Permalink to this headline">¶</a></h3>
+<p>This will enable you to have extensions for your Jupyterlab. There are so many cool ones out there. I’m particularly fond of the <a class="reference external" href="https://github.com/lckr/jupyterlab-variableInspector">variable inspector</a> and the <a class="reference external" href="https://github.com/jupyterlab/jupyterlab-toc">table of contents</a>. JupyterLab has gotten awesome so you can install most new extensions using the JupyterLab GUI.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install jupyter lab extension maager</span>
+<span class="l l-Scalar l-Scalar-Plain">jupyter labextension install @jupyter-widgets/jupyterlab-manager</span>
+<span class="l l-Scalar l-Scalar-Plain"># Enable</span>
+<span class="l l-Scalar l-Scalar-Plain">jupyter serverextension enable --py jupyterlab-manager</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="start-your-jupyterlab-instance-through-vscode-terminal">
+<h2>3 Start your Jupyterlab Instance through VSCode terminal<a class="headerlink" href="#start-your-jupyterlab-instance-through-vscode-terminal" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span>
+</pre></div>
+</div>
+<p>This should appear:</p>
+<p><img alt="pics/vscode_jlab/vscode_jlab.png" src="content/tutorials/remote/pics/vscode_jlab/vscode_jlab.png" /></p>
+<p>The most important thing is that this should appear.</p>
+<p><img alt="pics/vscode_jlab/vscode_3.png" src="content/tutorials/remote/pics/vscode_jlab/vscode_3.png" /></p>
+<p>Notice now that you have two links to use and you can click on them. Now you’re good! Your browser should open a JupyterLab notebook on it’s own!</p>
+<p><img alt="pics/vscode_jlab/jlab.png" src="content/tutorials/remote/pics/vscode_jlab/jlab.png" /></p>
+<div class="section" id="what-happened">
+<h3>What Happened?<a class="headerlink" href="#what-happened" title="Permalink to this headline">¶</a></h3>
+<p>Well VSCode rocks and basically opened an ssh port <strong>through vscode</strong> itself. So now we can access it through our browser as if we did the ssh stuff ourselves.</p>
+<p><img alt="pics/vscode_jlab/vscode_localhost.png" src="content/tutorials/remote/pics/vscode_jlab/vscode_localhost.png" /></p>
+</div>
+<div class="section" id="bonus-automatic-function">
+<h3>3.1 Bonus - Automatic Function<a class="headerlink" href="#bonus-automatic-function" title="Permalink to this headline">¶</a></h3>
+<p>We can automate this to have a bit more flexibility on the port number. I added this function to my <code class="docutils literal notranslate"><span class="pre">.profile</span></code> (you can use <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code>) and now I can just call this function whenever I need to open a JupyterLab using the VSCode terminal.</p>
+<p><span class="xref myst"></span></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># JUPYTER NOTEBOOK STUFF</span>
+<span class="l l-Scalar l-Scalar-Plain">function jpt(){</span>
+    <span class="l l-Scalar l-Scalar-Plain"># Fires-up a Jupyter notebook by supplying a specific port</span>
+    <span class="l l-Scalar l-Scalar-Plain">conda activate jupyterlab</span>
+    <span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port=$1</span>
+<span class="l l-Scalar l-Scalar-Plain">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bonus-outside-of-vscode">
+<h3>3.2 Bonus - Outside of VSCode<a class="headerlink" href="#bonus-outside-of-vscode" title="Permalink to this headline">¶</a></h3>
+<p>One caveat is that you need to have VSCode open for your JupyterLab to run. So if you close it, it closed the JupyterLab session. One thing you could do is open another ssh port using the gcloud command.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># sign in and have a port open</span>
+<span class="l l-Scalar l-Scalar-Plain">gcloud compute ssh --project XXX --zone XXXX USER@VM-INSTANCE -- -L 2005:localhost:2005</span>
+<span class="l l-Scalar l-Scalar-Plain"># start jupyterlab</span>
+<span class="l l-Scalar l-Scalar-Plain">conda activate jupyterlab</span>
+<span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/tutorials/remote"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="overview.html" title="previous page">Remote Computing</a>
+    <a class='right-next' id="next-link" href="../../notes/bayesian/overview.html" title="next page">Bayesian</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    <script src="../../../_static/js/index.js"></script>
+    
+  </body>
+</html>

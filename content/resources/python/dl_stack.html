@@ -301,6 +301,18 @@
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#other-resources">
+   Other Resources
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#automatic-differentiation">
+     Automatic Differentiation
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
         </nav>
@@ -411,33 +423,39 @@
 <hr class="docutils" />
 <div class="section" id="list-of-software">
 <h2>List of Software<a class="headerlink" href="#list-of-software" title="Permalink to this headline">¶</a></h2>
-<p>There are many autograd libraries available right now. All of the big tech companies (Google, Facebook, Amazon, Microsoft, Uber, etc.) have a piece of the python software package pie. Fortunately for us, many of them have open-sourced so we get to enjoy high-quality, feature-filled, polished software for us to work with. I believe this, more than anything, has accelerated research in the computational world, in particular for people doing research related to machine learning.</p>
+<p>There are many autograd libraries available right now. All of the big tech companies (Google, Facebook, Amazon, Microsoft, Uber, etc.) have a piece of the python software package pie. Fortunately for us, many of them have open-sourced so we get to enjoy high-quality, feature-filled, polished software for us to work with. I believe this, more than anything, has accelerated research in the computational world, in particular for people doing research related to machine learning. I’ll also include some of my favourites for Probabilistic Programming Languages (PPL) as well as Gaussian process (GP) library.</p>
 <hr class="docutils" />
 <div class="section" id="core-packages">
 <h3>Core Packages<a class="headerlink" href="#core-packages" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="tensorflow-tf">
 <h4><a class="reference external" href="https://www.tensorflow.org/">TensorFlow</a> (TF)<a class="headerlink" href="#tensorflow-tf" title="Permalink to this headline">¶</a></h4>
 <p>This is by far the most popular autograd library currently. Backed by Google (Alphabet, Inc), it is the go to python package for production and it is very popular for researchers as well. Recently (mid-2019) there was a huge update which made the python API much easier to use by having a tight keras integration and allowing for a more pythonic-style of coding.</p>
-<p><strong><a class="reference external" href="https://www.tensorflow.org/probability">TensorFlow Probability</a></strong> (TFP)</p>
+<p><strong>PPL</strong>: <a class="reference external" href="https://www.tensorflow.org/probability">TensorFlow Probability</a></p>
 <p>As the name suggests, this is a probabilistic library that is built on top of TensorFlow. It has many distributions, priors, and inference methods. In addition, it uses the same <code class="docutils literal notranslate"><span class="pre">layers</span></code> as the <code class="docutils literal notranslate"><span class="pre">tf.keras</span></code> library with some <code class="docutils literal notranslate"><span class="pre">edward2</span></code> integration.</p>
-<p><strong><a class="reference external" href="https://github.com/google/edward2">Edward2</a></strong> (Ed2)</p>
-<p>While there is some integration of <code class="docutils literal notranslate"><span class="pre">edward2</span></code> into the TFP library, there are some stand alone functions in the original Ed2 library. Some more advanced <code class="docutils literal notranslate"><span class="pre">layers</span></code> such as Sparse Gaussian processes and Noise contrastive priors. It all works seemlessly with TF and TFP.</p>
-<p><strong><a class="reference external" href="https://github.com/GPflow/GPflow">GPFlow</a></strong> (GPF)</p>
+<p><strong>GP</strong>: <a class="reference external" href="https://github.com/GPflow/GPflow">GPFlow</a></p>
 <p>This is a special library for SOTA GPs that’s built on top of TF. It is the success to the original GP library, GPy but it has a much cleaner code base and a bit better documentation due to its use of autograd.</p>
+<p><strong>Bayesian Layers</strong>: <a class="reference external" href="https://github.com/google/edward2">Edward2</a></p>
+<p>While there is some integration of <code class="docutils literal notranslate"><span class="pre">edward2</span></code> into the TFP library, there are some stand alone functions in the original Ed2 library. Some more advanced <code class="docutils literal notranslate"><span class="pre">layers</span></code> such as Sparse Gaussian processes and Noise contrastive priors. It all works seemlessly with TF and TFP.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="pytorch">
 <h4><a class="reference external" href="https://pytorch.org/">PyTorch</a><a class="headerlink" href="#pytorch" title="Permalink to this headline">¶</a></h4>
 <p>This is the most popular DL library for the machine learning community. Backed by Facebook, this is a rather new library that came out 2 years ago. It took a bit of time, but eventually people started using it more and more especially in a research setting. The reason is because it is very pythonic, it was designed by researchers and for researchers, and it keeps the design simple even sacrificing speed if needed. If you’re starting out, most people will recommend you start with PyTorch.</p>
-<p><strong><a class="reference external" href="https://pyro.ai/">Pyro</a></strong></p>
+<p><strong>PPL</strong>: <a class="reference external" href="https://pyro.ai/">Pyro</a></p>
 <p>This is a popular Bayesian DL library that is built on top of PyTorch. Backed by Uber, you’ll find a lot of different inference scheme. This library is a bit of a learning curve because their API. But, their documentation and tutorial section is great so if you take your time you should pick it up. Unfortunately I don’t find too many papers with Pyro code examples, but when the Bayesian community gets bigger, I’m sure this will change.</p>
-<p><strong><a class="reference external" href="https://gpytorch.ai/">GPyTorch</a></strong></p>
+<p><strong>GP</strong>: <a class="reference external" href="https://gpytorch.ai/">GPyTorch</a></p>
 <p>This is the most scalable GP library currently that’s built on top of PyTorch. They mainly use Matrix-Vector-Multiplication strategies to scale exact GPs up to 1 million points using multiple GPUs. They recently just revamped their documentation as well with many examples. If you plan to put GPs in production, you should definitely check out this library.</p>
-<p><strong><a class="reference external" href="https://docs.fast.ai/">fastai</a></strong></p>
+<p><strong>Jump In:</strong> <a class="reference external" href="https://docs.fast.ai/">fastai</a></p>
 <p>This is a DL library that was created to facilate people using some of the SOTA NN methods to solve problems. It was created by Jeremy Howard and has gained popularity due to its simplicity. It has all of the SOTA parameters by default and there are many options to tune your models as you see fit. In addition, it has a huge community with a very active <a class="reference external" href="https://forums.fast.ai/">forum</a>. I think it’s a good first pass if you’re looking to solve real problems and get your feet wet while not getting too hung up on the model building code. They also have 2 really good <a class="reference external" href="https://course18.fast.ai/">courses</a> that teach you the mechanics of ML and DL while still giving you enough tools to make you a competitive.</p>
 <hr class="docutils" />
-<p><strong><span class="xref myst">JAX</span></strong></p>
-<p>This is the successor for the popular <a class="reference external" href="https://github.com/HIPS/autograd">autograd</a> package that is now backed by Google. It is basically <code class="docutils literal notranslate"><span class="pre">numpy</span></code> on steroids giving you access to an autograd function and it can be used on CPUs, GPUs and TPUs. The gradients are very intuitive as it is just using a <code class="docutils literal notranslate"><span class="pre">grad</span></code> function; recursively if you want high-order gradients. It’s still fairly early in development but it’s gaining popularity very fast and has shown to be <a class="reference external" href="https://github.com/dionhaefner/pyhpc-benchmarks"><strong>very</strong> competitive</a>. It’s fast. Really fast. To really take advantage of this library, you will need to do a more functional-style of programming but there have been many benefits, e.g. using it for MCMC sampling schemes has become <a class="reference external" href="https://twitter.com/remilouf/status/1215740986195922944">popular</a>.</p>
+<p><strong><a class="reference external" href="https://github.com/google/jax">JAX</a></strong></p>
+<p>This is the successor for the popular <a class="reference external" href="https://github.com/HIPS/autograd">autograd</a> package that is now backed by Google. It is basically <code class="docutils literal notranslate"><span class="pre">numpy</span></code> on steroids giving you access to an autograd function and it can be used on CPUs, GPUs and TPUs. The gradients are very intuitive as it is just using a <code class="docutils literal notranslate"><span class="pre">grad</span></code> function; recursively if you want high-order gradients. It’s still fairly early in development but it’s gaining popularity very fast and has shown to be <a class="reference external" href="https://github.com/dionhaefner/pyhpc-benchmarks"><strong>very</strong> competitive</a>. It’s fast. Really fast. To really take advantage of this library, you will need to do a more functional-style of programming but there have been many benefits, e.g. using it for MCMC sampling schemes has become <a class="reference external" href="https://twitter.com/remilouf/status/1215740986195922944">popular</a>. Keep in mind that although JAX does have the <span class="xref myst">flax</span> API which allows you to have predefined NN architectures, it’s primarily an autograd library, not a Deep learning library. There are many</p>
+<p><strong>PPL</strong>: <a class="reference external" href="https://github.com/pyro-ppl/numpyro#numpyro">Numpyro</a></p>
+<p>This is a great PPL which took it’s inspiration from <strong>Pyro</strong> but is built on top of JAX. It really focuses on MCMC methods but it also has quite a few other nuggets such as stochastic variational inference (SVI) and normalizing flows (NFs). I would say this is the most popular (and oldest) library for probabilistic programming under the JAX framework. My favourite tutorials include the ones about <a class="reference external" href="https://pyro.ai/numpyro/bayesian_regression.html">Bayesian Regression</a>, <a class="reference external" href="https://pyro.ai/numpyro/examples/gp.html">Gaussian processes</a> and a <a class="reference external" href="http://num.pyro.ai/en/stable/primitives.html#random-flax-module">Bayesian Neural Network</a>.</p>
+<p><a class="reference external" href="https://objax.readthedocs.io/en/latest/"><strong>Objax</strong></a></p>
+<p>This is an OOP that’s built on top of JAX. It allows you to use the PyTorch method but having JAX underneath. It also has a lot of pre-defined layers and optimization methods.</p>
+<p><a class="reference external" href="https://poets-ai.github.io/elegy/"><strong>Elegy</strong></a></p>
+<p>This is a keras-like wrapper for JAX. It has all of the features that allow you to use JAX as if you were using Keras. It does follow a more functional style so it’s a bit more advanced that Objax for example.</p>
 </div>
 </div>
 <hr class="docutils" />
@@ -453,6 +471,21 @@
 <p><strong><span class="xref myst">PyMC3</span></strong> &amp; <strong><span class="xref myst">PyMC4</span></strong></p>
 <p><strong><span class="xref myst">CNTK</span></strong></p>
 <p>Microsoft</p>
+<p>–</p>
+</div>
+</div>
+<div class="section" id="other-resources">
+<h2>Other Resources<a class="headerlink" href="#other-resources" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="automatic-differentiation">
+<h3>Automatic Differentiation<a class="headerlink" href="#automatic-differentiation" title="Permalink to this headline">¶</a></h3>
+<p><strong><a class="reference external" href="https://d2l.ai/chapter_preliminaries/autograd.html">D2L Tutorial</a></strong></p>
+<blockquote>
+<div><p>A programming tutorial where they show how to do automatic differentiation using 3 different frameworks: tensorflow, pytorch and mxnet. Useful to show the differences between some popular libraries (MXNet isn’t so mainstream).</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arxiv.org/abs/1502.05767">Automatic differentiation in machine learning: a survey</a> - Baydin et al (2018)</p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=NG21KWZSiok"> Colin Carroll - Getting started with automatic differentiation</a> - PyCon 2020</p></li>
+</ul>
 </div>
 </div>
 </div>

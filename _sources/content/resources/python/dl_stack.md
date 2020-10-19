@@ -105,7 +105,7 @@ I have a personal short list below just from observations, trends and reading bu
 
 ## List of Software
 
-There are many autograd libraries available right now. All of the big tech companies (Google, Facebook, Amazon, Microsoft, Uber, etc.) have a piece of the python software package pie. Fortunately for us, many of them have open-sourced so we get to enjoy high-quality, feature-filled, polished software for us to work with. I believe this, more than anything, has accelerated research in the computational world, in particular for people doing research related to machine learning.
+There are many autograd libraries available right now. All of the big tech companies (Google, Facebook, Amazon, Microsoft, Uber, etc.) have a piece of the python software package pie. Fortunately for us, many of them have open-sourced so we get to enjoy high-quality, feature-filled, polished software for us to work with. I believe this, more than anything, has accelerated research in the computational world, in particular for people doing research related to machine learning. I'll also include some of my favourites for Probabilistic Programming Languages (PPL) as well as Gaussian process (GP) library.
 
 ---
 
@@ -116,17 +116,19 @@ There are many autograd libraries available right now. All of the big tech compa
 
 This is by far the most popular autograd library currently. Backed by Google (Alphabet, Inc), it is the go to python package for production and it is very popular for researchers as well. Recently (mid-2019) there was a huge update which made the python API much easier to use by having a tight keras integration and allowing for a more pythonic-style of coding.
 
-**[TensorFlow Probability](https://www.tensorflow.org/probability)** (TFP)
+**PPL**: [TensorFlow Probability](https://www.tensorflow.org/probability)
 
 As the name suggests, this is a probabilistic library that is built on top of TensorFlow. It has many distributions, priors, and inference methods. In addition, it uses the same `layers` as the `tf.keras` library with some `edward2` integration.
 
-**[Edward2](https://github.com/google/edward2)** (Ed2)
+**GP**: [GPFlow](https://github.com/GPflow/GPflow)
+
+This is a special library for SOTA GPs that's built on top of TF. It is the success to the original GP library, GPy but it has a much cleaner code base and a bit better documentation due to its use of autograd.
+
+**Bayesian Layers**: [Edward2](https://github.com/google/edward2)
 
 While there is some integration of `edward2` into the TFP library, there are some stand alone functions in the original Ed2 library. Some more advanced `layers` such as Sparse Gaussian processes and Noise contrastive priors. It all works seemlessly with TF and TFP.
 
-**[GPFlow](https://github.com/GPflow/GPflow)** (GPF)
 
-This is a special library for SOTA GPs that's built on top of TF. It is the success to the original GP library, GPy but it has a much cleaner code base and a bit better documentation due to its use of autograd.
 
 ---
 
@@ -134,24 +136,36 @@ This is a special library for SOTA GPs that's built on top of TF. It is the succ
 
 This is the most popular DL library for the machine learning community. Backed by Facebook, this is a rather new library that came out 2 years ago. It took a bit of time, but eventually people started using it more and more especially in a research setting. The reason is because it is very pythonic, it was designed by researchers and for researchers, and it keeps the design simple even sacrificing speed if needed. If you're starting out, most people will recommend you start with PyTorch.
 
-**[Pyro](https://pyro.ai/)**
+**PPL**: [Pyro](https://pyro.ai/)
 
 This is a popular Bayesian DL library that is built on top of PyTorch. Backed by Uber, you'll find a lot of different inference scheme. This library is a bit of a learning curve because their API. But, their documentation and tutorial section is great so if you take your time you should pick it up. Unfortunately I don't find too many papers with Pyro code examples, but when the Bayesian community gets bigger, I'm sure this will change.
 
-**[GPyTorch](https://gpytorch.ai/)**
+**GP**: [GPyTorch](https://gpytorch.ai/)
 
 This is the most scalable GP library currently that's built on top of PyTorch. They mainly use Matrix-Vector-Multiplication strategies to scale exact GPs up to 1 million points using multiple GPUs. They recently just revamped their documentation as well with many examples. If you plan to put GPs in production, you should definitely check out this library. 
 
 
-**[fastai](https://docs.fast.ai/)**
+**Jump In:** [fastai](https://docs.fast.ai/)
 
 This is a DL library that was created to facilate people using some of the SOTA NN methods to solve problems. It was created by Jeremy Howard and has gained popularity due to its simplicity. It has all of the SOTA parameters by default and there are many options to tune your models as you see fit. In addition, it has a huge community with a very active [forum](https://forums.fast.ai/). I think it's a good first pass if you're looking to solve real problems and get your feet wet while not getting too hung up on the model building code. They also have 2 really good [courses](https://course18.fast.ai/) that teach you the mechanics of ML and DL while still giving you enough tools to make you a competitive.
 
 ---
 
-**[JAX]()**
+**[JAX](https://github.com/google/jax)**
 
-This is the successor for the popular [autograd](https://github.com/HIPS/autograd) package that is now backed by Google. It is basically `numpy` on steroids giving you access to an autograd function and it can be used on CPUs, GPUs and TPUs. The gradients are very intuitive as it is just using a `grad` function; recursively if you want high-order gradients. It's still fairly early in development but it's gaining popularity very fast and has shown to be [**very** competitive](https://github.com/dionhaefner/pyhpc-benchmarks). It's fast. Really fast. To really take advantage of this library, you will need to do a more functional-style of programming but there have been many benefits, e.g. using it for MCMC sampling schemes has become [popular](https://twitter.com/remilouf/status/1215740986195922944).
+This is the successor for the popular [autograd](https://github.com/HIPS/autograd) package that is now backed by Google. It is basically `numpy` on steroids giving you access to an autograd function and it can be used on CPUs, GPUs and TPUs. The gradients are very intuitive as it is just using a `grad` function; recursively if you want high-order gradients. It's still fairly early in development but it's gaining popularity very fast and has shown to be [**very** competitive](https://github.com/dionhaefner/pyhpc-benchmarks). It's fast. Really fast. To really take advantage of this library, you will need to do a more functional-style of programming but there have been many benefits, e.g. using it for MCMC sampling schemes has become [popular](https://twitter.com/remilouf/status/1215740986195922944). Keep in mind that although JAX does have the [flax]() API which allows you to have predefined NN architectures, it's primarily an autograd library, not a Deep learning library. There are many
+
+**PPL**: [Numpyro](https://github.com/pyro-ppl/numpyro#numpyro)
+
+This is a great PPL which took it's inspiration from **Pyro** but is built on top of JAX. It really focuses on MCMC methods but it also has quite a few other nuggets such as stochastic variational inference (SVI) and normalizing flows (NFs). I would say this is the most popular (and oldest) library for probabilistic programming under the JAX framework. My favourite tutorials include the ones about [Bayesian Regression](https://pyro.ai/numpyro/bayesian_regression.html), [Gaussian processes](https://pyro.ai/numpyro/examples/gp.html) and a [Bayesian Neural Network](http://num.pyro.ai/en/stable/primitives.html#random-flax-module).
+
+[**Objax**](https://objax.readthedocs.io/en/latest/)
+
+This is an OOP that's built on top of JAX. It allows you to use the PyTorch method but having JAX underneath. It also has a lot of pre-defined layers and optimization methods.
+
+[**Elegy**](https://poets-ai.github.io/elegy/)
+
+This is a keras-like wrapper for JAX. It has all of the features that allow you to use JAX as if you were using Keras. It does follow a more functional style so it's a bit more advanced that Objax for example.
 
 ---
 
@@ -177,3 +191,16 @@ maintained by the PyMC3 developers.
 **[CNTK]()**
 
 Microsoft
+
+--
+
+## Other Resources
+
+### Automatic Differentiation
+
+**[D2L Tutorial](https://d2l.ai/chapter_preliminaries/autograd.html)**
+
+> A programming tutorial where they show how to do automatic differentiation using 3 different frameworks: tensorflow, pytorch and mxnet. Useful to show the differences between some popular libraries (MXNet isn't so mainstream).
+
+* [Automatic differentiation in machine learning: a survey](https://arxiv.org/abs/1502.05767) - Baydin et al (2018)
+* [ Colin Carroll - Getting started with automatic differentiation](https://www.youtube.com/watch?v=NG21KWZSiok) - PyCon 2020

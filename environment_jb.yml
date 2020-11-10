@@ -1,0 +1,9 @@
+name: jupyterbook
+channels:
+- defaults
+dependencies:
+    - python=3.8
+    - pip
+    - pip:
+        - jupyter-book
+        - cookiecutter

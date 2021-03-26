@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Literature &#8212; Research Notebook</title>
+    <title>Uncertain Predictions &#8212; Research Notebook</title>
     
   <link rel="stylesheet" href="../../../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -56,6 +56,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Gaussian Approximation" href="gauss_approx.html" />
+    <link rel="prev" title="Uncertain Gaussian Processes" href="overview.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -217,7 +219,7 @@
   Notes
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="current nav sidenav_l1">
  <li class="toctree-l1 collapsible-parent">
   <a class="reference internal" href="../bayesian/overview.html">
    Bayesian
@@ -297,12 +299,12 @@
   </i>
  </li>
  <li class="toctree-l1 collapsible-parent">
-  <a class="reference internal" href="overview.html">
+  <a class="reference internal" href="../kernels/overview.html">
    Kernel Methods
   </a>
   <ul class="collapse-ul">
    <li class="toctree-l2">
-    <a class="reference internal" href="kernel_derivatives.html">
+    <a class="reference internal" href="../kernels/kernel_derivatives.html">
      Kernel Derivatives
     </a>
    </li>
@@ -310,33 +312,33 @@
   <i class="fas fa-chevron-down">
   </i>
  </li>
- <li class="toctree-l1 collapsible-parent">
-  <a class="reference internal" href="../egps/overview.html">
+ <li class="toctree-l1 current active collapsible-parent">
+  <a class="reference internal" href="overview.html">
    Uncertain Gaussian Processes
   </a>
-  <ul class="collapse-ul">
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/predictions.html">
+  <ul class="current collapse-ul">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
      Uncertain Predictions
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/gauss_approx.html">
+    <a class="reference internal" href="gauss_approx.html">
      Gaussian Approximation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/mcmc.html">
+    <a class="reference internal" href="mcmc.html">
      Monte Carlo Sampling
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/taylor.html">
+    <a class="reference internal" href="taylor.html">
      Taylor Approximation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/moment_matching.html">
+    <a class="reference internal" href="moment_matching.html">
      Moment Matching
     </a>
    </li>
@@ -384,7 +386,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/content/notes/kernels/derivatives.md"><button type="button"
+        <a class="dropdown-buttons" href="../../../_sources/content/notes/egps/predictions.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -416,9 +418,77 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#paper-i">
-   Paper I
+  <a class="reference internal nav-link" href="#numerical">
+   Numerical
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#monte-carlo-methods">
+     Monte Carlo Methods
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sigma-point-methods">
+     Sigma Point Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#approximate-moments">
+   Approximate Moments
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#linearization">
+     Linearization
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sigma-points">
+     Sigma Points
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#more-exact-moments">
+   (More) Exact Moments
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#analytical">
+     Analytical
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Linearization
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mean-function">
+       Mean Function
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#variance-function">
+       Variance Function
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     Sigma Points
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#monte-carlo-sampling">
+     Monte Carlo Sampling
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -432,58 +502,164 @@
         
               <div>
                 
-  <div class="section" id="literature">
-<h1>Literature<a class="headerlink" href="#literature" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="paper-i">
-<h2>Paper I<a class="headerlink" href="#paper-i" title="Permalink to this headline">¶</a></h2>
-<p><strong>Linear Operators and Stochastic Partial Differential Equations in GPR</strong> - Simo Särkkä - <a class="reference external" href="https://users.aalto.fi/~ssarkka/pub/spde.pdf">PDF</a></p>
-<blockquote>
-<div><p>Expresses derivatives of GPs as operators</p>
-</div></blockquote>
-<p><a class="reference external" href="https://colab.research.google.com/drive/1pbb0qlypJCqPTN_cu2GEkkKLNXCYO9F2"><strong>Demo Colab Notebook</strong></a></p>
-<p>He looks at ths special case where we have a GP with a mean function zero and a covariance matrix <span class="math notranslate nohighlight">\(K\)</span> defined as:
-$<span class="math notranslate nohighlight">\(
-\mathbb{E}[f(\mathbf{x})f^\top(\mathbf{x'})] = K_{ff}(\mathbf{x,x'})
-\)</span><span class="math notranslate nohighlight">\(
-So in GP terminology:
-\)</span><span class="math notranslate nohighlight">\(
-f(\mathbf(x)) \sim \mathcal{GP}(\mathbf{0}, K_{ff}(\mathbf{x,x'}))
-\)</span>$
-We use the rulse for linear transformations of GPs to obtain the different transformations of the kernel matrix.</p>
-<p>Let’s define the notation for the derivative of a kernel matrix. Let <span class="math notranslate nohighlight">\(g(\cdot)\)</span> be the derivative operator on a function <span class="math notranslate nohighlight">\(f(\cdot)\)</span>. So:
-$<span class="math notranslate nohighlight">\(
-g(\mathbf{x}) = \mathcal{L}_x f(\mathbf{x})
-\)</span>$</p>
-<p>So now, we want to define the cross operators between the derivative <span class="math notranslate nohighlight">\(g(\cdot)\)</span> and the function <span class="math notranslate nohighlight">\(f(\cdot)\)</span>.</p>
-<p><strong>Example</strong>: He draws a distinction between the two operators with an example of how this works in practice. So let’s take the linear operator <span class="math notranslate nohighlight">\(\mathcal{L}_{x}=(1, \frac{\partial}{\partial x})\)</span>. This operator:</p>
-<ul class="simple">
-<li><p>acts on a scalar GP <span class="math notranslate nohighlight">\(f(x)\)</span></p></li>
-<li><p>a scalar input <span class="math notranslate nohighlight">\(x\)</span></p></li>
-<li><p>a covariance function <span class="math notranslate nohighlight">\(k_{ff}(x,x')\)</span></p></li>
-<li><p>outputs a scalar value <span class="math notranslate nohighlight">\(y\)</span></p></li>
-</ul>
-<p>We can get the following transformations:
-$<span class="math notranslate nohighlight">\(
+  <div class="section" id="uncertain-predictions">
+<h1>Uncertain Predictions<a class="headerlink" href="#uncertain-predictions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="numerical">
+<h2>Numerical<a class="headerlink" href="#numerical" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="monte-carlo-methods">
+<h3>Monte Carlo Methods<a class="headerlink" href="#monte-carlo-methods" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-K_{gf}(\mathbf{x,x'})
-&amp;= \mathcal{L}_x f(\mathbf{x}) f(\mathbf{x}) = \mathcal{L}_xK_{ff}(\mathbf{x,x'}) \\
-K_{fg}(\mathbf{x,x'})
-&amp;= f(\mathbf{x}) f(\mathbf{x'}) \mathcal{L}_{x'} = K_{ff}(\mathbf{x,x'})\mathcal{L}_{x'} \\
-K_{gg}(\mathbf{x,x'})
-&amp;= \mathcal{L}_x f(\mathbf{x}) f(\mathbf{x'}) \mathcal{L}_{x'}
-= \mathcal{L}_xK_{ff}(\mathbf{x,x'})\mathcal{L}_{x'}^\top \\
+p(\mathbf{f}_*|\boldsymbol{\mu}_\mathbf{x},\mathbf{\Sigma}_\mathbf{x},\mathcal{D}) 
+&amp;= \int \mathcal{N}\left(\mathbf{f}_*|\boldsymbol{\mu}_\mathcal{GP}(\mathbf{x}_*),\boldsymbol{\sigma}^2_\mathcal{GP}(\mathbf{x}_*) \right) \; \mathcal{N}(\mathbf{x}_*|\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x})\; d\mathbf{x}_* \\
+&amp;= \frac{1}{T} \sum_{t=1}^T p(\mathbf{f}_*|\mathcal{D}, \mathbf{x}_*^t)\\
+&amp;= \frac{1}{T} \sum_{t=1}^T  \mathcal{N}\left(\boldsymbol{\mu}_\mathcal{GP}(\mathbf{x}_*^t),\boldsymbol{\sigma}^2_\mathcal{GP}(\mathbf{x}_*^t) \right)
 \end{aligned}
-\)</span>$</p>
-<p><strong>Example</strong>: The Cross-Covariance term <span class="math notranslate nohighlight">\(K_{fg}(\mathbf{x,x'})\)</span></p>
-<p>We can calculate the cross-covariance term <span class="math notranslate nohighlight">\(K_{fg}(\mathbf{x,x})\)</span>. We apply the following operation</p>
+\end{split}\]</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="sigma-point-methods">
+<h3>Sigma Point Methods<a class="headerlink" href="#sigma-point-methods" title="Permalink to this headline">¶</a></h3>
+<p><strong>TODO</strong></p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="approximate-moments">
+<h2>Approximate Moments<a class="headerlink" href="#approximate-moments" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+m(\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\mathbf{x_*}\left[ \mathbb{E}_{f_*} \left[ f_* |\mathbf{x}_* \right] \right] = \mathbb{E}_\mathbf{x_*}\left[ \boldsymbol{\mu}(\mathbf{x}) \right] \\ 
+\nu(\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\mathbf{x_*} \left[ \mathbb{V}_{f_*} \left[ f_* | \mathbf{x_*} \right]  \right] + \mathbb{V}_\mathbf{x_*}\left[ \mathbb{E}_{f_*} \left[  f_*|\mathbf{x}_* \right] \right] \\ 
+&amp;= \mathbb{E}_\mathbf{x_*}\left[ \boldsymbol{\sigma}^2(\mathbf{x_*}) \right] + \mathbb{V}\left[ \boldsymbol{\mu}(\mathbf{x_*}) \right] \\ 
+&amp;= \mathbb{E}_\mathbf{x_*}\left[ \boldsymbol{\sigma}^2(\mathbf{x_*}) \right] + \mathbb{E}_\mathbf{x_*}\left[ \boldsymbol{\mu}^2(\mathbf{x_*}) \right] - \mathbb{E}^2_\mathbf{x_*}\left[ \boldsymbol{\mu}(\mathbf{x_*}) \right]
+\end{aligned}
+\end{split}\]</div>
+<ul class="simple">
+<li><p>Deterministic Methods</p>
+<ul>
+<li><p>Linearization</p></li>
+<li><p>Sigma Points</p></li>
+</ul>
+</li>
+<li><p>Stochastic Methods</p>
+<ul>
+<li><p>Monte Carlo Sampling</p></li>
+</ul>
+</li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="linearization">
+<h3>Linearization<a class="headerlink" href="#linearization" title="Permalink to this headline">¶</a></h3>
+<p>This involves the Taylor Series expansion of the function <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\tilde{\boldsymbol{\mu}}_\text{LinGP}(\mathbf{x_*}) &amp;= \boldsymbol{\mu}_\text{GP}(\boldsymbol{\mu}_\mathbf{x_*}) +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \boldsymbol{\mu}_\text{GP}(\boldsymbol{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{second Order}\\
+\tilde{\mathbf{\Sigma}}^2_\text{LinGP} (\mathbf{x_*}) &amp;= 
+\boldsymbol{\sigma}^2_\text{GP}(\boldsymbol{\mu}_\mathbf{x_*}) + 
+\underbrace{\frac{\partial \boldsymbol{\mu}_\text{GP}(\boldsymbol{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}^\top
+\mathbf{\Sigma}_\mathbf{x_*}
+\frac{\partial \boldsymbol{\mu}_\text{GP}(\boldsymbol{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}}_\text{1st Order} +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \boldsymbol{\sigma}^2_\text{GP}(\boldsymbol{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{second Order}
+\end{aligned}
+\end{split}\]</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="sigma-points">
+<h3>Sigma Points<a class="headerlink" href="#sigma-points" title="Permalink to this headline">¶</a></h3>
+<p><strong>TODO</strong></p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="more-exact-moments">
+<h2>(More) Exact Moments<a class="headerlink" href="#more-exact-moments" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\tilde{\boldsymbol{\mu}}_{MMGP}(\mathbf{x_*}) &amp;= \int \boldsymbol{\mu}_{GP}(\mathbf{x_*}) p(\mathbf{x_*})d\mathbf{x_*} \\ 
+\tilde{\mathbf{\Sigma}}^2_{mmGP}(\mathbf{x}_*) &amp;= \int \boldsymbol{\sigma}^2_{GP}(\mathbf{x_*}) p(\mathbf{x_*}) d\mathbf{x}_* + \int  \boldsymbol{\mu}_{GP}^2(\mathbf{x_*})p(\mathbf{x_*})d\mathbf{x_*}  - \left[ \int \boldsymbol{\mu}_{GP}(\mathbf{x_*}) p(\mathbf{x_*})d\mathbf{x_*}\right]^2
+\end{aligned}
+\end{split}\]</div>
+<p>After some manipulation, this results in the follow equations for the predictive mean and variance:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\tilde{\boldsymbol{\mu}}_{MMGP}(\mathbf{x_*}) &amp;= \Psi_1^\top\alpha \\
+\tilde{\mathbf{\Sigma}}^2_{MMGP}(\mathbf{x}_*)
+&amp;=
+\psi_0 - \text{Tr}\left( \left(\mathbf{K}_{GP}^{-1}  - \alpha\alpha^\top\right) \Psi_2\right) - \text{Tr}\left( \Psi_1\Psi_1^\top\alpha\alpha^\top \right),
+\end{aligned}
+\end{split}\]</div>
+<p>where we have <span class="math notranslate nohighlight">\(\boldsymbol{\Psi_i}\)</span> quantities called kernel expectations denoted by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+[ \psi_0 ]_{i}  &amp;= \int k(\mathbf{x}_i, \mathbf{x}_i)p(\mathbf{x}_i)d\mathbf{x}_i \\
+[\Psi_1]_{ij} &amp;= \int k(\mathbf{x}_i, \mathbf{y}_j)p(\mathbf{x}_i)d\mathbf{x}_i \\
+[\Psi_2]_{ijk} &amp;= \int k(\mathbf{x}_i, \mathbf{y}_j)k(\mathbf{x}_i, \mathbf{z}_k) d\mathbf{x}_i.
+\end{aligned}
+\end{split}\]</div>
+<hr class="docutils" />
+<div class="section" id="analytical">
+<h3>Analytical<a class="headerlink" href="#analytical" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>RBF Kernel</p></li>
+<li><p>Linear Kernel</p></li>
+<li><p>Spectral Mixture Kernel</p></li>
+</ul>
+<p><strong>TODO</strong></p>
+</div>
+<hr class="docutils" />
+<div class="section" id="id1">
+<h3>Linearization<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="mean-function">
+<h4>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this headline">¶</a></h4>
 <div class="math notranslate nohighlight">
 \[
-K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})(1, \frac{\partial}{\partial x'})
+\begin{aligned}
+\tilde{\boldsymbol{\mu}}_\text{LinGP}(\mathbf{x_*}) &amp;= \boldsymbol{\mu}_\text{GP}(\boldsymbol{\mu}_\mathbf{x_*}) +
+\frac{1}{2} \sum_{n=1}^N\alpha_n \text{Tr}\left\{ k''(\boldsymbol{\mu}_\mathbf{x_*},\mathbf{x}_n)  \mathbf{\Sigma}_\mathbf{x_*}\right\}
+\end{aligned}
 \]</div>
-<p>If we multiply the terms across, we get:
-$<span class="math notranslate nohighlight">\(
-K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\partial x'}
-\)</span>$</p>
+</div>
+<div class="section" id="variance-function">
+<h4>Variance Function<a class="headerlink" href="#variance-function" title="Permalink to this headline">¶</a></h4>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\tilde{\boldsymbol{\sigma}}^2_\text{LinGP} (\mathbf{x_*}) &amp;= \boldsymbol{\sigma}^2_\text{GP}(\boldsymbol{\mu}_\mathbf{x_*}) +
+\frac{1}{2} \sum_{n=1}^N\alpha_n \text{Tr}\left\{ k''(\boldsymbol{\mu}_\mathbf{x_*},\mathbf{x}_n)  \mathbf{\Sigma}_\mathbf{x_*}\right\} \\
+&amp;- \sum_{i,j}^{N}(K_{ij}^{-1}-\alpha_i\alpha_j)\text{Tr}\left\{
+    k'(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_i)k'(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_j)\boldsymbol{\Sigma}_\mathbf{x} \right\}\\
+&amp;- \frac{1}{2} \sum_{i,j=1}^NK_{ij}^{-1}
+\left( k(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_i) \text{Tr}\left\{k''(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_j)\mathbf{\Sigma}_\mathbf{x} \right\} + k(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_j)\text{Tr}\left\{k''(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_j)\mathbf{\Sigma}_\mathbf{x} \right\}\right)
+\end{aligned}
+\end{split}\]</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id2">
+<h3>Sigma Points<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p><strong>TODO</strong></p>
+</div>
+<hr class="docutils" />
+<div class="section" id="monte-carlo-sampling">
+<h3>Monte Carlo Sampling<a class="headerlink" href="#monte-carlo-sampling" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+[ \psi_0 ]  = \int k(\mathbf{x}_*, \mathbf{x}_*)p(\mathbf{x}_*)d\mathbf{x}_* 
+&amp;\approx \frac{1}{T} \sum_{t=1}^T   k(\mathbf{x}_*^t, \mathbf{x}_*^t)\\
+[\Psi_1]_{j} = \int k(\mathbf{x}_*, \mathbf{y}_j)p(\mathbf{x}_*)d\mathbf{x}_* 
+&amp;\approx \frac{1}{T} \sum_{t=1}^T   k(\mathbf{x}^t_*, \mathbf{y}_j) \\
+[\Psi_2]_{jk} = \int k(\mathbf{x}_*, \mathbf{y}_j)k(\mathbf{x}_*, \mathbf{z}_k) d\mathbf{x}_*  
+&amp;\approx \frac{1}{T} \sum_{t=1}^T   k(\mathbf{x}^t_*, \mathbf{y}_j) k(\mathbf{x}^t_*, \mathbf{z}_k)
+\end{aligned}
+\end{split}\]</div>
+</div>
 </div>
 </div>
 
@@ -500,7 +676,7 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
         },
         kernelOptions: {
             kernelName: "python3",
-            path: "./content/notes/kernels"
+            path: "./content/notes/egps"
         },
         predefinedOutput: true
     }
@@ -512,6 +688,8 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
         
         <div class='prev-next-bottom'>
             
+    <a class='left-prev' id="prev-link" href="overview.html" title="previous page">Uncertain Gaussian Processes</a>
+    <a class='right-next' id="next-link" href="gauss_approx.html" title="next page">Gaussian Approximation</a>
 
         </div>
         

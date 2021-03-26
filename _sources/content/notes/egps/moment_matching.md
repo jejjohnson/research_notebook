@@ -24,7 +24,7 @@ where we have $\boldsymbol{\Psi_i}$ quantities called kernel expectations denote
 
 $$
 \begin{aligned}
-[\Psi_0]_{i}  &= \int k(\mathbf{x}_i, \mathbf{x}_i)p(\mathbf{x}_i)d\mathbf{x}_i \\
+[ \psi_0 ]_{i}  &= \int k(\mathbf{x}_i, \mathbf{x}_i)p(\mathbf{x}_i)d\mathbf{x}_i \\
 [\Psi_1]_{ij} &= \int k(\mathbf{x}_i, \mathbf{y}_j)p(\mathbf{x}_i)d\mathbf{x}_i \\
 [\Psi_2]_{ijk} &= \int k(\mathbf{x}_i, \mathbf{y}_j)k(\mathbf{x}_i, \mathbf{z}_k) d\mathbf{x}_i.
 \end{aligned}

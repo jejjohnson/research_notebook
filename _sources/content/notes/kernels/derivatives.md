@@ -1,11 +1,3 @@
----
-title: Overview
-description: Overview of my similarity appendices
-authors:
-    - J. Emmanuel Johnson
-path: docs/appendices/similarity
-source: README.md
----
 # Literature
 
 

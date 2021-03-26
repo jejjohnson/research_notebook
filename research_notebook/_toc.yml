@@ -50,3 +50,9 @@
   - file: content/notes/kernels/overview.md
     sections:
     - file: content/notes/kernels/kernel_derivatives
+  - file: content/notes/egps/overview.md
+    sections:
+    - file: content/notes/egps/gauss_approx.md
+    - file: content/notes/egps/mcmc.md
+    - file: content/notes/egps/taylor.md
+    - file: content/notes/egps/moment_matching.md

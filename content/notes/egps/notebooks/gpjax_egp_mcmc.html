@@ -1,0 +1,1708 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MCMC + Sigma Points Demo &#8212; Research Notebook</title>
+    
+  <link rel="stylesheet" href="../../../../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/sphinx-book-theme.e7340bb3dbd8dde6db86f25597f54a1b.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../../../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/togglebutton.js"></script>
+    <script src="../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../../_static/sphinx-book-theme.7d483ff0a819d6edff12ce0b1ead3928.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../../../../index.html">
+  
+  <img src="../../../../_static/book.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Research Notebook</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../../../resources/python/overview.html">
+   Python
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../tutorials/jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../tutorials/jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../tutorials/jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../tutorials/jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 collapsible-parent">
+    <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <ul class="collapse-ul">
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/gpr.html">
+       GP from Scratch
+      </a>
+     </li>
+    </ul>
+    <i class="fas fa-chevron-down">
+    </i>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../tutorials/remote/vscode_jlab.html">
+     JupyterLab + VSCode
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../../bayesian/overview.html">
+   Bayesian
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../bayesian/intro.html">
+     Bayesian: Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../bayesian/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../bayesian/gaussian.html#gaussian-distribution">
+     Gaussian Distribution
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../bayesian/regression.html">
+     Regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../bayesian/inference/inference.html">
+     Solving Hard Integral Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../bayesian/inference/inference.html#inference">
+     Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../bayesian/inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../../kernels/overview.html">
+   Kernel Methods
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../overview.html">
+     Uncertain Gaussian Processes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../predictions.html">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../gauss_approx.html">
+     Gaussian Approximation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../mcmc.html">
+     Monte Carlo Sampling
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../taylor.html">
+     Taylor Approximation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../moment_matching.html">
+     Moment Matching
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../../_sources/content/notes/egps/notebooks/gpjax_egp_mcmc.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+            <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                    data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                    title="Fullscreen mode"><i
+                        class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/content/notes/egps/notebooks/gpjax_egp_mcmc.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../../../../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i>
+            Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   MCMC + Sigma Points Demo
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#demo-data">
+     Demo Data
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#standard-gp-model">
+     Standard GP Model
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#model">
+       Model
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h4 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#parameters">
+         Parameters
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#inference-svi">
+       Inference (SVI)
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#training">
+       Training
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h4 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#losses">
+         Losses
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#take-them-directly">
+   Take them directly
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#predictions-on-noisy-data">
+     Predictions on Noisy Data
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#noisy-test-samples">
+     Noisy Test Samples
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#demo-single-point">
+       Demo - Single Point
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#monte-carlo-sampling">
+       Monte Carlo Sampling
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h4 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#vectorized-over-all-samples">
+         Vectorized Over All Samples
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#unscented-transformation">
+     Unscented Transformation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#unscented-weights">
+       Unscented Weights
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sigma-points">
+       Sigma Points
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#vectorized-demo">
+       Vectorized Demo
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+        
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <p><a href="https://colab.research.google.com/github/jejjohnson/research_notebook/blob/main/research_notebook/content/notes/egps/notebooks/gpjax_egp_mcmc.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+<div class="section" id="mcmc-sigma-points-demo">
+<h1>MCMC + Sigma Points Demo<a class="headerlink" href="#mcmc-sigma-points-demo" title="Permalink to this headline">¶</a></h1>
+<p>My starting notebook where I install all of the necessary libraries and load some easy 1D/2D Regression data to play around with.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Install  </span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">gpjax</span>
+    <span class="kn">import</span> <span class="nn">numpyro</span>
+    <span class="kn">import</span> <span class="nn">chex</span>
+
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;pip install arviz chex loguru&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;pip install git+https://github.com/thomaspinder/GPJax.git#egg=GPJAX&quot;</span><span class="p">)</span>
+    
+<span class="k">finally</span><span class="p">:</span>
+    <span class="c1"># import library functions</span>
+    <span class="kn">import</span> <span class="nn">gpjax</span>
+    <span class="kn">import</span> <span class="nn">numpyro</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">ef5c96bb1920</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="k">finally</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span>     <span class="c1"># import library functions</span>
+<span class="ne">---&gt; </span><span class="mi">14</span>     <span class="kn">import</span> <span class="nn">gpjax</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span>     <span class="kn">import</span> <span class="nn">numpyro</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;gpjax&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Load Packages</span>
+<span class="c1"># TYPE HINTS</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="c1"># JAX SETTINGS</span>
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">jax.random</span> <span class="k">as</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">gpjax</span>
+
+
+<span class="c1"># JAX UTILITY LIBRARIES</span>
+<span class="kn">import</span> <span class="nn">chex</span>
+
+<span class="c1"># NUMPYRO SETTINGS</span>
+<span class="kn">import</span> <span class="nn">numpyro</span>
+<span class="kn">import</span> <span class="nn">numpyro.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
+<span class="kn">from</span> <span class="nn">numpyro.infer.autoguide</span> <span class="kn">import</span> <span class="n">AutoDiagonalNormal</span>
+<span class="kn">from</span> <span class="nn">numpyro.infer</span> <span class="kn">import</span> <span class="n">SVI</span><span class="p">,</span> <span class="n">Trace_ELBO</span>
+
+<span class="c1"># NUMPY SETTINGS</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># MATPLOTLIB Settings</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+
+<span class="c1"># SEABORN SETTINGS</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="s1">&#39;talk&#39;</span><span class="p">,</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="c1"># PANDAS SETTINGS</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span>
+
+<span class="c1"># LOGGING SETTINGS</span>
+<span class="kn">import</span> <span class="nn">loguru</span>
+
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="demo-data">
+<h2>Demo Data<a class="headerlink" href="#demo-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">y_noise</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">x_noise</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">1.6</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">5</span> <span class="o">+</span> <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">))</span>
+<span class="n">ntrain</span> <span class="o">=</span> <span class="mi">60</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">ntrain</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">key</span><span class="p">,</span> <span class="n">y_rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Noisy Signal</span>
+
+<span class="n">key</span><span class="p">,</span> <span class="n">x_rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">X_noise</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">x_noise</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">x_rng</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">y_noise</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="n">y_noise</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">y_rng</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># sort inputs</span>
+<span class="n">idx_sorted</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">X_noise</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+<span class="n">X_noise</span> <span class="o">=</span> <span class="n">X_noise</span><span class="p">[(</span><span class="n">idx_sorted</span><span class="p">,)]</span>
+<span class="n">y_noise</span> <span class="o">=</span> <span class="n">y_noise</span><span class="p">[(</span><span class="n">idx_sorted</span><span class="p">,)]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[(</span><span class="n">idx_sorted</span><span class="p">,)]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[(</span><span class="n">idx_sorted</span><span class="p">,)]</span>
+
+<span class="n">ntest</span> <span class="o">=</span> <span class="mi">100</span>
+
+
+<span class="n">Xtest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">10.1</span><span class="p">,</span> <span class="mf">10.1</span><span class="p">,</span> <span class="n">ntest</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_noise</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_noise</span><span class="p">,</span> <span class="n">y_noise</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_6_0.png" src="../../../../_images/gpjax_egp_mcmc_6_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="standard-gp-model">
+<h2>Standard GP Model<a class="headerlink" href="#standard-gp-model" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="model">
+<h3>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gpjax.gps</span> <span class="kn">import</span> <span class="n">Prior</span>
+<span class="kn">from</span> <span class="nn">gpjax.mean_functions</span> <span class="kn">import</span> <span class="n">Zero</span>
+<span class="kn">from</span> <span class="nn">gpjax.kernels</span> <span class="kn">import</span> <span class="n">RBF</span>
+<span class="kn">from</span> <span class="nn">gpjax.likelihoods</span> <span class="kn">import</span> <span class="n">Gaussian</span>
+<span class="kn">from</span> <span class="nn">gpjax.types</span> <span class="kn">import</span> <span class="n">Dataset</span>
+
+
+
+<span class="c1"># GP Prior</span>
+<span class="n">mean_function</span> <span class="o">=</span> <span class="n">Zero</span><span class="p">()</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">RBF</span><span class="p">()</span>
+<span class="n">prior</span> <span class="o">=</span> <span class="n">Prior</span><span class="p">(</span><span class="n">mean_function</span><span class="o">=</span><span class="n">mean_function</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">)</span>
+
+<span class="c1"># GP Likelihood</span>
+<span class="n">lik</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">()</span>
+
+<span class="c1"># GP Posterior</span>
+<span class="n">posterior</span> <span class="o">=</span> <span class="n">prior</span> <span class="o">*</span> <span class="n">lik</span>
+
+<span class="c1"># initialize training dataset</span>
+<span class="n">training_ds</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_noise</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gpjax.parameters</span> <span class="kn">import</span> <span class="n">initialise</span>
+<span class="kn">import</span> <span class="nn">numpyro.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
+<span class="kn">from</span> <span class="nn">gpjax.interfaces.numpyro</span> <span class="kn">import</span> <span class="n">numpyro_dict_params</span><span class="p">,</span> <span class="n">add_constraints</span>
+
+
+<span class="c1"># initialize parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">initialise</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span>
+
+<span class="n">hyperpriors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;lengthscale&quot;</span><span class="p">:</span> <span class="n">dist</span><span class="o">.</span><span class="n">LogNormal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span>
+    <span class="s2">&quot;variance&quot;</span><span class="p">:</span> <span class="n">dist</span><span class="o">.</span><span class="n">LogNormal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span>
+    <span class="s2">&quot;obs_noise&quot;</span><span class="p">:</span> <span class="n">dist</span><span class="o">.</span><span class="n">LogNormal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">hyperpriors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;lengthscale&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;variance&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;obs_noise&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="c1"># convert to numpyro-style params</span>
+<span class="n">numpyro_params</span> <span class="o">=</span> <span class="n">numpyro_dict_params</span><span class="p">(</span><span class="n">hyperpriors</span><span class="p">)</span>
+
+<span class="c1"># convert to numpyro-style params</span>
+<span class="n">numpyro_params</span> <span class="o">=</span> <span class="n">add_constraints</span><span class="p">(</span><span class="n">numpyro_params</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">softplus_positive</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="inference-svi">
+<h3>Inference (SVI)<a class="headerlink" href="#inference-svi" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpyro.infer.autoguide</span> <span class="kn">import</span> <span class="n">AutoDelta</span>
+<span class="kn">from</span> <span class="nn">gpjax.interfaces.numpyro</span> <span class="kn">import</span> <span class="n">numpyro_marginal_ll</span><span class="p">,</span> <span class="n">numpyro_dict_params</span>
+
+
+<span class="c1"># initialize numpyro-style GP model</span>
+<span class="n">npy_model</span> <span class="o">=</span> <span class="n">numpyro_marginal_ll</span><span class="p">(</span><span class="n">posterior</span><span class="p">,</span> <span class="n">numpyro_params</span><span class="p">)</span>
+
+<span class="c1"># approximate posterior</span>
+<span class="n">guide</span> <span class="o">=</span> <span class="n">AutoDelta</span><span class="p">(</span><span class="n">npy_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="training">
+<h3>Training<a class="headerlink" href="#training" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpyro.infer</span> <span class="kn">import</span> <span class="n">SVI</span><span class="p">,</span> <span class="n">Trace_ELBO</span>
+
+<span class="c1"># reproducibility</span>
+<span class="n">rng_key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">2_000</span>
+
+
+<span class="c1"># numpyro specific optimizer</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+
+<span class="c1"># stochastic variational inference (pseudo)</span>
+<span class="n">svi</span> <span class="o">=</span> <span class="n">SVI</span><span class="p">(</span><span class="n">npy_model</span><span class="p">,</span> <span class="n">guide</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">Trace_ELBO</span><span class="p">())</span>
+<span class="n">svi_results</span> <span class="o">=</span> <span class="n">svi</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">n_iterations</span><span class="p">,</span> <span class="n">training_ds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 2000/2000 [00:04&lt;00:00, 435.07it/s, init loss: -1145.6521, avg. loss [1901-2000]: -2827.7780]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="losses">
+<h4>Losses<a class="headerlink" href="#losses" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">svi_results</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Loss&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Iterations&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;ELBO&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_17_0.png" src="../../../../_images/gpjax_egp_mcmc_17_0.png" />
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="take-them-directly">
+<h1>Take them directly<a class="headerlink" href="#take-them-directly" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">learned_params</span> <span class="o">=</span> <span class="n">svi_results</span><span class="o">.</span><span class="n">params</span>
+<span class="n">learned_params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;lengthscale&#39;: DeviceArray(1.735, dtype=float64),
+ &#39;obs_noise&#39;: DeviceArray(0.003, dtype=float64),
+ &#39;variance&#39;: DeviceArray(0.656, dtype=float64)}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gpjax</span> <span class="kn">import</span> <span class="n">mean</span><span class="p">,</span> <span class="n">variance</span>
+
+<span class="n">meanf</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">posterior</span><span class="p">,</span> <span class="n">learned_params</span><span class="p">,</span> <span class="n">training_ds</span><span class="p">)</span>
+<span class="n">covarf</span> <span class="o">=</span> <span class="n">variance</span><span class="p">(</span><span class="n">posterior</span><span class="p">,</span> <span class="n">learned_params</span><span class="p">,</span> <span class="n">training_ds</span><span class="p">)</span>
+<span class="n">varf</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">covarf</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">meanf</span><span class="p">(</span><span class="n">Xtest</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<span class="n">cov</span> <span class="o">=</span> <span class="n">covarf</span><span class="p">(</span><span class="n">Xtest</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">varf</span><span class="p">(</span><span class="n">Xtest</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+<span class="n">one_stddev</span> <span class="o">=</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_sorted_indices</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">apply_sorted_indices</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sorted_idx</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">[(</span><span class="n">sorted_idx</span><span class="p">,)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_1D_GP_clean</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span><span class="p">):</span>
+
+    <span class="n">one_stddev</span> <span class="o">=</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:orange&quot;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Xtest</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_mu</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+        <span class="n">Xtest</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+        <span class="n">y_mu</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">one_stddev</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+        <span class="n">y_mu</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">+</span> <span class="n">one_stddev</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Xtest</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_mu</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">one_stddev</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Xtest</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_mu</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">+</span> <span class="n">one_stddev</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_1D_GP_clean</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_23_0.png" src="../../../../_images/gpjax_egp_mcmc_23_0.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Figure size 720x360 with 1 Axes&gt;,
+ &lt;matplotlib.axes._subplots.AxesSubplot at 0x7f5e214b6950&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="predictions-on-noisy-data">
+<h2>Predictions on Noisy Data<a class="headerlink" href="#predictions-on-noisy-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_noise</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">input_cov</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_noise</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="n">ntest</span> <span class="o">=</span> <span class="mi">100</span>
+
+
+<span class="n">Xtest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">10.1</span><span class="p">,</span> <span class="mf">10.1</span><span class="p">,</span> <span class="n">ntest</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">ytest</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">Xtest</span><span class="p">)</span> 
+
+<span class="n">demo_sample_idx</span> <span class="o">=</span> <span class="mi">47</span>
+
+<span class="n">key</span><span class="p">,</span> <span class="n">xt_rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">Xtest_noisy</span> <span class="o">=</span> <span class="n">Xtest</span> <span class="o">+</span> <span class="n">x_noise</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">xt_rng</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">Xtest</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+
+<span class="n">idx_sorted</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Xtest = Xtest[(idx_sorted,)]</span>
+<span class="n">Xtest_noisy</span> <span class="o">=</span> <span class="n">Xtest_noisy</span><span class="p">[(</span><span class="n">idx_sorted</span><span class="p">,)][</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">ytest_noisy</span> <span class="o">=</span> <span class="n">ytest</span><span class="p">[(</span><span class="n">idx_sorted</span><span class="p">,)]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">,</span> <span class="n">ytest_noisy</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">ytest</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">[</span><span class="n">demo_sample_idx</span><span class="p">],</span> <span class="n">ytest_noisy</span><span class="p">[</span><span class="n">demo_sample_idx</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_25_0.png" src="../../../../_images/gpjax_egp_mcmc_25_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_1D_GP_noisy</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">,</span> <span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span><span class="p">):</span>
+
+    <span class="n">one_stddev</span> <span class="o">=</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">ytest_noisy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:orange&quot;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">y_mu</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+        <span class="n">Xtest_noisy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span>
+        <span class="n">y_mu</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">-</span> <span class="n">one_stddev</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span>
+        <span class="n">y_mu</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">+</span> <span class="n">one_stddev</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">y_mu</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">-</span> <span class="n">one_stddev</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">y_mu</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">+</span> <span class="n">one_stddev</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span> <span class="o">=</span> <span class="n">meanf</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">varf</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+
+<span class="n">one_stddev</span> <span class="o">=</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_1D_GP_noisy</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_30_0.png" src="../../../../_images/gpjax_egp_mcmc_30_0.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Figure size 720x360 with 1 Axes&gt;,
+ &lt;matplotlib.axes._subplots.AxesSubplot at 0x7f5e20127390&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="noisy-test-samples">
+<h2>Noisy Test Samples<a class="headerlink" href="#noisy-test-samples" title="Permalink to this headline">¶</a></h2>
+<p>In Gaussian processes, the original formulation dictates that we assume there is some noise in the observations, <span class="math notranslate nohighlight">\(y\)</span> and that we observe the real inputs <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>. So we’ll see that this it is not trivial to modify this formulation to account for uncertain inputs. Let’s assume that we have a data set <span class="math notranslate nohighlight">\(\mathcal{D}=\{\mathbf{X}, \boldsymbol{y} \}\)</span>. In this case we assume the following relationship between our inputs, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, and outputs, <span class="math notranslate nohighlight">\(y\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+y_n &amp;= f(\mathbf{x}_n)+ \epsilon_y \\
+\epsilon_y &amp;\sim \mathcal{N}(0,\sigma_y^2)
+\end{aligned}
+\end{split}\]</div>
+<p>Let’s also assume that we have a standard GP model optimized and fitted to this data set. We’re not assuming noisy inputs during the training phase so we will use the standard log-likelihood maximization procedure. However, during the testing phase, we will assume that our inputs are noisy. For simplicity, we can assume our test data set is normally distributed with a mean <span class="math notranslate nohighlight">\(\mu_\mathbf{x}\)</span> and variance <span class="math notranslate nohighlight">\(\Sigma_\mathbf{x}\)</span>. So we will have:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_* \sim \mathcal{N}(\mu_\mathbf{x}, \Sigma_\mathbf{x}) \]</div>
+<p>or equivalently we can reparameterize it like so:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathbf{x}_* &amp;=\mu_\mathbf{x}+ \epsilon_\mathbf{x} \\
+\epsilon_\mathbf{x} &amp;\sim \mathcal{N}(0, \Sigma_\mathbf{x})
+\end{aligned}
+\end{split}\]</div>
+<p>If we consider the predictive distribution given by <span class="math notranslate nohighlight">\(p(f_*|\mathbf{x}_*, \mathcal{D})\)</span>,  we need to marginalize out the input distribution. So the full integral appears as follows.</p>
+<div class="math notranslate nohighlight">
+\[p(f_*|\mu_\mathbf{x}, \Sigma_\mathbf{x},\mathcal{D}) = \int p(f_*|\mathbf{x}_*,\mathcal{D})\;\mathcal{N}(\mathbf{x}_*|\mu_\mathbf{x},\Sigma_\mathbf{x})\; d\mathbf{x}_*\]</div>
+<p>If we use the GP formulation, we have a closed-form deterministic predictive distribution for <span class="math notranslate nohighlight">\(p(f_*|\mathbf{x}_*,\mathcal{D})\)</span>. Plugging this into the above equation gives us:</p>
+<div class="math notranslate nohighlight">
+\[p(f_*|\mu_\mathbf{x},\Sigma_\mathbf{x},\mathcal{D}) = \int \mathcal{N}\left(f_*|\mu_\mathcal{GP}(\mathbf{x}_*),\sigma^2_\mathcal{GP}(\mathbf{x}_*) \right) \; \mathcal{N}(\mathbf{x}_*|\mu_\mathbf{x}, \Sigma_\mathbf{x})\; d\mathbf{x}_*\]</div>
+<p>So this integral is intractable because if we consider the terms within the GP predictive mean and predictive variance, we will need to calculate the integral of an inverse kernel function, <span class="math notranslate nohighlight">\(\mathbf{K}_\mathcal{GP}^{-1}\)</span>. Below we outline some of the most popular methods found in the literature.</p>
+<div class="section" id="demo-single-point">
+<h3>Demo - Single Point<a class="headerlink" href="#demo-single-point" title="Permalink to this headline">¶</a></h3>
+<p>For to demonstrate the function, we’re going to do the steps assuming no batch dimension. In other words, we’re working with a test vector <span class="math notranslate nohighlight">\(\mathbf{x}_* \in \mathbb{R}^{D}\)</span>, <strong>not</strong> a matrix of samples <span class="math notranslate nohighlight">\(\mathbf{X}_* \in \mathbb{R}^{N\times D}\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xtest_noisy</span> <span class="o">=</span> <span class="n">Xtest_noisy</span><span class="p">[</span><span class="n">demo_sample_idx</span><span class="p">]</span>
+<span class="n">mu_demo</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">mu_demo</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;standard&quot;</span><span class="p">:</span> <span class="n">meanf</span><span class="p">(</span><span class="n">xtest_noisy</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">covar_demo</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;standard&quot;</span><span class="p">:</span> <span class="n">varf</span><span class="p">(</span><span class="n">xtest_noisy</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">,</span> <span class="n">ytest_noisy</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:orange&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xtest_noisy</span><span class="p">,</span> <span class="n">mu_demo</span><span class="p">[</span><span class="s2">&quot;standard&quot;</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">mu_demo</span><span class="p">[</span><span class="s2">&quot;standard&quot;</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7f5e2008de90&gt;
+</pre></div>
+</div>
+<img alt="../../../../_images/gpjax_egp_mcmc_35_1.png" src="../../../../_images/gpjax_egp_mcmc_35_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># x_mu = np.array([-0.2])</span>
+<span class="c1"># x_cov = np.tile(np.diag(np.array([3.0])), (1, 1))</span>
+
+<span class="c1"># # get function</span>
+<span class="c1"># f = jax.vmap(jax.partial(predictive_mean, model))</span>
+<span class="c1"># df = jax.vmap(jax.grad(jax.partial(predictive_mean, model)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mu = f(Xtest)</span>
+
+<span class="c1"># # plt.hist(x_mc_samples.squeeze(), bins=100, density=True);</span>
+<span class="c1"># fig, ax = plt.subplots(figsize=(7, 5))</span>
+<span class="c1"># ax.plot(Xtest, mu, color=&#39;red&#39;, linewidth=4, label=r&quot;$f(x)$&quot;)</span>
+<span class="c1"># ax.axvline(x_sample, linestyle=&quot;--&quot;, color=&#39;black&#39;, linewidth=4)</span>
+<span class="c1"># ax.set(xticklabels=&quot;&quot;, xlabel=&quot;&quot;, yticklabels=&quot;&quot;)</span>
+<span class="c1"># plt.fill_between(Xtest.squeeze(), lb, ub, label=&#39;CI&#39;, color=&#39;darkorange&#39;, alpha=0.2)</span>
+<span class="c1"># ax.set(xlim=(-10, 10), ylim=(-2.1, 2.1))</span>
+<span class="c1"># plt.scatter(X, y, label=&#39;Training&#39;, color=&#39;blue&#39;, s=60, zorder=3)</span>
+<span class="c1"># plt.legend(fontsize=15)</span>
+<span class="c1"># plt.show()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="monte-carlo-sampling">
+<h3>Monte Carlo Sampling<a class="headerlink" href="#monte-carlo-sampling" title="Permalink to this headline">¶</a></h3>
+<p>In this first example, we will approximate the actual posterior using Monte Carlo sampling. Using the following formula:</p>
+<div class="math notranslate nohighlight">
+\[
+p(f_*|\mu_\mathbf{x}, \Sigma_\mathbf{x}, \mathcal{D}) \approx \frac{1}{T}\sum_{t=1}^T \mathcal{N}\left(f_*|\mu_\mathcal{GP}(\mathbf{x}_*^t),\sigma^2_\mathcal{GP}(\mathbf{x}_*^t) \right) 
+\]</div>
+<p>This will approach the real posterior as <span class="math notranslate nohighlight">\(T\)</span> grows. What we want to demonstrate is that this posterior is non-Gaussian when our inputs are non-Gaussian.</p>
+<p>In this example, we assume that <span class="math notranslate nohighlight">\(\mathbf{x}_* \sim \mathcal{N}(\mathbf{\mu_x}, \mathbf{\Sigma_x})\)</span>. We’re assuming our data points come We can reparameterize this as f</p>
+<p>we will be using the following form to do the sampling:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_T = \mu_\mathbf{x} + \mathbf{L}\mathbf{z}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{z}\sim \mathcal{N}(\mathbf{0}, \mathbf{I})\)</span>. So we will draw 10,000 samples and then propagate all of these through the non-linear function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow_probability.substrates.jax</span> <span class="k">as</span> <span class="nn">tfp</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">tfp</span><span class="o">.</span><span class="n">distributions</span>
+
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_features</span><span class="p">,)),</span> <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># input covariance</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">input_cov</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+
+<span class="c1"># generate sigma points</span>
+<span class="n">n_mc_points</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">sigma_pts</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">n_mc_points</span><span class="p">,),</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">sigma_pts</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_mc_points</span><span class="p">,))</span>
+
+<span class="c1"># calculate sigma points</span>
+<span class="n">x_mc_samples</span> <span class="o">=</span> <span class="n">xtest_noisy</span> <span class="o">+</span> <span class="n">L</span> <span class="o">@</span> <span class="n">sigma_pts</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">x_mc_samples</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_mc_points</span><span class="p">))</span>
+
+<span class="c1"># mean function predictions</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">meanf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+
+<span class="n">y_mu_mc</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">x_mc_samples</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+
+<span class="n">y_mu_mc</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">y_mu_mc</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">y_mu_mc</span><span class="p">,</span> <span class="p">(</span><span class="n">n_mc_points</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+
+
+<span class="c1"># calculate mean of MC samples</span>
+<span class="n">wm</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n_mc_points</span>
+<span class="n">y_mu</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_mu_mc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">y_mu</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,))</span>
+
+<span class="c1"># calculate covariance of MC samples</span>
+<span class="n">wc</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_mc_points</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">dfx</span> <span class="o">=</span> <span class="n">y_mu_mc</span> <span class="o">-</span> <span class="n">y_mu</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">dfx</span><span class="p">,</span> <span class="p">(</span><span class="n">n_mc_points</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+
+<span class="n">x_cov</span> <span class="o">=</span> <span class="n">wc</span> <span class="o">*</span> <span class="n">dfx</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">dfx</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">x_cov</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+
+<span class="c1"># input-output covariance</span>
+<span class="n">x_covx</span> <span class="o">=</span> <span class="n">wc</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_mc_samples</span> <span class="o">-</span> <span class="n">xtest_noisy</span><span class="p">)</span> <span class="o">@</span> <span class="n">dfx</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">x_cov</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu_demo</span><span class="p">[</span><span class="s2">&quot;mc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_mu</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plt.hist(x_mc_samples.squeeze(), bins=100, density=True);</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x_mc_samples</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">bw_adjust</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$p(x)$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">xtest_noisy</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="c1"># ax.set_ylim(-1.5, 1.1)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_43_0.png" src="../../../../_images/gpjax_egp_mcmc_43_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_mu_mc</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">bw_adjust</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MC Samples&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">),</span> <span class="n">yticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">mu_demo</span><span class="p">[</span><span class="s2">&quot;standard&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Mean Prediction&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_44_0.png" src="../../../../_images/gpjax_egp_mcmc_44_0.png" />
+</div>
+</div>
+<div class="section" id="vectorized-over-all-samples">
+<h4>Vectorized Over All Samples<a class="headerlink" href="#vectorized-over-all-samples" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="k">def</span> <span class="nf">init_mc_moment_transform</span><span class="p">(</span>
+    <span class="n">meanf</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> 
+    <span class="n">n_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+    <span class="n">mc_samples</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">covariance</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span><span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+
+
+    <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">meanf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_features</span><span class="p">,)),</span> <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_features</span><span class="p">))</span>
+    <span class="n">wm</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">mc_samples</span>
+    <span class="n">wc</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">mc_samples</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">apply_transform</span><span class="p">(</span><span class="n">rng_key</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_cov</span><span class="p">):</span>
+
+        <span class="c1"># sigma points</span>
+        <span class="n">sigma_pts</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">mc_samples</span><span class="p">,),</span> <span class="n">key</span><span class="p">)</span>
+
+        <span class="c1"># cholesky for input covariance</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">input_cov</span><span class="p">)</span>
+
+        <span class="c1"># calculate sigma points</span>
+        <span class="n">x_mc_samples</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">L</span> <span class="o">@</span> <span class="n">sigma_pts</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="c1"># ===================</span>
+        <span class="c1"># Mean</span>
+        <span class="c1"># ===================</span>
+
+        <span class="c1"># function predictions over mc samples</span>
+        <span class="n">y_mu_mc</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="mi">1</span><span class="p">)(</span><span class="n">x_mc_samples</span><span class="p">)</span>
+        
+        <span class="n">y_mu_mc</span> <span class="o">=</span> <span class="n">y_mu_mc</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">mc_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span> 
+
+        <span class="c1"># mean of mc samples</span>
+        <span class="n">y_mu</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_mu_mc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># ===================</span>
+        <span class="c1"># Covariance</span>
+        <span class="c1"># ===================</span>
+        <span class="n">dfydx</span> <span class="o">=</span> <span class="n">y_mu_mc</span> <span class="o">-</span> <span class="n">y_mu</span>
+
+        <span class="n">y_cov</span> <span class="o">=</span> <span class="n">wc</span> <span class="o">*</span> <span class="n">dfydx</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">dfydx</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">covariance</span><span class="p">:</span>
+            <span class="n">y_cov</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">y_cov</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">y_mu</span><span class="p">,</span> <span class="n">y_cov</span>
+        
+    <span class="k">return</span> <span class="n">apply_transform</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(10, 10)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># init function</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">mc_samples</span> <span class="o">=</span> <span class="mi">1_000</span>
+<span class="n">mc_transform</span> <span class="o">=</span> <span class="n">init_mc_moment_transform</span><span class="p">(</span><span class="n">meanf</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span> <span class="n">mc_samples</span><span class="o">=</span><span class="n">mc_samples</span><span class="p">)</span>
+
+<span class="c1"># apply function</span>
+<span class="n">xtest_noisy</span> <span class="o">=</span> <span class="n">Xtest_noisy</span><span class="p">[</span><span class="n">demo_sample_idx</span><span class="p">][</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">input_cov</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_noise</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">x_mu</span><span class="p">,</span> <span class="n">x_var</span> <span class="o">=</span> <span class="n">mc_transform</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">xtest_noisy</span><span class="p">,</span> <span class="n">input_cov</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_equal_shape</span><span class="p">([</span><span class="n">x_mu</span><span class="p">,</span> <span class="n">x_var</span><span class="p">])</span>
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">x_mu</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mc_transform_vectorized</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">mc_transform</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span> <span class="o">=</span> <span class="n">mc_transform_vectorized</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Xtest_noisy</span><span class="p">,</span> <span class="n">input_cov</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_equal_shape</span><span class="p">([</span><span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span><span class="p">])</span>
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">y_mu</span><span class="p">,</span> <span class="p">(</span><span class="n">ntest</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+
+<span class="n">y_std</span> <span class="o">=</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_1D_GP_noisy</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">,</span> <span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_51_0.png" src="../../../../_images/gpjax_egp_mcmc_51_0.png" />
+</div>
+</div>
+<p>As you can see, this is a non-Gaussian distribution. Below we will see how we can approximate this as a Gaussian.</p>
+</div>
+</div>
+</div>
+<div class="section" id="unscented-transformation">
+<h2>Unscented Transformation<a class="headerlink" href="#unscented-transformation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="unscented-weights">
+<h3>Unscented Weights<a class="headerlink" href="#unscented-weights" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="k">def</span> <span class="nf">get_unscented_weights</span><span class="p">(</span>
+    <span class="n">n_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">kappa</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Generate normalizers for MCMC samples&quot;&quot;&quot;</span>
+
+    <span class="c1"># calculate kappa value</span>
+    <span class="k">if</span> <span class="n">kappa</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">kappa</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">3.0</span> <span class="o">-</span> <span class="n">n_features</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_features</span> <span class="o">+</span> <span class="n">kappa</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_features</span>
+    <span class="n">wm</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_features</span> <span class="o">+</span> <span class="n">lam</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_features</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">wc</span> <span class="o">=</span> <span class="n">wm</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">wm</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">index_update</span><span class="p">(</span><span class="n">wm</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lam</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_features</span> <span class="o">+</span> <span class="n">lam</span><span class="p">))</span>
+    <span class="n">wc</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">index_update</span><span class="p">(</span><span class="n">wc</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">beta</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">wm</span><span class="p">,</span> <span class="n">wc</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_features</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">kappa</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">n_sigma_points</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">wm</span><span class="p">,</span> <span class="n">wc</span> <span class="o">=</span> <span class="n">get_unscented_weights</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_equal_shape</span><span class="p">([</span><span class="n">wm</span><span class="p">,</span> <span class="n">wc</span><span class="p">])</span>
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">wm</span><span class="p">,</span> <span class="p">(</span><span class="n">n_sigma_points</span><span class="p">,))</span>
+
+<span class="c1"># Wm, Wc = jnp.diag(wm), jnp.diag(wc)</span>
+
+<span class="c1"># chex.assert_equal_shape([Wm, Wc])</span>
+<span class="c1"># chex.assert_shape(Wm, (n_sigma_points,n_sigma_points))</span>
+
+<span class="n">Wm</span><span class="p">,</span> <span class="n">Wc</span> <span class="o">=</span> <span class="n">wm</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">wc</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">Wc</span><span class="p">,</span> <span class="p">(</span><span class="n">n_sigma_points</span><span class="p">,</span> <span class="n">n_sigma_points</span><span class="p">))</span>
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">Wm</span><span class="p">,</span> <span class="p">(</span><span class="n">n_sigma_points</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="sigma-points">
+<h3>Sigma Points<a class="headerlink" href="#sigma-points" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_unscented_sigma_points</span><span class="p">(</span>
+    <span class="n">n_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">kappa</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">chex</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">chex</span><span class="o">.</span><span class="n">Array</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Generate Unscented samples&quot;&quot;&quot;</span>
+
+    <span class="c1"># calculate kappa value</span>
+    <span class="k">if</span> <span class="n">kappa</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">kappa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">3.0</span> <span class="o">-</span> <span class="n">n_features</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_features</span> <span class="o">+</span> <span class="n">kappa</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_features</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_features</span> <span class="o">+</span> <span class="n">lam</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_features</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">c</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span> <span class="o">-</span><span class="n">c</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_features</span><span class="p">))</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kappa</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">n_sigma_points</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_features</span> <span class="o">+</span> <span class="mi">1</span>
+
+
+<span class="c1"># generate sigma points</span>
+<span class="n">sigma_pts</span> <span class="o">=</span> <span class="n">get_unscented_sigma_points</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_equal_shape</span><span class="p">([</span><span class="n">sigma_pts</span><span class="p">,</span> <span class="n">sigma_pts</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># input covariance</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">input_cov</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+
+<span class="c1"># calculate sigma points</span>
+<span class="n">x_sigma_samples</span> <span class="o">=</span> <span class="n">xtest_noisy</span> <span class="o">+</span> <span class="n">L</span> <span class="o">@</span> <span class="n">sigma_pts</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">x_sigma_samples</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_sigma_points</span><span class="p">))</span>
+
+<span class="c1"># mean function predictions</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">meanf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+
+<span class="n">y_mu_unc</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">x_sigma_samples</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+
+<span class="n">y_mu_unc</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">y_mu_unc</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">y_mu_unc</span><span class="p">,</span> <span class="p">(</span><span class="n">n_sigma_points</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+
+<span class="c1"># calculate weights of unscented points</span>
+<span class="n">y_mu</span> <span class="o">=</span> <span class="n">y_mu_unc</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Wm</span>
+
+
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">y_mu</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,))</span>
+
+<span class="c1"># calculate covariance of MC samples</span>
+<span class="n">dfx</span> <span class="o">=</span> <span class="n">y_mu_unc</span> <span class="o">-</span> <span class="n">y_mu</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">dfx</span><span class="p">,</span> <span class="p">(</span><span class="n">n_sigma_points</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+
+<span class="n">y_cov</span> <span class="o">=</span> <span class="n">dfx</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Wc</span> <span class="o">@</span> <span class="n">dfx</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">y_cov</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+
+<span class="c1"># input-output covariance</span>
+<span class="n">y_covx</span> <span class="o">=</span> <span class="n">wc</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_sigma_samples</span> <span class="o">-</span> <span class="n">xtest_noisy</span><span class="p">)</span> <span class="o">@</span> <span class="n">dfx</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">y_cov</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu_demo</span><span class="p">[</span><span class="s2">&quot;sigma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_mu</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plt.hist(x_mc_samples.squeeze(), bins=100, density=True);</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x_mc_samples</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">bw_adjust</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$p(x)$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">xtest_noisy</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">sigma_pts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">sigma_pts</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">sigma_pts</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="c1"># ax.set_ylim(-1.5, 1.1)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_62_0.png" src="../../../../_images/gpjax_egp_mcmc_62_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate samples from the distribution</span>
+<span class="n">unscented_samples</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">y_mu</span><span class="p">),</span>  <span class="n">y_cov</span><span class="p">,</span> <span class="p">(</span><span class="n">n_mc_points</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">unscented_samples</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">bw_adjust</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Unscented&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">),</span> <span class="n">yticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y_mu_unc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y_mu_unc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y_mu_unc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">mu_demo</span><span class="p">[</span><span class="s2">&quot;standard&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Mean Prediction&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_64_0.png" src="../../../../_images/gpjax_egp_mcmc_64_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_mu_mc</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">bw_adjust</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MC Samples&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">unscented_samples</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">bw_adjust</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Unscented&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">2.1</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">),</span> <span class="n">yticklabels</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">mu_demo</span><span class="p">[</span><span class="s2">&quot;standard&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Mean Prediction&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_65_0.png" src="../../../../_images/gpjax_egp_mcmc_65_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="vectorized-demo">
+<h3>Vectorized Demo<a class="headerlink" href="#vectorized-demo" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="k">def</span> <span class="nf">init_unscented_transform</span><span class="p">(</span>
+    <span class="n">meanf</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> 
+    <span class="n">n_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">kappa</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">covariance</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span><span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+
+
+    <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">meanf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+
+    <span class="c1"># get weights</span>
+    <span class="n">wm</span><span class="p">,</span> <span class="n">wc</span> <span class="o">=</span> <span class="n">get_unscented_weights</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+
+    <span class="n">Wm</span><span class="p">,</span> <span class="n">Wc</span> <span class="o">=</span> <span class="n">wm</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">wc</span><span class="p">)</span>
+
+    <span class="c1"># generate sigma points</span>
+    <span class="n">sigma_pts</span> <span class="o">=</span> <span class="n">get_unscented_sigma_points</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">apply_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_cov</span><span class="p">):</span>
+
+        <span class="c1"># cholesky decomposition</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">x_cov</span><span class="p">)</span>
+
+        <span class="c1"># calculate sigma points</span>
+        <span class="n">x_sigma_samples</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">L</span> <span class="o">@</span> <span class="n">sigma_pts</span>
+
+
+        <span class="c1"># propagate samples through function</span>
+        <span class="n">y_mu_unc</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="mi">2</span><span class="p">)(</span><span class="n">x_sigma_samples</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+
+        <span class="n">y_mu_unc</span> <span class="o">=</span> <span class="n">y_mu_unc</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># ===================</span>
+        <span class="c1"># Mean</span>
+        <span class="c1"># ===================</span>
+
+        <span class="c1"># calculate weights of unscented points</span>
+        <span class="n">y_mu</span> <span class="o">=</span> <span class="n">y_mu_unc</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Wm</span>
+
+        <span class="c1"># ===================</span>
+        <span class="c1"># Covariance</span>
+        <span class="c1"># ===================</span>
+
+        <span class="c1"># calculate covariance of MC samples</span>
+        <span class="n">dfx</span> <span class="o">=</span> <span class="n">y_mu_unc</span> <span class="o">-</span> <span class="n">y_mu</span>
+
+        <span class="n">y_cov</span> <span class="o">=</span> <span class="n">dfx</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Wc</span> <span class="o">@</span> <span class="n">dfx</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">covariance</span><span class="p">:</span>
+            <span class="n">y_cov</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">y_cov</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">y_mu</span><span class="p">,</span> <span class="n">y_cov</span>
+        
+    <span class="k">return</span> <span class="n">apply_transform</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># init function</span>
+<span class="n">unscented_transform</span> <span class="o">=</span> <span class="n">init_unscented_transform</span><span class="p">(</span><span class="n">meanf</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># apply function</span>
+<span class="n">xtest_noisy</span> <span class="o">=</span> <span class="n">Xtest_noisy</span><span class="p">[</span><span class="n">demo_sample_idx</span><span class="p">]</span>
+<span class="n">input_cov</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_noise</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span> <span class="o">=</span> <span class="n">unscented_transform</span><span class="p">(</span><span class="n">xtest_noisy</span><span class="p">,</span> <span class="n">input_cov</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_equal_shape</span><span class="p">([</span><span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span><span class="p">])</span>
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">y_mu</span><span class="p">,</span> <span class="p">(</span><span class="n">n_features</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unscented_transform_vectorized</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">unscented_transform</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span> <span class="o">=</span> <span class="n">unscented_transform_vectorized</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">,</span> <span class="n">input_cov</span><span class="p">)</span>
+
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_equal_shape</span><span class="p">([</span><span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span><span class="p">])</span>
+<span class="n">chex</span><span class="o">.</span><span class="n">assert_shape</span><span class="p">(</span><span class="n">y_mu</span><span class="p">,</span> <span class="p">(</span><span class="n">ntest</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># y_var = var.squeeze() + y_var_o2.squeeze()</span>
+
+<span class="n">plot_1D_GP_noisy</span><span class="p">(</span><span class="n">Xtest_noisy</span><span class="p">,</span> <span class="n">y_mu</span><span class="p">,</span> <span class="n">y_var</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../_images/gpjax_egp_mcmc_71_0.png" src="../../../../_images/gpjax_egp_mcmc_71_0.png" />
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/egps/notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="../../../../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>

@@ -50,8 +50,8 @@
   - file: content/notes/kernels/overview.md
     sections:
     - file: content/notes/kernels/kernel_derivatives
+  - file: content/notes/egps/overview.md
     sections:
-    - file: content/notes/egps/overview.md
     - file: content/notes/egps/predictions.md
     - file: content/notes/egps/gauss_approx.md
     - file: content/notes/egps/mcmc.md

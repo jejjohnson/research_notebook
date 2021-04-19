@@ -59,6 +59,12 @@
     - file: content/notes/egps/taylor.md
     - file: content/notes/egps/moment_matching.md
 
+- part: Data
+  chapters: 
+  - file: content/notes/data/overview.md
+    sections:
+    - file: content/notes/data/cds.md
+
 - part: References
   chapters: 
   - file: bib.md

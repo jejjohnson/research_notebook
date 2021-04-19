@@ -12,7 +12,7 @@
 
 I recently ran into someone at a conference who said, "*a lot of research dies in Graduate students laptops*" (it was actually this [scientist right here](https://twitter.com/jennifermarsman)). So I decided to go through all of my stuff, organize it a little bit and make it public.
 
-This is my research journal of various topics that I'm working with. My research is mostly in using Machine learning methods in various applications of remote sensing, ocean and climate sciences. I focus on three factors:
+This is my research journal  of various topics that I'm working with. My research is mostly in using Machine learning methods in various applications of remote sensing, ocean and climate sciences. I focus on three factors:
 
 * **Data Representation** - We know that spatial-temporal information is important; can we effectively capture this in ML models?
 * **Modeling Uncertainty** - Which ML models allow us to capture any facets of uncertainty (input, model, output) in our  models.

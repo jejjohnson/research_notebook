@@ -11,8 +11,18 @@ copyright                   : "2020"  # Copyright year to be placed in the foote
 logo                        : book.png  # A path to the book logo
 # bibtex_reference_style: author_year 
 execute:
-  execute_notebooks: cache
+  execute_notebooks: "off"
 
-# bibtex_bibfiles:
-#     - references.bib
+repository:
+  url                       : https://github.com/jejjohnson/research_notebook # Online location of your book
+  path_to_book              : research_notebook  # Optional path to your book, relative to the repository root
+  branch                    : main  # Which branch of the repository should be used when creating links (optional)
+
+
+bibtex_bibfiles:
+  - references.bib
+
+sphinx:
+  config:
+    bibtex_reference_style: author_year 
     # - content/notes/bayesian/bayesian.bib

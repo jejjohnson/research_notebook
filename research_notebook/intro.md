@@ -5,7 +5,8 @@
 * Twitter: [jejjohnson](https://twitter.com/jejjohnson)
 * Github: [jejjohnson](https://github.com/jejjohnson)
 * Website: [jejjohnson.netlify.app](https://jejjohnson.netlify.app)
-* Research Journal: [jejjohnson.github.io/research_journal](https://jejjohnson.github.io/research_journal)
+* Website: [jejjohnson.github.io/research_notebook](https://jejjohnson.github.io/research_notebook)
+* Github Repo: [https://github.com/jejjohnson/research_notebook](https://github.com/jejjohnson/research_notebook)
 
 ---
 

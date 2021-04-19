@@ -40,6 +40,7 @@
     - file: content/notes/bayesian/regression.md
     - file: content/notes/bayesian/inference/inference.md
     - file: content/notes/bayesian/inference/variational_inference.md
+    - file: content/notes/bayesian/confidence_intervals.md
   - file: content/notes/concepts/overview.md
     sections:
     - file: content/notes/concepts/change_of_variables.md 
@@ -57,3 +58,7 @@
     - file: content/notes/egps/mcmc.md
     - file: content/notes/egps/taylor.md
     - file: content/notes/egps/moment_matching.md
+
+- part: References
+  chapters: 
+  - file: bib.md

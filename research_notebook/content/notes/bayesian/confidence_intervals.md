@@ -25,7 +25,9 @@ The easiest thing to use is a Gaussian process (GP). They come equipped with con
 
 ### DropOut
 
-Dropout is probably the most common method{cite:p}`DROPOUT2016`
+Dropout is probably the most common method {cite}`dropout_2016`
+
+{cite}`MeilaVI`, {cite}`holdgraf_encoding_2017`
 
 
 ### Probabilistic
@@ -43,7 +45,7 @@ Dropout is probably the most common method{cite:p}`DROPOUT2016`
 ## Quantile Regression
 
 
-## References
+<!-- ## References
 
-```{bibliography} ./references.bib
-```
+```{bibliography} ./bayesian.bib
+``` -->

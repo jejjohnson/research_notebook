@@ -58,6 +58,9 @@
     - file: content/notes/egps/mcmc.md
     - file: content/notes/egps/taylor.md
     - file: content/notes/egps/moment_matching.md
+  - file: content/notes/info_theory/overview.md
+    sections:
+    - file: content/notes/info_theory/experiments/rbig_sample_consistency.ipynb
 
 - part: Data
   chapters: 

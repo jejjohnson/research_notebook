@@ -1,0 +1,675 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Entropy Estimator - K-NN &#8212; Research Notebook</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/sphinx-book-theme.acff12b8f9c144ce68a297486a2fa670.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      <img src="../../../_static/book.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../bayesian/overview.html">
+   Bayesian
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../egps/overview.html">
+   Uncertain Gaussian Processes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="overview.html">
+   Information Theory
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Data
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../data/overview.html">
+   Data
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  References
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../bib.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/notes/info_theory/knn.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/jejjohnson/research_notebook/main?urlpath=tree/research_notebook/content/notes/info_theory/knn.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../../../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#demo-data-gaussian">
+   Demo Data - Gaussian
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#k-nearest-neighbors">
+   K-Nearest Neighbors
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#volume">
+     Volume
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="entropy-estimator-k-nn">
+<h1>Entropy Estimator - K-NN<a class="headerlink" href="#entropy-estimator-k-nn" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pyprojroot</span> <span class="kn">import</span> <span class="n">here</span>
+
+<span class="c1"># spyder up to find the root</span>
+<span class="n">pysim_root</span> <span class="o">=</span> <span class="s2">&quot;/home/emmanuel/code/pysim&quot;</span>
+<span class="c1"># append to path</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pysim_root</span><span class="p">))</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># MATPLOTLIB Settings</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+
+<span class="c1"># SEABORN SETTINGS</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">corner</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="s2">&quot;talk&quot;</span><span class="p">,</span> <span class="n">font_scale</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+<span class="o">%</span><span class="k">load_ext</span> lab_black
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mutual_info.mutual_info</span> <span class="kn">import</span> <span class="n">entropy</span> <span class="k">as</span> <span class="n">mi_entropy</span>
+<span class="kn">from</span> <span class="nn">npeet.entropy_estimators</span> <span class="kn">import</span> <span class="n">entropy</span> <span class="k">as</span> <span class="n">npeet_entropy</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="demo-data-gaussian">
+<h2>Demo Data - Gaussian<a class="headerlink" href="#demo-data-gaussian" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pysim.data.information.gaussian</span> <span class="kn">import</span> <span class="n">generate_gaussian_data</span>
+
+<span class="c1"># parameters</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">50_000</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">25</span>
+
+<span class="c1"># create seed (trial number)</span>
+<span class="n">res_tuple</span> <span class="o">=</span> <span class="n">generate_gaussian_data</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="n">n_features</span><span class="p">,)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">5</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/knn_5_0.png" src="../../../_images/knn_5_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="k-nearest-neighbors">
+<h2>K-Nearest Neighbors<a class="headerlink" href="#k-nearest-neighbors" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mutual_info.mutual_info</span> <span class="kn">import</span> <span class="n">entropy</span> <span class="k">as</span> <span class="n">mi_entropy</span>
+<span class="kn">from</span> <span class="nn">npeet.entropy_estimators</span> <span class="kn">import</span> <span class="n">entropy</span> <span class="k">as</span> <span class="n">npeet_entropy</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True Estimator: </span><span class="si">{</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">H</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+
+<span class="n">H_mi</span> <span class="o">=</span> <span class="n">mi_entropy</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;H_mi Estimator: </span><span class="si">{</span><span class="n">H_mi</span><span class="si">:</span><span class="s2">.10f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+
+<span class="n">H_npeet</span> <span class="o">=</span> <span class="n">npeet_entropy</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NPeet Estimator: </span><span class="si">{</span><span class="n">H_npeet</span><span class="si">:</span><span class="s2">.10f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True Estimator: 26.5180 nats
+H_mi Estimator: 29.5426287400 nats
+NPeet Estimator: 30.7156496346 nats
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pysim.data.information.gaussian</span> <span class="kn">import</span> <span class="n">generate_gaussian_mi_data</span>
+
+<span class="c1"># parameters</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">2_000</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">25</span>
+
+<span class="n">res_tuple</span> <span class="o">=</span> <span class="n">generate_gaussian_mi_data</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+
+<span class="n">res_tuple</span><span class="o">.</span><span class="n">MI</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.919772283748145
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mutual_info.mutual_info</span> <span class="kn">import</span> <span class="n">mutual_information</span> <span class="k">as</span> <span class="n">gael_mi</span>
+<span class="kn">from</span> <span class="nn">npeet.entropy_estimators</span> <span class="kn">import</span> <span class="n">mi</span> <span class="k">as</span> <span class="n">npeet_mi</span>
+
+<span class="c1"># parameters</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">10_000</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True Estimator: </span><span class="si">{</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">MI</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+
+<span class="n">MI_gael</span> <span class="o">=</span> <span class="n">gael_mi</span><span class="p">((</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">res_tuple</span><span class="o">.</span><span class="n">Y</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;H_mi Estimator: </span><span class="si">{</span><span class="n">MI_gael</span><span class="si">:</span><span class="s2">.10f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+
+<span class="n">MI_npeet</span> <span class="o">=</span> <span class="n">npeet_mi</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">res_tuple</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NPeet Estimator: </span><span class="si">{</span><span class="n">MI_npeet</span><span class="si">:</span><span class="s2">.10f</span><span class="si">}</span><span class="s2"> nats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True Estimator: 5.9198 nats
+H_mi Estimator: -1.0757337058 nats
+NPeet Estimator: 1.4802056201 nats
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+
+
+<span class="kn">from</span> <span class="nn">hyppo.independence</span> <span class="kn">import</span> <span class="n">RV</span>
+
+<span class="n">rv_clf</span> <span class="o">=</span> <span class="n">RV</span><span class="p">()</span>
+<span class="n">rv_clf</span><span class="o">.</span><span class="n">statistic</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">res_tuple</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.51 ms, sys: 5.07 ms, total: 8.57 ms
+Wall time: 2.25 ms
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9381932669226358
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="kn">from</span> <span class="nn">hyppo.independence</span> <span class="kn">import</span> <span class="n">Dcorr</span>
+
+<span class="n">dcorr_clf</span> <span class="o">=</span> <span class="n">Dcorr</span><span class="p">()</span>
+<span class="n">dcorr_clf</span><span class="o">.</span><span class="n">statistic</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">res_tuple</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.27 s, sys: 3.95 s, total: 5.21 s
+Wall time: 410 ms
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9184229528341773
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="kn">from</span> <span class="nn">hyppo.independence</span> <span class="kn">import</span> <span class="n">Hsic</span>
+
+<span class="n">hsic_clf</span> <span class="o">=</span> <span class="n">Hsic</span><span class="p">(</span><span class="n">compute_kernel</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">)</span>
+<span class="n">hsic_clf</span><span class="o">.</span><span class="n">statistic</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">res_tuple</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 894 ms, sys: 2.9 s, total: 3.79 s
+Wall time: 347 ms
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9381496748896323
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="kn">from</span> <span class="nn">hyppo.independence</span> <span class="kn">import</span> <span class="n">Hsic</span>
+
+<span class="n">hsic_clf</span> <span class="o">=</span> <span class="n">Hsic</span><span class="p">(</span><span class="n">compute_kernel</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">)</span>
+<span class="n">hsic_clf</span><span class="o">.</span><span class="n">statistic</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">res_tuple</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.84 s, sys: 4.75 s, total: 6.6 s
+Wall time: 761 ms
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.937042671435708
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="kn">from</span> <span class="nn">hyppo.independence</span> <span class="kn">import</span> <span class="n">MGC</span>
+
+<span class="n">mgc_clf</span> <span class="o">=</span> <span class="n">MGC</span><span class="p">()</span>
+<span class="n">mgc_clf</span><span class="o">.</span><span class="n">statistic</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">res_tuple</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.61 s, sys: 4.7 s, total: 7.31 s
+Wall time: 1.71 s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9184224379905574
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="kn">from</span> <span class="nn">hyppo.ksample</span> <span class="kn">import</span> <span class="n">Energy</span>
+
+<span class="n">energy_clf</span> <span class="o">=</span> <span class="n">Energy</span><span class="p">()</span>
+<span class="n">energy_clf</span><span class="o">.</span><span class="n">statistic</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">res_tuple</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.15 s, sys: 3.91 s, total: 6.06 s
+Wall time: 1.29 s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6524979193309077
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="kn">from</span> <span class="nn">hyppo.ksample</span> <span class="kn">import</span> <span class="n">MMD</span>
+
+<span class="n">mmd_clf</span> <span class="o">=</span> <span class="n">MMD</span><span class="p">(</span><span class="n">compute_kernel</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">)</span>
+<span class="n">mmd_clf</span><span class="o">.</span><span class="n">statistic</span><span class="p">(</span><span class="n">res_tuple</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">res_tuple</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.57 s, sys: 3.67 s, total: 6.24 s
+Wall time: 2.37 s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0012516668057823018
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="volume">
+<h3>Volume<a class="headerlink" href="#volume" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">volume_unit_ball</span><span class="p">(</span><span class="n">d_dimensions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Volume of the unit l_p-ball in d-dimensional</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    d_dimensions : int</span>
+<span class="sd">        Number of dimensions to estimate the volume</span>
+
+<span class="sd">    norm : int, default=2</span>
+<span class="sd">        The type of ball to get the volume.</span>
+<span class="sd">        * 2 : euclidean distance</span>
+<span class="sd">        * 1 : manhattan distance</span>
+<span class="sd">        * 0 : chebyshev distance</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    vol : float</span>
+<span class="sd">        The volume of the d-dimensional unit ball</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1]:    Demystifying Fixed k-Nearest Neighbor Information </span>
+<span class="sd">            Estimators - Gao et al (2016)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># get ball</span>
+    <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+    <span class="k">elif</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognized norm: </span><span class="si">{</span><span class="n">norm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">numerator</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">b</span><span class="p">)</span> <span class="o">**</span> <span class="n">d_dimensions</span>
+    <span class="n">denomenator</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">d_dimensions</span> <span class="o">/</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">vol</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">d_dimensions</span> <span class="o">*</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denomenator</span>
+
+    <span class="k">return</span> <span class="n">vol</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "conda-env-.conda-jax_py38-py"
+        },
+        kernelOptions: {
+            kernelName: "conda-env-.conda-jax_py38-py",
+            path: "./content/notes/info_theory"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'conda-env-.conda-jax_py38-py'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

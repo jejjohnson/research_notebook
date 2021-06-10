@@ -1,0 +1,812 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bayesian GPLVM &#8212; Research Notebook</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/sphinx-book-theme.acff12b8f9c144ce68a297486a2fa670.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Next Steps" href="next.html" />
+    <link rel="prev" title="Moment Matching" href="moment_matching.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      <img src="../../../_static/book.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
+       GP from Scratch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/vscode_jlab.html">
+     JupyterLab + VSCode
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../bayesian/overview.html">
+   Bayesian
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/intro.html">
+     Bayesian: Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/regression.html">
+     Regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference/inference.html">
+     Solving Hard Integral Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/confidence_intervals.html">
+     Confidence Intervals
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/kernel_derivatives.html">
+     Kernel Derivatives
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="overview.html">
+   Uncertain Gaussian Processes
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="predictions.html">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="gauss_approx.html">
+     Gaussian Approximation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mcmc.html">
+     Monte Carlo Sampling
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="taylor.html">
+     Linearization (Taylor Expansions)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="moment_matching.html">
+     Moment Matching
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Bayesian GPLVM
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="next.html">
+     Next Steps
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/histogram.html">
+     Entropy Estimator - Histogram
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+     Experiment - RBIG Sample Consistency
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/notes/egps/bgplvm.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#posterior-approximations">
+   Posterior Approximations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#variational-gp-model-with-latent-inputs">
+     Variational GP Model with Latent Inputs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#evidence-lower-bound-elbo">
+     Evidence Lower Bound (ELBO)
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#uncertain-inputs">
+   Uncertain Inputs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#case-i-strong-prior">
+     Case I - Strong Prior
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#case-ii-regularized-strong-prior">
+     Case II - Regularized Strong Prior
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#case-iii-prior-with-openness">
+     Case III - Prior with Openness
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#case-iv-bonus-conservative-freedom">
+     Case IV - Bonus, Conservative Freedom
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#important-papers">
+     Important Papers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary-thesis">
+     Summary Thesis
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#talks">
+     Talks
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="bayesian-gplvm">
+<h1>Bayesian GPLVM<a class="headerlink" href="#bayesian-gplvm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="posterior-approximations">
+<h2>Posterior Approximations<a class="headerlink" href="#posterior-approximations" title="Permalink to this headline">¶</a></h2>
+<p>What links all of the strategies from uncertain GPs is how they approach the problem of uncertain inputs: approximating the posterior distribution. The methods that use moment matching on stochastic trial points are all using various strategies to construct some posterior approximation. They define their GP model first and then approximate the posterior by using some approximate scheme to account for uncertainty. The NIGP however does change the model which is a product of the Taylor series expansion employed. From there, the resulting posterior is either evaluated or further approximated. My method actually is related because I also avoid changing the model and just attempt to approximate the posterior predictive distribution by augmenting the predictive variance function only (<strong>???</strong>).</p>
+<p>This approach has similar strategies that stem from the wave of methods that appeared using variational inference (VI). VI consists of creating a variational approximation of the posterior distribution <span class="math notranslate nohighlight">\(q(\mathbf u)\approx \mathcal{p}(\mathbf x)\)</span>. Under some assumptions and a baseline distribution for <span class="math notranslate nohighlight">\(q(\mathbf u)\)</span>,  we can try to approximate the complex distribution <span class="math notranslate nohighlight">\(\mathcal{p}(\mathbf x)\)</span> by minimizing the distance between the two distributions, <span class="math notranslate nohighlight">\(D\left[q(\mathbf u)||\mathcal{p}(\mathbf x)\right]\)</span>. Many practioners believe that approximating the posterior and not the model is the better option when doing Bayesian inference; especially for large data (<a class="reference external" href="https://www.prowler.io/blog/sparse-gps-approximate-the-posterior-not-the-model">example blog</a>, <span class="xref myst">VFE paper</span>). The variational family of methods that are common for GPs use the Kullback-Leibler (KL) divergence criteria between the GP posterior approximation <span class="math notranslate nohighlight">\(q(\mathbf u)\)</span> and the true GP posterior <span class="math notranslate nohighlight">\(\mathcal{p}(\mathbf x)\)</span>. From the literature, this has been extended to many different problems related to GPs for regression, classification, dimensionality reduction and more.</p>
+<hr class="docutils" />
+<div class="section" id="variational-gp-model-with-latent-inputs">
+<h3>Variational GP Model with Latent Inputs<a class="headerlink" href="#variational-gp-model-with-latent-inputs" title="Permalink to this headline">¶</a></h3>
+<p><strong>Posterior Distribution:</strong>
+$<span class="math notranslate nohighlight">\(p(Y) = \int_{\mathcal X} p(Y|X) P(X) dX\)</span>$</p>
+<p><strong>Derive the Lower Bound</strong> (w/ Jensens Inequality):</p>
+<div class="math notranslate nohighlight">
+\[\log p(Y) = \log \int_{\mathcal X} p(Y|X) P(X) dX\]</div>
+<p><strong>importance sampling/identity trick</strong></p>
+<div class="math notranslate nohighlight">
+\[ = \log \int_{\mathcal F} p(Y|X) P(X) \frac{q(X)}{q(X)}dF\]</div>
+<p><strong>rearrange to isolate</strong>: <span class="math notranslate nohighlight">\(p(Y|X)\)</span> and shorten notation to <span class="math notranslate nohighlight">\(\langle \cdot \rangle_{q(X)}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[= \log \left\langle  \frac{p(Y|X)p(X)}{q(X)} \right\rangle_{q(X)}\]</div>
+<p><strong>Jensens inequality</strong></p>
+<div class="math notranslate nohighlight">
+\[\geq \left\langle \log \frac{p(Y|X)p(X)}{q(X)} \right\rangle_{q(X)}\]</div>
+<p><strong>Split the logs</strong></p>
+<div class="math notranslate nohighlight">
+\[\geq \left\langle \log p(Y|X) + \log \frac{p(X)}{q(X)} \right\rangle_{q(X)}\]</div>
+<p><strong>collect terms</strong></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{2}(q)=\left\langle \log p(Y|X)\right\rangle_{q(F)} - D_{KL} \left( q(X) || p(X)\right) \]</div>
+<p><strong>plug in other bound</strong></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{2}(q)=\left\langle \mathcal{L}_{1}(q)\right\rangle_{q(F)} - D_{KL} \left( q(X) || p(X)\right) \]</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="evidence-lower-bound-elbo">
+<h3>Evidence Lower Bound (ELBO)<a class="headerlink" href="#evidence-lower-bound-elbo" title="Permalink to this headline">¶</a></h3>
+<p>In VI strategies, we never get an explicit function that will lead us to the best variational approximation but we can come close; we can come up with an upper bound.
+Traditional marginal likelhood (evidence) function that we’re given is given by:</p>
+<div class="math notranslate nohighlight">
+\[\underbrace{\mathcal{p}(y|\mathbf x, \theta)}_{\text{Evidence}}=\int_f \underbrace{\mathcal{p}(y|f, \mathbf x, 
+\theta)}_{\text{Likelihood}} \cdot \underbrace{\mathcal{p}(f|\mathbf x, \theta)}_{\text{GP Prior}}df\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathcal{p}(y|f, \mathbf x, \theta)=\mathcal{N}(y|f, \sigma_n^2\mathbf{I})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{p}(f|\mathbf x, \theta)=\mathcal{N}(f|\mu, K_\theta)\)</span></p></li>
+</ul>
+<p>In this case we are marginalizing by the latent functions <span class="math notranslate nohighlight">\(f\)</span>’s. But we no longer consider <span class="math notranslate nohighlight">\(\mathbf x\)</span> to be uncertain with some probability distribution. Also, we do not want some MAP estimation; we want a fully Bayesian approach. So the only thing to do is marginalize out the <span class="math notranslate nohighlight">\(\mathbf x\)</span>’s. In doing so we get:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{p}(y| \theta)=\int_f\int_\mathcal{X} \mathcal{p}(y|f, \mathbf x, 
+\theta)\cdot\mathcal{p}(f|\mathbf x, \theta) \cdot \mathcal{p}(\mathbf x)\cdot df \cdot d\mathbf{x}\]</div>
+<p>We can rearrange this equation to change notation:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{p}(y| \theta)=\int_\mathcal{X} 
+\underbrace{\left[ \int_f \mathcal{p}(y|f, \mathbf x, 
+\theta)\cdot\mathcal{p}(f|\mathbf x, \theta)\cdot df\right]}_{\text{Evidence}}
+\cdot \underbrace{\mathcal{p}(\mathbf x)}_{\text{Prior}} \cdot d\mathbf{x}\]</div>
+<p>where we find that that term is simply the same term as the original likelihood, <span class="math notranslate nohighlight">\(\mathcal{p}(y|\mathbf x, \theta)\)</span>. So our new simplified equation is:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{p}(y| \theta)=\int_\mathcal{X} \mathcal{p}(y|\mathbf x, \theta) \cdot \mathcal{p}(\mathbf x) \cdot d\mathbf{x}\]</div>
+<p>where we have effectively marginalized out the <span class="math notranslate nohighlight">\(f\)</span>’s. We already know that it’s difficult to propagate the <span class="math notranslate nohighlight">\(\mathbf x\)</span>’s through the nonlinear functions <span class="math notranslate nohighlight">\(\mathbf K^{-1}\)</span> and <span class="math notranslate nohighlight">\(|\)</span>det <span class="math notranslate nohighlight">\(\mathbf K|\)</span> (see previous doc for examples). So using the VI strategy, we introduce a new variational distribution <span class="math notranslate nohighlight">\(q(\mathbf x)\)</span> to approximate the posterior distribution <span class="math notranslate nohighlight">\(\mathcal{p}(\mathbf x| y)\)</span>. The distribution is normally chosen to be Gaussian:</p>
+<div class="math notranslate nohighlight">
+\[q(\mathbf x) = \prod_{i=1}^{N}\mathcal{N}(\mathbf x|\mathbf \mu_z, \mathbf \Sigma_z)\]</div>
+<p>So at this point, we are interested in trying to find a way to measure the difference between the approximate distribution <span class="math notranslate nohighlight">\(q(\mathbf x)\)</span> and the true posterior distribution <span class="math notranslate nohighlight">\(\mathcal{p} (\mathbf x)\)</span>. Using the standard derivation for the ELBO, we arrive at the final formula:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{F}(q)=\mathbb{E}_{q(\mathbf x)}\left[ \log \mathcal{p}(y|\mathbf x, \theta) \right] - \text{D}_\text{KL}\left[ q(\mathbf x) || \mathcal{p}(\mathbf x) \right]\]</div>
+<p>If we optimize <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> with respect to <span class="math notranslate nohighlight">\(q(\mathbf x)\)</span>, the KL is minimized and we just get the likelihood. As we’ve seen before, the likelihood term is still problematic as it still has the nonlinear portion to propagate the <span class="math notranslate nohighlight">\(\mathbf x\)</span>’s through. So that’s nothing new and we’ve done nothing useful. If we introduce some special structure in <span class="math notranslate nohighlight">\(q(f)\)</span> by introducing sparsity, then we can achieve something useful with this formulation.
+But through augmentation of the variable space with <span class="math notranslate nohighlight">\(\mathbf u\)</span> and <span class="math notranslate nohighlight">\(\mathbf Z\)</span> we can bypass this problem. The second term is simple to calculate because they’re both chosen to be Gaussian.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="uncertain-inputs">
+<h2>Uncertain Inputs<a class="headerlink" href="#uncertain-inputs" title="Permalink to this headline">¶</a></h2>
+<p>So how does this relate to uncertain inputs exactly? Let’s look again at our problem setting.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+y &amp;= f(x) + \epsilon_y \\
+x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
+\end{aligned}\end{split}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(y\)</span> - noise-corrupted outputs which have a noise parameter characterized by <span class="math notranslate nohighlight">\(\epsilon_y \sim \mathcal{N}(0, \sigma^2_y)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(f(x)\)</span> - is the standard GP function</p></li>
+<li><p><span class="math notranslate nohighlight">\(x\)</span> - “latent variables” but we assume that the come from a normal distribution, <span class="math notranslate nohighlight">\(x \sim \mathcal{N}(\mu_x, \Sigma_x)\)</span> where you have some observations <span class="math notranslate nohighlight">\(\mu_x\)</span> but you also have some prior uncertainty <span class="math notranslate nohighlight">\(\Sigma_x\)</span> that you would like to incorporate.</p></li>
+</ul>
+<p>Now the ELBO that we want to minimize has the following form:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{F}(q)=\mathbb{E}_{q(\mathbf x | m_{p_z}, S_{p_z})}\left[ \log \mathcal{p}(y|\mathbf x, \theta) \right] - \text{D}_\text{KL}\left[ q(\mathbf x | m_{p_z}, S_{p_z}) || \mathcal{p}(\mathbf x | m_{p_x}, S_{p_x}) \right]\]</div>
+<p>Notice that I have expanded the parameters for <span class="math notranslate nohighlight">\(p(X)\)</span> and <span class="math notranslate nohighlight">\(q(X)\)</span> so that we are clear about where the parameters. We would like to figure out a way to incorporate our uncertainties in the <span class="math notranslate nohighlight">\(m_{p_x}\)</span>, <span class="math notranslate nohighlight">\(S_{p_x}\)</span>, <span class="math notranslate nohighlight">\(m_{p_z}\)</span>, and <span class="math notranslate nohighlight">\(S_{p_z}\)</span>. The author had two suggestions about how to account for noise in the inputs but the original formulation assumed that these parameters were unknown. In my problem setting, we know that there is noise in the inputs so the problems that the original formulations had will change. I will outline the formulations below for both known and unknown uncertainties.</p>
+<hr class="docutils" />
+<div class="section" id="case-i-strong-prior">
+<h3>Case I - Strong Prior<a class="headerlink" href="#case-i-strong-prior" title="Permalink to this headline">¶</a></h3>
+<p><strong>Prior</strong>, <span class="math notranslate nohighlight">\(p(X)\)</span></p>
+<p>We can directly assume that we know the parameters for the prior distribution. So we let <span class="math notranslate nohighlight">\(\mu_x\)</span> be our noisy observations and we let <span class="math notranslate nohighlight">\(\Sigma_x\)</span> be our known covariance matrix for <span class="math notranslate nohighlight">\(X\)</span>. These parameters are fixed as we assume we know them and we would like this to be our prior. This seems to be the most natural as is where we have information and we would like to use it. So now our prior is in the form of:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{p}(\mathbf X|\mu_x, \Sigma_x) = \prod_{i=1}^{N}\mathcal{N}(\mathbf{x}_i |\mathbf \mu_{\mathbf{x}_i},\mathbf \Sigma_\mathbf{x_i})\]</div>
+<p>and this will be our regularization that we use for the KL divergence term.</p>
+<p><strong>Variational</strong>, <span class="math notranslate nohighlight">\(q(X)\)</span></p>
+<p>However, the variational parameters <span class="math notranslate nohighlight">\(m\)</span> and <span class="math notranslate nohighlight">\(S\)</span> are also important because that is being directly evaluated with the KL divergence term and the likelihood function <span class="math notranslate nohighlight">\(\log p(y|X, \theta)\)</span>. So ideally we would also like to constrain this as well if we know something. The first thing to do would be to fix them as well to what we know about our data, <span class="math notranslate nohighlight">\(m=\mu_x\)</span> and <span class="math notranslate nohighlight">\(S_{p_z} = \Sigma_x\)</span>. So our prior for our variational distribution will be:</p>
+<div class="math notranslate nohighlight">
+\[q(\mathbf X|\mu_x, \Sigma_x) = \prod_{i=1}^{N}\mathcal{N}(\mathbf{x}_i |\mathbf \mu_{\mathbf{x}_i},\mathbf \Sigma_\mathbf{x_i})\]</div>
+<p>We now have our variational bound with the assumed parameters:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{F}=\langle \log \mathcal{p}(\mathbf{Y|X}) \rangle_{q(\mathbf X|\mu_x, \Sigma_x)} - \text{KL}\left( q(\mathbf X|\mu_x, \Sigma_x) || p(\mathbf X|\mu_x, \Sigma_x)  \right)\]</div>
+<p><strong>Assessment</strong></p>
+<p>So this is a very strong belief over our parameters. The KL divergence term will be zero because the distributions will be the same and we would have probably done some extra computations for no reason; we do need this in order to make the likelihood tractable but it doesn’t make sense if we’re not learning anything. But this is absolute because we have no reason to change anything. It’s worth testing to see how this goes.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="case-ii-regularized-strong-prior">
+<h3>Case II - Regularized Strong Prior<a class="headerlink" href="#case-ii-regularized-strong-prior" title="Permalink to this headline">¶</a></h3>
+<p>This is similar to the above statement, however we would be reducing the prior parameters to a standard 0 mean and 1 standard deviation. So our prior function will look like this</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{p}(\mathbf X|0, 1) = \prod_{i=1}^{N}\mathcal{N}(\mathbf{x}_i |0, 1)\]</div>
+<p>This would allow the KL-Divergence criteria extra penalization for the loss function. It might change some of the parameters learned for the other regions of the ELBO. So our final loss function is:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{F}=\langle \log \mathcal{p}(\mathbf{Y|X}) \rangle_{q(\mathbf X|\mu_x, \Sigma_x)} - \text{KL}\left( q(\mathbf X|\mu_x, \Sigma_x) || p(\mathbf X|0, 1)  \right)\]</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="case-iii-prior-with-openness">
+<h3>Case III - Prior with Openness<a class="headerlink" href="#case-iii-prior-with-openness" title="Permalink to this headline">¶</a></h3>
+<p>The last option I think is the most interesting. It seems to incorporate the prior but also allow for some flexibility. In this option,</p>
+<p>We can pivot off of what the factor that the KL divergence term is simply a regularizer. So we could also go with a more conservative approach where we</p>
+<p>We will introduce a variational constraint to encode the input uncertainty directly into the approximate posterior.</p>
+<div class="math notranslate nohighlight">
+\[q(\mathbf X|\mathbf Z) = \prod_{i=1}^{N}\mathcal{N}(\mathbf{x}_i |\mathbf z_i,\mathbf \Sigma_\mathbf{z_i})\]</div>
+<p>We will have a new variational bound now:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{F}=\langle \log \mathcal{p}(\mathbf{Y|X}) \rangle_{q(\mathbf X|\mu_x, S)} - \text{KL}\left( q(\mathbf X|\mu_x, S) || p(\mathbf X|\mu_x, \Sigma_x)  \right)\]</div>
+<p>So the only free parameter in the variational bound is the actual variance of our inputs <span class="math notranslate nohighlight">\(S\)</span> that stems from our variational distribution <span class="math notranslate nohighlight">\(q(X)\)</span>. Again, this seems like a nice balanced approach where we can incorporate prior information within our model but at the same time allow for some freedom to maybe find a better distribution to represent the noise.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="case-iv-bonus-conservative-freedom">
+<h3>Case IV - Bonus, Conservative Freedom<a class="headerlink" href="#case-iv-bonus-conservative-freedom" title="Permalink to this headline">¶</a></h3>
+<p>Ok, so the true last option would be to try and see how the algorithm thinks the results should be. We</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{F}=\langle \log \mathcal{p}(\mathbf{Y|X}) \rangle_{q(\mathbf{X|Z})} - \text{KL}\left( q(\mathbf{X|Z}) || \mathcal{p}(\mathbf{X}) \right)\]</div>
+<center>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-align:center head"><p>Options</p></th>
+<th class="text-align:center head"><p><span class="math notranslate nohighlight">\(m_{p_x}\)</span></p></th>
+<th class="text-align:center head"><p><span class="math notranslate nohighlight">\(S_{p_x}\)</span></p></th>
+<th class="text-align:center head"><p><span class="math notranslate nohighlight">\(m_{p_z}\)</span></p></th>
+<th class="text-align:center head"><p><span class="math notranslate nohighlight">\(S_{p_z}\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-align:center"><p>No Prior</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\mu_x\)</span></p></td>
+<td class="text-align:center"><p>1</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\mu_x\)</span></p></td>
+<td class="text-align:center"><p>S_z</p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>Strong Conservative Prior</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\mu_x\)</span></p></td>
+<td class="text-align:center"><p>1</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\mu_x\)</span></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\Sigma_x\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-align:center"><p>Strong Prior</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\mu_x\)</span></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\Sigma_x\)</span></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\mu_x\)</span></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\Sigma_x\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>Bayesian Prior</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\mu_x\)</span></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\Sigma_x\)</span></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\mu_x\)</span></p></td>
+<td class="text-align:center"><p>S_z</p></td>
+</tr>
+</tbody>
+</table>
+</center>
+<p><strong>Caption</strong>: Summary of Options</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="important-papers">
+<h3>Important Papers<a class="headerlink" href="#important-papers" title="Permalink to this headline">¶</a></h3>
+<p>These are the important papers that helped me understand what was going on throughout the learning process.</p>
+</div>
+<div class="section" id="summary-thesis">
+<h3>Summary Thesis<a class="headerlink" href="#summary-thesis" title="Permalink to this headline">¶</a></h3>
+<p>Often times the papers that people publish in conferences in Journals don’t have enough information in them. Sometimes it’s really difficult to go through some of the mathematics that people put  in their articles especially with cryptic explanations like “it’s easy to show that…” or “trivially it can be shown that…”. For most of us it’s not easy nor is it trivial. So I’ve included a few thesis that help to explain some of the finer details. I’ve arranged them in order starting from the easiest to the most difficult.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://lib.ugent.be/fulltxt/RUG01/002/367/115/RUG01-002367115_2017_0001_AC.pdf">Non-Stationary Surrogate Modeling with Deep Gaussian Processes</a> - Dutordoir (2016)</p>
+<ul>
+<li><p>Chapter IV - Finding Uncertain Patterns in GPs</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="http://etheses.whiterose.ac.uk/18492/1/MaxZwiesseleThesis.pdf">Bringing Models to the Domain: Deploying Gaussian Processes in the Biological Sciences</a> - Zwießele (2017)</p>
+<ul>
+<li><p>Chapter II (2.4, 2.5) - Sparse GPs, Variational Bayesian GPLVM</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="http://etheses.whiterose.ac.uk/9968/1/Damianou_Thesis.pdf">Deep GPs and Variational Propagation of Uncertainty</a> - Damianou (2015)</p>
+<ul>
+<li><p>Chapter IV - Uncertain Inputs in Variational GPs</p></li>
+<li><p>Chapter II (2.1) - Lit Review</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="talks">
+<h3>Talks<a class="headerlink" href="#talks" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Damianou - Bayesian LVM with GPs - <a class="reference external" href="http://gpss.cc/gpss15/talks/gpss_BGPLVMs.pdf">MLSS2015</a></p></li>
+<li><p>Lawrence - Deep GPs - <span class="xref myst">MLSS2019</span></p></li>
+</ul>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/egps"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+        <div class='prev-next-bottom'>
+            
+    <a class='left-prev' id="prev-link" href="moment_matching.html" title="previous page">Moment Matching</a>
+    <a class='right-next' id="next-link" href="next.html" title="next page">Next Steps</a>
+
+        </div>
+        
+        </div>
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By J. Emmanuel Johnson<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Taylor Approximation &#8212; Research Notebook</title>
+    <title>Linearization (Taylor Expansions) &#8212; Research Notebook</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet" />
   <link href="../../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -352,12 +352,22 @@
    </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     Taylor Approximation
+     Linearization (Taylor Expansions)
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="moment_matching.html">
      Moment Matching
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="bgplvm.html">
+     Bayesian GPLVM
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="next.html">
+     Next Steps
     </a>
    </li>
   </ul>
@@ -456,12 +466,81 @@
             <nav id="bd-toc-nav">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tldr">
+   TLDR
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#analytical-moments">
+     Analytical Moments
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mean-function">
+       Mean Function
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#variance-function">
+       Variance Function
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#taylor-approximation">
+     Taylor Approximation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#linearized-predictive-mean-and-variance">
+       Linearized Predictive Mean and Variance
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conditional-gaussian-distributions">
+   Conditional Gaussian Distributions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#i-additive-noise-model-x-f">
+     I: Additive Noise Model (
+     <span class="math notranslate nohighlight">
+      \(x,f\)
+     </span>
+     )
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#other-gp-methods">
+       Other GP Methods
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#literature">
+   Literature
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#supplementary">
+   Supplementary
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#proof">
    Proof
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mean-function">
+    <a class="reference internal nav-link" href="#id1">
      Mean Function
     </a>
     <ul class="nav section-nav flex-column">
@@ -488,12 +567,12 @@
     </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#variance-function">
+    <a class="reference internal nav-link" href="#id2">
      Variance Function
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#linearized-predictive-mean-and-variance">
+    <a class="reference internal nav-link" href="#id3">
      Linearized Predictive Mean and Variance
     </a>
    </li>
@@ -503,6 +582,48 @@
   <a class="reference internal nav-link" href="#sparse-gps">
    Sparse GPs
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#error-propagation">
+     Error Propagation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#taylor-series-expansion">
+       Taylor Series Expansion
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#law-of-error-propagation">
+   Law of Error Propagation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#font-color-red-proof-font-mean-function">
+     <font color="red">
+      Proof:
+     </font>
+     Mean Function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#font-color-red-proof-font-variance-function">
+     <font color="red">
+      Proof:
+     </font>
+     Variance Function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#resources">
+     Resources
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -515,21 +636,230 @@
         
               <div>
                 
-  <div class="section" id="taylor-approximation">
-<h1>Taylor Approximation<a class="headerlink" href="#taylor-approximation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="linearization-taylor-expansions">
+<h1>Linearization (Taylor Expansions)<a class="headerlink" href="#linearization-taylor-expansions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="tldr">
+<h2>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">¶</a></h2>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{aligned}
 \tilde{\mathbf{\mu}}_\text{LinGP}(\mathbf{x_*}) &amp;= \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*}) +
 \underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{second Order}\\
-\tilde{\mathbf{\Sigma}}^2_\text{LinGP} (\mathbf{x_*}) &amp;= 
-\mathbf{\Sigma}^2_\text{GP}(\mathbf{\mu}_\mathbf{x_*}) + 
+\tilde{\mathbf{\sigma}}^2_\text{LinGP} (\mathbf{x_*}) &amp;= 
+\mathbf{\sigma}^2_\text{GP}(\mathbf{\mu}_\mathbf{x_*}) + 
 \underbrace{\frac{\partial \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}^\top
 \mathbf{\Sigma}_\mathbf{x_*}
 \frac{\partial \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}}_\text{1st Order} +
-\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \mathbf{\Sigma}^2_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{second Order}
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \mathbf{\Sigma}^2_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{2nd Order}
 \end{aligned}
 \end{split}\]</div>
+<hr class="docutils" />
+<div class="section" id="analytical-moments">
+<h3>Analytical Moments<a class="headerlink" href="#analytical-moments" title="Permalink to this headline">¶</a></h3>
+<p>The posterior of this distribution is non-Gaussian because we have to propagate a probability distribution through a non-linear kernel function. So this integral becomes intractable. We can compute the analytical Gaussian approximation by only computing the mean and the variance of the</p>
+<div class="section" id="mean-function">
+<h4>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this headline">¶</a></h4>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+m(\mu_\mathbf{x}, \Sigma_\mathbf{x})
+&amp;=
+\mathbb{E}_\mathbf{f_*}
+\left[ f_* \, \mathbb{E}_\mathbf{x_*} \left[ p(f_*|\mathbf{x}_*) \right] \right] \\
+&amp;=
+\mathbb{E}_\mathbf{x_*}
+\left[ \mathbb{E}_{f_*} \left[ f_* \,p(f_* | \mathbf{x_*}) \right]\right]\\
+&amp;=
+\mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]
+\end{aligned}
+\end{split}\]</div>
+</div>
+<div class="section" id="variance-function">
+<h4>Variance Function<a class="headerlink" href="#variance-function" title="Permalink to this headline">¶</a></h4>
+<p>The variance term is a bit more complex.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+v(\mu_\mathbf{x}, \Sigma_\mathbf{x})
+&amp;=
+\mathbb{E}_\mathbf{f_*}
+\left[ f_*^2 \, \mathbb{E}_\mathbf{x_*} \left[ p(f_*|\mathbf{x}_*) \right] \right] -
+\left(\mathbb{E}_\mathbf{f_*}
+\left[ f_* \, \mathbb{E}_\mathbf{x_*} \left[ p(f_*|\mathbf{x}_*) \right] \right]\right)^2\\
+&amp;=
+\mathbb{E}_\mathbf{x_*}
+\left[ \mathbb{E}_\mathbf{x_*} \left[ f_*^2 \, p(f_*|\mathbf{x}_*) \right] \right] -
+\left(\mathbb{E}_\mathbf{x_*}
+\left[ \mathbb{E}_\mathbf{x_*} \left[ f_* \, p(f_*|\mathbf{x}_*) \right] \right]\right)^2\\
+&amp;=
+\mathbb{E}_\mathbf{x_*}
+\left[  \sigma_\text{GP}^2(\mathbf{x}_*) + \mu_\text{GP}^2(\mathbf{x}_*) \right] -
+\mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]^2 \\
+&amp;=
+\mathbb{E}_\mathbf{x_*}
+\left[  \sigma_\text{GP}^2(\mathbf{x}_*) \right] + \mathbb{E}_\mathbf{x_*} \left[ \mu_\text{GP}^2(\mathbf{x}_*) \right] -
+\mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]^2\\
+&amp;=
+\mathbb{E}_\mathbf{x_*} \left[  \sigma_\text{GP}^2(\mathbf{x}_*) \right] +
+\mathbb{V}_\mathbf{x_*} \left[\mu_\text{GP}(\mathbf{x}_*) \right]
+\end{aligned}
+\end{split}\]</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="taylor-approximation">
+<h3>Taylor Approximation<a class="headerlink" href="#taylor-approximation" title="Permalink to this headline">¶</a></h3>
+<p>We will approximate our mean and variance function via a Taylor Expansion. First the mean function:</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\mathbf{z}_\mu =
+\mu_\text{GP}(\mathbf{x_*})=
+\mu_\text{GP}(\mu_\mathbf{x_*}) +
+\nabla \mu_\text{GP}\bigg\vert_{\mathbf{x}_* = \mu_\mathbf{x}}
+(\mathbf{x}_* - \mu_\mathbf{x_*})
++ \mathcal{O} (\mathbf{x_*}^2)
+\end{aligned}
+\]</div>
+<p>and then the variance function:</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\mathbf{z}_\sigma =
+\nu^2_\text{GP}(\mathbf{x_*})=
+\nu^2_\text{GP}(\mu_\mathbf{x_*}) +
+\nabla \nu^2_\text{GP}\bigg\vert_{\mathbf{x}_* = \mu_\mathbf{x}}
+(\mathbf{x}_* - \mu_\mathbf{x_*})
++ \mathcal{O} (\mathbf{x_*}^2)
+\end{aligned}
+\]</div>
+<hr class="docutils" />
+<div class="section" id="linearized-predictive-mean-and-variance">
+<h4>Linearized Predictive Mean and Variance<a class="headerlink" href="#linearized-predictive-mean-and-variance" title="Permalink to this headline">¶</a></h4>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+m(\mu_\mathbf{x_*}, \Sigma_\mathbf{x_*})
+&amp;=
+\mu_\text{GP}(\mu_\mathbf{x_*})\\
+v(\mu_\mathbf{x_*}, \Sigma_\mathbf{x_*})
+&amp;= \nu^2_\text{GP}(\mu_{x_*}) +
+\nabla_\mathbf{x_*} \mu_\text{GP}(\mu_{x_*})^\top
+\Sigma_{x_*}
+\nabla_\mathbf{x_*} \mu_\text{GP}(\mu_{x_*}) +
+\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \nu^2(\mu_{x_*})}{\partial x_* \partial x_*^\top}  \Sigma_{x_*}\right\}
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nabla_x\)</span> is the gradient of the function <span class="math notranslate nohighlight">\(f(\mu_x)\)</span> w.r.t. <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(\nabla_x^2 f(\mu_x)\)</span> is the second derivative (the Hessian) of the function <span class="math notranslate nohighlight">\(f(\mu_x)\)</span> w.r.t. <span class="math notranslate nohighlight">\(x\)</span>. This is a second-order approximation which has that expensive Hessian term. There have have been studies that have shown that that term tends to be neglible in practice and a first-order approximation is typically enough.</p>
+<p>Practically speaking, this leaves us with the following predictive mean and variance functions:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mu_\text{GP}(\mathbf{x_*}) &amp;= k(\mathbf{x_*}) \, \mathbf{K}_{GP}^{-1}y=k(\mathbf{x_*}) \, \alpha  \\
+\nu_{GP}^2(\mathbf{x_*}) &amp;= \sigma_y^2 + {\color{red}{\nabla_{\mu_\text{GP}}\,\Sigma_\mathbf{x_*} \,\nabla_{\mu_\text{GP}}^\top} }+ k_{**}- {\bf k}_* ({\bf K}+\sigma_y^2 \mathbf{I}_N )^{-1} {\bf k}_{*}^{\top}
+\end{aligned}
+\end{split}\]</div>
+<p>As seen above, the only extra term we need to include is the derivative of the mean function that is present in the predictive variance term.</p>
+</div>
+</div>
+</div>
+<div class="section" id="conditional-gaussian-distributions">
+<h2>Conditional Gaussian Distributions<a class="headerlink" href="#conditional-gaussian-distributions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="i-additive-noise-model-x-f">
+<h3>I: Additive Noise Model (<span class="math notranslate nohighlight">\(x,f\)</span>)<a class="headerlink" href="#i-additive-noise-model-x-f" title="Permalink to this headline">¶</a></h3>
+<p>This is the noise
+$<span class="math notranslate nohighlight">\(
+\begin{bmatrix}
+    x \\
+    y
+    \end{bmatrix}
+    \sim \mathcal{N} \left( 
+    \begin{bmatrix}
+    \mu_{x} \\ 
+    \mu_{y} 
+    \end{bmatrix}, 
+    \begin{bmatrix}
+    \Sigma_x &amp; C \\
+    C^\top &amp; \Pi
+    \end{bmatrix}
+    \right)
+\)</span><span class="math notranslate nohighlight">\(
+where
+\)</span><span class="math notranslate nohighlight">\(
+\begin{aligned}
+\mu_y &amp;= f(\mu_x) \\
+\Pi &amp;= \nabla_x f(\mu_x) \: \Sigma_x \: \nabla_x f(\mu_x)^\top + \nu^2(x) \\
+C &amp;= \Sigma_x \: \nabla_x^\top f(\mu_x)
+\end{aligned}
+\)</span><span class="math notranslate nohighlight">\(
+So if we want to make predictions with our new model, we will have the final equation as:
+\)</span><span class="math notranslate nohighlight">\(
+\begin{aligned}
+f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \\
+    \mu_{GP} &amp;= K_{*} K_{GP}^{-1}y=K_{*} \alpha \\
+    \nu^2_{GP} &amp;= K_{**} - K_{*} K_{GP}^{-1}K_{*}^{\top} + \tilde{\Sigma}_x
+\end{aligned}
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>\tilde{\Sigma}<em>x = \nabla_x \mu</em>{GP} \Sigma_x \nabla \mu_{GP}^\top$.</p>
+<div class="section" id="other-gp-methods">
+<h4>Other GP Methods<a class="headerlink" href="#other-gp-methods" title="Permalink to this headline">¶</a></h4>
+<p>We can extend this method to other GP algorithms including sparse GP models. The only thing that changes are the original <span class="math notranslate nohighlight">\(\mu_{GP}\)</span> and <span class="math notranslate nohighlight">\(\nu^2_{GP}\)</span> equations. In a sparse GP we have the following predictive functions
+$<span class="math notranslate nohighlight">\(
+\begin{aligned}
+    \mu_{SGP} &amp;= K_{*z}K_{zz}^{-1}m \\
+    \nu^2_{SGP} &amp;= K_{**} 
+    - K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top}
+\end{aligned}
+\)</span><span class="math notranslate nohighlight">\(
+So the new predictive functions will be:
+\)</span><span class="math notranslate nohighlight">\(
+\begin{aligned}
+    \mu_{SGP} &amp;= K_{*z}K_{zz}^{-1}m \\
+    \nu^2_{SGP} &amp;= K_{**} 
+    - K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top} 
+    + \tilde{\Sigma}_x
+\end{aligned}
+\)</span>$
+As shown above, this is a fairly extensible method that offers a cheap improved predictive variance estimates on an already trained GP model. Some future work could be evaluating how other GP models, e.g. Sparse Spectrum GP, Multi-Output GPs, e.t.c.</p>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="literature">
+<h2>Literature<a class="headerlink" href="#literature" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Gaussian Process Priors with Uncertain Inputs: Multiple-Step-Ahead Prediction - Girard et. al. (2002) - Technical Report</p>
+<blockquote>
+<div><p>Does the derivation for taking the expectation and variance for the  Taylor series expansion of the predictive mean and variance.</p>
+</div></blockquote>
+</li>
+<li><p>Expectation Propagation in Gaussian Process Dynamical Systems: Extended Version - Deisenroth &amp; Mohamed (2012) - NeuRIPS</p>
+<blockquote>
+<div><p>First time the moment matching <strong>and</strong> linearized version appears in the GP literature.</p>
+</div></blockquote>
+</li>
+<li><p>Learning with Uncertainty-Gaussian Processes and Relevance Vector Machines - Candela (2004) - Thesis</p>
+<blockquote>
+<div><p>Full law of iterated expectations and conditional variance.</p>
+</div></blockquote>
+</li>
+<li><p>Gaussian Process Training with Input Noise - McHutchon &amp; Rasmussen et. al. (2012) - NeuRIPS</p>
+<blockquote>
+<div><p>Used the same logic but instead of just approximated the posterior, they also applied this to the model which resulted in an iterative procedure.</p>
+</div></blockquote>
+</li>
+<li><p>Multi-class Gaussian Process Classification with Noisy Inputs - Villacampa-Calvo et. al. (2020) - <span class="xref myst">axriv</span></p>
+<blockquote>
+<div><p>Applied the first order approximation using the Taylor expansion for a classification problem. Compared this to the variational inference.</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="supplementary">
+<h2>Supplementary<a class="headerlink" href="#supplementary" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+</div>
 <hr class="docutils" />
 <div class="section" id="proof">
 <h2>Proof<a class="headerlink" href="#proof" title="Permalink to this headline">¶</a></h2>
@@ -544,8 +874,8 @@
 (\mathbf{x}_* - \mu_\mathbf{x_*})^\top (\mathbf{x}_* - \mu_\mathbf{x_*})}_\text{2nd Order} +
 \underbrace{\mathcal{O} (\mathbf{x_*}^3)}_\text{Higher Order}
 \end{aligned}\end{split}\]</div>
-<div class="section" id="mean-function">
-<h3>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>Mean Function<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Now we need to take the expectation of our approximation, <span class="math notranslate nohighlight">\(\mathbb{E}[\mathbf{z}_\mu]\)</span>. We tackle each of the terms individually below.</p>
 <div class="section" id="zeroth-term">
 <h4>Zeroth Term<a class="headerlink" href="#zeroth-term" title="Permalink to this headline">¶</a></h4>
@@ -603,8 +933,8 @@ f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
 \]</div>
 </div>
 </div>
-<div class="section" id="variance-function">
-<h3>Variance Function<a class="headerlink" href="#variance-function" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Variance Function<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>So the variance term is a bit more difficult to calculate due to the <span class="math notranslate nohighlight">\(\mathbb{V}[\cdot]\)</span> operator.</p>
 <div class="math notranslate nohighlight">
 \[
@@ -643,8 +973,8 @@ f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
 \frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} \sigma^2_\text{GP}(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\} 
 \end{aligned}\]</div>
 </div>
-<div class="section" id="linearized-predictive-mean-and-variance">
-<h3>Linearized Predictive Mean and Variance<a class="headerlink" href="#linearized-predictive-mean-and-variance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Linearized Predictive Mean and Variance<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
 \tilde{\mu}_\text{LinGP}(\mathbf{x_*}) &amp;= \underbrace{\mu_\text{GP}(\mu_\mathbf{x_*})}_\text{1st Order} +
@@ -682,6 +1012,77 @@ f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
     + \tilde{\Sigma}_x
 \end{aligned}\end{split}\]</div>
 <p>As shown above, this is a fairly extensible method that offers a cheap improved predictive variance estimates on an already trained GP model. Some future work could be evaluating how other GP models, e.g. Sparse Spectrum GP, Multi-Output GPs, e.t.c.</p>
+<hr class="docutils" />
+<div class="section" id="error-propagation">
+<h3>Error Propagation<a class="headerlink" href="#error-propagation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="taylor-series-expansion">
+<h4>Taylor Series Expansion<a class="headerlink" href="#taylor-series-expansion" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><p>A Taylor series is representation of a function as an infinite sum of terms that are calculated from the values of the functions derivatives at a single point - Wiki</p>
+</div></blockquote>
+<p>Often times we come across functions that are very difficult to compute analytically. Below we have the simple first-order Taylor series approximation.</p>
+<p>Let’s take some function <span class="math notranslate nohighlight">\(f(\mathbf x)\)</span> where <span class="math notranslate nohighlight">\(\mathbf{x} \sim \mathcal{N}(\mu_\mathbf{x}, \Sigma_\mathbf{x})\)</span> described by a mean <span class="math notranslate nohighlight">\(\mu_\mathbf{x}\)</span> and covariance <span class="math notranslate nohighlight">\(\Sigma_\mathbf{x}\)</span>. The Taylor series expansion around the function <span class="math notranslate nohighlight">\(f(\mathbf x)\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf z = f(\mathbf x) \approx f(\mu_{\mathbf x}) +   \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \]</div>
+</div>
+</div>
+</div>
+<div class="section" id="law-of-error-propagation">
+<h2>Law of Error Propagation<a class="headerlink" href="#law-of-error-propagation" title="Permalink to this headline">¶</a></h2>
+<p>This results in a mean and error covariance of the new distribution <span class="math notranslate nohighlight">\(\mathbf z\)</span> defined by:</p>
+<div class="math notranslate nohighlight">
+\[\mu_{\mathbf z} = f(\mu_{\mathbf x})\]</div>
+<div class="math notranslate nohighlight">
+\[\Sigma_\mathbf{z} = \nabla_\mathbf{x} f(\mu_{\mathbf x}) \; \Sigma_\mathbf{x} \; \nabla_\mathbf{x} f(\mu_{\mathbf x})^{\top}\]</div>
+<div class="section" id="font-color-red-proof-font-mean-function">
+<h3><font color="red">Proof:</font> Mean Function<a class="headerlink" href="#font-color-red-proof-font-mean-function" title="Permalink to this headline">¶</a></h3>
+<p>Given the mean function:</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{E}[\mathbf{x}] = \frac{1}{N} \sum_{i=1} x_i\]</div>
+<p>We can simply apply this to the first-order Taylor series function.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mu_\mathbf{z} &amp;= 
+\mathbb{E}_{\mathbf{x}} \left[  f(\mu_{\mathbf x}) +   \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \right] \\
+&amp;= \mathbb{E}_{\mathbf{x}} \left[  f(\mu_{\mathbf x}) \right] +   \mathbb{E}_{\mathbf{x}} \left[  \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \right] \\
+&amp;= f(\mu_{\mathbf x}) + 
+\mathbb{E}_{\mathbf{x}} \left[  \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}  \mathbf x  \right]- \mathbb{E}_{\mathbf{x}} \left[ \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\mu_{\mathbf x} \right] \\
+&amp;= f(\mu_{\mathbf x}) +
+ \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}  \mu_\mathbf{x} -  \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\mu_{\mathbf x}  \\
+&amp;= f(\mu_{\mathbf x}) \\
+\end{aligned}
+\end{split}\]</div>
+</div>
+<div class="section" id="font-color-red-proof-font-variance-function">
+<h3><font color="red">Proof:</font> Variance Function<a class="headerlink" href="#font-color-red-proof-font-variance-function" title="Permalink to this headline">¶</a></h3>
+<p>Given the variance function</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{V}[\mathbf{x}] = \mathbb{E}\left[ \mathbf{x} - \mu_\mathbf{x} \right]^2\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\sigma_\mathbf{z}^2
+&amp;=
+\mathbb{E} \left[ f(\mu_\mathbf{x}) - \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}} (\mathbf{x} - \mu_\mathbf{x}) - \mu_\mathbf{x} \right] \\
+&amp;=
+\mathbb{E} \left[ \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}}  (\mathbf{x} - \mu_\mathbf{x})\right]^2 \\
+&amp;=
+\left( \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}} \right)^2 \mathbb{E}\left[  \mathbf{x} - \mu_\mathbf{x}\right]^2\\
+&amp;= \left( \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}} \right)^2 \Sigma_\mathbf{x}
+\end{aligned}
+\end{split}\]</div>
+<p>I’ve linked a nice tutorial for propagating variances below if you would like to go through the derivations yourself.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="resources">
+<h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Essence of Calculus, Chapter 11 | Taylor Series - 3Blue1Brown - <a class="reference external" href="https://youtu.be/3d6DsjIBzJ4">youtube</a></p></li>
+<li><p>Introduction to Error Propagation: Derivation, Meaning and Examples - <a class="reference external" href="http://srl.informatik.uni-freiburg.de/papers/arrasTR98.pdf">PDF</a></p></li>
+<li><p>Statistical uncertainty and error propagation - Vermeer - <a class="reference external" href="https://users.aalto.fi/~mvermeer/uncertainty.pdf">PDF</a></p></li>
+</ul>
+</div>
 </div>
 </div>
 

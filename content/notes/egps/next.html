@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Metrics &#8212; Research Notebook</title>
+    <title>Next Steps &#8212; Research Notebook</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet" />
   <link href="../../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -53,6 +53,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Information Theory" href="../info_theory/overview.html" />
+    <link rel="prev" title="Bayesian GPLVM" href="bgplvm.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -226,7 +228,7 @@
   Notes
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../bayesian/overview.html">
    Bayesian
@@ -270,7 +272,7 @@
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="overview.html">
+  <a class="reference internal" href="../concepts/overview.html">
    Sleeper Concepts
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
@@ -280,27 +282,27 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="change_of_variables.html">
+    <a class="reference internal" href="../concepts/change_of_variables.html">
      Change of Variables
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="identity_trick.html">
+    <a class="reference internal" href="../concepts/identity_trick.html">
      Identity Trick
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="inverse_function.html">
+    <a class="reference internal" href="../concepts/inverse_function.html">
      Inverse Function Theorem
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="jensens.html">
+    <a class="reference internal" href="../concepts/jensens.html">
      Jensens Inequality
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="lin_alg.html">
+    <a class="reference internal" href="../concepts/lin_alg.html">
      Linear Algebra Tricks
     </a>
    </li>
@@ -323,48 +325,48 @@
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../egps/overview.html">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="overview.html">
    Uncertain Gaussian Processes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
   <label for="toctree-checkbox-8">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/predictions.html">
+    <a class="reference internal" href="predictions.html">
      Uncertain Predictions
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/gauss_approx.html">
+    <a class="reference internal" href="gauss_approx.html">
      Gaussian Approximation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/mcmc.html">
+    <a class="reference internal" href="mcmc.html">
      Monte Carlo Sampling
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/taylor.html">
+    <a class="reference internal" href="taylor.html">
      Linearization (Taylor Expansions)
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/moment_matching.html">
+    <a class="reference internal" href="moment_matching.html">
      Moment Matching
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/bgplvm.html">
+    <a class="reference internal" href="bgplvm.html">
      Bayesian GPLVM
     </a>
    </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/next.html">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
      Next Steps
     </a>
    </li>
@@ -433,7 +435,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/content/notes/concepts/metrics.md"><button type="button"
+        <a class="dropdown-buttons" href="../../../_sources/content/notes/egps/next.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -464,41 +466,34 @@
             <nav id="bd-toc-nav">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#mae">
-   MAE
+  <a class="reference internal nav-link" href="#apply-these-algorithms-to-different-problems-other-than-dynamical-systems">
+   1. Apply these algorithms to different problems (other than dynamical systems)
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#mse">
-   MSE
+  <a class="reference internal nav-link" href="#improve-the-kernel-expectation-calculations">
+   2. Improve the Kernel Expectation Calculations
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#rmse">
-   RMSE
+  <a class="reference internal nav-link" href="#think-about-the-problem-differently">
+   3. Think about the problem differently
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#r-squared">
-   R-Squared
+  <a class="reference internal nav-link" href="#think-about-pragmatic-solutions">
+   4. Think about pragmatic solutions
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#percentage-metrics">
-   Percentage Metrics
+  <a class="reference internal nav-link" href="#figure-out-how-to-extend-it-to-deep-gps">
+   5. Figure Out how to extend it to Deep GPs
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mape">
-     MAPE
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#smape">
-     SMAPE
-    </a>
-   </li>
-  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#time-series-state-space-models">
+   6. Time Series (State-Space Models)
+  </a>
  </li>
 </ul>
 
@@ -511,58 +506,32 @@
         
               <div>
                 
-  <div class="section" id="metrics">
-<h1>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="mae">
-<h2>MAE<a class="headerlink" href="#mae" title="Permalink to this headline">¶</a></h2>
-<p>Mean Absolute Error</p>
-<div class="math notranslate nohighlight">
-\[
-\text{MAE}(Y, \hat{Y}) = \frac{1}{N} \sum_{i=1}^N |\hat{y}_i - y_i|
-\]</div>
+  <div class="section" id="next-steps">
+<h1>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h1>
+<p>So after all of this literature, what is the next step for the community? I have a few suggestions based on what I’ve seen:</p>
+<div class="section" id="apply-these-algorithms-to-different-problems-other-than-dynamical-systems">
+<h2>1. Apply these algorithms to different problems (other than dynamical systems)<a class="headerlink" href="#apply-these-algorithms-to-different-problems-other-than-dynamical-systems" title="Permalink to this headline">¶</a></h2>
+<p>It’s clear to me that there are a LOT of different algorithms. But in almost every study above, I don’t see many applications outside of dynamical systems. I would love to see other people outside (or within) community use these algorithms on different problems. Like Neil Lawrence said in a recent MLSS talk; “we need to stop jacking around with GPs and actually <strong>apply them</strong>” (paraphrased). There are many little goodies to be had from all of these methods; like the linearized GP predictive variance estimate for better variance estimates is something you get almost for free. So why not use it?</p>
 </div>
-<div class="section" id="mse">
-<h2>MSE<a class="headerlink" href="#mse" title="Permalink to this headline">¶</a></h2>
-<p>Mean Squared Error</p>
-<div class="math notranslate nohighlight">
-\[
-\text{MSE}(Y, \hat{Y}) = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2
-\]</div>
+<div class="section" id="improve-the-kernel-expectation-calculations">
+<h2>2. Improve the Kernel Expectation Calculations<a class="headerlink" href="#improve-the-kernel-expectation-calculations" title="Permalink to this headline">¶</a></h2>
+<p>So how we calculate kernel expectations is costly. A typical sparse GP has a cost of <span class="math notranslate nohighlight">\(O(NM^2)\)</span>. But when we do the calculation of kernel expectations, that order goes back up to <span class="math notranslate nohighlight">\(O (DNM^2)\)</span> . It’s not bad considering but it is still now an order of magnitude larger for high dimensional datasets. This is going backwards in terms of efficiency. Also, many implementations attempt to do this in parallel for speed but then the cost of memory becomes prohibitive (especially on GPUs). There are some other good approximation schemes we might be able to use such as advanced Bayesian Quadrature techniques and the many moment transformation techniques that are present in the Kalman Filter literature. I’m sure there are tricks of the trade to be had there.</p>
 </div>
-<div class="section" id="rmse">
-<h2>RMSE<a class="headerlink" href="#rmse" title="Permalink to this headline">¶</a></h2>
-<p>Root Mean Squared Error</p>
-<div class="math notranslate nohighlight">
-\[
-\text{RMSE}(Y, \hat{Y}) = \sqrt{\frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2}
-\]</div>
+<div class="section" id="think-about-the-problem-differently">
+<h2>3. Think about the problem differently<a class="headerlink" href="#think-about-the-problem-differently" title="Permalink to this headline">¶</a></h2>
+<p>An interesting way to approach the method is to perhaps use the idea of covariates. Instead of the noise being additive, perhaps it’s another combination where we have to model it separately. That’s what Salimbeni did for his latest Deep GP and it’s a very interesting way to look at it. It works well too!</p>
 </div>
-<div class="section" id="r-squared">
-<h2>R-Squared<a class="headerlink" href="#r-squared" title="Permalink to this headline">¶</a></h2>
-<div class="math notranslate nohighlight">
-\[
-\text{R}^2(Y, \hat{Y}) = 1 - \frac{\sum_{i=1}^N (\hat{y}_i - y_i)^2}{\sum_{i=1}^N (\hat{y}_i - \bar{y})^2}
-\]</div>
+<div class="section" id="think-about-pragmatic-solutions">
+<h2>4. Think about pragmatic solutions<a class="headerlink" href="#think-about-pragmatic-solutions" title="Permalink to this headline">¶</a></h2>
+<p>Some of these algorithms are super complicated. It makes it less desireable to actually try them because it’s so easy to get lost in the mathematics of it all. I like pragmatic solutions. For example, using Drop-Out, Ensembles and Noise Constrastive Priors are easy and pragmatic ways of adding reliable uncertainty estimates in Bayesian Neural Networks. I would like some more pragmatic solutions for some of these methods that have been listed above. <strong>Another Shameless Plug</strong>: the method I used is very easy to get better predictive variances almost for free.</p>
 </div>
-<hr class="docutils" />
-<div class="section" id="percentage-metrics">
-<h2>Percentage Metrics<a class="headerlink" href="#percentage-metrics" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="mape">
-<h3>MAPE<a class="headerlink" href="#mape" title="Permalink to this headline">¶</a></h3>
-<p><strong>Mean Absolute Percent Error</strong></p>
-<div class="math notranslate nohighlight">
-\[
-\text{MAPE}(Y, \hat{Y}) = \frac{1}{N} \sum_{i=1}^N \left|\frac{  \hat{y}_i - y_i}{y_i} \right|
-\]</div>
+<div class="section" id="figure-out-how-to-extend-it-to-deep-gps">
+<h2>5. Figure Out how to extend it to Deep GPs<a class="headerlink" href="#figure-out-how-to-extend-it-to-deep-gps" title="Permalink to this headline">¶</a></h2>
+<p>So the original Deep GP is just a stack of BGPLVMs and more recent GPs have regressed back to stacking SVGPs. I would like to know if there is a way to improve the BGPLVM in such a way that we can stack them again and then constrain the solutions with our known prior distributions.</p>
 </div>
-<div class="section" id="smape">
-<h3>SMAPE<a class="headerlink" href="#smape" title="Permalink to this headline">¶</a></h3>
-<p><strong>Symmetric Mean Absolute Percent Error</strong></p>
-<div class="math notranslate nohighlight">
-\[
-\text{SMAPE}(Y, \hat{Y}) = \frac{100\%}{N} \sum_{i=1}^N \left|\frac{  \hat{y}_i - y_i}{\frac{|\hat{y}_i|+|y_i|}{2}} \right|
-\]</div>
-</div>
+<div class="section" id="time-series-state-space-models">
+<h2>6. Time Series (State-Space Models)<a class="headerlink" href="#time-series-state-space-models" title="Permalink to this headline">¶</a></h2>
+<p>State Space Models already inherently do this as they do a sort of forward propagation (in time) and then backwards smoothing (in time), but it would be good to see how we can incorporate prior error knowledge into these frameworks. This would especially be useful in large modeling frameworks like Data Assimilation.</p>
 </div>
 </div>
 
@@ -579,7 +548,7 @@
         },
         kernelOptions: {
             kernelName: "python3",
-            path: "./content/notes/concepts"
+            path: "./content/notes/egps"
         },
         predefinedOutput: true
     }
@@ -591,6 +560,8 @@
         
         <div class='prev-next-bottom'>
             
+    <a class='left-prev' id="prev-link" href="bgplvm.html" title="previous page">Bayesian GPLVM</a>
+    <a class='right-next' id="next-link" href="../info_theory/overview.html" title="next page">Information Theory</a>
 
         </div>
         

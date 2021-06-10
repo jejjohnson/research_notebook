@@ -1,11 +1,11 @@
 # Moment Matching
 
-
+## TLDR
 
 $$
 \begin{aligned}
 \tilde{\mathbf{\mu}}_{MMGP}(\mathbf{x_*}) &= \int \mathbf{\mu}_{GP}(\mathbf{x_*}) p(\mathbf{x_*})d\mathbf{x_*} \\ 
-\tilde{\mathbf{\Sigma}}^2_{mmGP}(\mathbf{x}_*) &= \int \mathbf{\Sigma}^2_{GP}(\mathbf{x_*}) p(\mathbf{x_*}) d\mathbf{x}_* + \int  \mathbf{\mu}_{GP}^2(\mathbf{x_*})p(\mathbf{x_*})d\mathbf{x_*}  - \left[ \int \mathbf{\mu}_{GP}(\mathbf{x_*}) p(\mathbf{x_*})d\mathbf{x_*}\right]^2
+\tilde{\mathbf{\sigma}}^2_{mmGP}(\mathbf{x}_*) &= \int \mathbf{\sigma}^2_{GP}(\mathbf{x_*}) p(\mathbf{x_*}) d\mathbf{x}_* + \int  \mathbf{\mu}_{GP}^2(\mathbf{x_*})p(\mathbf{x_*})d\mathbf{x_*}  - \left[ \int \mathbf{\mu}_{GP}(\mathbf{x_*}) p(\mathbf{x_*})d\mathbf{x_*}\right]^2
 \end{aligned}
 $$
 
@@ -14,7 +14,7 @@ After some manipulation, this results in the follow equations for the predictive
 $$
 \begin{aligned}
 \tilde{\mathbf{\mu}}_{MMGP}(\mathbf{x_*}) &= \Psi_1^\top\alpha \\
-\tilde{\mathbf{\Sigma}}^2_{MMGP}(\mathbf{x}_*)
+\tilde{\mathbf{\sigma}}^2_{MMGP}(\mathbf{x}_*)
 &=
 \psi_0 - \text{Tr}\left( \left(\mathbf{K}_{GP}^{-1}  - \alpha\alpha^\top\right) \Psi_2\right) - \text{Tr}\left( \Psi_1\Psi_1^\top\alpha\alpha^\top \right),
 \end{aligned}
@@ -23,16 +23,14 @@ $$
 where we have $\boldsymbol{\Psi_i}$ quantities called kernel expectations denoted by:
 
 $$
-\begin{aligned}
-[ \psi_0 ]_{i}  &= \int k(\mathbf{x}_i, \mathbf{x}_i)p(\mathbf{x}_i)d\mathbf{x}_i \\
-[\Psi_1]_{ij} &= \int k(\mathbf{x}_i, \mathbf{y}_j)p(\mathbf{x}_i)d\mathbf{x}_i \\
-[\Psi_2]_{ijk} &= \int k(\mathbf{x}_i, \mathbf{y}_j)k(\mathbf{x}_i, \mathbf{z}_k) d\mathbf{x}_i.
-\end{aligned}
+[\psi_0]_i  = \int k(\mathbf{x}_i, \mathbf{x}_i)p(\mathbf{x}_i)d\mathbf{x}_i \\
+[\Psi_1]_{ij} = \int k(\mathbf{x}_i, \mathbf{y}_j)p(\mathbf{x}_i)d\mathbf{x}_i \\
+[\Psi_2]_{ijk} = \int k(\mathbf{x}_i, \mathbf{y}_j)k(\mathbf{x}_i, \mathbf{z}_k) d\mathbf{x}_i.
 $$
 
 ---
 
-## Proof
+## Proofs
 
 
 ### Mean Function
@@ -40,7 +38,7 @@ $$
 
 $$
 \begin{aligned}
-\tilde{\mu}_{GP}(\mu_{\mathbf{x}}, \Sigma_\mathbf{x})
+\tilde{\mu}_{MMGP}(\mathbf{x}_*)
     &= \mathbb{E}_{\mathbf{x}_*}\left[
     \mu_{GP}(\mathbf{x}_*) \right]
     \\
@@ -53,7 +51,7 @@ $$
     &= 
      \int_\mathcal{X} k(\mathbf{X,x}_*)^{\top}\alpha  \; p(\mathbf{x}_*)\; d\mathbf{x}_*\\
     &= \alpha^\top \underbrace{\int_{X} k(\mathbf{X,x}_*) \cdot p(\mathbf{x}_*)d\mathbf{x}_*}_{\Psi_1}\\
-\tilde{\mu}_{GP}(\mu_{\mathbf{x}}, \Sigma_\mathbf{x})
+\tilde{\mu}_{MMGP}(\mathbf{x}_*)
 &= \Psi_1^\top\alpha \\
 \end{aligned}
 $$
@@ -101,7 +99,7 @@ $$
 \begin{aligned}
 \mathbb{E}_{\mathbf{x}_*}[\mu_{GP}(\mathbf{x}_*)]^2 
 &= 
-\left[ \tilde{\mu}_{GP}(\mu_{\mathbf{x}}, \Sigma_\mathbf{x})\right]^2 \\
+\left[ \tilde{\mu}_{GP}(\mu_{\mathbf{x}}, \sigma_\mathbf{x})\right]^2 \\
 &= [\Psi_1^\top\alpha]^2  \\
 &= \text{Tr}\left( \Psi_1\Psi_1^\top\alpha\alpha^\top \right)  \\
 \end{aligned}

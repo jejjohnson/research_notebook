@@ -597,34 +597,6 @@
    </li>
   </ul>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#law-of-error-propagation">
-   Law of Error Propagation
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#font-color-red-proof-font-mean-function">
-     <font color="red">
-      Proof:
-     </font>
-     Mean Function
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#font-color-red-proof-font-variance-function">
-     <font color="red">
-      Proof:
-     </font>
-     Variance Function
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#resources">
-     Resources
-    </a>
-   </li>
-  </ul>
- </li>
 </ul>
 
             </nav>
@@ -1025,63 +997,6 @@ f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
 <div class="math notranslate nohighlight">
 \[\mathbf z = f(\mathbf x) \approx f(\mu_{\mathbf x}) +   \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \]</div>
 </div>
-</div>
-</div>
-<div class="section" id="law-of-error-propagation">
-<h2>Law of Error Propagation<a class="headerlink" href="#law-of-error-propagation" title="Permalink to this headline">¶</a></h2>
-<p>This results in a mean and error covariance of the new distribution <span class="math notranslate nohighlight">\(\mathbf z\)</span> defined by:</p>
-<div class="math notranslate nohighlight">
-\[\mu_{\mathbf z} = f(\mu_{\mathbf x})\]</div>
-<div class="math notranslate nohighlight">
-\[\Sigma_\mathbf{z} = \nabla_\mathbf{x} f(\mu_{\mathbf x}) \; \Sigma_\mathbf{x} \; \nabla_\mathbf{x} f(\mu_{\mathbf x})^{\top}\]</div>
-<div class="section" id="font-color-red-proof-font-mean-function">
-<h3><font color="red">Proof:</font> Mean Function<a class="headerlink" href="#font-color-red-proof-font-mean-function" title="Permalink to this headline">¶</a></h3>
-<p>Given the mean function:</p>
-<div class="math notranslate nohighlight">
-\[\mathbb{E}[\mathbf{x}] = \frac{1}{N} \sum_{i=1} x_i\]</div>
-<p>We can simply apply this to the first-order Taylor series function.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-\mu_\mathbf{z} &amp;= 
-\mathbb{E}_{\mathbf{x}} \left[  f(\mu_{\mathbf x}) +   \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \right] \\
-&amp;= \mathbb{E}_{\mathbf{x}} \left[  f(\mu_{\mathbf x}) \right] +   \mathbb{E}_{\mathbf{x}} \left[  \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \right] \\
-&amp;= f(\mu_{\mathbf x}) + 
-\mathbb{E}_{\mathbf{x}} \left[  \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}  \mathbf x  \right]- \mathbb{E}_{\mathbf{x}} \left[ \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\mu_{\mathbf x} \right] \\
-&amp;= f(\mu_{\mathbf x}) +
- \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}  \mu_\mathbf{x} -  \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\mu_{\mathbf x}  \\
-&amp;= f(\mu_{\mathbf x}) \\
-\end{aligned}
-\end{split}\]</div>
-</div>
-<div class="section" id="font-color-red-proof-font-variance-function">
-<h3><font color="red">Proof:</font> Variance Function<a class="headerlink" href="#font-color-red-proof-font-variance-function" title="Permalink to this headline">¶</a></h3>
-<p>Given the variance function</p>
-<div class="math notranslate nohighlight">
-\[\mathbb{V}[\mathbf{x}] = \mathbb{E}\left[ \mathbf{x} - \mu_\mathbf{x} \right]^2\]</div>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-\sigma_\mathbf{z}^2
-&amp;=
-\mathbb{E} \left[ f(\mu_\mathbf{x}) - \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}} (\mathbf{x} - \mu_\mathbf{x}) - \mu_\mathbf{x} \right] \\
-&amp;=
-\mathbb{E} \left[ \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}}  (\mathbf{x} - \mu_\mathbf{x})\right]^2 \\
-&amp;=
-\left( \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}} \right)^2 \mathbb{E}\left[  \mathbf{x} - \mu_\mathbf{x}\right]^2\\
-&amp;= \left( \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}} \right)^2 \Sigma_\mathbf{x}
-\end{aligned}
-\end{split}\]</div>
-<p>I’ve linked a nice tutorial for propagating variances below if you would like to go through the derivations yourself.</p>
-</div>
-<hr class="docutils" />
-<div class="section" id="resources">
-<h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Essence of Calculus, Chapter 11 | Taylor Series - 3Blue1Brown - <a class="reference external" href="https://youtu.be/3d6DsjIBzJ4">youtube</a></p></li>
-<li><p>Introduction to Error Propagation: Derivation, Meaning and Examples - <a class="reference external" href="http://srl.informatik.uni-freiburg.de/papers/arrasTR98.pdf">PDF</a></p></li>
-<li><p>Statistical uncertainty and error propagation - Vermeer - <a class="reference external" href="https://users.aalto.fi/~mvermeer/uncertainty.pdf">PDF</a></p></li>
-</ul>
 </div>
 </div>
 </div>

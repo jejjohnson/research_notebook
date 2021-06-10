@@ -1,73 +1,73 @@
-# Table of contents
-# Learn more at https://jupyterbook.org/customize/toc.html
-- file: intro
-
-- part: Resources
-  chapters: 
-  - file: content/resources/python/overview.md
-    sections:
-    - file: content/resources/python/ides.md
-    - file: content/resources/python/stack.md
-    - file: content/resources/python/earthsci_stack.md
-    - file: content/resources/python/dl_stack.md
-    - file: content/resources/python/scale_stack.md
-    - file: content/resources/python/good_code.md
-
-- part: Tutorials
-  chapters: 
-  - file: content/tutorials/jax_journey/overview.md
-    sections:
-    - file: content/tutorials/jax_journey/ecosystem.md
-    - file: content/tutorials/jax_journey/vmap.md
-    - file: content/tutorials/jax_journey/jit.md
-    - file: content/tutorials/jax_journey/classes.md
-    - file: content/tutorials/jax_journey/optimization.md
-    - file: content/tutorials/jax_journey/algorithms/overview.md
+format: jb-book
+root: intro
+parts:
+  - caption: Resources
+    chapters:
+    - file: content/resources/python/overview
       sections:
-      - file: content/tutorials/jax_journey/algorithms/bisection.md
-      - file: content/tutorials/jax_journey/algorithms/kernel_derivatives.md
-      - file: content/tutorials/jax_journey/algorithms/gpr.md
-  - file: content/tutorials/remote/overview.md
-    sections:
-    - file: content/tutorials/remote/vscode_jlab.md
+      - file: content/resources/python/ides
+      - file: content/resources/python/stack
+      - file: content/resources/python/earthsci_stack
+      - file: content/resources/python/dl_stack
+      - file: content/resources/python/scale_stack
+      - file: content/resources/python/good_code
+  - caption: Tutorials
+    chapters:
+    - file: content/tutorials/jax_journey/overview
+      sections:
+      - file: content/tutorials/jax_journey/ecosystem
+      - file: content/tutorials/jax_journey/vmap
+      - file: content/tutorials/jax_journey/jit
+      - file: content/tutorials/jax_journey/classes
+      - file: content/tutorials/jax_journey/optimization
+      - file: content/tutorials/jax_journey/algorithms/overview
+        sections:
+        - file: content/tutorials/jax_journey/algorithms/bisection
+        - file: content/tutorials/jax_journey/algorithms/kernel_derivatives
+        - file: content/tutorials/jax_journey/algorithms/gpr
+    - file: content/tutorials/remote/overview
+      sections:
+      - file: content/tutorials/remote/vscode_jlab
+  - caption: Notes
+    maxdepth: 3
+    chapters:
+    - file: content/notes/bayesian/overview
+      sections:
+      - file: content/notes/bayesian/intro
+      - file: content/notes/bayesian/gaussian
+      - file: content/notes/bayesian/regression
+      - file: content/notes/bayesian/inference/inference
+      - file: content/notes/bayesian/inference/variational_inference
+      - file: content/notes/bayesian/confidence_intervals
+    - file: content/notes/concepts/overview
+      sections:
+      - file: content/notes/concepts/change_of_variables
+      - file: content/notes/concepts/identity_trick
+      - file: content/notes/concepts/inverse_function
+      - file: content/notes/concepts/jensens
+      - file: content/notes/concepts/lin_alg
+    - file: content/notes/kernels/overview
+      sections:
+      - file: content/notes/kernels/kernel_derivatives
+    - file: content/notes/egps/overview
+      sections:
+      - file: content/notes/egps/predictions
+      - file: content/notes/egps/gauss_approx
+      - file: content/notes/egps/mcmc
+      - file: content/notes/egps/taylor
+      - file: content/notes/egps/moment_matching
+      - file: content/notes/egps/bgplvm
+      - file: content/notes/egps/next
+    - file: content/notes/info_theory/overview
+      sections:
+      - file: content/notes/info_theory/histogram.ipynb
+      - file: content/notes/info_theory/experiments/rbig_sample_consistency.ipynb
 
-- part: Notes
-  chapters: 
-  - file: content/notes/bayesian/overview.md
-    sections:
-    - file: content/notes/bayesian/intro
-    - file: content/notes/bayesian/gaussian.md
-    - file: content/notes/bayesian/regression.md
-    - file: content/notes/bayesian/inference/inference.md
-    - file: content/notes/bayesian/inference/variational_inference.md
-    - file: content/notes/bayesian/confidence_intervals.md
-  - file: content/notes/concepts/overview.md
-    sections:
-    - file: content/notes/concepts/change_of_variables.md 
-    - file: content/notes/concepts/identity_trick.md 
-    - file: content/notes/concepts/inverse_function.md 
-    - file: content/notes/concepts/jensens.md 
-    - file: content/notes/concepts/lin_alg.md
-  - file: content/notes/kernels/overview.md
-    sections:
-    - file: content/notes/kernels/kernel_derivatives
-  - file: content/notes/egps/overview.md
-    sections:
-    - file: content/notes/egps/predictions.md
-    - file: content/notes/egps/gauss_approx.md
-    - file: content/notes/egps/mcmc.md
-    - file: content/notes/egps/taylor.md
-    - file: content/notes/egps/moment_matching.md
-  - file: content/notes/info_theory/overview.md
-    sections:
-    - file: content/notes/info_theory/experiments/rbig_sample_consistency.ipynb
-
-- part: Data
-  chapters: 
-  - file: content/notes/data/overview.md
-    sections:
-    - file: content/notes/data/cds.md
-
-- part: References
-  chapters: 
-  - file: bib.md
+# - caption: Data
+#   chapters:
+#   - file: content/notes/data/overview.md
+#     sections:
+#     - file: content/notes/data/cds.md
+# - caption: References
+#   chapters:
+#   - file: bib.md

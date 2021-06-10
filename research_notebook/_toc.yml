@@ -56,6 +56,8 @@ parts:
       - file: content/notes/egps/mcmc
       - file: content/notes/egps/taylor
       - file: content/notes/egps/moment_matching
+      - file: content/notes/egps/bgplvm
+      - file: content/notes/egps/next
     - file: content/notes/info_theory/overview
       sections:
       - file: content/notes/info_theory/histogram.ipynb

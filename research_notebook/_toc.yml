@@ -29,7 +29,6 @@ parts:
       sections:
       - file: content/tutorials/remote/vscode_jlab
   - caption: Notes
-    maxdepth: 3
     chapters:
     - file: content/notes/bayesian/overview
       sections:
@@ -57,7 +56,11 @@ parts:
       - file: content/notes/egps/taylor
       - file: content/notes/egps/moment_matching
       - file: content/notes/egps/bgplvm
+      - file: content/notes/egps/error_prop
       - file: content/notes/egps/next
+      - file: content/notes/egps/experiments
+        sections:
+        - file: content/notes/egps/notebooks/gpytorch_egp_taylor
     - file: content/notes/info_theory/overview
       sections:
       - file: content/notes/info_theory/histogram.ipynb

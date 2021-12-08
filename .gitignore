@@ -2,3 +2,4 @@
 \wandb/
 rbig_consistency.csv
 \.ipynb_checkpoints/
+*.DS_Store

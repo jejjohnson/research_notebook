@@ -65,7 +65,18 @@ parts:
       sections:
       - file: content/notes/info_theory/histogram.ipynb
       - file: content/notes/info_theory/experiments/rbig_sample_consistency.ipynb
-
+    - file: content/tutorials/normalizing_flows/overview
+      sections:
+      - file: content/tutorials/normalizing_flows/lecture_1_ig.md
+        sections:
+        - file: content/tutorials/normalizing_flows/1.0_univariate_gauss.ipynb
+        - file: content/tutorials/normalizing_flows/1.1_marginal_gauss.ipynb
+        - file: content/tutorials/normalizing_flows/1.2_gaussianization.ipynb
+      - file: content/tutorials/normalizing_flows/lecture_2_gf.md
+        sections:
+        - file: content/tutorials/normalizing_flows/lecture_3_gfs_pt1_mg.md
+        - file: content/tutorials/normalizing_flows/lecture_3_gfs_pt2_rot.md
+        - file: content/tutorials/normalizing_flows/lecture_3_gfs_pt3_plane.md
 # - caption: Data
 #   chapters:
 #   - file: content/notes/data/overview.md

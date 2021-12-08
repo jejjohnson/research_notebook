@@ -2,7 +2,8 @@ name: jupyterbook
 channels:
 - defaults
 dependencies:
-    - python=3.8
+    - python=3.9
+    - conda-forge::jupytext
     - pip
     - pip:
         - jupyter-book

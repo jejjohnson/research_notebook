@@ -25,6 +25,7 @@ parts:
         - file: content/tutorials/jax_journey/algorithms/bisection
         - file: content/tutorials/jax_journey/algorithms/kernel_derivatives
         - file: content/tutorials/jax_journey/algorithms/gpr
+        - file: content/tutorials/jax_journey/gfs_with_jax.ipynb
     - file: content/tutorials/remote/overview
       sections:
       - file: content/tutorials/remote/vscode_jlab

@@ -21,6 +21,7 @@ repository:
 
 bibtex_bibfiles:
   - references.bib
+  - bibliographies/software.bib
 
 sphinx:
   config:

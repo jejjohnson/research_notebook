@@ -39,6 +39,21 @@ See [this](https://sphinx-proof.readthedocs.io/en/latest/syntax.html) documentat
 ### Algorithms
 
 
+
+### Operators
+
+```
+$$
+\operatorname*{argmin}_\theta f(x)
+$$
+```
+
+$$
+\operatorname*{argmin}_\theta f(x)
+$$
+
+
+
 ---
 
 ## Citations
@@ -50,6 +65,7 @@ bibtex_bibfiles:
   - references.bib
   - bibliographies/software.bib
 ```
+
 
 
 ### Local Citations

@@ -41,6 +41,7 @@ parts:
       - file: content/notes/bayesian/confidence_intervals
     - file: content/notes/concepts/overview
       sections:
+      - file: content/notes/concepts/notation.md
       - file: content/notes/concepts/change_of_variables
       - file: content/notes/concepts/identity_trick
       - file: content/notes/concepts/inverse_function

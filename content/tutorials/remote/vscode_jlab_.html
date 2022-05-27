@@ -1,0 +1,786 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VSCode + JLab &#8212; Research Notebook</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/book.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../jax_journey/algorithms/gpr.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../jax_journey/gfs_with_jax.html">
+       Gaussianization Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="overview.html">
+   Remote Computing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="ssh.html">
+     SSH Config
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="conda.html">
+     Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="vscode_jlab.html">
+     VSCode + JLab
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/bayesian/overview.html">
+   Bayesian
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/intro.html">
+     Bayesian: Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/regression.html">
+     Regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/inference/inference.html">
+     Solving Hard Integral Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/confidence_intervals.html">
+     Confidence Intervals
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/notation.html">
+     Notation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/kernels/overview.html">
+   Kernel Methods
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/kernels/kernel_derivatives.html">
+     Kernel Derivatives
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/egps/overview.html">
+   Uncertain Gaussian Processes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/predictions.html">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/gauss_approx.html">
+     Gaussian Approximation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/mcmc.html">
+     Monte Carlo Sampling
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/taylor.html">
+     Linearization (Taylor Expansions)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/moment_matching.html">
+     Moment Matching
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/bgplvm.html">
+     Bayesian GPLVM
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/error_prop.html">
+     Error Propagation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/next.html">
+     Next Steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../notes/egps/experiments.html">
+     Notebooks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../notes/egps/notebooks/gpytorch_egp_taylor.html">
+       Gaussian Process Gradients with GPyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/info_theory/histogram.html">
+     Entropy Estimator - Histogram
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/info_theory/experiments/rbig_sample_consistency.html">
+     Experiment - RBIG Sample Consistency
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../normalizing_flows/overview.html">
+   Normalizing Flows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
+     Lecture I - Iterative Gaussianization
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.0_univariate_gauss.html">
+       1.1 - Univariate Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.1_marginal_gauss.html">
+       1.2 - Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.2_gaussianization.html">
+       1.2 - Iterative Gaussianization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
+     Lecture II - Gaussianization Flows
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt1_mg.html">
+       Parameterized Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt2_rot.html">
+       Parameterized Rotations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt3_plane.html">
+       Example - 2D Plane
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/tutorials/remote/vscode_jlab_.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-vscode-to-your-vm">
+   1. Connect VSCode to your VM
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-to-an-interactive-node">
+   2. Connect to an Interactive Node
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#start-your-jupyterlab-instance-through-vscode-terminal">
+   3 Start your Jupyterlab Instance through VSCode terminal
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#what-happened">
+     What Happened?
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bonus-automatic-function">
+     3.1 Bonus - Automatic Function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bonus-outside-of-vscode">
+     3.2 Bonus - Outside of VSCode
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>VSCode + JLab</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-vscode-to-your-vm">
+   1. Connect VSCode to your VM
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-to-an-interactive-node">
+   2. Connect to an Interactive Node
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#start-your-jupyterlab-instance-through-vscode-terminal">
+   3 Start your Jupyterlab Instance through VSCode terminal
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#what-happened">
+     What Happened?
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bonus-automatic-function">
+     3.1 Bonus - Automatic Function
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bonus-outside-of-vscode">
+     3.2 Bonus - Outside of VSCode
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="vscode-jlab">
+<h1>VSCode + JLab<a class="headerlink" href="#vscode-jlab" title="Permalink to this headline">¶</a></h1>
+<hr class="docutils" />
+<p>So most people like to use a combination of a dedicated IDE as well as JupyterLab. If you don’t you probably should… But it’s a bit annoying when we need both. Some people try to use the built-in jupyter notebook support from VSCode. But it sucks. It’s not good enough and it’s quite slow compared to JupyterLab. Another thing people do is they use the Notebook Instances from the GCP webpage. This is convenient but the biggest problem with this is that it’s not in your home directory. So you have to play games with the directories which is a pain in the butt. In addition, the permissions are weird so some python code doesn’t play nice when you want to do execute commands using python (and sometimes the terminal - need <code class="docutils literal notranslate"><span class="pre">sudo</span></code>).</p>
+<p>So this tutorial provides the following:</p>
+<ul class="simple">
+<li><p>a simple way to open jupyterlab with your vscode ide</p></li>
+<li><p>you don’t have to do the <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">server</span> <span class="pre">-L</span> <span class="pre">xxxx:localhost:xxxx</span></code> with the extra port</p></li>
+<li><p>you will be able to access all of your other conda environments using this jupyterlab</p></li>
+<li><p>makes working with jupyterlab in conjunction with vscode a lot easier.</p></li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="connect-vscode-to-your-vm">
+<h2>1. Connect VSCode to your VM<a class="headerlink" href="#connect-vscode-to-your-vm" title="Permalink to this headline">¶</a></h2>
+<p><img alt="vscode" src="../../../_images/vscode1.png" /></p>
+</div>
+<div class="section" id="connect-to-an-interactive-node">
+<h2>2. Connect to an Interactive Node<a class="headerlink" href="#connect-to-an-interactive-node" title="Permalink to this headline">¶</a></h2>
+<p>Try to use something explicit like the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>srun --nodes<span class="o">=</span><span class="m">1</span>  --ntasks-per-node<span class="o">=</span><span class="m">1</span> --cpus-per-task<span class="o">=</span><span class="m">28</span> --time <span class="m">100</span>:00:00 --exclude<span class="o">=</span>nodo17 --job-name bash-jupyter --pty bash -i
+</pre></div>
+</div>
+<p><img alt="pics/vscode_jlab/vscode_3.png" src="../../../_images/2_connect_node.png" /></p>
+</div>
+<div class="section" id="start-your-jupyterlab-instance-through-vscode-terminal">
+<h2>3 Start your Jupyterlab Instance through VSCode terminal<a class="headerlink" href="#start-your-jupyterlab-instance-through-vscode-terminal" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span><span class="w"></span>
+</pre></div>
+</div>
+<p>This should appear:</p>
+<p><img alt="pics/vscode_jlab/vscode_jlab.png" src="../../../_images/1_connect_remote.png" /></p>
+<p>The most important thing is that this should appear.</p>
+<p>Notice now that you have two links to use and you can click on them. Now you’re good! Your browser should open a JupyterLab notebook on it’s own!</p>
+<p><img alt="pics/vscode_jlab/jlab.png" src="../../../_images/3_run_jupyter.png" /></p>
+<div class="section" id="what-happened">
+<h3>What Happened?<a class="headerlink" href="#what-happened" title="Permalink to this headline">¶</a></h3>
+<p>Well VSCode rocks and basically opened an ssh port <strong>through vscode</strong> itself. So now we can access it through our browser as if we did the ssh stuff ourselves.</p>
+<p><img alt="pics/vscode_jlab/vscode_localhost.png" src="../../../_images/4_start_notebook.png" /></p>
+</div>
+<div class="section" id="bonus-automatic-function">
+<h3>3.1 Bonus - Automatic Function<a class="headerlink" href="#bonus-automatic-function" title="Permalink to this headline">¶</a></h3>
+<p>We can automate this to have a bit more flexibility on the port number. I added this function to my <code class="docutils literal notranslate"><span class="pre">.profile</span></code> (you can use <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code>) and now I can just call this function whenever I need to open a JupyterLab using the VSCode terminal.</p>
+<p><span class="xref myst"></span></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># JUPYTER NOTEBOOK STUFF</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">function jpt(){</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Fires-up a Jupyter notebook by supplying a specific port</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">conda activate jupyterlab</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port=$1</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">}</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bonus-outside-of-vscode">
+<h3>3.2 Bonus - Outside of VSCode<a class="headerlink" href="#bonus-outside-of-vscode" title="Permalink to this headline">¶</a></h3>
+<p>One caveat is that you need to have VSCode open for your JupyterLab to run. So if you close it, it closed the JupyterLab session. One thing you could do is open another ssh port using the gcloud command.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># sign in and have a port open</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">gcloud compute ssh --project XXX --zone XXXX USER@VM-INSTANCE -- -L 2005:localhost:2005</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain"># start jupyterlab</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">conda activate jupyterlab</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/tutorials/remote"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By J. Emmanuel Johnson<br/>
+    
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

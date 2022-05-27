@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JupyterLab + VSCode &#8212; Research Notebook</title>
+    <title>VSCode + JLab &#8212; Research Notebook</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -228,13 +228,18 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul class="current">
    <li class="toctree-l2">
+    <a class="reference internal" href="ssh.html">
+     SSH Config
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="conda.html">
      Conda 4 Remote Servers
     </a>
    </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     JupyterLab + VSCode
+     VSCode + JLab
     </a>
    </li>
   </ul>
@@ -581,41 +586,8 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#setup-your-jupyterlab-environment">
-   2. Setup Your JupyterLab Environment
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#create-a-yml-file-with-requirements">
-     2.1 Create a
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       .yml
-      </span>
-     </code>
-     file with requirements
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#jupyterlab-and-other-python-kernels">
-     2.2 JupyterLab and other python kernels
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#create-a-conda-environment">
-     2.1 Create a Conda Environment
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#install-and-the-jupyterlab-manager">
-     2.3 Install and the Jupyterlab Manager
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#start-your-jupyterlab-instance-through-vscode-terminal">
-   3 Start your Jupyterlab Instance through VSCode terminal
+   2 Start your Jupyterlab Instance through VSCode terminal
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
@@ -635,6 +607,26 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-to-the-server-via-vscode">
+   1. Connect to the server via VSCode
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-to-an-interactive-node">
+   2. Connect to an interactive node
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#start-a-jupyter-notebook">
+   3. Start a Jupyter Notebook
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#open-jupyter-notebook-in-vscode">
+   4. Open Jupyter Notebook in VSCode
+  </a>
+ </li>
 </ul>
 
             </nav>
@@ -645,7 +637,7 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>JupyterLab + VSCode</h1>
+                <h1>VSCode + JLab</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -661,41 +653,8 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#setup-your-jupyterlab-environment">
-   2. Setup Your JupyterLab Environment
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#create-a-yml-file-with-requirements">
-     2.1 Create a
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       .yml
-      </span>
-     </code>
-     file with requirements
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#jupyterlab-and-other-python-kernels">
-     2.2 JupyterLab and other python kernels
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#create-a-conda-environment">
-     2.1 Create a Conda Environment
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#install-and-the-jupyterlab-manager">
-     2.3 Install and the Jupyterlab Manager
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#start-your-jupyterlab-instance-through-vscode-terminal">
-   3 Start your Jupyterlab Instance through VSCode terminal
+   2 Start your Jupyterlab Instance through VSCode terminal
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
@@ -715,6 +674,26 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-to-the-server-via-vscode">
+   1. Connect to the server via VSCode
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-to-an-interactive-node">
+   2. Connect to an interactive node
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#start-a-jupyter-notebook">
+   3. Start a Jupyter Notebook
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#open-jupyter-notebook-in-vscode">
+   4. Open Jupyter Notebook in VSCode
+  </a>
+ </li>
 </ul>
 
                         </nav>
@@ -724,12 +703,8 @@ const thebe_selector_output = ".output, .cell_output"
             
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="jupyterlab-vscode">
-<h1>JupyterLab + VSCode<a class="headerlink" href="#jupyterlab-vscode" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p>J. Emmanuel Johnson</p></li>
-<li><p>Last Updated: 17-07-2020</p></li>
-</ul>
+  <div class="tex2jax_ignore mathjax_ignore section" id="vscode-jlab">
+<h1>VSCode + JLab<a class="headerlink" href="#vscode-jlab" title="Permalink to this headline">¶</a></h1>
 <hr class="docutils" />
 <p>So most people like to use a combination of a dedicated IDE as well as JupyterLab. If you don’t you probably should… But it’s a bit annoying when we need both. Some people try to use the built-in jupyter notebook support from VSCode. But it sucks. It’s not good enough and it’s quite slow compared to JupyterLab. Another thing people do is they use the Notebook Instances from the GCP webpage. This is convenient but the biggest problem with this is that it’s not in your home directory. So you have to play games with the directories which is a pain in the butt. In addition, the permissions are weird so some python code doesn’t play nice when you want to do execute commands using python (and sometimes the terminal - need <code class="docutils literal notranslate"><span class="pre">sudo</span></code>).</p>
 <p>So this tutorial provides the following:</p>
@@ -742,96 +717,34 @@ const thebe_selector_output = ".output, .cell_output"
 <hr class="docutils" />
 <div class="section" id="connect-vscode-to-your-vm">
 <h2>1. Connect VSCode to your VM<a class="headerlink" href="#connect-vscode-to-your-vm" title="Permalink to this headline">¶</a></h2>
-<p><img alt="pics/vscode_jlab/vscode.png" src="content/tutorials/remote/pics/vscode_jlab/vscode.png" /></p>
-</div>
-<div class="section" id="setup-your-jupyterlab-environment">
-<h2>2. Setup Your JupyterLab Environment<a class="headerlink" href="#setup-your-jupyterlab-environment" title="Permalink to this headline">¶</a></h2>
-<p><strong>Note</strong>:</p>
-<ul class="simple">
-<li><p>You only have to do this once!</p></li>
-<li><p>Make sure conda is already installed.</p></li>
-</ul>
-<div class="section" id="create-a-yml-file-with-requirements">
-<h3>2.1 Create a <code class="docutils literal notranslate"><span class="pre">.yml</span></code> file with requirements<a class="headerlink" href="#create-a-yml-file-with-requirements" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyterlab</span><span class="w"></span>
-<span class="nt">channels</span><span class="p">:</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span><span class="w"></span>
-<span class="nt">dependencies</span><span class="p">:</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python=3.8</span><span class="w"></span>
-<span class="c1"># GUI</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyterlab</span><span class="w">           </span><span class="c1"># JupyterLab GUI</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::nb_conda_kernels</span><span class="w">     </span><span class="c1"># Access to other conda kernels</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::spyder-kernels</span><span class="w">       </span><span class="c1"># Access via spyder kernels</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::nodejs</span><span class="w">               </span><span class="c1"># for extensions in jupyterlab</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyviz::holoviews</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bokeh</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bokeh::jupyter_bokeh</span><span class="w">              </span><span class="c1"># Bokeh</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tqdm</span><span class="w">                              </span><span class="c1"># For status bars</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span><span class="w">                               </span><span class="c1"># To install other packages</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipykernel</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipywidgets</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyter-server-proxy</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dask_labextension</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nbserverproxy</span><span class="w"></span>
-</pre></div>
-</div>
-<p>I’ve typed it out but you can also check out the file on <a class="reference external" href="https://github.com/jejjohnson/dot_files/blob/master/jupyter_scripts/jupyterlab.yml">github</a>.</p>
-</div>
-<div class="section" id="jupyterlab-and-other-python-kernels">
-<h3>2.2 JupyterLab and other python kernels<a class="headerlink" href="#jupyterlab-and-other-python-kernels" title="Permalink to this headline">¶</a></h3>
-<p>So you may be wondering if we need to do this with every conda environment we create. No. We just need to have a general JupyterLab environment that calls other environments. The important thing here is that we have the jupyterlab package installed as well as <code class="docutils literal notranslate"><span class="pre">nb_conda_kernels</span></code> package. This allows the jupyterlab to be able to use any other python kernel that’s in your user space (sometimes common shared ones but it depends).</p>
-<p>Now, all other conda environments will need to have the <code class="docutils literal notranslate"><span class="pre">ipykernel</span></code> package installed and it will be visible from your JupyterLab environment.</p>
-</div>
-<div class="section" id="create-a-conda-environment">
-<h3>2.1 Create a Conda Environment<a class="headerlink" href="#create-a-conda-environment" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the environment with your .yml file</span>
-conda env create --name jupyterlab -f jupyterlab.yml
-<span class="c1"># activate the environment</span>
-<span class="nb">source</span> activate jupyterlab
-<span class="c1"># or perhaps</span>
-<span class="c1"># conda activate jupyterlab</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="install-and-the-jupyterlab-manager">
-<h3>2.3 Install and the Jupyterlab Manager<a class="headerlink" href="#install-and-the-jupyterlab-manager" title="Permalink to this headline">¶</a></h3>
-<p>This will enable you to have extensions for your Jupyterlab. There are so many cool ones out there. I’m particularly fond of the <a class="reference external" href="https://github.com/lckr/jupyterlab-variableInspector">variable inspector</a> and the <a class="reference external" href="https://github.com/jupyterlab/jupyterlab-toc">table of contents</a>. JupyterLab has gotten awesome so you can install most new extensions using the JupyterLab GUI.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install jupyter lab extension maager</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">jupyter labextension install @jupyter-widgets/jupyterlab-manager</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain"># Enable</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">jupyter serverextension enable --py jupyterlab-manager</span><span class="w"></span>
-</pre></div>
-</div>
-</div>
+<p><img alt="vscode" src="../../../_images/vscode1.png" /></p>
 </div>
 <div class="section" id="start-your-jupyterlab-instance-through-vscode-terminal">
-<h2>3 Start your Jupyterlab Instance through VSCode terminal<a class="headerlink" href="#start-your-jupyterlab-instance-through-vscode-terminal" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span><span class="w"></span>
+<h2>2 Start your Jupyterlab Instance through VSCode terminal<a class="headerlink" href="#start-your-jupyterlab-instance-through-vscode-terminal" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter-lab --no-browser --port<span class="o">=</span><span class="m">2005</span> --ip<span class="o">=</span><span class="m">0</span>.0.0.0
 </pre></div>
 </div>
 <p>This should appear:</p>
-<p><img alt="pics/vscode_jlab/vscode_jlab.png" src="content/tutorials/remote/pics/vscode_jlab/vscode_jlab.png" /></p>
+<p><img alt="vscode_jlab_terminal_i" src="../../../_images/vscode_jlab.png" /></p>
 <p>The most important thing is that this should appear.</p>
-<p><img alt="pics/vscode_jlab/vscode_3.png" src="content/tutorials/remote/pics/vscode_jlab/vscode_3.png" /></p>
+<p><img alt="vscode_jlab_terminal_o" src="../../../_images/vscode_3.png" /></p>
 <p>Notice now that you have two links to use and you can click on them. Now you’re good! Your browser should open a JupyterLab notebook on it’s own!</p>
-<p><img alt="pics/vscode_jlab/jlab.png" src="content/tutorials/remote/pics/vscode_jlab/jlab.png" /></p>
+<p><img alt="vscode_jlab_terminal_o_zoom" src="../../../_images/jlab.png" /></p>
 <div class="section" id="what-happened">
 <h3>What Happened?<a class="headerlink" href="#what-happened" title="Permalink to this headline">¶</a></h3>
 <p>Well VSCode rocks and basically opened an ssh port <strong>through vscode</strong> itself. So now we can access it through our browser as if we did the ssh stuff ourselves.</p>
-<p><img alt="pics/vscode_jlab/vscode_localhost.png" src="content/tutorials/remote/pics/vscode_jlab/vscode_localhost.png" /></p>
+<p><img alt="pics/vscode_jlab/vscode_localhost.png" src="../../../_images/vscode_localhost.png" /></p>
 </div>
 <div class="section" id="bonus-automatic-function">
 <h3>3.1 Bonus - Automatic Function<a class="headerlink" href="#bonus-automatic-function" title="Permalink to this headline">¶</a></h3>
 <p>We can automate this to have a bit more flexibility on the port number. I added this function to my <code class="docutils literal notranslate"><span class="pre">.profile</span></code> (you can use <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code>) and now I can just call this function whenever I need to open a JupyterLab using the VSCode terminal.</p>
 <p><span class="xref myst"></span></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># JUPYTER NOTEBOOK STUFF</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">function jpt(){</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Fires-up a Jupyter notebook by supplying a specific port</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">conda activate jupyterlab</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port=$1</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">}</span><span class="w"></span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># JUPYTER NOTEBOOK STUFF</span>
+<span class="k">function</span> jpt<span class="o">(){</span>
+    <span class="c1"># Fires-up a Jupyter notebook by supplying a specific port</span>
+    conda activate jupyterlab
+    jupyter-lab --no-browser --port<span class="o">=</span><span class="nv">$1</span>
+<span class="o">}</span>
 </pre></div>
 </div>
 </div>
@@ -845,8 +758,41 @@ conda env create --name jupyterlab -f jupyterlab.yml
 <span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span><span class="w"></span>
 </pre></div>
 </div>
+<p>In this tutorial, I will quickly be going over how one can open up a Jupyter Notebook in VSCode from one that has been activated on a slurm server through an interactive node.</p>
 </div>
 </div>
+<div class="section" id="connect-to-the-server-via-vscode">
+<h2>1. Connect to the server via VSCode<a class="headerlink" href="#connect-to-the-server-via-vscode" title="Permalink to this headline">¶</a></h2>
+<p align="center">
+  <img src="./pics/1_connect_remote.png" width="600" align="center"/>
+</p>
+</div>
+<div class="section" id="connect-to-an-interactive-node">
+<h2>2. Connect to an interactive node<a class="headerlink" href="#connect-to-an-interactive-node" title="Permalink to this headline">¶</a></h2>
+<p>Try to use something explicit like the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>srun --nodes<span class="o">=</span><span class="m">1</span>  --ntasks-per-node<span class="o">=</span><span class="m">1</span> --cpus-per-task<span class="o">=</span><span class="m">28</span> --time <span class="m">100</span>:00:00 --exclude<span class="o">=</span>nodo17 --job-name bash-jupyter --pty bash -i
+</pre></div>
+</div>
+<p align="center">
+  <img src="./pics/2_connect_node.png" width="600" align="center"/>
+</p>
+</div>
+<div class="section" id="start-a-jupyter-notebook">
+<h2>3. Start a Jupyter Notebook<a class="headerlink" href="#start-a-jupyter-notebook" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate jupyterlab
+jupyter notebook --ip localhost --port <span class="m">3001</span> --no-browser
+</pre></div>
+</div>
+<p align="center">
+  <img src="./pics/3_run_jupyter.png" width="600" align="center"/>
+</p>
+</div>
+<div class="section" id="open-jupyter-notebook-in-vscode">
+<h2>4. Open Jupyter Notebook in VSCode<a class="headerlink" href="#open-jupyter-notebook-in-vscode" title="Permalink to this headline">¶</a></h2>
+<p>At this point, something should pop up asking you if you would like to enter a token or your password for your notebook.</p>
+<p align="center">
+  <img src="./pics/4_start_notebook.png" width="600" align="center"/>
+</p></div>
 </div>
 
     <script type="text/x-thebe-config">
@@ -897,7 +843,7 @@ conda env create --name jupyterlab -f jupyterlab.yml
     
       By J. Emmanuel Johnson<br/>
     
-        &copy; Copyright 2020.<br/>
+        &copy; Copyright 2022.<br/>
   </p>
 </footer>
 </main>

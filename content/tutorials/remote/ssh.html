@@ -1,0 +1,1265 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SSH Config &#8212; Research Notebook</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Conda 4 Remote Servers" href="conda.html" />
+    <link rel="prev" title="Remote Computing" href="overview.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/book.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../intro.html">
+   Overview
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../jax_journey/algorithms/gpr.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../jax_journey/gfs_with_jax.html">
+       Gaussianization Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="overview.html">
+   Remote Computing
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     SSH Config
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="conda.html">
+     Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="vscode_jlab.html">
+     VSCode + JLab
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/bayesian/overview.html">
+   Bayesian
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/intro.html">
+     Bayesian: Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/regression.html">
+     Regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/inference/inference.html">
+     Solving Hard Integral Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/bayesian/confidence_intervals.html">
+     Confidence Intervals
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/notation.html">
+     Notation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/kernels/overview.html">
+   Kernel Methods
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/kernels/kernel_derivatives.html">
+     Kernel Derivatives
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/egps/overview.html">
+   Uncertain Gaussian Processes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/predictions.html">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/gauss_approx.html">
+     Gaussian Approximation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/mcmc.html">
+     Monte Carlo Sampling
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/taylor.html">
+     Linearization (Taylor Expansions)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/moment_matching.html">
+     Moment Matching
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/bgplvm.html">
+     Bayesian GPLVM
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/error_prop.html">
+     Error Propagation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/egps/next.html">
+     Next Steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../notes/egps/experiments.html">
+     Notebooks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../notes/egps/notebooks/gpytorch_egp_taylor.html">
+       Gaussian Process Gradients with GPyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../notes/info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/info_theory/histogram.html">
+     Entropy Estimator - Histogram
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../notes/info_theory/experiments/rbig_sample_consistency.html">
+     Experiment - RBIG Sample Consistency
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../normalizing_flows/overview.html">
+   Normalizing Flows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
+     Lecture I - Iterative Gaussianization
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.0_univariate_gauss.html">
+       1.1 - Univariate Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.1_marginal_gauss.html">
+       1.2 - Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.2_gaussianization.html">
+       1.2 - Iterative Gaussianization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
+     Lecture II - Gaussianization Flows
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt1_mg.html">
+       Parameterized Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt2_rot.html">
+       Parameterized Rotations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt3_plane.html">
+       Example - 2D Plane
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../_sources/content/tutorials/remote/ssh.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#table-of-conents">
+   Table of Conents
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ssh">
+   SSH
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#identityfile">
+     IdentityFile
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#port-forwarding">
+     Port Forwarding
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#background">
+       Background
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#closing-the-background-process">
+         Closing The Background Process
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ssh-config-file">
+   SSH Config File
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#remote-server-cal1">
+   Remote Server (Cal1)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#important-arguments">
+     Important Arguments
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         IdentityFile
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#forwardx11">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         ForwardX11
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#localforward">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         LocalForward
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#testing-the-setup">
+       Testing the Setup
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#remote-server-proxyjump">
+   Remote Server + ProxyJump
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#jeanzay">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       JeanZay
+      </span>
+     </code>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id2">
+       Testing the Setup
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gricad">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Gricad
+      </span>
+     </code>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       Testing the Setup
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>SSH Config</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#table-of-conents">
+   Table of Conents
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ssh">
+   SSH
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#identityfile">
+     IdentityFile
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#port-forwarding">
+     Port Forwarding
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#background">
+       Background
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#closing-the-background-process">
+         Closing The Background Process
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ssh-config-file">
+   SSH Config File
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#remote-server-cal1">
+   Remote Server (Cal1)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#important-arguments">
+     Important Arguments
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         IdentityFile
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#forwardx11">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         ForwardX11
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#localforward">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         LocalForward
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#testing-the-setup">
+       Testing the Setup
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#remote-server-proxyjump">
+   Remote Server + ProxyJump
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#jeanzay">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       JeanZay
+      </span>
+     </code>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id2">
+       Testing the Setup
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gricad">
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       Gricad
+      </span>
+     </code>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       Testing the Setup
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="ssh-config">
+<h1>SSH Config<a class="headerlink" href="#ssh-config" title="Permalink to this headline">¶</a></h1>
+<hr class="docutils" />
+<p>We will go over 2 cases:</p>
+<ol class="simple">
+<li><p>Remote Server</p></li>
+<li><p>Remote Server with a ProxyJump</p></li>
+</ol>
+<hr class="docutils" />
+<div class="section" id="table-of-conents">
+<h2>Table of Conents<a class="headerlink" href="#table-of-conents" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="#table-of-conents">Table of Conents</a></p></li>
+<li><p><a class="reference external" href="#ssh">SSH</a></p>
+<ul>
+<li><p><a class="reference external" href="#identityfile">IdentityFile</a></p></li>
+<li><p><a class="reference external" href="#port-forwarding">Port Forwarding</a></p>
+<ul>
+<li><p><a class="reference external" href="#background">Background</a></p>
+<ul>
+<li><p><a class="reference external" href="#closing-the-background-process">Closing The Background Process</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#ssh-config-file">SSH Config File</a></p></li>
+<li><p><a class="reference external" href="#remote-server-cal1">Remote Server (Cal1)</a></p>
+<ul>
+<li><p><a class="reference external" href="#important-arguments">Important Arguments</a></p>
+<ul>
+<li><p><a class="reference external" href="#identityfile-1"><code class="docutils literal notranslate"><span class="pre">IdentityFile</span></code></a></p></li>
+<li><p><a class="reference external" href="#forwardx11"><code class="docutils literal notranslate"><span class="pre">ForwardX11</span></code></a></p></li>
+<li><p><a class="reference external" href="#localforward"><code class="docutils literal notranslate"><span class="pre">LocalForward</span></code></a></p></li>
+<li><p><a class="reference external" href="#testing-the-setup">Testing the Setup</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#remote-server--proxyjump">Remote Server + ProxyJump</a></p>
+<ul>
+<li><p><a class="reference external" href="#jeanzay"><code class="docutils literal notranslate"><span class="pre">JeanZay</span></code></a></p>
+<ul>
+<li><p><a class="reference external" href="#testing-the-setup-1">Testing the Setup</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#gricad"><code class="docutils literal notranslate"><span class="pre">Gricad</span></code></a></p>
+<ul>
+<li><p><a class="reference external" href="#testing-the-setup-2">Testing the Setup</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="ssh">
+<h2>SSH<a class="headerlink" href="#ssh" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="identityfile">
+<h3>IdentityFile<a class="headerlink" href="#identityfile" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server -i /path/to/id_key_file
+</pre></div>
+</div>
+<p><strong>Forward ID</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-copy-id -i /path/to/id_key username@server
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="port-forwarding">
+<h3>Port Forwarding<a class="headerlink" href="#port-forwarding" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server <span class="m">8888</span>:localhost:8888
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="background">
+<h4>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h4>
+<p>Often times we don’t want to have the connection open occupying our terminal. So we can put it in the background where we don’t need to worry about it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a tunnel</span>
+ssh -fN username@server -L <span class="m">8888</span>:localhost:8888 
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-f</span></code> flag ensures that it is executed to the background.</p>
+<hr class="docutils" />
+<div class="section" id="closing-the-background-process">
+<h5>Closing The Background Process<a class="headerlink" href="#closing-the-background-process" title="Permalink to this headline">¶</a></h5>
+<p>When you’re done, make sure you close the tunnel you opened. First we need to find all of the background processes that have an ssh.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;localhost&quot;</span>
+</pre></div>
+</div>
+<p>We can narrow the search to only those that have a local host attached.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ps aux <span class="p">|</span> grep ssh <span class="p">|</span> localhost assigned
+</pre></div>
+</div>
+<p>Then we can kill the process assigned here</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># kill that process manually by looking</span>
+<span class="nb">kill</span> -9 PID
+<span class="c1"># kill it automatically</span>
+ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;localhost&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> xargs <span class="nb">kill</span>
+</pre></div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Automation</p>
+<p>Now we want to automate this. I would suggest adding these functions to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code> so that you can just use these easier to find and kill ssh background processes.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># syntatic sugar for launching ssh tunnel given a server and a port</span>
+<span class="k">function</span> ssh_tunnel<span class="o">(){</span>
+    <span class="nv">server</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+    <span class="nv">port</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;server:&quot;</span> <span class="nv">$1</span>
+    <span class="nb">echo</span> <span class="s2">&quot;port:&quot;</span> <span class="nv">$2</span>
+    ssh -fN <span class="nv">$server</span> -L <span class="s2">&quot;</span><span class="nv">$port</span><span class="s2">&quot;</span>:localhost:<span class="s2">&quot;</span><span class="nv">$port</span><span class="s2">&quot;</span>
+<span class="o">}</span>
+
+<span class="c1"># function to show all background ssh processes</span>
+<span class="c1"># demo:</span>
+<span class="c1"># &gt; show_all_bg_ssh</span>
+<span class="c1">#</span>
+<span class="k">function</span> show_all_bg_ssh<span class="o">(){</span>
+    ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;localhost&quot;</span>
+<span class="o">}</span>
+<span class="c1"># function to show background ssh processes given a localport</span>
+<span class="c1"># demo:</span>
+<span class="c1"># &gt; show_bg_ssh 8888</span>
+<span class="c1">#</span>
+<span class="k">function</span> show_bg_ssh<span class="o">(){</span>
+    ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="nv">$1</span>
+<span class="o">}</span>
+
+<span class="c1"># function to kill background ssh process given a localport number</span>
+<span class="c1"># demo:</span>
+<span class="c1"># &gt; kill_bg_ssh 8888</span>
+<span class="c1">#</span>
+<span class="k">function</span> kill_bg_ssh<span class="o">(){</span>
+    ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="nv">$1</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> xargs <span class="nb">kill</span>
+<span class="o">}</span>
+
+<span class="c1"># function to kill all background ssh processes</span>
+<span class="c1"># demo:</span>
+<span class="c1"># &gt; kill_all_bg_ssh</span>
+<span class="c1">#</span>
+<span class="k">function</span> kill_all_bg_ssh<span class="o">(){</span>
+    ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;localhost&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> xargs <span class="nb">kill</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Demo Usage</strong> (Specific Port):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># launch ssh</span>
+ssh_tunnel cal1 <span class="m">8888</span>
+
+<span class="c1"># find the background process</span>
+show_bg_sh <span class="m">8888</span>
+
+<span class="c1"># kill the background process</span>
+kill_bg_sh <span class="m">8888</span>
+</pre></div>
+</div>
+<p><strong>Demo Usage</strong> (Everything):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># launch ssh</span>
+ssh_tunnel cal1 <span class="m">8888</span>
+
+<span class="c1"># find the background process</span>
+show_all_bg_sh
+
+<span class="c1"># kill the background process</span>
+kill_all_bg_sh
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="ssh-config-file">
+<h2>SSH Config File<a class="headerlink" href="#ssh-config-file" title="Permalink to this headline">¶</a></h2>
+<p>It ups your game to the next level if you use an ssh config file.</p>
+<p>More resources:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://gricad-doc.univ-grenoble-alpes.fr/en/hpc/connexion/">Gricad Docs</a></p></li>
+<li><p><a class="reference external" href="https://linuxize.com/post/using-the-ssh-config-file/">Blog</a> - Using the SSH Config File</p></li>
+</ul>
+<p>We typically store this here:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/home/user/.ssh/config
+</pre></div>
+</div>
+<p>where it’s visible from anywhere in on your computer.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="remote-server-cal1">
+<h2>Remote Server (Cal1)<a class="headerlink" href="#remote-server-cal1" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we will showcase how to automate the connection to</p>
+<p>We can automate this using using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host cal1
+    HostName ige-meom-cal1.u-ga.fr
+	User username
+	<span class="c1"># Allow for Ids</span>
+	ForwardX11 yes
+	<span class="c1"># SSH Identity File</span>
+	IdentityFile ~/.ssh/id_key_file
+	<span class="c1"># Jupyter Notebooks</span>
+	LocalForward <span class="m">8888</span> localhost:8888
+
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_key_file
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="important-arguments">
+<h3>Important Arguments<a class="headerlink" href="#important-arguments" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h4><code class="docutils literal notranslate"><span class="pre">IdentityFile</span></code><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<p>This will point to the <code class="docutils literal notranslate"><span class="pre">identity_file</span></code> found in your local server. This removes the need to authenticate every time you log in. It’s hard to remember passwords all of the time so this removes that necessity. It’s also more secure due to the encryption.</p>
+<p><strong>Note</strong>: Never share this <code class="docutils literal notranslate"><span class="pre">.pub</span></code> with anyone! It should be kept on your personal computer only.</p>
+</div>
+<div class="section" id="forwardx11">
+<h4><code class="docutils literal notranslate"><span class="pre">ForwardX11</span></code><a class="headerlink" href="#forwardx11" title="Permalink to this headline">¶</a></h4>
+<p>This allows us to have some visual bits and pieces. This is important for matlab GUIs and even GUIs for <code class="docutils literal notranslate"><span class="pre">spyder</span></code>.</p>
+</div>
+<div class="section" id="localforward">
+<h4><code class="docutils literal notranslate"><span class="pre">LocalForward</span></code><a class="headerlink" href="#localforward" title="Permalink to this headline">¶</a></h4>
+<p>This takes care of all of the port forwarding. You can also forward multiple ports if there is a reason, e.g. 1 for tensor board, 1 for JupyterLab, 1 for some visualization software, etc.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="testing-the-setup">
+<h4>Testing the Setup<a class="headerlink" href="#testing-the-setup" title="Permalink to this headline">¶</a></h4>
+<p><strong>Step 1</strong>: Test the connection to <code class="docutils literal notranslate"><span class="pre">cal1</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh cal1
+</pre></div>
+</div>
+<p>Now it is much easier to ssh into the remote server without having to do all of the extra stuff.</p>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="remote-server-proxyjump">
+<h2>Remote Server + ProxyJump<a class="headerlink" href="#remote-server-proxyjump" title="Permalink to this headline">¶</a></h2>
+<p>In this case, we will look at the configuration for <code class="docutils literal notranslate"><span class="pre">gricad</span></code> and <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code>. In this case, we have a head node (not really useful except to enter into the server). And then later we <em>proxy jump</em> to the actual head node for computing.</p>
+<hr class="docutils" />
+<div class="section" id="jeanzay">
+<h3><code class="docutils literal notranslate"><span class="pre">JeanZay</span></code><a class="headerlink" href="#jeanzay" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host cal1
+    HostName ige-meom-cal1.u-ga.fr
+	User username
+	<span class="c1"># Allow for Ids</span>
+	ForwardX11 yes
+	<span class="c1"># SSH Identity File</span>
+	IdentityFile ~/.ssh/id_key_file
+	<span class="c1"># Jupyter Notebooks</span>
+	LocalForward <span class="m">8888</span> localhost:8888
+
+<span class="c1"># JEANZAY Head Node</span>
+Host jean_zay
+    User username
+    HostName jean-zay.idris.fr
+    ProxyJump cal1
+    IdentityFile ~/.ssh/id_key_file
+    <span class="c1"># Jupyter Notebooks</span>
+    LocalForward <span class="m">8880</span> localhost:8880
+
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_key_file
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id2">
+<h4>Testing the Setup<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p><strong>Step 1</strong>: Test access to the <code class="docutils literal notranslate"><span class="pre">cal1</span></code> node.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh cal1
+</pre></div>
+</div>
+<p><strong>Step 2</strong>: Test access the mega head node (<code class="docutils literal notranslate"><span class="pre">jeanzay</span></code>)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh jean_zay
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="gricad">
+<h3><code class="docutils literal notranslate"><span class="pre">Gricad</span></code><a class="headerlink" href="#gricad" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># GRIDCAD Entry Node Access</span>
+Host gricad
+    User username
+    HostName access-gricad.univ-grenoble-alpes.fr
+    IdentityFile ~/.ssh/id_key_file
+
+<span class="c1"># DAHU Head Node (CPUs)</span>
+Host dahu_gricad
+    User username
+    HostName dahu
+    ForwardX11 yes
+    ProxyJump gricad
+    IdentityFile ~/.ssh/id_key_file
+    <span class="c1"># Jupyter Notebooks</span>
+    LocalForward <span class="m">8888</span> localhost:8888
+
+<span class="c1"># BIGFOOT Head Node (GPUs) </span>
+Host bigfoot_gricad
+    User username
+    HostName bigfoot
+    ForwardX11 yes
+    ProxyJump gricad
+    IdentityFile ~/.ssh/id_key_file
+    <span class="c1"># Jupyter Notebooks (CPU)</span>
+    LocalForward <span class="m">8889</span> localhost:8889
+
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_key_file
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="id3">
+<h4>Testing the Setup<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p><strong>Step 1</strong>: Test access the compute node (<code class="docutils literal notranslate"><span class="pre">gricad</span></code>)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh gricad
+</pre></div>
+</div>
+<p><strong>Note</strong>: There is almost never any reason to do this…</p>
+<p><strong>Step 2</strong>: Test access the head node (<code class="docutils literal notranslate"><span class="pre">dahu</span></code>)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh dahu_gricad
+</pre></div>
+</div>
+<p><strong>Step 3</strong>: Test access the GPU compute node (<code class="docutils literal notranslate"><span class="pre">Bigfoot</span></code>)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh bigfoot_gricad
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/tutorials/remote"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="overview.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Remote Computing</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="conda.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Conda 4 Remote Servers</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By J. Emmanuel Johnson<br/>
+    
+        &copy; Copyright 2022.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

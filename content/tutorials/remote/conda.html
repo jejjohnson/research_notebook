@@ -53,8 +53,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="JupyterLab + VSCode" href="vscode_jlab.html" />
-    <link rel="prev" title="Remote Computing" href="overview.html" />
+    <link rel="next" title="VSCode + JLab" href="vscode_jlab.html" />
+    <link rel="prev" title="SSH Config" href="ssh.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -227,6 +227,11 @@ const thebe_selector_output = ".output, .cell_output"
    </i>
   </label>
   <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="ssh.html">
+     SSH Config
+    </a>
+   </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
      Conda 4 Remote Servers
@@ -234,7 +239,7 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="vscode_jlab.html">
-     JupyterLab + VSCode
+     VSCode + JLab
     </a>
    </li>
   </ul>
@@ -853,7 +858,7 @@ myenv    *  /path/to/workdir/.conda/envs/myenv
 <span class="w">conda deactivate</span>
 <span class="w"># remove environment</span>
 <span class="gd">- conda remove --name myenv --all</span><span class="w"></span>
-<span class="gi">+ conda remove --name myenv --all</span><span class="w"></span>
+<span class="gi">+ mamba remove --name myenv --all</span><span class="w"></span>
 </pre></div>
 </div>
 <p><strong>Note</strong>: you only should change the regions where we are <em>creating</em>/<em>removing</em> environments and  <em>installing packages</em> within environments. All other commands should use conda.</p>
@@ -975,6 +980,10 @@ conda activate env_name
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joblib</span><span class="w">  </span><span class="c1"># Embarssingly parallel</span><span class="w"></span>
 </pre></div>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you want to see more examples of conda <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> files, you can check out my <a class="reference external" href="https://github.com/jejjohnson/dot_files"><code class="docutils literal notranslate"><span class="pre">dot_files</span></code> repo</a>. I have plenty of examples and I even distinguish between operating systems like Linux and MacOS.</p>
+</div>
 </div>
 <hr class="docutils" />
 <div class="section" id="multiple-conda-directories">
@@ -1038,17 +1047,17 @@ conda activate env_name
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="overview.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="ssh.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Remote Computing</p>
+            <p class="prev-next-title">SSH Config</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="vscode_jlab.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">JupyterLab + VSCode</p>
+        <p class="prev-next-title">VSCode + JLab</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -1061,7 +1070,7 @@ conda activate env_name
     
       By J. Emmanuel Johnson<br/>
     
-        &copy; Copyright 2020.<br/>
+        &copy; Copyright 2022.<br/>
   </p>
 </footer>
 </main>

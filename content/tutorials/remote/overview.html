@@ -53,7 +53,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Conda 4 Remote Servers" href="conda.html" />
+    <link rel="next" title="SSH Config" href="ssh.html" />
     <link rel="prev" title="Gaussianization Flows" href="../jax_journey/gfs_with_jax.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -228,13 +228,18 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
+    <a class="reference internal" href="ssh.html">
+     SSH Config
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="conda.html">
      Conda 4 Remote Servers
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="vscode_jlab.html">
-     JupyterLab + VSCode
+     VSCode + JLab
     </a>
    </li>
   </ul>
@@ -570,6 +575,70 @@ const thebe_selector_output = ".output, .cell_output"
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show noprint">
             
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ssh-config">
+   <span class="xref myst">
+    <strong>
+     SSH Config
+    </strong>
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conda">
+   <span class="xref myst">
+    <strong>
+     Conda
+    </strong>
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jupyter-lab">
+   <span class="xref myst">
+    <strong>
+     Jupyter Lab
+    </strong>
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#organization">
+   <span class="xref myst">
+    <strong>
+     Organization
+    </strong>
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#visual-studio-code-todo">
+   <span class="xref myst">
+    <strong>
+     Visual Studio Code
+    </strong>
+   </span>
+   (TODO)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tips-n-tricks-4-ml-todo">
+   <span class="xref myst">
+    <strong>
+     Tips n Tricks 4 ML
+    </strong>
+   </span>
+   (TODO)
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -582,6 +651,70 @@ const thebe_selector_output = ".output, .cell_output"
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ssh-config">
+   <span class="xref myst">
+    <strong>
+     SSH Config
+    </strong>
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conda">
+   <span class="xref myst">
+    <strong>
+     Conda
+    </strong>
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jupyter-lab">
+   <span class="xref myst">
+    <strong>
+     Jupyter Lab
+    </strong>
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#organization">
+   <span class="xref myst">
+    <strong>
+     Organization
+    </strong>
+   </span>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#visual-studio-code-todo">
+   <span class="xref myst">
+    <strong>
+     Visual Studio Code
+    </strong>
+   </span>
+   (TODO)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tips-n-tricks-4-ml-todo">
+   <span class="xref myst">
+    <strong>
+     Tips n Tricks 4 ML
+    </strong>
+   </span>
+   (TODO)
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -590,11 +723,81 @@ const thebe_selector_output = ".output, .cell_output"
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="remote-computing">
 <h1>Remote Computing<a class="headerlink" href="#remote-computing" title="Permalink to this headline">¶</a></h1>
-<p><strong>Language</strong>: <code class="docutils literal notranslate"><span class="pre">Python</span></code></p>
-<p><strong>Package Manager</strong>: <code class="docutils literal notranslate"><span class="pre">Conda</span></code></p>
-<p><strong>Research</strong>: <code class="docutils literal notranslate"><span class="pre">JupyterLab</span></code></p>
-<p><strong>IDE</strong>: <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">Code</span></code></p>
-<p><strong>Dissemination</strong>: <code class="docutils literal notranslate"><span class="pre">Weights</span> <span class="pre">&amp;</span> <span class="pre">Biases</span></code>, <code class="docutils literal notranslate"><span class="pre">JupyterBook</span></code>, <code class="docutils literal notranslate"><span class="pre">Docs</span></code></p>
+<p>Remote computing is the future. It is</p>
+<p>All of the following tutorials are for remote servers:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="ssh.html"><span class="doc std std-doc">SSH Config</span></a></p></li>
+<li><p><a class="reference internal" href="conda.html"><span class="doc std std-doc">Conda </span></a></p></li>
+<li><p><a class="reference internal" href="jlab.html"><span class="doc std std-doc">Jupyter Lab</span></a></p></li>
+<li><p><a class="reference internal" href="organize.html"><span class="doc std std-doc">Organization</span></a> (TODO)</p></li>
+<li><p><span class="xref myst">Visual Studio Code</span> (TODO)</p></li>
+<li><p><span class="xref myst">Tips n Tricks for ML</span> (TODO)</p></li>
+</ul>
+<p>These tutorials should be followed in sequential order because:</p>
+<ul class="simple">
+<li><p>that’s the path of increasing difficulty</p></li>
+<li><p>that’s the path of increasing usefulness.</p></li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="ssh-config">
+<h2><a class="reference internal" href="ssh.html"><span class="doc std std-doc"><strong>SSH Config</strong></span></a><a class="headerlink" href="#ssh-config" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial will demonstrate how to log in using <code class="docutils literal notranslate"><span class="pre">ssh</span></code> and then how to set up your <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file. <code class="docutils literal notranslate"><span class="pre">ssh</span></code> is probably the most important tool you need to be relatively familiar with in order to have a good workflow. The <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file will automate some of the commands and permissions and it will make things <strong>a lot</strong> easier.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="conda">
+<h2><a class="reference internal" href="conda.html"><span class="doc std std-doc"><strong>Conda</strong></span></a><a class="headerlink" href="#conda" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial will demonstrate how we can set up personal <code class="docutils literal notranslate"><span class="pre">conda</span></code> as our package management on remote servers. We will show how we can have full control of our package environments but still be able to see some of the pre-configured packages that the server admins may have installed.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="jupyter-lab">
+<h2><a class="reference internal" href="jlab.html"><span class="doc std std-doc"><strong>Jupyter Lab</strong></span></a><a class="headerlink" href="#jupyter-lab" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial will demonstrate how to install, start and use <code class="docutils literal notranslate"><span class="pre">jupyter-lab</span></code> / <code class="docutils literal notranslate"><span class="pre">jupyter-notebook</span></code> effectively on the servers while still being in the comforts of our own home. It will also showcase the different scenarios of how to get it to work using:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cal1</span></code> - a small server that uses the <code class="docutils literal notranslate"><span class="pre">slurm</span></code> management system.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> - a security-heavy server that uses the <code class="docutils literal notranslate"><span class="pre">slurm</span></code> management system.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gricad</span></code> - a server that uses the <code class="docutils literal notranslate"><span class="pre">oar</span></code> management system.</p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="organization">
+<h2><a class="reference internal" href="organize.html"><span class="doc std std-doc"><strong>Organization</strong></span></a><a class="headerlink" href="#organization" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial will give some tips and tricks for my workflow. It might be useful to showcase how I code and how I use all of the servers and the tools at my disposal to be efficient and effective. There will also be some extra tips and tricks:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span></code> + <code class="docutils literal notranslate"><span class="pre">github</span></code> - local and remote version control</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zsh</span></code> - a more advanced cli prompt</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tmux</span></code> - for running scripts in the background</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tmuxp</span></code> - for automating the navigation pane depending upon the project</p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="visual-studio-code-todo">
+<h2><span class="xref myst"><strong>Visual Studio Code</strong></span> (TODO)<a class="headerlink" href="#visual-studio-code-todo" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial will demonstrate how we can use a fully-fledged editor for programming via <code class="docutils literal notranslate"><span class="pre">ssh</span></code>-remote-computing. It’s possible but it does require a bit of manipulation.</p>
+<ul class="simple">
+<li><p>Useful extensions</p></li>
+<li><p>JupyterLab embedded</p></li>
+<li><p>Debugging on a remote node</p></li>
+</ul>
+<p><strong>Note</strong>: I have not been able to use <code class="docutils literal notranslate"><span class="pre">vscode</span></code> on servers that don’t allow dynamic IPs, e.g. <code class="docutils literal notranslate"><span class="pre">jean-zay</span></code>.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="tips-n-tricks-4-ml-todo">
+<h2><span class="xref myst"><strong>Tips n Tricks 4 ML</strong></span> (TODO)<a class="headerlink" href="#tips-n-tricks-4-ml-todo" title="Permalink to this headline">¶</a></h2>
+<p>There are a l</p>
+<ul class="simple">
+<li><p>logging with <em>weights and biases</em></p></li>
+<li></li>
+</ul>
+<!-- 
+**Language**: `Python`
+
+**Package Manager**: `Conda`
+
+**Research**: `JupyterLab`
+
+**IDE**: `Visual Studio Code`
+
+**Dissemination**: `Weights & Biases`, `JupyterBook`, `Docs` --></div>
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -631,10 +834,10 @@ const thebe_selector_output = ".output, .cell_output"
             <p class="prev-next-title">Gaussianization Flows</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="conda.html" title="next page">
+    <a class='right-next' id="next-link" href="ssh.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Conda 4 Remote Servers</p>
+        <p class="prev-next-title">SSH Config</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -647,7 +850,7 @@ const thebe_selector_output = ".output, .cell_output"
     
       By J. Emmanuel Johnson<br/>
     
-        &copy; Copyright 2020.<br/>
+        &copy; Copyright 2022.<br/>
   </p>
 </footer>
 </main>

@@ -226,13 +226,18 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
+    <a class="reference internal" href="ssh.html">
+     SSH Config
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="conda.html">
      Conda 4 Remote Servers
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="vscode_jlab.html">
-     JupyterLab + VSCode
+     VSCode + JLab
     </a>
    </li>
   </ul>
@@ -574,6 +579,23 @@ const thebe_selector_output = ".output, .cell_output"
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#workflow">
+   WorkFlow
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#coding">
+     Coding
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#big-jobs">
+     Big Jobs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#file-structure">
    File Structure
   </a>
@@ -665,6 +687,23 @@ const thebe_selector_output = ".output, .cell_output"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#workflow">
+   WorkFlow
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#coding">
+     Coding
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#big-jobs">
+     Big Jobs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#file-structure">
    File Structure
   </a>
@@ -751,11 +790,37 @@ const thebe_selector_output = ".output, .cell_output"
 <li></li>
 </ul>
 <hr class="docutils" />
+<div class="section" id="workflow">
+<h2>WorkFlow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="coding">
+<h3>Coding<a class="headerlink" href="#coding" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Prototype: <code class="docutils literal notranslate"><span class="pre">jupyter-lab</span></code></p></li>
+<li><p>Packaging: <code class="docutils literal notranslate"><span class="pre">vscode</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="big-jobs">
+<h3>Big Jobs<a class="headerlink" href="#big-jobs" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li><p>Setup Codes on My machine</p></li>
+<li><p>Prototype pipeline with <code class="docutils literal notranslate"><span class="pre">jupyter-lab</span></code> + <code class="docutils literal notranslate"><span class="pre">vscode</span></code></p></li>
+<li><p>Setup organization on <code class="docutils literal notranslate"><span class="pre">cal1</span></code> server.</p></li>
+<li><p>Prototype job scripts on <code class="docutils literal notranslate"><span class="pre">slurm</span></code></p></li>
+<li><p>Sync files across <code class="docutils literal notranslate"><span class="pre">cal1</span></code> &lt;—&gt; <code class="docutils literal notranslate"><span class="pre">jean-zay</span></code> and/or <code class="docutils literal notranslate"><span class="pre">gricad</span></code></p></li>
+<li><p>Run mega-jobs on <code class="docutils literal notranslate"><span class="pre">slurm</span></code></p></li>
+<li><p>Sync files across <code class="docutils literal notranslate"><span class="pre">cal1</span></code> &lt;—&gt; <code class="docutils literal notranslate"><span class="pre">jean-zay</span></code> and/or <code class="docutils literal notranslate"><span class="pre">gricad</span></code></p></li>
+<li><p>Visualize, Play, Host Results on <code class="docutils literal notranslate"><span class="pre">cal1</span></code> server</p></li>
+</ol>
+</div>
+</div>
+<hr class="docutils" />
 <div class="section" id="file-structure">
 <h2>File Structure<a class="headerlink" href="#file-structure" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">/</span><span class="n">project</span>
 <span class="n">logs</span><span class="o">/</span><span class="n">project</span>
 <span class="n">project</span><span class="o">/</span>
+<span class="n">config</span><span class="o">/</span>
+<span class="n">credentials</span><span class="o">/</span>
 </pre></div>
 </div>
 <p><strong><code class="docutils literal notranslate"><span class="pre">project</span></code></strong>: this is where all of your source code lives. It should be an environment under version control (e.g. git) so that you can track all of the changes.</p>
@@ -804,6 +869,11 @@ git pull origin master
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rsync -avxH /path/to/project/data login@cargo.univ-grenoble-alpes.fr:/path/to/project/data
 </pre></div>
 </div>
+<p><strong>SCP</strong></p>
+<p>A lot of times you’ll get coworkers who can’t access or they don’t use (or don’t want to learn) how to use the server effectively. So they might ask you to help them transfer some files. One way to do it is to use the scp package. The command I use is below.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp -r user@your.server.example.com:/path/to/foo /home/user/Desktop/
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -842,7 +912,7 @@ git pull origin master
     
       By J. Emmanuel Johnson<br/>
     
-        &copy; Copyright 2020.<br/>
+        &copy; Copyright 2022.<br/>
   </p>
 </footer>
 </main>

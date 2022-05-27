@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JupyterLab on Servers &#8212; Research Notebook</title>
+    <title>JupyterLab &#8212; Research Notebook</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -226,13 +226,18 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
+    <a class="reference internal" href="ssh.html">
+     SSH Config
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="conda.html">
      Conda 4 Remote Servers
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="vscode_jlab.html">
-     JupyterLab + VSCode
+     VSCode + JLab
     </a>
    </li>
   </ul>
@@ -574,9 +579,90 @@ const thebe_selector_output = ".output, .cell_output"
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment">
-   Environment
+  <a class="reference internal nav-link" href="#organization">
+   Organization
   </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install-jupyterlab">
+   Install JupyterLab
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#environment-yaml-file">
+     Environment
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       .yaml
+      </span>
+     </code>
+     file
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jlab-on-slurm">
+   JLab on SLURM
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#automation">
+     Automation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jlab-on-oar">
+   JLab on OAR
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   Automation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#slurm-cal1">
+     SLURM (Cal1)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#from-scratch">
+       From Scratch
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#scripts">
+       Scripts
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#slurm-jeanzay">
+     SLURM (JeanZay)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#procedure">
+       Procedure
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#jeanzay-cpu">
+       JeanZay (CPU)
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#jeanzay-gpu">
+       JeanZay (GPU)
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#run-the-jupyter-notebook-with-conda-environment-everytime">
@@ -594,6 +680,46 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#extensions">
    Extensions
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#templates">
+     Templates
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup-your-jupyterlab-environment">
+   2. Setup Your JupyterLab Environment
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-a-yml-file-with-requirements">
+     2.1 Create a
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       .yml
+      </span>
+     </code>
+     file with requirements
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#jupyterlab-and-other-python-kernels">
+     2.2 JupyterLab and other python kernels
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-a-conda-environment">
+     2.1 Create a Conda Environment
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#install-and-the-jupyterlab-manager">
+     2.3 Install and the Jupyterlab Manager
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -605,7 +731,7 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>JupyterLab on Servers</h1>
+                <h1>JupyterLab</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -616,9 +742,90 @@ const thebe_selector_output = ".output, .cell_output"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment">
-   Environment
+  <a class="reference internal nav-link" href="#organization">
+   Organization
   </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install-jupyterlab">
+   Install JupyterLab
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#environment-yaml-file">
+     Environment
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       .yaml
+      </span>
+     </code>
+     file
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jlab-on-slurm">
+   JLab on SLURM
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#automation">
+     Automation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jlab-on-oar">
+   JLab on OAR
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   Automation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#slurm-cal1">
+     SLURM (Cal1)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#from-scratch">
+       From Scratch
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#scripts">
+       Scripts
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#slurm-jeanzay">
+     SLURM (JeanZay)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#procedure">
+       Procedure
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#jeanzay-cpu">
+       JeanZay (CPU)
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#jeanzay-gpu">
+       JeanZay (GPU)
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#run-the-jupyter-notebook-with-conda-environment-everytime">
@@ -636,6 +843,46 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#extensions">
    Extensions
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#templates">
+     Templates
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup-your-jupyterlab-environment">
+   2. Setup Your JupyterLab Environment
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-a-yml-file-with-requirements">
+     2.1 Create a
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       .yml
+      </span>
+     </code>
+     file with requirements
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#jupyterlab-and-other-python-kernels">
+     2.2 JupyterLab and other python kernels
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-a-conda-environment">
+     2.1 Create a Conda Environment
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#install-and-the-jupyterlab-manager">
+     2.3 Install and the Jupyterlab Manager
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -646,14 +893,103 @@ const thebe_selector_output = ".output, .cell_output"
             
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="jupyterlab-on-servers">
-<h1>JupyterLab on Servers<a class="headerlink" href="#jupyterlab-on-servers" title="Permalink to this headline">¶</a></h1>
+  <div class="tex2jax_ignore mathjax_ignore section" id="jupyterlab">
+<h1>JupyterLab<a class="headerlink" href="#jupyterlab" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Install Jlab (from environment)</p></li>
+<li><p>Launch Jlab</p>
+<ul>
+<li><p>Local</p></li>
+<li><p>SLURM</p>
+<ul>
+<li><p>Scratch</p></li>
+<li><p>Automation (script, config)</p></li>
+</ul>
+</li>
+<li><p>Gricad</p>
+<ul>
+<li><p>Scratch</p></li>
+<li><p>Automation</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li></li>
+</ul>
 <hr class="docutils" />
-<div class="section" id="environment">
-<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this headline">¶</a></h2>
-<p>Below, we have a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file for creating a Jupyter Lab environment.</p>
-<details>
-<summary>JupyterLab</summary>
+<div class="section" id="organization">
+<h2>Organization<a class="headerlink" href="#organization" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">project</span></code> directory - where our code is living</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">bin</span></code> directory - where we put all of our executables</p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">$WORKDIR</span></code> -</p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">$LOGSDIR</span></code></p></li>
+<li><p>Create necessary files (<code class="docutils literal notranslate"><span class="pre">logs</span></code>, <code class="docutils literal notranslate"><span class="pre">jobs</span></code>, <code class="docutils literal notranslate"><span class="pre">errs</span></code>)</p></li>
+</ol>
+<p><strong>Example</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ===================</span>
+<span class="c1"># Custom directories</span>
+<span class="c1"># ===================</span>
+<span class="c1"># work directory</span>
+<span class="nb">export</span> <span class="nv">WORKDIR</span><span class="o">=</span>/mnt/meom/workdir/johnsonj
+<span class="c1"># log directory</span>
+<span class="nb">export</span> <span class="nv">LOGDIR</span><span class="o">=</span><span class="nv">$WORKDIR</span>/logs
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><strong>Step 1</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">$WORKDIR</span></code> is set.</p>
+<p>Check if it exists in the environments.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>printenv WORKDIR
+</pre></div>
+</div>
+<p>Make sure to add it to the <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.profile</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add this to the .profile</span>
+<span class="nb">export</span> <span class="nv">WORKDIR</span><span class="o">=</span>/mnt/meom/workdir/username:<span class="nv">$WORKDIR</span>
+</pre></div>
+</div>
+<p>Check again if it exists.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># check if exists (it should now)</span>
+printenv WORKDIR
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><strong>Step 2</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">$LOGSDIR</span></code> is set.</p>
+<p>Check if it exists in the environments.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>printenv LOGDIR
+</pre></div>
+</div>
+<p>Make sure to add it to the <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.profile</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add this to the .profile</span>
+<span class="nb">export</span> <span class="nv">LOGDIR</span><span class="o">=</span><span class="nv">$WORKDIR</span>/logs
+</pre></div>
+</div>
+<p>Check again if it exists.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># check if exists (it should now)</span>
+printenv LOGDIR
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><strong>Step 3</strong>: Create necessary directories</p>
+<p>This is so that we can save logs, errors and job configurations. This will be helpful for automating things later. I like to have these available:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$LOGDIR</span>/logs
+<span class="nv">$LOGDIR</span>/jobs
+<span class="nv">$LOGDIR</span>/errs
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">logs</span></code> is a subdirectory within logs which will hold all of the slurm log files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">errs</span></code> - a subdirectory which will hold all of the slurm error log files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jobs</span></code> - a subdirectory which will hold all of the current job configurations.</p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="install-jupyterlab">
+<h2>Install JupyterLab<a class="headerlink" href="#install-jupyterlab" title="Permalink to this headline">¶</a></h2>
+<p>Here, we will walk-through how we can install <code class="docutils literal notranslate"><span class="pre">jupyterlab</span></code> on the servers.</p>
+<hr class="docutils" />
+<div class="section" id="environment-yaml-file">
+<h3>Environment <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file<a class="headerlink" href="#environment-yaml-file" title="Permalink to this headline">¶</a></h3>
+<p>Below, we have a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file for creating a Jupyter Lab environment. To refresh yourself on how this works, have a look at the <a class="reference internal" href="conda.html"><span class="doc std std-doc">conda tutorial</span></a> to more details on the installation.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jlab</span><span class="w"></span>
 <span class="nt">channels</span><span class="p">:</span><span class="w"></span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span><span class="w"></span>
@@ -677,11 +1013,224 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span><span class="w">                               </span><span class="c1"># To install other packages</span><span class="w"></span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dask_labextension</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lckr-jupyterlab-variableinspector</span><span class="w"></span>
 </pre></div>
 </div>
-</details>    
-<p><strong>Tip</strong>: You can make JupyterLab environment “to rule them all”. And then just make other conda environments. If you install the packages <code class="docutils literal notranslate"><span class="pre">nb_conda_kernel</span></code> and <code class="docutils literal notranslate"><span class="pre">ipykernels</span></code> then your JupyterLab environment will see everything. That way you don’t have to keep installing JupyterLab in every single conda environment.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We are making a single <em>JupyterLab environment to rule them all</em>. So we are only going to install things that are important for JupyterLab as a jlab <em>base environment</em>. It isn’t necessary to install things like numpy, scipy or even pytorch. We only need to install things like git and server proxies.</p>
+<p>However, we still will be able to change the <code class="docutils literal notranslate"><span class="pre">conda_kernel</span></code>. To ensure that we can change it to <em>other environments</em>, we needed to install  <code class="docutils literal notranslate"><span class="pre">nb_conda_kernel</span></code> and <code class="docutils literal notranslate"><span class="pre">ipykernels</span></code> in the <code class="docutils literal notranslate"><span class="pre">jlab</span></code> base environment as well as any other environment that we want access to.</p>
+</div>
+<p><strong>Step 1</strong>: Install this as a conda environment. (Use mamba because its faster)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba env create -f environment.yaml --prune
+</pre></div>
+</div>
+<p><strong>Step 2</strong>: Activate environment</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate jlab
+</pre></div>
+</div>
+<p><strong>Step 3</strong>: Start JupyterLab</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter-lab --no-browser --ip<span class="o">=</span><span class="m">0</span>.0.0.0 --port<span class="o">=</span><span class="m">8888</span>
+</pre></div>
+</div>
+<p>This will give you a</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="jlab-on-slurm">
+<h2>JLab on SLURM<a class="headerlink" href="#jlab-on-slurm" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Activate Environment</p></li>
+<li><p>Start JLab with port-forwarding</p></li>
+<li><p>Create and SSH session.</p></li>
+</ol>
+<hr class="docutils" />
+<div class="section" id="automation">
+<h3>Automation<a class="headerlink" href="#automation" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="jlab-on-oar">
+<h2>JLab on OAR<a class="headerlink" href="#jlab-on-oar" title="Permalink to this headline">¶</a></h2>
+</div>
+<hr class="docutils" />
+<div class="section" id="id1">
+<h2>Automation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Log into server</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Run slurm script via <code class="docutils literal notranslate"><span class="pre">sbatch</span></code>.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Create SSH tunnel to allow for <code class="docutils literal notranslate"><span class="pre">jlab</span></code> on local machine.</p></li>
+</ol>
+<div class="section" id="slurm-cal1">
+<h3>SLURM (Cal1)<a class="headerlink" href="#slurm-cal1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="from-scratch">
+<h4>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate jlab
+srun -n <span class="m">1</span> --time<span class="o">=</span><span class="m">01</span>:00:00 --mem<span class="o">=</span><span class="m">1600</span> --account<span class="o">=</span>python --job-name<span class="o">=</span>jlab jupyter-lab --no-browser --port<span class="o">=</span><span class="m">3211</span> --ip<span class="o">=</span><span class="m">0</span>.0.0.0
+</pre></div>
+</div>
+</div>
+<div class="section" id="scripts">
+<h4>Scripts<a class="headerlink" href="#scripts" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1">#SBATCH --job-name=jlab                     # name of job</span>
+<span class="c1">#SBATCH --account=python                    # for statistics</span>
+<span class="c1">#SBATCH --nodes=1                           # we ALWAYS request one node</span>
+<span class="c1">#SBATCH --ntasks-per-node=1                 # number of tasks per node</span>
+<span class="c1">#SBATCH --cpus-per-task=4                   # number of cpus per task</span>
+<span class="c1">#SBATCH --time=8:00:00                      # maximum execution time requested (HH:MM:SS)</span>
+<span class="c1">#SBATCH --memory=1600                       # the amount of memory requested</span>
+<span class="c1">#SBATCH --output=/mnt/meom/workdir/johnsonj/logs/jlab.log      # name of output file</span>
+<span class="c1">#SBATCH --error=/mnt/meom/workdir/johnsonj/errs/jlab.err       # name of error file </span>
+
+<span class="c1"># get tunneling info</span>
+<span class="nv">XDG_RUNTIME_DIR</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="nv">node</span><span class="o">=</span><span class="k">$(</span>hostname -s<span class="k">)</span>
+<span class="nv">user</span><span class="o">=</span><span class="k">$(</span>whoami<span class="k">)</span>
+<span class="nv">cluster</span><span class="o">=</span><span class="s2">&quot;ige-meom-cal1&quot;</span>
+<span class="nv">cluster_ssh</span><span class="o">=</span><span class="s2">&quot;meom_cal1&quot;</span>
+<span class="nv">port</span><span class="o">=</span><span class="m">3211</span>
+
+<span class="c1"># ==================</span>
+<span class="c1"># Information 4 SSH</span>
+<span class="c1"># ==================</span>
+<span class="c1"># Get the compute node</span>
+squeue -u <span class="nv">$USER</span> -h <span class="p">|</span> grep jlab <span class="p">|</span> awk <span class="s1">&#39;{print $NF}&#39;</span> &gt; <span class="nv">$LOGDIR</span>/jobs/jlab.node
+<span class="c1"># get the hostname</span>
+hostname -I <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> &gt; <span class="nv">$LOGDIR</span>/jobs/jlab.ip
+<span class="c1"># get the username</span>
+whoami &gt; <span class="nv">$LOGDIR</span>/jobs/jlab.user
+
+<span class="c1"># Tunneling Info</span>
+<span class="nb">echo</span> -e <span class="s2">&quot;</span>
+<span class="s2">node=</span><span class="si">${</span><span class="nv">node</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">user=</span><span class="si">${</span><span class="nv">user</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">cluster=</span><span class="si">${</span><span class="nv">cluster</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">port=</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">Command to create ssh tunnel (manually):</span>
+<span class="s2">ssh -N -f -L </span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">node</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2"> </span><span class="si">${</span><span class="nv">user</span><span class="si">}</span><span class="s2">@</span><span class="si">${</span><span class="nv">cluster</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">Command to create ssh tunnel (ssh config):</span>
+<span class="s2">ssh -N -f -L </span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">node</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2"> </span><span class="si">${</span><span class="nv">cluster_ssh</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">Command to create ssh tunnel through</span>
+<span class="s2">ssh -N -f -L </span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">:localhost:</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2"> </span>$<span class="s2"></span>
+
+<span class="s2">Use a Browser on your local machine to go to:</span>
+<span class="s2">localhost:</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">  (prefix w/ https:// if using password)</span>
+<span class="s2">&quot;</span>
+ 
+<span class="c1"># loading of modules</span>
+conda activate jlab
+
+<span class="c1"># go into work directory</span>
+<span class="nb">cd</span> <span class="nv">$WORKDIR</span>
+<span class="c1"># echo of launched commands</span>
+<span class="nb">set</span> -x
+ 
+<span class="c1"># code execution</span>
+jupyter-lab --no-browser --port<span class="o">=</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span> --ip<span class="o">=</span><span class="m">0</span>.0.0.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="slurm-jeanzay">
+<h3>SLURM (JeanZay)<a class="headerlink" href="#slurm-jeanzay" title="Permalink to this headline">¶</a></h3>
+<p>Below we have a <code class="docutils literal notranslate"><span class="pre">jlab_gpu.slurm</span></code> script which is meant to be run on the slurm server.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1">#SBATCH --job-name=jlab_gpu          # name of job</span>
+<span class="c1">#SBATCH --account=cli@gpu</span>
+<span class="c1">#SBATCH --export=ALL</span>
+<span class="c1">#SBATCH --nodes=1                    # we request one node</span>
+<span class="c1">#SBATCH --ntasks-per-node=1          # with one task per node (= number of GPUs here)</span>
+<span class="c1">#SBATCH --gres=gpu:1                 # number of GPUs (1/4 of GPUs)</span>
+<span class="c1">#SBATCH --cpus-per-task=10           # number of cores per task (1/4 of the 4-GPUs node)</span>
+<span class="c1">#SBATCH --hint=nomultithread         # hyperthreading is deactivated</span>
+<span class="c1">#SBATCH --time=12:00:00              # maximum execution time requested (HH:MM:SS)</span>
+<span class="c1">#SBATCH --output=$LOGDIR/logs/jlab_gpu.out    # name of output file</span>
+<span class="c1">#SBATCH --error=$LOGDIR/errs/jlab_gpu.out     # name of error file (here, in common with the output file)</span>
+
+<span class="c1"># get tunneling info</span>
+<span class="nv">XDG_RUNTIME_DIR</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="nv">node</span><span class="o">=</span><span class="k">$(</span>hostname -s<span class="k">)</span>
+<span class="nv">user</span><span class="o">=</span><span class="k">$(</span>whoami<span class="k">)</span>
+<span class="nv">cluster</span><span class="o">=</span><span class="s2">&quot;dahu_ciment&quot;</span>
+<span class="nv">port</span><span class="o">=</span><span class="m">8888</span>
+
+<span class="c1"># ==================</span>
+<span class="c1"># Information 4 SSH</span>
+<span class="c1"># ==================</span>
+<span class="c1"># Get the compute node</span>
+squeue -u <span class="nv">$USER</span> -h <span class="p">|</span> grep jlab_gpu <span class="p">|</span> awk <span class="s1">&#39;{print $NF}&#39;</span> &gt; <span class="nv">$LOGDIR</span>/jobs/jlab_gpu.node
+<span class="c1"># get the hostname</span>
+hostname -I <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> &gt; <span class="nv">$LOGDIR</span>/jobs/jlab_gpu.ip
+<span class="c1"># get the username</span>
+whoami &gt; <span class="nv">$LOGDIR</span>/jobs/jlab_gpu.user
+
+<span class="c1"># cleans out the modules loaded in interactive and inherited by default </span>
+module purge
+
+<span class="c1"># Tunneling Info</span>
+<span class="nb">echo</span> -e <span class="s2">&quot;</span>
+<span class="s2">node=</span><span class="si">${</span><span class="nv">node</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">user=</span><span class="si">${</span><span class="nv">user</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">cluster=</span><span class="si">${</span><span class="nv">cluster</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">port=</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">Command to create ssh tunnel:</span>
+<span class="s2">ssh -N -f -L </span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">node</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2"> </span><span class="si">${</span><span class="nv">user</span><span class="si">}</span><span class="s2">@</span><span class="si">${</span><span class="nv">cluster</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">Command to create ssh tunnel through</span>
+<span class="s2">ssh -N -f -L </span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">:localhost:</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2"> </span>$<span class="s2"></span>
+
+<span class="s2">Use a Browser on your local machine to go to:</span>
+<span class="s2">localhost:</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span><span class="s2">  (prefix w/ https:// if using password)</span>
+<span class="s2">&quot;</span>
+ 
+<span class="c1"># loading of modules</span>
+module load git
+module load cuda/10.2
+<span class="nb">source</span> activate jlab
+ 
+<span class="c1"># echo of launched commands</span>
+<span class="nb">set</span> -x
+ 
+<span class="c1"># code execution</span>
+jupyter-lab --no-browser --port<span class="o">=</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span> --ip<span class="o">=</span><span class="m">0</span>.0.0.0
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>make sure that it is executable via the <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">+x</span> <span class="pre">script.slurm</span></code> command.</p>
+</div>
+<div class="section" id="procedure">
+<h4>Procedure<a class="headerlink" href="#procedure" title="Permalink to this headline">¶</a></h4>
+<p><strong>Step I</strong>: Run the bash script</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sbatch /path/to/script.slurm
+</pre></div>
+</div>
+<p><strong>Step 2</strong>: Check</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># JUPYTER NOTEBOOK STUFF</span>
+<span class="k">function</span> launch_jlab<span class="o">(){</span>
+    <span class="c1"># Fires up JLab using sbatch</span>
+    sbatch jlab.slurm
+    <span class="c1"># prints</span>
+    cat <span class="nv">$LOGDIR</span>/logs/jlab.log
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="jeanzay-cpu">
+<h4>JeanZay (CPU)<a class="headerlink" href="#jeanzay-cpu" title="Permalink to this headline">¶</a></h4>
+</div>
+<hr class="docutils" />
+<div class="section" id="jeanzay-gpu">
+<h4>JeanZay (GPU)<a class="headerlink" href="#jeanzay-gpu" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
 </div>
 <hr class="docutils" />
 <div class="section" id="run-the-jupyter-notebook-with-conda-environment-everytime">
@@ -811,9 +1360,121 @@ lsof -i :portNumber
 <hr class="docutils" />
 <div class="section" id="extensions">
 <h2>Extensions<a class="headerlink" href="#extensions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="templates">
+<h3>Templates<a class="headerlink" href="#templates" title="Permalink to this headline">¶</a></h3>
+<p><strong>Google Colab</strong></p>
+<p><strong>Default</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pyprojroot</span> <span class="kn">import</span> <span class="n">here</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">here</span><span class="p">(</span><span class="n">project_files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;.here&quot;</span><span class="p">])</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">here</span><span class="p">()))</span>
+
+<span class="kn">import</span> <span class="nn">pathlib</span>
+
+<span class="c1"># standard python packages</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="c1"># NUMPY SETTINGS</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">onp</span>
+<span class="n">onp</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># MATPLOTLIB Settings</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">&#39;retina&#39;</span>
+
+<span class="c1"># SEABORN SETTINGS</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="s1">&#39;talk&#39;</span><span class="p">,</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="c1"># PANDAS SETTINGS</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span>
+
+<span class="c1"># LOGGING SETTINGS</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> 
+    <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1">:</span><span class="si">%(levelname)s</span><span class="s1">:</span><span class="si">%(message)s</span><span class="s1">&#39;</span>
+<span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+<span class="c1">#logger.setLevel(logging.INFO)</span>
+
+<span class="o">%</span><span class="n">load_ext</span> <span class="n">autoreload</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="setup-your-jupyterlab-environment">
+<h2>2. Setup Your JupyterLab Environment<a class="headerlink" href="#setup-your-jupyterlab-environment" title="Permalink to this headline">¶</a></h2>
+<p><strong>Note</strong>:</p>
 <ul class="simple">
-<li><p>Default</p></li>
+<li><p>You only have to do this once!</p></li>
+<li><p>Make sure conda is already installed.</p></li>
 </ul>
+<div class="section" id="create-a-yml-file-with-requirements">
+<h3>2.1 Create a <code class="docutils literal notranslate"><span class="pre">.yml</span></code> file with requirements<a class="headerlink" href="#create-a-yml-file-with-requirements" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyterlab</span><span class="w"></span>
+<span class="nt">channels</span><span class="p">:</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span><span class="w"></span>
+<span class="nt">dependencies</span><span class="p">:</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python=3.8</span><span class="w"></span>
+<span class="c1"># GUI</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyterlab</span><span class="w">           </span><span class="c1"># JupyterLab GUI</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::nb_conda_kernels</span><span class="w">     </span><span class="c1"># Access to other conda kernels</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::spyder-kernels</span><span class="w">       </span><span class="c1"># Access via spyder kernels</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::nodejs</span><span class="w">               </span><span class="c1"># for extensions in jupyterlab</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyviz::holoviews</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bokeh</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bokeh::jupyter_bokeh</span><span class="w">              </span><span class="c1"># Bokeh</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tqdm</span><span class="w">                              </span><span class="c1"># For status bars</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span><span class="w">                               </span><span class="c1"># To install other packages</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipykernel</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipywidgets</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyter-server-proxy</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dask_labextension</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nbserverproxy</span><span class="w"></span>
+</pre></div>
+</div>
+<p>I’ve typed it out but you can also check out the file on <a class="reference external" href="https://github.com/jejjohnson/dot_files/blob/master/jupyter_scripts/jupyterlab.yml">github</a>.</p>
+</div>
+<div class="section" id="jupyterlab-and-other-python-kernels">
+<h3>2.2 JupyterLab and other python kernels<a class="headerlink" href="#jupyterlab-and-other-python-kernels" title="Permalink to this headline">¶</a></h3>
+<p>So you may be wondering if we need to do this with every conda environment we create. No. We just need to have a general JupyterLab environment that calls other environments. The important thing here is that we have the jupyterlab package installed as well as <code class="docutils literal notranslate"><span class="pre">nb_conda_kernels</span></code> package. This allows the jupyterlab to be able to use any other python kernel that’s in your user space (sometimes common shared ones but it depends).</p>
+<p>Now, all other conda environments will need to have the <code class="docutils literal notranslate"><span class="pre">ipykernel</span></code> package installed and it will be visible from your JupyterLab environment.</p>
+</div>
+<div class="section" id="create-a-conda-environment">
+<h3>2.1 Create a Conda Environment<a class="headerlink" href="#create-a-conda-environment" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the environment with your .yml file</span>
+conda env create --name jupyterlab -f jupyterlab.yml
+<span class="c1"># activate the environment</span>
+<span class="nb">source</span> activate jupyterlab
+<span class="c1"># or perhaps</span>
+<span class="c1"># conda activate jupyterlab</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-and-the-jupyterlab-manager">
+<h3>2.3 Install and the Jupyterlab Manager<a class="headerlink" href="#install-and-the-jupyterlab-manager" title="Permalink to this headline">¶</a></h3>
+<p>This will enable you to have extensions for your Jupyterlab. There are so many cool ones out there. I’m particularly fond of the <a class="reference external" href="https://github.com/lckr/jupyterlab-variableInspector">variable inspector</a> and the <a class="reference external" href="https://github.com/jupyterlab/jupyterlab-toc">table of contents</a>. JupyterLab has gotten awesome so you can install most new extensions using the JupyterLab GUI.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install jupyter lab extension maager</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">jupyter labextension install @jupyter-widgets/jupyterlab-manager</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain"># Enable</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">jupyter serverextension enable --py jupyterlab-manager</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
@@ -851,7 +1512,7 @@ lsof -i :portNumber
     
       By J. Emmanuel Johnson<br/>
     
-        &copy; Copyright 2020.<br/>
+        &copy; Copyright 2022.<br/>
   </p>
 </footer>
 </main>

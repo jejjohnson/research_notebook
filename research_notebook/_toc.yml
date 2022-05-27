@@ -28,7 +28,7 @@ parts:
         - file: content/tutorials/jax_journey/gfs_with_jax.ipynb
     - file: content/tutorials/remote/overview
       sections:
-      - file: content/tutorials/remote/conda.md
+      - file: content/tutorials/remote/conda
       - file: content/tutorials/remote/vscode_jlab
   - caption: Notes
     chapters:

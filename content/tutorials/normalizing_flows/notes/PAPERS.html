@@ -37,17 +37,19 @@
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/togglebutton.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
-    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
-    <script>
-        const thebe_selector = ".thebe"
-        const thebe_selector_input = "pre"
-        const thebe_selector_output = ".output"
-    </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -567,14 +569,36 @@
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#all-you-need-is-gaussinization">
-   All You Need is Gaussinization
+  <a class="reference internal nav-link" href="#elevator-pitch-ideas">
+   Elevator Pitch Ideas
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#gaussianized-kalman-filters">
-   Gaussianized Kalman Filters
+  <a class="reference internal nav-link" href="#id1">
+   Papers
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#all-you-need-is-gaussinization">
+     All You Need is Gaussinization
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gaussianized-kalman-filters">
+     Gaussianized Kalman Filters
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#deep-gaussianized-kalman-filters">
+     Deep Gaussianized Kalman Filters
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#conditional-gaussianization-flows">
+     Conditional Gaussianization Flows
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -597,14 +621,36 @@
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#all-you-need-is-gaussinization">
-   All You Need is Gaussinization
+  <a class="reference internal nav-link" href="#elevator-pitch-ideas">
+   Elevator Pitch Ideas
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#gaussianized-kalman-filters">
-   Gaussianized Kalman Filters
+  <a class="reference internal nav-link" href="#id1">
+   Papers
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#all-you-need-is-gaussinization">
+     All You Need is Gaussinization
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gaussianized-kalman-filters">
+     Gaussianized Kalman Filters
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#deep-gaussianized-kalman-filters">
+     Deep Gaussianized Kalman Filters
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#conditional-gaussianization-flows">
+     Conditional Gaussianization Flows
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -621,11 +667,44 @@
 <li><p>All You Need is Gaussianization</p></li>
 <li><p>Conditional Gaussianization for Emulation</p></li>
 <li><p>Gaussianized Markovian Generative Models for Spatio-Temporal Data</p></li>
-<li><p>Gaussianized Kalman Filters</p></li>
 </ul>
 <hr class="docutils" />
+<div class="section" id="elevator-pitch-ideas">
+<h2>Elevator Pitch Ideas<a class="headerlink" href="#elevator-pitch-ideas" title="Permalink to this headline">¶</a></h2>
+<p><strong>All You Need is Gaussianization</strong></p>
+<blockquote>
+<div><p>Use Gaussianization Flows for everything! A viable option for simple, effective normalizing flows.</p>
+</div></blockquote>
+<p><strong>Gaussianized Kalman Filters</strong></p>
+<blockquote>
+<div><p>Combines iterative Gaussianization and traditional kalman filters for iterative filtering and smoothing solutions.</p>
+</div></blockquote>
+<p><strong>Deep Gaussianized Kalman Filters</strong></p>
+<blockquote>
+<div><p>Combines Gaussianization Flows and Deep Kalman Filters for time series models. Applications include 1D, 2D and 3D spatio-temporal datasets.</p>
+</div></blockquote>
+<p><strong>Conditional Gaussianization Flows</strong></p>
+<blockquote>
+<div><p>Trainable conditional Gaussianization flows for emulation.</p>
+</div></blockquote>
+<p><strong>Deep Gaussianized Spatio-Temporal Features</strong></p>
+<blockquote>
+<div><p>Feature extractors + Gaussianization for complex nD Spatio-Temporal data. nD Spatio-Temporal data is very complex to model. Perhaps a feature extractor, e.g. slow-fast or convLSTM, will capture the complex elements on top of a normalizing flow. Applications: regression, classification, density estimation, anomaly detection, etc.</p>
+</div></blockquote>
+<p><strong>Self-Normalizing Gaussianization</strong></p>
+<blockquote>
+<div><p>Couple the GDN with orthogonal rotations to get data-dependent invertible methods.</p>
+</div></blockquote>
+<p><strong>Gaussianized Plug-In-Play Priors</strong></p>
+<blockquote>
+<div><p>Using Gaussianized Flows for plug-in-play priors.</p>
+</div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="id1">
+<h2>Papers<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="all-you-need-is-gaussinization">
-<h2>All You Need is Gaussinization<a class="headerlink" href="#all-you-need-is-gaussinization" title="Permalink to this headline">¶</a></h2>
+<h3>All You Need is Gaussinization<a class="headerlink" href="#all-you-need-is-gaussinization" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>We want to show that</p>
 </div></blockquote>
@@ -660,10 +739,31 @@
 </div>
 <hr class="docutils" />
 <div class="section" id="gaussianized-kalman-filters">
-<h2>Gaussianized Kalman Filters<a class="headerlink" href="#gaussianized-kalman-filters" title="Permalink to this headline">¶</a></h2>
+<h3>Gaussianized Kalman Filters<a class="headerlink" href="#gaussianized-kalman-filters" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Iterative + Kalman Filters</p></li>
 </ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="deep-gaussianized-kalman-filters">
+<h3>Deep Gaussianized Kalman Filters<a class="headerlink" href="#deep-gaussianized-kalman-filters" title="Permalink to this headline">¶</a></h3>
+<p><strong>Methods</strong></p>
+<ul class="simple">
+<li><p>Gaussianization Flows (GF)</p></li>
+<li><p>Kalman Filter (KF)</p></li>
+<li><p>Ensemble Kalman Filter (EnsKF)</p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="conditional-gaussianization-flows">
+<h3>Conditional Gaussianization Flows<a class="headerlink" href="#conditional-gaussianization-flows" title="Permalink to this headline">¶</a></h3>
+<p><strong>Methods</strong></p>
+<ul class="simple">
+<li><p>Prior - Mixture Conditional Prior</p></li>
+<li><p>Coupling Layers - Data-Dependent Layers</p></li>
+<li><p>Augmentation - Latent Variable (Dim. Reduction / Augmentation)</p></li>
+</ul>
+</div>
 </div>
 </div>
 

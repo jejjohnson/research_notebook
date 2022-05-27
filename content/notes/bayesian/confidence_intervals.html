@@ -37,20 +37,22 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
-    <script>
-        const thebe_selector = ".thebe"
-        const thebe_selector_input = "pre"
-        const thebe_selector_output = ".output"
-    </script>
-    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Sleeper Concepts" href="../concepts/overview.html" />
@@ -818,8 +820,8 @@
 </div>
 <div class="section" id="deep-kernel-learning">
 <h4>Deep Kernel Learning<a class="headerlink" href="#deep-kernel-learning" title="Permalink to this headline">¶</a></h4>
-<p>One of the biggest limiations of Gaussian processes is the expressivity of the kernel function. There are just some datasets that are hard to fit. So one augmentation is to use something called Deep Kernel Learning (DKL) <span id="id1">[<a class="reference internal" href="../../../markdown.html#id6">Wilson <em>et al.</em>, 2016</a>, <a class="reference internal" href="../../../markdown.html#id7">Wilson <em>et al.</em>, 2016</a>]</span>.This works by attaching a neural network before the kernel. So instead of the inputs going directly into the kernel function, they go through a neural network first (kind of like an encoder) and then they are passed through to the kernel function.</p>
-<p>However, because DKL are using neural networks, standard training procedures (i.e. maximum likelihood estimation) tend to exhibit the same pathologies that we see in standard neural networks <span id="id2">[<a class="reference internal" href="../../../markdown.html#id5">Ober <em>et al.</em>, 2021</a>]</span>.</p>
+<p>One of the biggest limiations of Gaussian processes is the expressivity of the kernel function. There are just some datasets that are hard to fit. So one augmentation is to use something called Deep Kernel Learning (DKL) <span id="id1">[<a class="reference internal" href="../../../markdown.html#id6" title="Andrew Gordon Wilson, Zhiting Hu, Ruslan Salakhutdinov, and Eric P. Xing. Deep kernel learning. In Arthur Gretton and Christian C. Robert, editors, Proceedings of the 19th International Conference on Artificial Intelligence and Statistics, AISTATS 2016, Cadiz, Spain, May 9-11, 2016, volume 51 of JMLR Workshop and Conference Proceedings, 370–378. JMLR.org, 2016. URL: http://proceedings.mlr.press/v51/wilson16.html.">Wilson <em>et al.</em>, 2016</a>, <a class="reference internal" href="../../../markdown.html#id7" title="Andrew Gordon Wilson, Zhiting Hu, Ruslan Salakhutdinov, and Eric P. Xing. Stochastic variational deep kernel learning. In Daniel D. Lee, Masashi Sugiyama, Ulrike von Luxburg, Isabelle Guyon, and Roman Garnett, editors, Advances in Neural Information Processing Systems 29: Annual Conference on Neural Information Processing Systems 2016, December 5-10, 2016, Barcelona, Spain, 2586–2594. 2016. URL: https://proceedings.neurips.cc/paper/2016/hash/bcc0d400288793e8bdcd7c19a8ac0c2b-Abstract.html.">Wilson <em>et al.</em>, 2016</a>]</span>.This works by attaching a neural network before the kernel. So instead of the inputs going directly into the kernel function, they go through a neural network first (kind of like an encoder) and then they are passed through to the kernel function.</p>
+<p>However, because DKL are using neural networks, standard training procedures (i.e. maximum likelihood estimation) tend to exhibit the same pathologies that we see in standard neural networks <span id="id2">[<a class="reference internal" href="../../../markdown.html#id5" title="Sebastian W. Ober, Carl E. Rasmussen, and Mark van der Wilk. The promises and pitfalls of deep kernel learning. CoRR, 2021. URL: https://arxiv.org/abs/2102.12108, arXiv:2102.12108.">Ober <em>et al.</em>, 2021</a>]</span>.</p>
 </div>
 </div>
 <hr class="docutils" />
@@ -827,7 +829,7 @@
 <h3>Neural Networks<a class="headerlink" href="#neural-networks" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="dropout">
 <h4>DropOut<a class="headerlink" href="#dropout" title="Permalink to this headline">¶</a></h4>
-<p>Dropout is probably the most common method <span id="id3">[<a class="reference internal" href="../../../markdown.html#id4">Gal and Ghahramani, 2016</a>]</span>. Dropout works by randomly removing neurons during the training <strong>and</strong> testing phase. This works as an approximate method to Bayesian neural networks. The advantage of this is that it’s very simple and it’s relatively fast. If you’re already using a neural network, chances are you’re already using dropout as a regularization technique. So there will be minimum changes to your code. The downside is there there have been studies showing that it the confidence intervals aren’t the best quality.</p>
+<p>Dropout is probably the most common method <span id="id3">[<a class="reference internal" href="../../../markdown.html#id4" title="Yarin Gal and Zoubin Ghahramani. Dropout as a bayesian approximation: representing model uncertainty in deep learning. In Maria-Florina Balcan and Kilian Q. Weinberger, editors, Proceedings of the 33nd International Conference on Machine Learning, ICML 2016, New York City, NY, USA, June 19-24, 2016, volume 48 of JMLR Workshop and Conference Proceedings, 1050–1059. JMLR.org, 2016. URL: http://proceedings.mlr.press/v48/gal16.html.">Gal and Ghahramani, 2016</a>]</span>. Dropout works by randomly removing neurons during the training <strong>and</strong> testing phase. This works as an approximate method to Bayesian neural networks. The advantage of this is that it’s very simple and it’s relatively fast. If you’re already using a neural network, chances are you’re already using dropout as a regularization technique. So there will be minimum changes to your code. The downside is there there have been studies showing that it the confidence intervals aren’t the best quality.</p>
 </div>
 <div class="section" id="probabilistic">
 <h4>Probabilistic<a class="headerlink" href="#probabilistic" title="Permalink to this headline">¶</a></h4>

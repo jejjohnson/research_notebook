@@ -133,7 +133,7 @@ conda activate myenv
 conda deactivate
 # remove environment
 - conda remove --name myenv --all
-+ conda remove --name myenv --all
++ mamba remove --name myenv --all
 ```
 
 **Note**: you only should change the regions where we are *creating*/*removing* environments and  *installing packages* within environments. All other commands should use conda.
@@ -280,7 +280,9 @@ dependencies:
   - joblib  # Embarssingly parallel
 ```
 
-
+:::{tip}
+If you want to see more examples of conda `environment.yml` files, you can check out my [`dot_files` repo](https://github.com/jejjohnson/dot_files). I have plenty of examples and I even distinguish between operating systems like Linux and MacOS.
+:::
 
 ---
 

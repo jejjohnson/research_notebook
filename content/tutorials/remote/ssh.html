@@ -615,23 +615,31 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal nav-link" href="#port-forwarding">
      Port Forwarding
     </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#background-ssh-tunneling">
+     Background SSH Tunneling
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#closing-background-ssh-tunnels">
+     Closing Background SSH Tunnels
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#advanced-users-bash-script">
+     Advanced Users - Bash Script
+    </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#background">
-       Background
+      <a class="reference internal nav-link" href="#ssh-process-background">
+       SSH Process Background
       </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#closing-the-background-process">
-         Closing The Background Process
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#advanced-users-bash-script">
-         Advanced Users - Bash Script
-        </a>
-       </li>
-      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#closing-ports">
+       Closing Ports
+      </a>
      </li>
     </ul>
    </li>
@@ -679,11 +687,6 @@ const thebe_selector_output = ".output, .cell_output"
        </code>
       </a>
      </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#testing-the-setup">
-       Testing the Setup
-      </a>
-     </li>
     </ul>
    </li>
   </ul>
@@ -694,36 +697,33 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#jeanzay">
+    <a class="reference internal nav-link" href="#proxyjump">
      <code class="docutils literal notranslate">
       <span class="pre">
-       JeanZay
+       ProxyJump
       </span>
      </code>
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id2">
-       Testing the Setup
-      </a>
-     </li>
-    </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#gricad">
+    <a class="reference internal nav-link" href="#example-gricad">
+     Example:
      <code class="docutils literal notranslate">
       <span class="pre">
        Gricad
       </span>
      </code>
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id3">
-       Testing the Setup
-      </a>
-     </li>
-    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-jeanzay">
+     Example:
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       JeanZay
+      </span>
+     </code>
+    </a>
    </li>
   </ul>
  </li>
@@ -766,23 +766,31 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal nav-link" href="#port-forwarding">
      Port Forwarding
     </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#background-ssh-tunneling">
+     Background SSH Tunneling
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#closing-background-ssh-tunnels">
+     Closing Background SSH Tunnels
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#advanced-users-bash-script">
+     Advanced Users - Bash Script
+    </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#background">
-       Background
+      <a class="reference internal nav-link" href="#ssh-process-background">
+       SSH Process Background
       </a>
-      <ul class="nav section-nav flex-column">
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#closing-the-background-process">
-         Closing The Background Process
-        </a>
-       </li>
-       <li class="toc-h5 nav-item toc-entry">
-        <a class="reference internal nav-link" href="#advanced-users-bash-script">
-         Advanced Users - Bash Script
-        </a>
-       </li>
-      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#closing-ports">
+       Closing Ports
+      </a>
      </li>
     </ul>
    </li>
@@ -830,11 +838,6 @@ const thebe_selector_output = ".output, .cell_output"
        </code>
       </a>
      </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#testing-the-setup">
-       Testing the Setup
-      </a>
-     </li>
     </ul>
    </li>
   </ul>
@@ -845,36 +848,33 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#jeanzay">
+    <a class="reference internal nav-link" href="#proxyjump">
      <code class="docutils literal notranslate">
       <span class="pre">
-       JeanZay
+       ProxyJump
       </span>
      </code>
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id2">
-       Testing the Setup
-      </a>
-     </li>
-    </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#gricad">
+    <a class="reference internal nav-link" href="#example-gricad">
+     Example:
      <code class="docutils literal notranslate">
       <span class="pre">
        Gricad
       </span>
      </code>
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#id3">
-       Testing the Setup
-      </a>
-     </li>
-    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-jeanzay">
+     Example:
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       JeanZay
+      </span>
+     </code>
+    </a>
    </li>
   </ul>
  </li>
@@ -903,14 +903,13 @@ const thebe_selector_output = ".output, .cell_output"
 <li><p><a class="reference external" href="#ssh">SSH</a></p>
 <ul>
 <li><p><a class="reference external" href="#identityfile">IdentityFile</a></p></li>
-<li><p><a class="reference external" href="#port-forwarding">Port Forwarding</a></p>
+<li><p><a class="reference external" href="#port-forwarding">Port Forwarding</a></p></li>
+<li><p><a class="reference external" href="#background-ssh-tunneling">Background SSH Tunneling</a></p></li>
+<li><p><a class="reference external" href="#closing-background-ssh-tunnels">Closing Background SSH Tunnels</a></p></li>
+<li><p><a class="reference external" href="#advanced-users---bash-script">Advanced Users - Bash Script</a></p>
 <ul>
-<li><p><a class="reference external" href="#background">Background</a></p>
-<ul>
-<li><p><a class="reference external" href="#closing-the-background-process">Closing The Background Process</a></p></li>
-<li><p><a class="reference external" href="#advanced-users---bash-script">Advanced Users - Bash Script</a></p></li>
-</ul>
-</li>
+<li><p><a class="reference external" href="#ssh-process-background">SSH Process Background</a></p></li>
+<li><p><a class="reference external" href="#closing-ports">Closing Ports</a></p></li>
 </ul>
 </li>
 </ul>
@@ -923,23 +922,15 @@ const thebe_selector_output = ".output, .cell_output"
 <li><p><a class="reference external" href="#identityfile-1"><code class="docutils literal notranslate"><span class="pre">IdentityFile</span></code></a></p></li>
 <li><p><a class="reference external" href="#forwardx11"><code class="docutils literal notranslate"><span class="pre">ForwardX11</span></code></a></p></li>
 <li><p><a class="reference external" href="#localforward"><code class="docutils literal notranslate"><span class="pre">LocalForward</span></code></a></p></li>
-<li><p><a class="reference external" href="#testing-the-setup">Testing the Setup</a></p></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><p><a class="reference external" href="#remote-server--proxyjump">Remote Server + ProxyJump</a></p>
 <ul>
-<li><p><a class="reference external" href="#jeanzay"><code class="docutils literal notranslate"><span class="pre">JeanZay</span></code></a></p>
-<ul>
-<li><p><a class="reference external" href="#testing-the-setup-1">Testing the Setup</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference external" href="#gricad"><code class="docutils literal notranslate"><span class="pre">Gricad</span></code></a></p>
-<ul>
-<li><p><a class="reference external" href="#testing-the-setup-2">Testing the Setup</a></p></li>
-</ul>
-</li>
+<li><p><a class="reference external" href="#proxyjump"><code class="docutils literal notranslate"><span class="pre">ProxyJump</span></code></a></p></li>
+<li><p><a class="reference external" href="#example-gricad">Example: <code class="docutils literal notranslate"><span class="pre">Gricad</span></code></a></p></li>
+<li><p><a class="reference external" href="#example-jeanzay">Example: <code class="docutils literal notranslate"><span class="pre">JeanZay</span></code></a></p></li>
 </ul>
 </li>
 </ul>
@@ -947,67 +938,107 @@ const thebe_selector_output = ".output, .cell_output"
 <hr class="docutils" />
 <div class="section" id="ssh">
 <h2>SSH<a class="headerlink" href="#ssh" title="Permalink to this headline">¶</a></h2>
+<p>The simplest thing to do would be to just ssh into the remote server. You just need a username and server.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server
 </pre></div>
 </div>
+<p>This should work with your password. However, there are some essential things missing that we will need in order to use more features. Some include:</p>
+<ul class="simple">
+<li><p>Permissions - no more passwords + more security</p></li>
+<li><p>Tunneling - to be able to see applications that are hosted on the server</p></li>
+<li><p>Proxy Jumping - to be able to ssh into a remote server on a remote server</p></li>
+</ul>
+<p>The remainder of this section will talk about the extra flags we need to in order to accomplish this.</p>
 <hr class="docutils" />
 <div class="section" id="identityfile">
 <h3>IdentityFile<a class="headerlink" href="#identityfile" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server -i /path/to/id_key_file
+<p>This is important so we don’t have to keep typing import our password all of the time… This can be alleviated with an ssh key. We can generate this with <code class="docutils literal notranslate"><span class="pre">ssh-keygen</span></code> and then copy it over to the remote server using <code class="docutils literal notranslate"><span class="pre">ssh-copy-id</span></code>.</p>
+<p>Please see the detailed <a class="reference external" href="https://www.ssh.com/academy/ssh/keygen"><strong>Instructions</strong></a> for how to use <code class="docutils literal notranslate"><span class="pre">ssh-keygen</span></code> to generate a new SSH key <strong>and</strong> copy it over to your remote server. Below are some brief instructions for how to do it.</p>
+<p><strong>Step 1</strong>: Generate the Key</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-keygen -t rsa -b <span class="m">4096</span> -f /path/to/id_key
 </pre></div>
 </div>
-<p><strong>Forward ID</strong></p>
+<p><strong>Step 2</strong>: Forward Key to remote server. You will have to enter your password once - and then never again :).</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-copy-id -i /path/to/id_key username@server
+</pre></div>
+</div>
+<p>Now we should be able to log in with a specified key and we won’t have to enter our password.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server -i /path/to/id_key_file
 </pre></div>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="port-forwarding">
 <h3>Port Forwarding<a class="headerlink" href="#port-forwarding" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server <span class="m">8888</span>:localhost:8888
+<p>We need to create a tunnel especially if we have applications running on the remote server and we want access to the content. This can be done using the <code class="docutils literal notranslate"><span class="pre">-L</span></code> flag along with the appropriate ports.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server -L <span class="m">8888</span>:localhost:8888
 </pre></div>
 </div>
+<p><strong>Note</strong>: You may have to change the port number from <code class="docutils literal notranslate"><span class="pre">8888</span></code> to something else.</p>
+<p>Check this <a class="reference external" href="https://bytexd.com/what-is-ssh-tunneling-and-how-does-it-work/">blog</a> for details about how <strong>port forwarding</strong> (ssh-tunneling) works.</p>
+</div>
 <hr class="docutils" />
-<div class="section" id="background">
-<h4>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h4>
-<p>Often times we don’t want to have the connection open occupying our terminal. So we can put it in the background where we don’t need to worry about it.</p>
+<div class="section" id="background-ssh-tunneling">
+<h3>Background SSH Tunneling<a class="headerlink" href="#background-ssh-tunneling" title="Permalink to this headline">¶</a></h3>
+<p>Often times we don’t want to have the connection open occupying our terminal. So we can put it in the background where we don’t need to worry about it. This can be done with the <code class="docutils literal notranslate"><span class="pre">-f</span></code> to ensure that it is executed but stays in the background.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a tunnel</span>
 ssh -fN username@server -L <span class="m">8888</span>:localhost:8888 
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">-f</span></code> flag ensures that it is executed to the background.</p>
+</div>
 <hr class="docutils" />
-<div class="section" id="closing-the-background-process">
-<h5>Closing The Background Process<a class="headerlink" href="#closing-the-background-process" title="Permalink to this headline">¶</a></h5>
-<p>When you’re done, make sure you close the tunnel you opened. First we need to find all of the background processes that have an ssh.</p>
+<div class="section" id="closing-background-ssh-tunnels">
+<h3>Closing Background SSH Tunnels<a class="headerlink" href="#closing-background-ssh-tunnels" title="Permalink to this headline">¶</a></h3>
+<p>When you’re done, it’s good practice to make sure you close the ssh-tunnel that you opened. Below, I have some steps to do this in a relatively efficient way. It is a bit tedious to type everything out from scratch but later we can automate this so that we don’t have to keep typing in all of the commands. First we need to find all of the background processes that have an ssh.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;localhost&quot;</span>
 </pre></div>
 </div>
 <p>We can narrow the search to only those that have a local host attached.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ps aux <span class="p">|</span> grep ssh <span class="p">|</span> localhost assigned
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;8888:localhost:8888&quot;</span>
 </pre></div>
 </div>
 <p>Then we can kill the process assigned here</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># kill that process manually by looking</span>
 <span class="nb">kill</span> -9 PID
-<span class="c1"># kill it automatically</span>
+<span class="c1"># kill all processes with localhost</span>
 ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;localhost&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> xargs <span class="nb">kill</span>
+<span class="c1"># kill a specific one</span>
+ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;8888:localhost:8888&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> xargs <span class="nb">kill</span>
 </pre></div>
 </div>
+<p>These commands are a cumbersome but they get the job done. I would strongly suggest you continue to the next section and try to use some of the scripts in your own workflow. It will make for a much more pleasant experience.</p>
 </div>
+<hr class="docutils" />
 <div class="section" id="advanced-users-bash-script">
-<h5>Advanced Users - Bash Script<a class="headerlink" href="#advanced-users-bash-script" title="Permalink to this headline">¶</a></h5>
-<p>Now we want to automate this. I would suggest adding these functions to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code> so that you can just use these easier to find and kill ssh background processes.</p>
+<h3>Advanced Users - Bash Script<a class="headerlink" href="#advanced-users-bash-script" title="Permalink to this headline">¶</a></h3>
+<p>We want to automate a few of the things listed above. It’s too much to type all of that every time. In particular, we will automate:</p>
+<ul class="simple">
+<li><p>Opening up the SSH and Tunneling in the background</p></li>
+<li><p>Closing specific and all background ports</p></li>
+</ul>
+<div class="section" id="ssh-process-background">
+<h4>SSH Process Background<a class="headerlink" href="#ssh-process-background" title="Permalink to this headline">¶</a></h4>
+<p>We want to automate the ssh tunnel process in the background.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># syntatic sugar for launching ssh tunnel given a server and a port</span>
-<span class="k">function</span> ssh_tunnel<span class="o">(){</span>
+<span class="k">function</span> ssh_tunnel_bg<span class="o">(){</span>
     <span class="nv">server</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
     <span class="nv">port</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
     <span class="nb">echo</span> <span class="s2">&quot;server:&quot;</span> <span class="nv">$1</span>
     <span class="nb">echo</span> <span class="s2">&quot;port:&quot;</span> <span class="nv">$2</span>
     ssh -fN <span class="nv">$server</span> -L <span class="s2">&quot;</span><span class="nv">$port</span><span class="s2">&quot;</span>:localhost:<span class="s2">&quot;</span><span class="nv">$port</span><span class="s2">&quot;</span>
 <span class="o">}</span>
-
-<span class="c1"># function to show all background ssh processes</span>
+</pre></div>
+</div>
+<p><strong>Demo Usage</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh_tunnel_bg <span class="m">8888</span> meom_cal1
+</pre></div>
+</div>
+<p><strong>Much simpler</strong> and we don’t have to remember all of the commands. It is a bit of <em>syntatic sugar</em> but it’s more understandable.</p>
+</div>
+<div class="section" id="closing-ports">
+<h4>Closing Ports<a class="headerlink" href="#closing-ports" title="Permalink to this headline">¶</a></h4>
+<p>Now we want to automate the removal of ports. I would suggest adding these functions to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code> so that you can just use these easier to find and kill ssh background processes.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># function to show all background ssh processes</span>
 <span class="c1"># demo:</span>
 <span class="c1"># &gt; show_all_bg_ssh</span>
 <span class="c1">#</span>
@@ -1039,28 +1070,21 @@ ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span cla
 <span class="o">}</span>
 </pre></div>
 </div>
-<p><strong>Demo Usage</strong> (Specific Port):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># launch ssh</span>
-ssh_tunnel cal1 <span class="m">8888</span>
-
-<span class="c1"># find the background process</span>
+<p><strong>Demo Usage</strong>: Kill a Specific Port</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># find the background process</span>
 show_bg_sh <span class="m">8888</span>
 
 <span class="c1"># kill the background process</span>
 kill_bg_sh <span class="m">8888</span>
 </pre></div>
 </div>
-<p><strong>Demo Usage</strong> (Everything):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># launch ssh</span>
-ssh_tunnel cal1 <span class="m">8888</span>
-
-<span class="c1"># find the background process</span>
+<p><strong>Demo Usage</strong>: Kill Everything</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># find the background process</span>
 show_all_bg_sh
 
 <span class="c1"># kill the background process</span>
 kill_all_bg_sh
 </pre></div>
-</div>
 </div>
 </div>
 </div>
@@ -1101,6 +1125,12 @@ Host *
   IdentityFile ~/.ssh/id_key_file
 </pre></div>
 </div>
+<p><strong>Demo Usage</strong>:</p>
+<p>Test the connection to <code class="docutils literal notranslate"><span class="pre">cal1</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh cal1
+</pre></div>
+</div>
+<p>Now it is much easier to ssh into the remote server without having to do all of the extra stuff.</p>
 <hr class="docutils" />
 <div class="section" id="important-arguments">
 <h3>Important Arguments<a class="headerlink" href="#important-arguments" title="Permalink to this headline">¶</a></h3>
@@ -1118,32 +1148,104 @@ Host *
 <h4><code class="docutils literal notranslate"><span class="pre">LocalForward</span></code><a class="headerlink" href="#localforward" title="Permalink to this headline">¶</a></h4>
 <p>This takes care of all of the port forwarding. You can also forward multiple ports if there is a reason, e.g. 1 for tensor board, 1 for JupyterLab, 1 for some visualization software, etc.</p>
 </div>
-<hr class="docutils" />
-<div class="section" id="testing-the-setup">
-<h4>Testing the Setup<a class="headerlink" href="#testing-the-setup" title="Permalink to this headline">¶</a></h4>
-<p><strong>Step 1</strong>: Test the connection to <code class="docutils literal notranslate"><span class="pre">cal1</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh cal1
-</pre></div>
-</div>
-<p>Now it is much easier to ssh into the remote server without having to do all of the extra stuff.</p>
-</div>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="remote-server-proxyjump">
 <h2>Remote Server + ProxyJump<a class="headerlink" href="#remote-server-proxyjump" title="Permalink to this headline">¶</a></h2>
 <p>In this case, we will look at the configuration for <code class="docutils literal notranslate"><span class="pre">gricad</span></code> and <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code>. In this case, we have a head node (not really useful except to enter into the server). And then later we <em>proxy jump</em> to the actual head node for computing.</p>
-<hr class="docutils" />
-<div class="section" id="jeanzay">
-<h3><code class="docutils literal notranslate"><span class="pre">JeanZay</span></code><a class="headerlink" href="#jeanzay" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host cal1
-    HostName ige-meom-cal1.u-ga.fr
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host server1
+  HostName base_server
 	User username
-	<span class="c1"># Allow for Ids</span>
-	ForwardX11 yes
-	<span class="c1"># SSH Identity File</span>
+
+Host server2
+  HostName server
+  User username
+  ProxyJump server1
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="proxyjump">
+<h3><code class="docutils literal notranslate"><span class="pre">ProxyJump</span></code><a class="headerlink" href="#proxyjump" title="Permalink to this headline">¶</a></h3>
+<p>This is the only extra command is the <code class="docutils literal notranslate"><span class="pre">ProxyJump</span></code> command. This allows</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="example-gricad">
+<h3>Example: <code class="docutils literal notranslate"><span class="pre">Gricad</span></code><a class="headerlink" href="#example-gricad" title="Permalink to this headline">¶</a></h3>
+<p>In <code class="docutils literal notranslate"><span class="pre">gricad</span></code> they have a weird system where they have a <em>entry node</em> which you ssh into. And then you need to ssh into a compute node, e.g. <code class="docutils literal notranslate"><span class="pre">dahu</span></code>, <code class="docutils literal notranslate"><span class="pre">bigfoot</span></code>, etc. So this means we need to <em>proxyjump</em> to <code class="docutils literal notranslate"><span class="pre">dahu</span></code> via <code class="docutils literal notranslate"><span class="pre">entrynode</span></code>.</p>
+<p>Below is an example of the <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file with these arguments already in place.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host gricad
+	User username
+	HostName access-gricad.univ-grenoble-alpes.fr
+	IdentityFile ~/.ssh/id_rsa_gricad
+
+<span class="c1"># DAHU </span>
+Host dahu_gricad
+	User johnsonj
+	HostName dahu
+	ProxyJump gricad
+	IdentityFile ~/.ssh/id_rsa_gricad
+</pre></div>
+</div>
+<p><strong>Example Usage</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh dahu_gricad
+</pre></div>
+</div>
+<p>This is <strong>much simpler</strong> than having to do the proxy jumps.</p>
+<p>On the <a class="reference external" href="https://gricad-doc.univ-grenoble-alpes.fr/en/hpc/connexion/#4-transparent-ssh-connexion-configuration"><code class="docutils literal notranslate"><span class="pre">gricad</span></code> docs</a> they have a similar command which uses your <code class="docutils literal notranslate"><span class="pre">&lt;pereseus-login&gt;</span></code>. I have included it below for a side-by-side comparison with my version.</p>
+<div class="tabbed-set docutils">
+<input checked="checked" id="f03e473d-c2d1-45b2-83ff-aea0ac3c06f8" name="f910278b-57ad-4255-a2b2-1272774646ff" type="radio">
+</input><label class="tabbed-label" for="f03e473d-c2d1-45b2-83ff-aea0ac3c06f8">
+gricad Docs</label><div class="tabbed-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host *
+  ServerAliveInterval <span class="m">30</span>
+
+Host *.ciment
+  ProxyCommand ssh -q username@access-gricad.univ-grenoble-alpes.fr <span class="s2">&quot;nc -w 60 `basename %h .ciment` %p&quot;</span>
+
+Host dahu luke froggy bigfoot
+  User username
+  ProxyJump username@access-gricad.univ-grenoble-alpes.fr:22
+</pre></div>
+</div>
+<p><strong>Example Usage</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh dahu
+</pre></div>
+</div>
+</div>
+<input id="4faf322b-d9cd-4457-8cf1-ffe09177c08a" name="f910278b-57ad-4255-a2b2-1272774646ff" type="radio">
+</input><label class="tabbed-label" for="4faf322b-d9cd-4457-8cf1-ffe09177c08a">
+My Version</label><div class="tabbed-content docutils">
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host gricad
+	User username
+	HostName access-gricad.univ-grenoble-alpes.fr
+	IdentityFile ~/.ssh/id_rsa_gricad
+
+<span class="c1"># DAHU </span>
+Host dahu
+	User username
+	HostName dahu
+	ProxyJump gricad
+	IdentityFile ~/.ssh/id_rsa_gricad
+</pre></div>
+</div>
+<p><strong>Example Usage</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh dahu
+</pre></div>
+</div>
+</div>
+</div>
+<p>It’s apparently <em>transparent</em> but I really don’t understand the <code class="docutils literal notranslate"><span class="pre">ProxyCommand</span></code> they put in place. I think it is much harder to understand compared to my version. I have yet to see any differences in performance from their command and my own.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="example-jeanzay">
+<h3>Example: <code class="docutils literal notranslate"><span class="pre">JeanZay</span></code><a class="headerlink" href="#example-jeanzay" title="Permalink to this headline">¶</a></h3>
+<p>In <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> the permissions are a bit crazy. It doesn’t work to just <code class="docutils literal notranslate"><span class="pre">ssh</span></code> directly to <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> without some sort of hassle and special permissions with custom ips registered in their system. Instead, it’s much easier to just <code class="docutils literal notranslate"><span class="pre">ssh</span></code> into the <code class="docutils literal notranslate"><span class="pre">cal1</span></code> server. Then we can <code class="docutils literal notranslate"><span class="pre">ssh</span></code> from there into the <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> server. So this means we need to <em>proxyjump</em> to <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> via <code class="docutils literal notranslate"><span class="pre">cal1</span></code>.</p>
+<p>Below is an example of the <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file with these arguments already in place.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host cal1
+  HostName ige-meom-cal1.u-ga.fr
+	User username
 	IdentityFile ~/.ssh/id_key_file
-	<span class="c1"># Jupyter Notebooks</span>
 	LocalForward <span class="m">8888</span> localhost:8888
 
 <span class="c1"># JEANZAY Head Node</span>
@@ -1152,80 +1254,14 @@ Host jean_zay
     HostName jean-zay.idris.fr
     ProxyJump cal1
     IdentityFile ~/.ssh/id_key_file
-    <span class="c1"># Jupyter Notebooks</span>
     LocalForward <span class="m">8880</span> localhost:8880
-
-Host *
-  AddKeysToAgent yes
-  UseKeychain yes
-  IdentityFile ~/.ssh/id_key_file
 </pre></div>
 </div>
-<hr class="docutils" />
-<div class="section" id="id2">
-<h4>Testing the Setup<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
-<p><strong>Step 1</strong>: Test access to the <code class="docutils literal notranslate"><span class="pre">cal1</span></code> node.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh cal1
-</pre></div>
-</div>
-<p><strong>Step 2</strong>: Test access the mega head node (<code class="docutils literal notranslate"><span class="pre">jeanzay</span></code>)</p>
+<p><strong>Demo Usage</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh jean_zay
 </pre></div>
 </div>
-</div>
-</div>
-<hr class="docutils" />
-<div class="section" id="gricad">
-<h3><code class="docutils literal notranslate"><span class="pre">Gricad</span></code><a class="headerlink" href="#gricad" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># GRIDCAD Entry Node Access</span>
-Host gricad
-    User username
-    HostName access-gricad.univ-grenoble-alpes.fr
-    IdentityFile ~/.ssh/id_key_file
-
-<span class="c1"># DAHU Head Node (CPUs)</span>
-Host dahu_gricad
-    User username
-    HostName dahu
-    ForwardX11 yes
-    ProxyJump gricad
-    IdentityFile ~/.ssh/id_key_file
-    <span class="c1"># Jupyter Notebooks</span>
-    LocalForward <span class="m">8888</span> localhost:8888
-
-<span class="c1"># BIGFOOT Head Node (GPUs) </span>
-Host bigfoot_gricad
-    User username
-    HostName bigfoot
-    ForwardX11 yes
-    ProxyJump gricad
-    IdentityFile ~/.ssh/id_key_file
-    <span class="c1"># Jupyter Notebooks (CPU)</span>
-    LocalForward <span class="m">8889</span> localhost:8889
-
-Host *
-  AddKeysToAgent yes
-  UseKeychain yes
-  IdentityFile ~/.ssh/id_key_file
-</pre></div>
-</div>
-<hr class="docutils" />
-<div class="section" id="id3">
-<h4>Testing the Setup<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
-<p><strong>Step 1</strong>: Test access the compute node (<code class="docutils literal notranslate"><span class="pre">gricad</span></code>)</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh gricad
-</pre></div>
-</div>
-<p><strong>Note</strong>: There is almost never any reason to do this…</p>
-<p><strong>Step 2</strong>: Test access the head node (<code class="docutils literal notranslate"><span class="pre">dahu</span></code>)</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh dahu_gricad
-</pre></div>
-</div>
-<p><strong>Step 3</strong>: Test access the GPU compute node (<code class="docutils literal notranslate"><span class="pre">Bigfoot</span></code>)</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh bigfoot_gricad
-</pre></div>
-</div>
-</div>
+<p>As you can see, this allows us to log into <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> in a much simpler manner.</p>
 </div>
 </div>
 </div>

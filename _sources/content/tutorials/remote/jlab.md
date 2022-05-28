@@ -1,103 +1,33 @@
-# JupyterLab
+# Jupyter Lab
 
 
-* Install Jlab (from environment)
-* Launch Jlab 
-  * Local
-  * SLURM
-    * Scratch
-    * Automation (script, config)
-  * Gricad
-    * Scratch
-    * Automation
-* 
+---
+## TOC
+
+- [TOC](#toc)
+- [Install JupyterLab](#install-jupyterlab)
+  - [Environment `.yaml` file](#environment-yaml-file)
+- [JLab on SLURM](#jlab-on-slurm)
+  - [Using `srun`](#using-srun)
+  - [Using `sbatch`](#using-sbatch)
+    - [Slurm Script](#slurm-script)
+  - [SLURM (JeanZay)](#slurm-jeanzay)
+    - [SSH](#ssh)
+    - [GPU](#gpu)
+      - [`SRUN`](#srun)
+    - [Procedure](#procedure)
+    - [CPU](#cpu)
+- [JLab on OAR](#jlab-on-oar)
+  - [Using `srun`](#using-srun-1)
+  - [Using `oarsh`](#using-oarsh)
+- [Extensions](#extensions)
+  - [Templates](#templates)
+- [2. Setup Your JupyterLab Environment](#2-setup-your-jupyterlab-environment)
+  - [2.1 Create a `.yml` file with requirements](#21-create-a-yml-file-with-requirements)
+  - [2.2 JupyterLab and other python kernels](#22-jupyterlab-and-other-python-kernels)
+  - [2.1 Create a Conda Environment](#21-create-a-conda-environment)
+  - [2.3 Install and the Jupyterlab Manager](#23-install-and-the-jupyterlab-manager)
   
-
----
-## Organization
-
-1. Create a `project` directory - where our code is living
-2. Create a `bin` directory - where we put all of our executables
-3. Create `$WORKDIR` - 
-4. Create `$LOGSDIR`
-5. Create necessary files (`logs`, `jobs`, `errs`)
-
-
-**Example**
-
-```bash
-# ===================
-# Custom directories
-# ===================
-# work directory
-export WORKDIR=/mnt/meom/workdir/johnsonj
-# log directory
-export LOGDIR=$WORKDIR/logs
-```
-
----
-**Step 1**: Ensure `$WORKDIR` is set.
-
-
-Check if it exists in the environments.
-
-```bash
-printenv WORKDIR
-```
-
-Make sure to add it to the `.bashrc` or `.profile`.
-
-```bash
-# add this to the .profile
-export WORKDIR=/mnt/meom/workdir/username:$WORKDIR
-```
-
-Check again if it exists.
-
-```bash
-# check if exists (it should now)
-printenv WORKDIR
-```
-
-
----
-**Step 2**: Ensure `$LOGSDIR` is set.
-
-Check if it exists in the environments.
-
-```bash
-printenv LOGDIR
-```
-
-Make sure to add it to the `.bashrc` or `.profile`.
-
-```bash
-# add this to the .profile
-export LOGDIR=$WORKDIR/logs
-```
-
-Check again if it exists.
-
-```bash
-# check if exists (it should now)
-printenv LOGDIR
-```
-
----
-**Step 3**: Create necessary directories
-
-This is so that we can save logs, errors and job configurations. This will be helpful for automating things later. I like to have these available:
-
-
-```bash
-$LOGDIR/logs
-$LOGDIR/jobs
-$LOGDIR/errs
-```
-
-- `logs` is a subdirectory within logs which will hold all of the slurm log files.
-- `errs` - a subdirectory which will hold all of the slurm error log files.
-- `jobs` - a subdirectory which will hold all of the current job configurations.
 
 ---
 ## Install JupyterLab
@@ -118,7 +48,6 @@ channels:
 dependencies:
 - python=3.9
 # GUI
-- ipykernel
 - conda-forge::jupyterlab           # JupyterLab GUI
 - conda-forge::nb_conda_kernels     # Access to other conda kernels
 - conda-forge::spyder-kernels       # Access via spyder kernels
@@ -163,6 +92,28 @@ jupyter-lab --no-browser --ip=0.0.0.0 --port=8888
 
 This will give you a
 
+:::{admonition} Automation
+We can turn this into a script so that we don't have to keep running these same commands. Add this function to your `.profile` or `.bash_profile`.
+
+```bash
+# Launch Jupyter Lab
+function jlab(){
+    # set port (default)
+    port=${1:-8888}
+    # activate jupyter-lab
+    conda activate jlab
+    # Fires-up a Jupyter notebook by supplying a specific port
+    jupyter-lab --no-browser --ip=0.0.0.0 --port=$port
+}
+```
+
+**Example Usage**
+
+```bash
+jpt
+```
+:::
+
 
 ---
 ## JLab on SLURM
@@ -172,36 +123,47 @@ This will give you a
 3. Create and SSH session.
 
 
----
-### Automation
+### Using `srun`
 
-
-
-
----
-## JLab on OAR
-
-
-
----
-## Automation
-
-
-1. [ ] Log into server
-2. [ ] Run slurm script via `sbatch`.
-3. [ ] Create SSH tunnel to allow for `jlab` on local machine.
-
-
-### SLURM (Cal1)
-
-#### From Scratch
+:::{admonition} Automation
+We can turn this into a script so that we don't have to keep running these same commands. Add this function to your `.profile` or `.bash_profile`.
 
 ```bash
-conda activate jlab
-srun -n 1 --time=01:00:00 --mem=1600 --account=python --job-name=jlab jupyter-lab --no-browser --port=3211 --ip=0.0.0.0
+function jlab_srun(){
+    # activate conda environment with jlab
+    conda activate jlab
+    # run jupyterlab via srun
+    srun --nodes=1 --mem=1600 --time=8:00:00 --account=python --job-name=jlab jupyter-lab --no-browser --port=3211 --ip=0.0.0.0
+}
 ```
 
-#### Scripts
+**Example Usage**
+
+```bash
+jpt
+```
+:::
+
+---
+
+### Using `sbatch`
+
+In this case, we will create a script and then launch the job using the `sbatch` command. 
+
+**Pros**:
+* It really allows you to customize the nitty gritty details of the compute node environment.
+* It launches in the background.
+
+**Cons**: 
+* It's not very easy to do. You have to have access to the nitty-gritty details.
+* Sometimes you cannot ssh into the compute node.
+
+
+---
+
+#### Slurm Script
+
+We need to create a bash script, e.g. `jlab_script.sh`, that will hold all of the commands to really customize the note we run.
 
 
 ```bash
@@ -209,6 +171,7 @@ srun -n 1 --time=01:00:00 --mem=1600 --account=python --job-name=jlab jupyter-la
 
 #SBATCH --job-name=jlab                     # name of job
 #SBATCH --account=python                    # for statistics
+#SBATCH --export=ALL                        # export all environment variables
 #SBATCH --nodes=1                           # we ALWAYS request one node
 #SBATCH --ntasks-per-node=1                 # number of tasks per node
 #SBATCH --cpus-per-task=4                   # number of cpus per task
@@ -268,43 +231,121 @@ jupyter-lab --no-browser --port=${port} --ip=0.0.0.0
 ```
 
 
+1. Configure a `.sh` script
+2. Run the script using `sbatch` command
+3. Create and SSH session.
+
+:::{admonition} Automation
+
+```bash
+function jlab_sbatch(){
+    # Fires up JLab script in bin using sbatch 
+    sbatch jlab_sbatch.sh
+    # prints
+    cat $LOGDIR/slurm/logs/jlab.log
+    # prints jlab
+    cat $LOGDIR/slurm/errs/jlab.err
+}
+```
+:::
+
+
+
+
+
+
+
 ### SLURM (JeanZay)
 
+We have to do the same as above however there are a few different commands we need to take care of which allow for more customization. Furthermore, we now have access to 
+
+#### SSH
+
+
+```python
+sshuttle -dns -HN -r meom_cal1 130.84.132.0/24
+```
+
+
+:::{admonition} Automation
+:class: tip
+
+```bash
+sshuttle --dns -HN @meom_cal1.conf
+```
+
+The `meom_cal1.conf` file looks like this:
+
+```bash
+130.84.132.0/24
+--remote
+meom_cal1
+```
+
+:::
+
+
+
+
+#### GPU
 
 Below we have a `jlab_gpu.slurm` script which is meant to be run on the slurm server.
+
+
+##### `SRUN`
+
+**Run this Command**
+
+```bash
+srun --pty --account=cli@v100 --nodes=1 --ntasks-per-node=1 --cpus-per-task=10 --gres=gpu:1 --hint=nomultithread --time=01:30:00 bash
+```
+
+**Activate Bash shell**
+
+```bash
+eval "$(conda shell.bash hook)"
+```
+
+**Change Environment**
+
+```bash
+conda activate jlab
+```
+
+
 
 
 ```bash
 #!/bin/bash
 
-#SBATCH --job-name=jlab_gpu          # name of job
-#SBATCH --account=cli@gpu
-#SBATCH --export=ALL
-#SBATCH --nodes=1                    # we request one node
-#SBATCH --ntasks-per-node=1          # with one task per node (= number of GPUs here)
-#SBATCH --gres=gpu:1                 # number of GPUs (1/4 of GPUs)
-#SBATCH --cpus-per-task=10           # number of cores per task (1/4 of the 4-GPUs node)
-#SBATCH --hint=nomultithread         # hyperthreading is deactivated
-#SBATCH --time=12:00:00              # maximum execution time requested (HH:MM:SS)
-#SBATCH --output=$LOGDIR/logs/jlab_gpu.out    # name of output file
-#SBATCH --error=$LOGDIR/errs/jlab_gpu.out     # name of error file (here, in common with the output file)
+#SBATCH --job-name=jlab_gpu             # name of job
+#SBATCH --account=cli@v100              # GPU Account
+#SBATCH --export=ALL                    # export all environment variables
+#SBATCH --nodes=1                       # we request one node
+#SBATCH --ntasks-per-node=1             # with one task per node (= number of GPUs here)
+#SBATCH --gres=gpu:1                    # number of GPUs (1/4 of GPUs)
+#SBATCH --cpus-per-task=10              # number of cores per task (1/4 of the 4-GPUs node)
+#SBATCH --hint=nomultithread            # hyperthreading is deactivated
+#SBATCH --time=8:00:00                  # maximum execution time requested (HH:MM:SS)
+#SBATCH --output=/gpfswork/rech/cli/uvo53rl/logs/slurm/logs/jlab_gpu.out    # name of output file
+#SBATCH --error=/gpfswork/rech/cli/uvo53rl/logs/slurm/errs/jlab_gpu.out     # name of error file
 
 # get tunneling info
 XDG_RUNTIME_DIR=""
 node=$(hostname -s)
 user=$(whoami)
 cluster="dahu_ciment"
-port=8888
+port=3212
 
 # ==================
 # Information 4 SSH
 # ==================
 # Get the compute node
-squeue -u $USER -h | grep jlab_gpu | awk '{print $NF}' > $LOGDIR/jobs/jlab_gpu.node
+squeue -u $USER -h | grep jlab_gpu | awk '{print $NF}' > $SLURMDIR/jobs/jlab_gpu.node
 # get the hostname
-hostname -I | awk '{print $1}' > $LOGDIR/jobs/jlab_gpu.ip
+hostname -I | awk '{print $1}' > $SLURMDIR/jobs/jlab_gpu.ip
 # get the username
-whoami > $LOGDIR/jobs/jlab_gpu.user
+whoami > $SLURMDIR/jobs/jlab_gpu.user
 
 # cleans out the modules loaded in interactive and inherited by default 
 module purge
@@ -335,7 +376,8 @@ source activate jlab
 set -x
  
 # code execution
-jupyter-lab --no-browser --port=${port} --ip=0.0.0.0
+# jupyter-lab --no-browser --port=${port} --ip=0.0.0.0
+idrlab --notebook-dir=/gpfswork/rech/cli/uvo53rl
 ```
 
 :::{note}
@@ -370,17 +412,21 @@ function launch_jlab(){
 
 
 ---
-#### JeanZay (CPU)
-
-
----
-#### JeanZay (GPU)
-
+#### CPU
 
 
 ---
 
-## Run the jupyter notebook with conda environment (everytime)
+## JLab on OAR
+
+
+:::{warning}
+We can't actually launch jupyter-lab on the head node. Well, technically we can but it will kill the process almost immediately. You must use the compute nodes to do all computation. 
+:::
+
+---
+### Using `srun`
+
 
 First, take a look at this tutorial to get familiar: https://gricad-doc.univ-grenoble-alpes.fr/notebook/hpcnb/
 
@@ -441,8 +487,12 @@ kill -9 PID
 ```
 
 
+
+
+
+
 ---
-### Launching JupyterLab Using Jobs
+### Using `oarsh`
 
 
 Sometimes, it's a bit annoying to have to keep track of everything (launching interactive job + run jupyter notebook/lab + create tunnel, etc). So below is a way to create a simple script that helps automate the process a little bit.
@@ -516,16 +566,6 @@ oarsub -S /path/to/bash/script/bash_script.sh
 ```bash
 # create a tunnel
 ssh -N -f -L port_number:node_name:port_number server_name
-```
-
-3. Close the ssh tunnel when done
-
-
-```bash
-# get the process-ID number for ssh tunneling
-lsof -i :portNumber
-# kill that process
-kill -9 PID
 ```
 
 

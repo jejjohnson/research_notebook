@@ -78,7 +78,7 @@ const thebe_selector_output = ".output, .cell_output"
         
       
       
-      <img src="../../../_static/book.png" class="logo" alt="logo">
+      <img src="../../../_static/book_v2.jpeg" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Research Notebook</h1>
@@ -233,6 +233,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="conda.html">
      Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="jlab.html">
+     Jupyter Lab
     </a>
    </li>
    <li class="toctree-l2">
@@ -559,6 +564,22 @@ const thebe_selector_output = ".output, .cell_output"
 
             <!-- Source interaction buttons -->
 
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/jejjohnson/research_notebook"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/organize.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
             <!-- Full screen (wrap in <a> to have style consistency -->
 
 <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
@@ -665,6 +686,11 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
    </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#organization">
+   Organization
+  </a>
  </li>
 </ul>
 
@@ -774,6 +800,11 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#organization">
+   Organization
+  </a>
+ </li>
 </ul>
 
                         </nav>
@@ -875,6 +906,72 @@ git pull origin master
 </pre></div>
 </div>
 </div>
+</div>
+<hr class="docutils" />
+<div class="section" id="organization">
+<h2>Organization<a class="headerlink" href="#organization" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">project</span></code> directory - where our code is living</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">bin</span></code> directory - where we put all of our executables</p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">$WORKDIR</span></code> -</p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">$LOGSDIR</span></code></p></li>
+<li><p>Create necessary files (<code class="docutils literal notranslate"><span class="pre">logs</span></code>, <code class="docutils literal notranslate"><span class="pre">jobs</span></code>, <code class="docutils literal notranslate"><span class="pre">errs</span></code>)</p></li>
+</ol>
+<p><strong>Example</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ===================</span>
+<span class="c1"># Custom directories</span>
+<span class="c1"># ===================</span>
+<span class="c1"># work directory</span>
+<span class="nb">export</span> <span class="nv">WORKDIR</span><span class="o">=</span>/mnt/meom/workdir/johnsonj
+<span class="c1"># log directory</span>
+<span class="nb">export</span> <span class="nv">LOGDIR</span><span class="o">=</span><span class="nv">$WORKDIR</span>/logs
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><strong>Step 1</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">$WORKDIR</span></code> is set.</p>
+<p>Check if it exists in the environments.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>printenv WORKDIR
+</pre></div>
+</div>
+<p>Make sure to add it to the <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.profile</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add this to the .profile</span>
+<span class="nb">export</span> <span class="nv">WORKDIR</span><span class="o">=</span>/mnt/meom/workdir/username:<span class="nv">$WORKDIR</span>
+</pre></div>
+</div>
+<p>Check again if it exists.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># check if exists (it should now)</span>
+printenv WORKDIR
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><strong>Step 2</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">$LOGSDIR</span></code> is set.</p>
+<p>Check if it exists in the environments.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>printenv LOGDIR
+</pre></div>
+</div>
+<p>Make sure to add it to the <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.profile</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add this to the .profile</span>
+<span class="nb">export</span> <span class="nv">LOGDIR</span><span class="o">=</span><span class="nv">$WORKDIR</span>/logs
+</pre></div>
+</div>
+<p>Check again if it exists.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># check if exists (it should now)</span>
+printenv LOGDIR
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><strong>Step 3</strong>: Create necessary directories</p>
+<p>This is so that we can save logs, errors and job configurations. This will be helpful for automating things later. I like to have these available:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$LOGDIR</span>/logs
+<span class="nv">$LOGDIR</span>/jobs
+<span class="nv">$LOGDIR</span>/errs
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">logs</span></code> is a subdirectory within logs which will hold all of the slurm log files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">errs</span></code> - a subdirectory which will hold all of the slurm error log files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jobs</span></code> - a subdirectory which will hold all of the current job configurations.</p></li>
+</ul>
 </div>
 </div>
 

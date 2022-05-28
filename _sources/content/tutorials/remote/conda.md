@@ -280,8 +280,15 @@ dependencies:
   - joblib  # Embarssingly parallel
 ```
 
-:::{tip}
+:::{adomination} Other Example `environment.yaml`
+:class: tip
 If you want to see more examples of conda `environment.yml` files, you can check out my [`dot_files` repo](https://github.com/jejjohnson/dot_files). I have plenty of examples and I even distinguish between operating systems like Linux and MacOS.
+:::
+
+
+:::{adomination} Visible Python Kernels 
+:class: tip
+If you use jupyter-lab a lot, then it is best to try and have all of your conda kernels be visible. This can be done by installing `nb_conda_kernel` and `ipykernels`. So if you run a different environment with jupyter-lab, you should be able to select python kernels from other conda environments.
 :::
 
 ---

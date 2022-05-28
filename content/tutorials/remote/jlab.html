@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JupyterLab &#8212; Research Notebook</title>
+    <title>Jupyter Lab &#8212; Research Notebook</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -53,6 +53,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="VSCode + JLab" href="vscode_jlab.html" />
+    <link rel="prev" title="Conda 4 Remote Servers" href="conda.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -78,7 +80,7 @@ const thebe_selector_output = ".output, .cell_output"
         
       
       
-      <img src="../../../_static/book.png" class="logo" alt="logo">
+      <img src="../../../_static/book_v2.jpeg" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Research Notebook</h1>
@@ -150,7 +152,7 @@ const thebe_selector_output = ".output, .cell_output"
   Tutorials
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../jax_journey/overview.html">
    My JAX Journey
@@ -215,16 +217,16 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="overview.html">
    Remote Computing
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
   <label for="toctree-checkbox-4">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
     <a class="reference internal" href="ssh.html">
      SSH Config
@@ -233,6 +235,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="conda.html">
      Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Jupyter Lab
     </a>
    </li>
    <li class="toctree-l2">
@@ -559,6 +566,22 @@ const thebe_selector_output = ".output, .cell_output"
 
             <!-- Source interaction buttons -->
 
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/jejjohnson/research_notebook"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/jlab.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
             <!-- Full screen (wrap in <a> to have style consistency -->
 
 <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
@@ -579,8 +602,8 @@ const thebe_selector_output = ".output, .cell_output"
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#organization">
-   Organization
+  <a class="reference internal nav-link" href="#toc">
+   TOC
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -607,35 +630,28 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#automation">
-     Automation
+    <a class="reference internal nav-link" href="#using-srun">
+     Using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       srun
+      </span>
+     </code>
     </a>
    </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#jlab-on-oar">
-   JLab on OAR
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id1">
-   Automation
-  </a>
-  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#slurm-cal1">
-     SLURM (Cal1)
+    <a class="reference internal nav-link" href="#using-sbatch">
+     Using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       sbatch
+      </span>
+     </code>
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#from-scratch">
-       From Scratch
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#scripts">
-       Scripts
+      <a class="reference internal nav-link" href="#slurm-script">
+       Slurm Script
       </a>
      </li>
     </ul>
@@ -646,18 +662,34 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#ssh">
+       SSH
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#gpu">
+       GPU
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#srun">
+         <code class="docutils literal notranslate">
+          <span class="pre">
+           SRUN
+          </span>
+         </code>
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#procedure">
        Procedure
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#jeanzay-cpu">
-       JeanZay (CPU)
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#jeanzay-gpu">
-       JeanZay (GPU)
+      <a class="reference internal nav-link" href="#cpu">
+       CPU
       </a>
      </li>
     </ul>
@@ -665,13 +697,28 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#run-the-jupyter-notebook-with-conda-environment-everytime">
-   Run the jupyter notebook with conda environment (everytime)
+  <a class="reference internal nav-link" href="#jlab-on-oar">
+   JLab on OAR
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#launching-jupyterlab-using-jobs">
-     Launching JupyterLab Using Jobs
+    <a class="reference internal nav-link" href="#id1">
+     Using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       srun
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#using-oarsh">
+     Using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       oarsh
+      </span>
+     </code>
     </a>
    </li>
   </ul>
@@ -731,7 +778,7 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>JupyterLab</h1>
+                <h1>Jupyter Lab</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -742,8 +789,8 @@ const thebe_selector_output = ".output, .cell_output"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#organization">
-   Organization
+  <a class="reference internal nav-link" href="#toc">
+   TOC
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -770,35 +817,28 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#automation">
-     Automation
+    <a class="reference internal nav-link" href="#using-srun">
+     Using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       srun
+      </span>
+     </code>
     </a>
    </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#jlab-on-oar">
-   JLab on OAR
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id1">
-   Automation
-  </a>
-  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#slurm-cal1">
-     SLURM (Cal1)
+    <a class="reference internal nav-link" href="#using-sbatch">
+     Using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       sbatch
+      </span>
+     </code>
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#from-scratch">
-       From Scratch
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#scripts">
-       Scripts
+      <a class="reference internal nav-link" href="#slurm-script">
+       Slurm Script
       </a>
      </li>
     </ul>
@@ -809,18 +849,34 @@ const thebe_selector_output = ".output, .cell_output"
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#ssh">
+       SSH
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#gpu">
+       GPU
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#srun">
+         <code class="docutils literal notranslate">
+          <span class="pre">
+           SRUN
+          </span>
+         </code>
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#procedure">
        Procedure
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#jeanzay-cpu">
-       JeanZay (CPU)
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#jeanzay-gpu">
-       JeanZay (GPU)
+      <a class="reference internal nav-link" href="#cpu">
+       CPU
       </a>
      </li>
     </ul>
@@ -828,13 +884,28 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#run-the-jupyter-notebook-with-conda-environment-everytime">
-   Run the jupyter notebook with conda environment (everytime)
+  <a class="reference internal nav-link" href="#jlab-on-oar">
+   JLab on OAR
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#launching-jupyterlab-using-jobs">
-     Launching JupyterLab Using Jobs
+    <a class="reference internal nav-link" href="#id1">
+     Using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       srun
+      </span>
+     </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#using-oarsh">
+     Using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       oarsh
+      </span>
+     </code>
     </a>
    </li>
   </ul>
@@ -893,93 +964,59 @@ const thebe_selector_output = ".output, .cell_output"
             
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="jupyterlab">
-<h1>JupyterLab<a class="headerlink" href="#jupyterlab" title="Permalink to this headline">¶</a></h1>
+  <div class="tex2jax_ignore mathjax_ignore section" id="jupyter-lab">
+<h1>Jupyter Lab<a class="headerlink" href="#jupyter-lab" title="Permalink to this headline">¶</a></h1>
+<hr class="docutils" />
+<div class="section" id="toc">
+<h2>TOC<a class="headerlink" href="#toc" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>Install Jlab (from environment)</p></li>
-<li><p>Launch Jlab</p>
+<li><p><a class="reference external" href="#toc">TOC</a></p></li>
+<li><p><a class="reference external" href="#install-jupyterlab">Install JupyterLab</a></p>
 <ul>
-<li><p>Local</p></li>
-<li><p>SLURM</p>
-<ul>
-<li><p>Scratch</p></li>
-<li><p>Automation (script, config)</p></li>
+<li><p><a class="reference external" href="#environment-yaml-file">Environment <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file</a></p></li>
 </ul>
 </li>
-<li><p>Gricad</p>
+<li><p><a class="reference external" href="#jlab-on-slurm">JLab on SLURM</a></p>
 <ul>
-<li><p>Scratch</p></li>
-<li><p>Automation</p></li>
+<li><p><a class="reference external" href="#using-srun">Using <code class="docutils literal notranslate"><span class="pre">srun</span></code></a></p></li>
+<li><p><a class="reference external" href="#using-sbatch">Using <code class="docutils literal notranslate"><span class="pre">sbatch</span></code></a></p>
+<ul>
+<li><p><a class="reference external" href="#slurm-script">Slurm Script</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#slurm-jeanzay">SLURM (JeanZay)</a></p>
+<ul>
+<li><p><a class="reference external" href="#ssh">SSH</a></p></li>
+<li><p><a class="reference external" href="#gpu">GPU</a></p>
+<ul>
+<li><p><a class="reference external" href="#srun"><code class="docutils literal notranslate"><span class="pre">SRUN</span></code></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#procedure">Procedure</a></p></li>
+<li><p><a class="reference external" href="#cpu">CPU</a></p></li>
 </ul>
 </li>
 </ul>
 </li>
-<li></li>
+<li><p><a class="reference external" href="#jlab-on-oar">JLab on OAR</a></p>
+<ul>
+<li><p><a class="reference external" href="#using-srun-1">Using <code class="docutils literal notranslate"><span class="pre">srun</span></code></a></p></li>
+<li><p><a class="reference external" href="#using-oarsh">Using <code class="docutils literal notranslate"><span class="pre">oarsh</span></code></a></p></li>
 </ul>
-<hr class="docutils" />
-<div class="section" id="organization">
-<h2>Organization<a class="headerlink" href="#organization" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li><p>Create a <code class="docutils literal notranslate"><span class="pre">project</span></code> directory - where our code is living</p></li>
-<li><p>Create a <code class="docutils literal notranslate"><span class="pre">bin</span></code> directory - where we put all of our executables</p></li>
-<li><p>Create <code class="docutils literal notranslate"><span class="pre">$WORKDIR</span></code> -</p></li>
-<li><p>Create <code class="docutils literal notranslate"><span class="pre">$LOGSDIR</span></code></p></li>
-<li><p>Create necessary files (<code class="docutils literal notranslate"><span class="pre">logs</span></code>, <code class="docutils literal notranslate"><span class="pre">jobs</span></code>, <code class="docutils literal notranslate"><span class="pre">errs</span></code>)</p></li>
-</ol>
-<p><strong>Example</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ===================</span>
-<span class="c1"># Custom directories</span>
-<span class="c1"># ===================</span>
-<span class="c1"># work directory</span>
-<span class="nb">export</span> <span class="nv">WORKDIR</span><span class="o">=</span>/mnt/meom/workdir/johnsonj
-<span class="c1"># log directory</span>
-<span class="nb">export</span> <span class="nv">LOGDIR</span><span class="o">=</span><span class="nv">$WORKDIR</span>/logs
-</pre></div>
-</div>
-<hr class="docutils" />
-<p><strong>Step 1</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">$WORKDIR</span></code> is set.</p>
-<p>Check if it exists in the environments.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>printenv WORKDIR
-</pre></div>
-</div>
-<p>Make sure to add it to the <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.profile</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add this to the .profile</span>
-<span class="nb">export</span> <span class="nv">WORKDIR</span><span class="o">=</span>/mnt/meom/workdir/username:<span class="nv">$WORKDIR</span>
-</pre></div>
-</div>
-<p>Check again if it exists.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># check if exists (it should now)</span>
-printenv WORKDIR
-</pre></div>
-</div>
-<hr class="docutils" />
-<p><strong>Step 2</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">$LOGSDIR</span></code> is set.</p>
-<p>Check if it exists in the environments.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>printenv LOGDIR
-</pre></div>
-</div>
-<p>Make sure to add it to the <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.profile</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add this to the .profile</span>
-<span class="nb">export</span> <span class="nv">LOGDIR</span><span class="o">=</span><span class="nv">$WORKDIR</span>/logs
-</pre></div>
-</div>
-<p>Check again if it exists.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># check if exists (it should now)</span>
-printenv LOGDIR
-</pre></div>
-</div>
-<hr class="docutils" />
-<p><strong>Step 3</strong>: Create necessary directories</p>
-<p>This is so that we can save logs, errors and job configurations. This will be helpful for automating things later. I like to have these available:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">$LOGDIR</span>/logs
-<span class="nv">$LOGDIR</span>/jobs
-<span class="nv">$LOGDIR</span>/errs
-</pre></div>
-</div>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">logs</span></code> is a subdirectory within logs which will hold all of the slurm log files.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">errs</span></code> - a subdirectory which will hold all of the slurm error log files.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jobs</span></code> - a subdirectory which will hold all of the current job configurations.</p></li>
+</li>
+<li><p><a class="reference external" href="#extensions">Extensions</a></p>
+<ul>
+<li><p><a class="reference external" href="#templates">Templates</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#2-setup-your-jupyterlab-environment">2. Setup Your JupyterLab Environment</a></p>
+<ul>
+<li><p><a class="reference external" href="#21-create-a-yml-file-with-requirements">2.1 Create a <code class="docutils literal notranslate"><span class="pre">.yml</span></code> file with requirements</a></p></li>
+<li><p><a class="reference external" href="#22-jupyterlab-and-other-python-kernels">2.2 JupyterLab and other python kernels</a></p></li>
+<li><p><a class="reference external" href="#21-create-a-conda-environment">2.1 Create a Conda Environment</a></p></li>
+<li><p><a class="reference external" href="#23-install-and-the-jupyterlab-manager">2.3 Install and the Jupyterlab Manager</a></p></li>
+</ul>
+</li>
 </ul>
 </div>
 <hr class="docutils" />
@@ -997,7 +1034,6 @@ printenv LOGDIR
 <span class="nt">dependencies</span><span class="p">:</span><span class="w"></span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python=3.9</span><span class="w"></span>
 <span class="c1"># GUI</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipykernel</span><span class="w"></span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyterlab</span><span class="w">           </span><span class="c1"># JupyterLab GUI</span><span class="w"></span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::nb_conda_kernels</span><span class="w">     </span><span class="c1"># Access to other conda kernels</span><span class="w"></span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::spyder-kernels</span><span class="w">       </span><span class="c1"># Access via spyder kernels</span><span class="w"></span>
@@ -1033,6 +1069,25 @@ printenv LOGDIR
 </pre></div>
 </div>
 <p>This will give you a</p>
+<div class="admonition-automation admonition">
+<p class="admonition-title">Automation</p>
+<p>We can turn this into a script so that we don’t have to keep running these same commands. Add this function to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Launch Jupyter Lab</span>
+<span class="k">function</span> jlab<span class="o">(){</span>
+    <span class="c1"># set port (default)</span>
+    <span class="nv">port</span><span class="o">=</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">8888</span><span class="si">}</span>
+    <span class="c1"># activate jupyter-lab</span>
+    conda activate jlab
+    <span class="c1"># Fires-up a Jupyter notebook by supplying a specific port</span>
+    jupyter-lab --no-browser --ip<span class="o">=</span><span class="m">0</span>.0.0.0 --port<span class="o">=</span><span class="nv">$port</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Example Usage</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jpt
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 <hr class="docutils" />
@@ -1043,38 +1098,48 @@ printenv LOGDIR
 <li><p>Start JLab with port-forwarding</p></li>
 <li><p>Create and SSH session.</p></li>
 </ol>
-<hr class="docutils" />
-<div class="section" id="automation">
-<h3>Automation<a class="headerlink" href="#automation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="using-srun">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">srun</span></code><a class="headerlink" href="#using-srun" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-automation admonition">
+<p class="admonition-title">Automation</p>
+<p>We can turn this into a script so that we don’t have to keep running these same commands. Add this function to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> jlab_srun<span class="o">(){</span>
+    <span class="c1"># activate conda environment with jlab</span>
+    conda activate jlab
+    <span class="c1"># run jupyterlab via srun</span>
+    srun --nodes<span class="o">=</span><span class="m">1</span> --mem<span class="o">=</span><span class="m">1600</span> --time<span class="o">=</span><span class="m">8</span>:00:00 --account<span class="o">=</span>python --job-name<span class="o">=</span>jlab jupyter-lab --no-browser --port<span class="o">=</span><span class="m">3211</span> --ip<span class="o">=</span><span class="m">0</span>.0.0.0
+<span class="o">}</span>
+</pre></div>
 </div>
-</div>
-<hr class="docutils" />
-<div class="section" id="jlab-on-oar">
-<h2>JLab on OAR<a class="headerlink" href="#jlab-on-oar" title="Permalink to this headline">¶</a></h2>
-</div>
-<hr class="docutils" />
-<div class="section" id="id1">
-<h2>Automation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Log into server</p></li>
-<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Run slurm script via <code class="docutils literal notranslate"><span class="pre">sbatch</span></code>.</p></li>
-<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Create SSH tunnel to allow for <code class="docutils literal notranslate"><span class="pre">jlab</span></code> on local machine.</p></li>
-</ol>
-<div class="section" id="slurm-cal1">
-<h3>SLURM (Cal1)<a class="headerlink" href="#slurm-cal1" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="from-scratch">
-<h4>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate jlab
-srun -n <span class="m">1</span> --time<span class="o">=</span><span class="m">01</span>:00:00 --mem<span class="o">=</span><span class="m">1600</span> --account<span class="o">=</span>python --job-name<span class="o">=</span>jlab jupyter-lab --no-browser --port<span class="o">=</span><span class="m">3211</span> --ip<span class="o">=</span><span class="m">0</span>.0.0.0
+<p><strong>Example Usage</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jpt
 </pre></div>
 </div>
 </div>
-<div class="section" id="scripts">
-<h4>Scripts<a class="headerlink" href="#scripts" title="Permalink to this headline">¶</a></h4>
+</div>
+<hr class="docutils" />
+<div class="section" id="using-sbatch">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">sbatch</span></code><a class="headerlink" href="#using-sbatch" title="Permalink to this headline">¶</a></h3>
+<p>In this case, we will create a script and then launch the job using the <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> command.</p>
+<p><strong>Pros</strong>:</p>
+<ul class="simple">
+<li><p>It really allows you to customize the nitty gritty details of the compute node environment.</p></li>
+<li><p>It launches in the background.</p></li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul class="simple">
+<li><p>It’s not very easy to do. You have to have access to the nitty-gritty details.</p></li>
+<li><p>Sometimes you cannot ssh into the compute node.</p></li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="slurm-script">
+<h4>Slurm Script<a class="headerlink" href="#slurm-script" title="Permalink to this headline">¶</a></h4>
+<p>We need to create a bash script, e.g. <code class="docutils literal notranslate"><span class="pre">jlab_script.sh</span></code>, that will hold all of the commands to really customize the note we run.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
 <span class="c1">#SBATCH --job-name=jlab                     # name of job</span>
 <span class="c1">#SBATCH --account=python                    # for statistics</span>
+<span class="c1">#SBATCH --export=ALL                        # export all environment variables</span>
 <span class="c1">#SBATCH --nodes=1                           # we ALWAYS request one node</span>
 <span class="c1">#SBATCH --ntasks-per-node=1                 # number of tasks per node</span>
 <span class="c1">#SBATCH --cpus-per-task=4                   # number of cpus per task</span>
@@ -1133,41 +1198,94 @@ conda activate jlab
 jupyter-lab --no-browser --port<span class="o">=</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span> --ip<span class="o">=</span><span class="m">0</span>.0.0.0
 </pre></div>
 </div>
+<ol class="simple">
+<li><p>Configure a <code class="docutils literal notranslate"><span class="pre">.sh</span></code> script</p></li>
+<li><p>Run the script using <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> command</p></li>
+<li><p>Create and SSH session.</p></li>
+</ol>
+<div class="admonition-automation admonition">
+<p class="admonition-title">Automation</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> jlab_sbatch<span class="o">(){</span>
+    <span class="c1"># Fires up JLab script in bin using sbatch </span>
+    sbatch jlab_sbatch.sh
+    <span class="c1"># prints</span>
+    cat <span class="nv">$LOGDIR</span>/slurm/logs/jlab.log
+    <span class="c1"># prints jlab</span>
+    cat <span class="nv">$LOGDIR</span>/slurm/errs/jlab.err
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 <div class="section" id="slurm-jeanzay">
 <h3>SLURM (JeanZay)<a class="headerlink" href="#slurm-jeanzay" title="Permalink to this headline">¶</a></h3>
+<p>We have to do the same as above however there are a few different commands we need to take care of which allow for more customization. Furthermore, we now have access to</p>
+<div class="section" id="ssh">
+<h4>SSH<a class="headerlink" href="#ssh" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sshuttle</span> <span class="o">-</span><span class="n">dns</span> <span class="o">-</span><span class="n">HN</span> <span class="o">-</span><span class="n">r</span> <span class="n">meom_cal1</span> <span class="mf">130.84.132.0</span><span class="o">/</span><span class="mi">24</span>
+</pre></div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Automation</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sshuttle --dns -HN @meom_cal1.conf
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">meom_cal1.conf</span></code> file looks like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">130</span>.84.132.0/24
+--remote
+meom_cal1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="gpu">
+<h4>GPU<a class="headerlink" href="#gpu" title="Permalink to this headline">¶</a></h4>
 <p>Below we have a <code class="docutils literal notranslate"><span class="pre">jlab_gpu.slurm</span></code> script which is meant to be run on the slurm server.</p>
+<div class="section" id="srun">
+<h5><code class="docutils literal notranslate"><span class="pre">SRUN</span></code><a class="headerlink" href="#srun" title="Permalink to this headline">¶</a></h5>
+<p><strong>Run this Command</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>srun --pty --account<span class="o">=</span>cli@v100 --nodes<span class="o">=</span><span class="m">1</span> --ntasks-per-node<span class="o">=</span><span class="m">1</span> --cpus-per-task<span class="o">=</span><span class="m">10</span> --gres<span class="o">=</span>gpu:1 --hint<span class="o">=</span>nomultithread --time<span class="o">=</span><span class="m">01</span>:30:00 bash
+</pre></div>
+</div>
+<p><strong>Activate Bash shell</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span>conda shell.bash hook<span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p><strong>Change Environment</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate jlab
+</pre></div>
+</div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1">#SBATCH --job-name=jlab_gpu          # name of job</span>
-<span class="c1">#SBATCH --account=cli@gpu</span>
-<span class="c1">#SBATCH --export=ALL</span>
-<span class="c1">#SBATCH --nodes=1                    # we request one node</span>
-<span class="c1">#SBATCH --ntasks-per-node=1          # with one task per node (= number of GPUs here)</span>
-<span class="c1">#SBATCH --gres=gpu:1                 # number of GPUs (1/4 of GPUs)</span>
-<span class="c1">#SBATCH --cpus-per-task=10           # number of cores per task (1/4 of the 4-GPUs node)</span>
-<span class="c1">#SBATCH --hint=nomultithread         # hyperthreading is deactivated</span>
-<span class="c1">#SBATCH --time=12:00:00              # maximum execution time requested (HH:MM:SS)</span>
-<span class="c1">#SBATCH --output=$LOGDIR/logs/jlab_gpu.out    # name of output file</span>
-<span class="c1">#SBATCH --error=$LOGDIR/errs/jlab_gpu.out     # name of error file (here, in common with the output file)</span>
+<span class="c1">#SBATCH --job-name=jlab_gpu             # name of job</span>
+<span class="c1">#SBATCH --account=cli@v100              # GPU Account</span>
+<span class="c1">#SBATCH --export=ALL                    # export all environment variables</span>
+<span class="c1">#SBATCH --nodes=1                       # we request one node</span>
+<span class="c1">#SBATCH --ntasks-per-node=1             # with one task per node (= number of GPUs here)</span>
+<span class="c1">#SBATCH --gres=gpu:1                    # number of GPUs (1/4 of GPUs)</span>
+<span class="c1">#SBATCH --cpus-per-task=10              # number of cores per task (1/4 of the 4-GPUs node)</span>
+<span class="c1">#SBATCH --hint=nomultithread            # hyperthreading is deactivated</span>
+<span class="c1">#SBATCH --time=8:00:00                  # maximum execution time requested (HH:MM:SS)</span>
+<span class="c1">#SBATCH --output=/gpfswork/rech/cli/uvo53rl/logs/slurm/logs/jlab_gpu.out    # name of output file</span>
+<span class="c1">#SBATCH --error=/gpfswork/rech/cli/uvo53rl/logs/slurm/errs/jlab_gpu.out     # name of error file</span>
 
 <span class="c1"># get tunneling info</span>
 <span class="nv">XDG_RUNTIME_DIR</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
 <span class="nv">node</span><span class="o">=</span><span class="k">$(</span>hostname -s<span class="k">)</span>
 <span class="nv">user</span><span class="o">=</span><span class="k">$(</span>whoami<span class="k">)</span>
 <span class="nv">cluster</span><span class="o">=</span><span class="s2">&quot;dahu_ciment&quot;</span>
-<span class="nv">port</span><span class="o">=</span><span class="m">8888</span>
+<span class="nv">port</span><span class="o">=</span><span class="m">3212</span>
 
 <span class="c1"># ==================</span>
 <span class="c1"># Information 4 SSH</span>
 <span class="c1"># ==================</span>
 <span class="c1"># Get the compute node</span>
-squeue -u <span class="nv">$USER</span> -h <span class="p">|</span> grep jlab_gpu <span class="p">|</span> awk <span class="s1">&#39;{print $NF}&#39;</span> &gt; <span class="nv">$LOGDIR</span>/jobs/jlab_gpu.node
+squeue -u <span class="nv">$USER</span> -h <span class="p">|</span> grep jlab_gpu <span class="p">|</span> awk <span class="s1">&#39;{print $NF}&#39;</span> &gt; <span class="nv">$SLURMDIR</span>/jobs/jlab_gpu.node
 <span class="c1"># get the hostname</span>
-hostname -I <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> &gt; <span class="nv">$LOGDIR</span>/jobs/jlab_gpu.ip
+hostname -I <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> &gt; <span class="nv">$SLURMDIR</span>/jobs/jlab_gpu.ip
 <span class="c1"># get the username</span>
-whoami &gt; <span class="nv">$LOGDIR</span>/jobs/jlab_gpu.user
+whoami &gt; <span class="nv">$SLURMDIR</span>/jobs/jlab_gpu.user
 
 <span class="c1"># cleans out the modules loaded in interactive and inherited by default </span>
 module purge
@@ -1198,12 +1316,15 @@ module load cuda/10.2
 <span class="nb">set</span> -x
  
 <span class="c1"># code execution</span>
-jupyter-lab --no-browser --port<span class="o">=</span><span class="si">${</span><span class="nv">port</span><span class="si">}</span> --ip<span class="o">=</span><span class="m">0</span>.0.0.0
+<span class="c1"># jupyter-lab --no-browser --port=${port} --ip=0.0.0.0</span>
+idrlab --notebook-dir<span class="o">=</span>/gpfswork/rech/cli/uvo53rl
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>make sure that it is executable via the <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">+x</span> <span class="pre">script.slurm</span></code> command.</p>
+</div>
+</div>
 </div>
 <div class="section" id="procedure">
 <h4>Procedure<a class="headerlink" href="#procedure" title="Permalink to this headline">¶</a></h4>
@@ -1223,18 +1344,21 @@ jupyter-lab --no-browser --port<span class="o">=</span><span class="si">${</span
 </div>
 </div>
 <hr class="docutils" />
-<div class="section" id="jeanzay-cpu">
-<h4>JeanZay (CPU)<a class="headerlink" href="#jeanzay-cpu" title="Permalink to this headline">¶</a></h4>
-</div>
-<hr class="docutils" />
-<div class="section" id="jeanzay-gpu">
-<h4>JeanZay (GPU)<a class="headerlink" href="#jeanzay-gpu" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="cpu">
+<h4>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h4>
 </div>
 </div>
 </div>
 <hr class="docutils" />
-<div class="section" id="run-the-jupyter-notebook-with-conda-environment-everytime">
-<h2>Run the jupyter notebook with conda environment (everytime)<a class="headerlink" href="#run-the-jupyter-notebook-with-conda-environment-everytime" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="jlab-on-oar">
+<h2>JLab on OAR<a class="headerlink" href="#jlab-on-oar" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>We can’t actually launch jupyter-lab on the head node. Well, technically we can but it will kill the process almost immediately. You must use the compute nodes to do all computation.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="id1">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">srun</span></code><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>First, take a look at this tutorial to get familiar: <a class="reference external" href="https://gricad-doc.univ-grenoble-alpes.fr/notebook/hpcnb/">https://gricad-doc.univ-grenoble-alpes.fr/notebook/hpcnb/</a></p>
 <p>Below offers a simpler work structure.</p>
 <p><strong>In the First Terminal</strong> - Start the JupyterLab session</p>
@@ -1280,9 +1404,10 @@ lsof -i :portNumber
 <span class="nb">kill</span> -9 PID
 </pre></div>
 </div>
+</div>
 <hr class="docutils" />
-<div class="section" id="launching-jupyterlab-using-jobs">
-<h3>Launching JupyterLab Using Jobs<a class="headerlink" href="#launching-jupyterlab-using-jobs" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="using-oarsh">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">oarsh</span></code><a class="headerlink" href="#using-oarsh" title="Permalink to this headline">¶</a></h3>
 <p>Sometimes, it’s a bit annoying to have to keep track of everything (launching interactive job + run jupyter notebook/lab + create tunnel, etc). So below is a way to create a simple script that helps automate the process a little bit.</p>
 <p>Firstly, we need a bash script which can easily be launched. Below is an example.</p>
 <details>
@@ -1344,15 +1469,6 @@ oarsub -S /path/to/bash/script/bash_script.sh
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a tunnel</span>
 ssh -N -f -L port_number:node_name:port_number server_name
-</pre></div>
-</div>
-<ol class="simple">
-<li><p>Close the ssh tunnel when done</p></li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the process-ID number for ssh tunneling</span>
-lsof -i :portNumber
-<span class="c1"># kill that process</span>
-<span class="nb">kill</span> -9 PID
 </pre></div>
 </div>
 </div>
@@ -1502,7 +1618,21 @@ conda env create --name jupyterlab -f jupyterlab.yml
               
             
                 <!-- Previous / next buttons -->
-<div class='prev-next-area'>
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="conda.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Conda 4 Remote Servers</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="vscode_jlab.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">VSCode + JLab</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             
         </div>

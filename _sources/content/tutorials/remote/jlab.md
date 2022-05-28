@@ -1,32 +1,67 @@
-# Jupyter Lab
-
+# Jupyter Lab 4 Remote Servers
 
 ---
-## TOC
+## Intro
 
-- [TOC](#toc)
+Jupyter Lab (`jlab`) is one of the most popular IDEs for science, data science and machine learning. Firstly, it offers an interactive development environment that greatly speeds up the coding process. Additionally, it also has a lower barrier to entry so many beginners can get started right away. Finally, also serves as an amazing method to document the thought process as it allows others to "walk-through" your code with text, equations, code blocks and visualizations.
+
+Unfortunately/Fortunately, data is getting bigger and computation is getting expensive. So nowadays, most people are **required** to use some sort of lab server `jlab` because laptops do not have the capacity nor the bandwidth to process such large volumes of data efficiently. There exists some built-in solutions like [`JupyterHub`]() which just needs a log-in and then your whole Jupyter suite is available. But, I find that they do not offer the necessary level of granularity that is required for many researchers; especially researchers that really want to make their products reproducible. For example, often times it requires images that are spun up which means the users don't have control over their python environments and also have to keep re-loading their scripts. This is cumbersome and doesn't promote good practices outside of simple prototyping. You could [argue for](https://www.youtube.com/watch?v=9Q6sLbz37gk) or [argue against](https://www.youtube.com/watch?v=7jiPeIFXb6U) the notion that Jupyter notebooks are good enough to do good coding practices and there are [certainly tools](https://nbdev.fast.ai/tutorial.html) to get around that. I personally find that the ecosystem doesn't lend itself well to that kind of development.
+
+This guide is meant to demonstrate how one can setup `jlab` oneself. Setting `jlab` up by yourself is definitely more work than the prebuilt solutions. However, once you know how to do (and you know how to automate some of the tedious commands), these skills are transferable to many different setups. As long as there is a remote server and you can have an ssh connection, you can have a `jlab` environment.
+
+---
+## TLDR
+
+
+Below is **What You Will Do** in this tutorial:
+
+* Install JupyterLab on a remote server
+* Learn how to launch jobs on SLURM and OAR
+* Automate some things to make life easier (e.g. `bash` scripts, `tmux`, `tmuxp`)
+
+
+:::{admonition} MEOM-ers
+:class: info
+
+For my current lab (2022), we have access to 3 servers. Each of them correspond to a server type with varying levels of power and customizability.
+
+* `cal1` -> SLURM
+* `gricad` -> OAR
+* `jean-zay` -> SLURM
+
+:::
+
+---
+
+**Table of Contents**
+- [Intro](#intro)
+- [TLDR](#tldr)
 - [Install JupyterLab](#install-jupyterlab)
   - [Environment `.yaml` file](#environment-yaml-file)
+- [Running JupyterLab](#running-jupyterlab)
+  - [Advanced Users](#advanced-users)
+    - [Bash Script](#bash-script)
+    - [`tmuxp`](#tmuxp)
+- [JLab on Remote Server](#jlab-on-remote-server)
+  - [Advanced Users](#advanced-users-1)
+    - [SSH Config](#ssh-config)
+    - [**TMUXP** Config](#tmuxp-config)
+    - [Bash Script](#bash-script-1)
 - [JLab on SLURM](#jlab-on-slurm)
   - [Using `srun`](#using-srun)
   - [Using `sbatch`](#using-sbatch)
-    - [Slurm Script](#slurm-script)
-  - [SLURM (JeanZay)](#slurm-jeanzay)
+  - [Advanced Users](#advanced-users-2)
+    - [Demo Setup](#demo-setup)
+    - [**TMUXP**](#tmuxp-1)
+  - [SLURM on JeanZay](#slurm-on-jeanzay)
     - [SSH](#ssh)
-    - [GPU](#gpu)
-      - [`SRUN`](#srun)
-    - [Procedure](#procedure)
-    - [CPU](#cpu)
+      - [Advanced Usage](#advanced-usage)
+    - [Advanced Users](#advanced-users-3)
+      - [Config](#config)
+      - [**TMUXP**](#tmuxp-2)
 - [JLab on OAR](#jlab-on-oar)
-  - [Using `srun`](#using-srun-1)
+  - [Using `oarsub`](#using-oarsub)
   - [Using `oarsh`](#using-oarsh)
-- [Extensions](#extensions)
-  - [Templates](#templates)
-- [2. Setup Your JupyterLab Environment](#2-setup-your-jupyterlab-environment)
-  - [2.1 Create a `.yml` file with requirements](#21-create-a-yml-file-with-requirements)
-  - [2.2 JupyterLab and other python kernels](#22-jupyterlab-and-other-python-kernels)
-  - [2.1 Create a Conda Environment](#21-create-a-conda-environment)
-  - [2.3 Install and the Jupyterlab Manager](#23-install-and-the-jupyterlab-manager)
   
 
 ---
@@ -72,6 +107,9 @@ We are making a single *JupyterLab environment to rule them all*. So we are only
 However, we still will be able to change the `conda_kernel`. To ensure that we can change it to *other environments*, we needed to install  `nb_conda_kernel` and `ipykernels` in the `jlab` base environment as well as any other environment that we want access to.
 :::
 
+---
+## Running JupyterLab
+
 **Step 1**: Install this as a conda environment. (Use mamba because its faster)
 
 ```bash
@@ -92,8 +130,12 @@ jupyter-lab --no-browser --ip=0.0.0.0 --port=8888
 
 This will give you a
 
-:::{admonition} Automation
-We can turn this into a script so that we don't have to keep running these same commands. Add this function to your `.profile` or `.bash_profile`.
+---
+### Advanced Users
+
+This will allow users to not have to go through all of those above steps each time we want to log in. Instead, we will create a function that automates this for us which will greatly reduce the amount of steps. We will also
+
+#### Bash Script
 
 ```bash
 # Launch Jupyter Lab
@@ -107,42 +149,208 @@ function jlab(){
 }
 ```
 
+Add this function to your `.profile` or `.bash_profile`.
+
 **Example Usage**
 
+Since everything is within the function, we just need to run the following command:
+
 ```bash
-jpt
+# activate conda environment and start jlab
+jlab 8888
 ```
-:::
+
+**That was easy**! Just a little bit of customization goes a long way.
+
+#### `tmuxp`
+
+This is the demo for `tmuxp` users.
+
+Below is my demo **`jlab.yaml`** file which has the automated commands for `tmuxp`.
+
+```bash
+session_name: cal1_jlab
+windows:
+  - window_name: jlab
+    panes:
+    - shell_command: |
+        cd $WORKDIR
+        jlab 8888
+```
+
+
+**Demo Usage**:
+
+```bash
+tmuxp load $HOME/.tmuxp/jlab.yaml
+```
+
+As you can see, it is **super simple** to use! Just this command, we get a nice `tmux` window with `jlab` running and even an extra window for tinkering. But of course, we need to add a function to our local `.profile` so that we don't have to type all of this out.
+
+```bash
+function tmux_jlab(){
+  tmuxp load $HOME/.tmuxp/jlab.yaml
+}
+```
+
+**Demo Usage**:
+
+```bash
+tmux_jlab
+```
+
+**Even easier**! Now we just type this command and we get a full tmux session where the ssh command has been run and the jlab session should already be activated on the remote server. We just need to go to `localhost:8888` in our browser and we are good to go.
+
+
+
+---
+## JLab on Remote Server
+
+So the **only difference** between what we did above and what we do now
+
+So the actual commands are quite similar. But they have different steps:
+
+```diff
+# log into remote server
++ ssh username@server -L 8888:localhost:8888
+# launch jlab via script
+jlab 8888
+```
+
+---
+### Advanced Users
+
+There are some shortcuts we can apply based on our previous stuff. We will do the following:
+
+1. Setup the `.ssh/config` to streamline the `ssh` flags
+2. Use `tmuxp` to streamline the `ssh` and `jlab` execution
+3. Write a `bash` script to execute the `tmuxp` commands
+
+---
+#### SSH Config
+
+If we have the server information already preconfigured in our `.ssh/config` file, then we can remove a lot of these redundant commands. 
+
+```bash
+Host server_name
+    HostName server
+    User username
+    # Allow for Ids
+    ForwardX11 yes
+    # SSH Identity File
+    IdentityFile ~/.ssh/id_key_file
+    # Jupyter Notebooks
+    LocalForward 8888 localhost:8888
+```
+
+The most important are:
+* `Host` - makes an easier to remember ssh command
+* `IdentityFile` - removes the need to authenticate
+* `LocalForward`/`localhost` - does the tunneling automatically
+
+Take a look at the changes when we have this setup. 
+
+```diff
+# log into remote server
+- ssh username@server -L 8888:localhost:8888
++ ssh server_name
+# launch jlab via script
+jlab 8888
+```
+
+**Note**: We could also remove the exact port number since this port number is configured to be the same within the `.ssh/config` file. So the result is the following command:
+
+```bash
+ssh server_name
+jlab
+```
+
+**Voila**! Super simple! :)
+
+
+---
+#### **TMUXP** Config
+
+We can create a `tmux` environment where we create windows to run commands where everything has already been executed. Below is my demo **`jlab_cal1.yaml`** file which has the automated commands for `tmuxp`.
+
+```bash
+session_name: cal1_jlab
+windows:
+  - window_name: jlab
+    panes:
+    - shell_command: |
+        ssh meom_cal1
+        cd $WORKDIR
+        sbatch $HOMEDIR/bin/jlab_sbatch.sh
+
+  - window_name: git
+    panes:
+    - shell_command: ssh meom_cal1
+```
+
+**Demo Usage**:
+
+```bash
+tmuxp load jlab_cal1.yaml
+```
+
+As you can see, it is **super simple** to use! Just this command, we get a nice `tmux` window with `jlab` running and even an extra window for tinkering.
+
+
+---
+#### Bash Script
+
+Now, the final step, we want to not have to write all of those commands. So we create a nice little bash script that does everything. Remember to add it to your `.profile` and restart your terminal.
+
+```bash
+function jlab_cal1(){
+  tmuxp load $HOME/.tmuxp/jlab_cal1.yaml
+}
+```
+
+**Demo Usage**:
+
+```bash
+jlab_cal1
+```
+
+**It's as easy as it gets!**
 
 
 ---
 ## JLab on SLURM
 
-1. Activate Environment
-2. Start JLab with port-forwarding
-3. Create and SSH session.
+In this section, we will take what we did above and apply it to a cluster managed by SLURM. The biggest difference in steps is that we first need to log into the remote server, then we need to start a compute node, and then we can apply the steps for the jlab:
+
+```diff
+# ssh into the remote server
++ ssh username@server -L 8888:localhost:8888
+# start an interactive compute session
++ srun ... or + sbatch
+# start jupyter lab environment
+conda activate jlab
+# Fires-up a Jupyter notebook by supplying a specific port
+jupyter-lab --no-browser --ip=0.0.0.0 --port=8888
+```
+
+Now we can open our browser to `localhost:8888` and we will have access to `jlab`. We have two ways to do this: 1) we can use `srun` which will start an interactive node or 2) `sbatch` which will start a node based on a `bash` script with the configurations. We will go over both options below.
 
 
+---
 ### Using `srun`
 
-:::{admonition} Automation
-We can turn this into a script so that we don't have to keep running these same commands. Add this function to your `.profile` or `.bash_profile`.
 
 ```bash
-function jlab_srun(){
-    # activate conda environment with jlab
-    conda activate jlab
-    # run jupyterlab via srun
-    srun --nodes=1 --mem=1600 --time=8:00:00 --account=python --job-name=jlab jupyter-lab --no-browser --port=3211 --ip=0.0.0.0
-}
+# log into remote server
+ssh username@server -L 8888:localhost:8888
+# activate conda environment
+conda activate jlab
+# start an interactive node (apply configs)
+srun --nodes=1 --cpus-per-task=8 --mem=1600 --account=python --pty jupyter-lab --no-browser --ip=0.0.0.0 --port=8888
 ```
 
-**Example Usage**
+Again, now we can open our browser to `localhost:8888` and we will have access to `jlab`. 
 
-```bash
-jpt
-```
-:::
 
 ---
 
@@ -159,11 +367,7 @@ In this case, we will create a script and then launch the job using the `sbatch`
 * Sometimes you cannot ssh into the compute node.
 
 
----
-
-#### Slurm Script
-
-We need to create a bash script, e.g. `jlab_script.sh`, that will hold all of the commands to really customize the note we run.
+Below is an example of a `bash` script, titled `jlab_sbatch.sh` which has the appropriate commands.
 
 
 ```bash
@@ -173,89 +377,146 @@ We need to create a bash script, e.g. `jlab_script.sh`, that will hold all of th
 #SBATCH --account=python                    # for statistics
 #SBATCH --export=ALL                        # export all environment variables
 #SBATCH --nodes=1                           # we ALWAYS request one node
-#SBATCH --ntasks-per-node=1                 # number of tasks per node
-#SBATCH --cpus-per-task=4                   # number of cpus per task
+#SBATCH --cpus-per-task=8                   # number of cpus per task
 #SBATCH --time=8:00:00                      # maximum execution time requested (HH:MM:SS)
 #SBATCH --memory=1600                       # the amount of memory requested
-#SBATCH --output=/mnt/meom/workdir/johnsonj/logs/jlab.log      # name of output file
-#SBATCH --error=/mnt/meom/workdir/johnsonj/errs/jlab.err       # name of error file 
 
 # get tunneling info
 XDG_RUNTIME_DIR=""
-node=$(hostname -s)
-user=$(whoami)
-cluster="ige-meom-cal1"
-cluster_ssh="meom_cal1"
-port=3211
+port=8888
 
-# ==================
-# Information 4 SSH
-# ==================
-# Get the compute node
-squeue -u $USER -h | grep jlab | awk '{print $NF}' > $LOGDIR/jobs/jlab.node
-# get the hostname
-hostname -I | awk '{print $1}' > $LOGDIR/jobs/jlab.ip
-# get the username
-whoami > $LOGDIR/jobs/jlab.user
-
-# Tunneling Info
-echo -e "
-node=${node}
-user=${user}
-cluster=${cluster}
-port=${port}
-
-Command to create ssh tunnel (manually):
-ssh -N -f -L ${port}:${node}:${port} ${user}@${cluster}
-
-Command to create ssh tunnel (ssh config):
-ssh -N -f -L ${port}:${node}:${port} ${cluster_ssh}
-
-Command to create ssh tunnel through
-ssh -N -f -L ${port}:localhost:${port} $
-
-Use a Browser on your local machine to go to:
-localhost:${port}  (prefix w/ https:// if using password)
-"
- 
 # loading of modules
 conda activate jlab
-
-# go into work directory
-cd $WORKDIR
-# echo of launched commands
-set -x
- 
 # code execution
-jupyter-lab --no-browser --port=${port} --ip=0.0.0.0
+jupyter-lab --no-browser --port=${port} --ip=0.0.0.0 --notebook-dir=$WORKDIR
 ```
 
 
-1. Configure a `.sh` script
-2. Run the script using `sbatch` command
-3. Create and SSH session.
+---
+### Advanced Users
 
-:::{admonition} Automation
+For interactive sessions with `srun`, I strongly recommend the use of functions to ensure that your configurations are correct. We can turn the above steps on the server into a script so that we don't have to keep running these same commands. 
 
+
+#### Demo Setup
+
+Add this function to your `.profile` or `.bash_profile` **on the remote server**.
+
+:::{tabbed} srun
+An example using the SLURM `srun` system:
 ```bash
-function jlab_sbatch(){
-    # Fires up JLab script in bin using sbatch 
-    sbatch jlab_sbatch.sh
-    # prints
-    cat $LOGDIR/slurm/logs/jlab.log
-    # prints jlab
-    cat $LOGDIR/slurm/errs/jlab.err
+function jlab_srun(){
+    # activate conda environment with jlab
+    conda activate jlab
+    # run jupyterlab via srun
+    srun --nodes=1 --mem=1600 --time=8:00:00 --account=python --job-name=jlab --pty jupyter-lab --no-browser --port=8888 --ip=0.0.0.0
 }
 ```
+
+:::
+
+:::{tabbed} sbatch
+An example using the SLURM `sbatch` system:
+```bash
+function jlab_sbatch(){
+    # run jupyterlab via srun
+    sbatch jlab_sbatch.sh
+}
+```
+
 :::
 
 
 
+**Demo Usage**:
+
+I am assume that we have already configured our `.ssh/config` file as done above.
+
+:::{tabbed} srun
+```bash
+# ssh into
+ssh meom_cal1
+# run function
+jlab_srun
+```
+:::
+
+:::{tabbed} sbatch
+```bash
+# ssh into
+ssh meom_cal1
+# run function
+jlab_sbatch
+```
+:::
+
+This is a low easier and less cumbersome than typing out all of the commands from scratch.
+
+#### **TMUXP**
+
+We can make this even easier with `tmuxp`. We need to create a `.yaml` file which will store all the commands to be executed. Here is an example for `jlab_cal1.yaml`.
 
 
+:::{tabbed} srun
+```bash
+session_name: jlab_cal1
+windows:
+  - window_name: jlab
+    panes:
+    - shell_command: |
+      ssh meom_cal1
+      conda activate jlab
+      srun --nodes=1 --cpus-per-task=8 --mem=1600 --account=python --pty jupyter-lab --no-browser --ip=0.0.0.0 --port=8888
+
+  - window_name: git
+    panes:
+    - shell_command: ssh meom_cal1
+```
+:::
+
+:::{tabbed} sbatch
+```bash
+session_name: jlab_cal1
+windows:
+  - window_name: jlab
+    panes:
+    - shell_command: |
+      ssh meom_cal1
+      sbatch jlab_sbatch.sh
+
+  - window_name: git
+    panes:
+    - shell_command: ssh meom_cal1
+```
+:::
 
 
-### SLURM (JeanZay)
+**Demo Usage**:
+
+
+```bash
+tmuxp load jlab_cal1.yaml
+```
+
+And as we did before, we can create a function in our local `.profile` that will allow us to run these commands with even greater brevity.
+
+```bash
+function jlab_cal1(){
+  tmuxp load jlab_cal1.yaml
+}
+```
+
+So now it's even easier to run:
+
+```bash
+jlab_cal1
+```
+
+**Super easy**! :)
+
+
+---
+### SLURM on JeanZay
 
 We have to do the same as above however there are a few different commands we need to take care of which allow for more customization. Furthermore, we now have access to 
 
@@ -266,13 +527,23 @@ We have to do the same as above however there are a few different commands we ne
 sshuttle -dns -HN -r meom_cal1 130.84.132.0/24
 ```
 
-
-:::{admonition} Automation
-:class: tip
+**Demo Usage**:
 
 ```bash
-sshuttle --dns -HN @meom_cal1.conf
+sshuttle
 ```
+
+##### Advanced Usage
+
+
+
+---
+#### Advanced Users
+
+
+##### Config
+
+
 
 The `meom_cal1.conf` file looks like this:
 
@@ -282,137 +553,69 @@ The `meom_cal1.conf` file looks like this:
 meom_cal1
 ```
 
-:::
-
-
-
-
-#### GPU
-
-Below we have a `jlab_gpu.slurm` script which is meant to be run on the slurm server.
-
-
-##### `SRUN`
-
-**Run this Command**
+**Demo Usage**:
 
 ```bash
-srun --pty --account=cli@v100 --nodes=1 --ntasks-per-node=1 --cpus-per-task=10 --gres=gpu:1 --hint=nomultithread --time=01:30:00 bash
+sshuttle --dns -HN @meom_cal1.conf
 ```
 
-**Activate Bash shell**
+And of course, we will create a nice little function for it.
 
 ```bash
-eval "$(conda shell.bash hook)"
-```
-
-**Change Environment**
-
-```bash
-conda activate jlab
-```
-
-
-
-
-```bash
-#!/bin/bash
-
-#SBATCH --job-name=jlab_gpu             # name of job
-#SBATCH --account=cli@v100              # GPU Account
-#SBATCH --export=ALL                    # export all environment variables
-#SBATCH --nodes=1                       # we request one node
-#SBATCH --ntasks-per-node=1             # with one task per node (= number of GPUs here)
-#SBATCH --gres=gpu:1                    # number of GPUs (1/4 of GPUs)
-#SBATCH --cpus-per-task=10              # number of cores per task (1/4 of the 4-GPUs node)
-#SBATCH --hint=nomultithread            # hyperthreading is deactivated
-#SBATCH --time=8:00:00                  # maximum execution time requested (HH:MM:SS)
-#SBATCH --output=/gpfswork/rech/cli/uvo53rl/logs/slurm/logs/jlab_gpu.out    # name of output file
-#SBATCH --error=/gpfswork/rech/cli/uvo53rl/logs/slurm/errs/jlab_gpu.out     # name of error file
-
-# get tunneling info
-XDG_RUNTIME_DIR=""
-node=$(hostname -s)
-user=$(whoami)
-cluster="dahu_ciment"
-port=3212
-
-# ==================
-# Information 4 SSH
-# ==================
-# Get the compute node
-squeue -u $USER -h | grep jlab_gpu | awk '{print $NF}' > $SLURMDIR/jobs/jlab_gpu.node
-# get the hostname
-hostname -I | awk '{print $1}' > $SLURMDIR/jobs/jlab_gpu.ip
-# get the username
-whoami > $SLURMDIR/jobs/jlab_gpu.user
-
-# cleans out the modules loaded in interactive and inherited by default 
-module purge
-
-# Tunneling Info
-echo -e "
-node=${node}
-user=${user}
-cluster=${cluster}
-port=${port}
-
-Command to create ssh tunnel:
-ssh -N -f -L ${port}:${node}:${port} ${user}@${cluster}
-
-Command to create ssh tunnel through
-ssh -N -f -L ${port}:localhost:${port} $
-
-Use a Browser on your local machine to go to:
-localhost:${port}  (prefix w/ https:// if using password)
-"
- 
-# loading of modules
-module load git
-module load cuda/10.2
-source activate jlab
- 
-# echo of launched commands
-set -x
- 
-# code execution
-# jupyter-lab --no-browser --port=${port} --ip=0.0.0.0
-idrlab --notebook-dir=/gpfswork/rech/cli/uvo53rl
-```
-
-:::{note}
-make sure that it is executable via the `chmod +x script.slurm` command.
-:::
-
-
-#### Procedure
-
-**Step I**: Run the bash script
-
-```bash
-sbatch /path/to/script.slurm
-```
-
-**Step 2**: Check
-
-
-```bash
-# JUPYTER NOTEBOOK STUFF
-function launch_jlab(){
-    # Fires up JLab using sbatch
-    sbatch jlab.slurm
-    # prints
-    cat $LOGDIR/logs/jlab.log
+function sshuttle_cal1(){
+  sshuttle --dns -HN @meom_cal1.conf
 }
 ```
 
+**Demo Usage**:
+
+```bash
+sshuttle_cal1
+```
 
 
+##### **TMUXP**
 
 
+```bash
+session_name: jlab_jz_gpu
+windows:
+  - window_name: jlab
+    panes:
+    - shell_command: |
+        ssh jean_zay
+        cd $WORKDIR
+        sbatch $HOMEDIR/bin/jlab_gpu.sh
 
----
-#### CPU
+  - window_name: vpn
+    panes:
+    - shell_command: sshuttle --dns -HN @$HOME/.sshuttle/meom_cal1.conf
+  
+```
+
+**Demo Usage**:
+
+```bash
+tmuxp load jlab_jz.yaml
+```
+
+
+And again, a function:
+
+```bash
+function jlab_jz(){
+  tmuxp load jlab_jz.yaml
+}
+```
+
+**Demo Usage**:
+
+```bash
+jlab_jz
+```
+
+**As easy as it gets**!
+
 
 
 ---
@@ -425,7 +628,7 @@ We can't actually launch jupyter-lab on the head node. Well, technically we can 
 :::
 
 ---
-### Using `srun`
+### Using `oarsub`
 
 
 First, take a look at this tutorial to get familiar: https://gricad-doc.univ-grenoble-alpes.fr/notebook/hpcnb/
@@ -496,6 +699,9 @@ kill -9 PID
 
 
 Sometimes, it's a bit annoying to have to keep track of everything (launching interactive job + run jupyter notebook/lab + create tunnel, etc). So below is a way to create a simple script that helps automate the process a little bit.
+
+
+
 
 Firstly, we need a bash script which can easily be launched. Below is an example.
 
@@ -569,128 +775,5 @@ ssh -N -f -L port_number:node_name:port_number server_name
 ```
 
 
----
-## Extensions
 
 
-### Templates
-
-**Google Colab**
-
-**Default**
-
-```python
-import sys, os
-from pyprojroot import here
-root = here(project_files=[".here"])
-sys.path.append(str(here()))
-
-import pathlib
-
-# standard python packages
-import xarray as xr
-import pandas as pd
-import numpy as np
-
-from tqdm import tqdm
-
-# NUMPY SETTINGS
-import numpy as onp
-onp.set_printoptions(precision=3, suppress=True)
-
-# MATPLOTLIB Settings
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-%matplotlib inline
-%config InlineBackend.figure_format = 'retina'
-
-# SEABORN SETTINGS
-import seaborn as sns
-sns.set_context(context='talk',font_scale=0.7)
-
-# PANDAS SETTINGS
-import pandas as pd
-pd.set_option("display.max_rows", 120)
-pd.set_option("display.max_columns", 120)
-
-# LOGGING SETTINGS
-import sys
-import logging
-logging.basicConfig(
-    level=logging.INFO, 
-    stream=sys.stdout,
-    format='%(asctime)s:%(levelname)s:%(message)s'
-)
-logger = logging.getLogger()
-#logger.setLevel(logging.INFO)
-
-%load_ext autoreload
-```
-
-
-
----
-
-## 2. Setup Your JupyterLab Environment
-
-**Note**: 
-
-- You only have to do this once!
-- Make sure conda is already installed.
-
-### 2.1 Create a `.yml` file with requirements
-
-```yaml
-name: jupyterlab
-channels:
-- defaults
-- conda-forge
-dependencies:
-- python=3.8
-# GUI
-- conda-forge::jupyterlab           # JupyterLab GUI
-- conda-forge::nb_conda_kernels     # Access to other conda kernels
-- conda-forge::spyder-kernels       # Access via spyder kernels
-- conda-forge::nodejs               # for extensions in jupyterlab
-- pyviz::holoviews
-- bokeh
-- bokeh::jupyter_bokeh              # Bokeh
-- tqdm                              # For status bars
-- pip                               # To install other packages
-- pip:
-  - ipykernel
-  - ipywidgets
-  - jupyter-server-proxy
-  - dask_labextension
-  - nbserverproxy
-```
-
-I've typed it out but you can also check out the file on [github](https://github.com/jejjohnson/dot_files/blob/master/jupyter_scripts/jupyterlab.yml).
-
-### 2.2 JupyterLab and other python kernels
-
-So you may be wondering if we need to do this with every conda environment we create. No. We just need to have a general JupyterLab environment that calls other environments. The important thing here is that we have the jupyterlab package installed as well as `nb_conda_kernels` package. This allows the jupyterlab to be able to use any other python kernel that's in your user space (sometimes common shared ones but it depends). 
-
-Now, all other conda environments will need to have the `ipykernel` package installed and it will be visible from your JupyterLab environment.
-
-### 2.1 Create a Conda Environment
-
-```bash
-# create the environment with your .yml file
-conda env create --name jupyterlab -f jupyterlab.yml
-# activate the environment
-source activate jupyterlab
-# or perhaps
-# conda activate jupyterlab
-```
-
-### 2.3 Install and the Jupyterlab Manager
-
-This will enable you to have extensions for your Jupyterlab. There are so many cool ones out there. I'm particularly fond of the [variable inspector](https://github.com/lckr/jupyterlab-variableInspector) and the [table of contents](https://github.com/jupyterlab/jupyterlab-toc). JupyterLab has gotten awesome so you can install most new extensions using the JupyterLab GUI.
-
-```yaml
-# Install jupyter lab extension maager
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
-# Enable
-jupyter serverextension enable --py jupyterlab-manager
-```

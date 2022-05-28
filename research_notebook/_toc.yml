@@ -30,6 +30,7 @@ parts:
       sections:
       - file: content/tutorials/remote/ssh
       - file: content/tutorials/remote/conda
+      - file: content/tutorials/remote/jlab
       - file: content/tutorials/remote/vscode_jlab
   - caption: Notes
     chapters:

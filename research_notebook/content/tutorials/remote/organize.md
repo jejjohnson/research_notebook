@@ -101,3 +101,90 @@ A lot of times you'll get coworkers who can't access or they don't use (or don't
 ```bash
 scp -r user@your.server.example.com:/path/to/foo /home/user/Desktop/
 ```
+
+
+---
+## Organization
+
+1. Create a `project` directory - where our code is living
+2. Create a `bin` directory - where we put all of our executables
+3. Create `$WORKDIR` - 
+4. Create `$LOGSDIR`
+5. Create necessary files (`logs`, `jobs`, `errs`)
+
+
+**Example**
+
+```bash
+# ===================
+# Custom directories
+# ===================
+# work directory
+export WORKDIR=/mnt/meom/workdir/johnsonj
+# log directory
+export LOGDIR=$WORKDIR/logs
+```
+
+---
+**Step 1**: Ensure `$WORKDIR` is set.
+
+
+Check if it exists in the environments.
+
+```bash
+printenv WORKDIR
+```
+
+Make sure to add it to the `.bashrc` or `.profile`.
+
+```bash
+# add this to the .profile
+export WORKDIR=/mnt/meom/workdir/username:$WORKDIR
+```
+
+Check again if it exists.
+
+```bash
+# check if exists (it should now)
+printenv WORKDIR
+```
+
+
+---
+**Step 2**: Ensure `$LOGSDIR` is set.
+
+Check if it exists in the environments.
+
+```bash
+printenv LOGDIR
+```
+
+Make sure to add it to the `.bashrc` or `.profile`.
+
+```bash
+# add this to the .profile
+export LOGDIR=$WORKDIR/logs
+```
+
+Check again if it exists.
+
+```bash
+# check if exists (it should now)
+printenv LOGDIR
+```
+
+---
+**Step 3**: Create necessary directories
+
+This is so that we can save logs, errors and job configurations. This will be helpful for automating things later. I like to have these available:
+
+
+```bash
+$LOGDIR/logs
+$LOGDIR/jobs
+$LOGDIR/errs
+```
+
+- `logs` is a subdirectory within logs which will hold all of the slurm log files.
+- `errs` - a subdirectory which will hold all of the slurm error log files.
+- `jobs` - a subdirectory which will hold all of the current job configurations.

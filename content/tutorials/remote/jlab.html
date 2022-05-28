@@ -229,7 +229,7 @@ const thebe_selector_output = ".output, .cell_output"
   <ul class="current">
    <li class="toctree-l2">
     <a class="reference internal" href="ssh.html">
-     SSH Config
+     SSH Configuration
     </a>
    </li>
    <li class="toctree-l2">
@@ -1397,8 +1397,8 @@ jupyter-lab --no-browser --port<span class="o">=</span><span class="si">${</span
 <h4>Demo Setup<a class="headerlink" href="#demo-setup" title="Permalink to this headline">¶</a></h4>
 <p>Add this function to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code> <strong>on the remote server</strong>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="f8fb46f4-3b55-45ae-b0ca-482e3122f01f" name="03ea675e-4862-4f38-9113-ab215b511d8e" type="radio">
-</input><label class="tabbed-label" for="f8fb46f4-3b55-45ae-b0ca-482e3122f01f">
+<input checked="checked" id="a066886f-4af0-4fe5-a34e-987a0370304c" name="4ad0462e-4ce7-47b0-8374-0451a69140af" type="radio">
+</input><label class="tabbed-label" for="a066886f-4af0-4fe5-a34e-987a0370304c">
 srun</label><div class="tabbed-content docutils">
 <p>An example using the SLURM <code class="docutils literal notranslate"><span class="pre">srun</span></code> system:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> jlab_srun<span class="o">(){</span>
@@ -1410,8 +1410,8 @@ srun</label><div class="tabbed-content docutils">
 </pre></div>
 </div>
 </div>
-<input id="0cf21787-239e-4a16-8728-27ea24d7a452" name="03ea675e-4862-4f38-9113-ab215b511d8e" type="radio">
-</input><label class="tabbed-label" for="0cf21787-239e-4a16-8728-27ea24d7a452">
+<input id="c3adef1a-a6fe-43d7-9358-97864dc21c0a" name="4ad0462e-4ce7-47b0-8374-0451a69140af" type="radio">
+</input><label class="tabbed-label" for="c3adef1a-a6fe-43d7-9358-97864dc21c0a">
 sbatch</label><div class="tabbed-content docutils">
 <p>An example using the SLURM <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> system:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> jlab_sbatch<span class="o">(){</span>
@@ -1425,8 +1425,8 @@ sbatch</label><div class="tabbed-content docutils">
 <p><strong>Demo Usage</strong>:</p>
 <p>I am assume that we have already configured our <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file as done above.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="3ac0b6af-690e-47cb-bb63-d47903026061" name="d2220db5-f1e2-4c93-8c8d-264c6d9d329f" type="radio">
-</input><label class="tabbed-label" for="3ac0b6af-690e-47cb-bb63-d47903026061">
+<input checked="checked" id="3e9469b4-abea-41cb-a641-08972716d1eb" name="12b77a49-02fa-4f2e-bc9e-3fb6f01cd6b2" type="radio">
+</input><label class="tabbed-label" for="3e9469b4-abea-41cb-a641-08972716d1eb">
 srun</label><div class="tabbed-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ssh into</span>
 ssh meom_cal1
@@ -1435,8 +1435,8 @@ jlab_srun
 </pre></div>
 </div>
 </div>
-<input id="a177aa2d-1523-441c-a91d-bf1ec52ac0fe" name="d2220db5-f1e2-4c93-8c8d-264c6d9d329f" type="radio">
-</input><label class="tabbed-label" for="a177aa2d-1523-441c-a91d-bf1ec52ac0fe">
+<input id="bf07d24c-3f52-4e02-acd6-88e632342445" name="12b77a49-02fa-4f2e-bc9e-3fb6f01cd6b2" type="radio">
+</input><label class="tabbed-label" for="bf07d24c-3f52-4e02-acd6-88e632342445">
 sbatch</label><div class="tabbed-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ssh into</span>
 ssh meom_cal1
@@ -1452,8 +1452,8 @@ jlab_sbatch
 <h4><strong>TMUXP</strong><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
 <p>We can make this even easier with <code class="docutils literal notranslate"><span class="pre">tmuxp</span></code>. We need to create a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file which will store all the commands to be executed. Here is an example for <code class="docutils literal notranslate"><span class="pre">jlab_cal1.yaml</span></code>.</p>
 <div class="tabbed-set docutils">
-<input checked="checked" id="c937040e-05ee-4567-8b4b-f0f993c9d0d5" name="8b9a42b5-b1e3-4f5e-b226-786f528d2818" type="radio">
-</input><label class="tabbed-label" for="c937040e-05ee-4567-8b4b-f0f993c9d0d5">
+<input checked="checked" id="623ac299-bae2-4a15-b2e3-ac672f4235fe" name="30f9d749-a900-4a5b-85ec-b2ef1bc90d27" type="radio">
+</input><label class="tabbed-label" for="623ac299-bae2-4a15-b2e3-ac672f4235fe">
 srun</label><div class="tabbed-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>session_name: jlab_cal1
 windows:
@@ -1470,8 +1470,8 @@ windows:
 </pre></div>
 </div>
 </div>
-<input id="c74303cc-7b09-4da0-92f2-917ec13909a6" name="8b9a42b5-b1e3-4f5e-b226-786f528d2818" type="radio">
-</input><label class="tabbed-label" for="c74303cc-7b09-4da0-92f2-917ec13909a6">
+<input id="abb46b78-461d-430a-8d77-9b52bb4644ea" name="30f9d749-a900-4a5b-85ec-b2ef1bc90d27" type="radio">
+</input><label class="tabbed-label" for="abb46b78-461d-430a-8d77-9b52bb4644ea">
 sbatch</label><div class="tabbed-content docutils">
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>session_name: jlab_cal1
 windows:

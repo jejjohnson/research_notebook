@@ -1,4 +1,4 @@
-# SSH Config
+# SSH Configuration
 
 
 
@@ -18,6 +18,7 @@ We will go over 2 cases:
   - [Port Forwarding](#port-forwarding)
     - [Background](#background)
       - [Closing The Background Process](#closing-the-background-process)
+      - [Advanced Users - Bash Script](#advanced-users---bash-script)
 - [SSH Config File](#ssh-config-file)
 - [Remote Server (Cal1)](#remote-server-cal1)
   - [Important Arguments](#important-arguments)
@@ -94,8 +95,7 @@ kill -9 PID
 ps aux | grep ssh | grep "localhost" | awk '{print $2}' | xargs kill
 ```
 
-:::{admonition} Automation
-:class: tip
+##### Advanced Users - Bash Script
 
 Now we want to automate this. I would suggest adding these functions to your `.profile` or `.bash_profile` so that you can just use these easier to find and kill ssh background processes.
 
@@ -167,7 +167,6 @@ show_all_bg_sh
 kill_all_bg_sh
 ```
 
-:::
 
 
 ---
@@ -214,6 +213,8 @@ Host *
 
 ---
 ### Important Arguments
+
+There are many important arguments that make our lives a lot easier if they are defined properly.
 
 #### `IdentityFile`
 

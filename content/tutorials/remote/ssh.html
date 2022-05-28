@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SSH Config &#8212; Research Notebook</title>
+    <title>SSH Configuration &#8212; Research Notebook</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -229,7 +229,7 @@ const thebe_selector_output = ".output, .cell_output"
   <ul class="current">
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     SSH Config
+     SSH Configuration
     </a>
    </li>
    <li class="toctree-l2">
@@ -626,6 +626,11 @@ const thebe_selector_output = ".output, .cell_output"
          Closing The Background Process
         </a>
        </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#advanced-users-bash-script">
+         Advanced Users - Bash Script
+        </a>
+       </li>
       </ul>
      </li>
     </ul>
@@ -732,7 +737,7 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>SSH Config</h1>
+                <h1>SSH Configuration</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -770,6 +775,11 @@ const thebe_selector_output = ".output, .cell_output"
        <li class="toc-h5 nav-item toc-entry">
         <a class="reference internal nav-link" href="#closing-the-background-process">
          Closing The Background Process
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#advanced-users-bash-script">
+         Advanced Users - Bash Script
         </a>
        </li>
       </ul>
@@ -877,8 +887,8 @@ const thebe_selector_output = ".output, .cell_output"
             
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="ssh-config">
-<h1>SSH Config<a class="headerlink" href="#ssh-config" title="Permalink to this headline">¶</a></h1>
+  <div class="tex2jax_ignore mathjax_ignore section" id="ssh-configuration">
+<h1>SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permalink to this headline">¶</a></h1>
 <hr class="docutils" />
 <p>We will go over 2 cases:</p>
 <ol class="simple">
@@ -898,6 +908,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li><p><a class="reference external" href="#background">Background</a></p>
 <ul>
 <li><p><a class="reference external" href="#closing-the-background-process">Closing The Background Process</a></p></li>
+<li><p><a class="reference external" href="#advanced-users---bash-script">Advanced Users - Bash Script</a></p></li>
 </ul>
 </li>
 </ul>
@@ -983,8 +994,9 @@ ssh -fN username@server -L <span class="m">8888</span>:localhost:8888
 ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;localhost&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> xargs <span class="nb">kill</span>
 </pre></div>
 </div>
-<div class="tip admonition">
-<p class="admonition-title">Automation</p>
+</div>
+<div class="section" id="advanced-users-bash-script">
+<h5>Advanced Users - Bash Script<a class="headerlink" href="#advanced-users-bash-script" title="Permalink to this headline">¶</a></h5>
 <p>Now we want to automate this. I would suggest adding these functions to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code> so that you can just use these easier to find and kill ssh background processes.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># syntatic sugar for launching ssh tunnel given a server and a port</span>
 <span class="k">function</span> ssh_tunnel<span class="o">(){</span>
@@ -1053,7 +1065,6 @@ kill_all_bg_sh
 </div>
 </div>
 </div>
-</div>
 <hr class="docutils" />
 <div class="section" id="ssh-config-file">
 <h2>SSH Config File<a class="headerlink" href="#ssh-config-file" title="Permalink to this headline">¶</a></h2>
@@ -1093,6 +1104,7 @@ Host *
 <hr class="docutils" />
 <div class="section" id="important-arguments">
 <h3>Important Arguments<a class="headerlink" href="#important-arguments" title="Permalink to this headline">¶</a></h3>
+<p>There are many important arguments that make our lives a lot easier if they are defined properly.</p>
 <div class="section" id="id1">
 <h4><code class="docutils literal notranslate"><span class="pre">IdentityFile</span></code><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <p>This will point to the <code class="docutils literal notranslate"><span class="pre">identity_file</span></code> found in your local server. This removes the need to authenticate every time you log in. It’s hard to remember passwords all of the time so this removes that necessity. It’s also more secure due to the encryption.</p>

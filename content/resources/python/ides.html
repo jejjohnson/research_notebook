@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Integraded Development Environment (IDE) &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -806,12 +810,12 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="integraded-development-environment-ide">
+  <section class="tex2jax_ignore mathjax_ignore" id="integraded-development-environment-ide">
 <h1>Integraded Development Environment (IDE)<a class="headerlink" href="#integraded-development-environment-ide" title="Permalink to this headline">#</a></h1>
 <p>So this is something that MATLAB and R users don’t have to deal with: <strong>which IDE should I use</strong>?</p>
 <p>I’m sorry but there is not correct answer, there are many and it all depends on what is your objective. I will list a few suggestions below and then you can decide for yourself which one you need to choose.</p>
 <hr class="docutils" />
-<div class="section" id="coding-interactively-recommended">
+<section id="coding-interactively-recommended">
 <h2>Coding Interactively (<strong>Recommended</strong>)<a class="headerlink" href="#coding-interactively-recommended" title="Permalink to this headline">#</a></h2>
 <p>So first and foremost, I am going to suggest that you use <a class="reference external" href="https://jupyterlab.readthedocs.io/en/stable/">JupyterLab</a>. It is an interactive environment to allow you to program step-by-step. You can visualize tables of data, run code and also visualize figures. The part I mentioned is mainly the ‘Jupyter Notebook’. The lab features much more. It has a terminal, a text editor and you can also visualize the directories without leaving the notebook environment. It’s the ultimate program-as-you-go type of environment. Most people use it as default and I personally always start coding in this environment right away when I want to work on something. So hop onboard!</p>
 <p><strong>Note</strong>: A lot of just stay with Jupyter Notebooks only for whatever reason they prefer. JupyterLab includes jupyter notebook. So you can always switch to the traditional notebook environment whenever you wish. You just need to switch to tree view by changing the URL in your browser from <code class="docutils literal notranslate"><span class="pre">http://localhost:8888/lab</span></code> to <code class="docutils literal notranslate"><span class="pre">http://localhost:8888/tree</span></code>.</p>
@@ -840,26 +844,26 @@ title="Print to PDF"
 </div>
 <p><strong>Jumping Feet First Into Code</strong></p>
 <p>If you just want to try something that’s relatively not so complicated, then I highly recommend you just using a <a class="reference external" href="https://colab.research.google.com/">google colaboratory notebook</a>. It’s a Jupyter Notebook(-like) interface, most python packages that you will need are already installed, you have access to CPUs, RAM, GPUs and even TPUs. I use it all the time when I want to just test something out or try something new.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="full-featured-python-editors">
+<section id="full-featured-python-editors">
 <h2>Full Featured Python Editors<a class="headerlink" href="#full-featured-python-editors" title="Permalink to this headline">#</a></h2>
 <p>The editors above are special cases. But if you want a full featured Python editor then I would highly suggest the ones I list below. You may not think you need one, especially those dedicated users of JupyterLab. But I can assure you that if you want to make good reproducible code.</p>
 <hr class="docutils" />
-<div class="section" id="jack-of-all-trades-recommended">
+<section id="jack-of-all-trades-recommended">
 <h3>1. Jack of All Trades (<strong>Recommended</strong>)<a class="headerlink" href="#jack-of-all-trades-recommended" title="Permalink to this headline">#</a></h3>
 <p>The most popular IDE as of now would be <a class="reference external" href="https://code.visualstudio.com/">Visual Studio Code</a> (VSCode). I really like it because it is hackable like Sublime or Atom but it also <strong>just works</strong>. I rarely run into IDE-breaking changes. It’s also fairly lightweight and supports <a class="reference external" href="https://code.visualstudio.com/docs/remote/ssh">remote computing via ssh</a> out of the box! Backed by Microsoft, it is definitely my most recommended IDE for almost any <strong>open-source</strong> programming language. It may support all languages but the Python specifics are great. They even have some support <a class="reference external" href="https://code.visualstudio.com/docs/python/jupyter-support">Jupyter Notebooks</a> and it comes shipped with the <a class="reference external" href="https://www.anaconda.com/distribution/">Anaconda distribution</a>.</p>
 <p><img alt="Screenshot" src="../../../_images/vscode.png" /></p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="python-extremist">
+<section id="python-extremist">
 <h3>2. Python Extremist<a class="headerlink" href="#python-extremist" title="Permalink to this headline">#</a></h3>
 <p>Probably the best IDE out there that is Python specific is <a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>. It’s backed by JetBrains and they have been around for a while.</p>
 <p><img alt="Screenshot" src="https://michaelckennedy.files.wordpress.com/2015/11/why-pycharm-cover-image.png" /></p>
 <p><strong>Source</strong>: <a class="reference external" href="https://blog.michaelckennedy.net/2015/11/19/9-reasons-you-should-be-using-pycharm/">9 Reasons You Should Be Using PyCharm</a> (2015) - Michael Kennedy</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="the-hacker">
+<section id="the-hacker">
 <h3>3. The Hacker<a class="headerlink" href="#the-hacker" title="Permalink to this headline">#</a></h3>
 <p>I would suggest that you learn VIM and hack your way into creating an IDE for yourself. I’m not a proficient VIM user but I can definitely see the benefits if you would like to be “one with your terminal”. In edition, you will be able to edit anywhere as long as you have access to a terminal. I often say Python programmers (that don’t use the out-of-the-box Anaconda GUI) have more abilities with the terminal that say MATLAB or SPSS users simply because python users typically spend quite a large amount of time trying to configure things. Especially when we want to use stuff remotely. But VIM users…are a different breed altogether. So needless to say the learning curve is huge. But…the rewards will be Jordi level heights.</p>
 <p><img alt="Screenshot" src="https://d3nmt5vlzunoa1.cloudfront.net/pycharm/files/2013/06/vim3-1024x748.gif" /></p>
@@ -870,9 +874,9 @@ title="Print to PDF"
 <li><p><a class="reference external" href="https://realpython.com/vim-and-python-a-match-made-in-heaven/">Blog: Real Python</a> - VIM and Python: A Match Made in Heaven</p></li>
 </ul>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="former-matlab-users">
+<section id="former-matlab-users">
 <h3>4. Former MATLAB users<a class="headerlink" href="#former-matlab-users" title="Permalink to this headline">#</a></h3>
 <p>If you’re coming from MATLAB and want to minimize the amount of changes you do during the transition, then I recommend that you start with <a class="reference external" href="https://www.spyder-ide.org/">Spyder</a>. It is the most complete environment available to date for people who like working with everything at their fingertips in front of them; i.e. script, terminal, variable explorer, etc. It was put on hiatus for a while but it is now sponsored by QuantSight and NumFOCUS which means it has a proper team of devs.</p>
 <center>
@@ -889,9 +893,9 @@ title="Print to PDF"
 <li><p><a class="reference external" href="https://medium.com/&#64;mazzine.r/how-to-connect-your-spyder-ide-to-an-external-ipython-kernel-with-ssh-putty-tunnel-e1c679e44154">Blog</a> - How to connect your Spyder IDE to an external ipython kernel with SSH PuTTY tunnel (2019)</p></li>
 </ul>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

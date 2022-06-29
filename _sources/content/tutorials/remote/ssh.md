@@ -31,7 +31,6 @@ We will go over 2 cases:
   - [`ProxyJump`](#proxyjump)
   - [Example: `Gricad`](#example-gricad)
   - [Example: `JeanZay`](#example-jeanzay)
-  - [Internal SSH Key](#internal-ssh-key)
 
 
 ---
@@ -425,25 +424,3 @@ ssh jean_zay
 
 As you can see, this allows us to log into `jeanzay` in a much simpler manner. 
 
----
-### Internal SSH Key
-
-I would recommend to generate a ssh-key on the proxy server as well. This will be useful for transferring files and mounting drives for the server. Follow the same instructions as above (`ssh-keygen` + `ssh-copy-id`) and generate a `.ssh/config` file similar to the one below.
-
-```bash
-Host jean_zay
-    User username
-    HostName jean-zay.idris.fr
-    IdentityFile ~/.ssh/id_jz
-```
-
-**Demo Usage**:
-
-```bash
-# ssh into proxy server
-ssh meom_cal1
-# ssh into the other server
-ssh jean_zay
-```
-
-**Note**: This is the same as `ssh jean_zay` on the local server via the proxy jump.

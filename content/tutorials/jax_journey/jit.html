@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Jit &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -750,9 +754,9 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="jit">
+  <section class="tex2jax_ignore mathjax_ignore" id="jit">
 <h1>Jit<a class="headerlink" href="#jit" title="Permalink to this headline">#</a></h1>
-<div class="section" id="fixing-some-arguments">
+<section id="fixing-some-arguments">
 <h2>Fixing some Arguments<a class="headerlink" href="#fixing-some-arguments" title="Permalink to this headline">#</a></h2>
 <p>So <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code> doesn’t play nice sometimes when you try to compile functions with arguments that are functions themselves. A lot of times you’ll get an error. One trick I learned to get around this is to “partially fit” the function. Let’s do an example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">input_vector</span><span class="p">):</span>
@@ -790,7 +794,7 @@ title="Print to PDF"
 </pre></div>
 </div>
 <p>In this case, we should be able to apply the <code class="docutils literal notranslate"><span class="pre">jit</span></code> function because we have saved the previous function via the context. I personally don’t like this but mainly because I’m not used to it. I like my functions to be relatively independent and I’m not very good at managing context. I imagine it’s super useful when you want to make a script that has all of the functions that you need all within the <code class="docutils literal notranslate"><span class="pre">.py</span></code> file. That way you can handle the context as you progress through the script. For if you want independent files (which I like for sanity purposes), I don’t see how this is possible. But again, it’s a personal preference. Plus, I’m not an expert by any means.</p>
-<div class="section" id="using-the-decorator">
+<section id="using-the-decorator">
 <h3>Using the decorator<a class="headerlink" href="#using-the-decorator" title="Permalink to this headline">#</a></h3>
 <p>We can also use the <code class="docutils literal notranslate"><span class="pre">functools.partial</span></code> decorator to wrap our function so that once it’s called, it will automatically compile the function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
@@ -807,9 +811,9 @@ title="Print to PDF"
 </pre></div>
 </div>
 <p>I use this quite often if I have functions that I know I won’t change certain parameters the moment I start using them. It also goes well with my style of having a lot of individual functions in separate files.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Reshaping &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/togglebutton.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -768,7 +772,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="reshaping">
+  <section class="tex2jax_ignore mathjax_ignore" id="reshaping">
 <h1>Reshaping<a class="headerlink" href="#reshaping" title="Permalink to this headline">#</a></h1>
 <ul class="simple">
 <li><p>Reshaping</p>
@@ -782,7 +786,7 @@ title="Print to PDF"
 <li><p>Orthogonal Squeeze - <a class="reference external" href="https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/orth_squeeze_pgd.py">DenseFlow</a></p></li>
 </ul>
 <hr class="docutils" />
-<div class="section" id="id1">
+<section id="id1">
 <h2>Reshaping<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/reshape.py">Source</a></p></li>
@@ -807,9 +811,9 @@ title="Print to PDF"
         <span class="k">return</span> <span class="n">x</span>
 </pre></div>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="haar-wavelet-transform">
+<section id="haar-wavelet-transform">
 <h2>Haar Wavelet Transform<a class="headerlink" href="#haar-wavelet-transform" title="Permalink to this headline">#</a></h2>
 <p><strong>Kernel</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_create_kernel</span><span class="p">(</span><span class="n">n_channels</span><span class="p">):</span>
@@ -829,7 +833,7 @@ title="Print to PDF"
     <span class="k">return</span> <span class="n">kernel</span>
 </pre></div>
 </div>
-<div class="section" id="downsampling">
+<section id="downsampling">
 <h3>DownSampling<a class="headerlink" href="#downsampling" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WaveletDownSampling</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Works on Images (C, H, W)&quot;&quot;&quot;</span>
@@ -906,8 +910,8 @@ def init_kernel(n_channels: int=3):
 
 </pre></div>
 </div>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h3>DownSampling<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
 <p><strong>Source</strong>: <a class="reference external" href="https://github.com/VLL-HD/FrEIA/blob/master/FrEIA/modules/reshapes.py">https://github.com/VLL-HD/FrEIA/blob/master/FrEIA/modules/reshapes.py</a></p>
 <p><strong>calculate output dims</strong></p>
@@ -936,9 +940,9 @@ def init_kernel(n_channels: int=3):
 
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

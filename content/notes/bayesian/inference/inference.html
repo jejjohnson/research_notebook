@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Solving Hard Integral Problems &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/togglebutton.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Variational Inference" href="variational_inference.html" />
@@ -792,7 +796,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="solving-hard-integral-problems">
+  <section class="tex2jax_ignore mathjax_ignore" id="solving-hard-integral-problems">
 <h1>Solving Hard Integral Problems<a class="headerlink" href="#solving-hard-integral-problems" title="Permalink to this headline">#</a></h1>
 <p><a class="reference external" href="https://www.cs.ubc.ca/~schmidtm/MLRG/GaussianProcesses.pdf"><strong>Source</strong></a> | Deisenroth - <a class="reference external" href="https://drive.google.com/file/d/1Ryb1zDzndnv1kOe8nT0Iu4OD6m0KC8ry/view">Sampling</a></p>
 <p><strong>Advances in VI</strong> - <a class="reference external" href="https://github.com/magister-informatica-uach/INFO320/blob/master/6_advances_in_VI.ipynb">Notebook</a></p>
@@ -806,18 +810,18 @@ title="Print to PDF"
 <li><p>Variational Methods (Laplace, Mean-Field, Expectation Propagation)</p></li>
 <li><p>Monte Carlo Methods (Gibbs, Metropolis-Hashings, Particle Filter)</p></li>
 </ul>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="inference">
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="inference">
 <h1>Inference<a class="headerlink" href="#inference" title="Permalink to this headline">#</a></h1>
-<div class="section" id="maximum-likelihood">
+<section id="maximum-likelihood">
 <h2>Maximum Likelihood<a class="headerlink" href="#maximum-likelihood" title="Permalink to this headline">#</a></h2>
 <p><strong>Sources</strong>:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://python-intro.quantecon.org/mle.html">Intro to Quantitative Econ w. Python</a></p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="laplace-approximation">
+<section id="laplace-approximation">
 <h2>Laplace Approximation<a class="headerlink" href="#laplace-approximation" title="Permalink to this headline">#</a></h2>
 <p>This is where we approximate the posterior with a Gaussian distribution <span class="math notranslate nohighlight">\(\mathcal{N}(\mu, A^{-1})\)</span>.</p>
 <ul class="simple">
@@ -829,15 +833,15 @@ title="Print to PDF"
 </ul>
 </li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="markov-chain-monte-carlo">
+<section id="markov-chain-monte-carlo">
 <h2>Markov Chain Monte Carlo<a class="headerlink" href="#markov-chain-monte-carlo" title="Permalink to this headline">#</a></h2>
 <p>We can produce samples from the exact posterior by defining a specific Monte Carlo chain.</p>
 <p>We actually do this in practice with NNs because of the stochastic training regimes. We modify the SGD algorithm to define a scalable MCMC sampler.</p>
 <p><a class="reference external" href="https://chi-feng.github.io/mcmc-demo/">Here</a> is a visual demonstration of some popular MCMC samplers.</p>
-</div>
-<div class="section" id="variational-inference">
+</section>
+<section id="variational-inference">
 <h2>Variational Inference<a class="headerlink" href="#variational-inference" title="Permalink to this headline">#</a></h2>
 <p><strong>Definition</strong>: We can find the best approximation within a given family w.r.t. KL-Divergence.
 $<span class="math notranslate nohighlight">\(
@@ -847,8 +851,8 @@ Let \)</span>q(w)=\mathcal{N}(\mu, S)<span class="math notranslate nohighlight">
 <blockquote>
 <div><p>“Approximate the posterior, not the model” - James Hensman.</p>
 </div></blockquote>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

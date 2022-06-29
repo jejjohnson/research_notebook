@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Bisection search &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/togglebutton.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Kernel Derivatives" href="kernel_derivatives.html" />
@@ -830,15 +834,15 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="bisection-search">
+  <section class="tex2jax_ignore mathjax_ignore" id="bisection-search">
 <h1>Bisection search<a class="headerlink" href="#bisection-search" title="Permalink to this headline">#</a></h1>
 <p>This is a very interesting thing that you can do instead of interpolation. This comes from the fact that <strong>PyTorch</strong> doesn’t have a native interpolation algorithm. Although there are saints on the internet who have implemented their own native algorithm, the library itself doesn’t have a core one. I find it very interesting that they don’t and I’m not sure why. Is there something difficult about automatic differentiation and interpolation?</p>
 <p>In any case, one thing that I did see was bisection search instead of interpolation. I’ve also seen it in the <code class="docutils literal notranslate"><span class="pre">rv_histogram</span></code> function in the scipy library. This function allows you to construct an empirical distribution based on histograms. You construct the histograms using the <code class="docutils literal notranslate"><span class="pre">np.histogram</span></code> function and then you go through and normalize the PDF estimates found in the bins followed by creating the CDF by using the <code class="docutils literal notranslate"><span class="pre">cumsum</span></code> function. Now with these, you should be able to calculate the PDF, the CDF, the quantile function and virtually any other distribution function that you may need, even on new data.</p>
 <p>So, how do you calculate quantities for new data? Let’s break two functions down step by step: the PDF and the CDF/Quantile.</p>
-<div class="section" id="estimating-pdfs">
+<section id="estimating-pdfs">
 <h2>Estimating PDFs<a class="headerlink" href="#estimating-pdfs" title="Permalink to this headline">#</a></h2>
 <p>Recall, a histogram works by putting bins in intervals along the domain of your data. Then you calculate how many times you get values within those bins. The probability is the number of times you have data within that bin divided by the width of the bin. To make a density, you need to normalize the entire distribution so that it sums to 1. So in order to estimate the PDF for new data, you need to find where are the bins closest to your data.</p>
-<div class="section" id="interpolation">
+<section id="interpolation">
 <h3>Interpolation<a class="headerlink" href="#interpolation" title="Permalink to this headline">#</a></h3>
 <p>One thing you can do is to interpolate. You find the support that is closest to your query points <span class="math notranslate nohighlight">\(X\)</span> and then output the corresponding values for the estimated histogram values. Old school algebra, this looks like:</p>
 <div class="math notranslate nohighlight">
@@ -850,8 +854,8 @@ title="Print to PDF"
 </pre></div>
 </div>
 <p>The numpy implementation has been shown to be quite fast. Sometimes I’ve used the scipy formula but apparently the numpy implementation <a class="reference external" href="https://github.com/scipy/scipy/pull/4903#issuecomment-114259888">it’s maginitudes faster</a> than the scipy implementation. However, I believe the scipy implementation has some extra goodies like extrapolation if you’re outside the bounds of your distribution.</p>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h3>Bisection Search<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
 <p>Alternatively, we could just do a bisection search. Now, it may not be as precise especially if we don’t have enough bins, but it will be faster than interpolation. This works but 1) find the closest support values and then 2) use the corresponding values in the histogram PDF.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># find the closest bins</span>
@@ -861,12 +865,12 @@ title="Print to PDF"
 <span class="n">X_pdf_est</span> <span class="o">=</span> <span class="n">X_hist_pdf</span><span class="p">[</span><span class="n">X_bins_est</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="estimating-cdf-quantiles">
+</section>
+</section>
+<section id="estimating-cdf-quantiles">
 <h2>Estimating CDF / Quantiles<a class="headerlink" href="#estimating-cdf-quantiles" title="Permalink to this headline">#</a></h2>
 <p>This is</p>
-<div class="section" id="cdfs">
+<section id="cdfs">
 <h3>CDFs<a class="headerlink" href="#cdfs" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
@@ -879,8 +883,8 @@ title="Print to PDF"
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X_uniform</span> <span class="o">=</span> <span class="n">X_ref</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">search_sorted</span><span class="p">(</span><span class="n">X_cdf</span><span class="p">,</span> <span class="n">X</span><span class="p">)]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="quantiles">
+</section>
+<section id="quantiles">
 <h3>Quantiles<a class="headerlink" href="#quantiles" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
@@ -893,15 +897,15 @@ title="Print to PDF"
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X_approx</span> <span class="o">=</span> <span class="n">X_quantiles</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">search_sorted</span><span class="p">(</span><span class="n">X_references</span><span class="p">,</span> <span class="n">X_uniform</span><span class="p">)]</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="application">
+</section>
+</section>
+<section id="application">
 <h2>Application<a class="headerlink" href="#application" title="Permalink to this headline">#</a></h2>
 <p>In my application, I frequently work with normalizing flows, in particular Gaussianization. Essentially, you transform a univariate distribution to a Guassian distribution by computing the empirical CDF of the distribution followed by the Inverse of the Gaussian CDF. Now you can calculate the probability distribution using samples from the Gaussian distribution</p>
-</div>
-<div class="section" id="other-implementations">
+</section>
+<section id="other-implementations">
 <h2>Other Implementations<a class="headerlink" href="#other-implementations" title="Permalink to this headline">#</a></h2>
-<div class="section" id="pytorch">
+<section id="pytorch">
 <h3>PyTorch<a class="headerlink" href="#pytorch" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">search_sorted</span><span class="p">(</span><span class="n">bin_locations</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -941,9 +945,9 @@ title="Print to PDF"
 </pre></div>
 </div>
 <p><strong>Source</strong>: <a class="reference external" href="http://docs.pyro.ai/en/stable/_modules/pyro/distributions/transforms/spline.html">Pyro Library</a> | <span class="xref myst">Neural Spline Flows</span></p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

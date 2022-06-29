@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>JupyterBook &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -814,11 +818,11 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="jupyterbook">
+  <section class="tex2jax_ignore mathjax_ignore" id="jupyterbook">
 <h1>JupyterBook<a class="headerlink" href="#jupyterbook" title="Permalink to this headline">#</a></h1>
-<div class="section" id="helpful-things">
+<section id="helpful-things">
 <h2>Helpful Things<a class="headerlink" href="#helpful-things" title="Permalink to this headline">#</a></h2>
-<div class="section" id="labeled-equations">
+<section id="labeled-equations">
 <h3>Labeled Equations<a class="headerlink" href="#labeled-equations" title="Permalink to this headline">#</a></h3>
 <p>We can use the following syntax</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$$
@@ -837,15 +841,15 @@ $$ (ssm_eqn)
 </div>
 <p>to get the following:
 Recall from: <a class="reference internal" href="#equation-ssm-eqn">()</a>.</p>
-</div>
-<div class="section" id="proofs">
+</section>
+<section id="proofs">
 <h3>Proofs<a class="headerlink" href="#proofs" title="Permalink to this headline">#</a></h3>
 <p>See <a class="reference external" href="https://sphinx-proof.readthedocs.io/en/latest/syntax.html">this</a> documentation.</p>
-</div>
-<div class="section" id="algorithms">
+</section>
+<section id="algorithms">
 <h3>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this headline">#</a></h3>
-</div>
-<div class="section" id="operators">
+</section>
+<section id="operators">
 <h3>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$$
 \operatorname*{argmin}_\theta f(x)
@@ -856,20 +860,20 @@ $$
 \[
 \operatorname*{argmin}_\theta f(x)
 \]</div>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="citations">
+<section id="citations">
 <h2>Citations<a class="headerlink" href="#citations" title="Permalink to this headline">#</a></h2>
-<div class="section" id="multiple-bibs">
+<section id="multiple-bibs">
 <h3>Multiple bibs<a class="headerlink" href="#multiple-bibs" title="Permalink to this headline">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bibtex_bibfiles</span><span class="p">:</span>
   <span class="o">-</span> <span class="n">references</span><span class="o">.</span><span class="n">bib</span>
   <span class="o">-</span> <span class="n">bibliographies</span><span class="o">/</span><span class="n">software</span><span class="o">.</span><span class="n">bib</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="local-citations">
+</section>
+<section id="local-citations">
 <h3>Local Citations<a class="headerlink" href="#local-citations" title="Permalink to this headline">#</a></h3>
 <p>Syntax:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>```{bibliography}
@@ -885,9 +889,9 @@ To get:
 :style: alpha
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

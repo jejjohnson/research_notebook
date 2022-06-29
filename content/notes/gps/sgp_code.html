@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Sparse GP (Numpyro Tutorial) &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -780,9 +784,9 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="sparse-gp-numpyro-tutorial">
+  <section class="tex2jax_ignore mathjax_ignore" id="sparse-gp-numpyro-tutorial">
 <h1>Sparse GP (Numpyro Tutorial)<a class="headerlink" href="#sparse-gp-numpyro-tutorial" title="Permalink to this headline">#</a></h1>
-<div class="section" id="objective-function">
+<section id="objective-function">
 <h2>Objective Function<a class="headerlink" href="#objective-function" title="Permalink to this headline">#</a></h2>
 <p>So I think it is important to make note of the similarities between methods; specifically between FITC and VFE which are some staple methods one would use to scale GPs naively. Not only is it helpful for understanding the connection between all of the methods but it also helps with programming and seeing where each method differs algorithmically. Each sparse method is a method of using some set of inducing points or subset of data <span class="math notranslate nohighlight">\(\mathcal{Z}\)</span> from the data space <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>. We typically have some approximate matrix <span class="math notranslate nohighlight">\(\mathbf{Q}\)</span> which approximates the kernel matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>:</p>
 <div class="math notranslate nohighlight">
@@ -831,7 +835,7 @@ title="Print to PDF"
 </pre></div>
 </div>
 <hr class="docutils" />
-<div class="section" id="w-term">
+<section id="w-term">
 <h3>W-Term<a class="headerlink" href="#w-term" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># gram matrix: (M,M)</span>
 <span class="n">Kuu</span> <span class="o">=</span> <span class="n">gram_matrix</span><span class="p">(</span><span class="n">X_u</span><span class="p">,</span> <span class="n">X_u</span><span class="p">,</span> <span class="n">η</span><span class="p">,</span> <span class="n">ℓ</span><span class="p">)</span>
@@ -850,17 +854,17 @@ title="Print to PDF"
 <span class="n">W</span> <span class="o">=</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">deterministic</span><span class="p">(</span><span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="d-term">
+<section id="d-term">
 <h3>D-Term<a class="headerlink" href="#d-term" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Diagonal</span>
 <span class="n">D</span> <span class="o">=</span> <span class="n">identity_matrix</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span> <span class="o">*</span> <span class="n">noise</span>
 </pre></div>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="trace-term">
+<section id="trace-term">
 <h3>Trace Term<a class="headerlink" href="#trace-term" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">K_ff_diag</span> <span class="o">=</span> <span class="n">gram_matrix</span><span class="p">(</span><span class="n">X_u</span><span class="p">,</span> <span class="n">X_u</span><span class="p">,</span> <span class="n">η</span><span class="p">,</span> <span class="n">ℓ</span><span class="p">,</span> <span class="n">diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">Q_ff_diag</span> <span class="o">=</span> <span class="n">power</span><span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -869,16 +873,16 @@ title="Print to PDF"
 </pre></div>
 </div>
 <p><strong>Note</strong>: the trace term should never be negative but sometimes this can happen due to numerical errors.</p>
-</div>
-<div class="section" id="numpyro-factor">
+</section>
+<section id="numpyro-factor">
 <h3>Numpyro Factor<a class="headerlink" href="#numpyro-factor" title="Permalink to this headline">#</a></h3>
 <p>We can simply add this to the log-likelihood by explicitly specifying a factor.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">numpyro</span><span class="o">.</span><span class="n">factor</span><span class="p">(</span><span class="s2">&quot;trace_term&quot;</span><span class="p">,</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">trace_term</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

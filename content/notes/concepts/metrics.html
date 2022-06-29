@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Metrics &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -800,60 +804,60 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="metrics">
+  <section class="tex2jax_ignore mathjax_ignore" id="metrics">
 <h1>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">#</a></h1>
-<div class="section" id="mae">
+<section id="mae">
 <h2>MAE<a class="headerlink" href="#mae" title="Permalink to this headline">#</a></h2>
 <p>Mean Absolute Error</p>
 <div class="math notranslate nohighlight">
 \[
 \text{MAE}(Y, \hat{Y}) = \frac{1}{N} \sum_{i=1}^N |\hat{y}_i - y_i|
 \]</div>
-</div>
-<div class="section" id="mse">
+</section>
+<section id="mse">
 <h2>MSE<a class="headerlink" href="#mse" title="Permalink to this headline">#</a></h2>
 <p>Mean Squared Error</p>
 <div class="math notranslate nohighlight">
 \[
 \text{MSE}(Y, \hat{Y}) = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2
 \]</div>
-</div>
-<div class="section" id="rmse">
+</section>
+<section id="rmse">
 <h2>RMSE<a class="headerlink" href="#rmse" title="Permalink to this headline">#</a></h2>
 <p>Root Mean Squared Error</p>
 <div class="math notranslate nohighlight">
 \[
 \text{RMSE}(Y, \hat{Y}) = \sqrt{\frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2}
 \]</div>
-</div>
-<div class="section" id="r-squared">
+</section>
+<section id="r-squared">
 <h2>R-Squared<a class="headerlink" href="#r-squared" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[
 \text{R}^2(Y, \hat{Y}) = 1 - \frac{\sum_{i=1}^N (\hat{y}_i - y_i)^2}{\sum_{i=1}^N (\hat{y}_i - \bar{y})^2}
 \]</div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="percentage-metrics">
+<section id="percentage-metrics">
 <h2>Percentage Metrics<a class="headerlink" href="#percentage-metrics" title="Permalink to this headline">#</a></h2>
-<div class="section" id="mape">
+<section id="mape">
 <h3>MAPE<a class="headerlink" href="#mape" title="Permalink to this headline">#</a></h3>
 <p><strong>Mean Absolute Percent Error</strong></p>
 <div class="math notranslate nohighlight">
 \[
 \text{MAPE}(Y, \hat{Y}) = \frac{1}{N} \sum_{i=1}^N \left|\frac{  \hat{y}_i - y_i}{y_i} \right|
 \]</div>
-</div>
-<div class="section" id="smape">
+</section>
+<section id="smape">
 <h3>SMAPE<a class="headerlink" href="#smape" title="Permalink to this headline">#</a></h3>
 <p><strong>Symmetric Mean Absolute Percent Error</strong></p>
 <div class="math notranslate nohighlight">
 \[
 \text{SMAPE}(Y, \hat{Y}) = \frac{100\%}{N} \sum_{i=1}^N \left|\frac{  \hat{y}_i - y_i}{\frac{|\hat{y}_i|+|y_i|}{2}} \right|
 \]</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

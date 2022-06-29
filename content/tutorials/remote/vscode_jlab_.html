@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>VSCode + JLab &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -788,7 +792,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="vscode-jlab">
+  <section class="tex2jax_ignore mathjax_ignore" id="vscode-jlab">
 <h1>VSCode + JLab<a class="headerlink" href="#vscode-jlab" title="Permalink to this headline">#</a></h1>
 <hr class="docutils" />
 <p>So most people like to use a combination of a dedicated IDE as well as JupyterLab. If you don’t you probably should… But it’s a bit annoying when we need both. Some people try to use the built-in jupyter notebook support from VSCode. But it sucks. It’s not good enough and it’s quite slow compared to JupyterLab. Another thing people do is they use the Notebook Instances from the GCP webpage. This is convenient but the biggest problem with this is that it’s not in your home directory. So you have to play games with the directories which is a pain in the butt. In addition, the permissions are weird so some python code doesn’t play nice when you want to do execute commands using python (and sometimes the terminal - need <code class="docutils literal notranslate"><span class="pre">sudo</span></code>).</p>
@@ -800,21 +804,21 @@ title="Print to PDF"
 <li><p>makes working with jupyterlab in conjunction with vscode a lot easier.</p></li>
 </ul>
 <hr class="docutils" />
-<div class="section" id="connect-vscode-to-your-vm">
+<section id="connect-vscode-to-your-vm">
 <h2>1. Connect VSCode to your VM<a class="headerlink" href="#connect-vscode-to-your-vm" title="Permalink to this headline">#</a></h2>
 <p><img alt="vscode" src="../../../_images/vscode1.png" /></p>
-</div>
-<div class="section" id="connect-to-an-interactive-node">
+</section>
+<section id="connect-to-an-interactive-node">
 <h2>2. Connect to an Interactive Node<a class="headerlink" href="#connect-to-an-interactive-node" title="Permalink to this headline">#</a></h2>
 <p>Try to use something explicit like the following command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>srun --nodes<span class="o">=</span><span class="m">1</span>  --ntasks-per-node<span class="o">=</span><span class="m">1</span> --cpus-per-task<span class="o">=</span><span class="m">28</span> --time <span class="m">100</span>:00:00 --exclude<span class="o">=</span>nodo17 --job-name bash-jupyter --pty bash -i
 </pre></div>
 </div>
 <p><img alt="pics/vscode_jlab/vscode_3.png" src="../../../_images/2_connect_node.png" /></p>
-</div>
-<div class="section" id="start-your-jupyterlab-instance-through-vscode-terminal">
+</section>
+<section id="start-your-jupyterlab-instance-through-vscode-terminal">
 <h2>3 Start your Jupyterlab Instance through VSCode terminal<a class="headerlink" href="#start-your-jupyterlab-instance-through-vscode-terminal" title="Permalink to this headline">#</a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span><span class="w"></span>
 </pre></div>
 </div>
 <p>This should appear:</p>
@@ -822,37 +826,37 @@ title="Print to PDF"
 <p>The most important thing is that this should appear.</p>
 <p>Notice now that you have two links to use and you can click on them. Now you’re good! Your browser should open a JupyterLab notebook on it’s own!</p>
 <p><img alt="pics/vscode_jlab/jlab.png" src="../../../_images/3_run_jupyter.png" /></p>
-<div class="section" id="what-happened">
+<section id="what-happened">
 <h3>What Happened?<a class="headerlink" href="#what-happened" title="Permalink to this headline">#</a></h3>
 <p>Well VSCode rocks and basically opened an ssh port <strong>through vscode</strong> itself. So now we can access it through our browser as if we did the ssh stuff ourselves.</p>
 <p><img alt="pics/vscode_jlab/vscode_localhost.png" src="../../../_images/4_start_notebook.png" /></p>
-</div>
-<div class="section" id="bonus-automatic-function">
+</section>
+<section id="bonus-automatic-function">
 <h3>3.1 Bonus - Automatic Function<a class="headerlink" href="#bonus-automatic-function" title="Permalink to this headline">#</a></h3>
 <p>We can automate this to have a bit more flexibility on the port number. I added this function to my <code class="docutils literal notranslate"><span class="pre">.profile</span></code> (you can use <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code>) and now I can just call this function whenever I need to open a JupyterLab using the VSCode terminal.</p>
 <p><span class="xref myst"></span></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># JUPYTER NOTEBOOK STUFF</span>
-<span class="l l-Scalar l-Scalar-Plain">function jpt(){</span>
-    <span class="l l-Scalar l-Scalar-Plain"># Fires-up a Jupyter notebook by supplying a specific port</span>
-    <span class="l l-Scalar l-Scalar-Plain">conda activate jupyterlab</span>
-    <span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port=$1</span>
-<span class="l l-Scalar l-Scalar-Plain">}</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># JUPYTER NOTEBOOK STUFF</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">function jpt(){</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain"># Fires-up a Jupyter notebook by supplying a specific port</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">conda activate jupyterlab</span><span class="w"></span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port=$1</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="bonus-outside-of-vscode">
+</section>
+<section id="bonus-outside-of-vscode">
 <h3>3.2 Bonus - Outside of VSCode<a class="headerlink" href="#bonus-outside-of-vscode" title="Permalink to this headline">#</a></h3>
 <p>One caveat is that you need to have VSCode open for your JupyterLab to run. So if you close it, it closed the JupyterLab session. One thing you could do is open another ssh port using the gcloud command.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># sign in and have a port open</span>
-<span class="l l-Scalar l-Scalar-Plain">gcloud compute ssh --project XXX --zone XXXX USER@VM-INSTANCE -- -L 2005:localhost:2005</span>
-<span class="l l-Scalar l-Scalar-Plain"># start jupyterlab</span>
-<span class="l l-Scalar l-Scalar-Plain">conda activate jupyterlab</span>
-<span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># sign in and have a port open</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">gcloud compute ssh --project XXX --zone XXXX USER@VM-INSTANCE -- -L 2005:localhost:2005</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain"># start jupyterlab</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">conda activate jupyterlab</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">jupyter-lab --no-browser --port 2005</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

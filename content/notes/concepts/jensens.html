@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Jensens Inequality &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Linear Algebra Tricks" href="lin_alg.html" />
@@ -738,7 +742,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="jensens-inequality">
+  <section class="tex2jax_ignore mathjax_ignore" id="jensens-inequality">
 <h1>Jensens Inequality<a class="headerlink" href="#jensens-inequality" title="Permalink to this headline">#</a></h1>
 <p>This theorem is one of those <a class="reference external" href="https://www.johndcook.com/blog/2012/12/10/sleeper-theorems/">sleeper theorems</a> which comes up in a big way in many machine learning problems.</p>
 <p>The Jensen inequality theorem states that for a convex function <span class="math notranslate nohighlight">\(f\)</span>,</p>
@@ -751,13 +755,15 @@ title="Print to PDF"
 <div class="math notranslate nohighlight">
 \[f''(x) = -\frac{1}{x^2}\]</div>
 <p>You’ll see that <span class="math notranslate nohighlight">\(-\frac{1}{x^2}\leq 0\)</span> for <span class="math notranslate nohighlight">\(x \in [0, \infty)\)</span>. This means that <span class="math notranslate nohighlight">\(\log x\)</span> is a concave function. So, the solution to this if we want a convex function is to take the negative <span class="math notranslate nohighlight">\(\log\)</span> (which adds intuition as to why we typically take the negative log likelihood of many functions).</p>
-<div class="section" id="variational-inference">
+<section id="variational-inference">
 <h2>Variational Inference<a class="headerlink" href="#variational-inference" title="Permalink to this headline">#</a></h2>
 <p>Typically in the VI literature, they add this Jensen inequality property in order to come up with the Evidence Lower Bound (ELBO). But I never understood how it worked because I didn’t know if they wanted the convex or concave. If we think of the loss function of the likelihood <span class="math notranslate nohighlight">\(\mathcal{L}(\theta)\)</span> and the ELBO <span class="math notranslate nohighlight">\(\mathcal{F}(q, \theta)\)</span>. Take a look at the figure from</p>
-<div class="figure align-default" id="id1">
+<figure class="align-default" id="id1">
 <img alt="../../../_images/elbo_inequality.png" src="../../../_images/elbo_inequality.png" />
-<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">A quick demo with the Elbo inequality.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
-</div>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">A quick demo with the Elbo inequality.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <p>Typically we use the <span class="math notranslate nohighlight">\(\log\)</span> function when it’s used</p>
 <p><strong>Resources</strong></p>
 <ul class="simple">
@@ -768,8 +774,8 @@ title="Print to PDF"
 <li><p>Ox Educ - <a class="reference external" href="https://www.youtube.com/watch?v=HfCb1K4Nr8M">Intuition</a> | <a class="reference external" href="https://www.youtube.com/watch?v=10xgmpG_uTs">Proof</a></p></li>
 <li><p>MIT OpenCourseWare - <a class="reference external" href="https://www.youtube.com/watch?v=GDJFLfmyb20">Intro Prob.</a> | <a class="reference external" href="https://ocw.mit.edu/resources/res-6-012-introduction-to-probability-spring-2018/part-ii-inference-limit-theorems/">Inequalitiese, Convergence and Weak Law of Large Numbers</a></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

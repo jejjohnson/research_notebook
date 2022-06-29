@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Kernel Derivatives &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Uncertain Gaussian Processes" href="../egps/overview.html" />
@@ -946,7 +950,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="kernel-derivatives">
+  <section class="tex2jax_ignore mathjax_ignore" id="kernel-derivatives">
 <h1>Kernel Derivatives<a class="headerlink" href="#kernel-derivatives" title="Permalink to this headline">#</a></h1>
 <p><strong>Linear Operators and Stochastic Partial Differential Equations in GPR</strong> - Simo Särkkä - <a class="reference external" href="https://users.aalto.fi/~ssarkka/pub/spde.pdf">PDF</a></p>
 <blockquote>
@@ -1065,7 +1069,7 @@ K_{gg}(\mathbf{x,x'})
   warnings.warn(&#39;No GPU/TPU found, falling back to CPU.&#39;)
 </pre></div>
 </div>
-<div class="section" id="kernel-function">
+<section id="kernel-function">
 <h2>Kernel Function<a class="headerlink" href="#kernel-function" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[
@@ -1090,7 +1094,7 @@ K_{gg}(\mathbf{x,x'})
     <span class="k">return</span> <span class="n">mapx2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="rbf-kernel">
+<section id="rbf-kernel">
 <h3>RBF Kernel<a class="headerlink" href="#rbf-kernel" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -1124,8 +1128,8 @@ K_{gg}(\mathbf{x,x'})
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(1, 1) (1, 2)
 </pre></div>
 </div>
-</div>
-<div class="section" id="kernel-matrix">
+</section>
+<section id="kernel-matrix">
 <h3>Kernel Matrix<a class="headerlink" href="#kernel-matrix" title="Permalink to this headline">#</a></h3>
 <p>We defined all of our functions above with only dimensions in mind, not the number of samples or the batch size. So we need to account for that. So if we wanted to calculate the kernel matrix, we would have to loop through all of the samples and calculate the products individually, which would take a long time; especially for large amounts of data.</p>
 <blockquote>
@@ -1253,9 +1257,9 @@ K_{gg}(\mathbf{x,x'})
 </pre></div>
 </div>
 <p>Seems like they are comparable and there is no real difference.</p>
-</div>
-</div>
-<div class="section" id="cross-covariance-term-1st-derivative">
+</section>
+</section>
+<section id="cross-covariance-term-1st-derivative">
 <h2>1. Cross-Covariance Term - 1st Derivative<a class="headerlink" href="#cross-covariance-term-1st-derivative" title="Permalink to this headline">#</a></h2>
 <p>We can calculate the cross-covariance term <span class="math notranslate nohighlight">\(K_{fg}(\mathbf{x,x})\)</span>. We apply the following operation</p>
 <div class="math notranslate nohighlight">
@@ -1270,7 +1274,7 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 <div class="math notranslate nohighlight">
 \[\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)\]</div>
 <p>Note: I did the derivations from scratch.</p>
-<div class="section" id="single-sample">
+<section id="single-sample">
 <h3>Single Sample<a class="headerlink" href="#single-sample" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_1d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
@@ -1278,7 +1282,7 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 <span class="n">test_Y</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
 </pre></div>
 </div>
-<div class="section" id="from-scratch">
+<section id="from-scratch">
 <h4>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">#</a></h4>
 <p>From scratch, we’re going to be using loops. There are more efficient ways to implement this but it’s harder to mess up loops and it’s also clearer what’s going on. Tricks with broadcasting are often hard to read and very hard to interpret because of the change in dimensions.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">drbf_kernel_scratch</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
@@ -1302,8 +1306,8 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dK_fg_</span> <span class="o">=</span> <span class="n">drbf_kernel_scratch</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">test_Y</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="jax">
+</section>
+<section id="jax">
 <h4>Jax<a class="headerlink" href="#jax" title="Permalink to this headline">#</a></h4>
 <p>For Jax, we’re going to use the built-in Jacobian function. <strong>Note</strong>: this function only allows us take the derivative of functions that output a scalar value.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rbf_kernel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">test_X</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">test_Y</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
@@ -1328,9 +1332,9 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 <span class="k">assert</span> <span class="n">dK_fg</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">==</span> <span class="n">dK_fg_</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="multiple-dimensions">
+</section>
+</section>
+<section id="multiple-dimensions">
 <h3>Multiple Dimensions<a class="headerlink" href="#multiple-dimensions" title="Permalink to this headline">#</a></h3>
 <p>Now, we have the same problem but for a vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> instead of a single sample <span class="math notranslate nohighlight">\(x\)</span>. In this example, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> has 2 features, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^2\)</span>. We’re still going to do it for a single sample.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate some data</span>
@@ -1341,13 +1345,13 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 <span class="n">test_Y</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
 </pre></div>
 </div>
-<div class="section" id="id1">
+<section id="id1">
 <h4>From Scratch<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dK_fg_</span> <span class="o">=</span> <span class="n">drbf_kernel_scratch</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">test_X</span><span class="p">,</span> <span class="n">test_Y</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h4>Jax<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
 <span class="n">drbf_kernel_fg</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -1359,9 +1363,9 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 <span class="k">assert</span> <span class="n">dK_fg</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">==</span> <span class="n">dK_fg_</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="multiple-samples-batches">
+</section>
+</section>
+<section id="multiple-samples-batches">
 <h3>Multiple Samples (Batches)<a class="headerlink" href="#multiple-samples-batches" title="Permalink to this headline">#</a></h3>
 <p>Now, we’re going to input a matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> which are stacked samples of multiple features. So <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{N\times D}\)</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_2d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
@@ -1370,7 +1374,7 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 <span class="n">test_Y</span> <span class="o">=</span> <span class="n">X</span>
 </pre></div>
 </div>
-<div class="section" id="id3">
+<section id="id3">
 <h4>From Scratch<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dK_fg_</span> <span class="o">=</span> <span class="n">onp</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
@@ -1380,8 +1384,8 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
         <span class="n">dK_fg_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">drbf_kernel_scratch</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_Y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id4">
+</section>
+<section id="id4">
 <h4>Jax<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
 <span class="n">drbf_kernel_fg</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -1396,10 +1400,10 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 <span class="n">onp</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_almost_equal</span><span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dK_fg</span><span class="p">),</span> <span class="n">dK_fg_</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="cross-covariance-term-2nd-derivative">
+</section>
+</section>
+</section>
+<section id="cross-covariance-term-2nd-derivative">
 <h2>2. Cross-Covariance Term - 2nd Derivative<a class="headerlink" href="#cross-covariance-term-2nd-derivative" title="Permalink to this headline">#</a></h2>
 <p>Recall the 1st derivative is:</p>
 <div class="math notranslate nohighlight">
@@ -1424,7 +1428,7 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 2 \gamma \left[ 2\gamma(x^j - y^j)^2 - 1\right] k(\mathbf{x}, \mathbf{y}) \\
 \end{aligned}
 \end{split}\]</div>
-<div class="section" id="id5">
+<section id="id5">
 <h3>From Scratch<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h3>
 <p>Recall, this is a Jacobian so we have</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">d2rbf_kernel_scratch_jac</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
@@ -1453,8 +1457,8 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
         <span class="n">d2K_fg2_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">d2rbf_kernel_scratch_jac</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_Y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id6">
+</section>
+<section id="id6">
 <h3>Jax<a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h3>
 <p>So with jax, we’re computing the hessian so we’ll get a matrix of size <span class="math notranslate nohighlight">\(N \times N \times D \times D\)</span>. So the 2nd derivative is just the diagonal terms of <span class="math notranslate nohighlight">\(D\times D\)</span> part.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
@@ -1479,9 +1483,9 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 </pre></div>
 </div>
 <p>Awesome, they’re the same! So that gives me hope!</p>
-</div>
-</div>
-<div class="section" id="cross-covariance-term-2nd-derivative-partial-derivatives">
+</section>
+</section>
+<section id="cross-covariance-term-2nd-derivative-partial-derivatives">
 <h2>3. Cross-Covariance Term - 2nd Derivative (Partial Derivatives)<a class="headerlink" href="#cross-covariance-term-2nd-derivative-partial-derivatives" title="Permalink to this headline">#</a></h2>
 <p>Recall the 1st derivative is:</p>
 <div class="math notranslate nohighlight">
@@ -1508,7 +1512,7 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
 \frac{\partial^2 k(x,y)}{\partial x^j \partial y^k} =
 4 \gamma^2 (x^k - y^k)(x^j - y^j) k(\mathbf{x}, \mathbf{y})
 \]</div>
-<div class="section" id="id7">
+<section id="id7">
 <h3>From Scratch<a class="headerlink" href="#id7" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">d2rbf_kernel_scratch_hessian</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
     <span class="n">d2K_fg2_</span> <span class="o">=</span> <span class="n">onp</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
@@ -1536,8 +1540,8 @@ K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\parti
         <span class="n">d2K_fg2_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2rbf_kernel_scratch_hessian</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">onp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_Y</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id8">
+</section>
+<section id="id8">
 <h3>Jax<a class="headerlink" href="#id8" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
 <span class="n">dK_fg_func</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -1599,9 +1603,9 @@ Max relative difference: 2.00000007
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

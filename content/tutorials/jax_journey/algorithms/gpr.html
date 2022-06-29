@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>GP from Scratch &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/togglebutton.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Gaussianization Flows" href="../gfs_with_jax.html" />
@@ -992,7 +996,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="gp-from-scratch">
+  <section class="tex2jax_ignore mathjax_ignore" id="gp-from-scratch">
 <h1>GP from Scratch<a class="headerlink" href="#gp-from-scratch" title="Permalink to this headline">#</a></h1>
 <p>This post will go through how we can build a GP regression model from scratch. I will be going over the formulation as well as how we can code this up from scratch. I did this before a long time ago but I’ve learned a lot about GPs since then. So I’m putting all of my knowledge together so that I can get a good implementation that goes in parallel with the theory. I am also interested in furthering my research on <span class="xref myst">uncertain GPs</span> where I go over how we can look at input error in GPs.</p>
 <div class="admonition note">
@@ -1023,7 +1027,7 @@ It took me approximately 12 hours in total to code this up from scratch. That’
 <div><p>Good blog post series that go through more finer details of GPs using TensorFlow.</p>
 </div></blockquote>
 </div>
-<div class="section" id="definition">
+<section id="definition">
 <h2>Definition<a class="headerlink" href="#definition" title="Permalink to this headline">#</a></h2>
 <p>The first thing to understand about GPs is that we are actively placing a distribution <span class="math notranslate nohighlight">\(\mathcal{P}(f)\)</span> on functions <span class="math notranslate nohighlight">\(f\)</span> where these functions can be infinitely long function values <span class="math notranslate nohighlight">\(f=[f_1, f_2, \ldots]\)</span>. A GP generalizes the multivariate Gaussian distribution to infinitely many variables.</p>
 <blockquote>
@@ -1037,15 +1041,15 @@ It took me approximately 12 hours in total to code this up from scratch. That’
 <div><p><strong>Gaussian Process</strong>: Any set of function variables <span class="math notranslate nohighlight">\(\{f_n \}^{N}_{n=1}\)</span> has a joint Gaussian distribution with mean function <span class="math notranslate nohighlight">\(m\)</span>. (Deisenroth)</p>
 </div></blockquote>
 <p>The nice thing is that this is provided by a mean function <span class="math notranslate nohighlight">\(\mu\)</span> and covariance matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span></p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="bayesian-inference-problem">
+<section id="bayesian-inference-problem">
 <h2>Bayesian Inference Problem<a class="headerlink" href="#bayesian-inference-problem" title="Permalink to this headline">#</a></h2>
-<div class="section" id="objective">
+<section id="objective">
 <h3>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">#</a></h3>
 <p>Let’s have some data set, <span class="math notranslate nohighlight">\(\mathcal{D}= \left\{ (x_i, y_i)^N_{i=1} \right\}=(X,y)\)</span></p>
-</div>
-<div class="section" id="model">
+</section>
+<section id="model">
 <h3>Model<a class="headerlink" href="#model" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1077,8 +1081,8 @@ P(y_*|x_*, \mathcal{D}) = \int P(y_*|x_*, \mathcal{D})P(f|\mathcal{D})df
 \[
 P(y|X) = \int P(y|f,X)P(f)df
 \]</div>
-</div>
-<div class="section" id="bayesian-treatment">
+</section>
+<section id="bayesian-treatment">
 <h3>Bayesian Treatment<a class="headerlink" href="#bayesian-treatment" title="Permalink to this headline">#</a></h3>
 <p>So now how does this look in terms of the Bayes theorem in words:</p>
 <div class="math notranslate nohighlight">
@@ -1097,10 +1101,10 @@ p(f|X,y) = \frac{p(y|f, X) \: p(f|X, \theta)}{p(y| X)}
 <li><p>Marginal Likelihood (Evidence): <span class="math notranslate nohighlight">\(p(y|X)=\int_f p(y|f,X)p(f|X)df\)</span></p></li>
 <li><p>Posterior: <span class="math notranslate nohighlight">\(p(f|X,y) = \mathcal{GP}(\mu_*, \mathbf{K}_*)\)</span></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="gaussian-process-regression">
+<section id="gaussian-process-regression">
 <h2>Gaussian Process Regression<a class="headerlink" href="#gaussian-process-regression" title="Permalink to this headline">#</a></h2>
 <p>We only need a few elements to define a Gaussian process in itself. Just a mean function <span class="math notranslate nohighlight">\(\mu\)</span>, a covariance matrix <span class="math notranslate nohighlight">\(\mathbf{K}_\theta\)</span> and some data, <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>.</p>
 <details>
@@ -1118,9 +1122,9 @@ p(f|X,y) = \frac{p(y|f, X) \: p(f|X, \theta)}{p(y| X)}
 </pre></div>
 </div>
 </details>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="gaussian-process-prior">
+<section id="gaussian-process-prior">
 <h2>Gaussian Process Prior<a class="headerlink" href="#gaussian-process-prior" title="Permalink to this headline">#</a></h2>
 <p>This is the basis of the GP method. Under the assumption that we mentioned above:</p>
 <div class="math notranslate nohighlight">
@@ -1158,7 +1162,7 @@ f_{\text{train}} \\ f_{\text{test}}
 \end{aligned}
 \end{split}\]</div>
 <p>and we arrive at a joint Gaussian distribution of the training and testing which is still normally distributed due to the marginalization.</p>
-<div class="section" id="mean-function">
+<section id="mean-function">
 <h3>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this headline">#</a></h3>
 <p>Honestly, I never work with mean functions. I always assume a zero-mean function and that’s it. I don’t really know anyone who works with mean functions either. I’ve seen it used in deep Gaussian processes but I have no expertise in which mean functions to use. So, we’ll follow the community standard for now: zero mean function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">zero_mean</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -1166,8 +1170,8 @@ f_{\text{train}} \\ f_{\text{test}}
 </pre></div>
 </div>
 <p>The output of the mean function is size <span class="math notranslate nohighlight">\(\mathbb{R}^{N}\)</span>.</p>
-</div>
-<div class="section" id="kernel-function">
+</section>
+<section id="kernel-function">
 <h3>Kernel Function<a class="headerlink" href="#kernel-function" title="Permalink to this headline">#</a></h3>
 <p>The most common kernel function you will see in the literature is the Radial Basis Function (RBF). It’s a universal approximator and it performs fairly well on <strong>most</strong> datasets. If your dataset becomes non-linear, then it may start to fail as it is a really smooth function. The kernel function is defined as:</p>
 <div class="math notranslate nohighlight">
@@ -1203,8 +1207,8 @@ k(x,y) = \sigma_f \exp \left( - || x / \sigma_\lambda - y / \sigma_\lambda ||^2_
 </pre></div>
 </div>
 <p><strong>Remember</strong>: These are functions so they take in vectors <span class="math notranslate nohighlight">\(\mathbf{x} \in  \mathbb{R}^{D}\)</span> and output a scalar value.</p>
-</div>
-<div class="section" id="kernel-matrix">
+</section>
+<section id="kernel-matrix">
 <h3>Kernel Matrix<a class="headerlink" href="#kernel-matrix" title="Permalink to this headline">#</a></h3>
 <p>The kernel function in the tab over shows how we can calculate the kernel for an input vector. But we need every single combination</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gram Matrix</span>
@@ -1213,8 +1217,8 @@ k(x,y) = \sigma_f \exp \left( - || x / \sigma_\lambda - y / \sigma_\lambda ||^2_
 </pre></div>
 </div>
 <p>The matrix has been completed.</p>
-</div>
-<div class="section" id="sampling-from-prior">
+</section>
+<section id="sampling-from-prior">
 <h3>Sampling from Prior<a class="headerlink" href="#sampling-from-prior" title="Permalink to this headline">#</a></h3>
 <p>Now, something a bit more practical, generally speaking when we program the sampling portion of the prior, we need data. The kernel function is as is and has already been defined with its appropriate parameters. Furthermore, we already have defined the mean function <span class="math notranslate nohighlight">\(\mu\)</span> when we initialized the mean function above. So we just need to pass the function through the multivariate normal function along with the number of samples we would like to draw from the prior.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize parameters</span>
@@ -1242,10 +1246,10 @@ k(x,y) = \sigma_f \exp \left( - || x / \sigma_\lambda - y / \sigma_\lambda ||^2_
 <span class="n">y_samples</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">mu_x</span><span class="p">,</span> <span class="n">cov_x_</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_functions</span><span class="p">,))</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="likelihood-noise-model">
+<section id="likelihood-noise-model">
 <h2>Likelihood (noise model)<a class="headerlink" href="#likelihood-noise-model" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[
@@ -1257,9 +1261,9 @@ p(y|f,X)=\prod_{i=1}^{N}\mathcal{N}(y_i|f_i,\sigma_\epsilon^2)= \mathcal{N}(y|f(
 <li><p><span class="math notranslate nohighlight">\(y\sim \mathcal{N}(f, \sigma_n^2)\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(\mathcal{N}(f, \sigma_n^2) = \prod_{i=1}^N\mathcal{P}(y_i, f_i)\)</span></p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="posterior">
+<section id="posterior">
 <h2>Posterior<a class="headerlink" href="#posterior" title="Permalink to this headline">#</a></h2>
 <p>Alternative Notation:</p>
 <ul>
@@ -1315,7 +1319,7 @@ p(y|f,X)=\prod_{i=1}^{N}\mathcal{N}(y_i|f_i,\sigma_\epsilon^2)= \mathcal{N}(y|f(
     <span class="k">return</span> <span class="n">mu_y</span><span class="p">,</span> <span class="n">cov_y</span>
 </pre></div>
 </div>
-<div class="section" id="cholesky">
+<section id="cholesky">
 <h3>Cholesky<a class="headerlink" href="#cholesky" title="Permalink to this headline">#</a></h3>
 <p>A lot of times just straight solving the <span class="math notranslate nohighlight">\(K^{-1}y=\alpha\)</span> will give you problems. Many times you’ll get an error about the matrix being ill-conditioned and non positive semi-definite. So we have to rectify that with the Cholesky decomposition. <span class="math notranslate nohighlight">\(K\)</span> should be a positive semi-definite matrix so, there are more stable ways to solve this. We can use the cholesky decomposition which decomposes <span class="math notranslate nohighlight">\(K\)</span> into a product of two lower triangular matrices:</p>
 <div class="math notranslate nohighlight">
@@ -1342,8 +1346,8 @@ p(y|f,X)=\prod_{i=1}^{N}\mathcal{N}(y_i|f_i,\sigma_\epsilon^2)= \mathcal{N}(y|f(
 </pre></div>
 </div>
 <p><strong>Note</strong>: If you want to get the cholesky matrix by itself and operator on it without the <code class="docutils literal notranslate"><span class="pre">cho_factor</span></code> function, then you should call the <code class="docutils literal notranslate"><span class="pre">cholesky</span></code> function directly. The <code class="docutils literal notranslate"><span class="pre">cho_factor</span></code> puts random (inexpensive) values in the part of the triangle that’s not necessary. Whereas the <code class="docutils literal notranslate"><span class="pre">cholesky</span></code> adds zeros there instead.</p>
-</div>
-<div class="section" id="variance-term">
+</section>
+<section id="variance-term">
 <h3>Variance Term<a class="headerlink" href="#variance-term" title="Permalink to this headline">#</a></h3>
 <p>The variance term also makes use of the <span class="math notranslate nohighlight">\(K^{-1}\)</span>. So naturally, we can use the already factored cholesky decompsition to calculate the term.</p>
 <div class="math notranslate nohighlight">
@@ -1360,9 +1364,9 @@ k_* K^{-1}k_*
 <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">KxX</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="joint-probability-distribution">
+<section id="joint-probability-distribution">
 <h3>Joint Probability Distribution<a class="headerlink" href="#joint-probability-distribution" title="Permalink to this headline">#</a></h3>
 <p>To make GPs useful, we want to actually make predictions. This stems from the using the joint distribution of the training data and test data with the formula shown above used to condition on multivariate Gaussians. In terms of the GP function space, we have</p>
 <div class="math notranslate nohighlight">
@@ -1386,10 +1390,10 @@ k_* K^{-1}k_*
 <li><p><span class="math notranslate nohighlight">\(\mu*=K_* (K + \sigma^2 I)^{-1}y=K_* \alpha\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(\nu^2_*= K_{**} - K_*(K + \sigma^2I)^{-1}K_*^{\top}\)</span></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="marginal-log-likelihood">
+<section id="marginal-log-likelihood">
 <h2>Marginal Log-Likelihood<a class="headerlink" href="#marginal-log-likelihood" title="Permalink to this headline">#</a></h2>
 <p>The prior <span class="math notranslate nohighlight">\(m(x), K\)</span> have hyper-parameters <span class="math notranslate nohighlight">\(\theta\)</span>. So learning a <span class="math notranslate nohighlight">\(\mathcal{GP}\)</span> implies inferring hyper-parameters from the model.</p>
 <div class="math notranslate nohighlight">
@@ -1404,7 +1408,7 @@ k_* K^{-1}k_*
 &amp;= \underset{\theta}{\text{argmax}}\log \mathcal{N}(y | 0, K + \sigma^2 I)
 \end{aligned}
 \end{split}\]</div>
-<div class="section" id="marginal-likelihood-evidence">
+<section id="marginal-likelihood-evidence">
 <h3>Marginal Likelihood (Evidence)<a class="headerlink" href="#marginal-likelihood-evidence" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
@@ -1452,9 +1456,9 @@ p(f|y) &amp;= \mathcal{N} (f|\Sigma \{ K^{-1}y + \mathbf{K}_\theta m_\theta \}, 
 <li><p>Alternative Derivation for Log Likelihood - <a class="reference external" href="http://jrmeyer.github.io/machinelearning/2017/08/18/mle.html">blog</a></p></li>
 </ul>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="id1">
+<section id="id1">
 <h3>Marginal Log-Likelihood<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
 <p>Now we need a cost function that will allow us to get the best hyperparameters that fit our data.</p>
 <div class="math notranslate nohighlight">
@@ -1462,7 +1466,7 @@ p(f|y) &amp;= \mathcal{N} (f|\Sigma \{ K^{-1}y + \mathbf{K}_\theta m_\theta \}, 
 \log p(y|x, \theta) = - \frac{N}{2} \log 2\pi - \frac{1}{2}y^{\top}(K+\sigma^2I)^{-1}y - \frac{1}{2} \log \left| K+\sigma^2I \right| 
 \]</div>
 <p>Inverting <span class="math notranslate nohighlight">\(N\times N\)</span> matrices is the worse part about GPs in general. There are many techniques to be able to handle them, but for basics, it can become a problem. Furthermore, inverting this Kernel matrix tends to have problems being <em>positive semi-definite</em>. One way we can make this more efficient is to do the cholesky decomposition and then solve our problem that way.</p>
-<div class="section" id="cholesky-components">
+<section id="cholesky-components">
 <h4>Cholesky Components<a class="headerlink" href="#cholesky-components" title="Permalink to this headline">#</a></h4>
 <p>Let <span class="math notranslate nohighlight">\(\mathbf{L}=\text{cholesky}(\mathbf{K}+\sigma_n^2\mathbf{I})\)</span>. We can write the log likelihood in terms of the cholesky decomposition.</p>
 <div class="math notranslate nohighlight">
@@ -1533,10 +1537,10 @@ p(f|y) &amp;= \mathcal{N} (f|\Sigma \{ K^{-1}y + \mathbf{K}_\theta m_\theta \}, 
 </div>
 </div>
 <p>source - Dai, <a class="reference external" href="http://zhenwendai.github.io/slides/gpss2018_slides.pdf">GPSS 2018</a></p>
-</div>
-</div>
-</div>
-<div class="section" id="training">
+</section>
+</section>
+</section>
+<section id="training">
 <h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -1579,7 +1583,7 @@ f(x) = \ln (1 + \exp(x))
 <span class="n">dloss</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">mll_loss</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="section" id="training-step">
+<section id="training-step">
 <h3>Training Step<a class="headerlink" href="#training-step" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># STEP FUNCTION</span>
 <span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
@@ -1599,8 +1603,8 @@ f(x) = \ln (1 + \exp(x))
     <span class="k">return</span> <span class="n">params</span><span class="p">,</span> <span class="n">opt_state</span><span class="p">,</span> <span class="n">loss</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="experimental-loop">
+</section>
+<section id="experimental-loop">
 <h3>Experimental Loop<a class="headerlink" href="#experimental-loop" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize optimizer</span>
 <span class="n">opt_init</span><span class="p">,</span> <span class="n">opt_update</span><span class="p">,</span> <span class="n">get_params</span> <span class="o">=</span> <span class="n">optimizers</span><span class="o">.</span><span class="n">rmsprop</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
@@ -1640,16 +1644,16 @@ f(x) = \ln (1 + \exp(x))
         <span class="n">params</span> <span class="o">=</span> <span class="n">saturate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="resources">
+<section id="resources">
 <h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p>Surrogates: GP Modeling, Design, and Optimization for the Applied Sciences - Gramacy - <a class="reference external" href="https://bookdown.org/rbg/surrogates/">Online Book</a></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

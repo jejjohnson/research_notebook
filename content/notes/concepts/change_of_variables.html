@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Change of Variables &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Identity Trick" href="identity_trick.html" />
@@ -738,11 +742,11 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="change-of-variables">
+  <section class="tex2jax_ignore mathjax_ignore" id="change-of-variables">
 <h1>Change of Variables<a class="headerlink" href="#change-of-variables" title="Permalink to this headline">#</a></h1>
 <p>This is after making some transformation function, we can find the probability of that function by simply multiplying</p>
 <hr class="docutils" />
-<div class="section" id="normalizing-flows">
+<section id="normalizing-flows">
 <h2>Normalizing Flows<a class="headerlink" href="#normalizing-flows" title="Permalink to this headline">#</a></h2>
 <p>First we will apply the change of variables formula from the perspective of parametric Gaussianization. Recall that we have our original data distribution <span class="math notranslate nohighlight">\(\mathcal{x}\)</span> and we want to find some transformation <span class="math notranslate nohighlight">\(z=\mathcal{G}_{\theta}(x)\)</span> such that <span class="math notranslate nohighlight">\(z\)</span> is drawn from a Gaussian distribution <span class="math notranslate nohighlight">\(z\sim \mathcal{N}(0, \mathbf{I})\)</span>.</p>
 <p align="center">
@@ -828,8 +832,8 @@ A((Z)) -- G --&gt; B((X))
 <li><p><a class="reference external" href="https://www.cl.cam.ac.uk/teaching/2003/Probability/prob11.pdf">Transforming Density Functions</a></p></li>
 <li><p><a class="reference external" href="https://faculty.math.illinois.edu/~r-ash/Stat/StatLec1-5.pdf">Transformation of RVs</a></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

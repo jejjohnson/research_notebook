@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Linear Algebra Tricks &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Kernel Methods" href="../kernels/overview.html" />
@@ -796,7 +800,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="linear-algebra-tricks">
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-algebra-tricks">
 <h1>Linear Algebra Tricks<a class="headerlink" href="#linear-algebra-tricks" title="Permalink to this headline">#</a></h1>
 <hr class="docutils" />
 <ul class="simple">
@@ -814,14 +818,14 @@ title="Print to PDF"
 </li>
 </ul>
 <hr class="docutils" />
-<div class="section" id="frobenius-norm-hilbert-schmidt-norm">
+<section id="frobenius-norm-hilbert-schmidt-norm">
 <h2>Frobenius Norm (Hilbert-Schmidt Norm)<a class="headerlink" href="#frobenius-norm-hilbert-schmidt-norm" title="Permalink to this headline">#</a></h2>
-<div class="section" id="intiution">
+<section id="intiution">
 <h3>Intiution<a class="headerlink" href="#intiution" title="Permalink to this headline">#</a></h3>
 <p>The Frobenius norm is the common matrix-based norm.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="formulation">
+<section id="formulation">
 <h3>Formulation<a class="headerlink" href="#formulation" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -851,9 +855,9 @@ title="Print to PDF"
 \end{aligned}
 \end{split}\]</div>
 </details>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="code">
+<section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Permalink to this headline">#</a></h3>
 <p><strong>Eigenvalues</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sigma_xy</span> <span class="o">=</span> <span class="n">covariance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
@@ -876,14 +880,14 @@ title="Print to PDF"
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="frobenius-norm">
+<section id="frobenius-norm">
 <h2>Frobenius Norm<a class="headerlink" href="#frobenius-norm" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[||X + Y||^2_F = ||X||_F^2 + ||Y||_F^2 + 2 \langle X, Y \rangle_F\]</div>
-<div class="section" id="frobenius-norm-or-hilbert-schmidt-norm-a-matrix">
+<section id="frobenius-norm-or-hilbert-schmidt-norm-a-matrix">
 <h3>Frobenius Norm (or Hilbert-Schmidt Norm) a matrix<a class="headerlink" href="#frobenius-norm-or-hilbert-schmidt-norm-a-matrix" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -911,9 +915,9 @@ title="Print to PDF"
 &amp;= \sum_{i}\lambda_i^2
 \end{aligned}
 \end{split}\]</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

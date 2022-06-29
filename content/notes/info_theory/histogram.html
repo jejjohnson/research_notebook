@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Entropy Estimator - Histogram &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Experiment - RBIG Sample Consistency" href="experiments/rbig_sample_consistency.html" />
@@ -969,7 +973,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="entropy-estimator-histogram">
+  <section class="tex2jax_ignore mathjax_ignore" id="entropy-estimator-histogram">
 <h1>Entropy Estimator - Histogram<a class="headerlink" href="#entropy-estimator-histogram" title="Permalink to this headline">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1005,7 +1009,7 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-<div class="section" id="demo-data-gaussian">
+<section id="demo-data-gaussian">
 <h2>Demo Data - Gaussian<a class="headerlink" href="#demo-data-gaussian" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1043,8 +1047,8 @@ title="Print to PDF"
 <img alt="../../../_images/histogram_4_0.png" src="../../../_images/histogram_4_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="histogram">
+</section>
+<section id="histogram">
 <h2>Histogram<a class="headerlink" href="#histogram" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1077,10 +1081,10 @@ title="Print to PDF"
 <li><p>Strong et. al. (1998) - “naive” estimator</p></li>
 </ul>
 <p>Fortunately, the scipy method already does this for us.</p>
-<div class="section" id="from-scratch">
+<section id="from-scratch">
 <h3>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">#</a></h3>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h3>1. Histogram<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1108,8 +1112,8 @@ title="Print to PDF"
 </div>
 <p><strong>Note</strong>:</p>
 <p>It’s always good practice to leave a bit of room for the boundaries.</p>
-</div>
-<div class="section" id="get-bin-centers">
+</section>
+<section id="get-bin-centers">
 <h3>2. Get Bin Centers<a class="headerlink" href="#get-bin-centers" title="Permalink to this headline">#</a></h3>
 <p>In the numpy implementation, we are only given the <code class="docutils literal notranslate"><span class="pre">bin_edges</span></code> and we need to <code class="docutils literal notranslate"><span class="pre">bin_centers</span></code>. It’s a minor thing but it’s important in order to get the width between each of the</p>
 <div class="cell docutils container">
@@ -1133,8 +1137,8 @@ title="Print to PDF"
 <img alt="../../../_images/histogram_13_0.png" src="../../../_images/histogram_13_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="get-normalized-density">
+</section>
+<section id="get-normalized-density">
 <h3>4. Get Normalized Density<a class="headerlink" href="#get-normalized-density" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1159,8 +1163,8 @@ title="Print to PDF"
 <img alt="../../../_images/histogram_16_0.png" src="../../../_images/histogram_16_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="calculate-entropy-given-the-probability">
+</section>
+<section id="calculate-entropy-given-the-probability">
 <h3>5. Calculate Entropy given the probability<a class="headerlink" href="#calculate-entropy-given-the-probability" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1202,8 +1206,8 @@ True Estimator: 1.5448 nats
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="refactor-scipy">
+</section>
+<section id="refactor-scipy">
 <h3>Refactor - Scipy<a class="headerlink" href="#refactor-scipy" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1236,10 +1240,10 @@ True Estimator: 1.5448 nats
 <ul class="simple">
 <li><p><a class="reference external" href="http://www.nowozin.net/sebastian/blog/estimating-discrete-entropy-part-1.html">Blog Post</a> - Sebasian Nowozin (2015)</p></li>
 </ul>
-</div>
-<div class="section" id="corrections">
+</section>
+<section id="corrections">
 <h3>Corrections<a class="headerlink" href="#corrections" title="Permalink to this headline">#</a></h3>
-<div class="section" id="miller-maddow">
+<section id="miller-maddow">
 <h4>Miller-Maddow<a class="headerlink" href="#miller-maddow" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[
@@ -1301,9 +1305,9 @@ True Estimator:
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="custom-function">
+</section>
+</section>
+<section id="custom-function">
 <h3>Custom Function<a class="headerlink" href="#custom-function" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1632,9 +1636,9 @@ True Estimator:
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="bin-width">
+</section>
+</section>
+<section id="bin-width">
 <h2>Bin Width<a class="headerlink" href="#bin-width" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1739,7 +1743,7 @@ True Estimator:
 </div>
 </div>
 </div>
-<div class="section" id="scotts">
+<section id="scotts">
 <h3>Scotts<a class="headerlink" href="#scotts" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
@@ -1790,8 +1794,8 @@ True Estimator:
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="freedman">
+</section>
+<section id="freedman">
 <h3>Freedman<a class="headerlink" href="#freedman" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1817,17 +1821,17 @@ True Estimator:
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="silverman">
+</section>
+<section id="silverman">
 <h3>Silverman<a class="headerlink" href="#silverman" title="Permalink to this headline">#</a></h3>
-</div>
-<div class="section" id="gaussian">
+</section>
+<section id="gaussian">
 <h3>Gaussian<a class="headerlink" href="#gaussian" title="Permalink to this headline">#</a></h3>
-<div class="section" id="id2">
+<section id="id2">
 <h4><a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h4>
-</div>
-</div>
-<div class="section" id="volume">
+</section>
+</section>
+<section id="volume">
 <h3>Volume<a class="headerlink" href="#volume" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1875,9 +1879,9 @@ True Estimator:
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

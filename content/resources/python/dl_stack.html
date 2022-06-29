@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Deep Learning Stack &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -848,9 +852,9 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="deep-learning-stack">
+  <section class="tex2jax_ignore mathjax_ignore" id="deep-learning-stack">
 <h1>Deep Learning Stack<a class="headerlink" href="#deep-learning-stack" title="Permalink to this headline">#</a></h1>
-<div class="section" id="what-is-deep-learning">
+<section id="what-is-deep-learning">
 <h2>What is Deep Learning?<a class="headerlink" href="#what-is-deep-learning" title="Permalink to this headline">#</a></h2>
 <p>Before we get into the software, I just wanted to quickly define deep learning. A recent debate on <a class="reference external" href="https://twitter.com/yudapearl/status/1215174538087948288">twitter</a> got me thinking about an appropriate definition and it helped me think about how this definition relates to the software. It gave me perspective.</p>
 <p><strong>Definition 1</strong> by Yann LeCun - <a class="reference external" href="https://twitter.com/ylecun/status/1215286749477384192">tweet</a> (paraphrased)</p>
@@ -871,9 +875,9 @@ title="Print to PDF"
 <li><p>Loss Functions</p></li>
 </ul>
 <p>Anything built on top of that can be special cases where we need special structures to create models for special cases. The simple example is a Multi-Layer Perceptron (MLP) model where we need some <code class="docutils literal notranslate"><span class="pre">weight</span></code> parameter, a <code class="docutils literal notranslate"><span class="pre">bias</span></code> parameter and an <code class="docutils literal notranslate"><span class="pre">activation</span></code> function. A library that allows you to train this model using an optimizer and a loss function, I would consider this autograd software (e.g. JAX). A library that has this functionality built-in (a.k.a. a <code class="docutils literal notranslate"><span class="pre">layer</span></code>), I would consider this deep learning software (e.g. TensorFlow, PyTorch). While the only difference is the level of encapsulation, the latter makes it much easier to build ‘<em>complex modular</em>’ neural networks whereas the former, not so much. You could still do it with the autograd library but you would have to design your entire model structure from scratch as well. So, there are still a LOT of things we can do with parameters and autograd alone but I wouldn’t classify it as DL software. This isn’t super important in the grand scheme of things but I think it’s important to think about when creating a programming language and/or package and thinking about the target user.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="anatomy-of-good-dl-software">
+<section id="anatomy-of-good-dl-software">
 <h2>Anatomy of good DL software<a class="headerlink" href="#anatomy-of-good-dl-software" title="Permalink to this headline">#</a></h2>
 <p>Francios Chollet (the creator of <code class="docutils literal notranslate"><span class="pre">keras</span></code>) has been very vocal about the benefits of how TensorFlow caters to a broad audience ranging from applied users and algorithm developers. Both sides of the audience have different needs so building software for both audiences can very, very challenging. Below I have included a really interesting figure which highlights the axis of operations.</p>
 <p align="center">
@@ -892,9 +896,9 @@ title="Print to PDF"
 <div><p>With great power, comes great responsibility - Uncle Ben</p>
 </div></blockquote>
 <p>On a side note, when you build popular libraries, you shape how a massive amount of people think about the problem. Just like expressiveness is only as good as your vocabulary and limited by your language, the software you create actively morphs how your users think about framing and solving their problems. Just something to think about.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="convergence-of-the-libraries">
+<section id="convergence-of-the-libraries">
 <h2>Convergence of the Libraries<a class="headerlink" href="#convergence-of-the-libraries" title="Permalink to this headline">#</a></h2>
 <p>Originally, there was a lot of differences between the deep learning libraries, e.g. <code class="docutils literal notranslate"><span class="pre">static</span></code> v.s. <code class="docutils literal notranslate"><span class="pre">dynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">Sequential</span></code> v.s. <code class="docutils literal notranslate"><span class="pre">Subclass</span></code>. But now they are all starting to converge or at least have similar ways of constructing models and training. Below is a quick example of 4 deep learning libraries. If you know your python DL libraries trivia, try and guess which library do you think it is. Click on the details below to find out the answer.</p>
 <p align="center">
@@ -920,9 +924,9 @@ title="Print to PDF"
 </table>
 </details>
 <p>It does begs the question: if all of the libraries are basically the same, why are their multiple libraries? That’s a great question and I do not know the answer to that. I think options are good as competition generally stimulates innovation. But at some point, there should be a limit no? But then again, the companies backing each of these languages are quite huge (Google, Microsoft, Uber, Facebook, etc). So I’m sure they have more than enough employees to justify the existence of their own library. But then again, imagine if they all put their efforts into making one great library. It could be an epic success! Or an epic disaster. I guess we will never know.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="so-what-to-choose">
+<section id="so-what-to-choose">
 <h2>So what to choose?<a class="headerlink" href="#so-what-to-choose" title="Permalink to this headline">#</a></h2>
 <p>There are many schools of thought. Some people suggest <a class="reference external" href="https://ericmjl.github.io/blog/2019/10/31/reimplementing-and-testing-deep-learning-models/">doing things from scratch</a> while some favour software to allow users to <a class="reference external" href="https://scale.com/interviews/jeremy-howard/transcript">jumping right in</a>. Fortunately, whatever the case may be or where you’re at in your ML journey, there is a library to suit your needs. And as seen above, most of them are converging so learning one python package will have be transferable to another. In the end, people are going to choose whatever based on personal factors such as “what is my style” or environmental factors such as “what is my research lab using now?”.</p>
 <p>I have a personal short list below just from observations, trends and reading but it is by no means concrete. Do whatever works for you!</p>
@@ -943,15 +947,15 @@ title="Print to PDF"
 <div><p>TensorFlow holds the market in production. By far. So if you’re looking to go into industry, it’s highly likely that you’ll be using TensorFlow. There are still a lot of researchers that use TF too. Fortunately, the API is similar to PyTorch if you use the subclass system so the skills are transferable.</p>
 </div></blockquote>
 <p>!&gt; <strong>Warning</strong>: The machine learning community changes rapidly so any trends you observe are extremely volatile. Just like the machine learning literature, what’s popular today can change within 6 months. So don’t ever lock yourself in and stay flexible to cope with the changes. But also don’t jump on bandwagons either as you’ll be jumping every weekend. Keep a good balance and maintain your mental health.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="list-of-software">
+<section id="list-of-software">
 <h2>List of Software<a class="headerlink" href="#list-of-software" title="Permalink to this headline">#</a></h2>
 <p>There are many autograd libraries available right now. All of the big tech companies (Google, Facebook, Amazon, Microsoft, Uber, etc.) have a piece of the python software package pie. Fortunately for us, many of them have open-sourced so we get to enjoy high-quality, feature-filled, polished software for us to work with. I believe this, more than anything, has accelerated research in the computational world, in particular for people doing research related to machine learning. I’ll also include some of my favourites for Probabilistic Programming Languages (PPL) as well as Gaussian process (GP) library.</p>
 <hr class="docutils" />
-<div class="section" id="core-packages">
+<section id="core-packages">
 <h3>Core Packages<a class="headerlink" href="#core-packages" title="Permalink to this headline">#</a></h3>
-<div class="section" id="tensorflow-tf">
+<section id="tensorflow-tf">
 <h4><a class="reference external" href="https://www.tensorflow.org/">TensorFlow</a> (TF)<a class="headerlink" href="#tensorflow-tf" title="Permalink to this headline">#</a></h4>
 <p>This is by far the most popular autograd library currently. Backed by Google (Alphabet, Inc), it is the go to python package for production and it is very popular for researchers as well. Recently (mid-2019) there was a huge update which made the python API much easier to use by having a tight keras integration and allowing for a more pythonic-style of coding.</p>
 <p><strong>PPL</strong>: <a class="reference external" href="https://www.tensorflow.org/probability">TensorFlow Probability</a></p>
@@ -960,9 +964,9 @@ title="Print to PDF"
 <p>This is a special library for SOTA GPs that’s built on top of TF. It is the success to the original GP library, GPy but it has a much cleaner code base and a bit better documentation due to its use of autograd.</p>
 <p><strong>Bayesian Layers</strong>: <a class="reference external" href="https://github.com/google/edward2">Edward2</a></p>
 <p>While there is some integration of <code class="docutils literal notranslate"><span class="pre">edward2</span></code> into the TFP library, there are some stand alone functions in the original Ed2 library. Some more advanced <code class="docutils literal notranslate"><span class="pre">layers</span></code> such as Sparse Gaussian processes and Noise contrastive priors. It all works seemlessly with TF and TFP.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="pytorch">
+<section id="pytorch">
 <h4><a class="reference external" href="https://pytorch.org/">PyTorch</a><a class="headerlink" href="#pytorch" title="Permalink to this headline">#</a></h4>
 <p>This is the most popular DL library for the machine learning community. Backed by Facebook, this is a rather new library that came out 2 years ago. It took a bit of time, but eventually people started using it more and more especially in a research setting. The reason is because it is very pythonic, it was designed by researchers and for researchers, and it keeps the design simple even sacrificing speed if needed. If you’re starting out, most people will recommend you start with PyTorch.</p>
 <p><strong>PPL</strong>: <a class="reference external" href="https://pyro.ai/">Pyro</a></p>
@@ -980,10 +984,10 @@ title="Print to PDF"
 <p>This is an OOP that’s built on top of JAX. It allows you to use the PyTorch method but having JAX underneath. It also has a lot of pre-defined layers and optimization methods.</p>
 <p><a class="reference external" href="https://poets-ai.github.io/elegy/"><strong>Elegy</strong></a></p>
 <p>This is a keras-like wrapper for JAX. It has all of the features that allow you to use JAX as if you were using Keras. It does follow a more functional style so it’s a bit more advanced that Objax for example.</p>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="other-packages">
+<section id="other-packages">
 <h3>Other Packages<a class="headerlink" href="#other-packages" title="Permalink to this headline">#</a></h3>
 <p>Although these are in the ‘other’ category, it doesn’t mean that they are lower tier by any means. I just put them here because I’m not too familiar with them outside of the media.</p>
 <p><strong><a class="reference external" href="https://chainer.org/">Chainer</a></strong></p>
@@ -996,11 +1000,11 @@ title="Print to PDF"
 <p><strong><span class="xref myst">CNTK</span></strong></p>
 <p>Microsoft</p>
 <p>–</p>
-</div>
-</div>
-<div class="section" id="other-resources">
+</section>
+</section>
+<section id="other-resources">
 <h2>Other Resources<a class="headerlink" href="#other-resources" title="Permalink to this headline">#</a></h2>
-<div class="section" id="automatic-differentiation">
+<section id="automatic-differentiation">
 <h3>Automatic Differentiation<a class="headerlink" href="#automatic-differentiation" title="Permalink to this headline">#</a></h3>
 <p><strong><a class="reference external" href="https://d2l.ai/chapter_preliminaries/autograd.html">D2L Tutorial</a></strong></p>
 <blockquote>
@@ -1010,9 +1014,9 @@ title="Print to PDF"
 <li><p><a class="reference external" href="https://arxiv.org/abs/1502.05767">Automatic differentiation in machine learning: a survey</a> - Baydin et al (2018)</p></li>
 <li><p><a class="reference external" href="https://www.youtube.com/watch?v=NG21KWZSiok"> Colin Carroll - Getting started with automatic differentiation</a> - PyCon 2020</p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

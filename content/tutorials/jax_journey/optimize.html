@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Optimizing Using Jax &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -808,14 +812,14 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="optimizing-using-jax">
+  <section class="tex2jax_ignore mathjax_ignore" id="optimizing-using-jax">
 <h1>Optimizing Using Jax<a class="headerlink" href="#optimizing-using-jax" title="Permalink to this headline">#</a></h1>
 <hr class="docutils" />
-<div class="section" id="from-scratch">
+<section id="from-scratch">
 <h2>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">#</a></h2>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="step-function">
+<section id="step-function">
 <h2>Step Function<a class="headerlink" href="#step-function" title="Permalink to this headline">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># STEP FUNCTION</span>
 <span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
@@ -874,34 +878,34 @@ title="Print to PDF"
         <span class="n">bar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">postfix</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="scipy-optimizers-with-dict-minimize">
+<section id="scipy-optimizers-with-dict-minimize">
 <h2>Scipy Optimizers with <code class="docutils literal notranslate"><span class="pre">dict_minimize</span></code><a class="headerlink" href="#scipy-optimizers-with-dict-minimize" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/twitter/dict_minimize">Package</a></p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="refactor-with-optax">
+<section id="refactor-with-optax">
 <h2>Refactor with <code class="docutils literal notranslate"><span class="pre">Optax</span></code><a class="headerlink" href="#refactor-with-optax" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/deepmind/optax">Package</a></p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="resources">
+<section id="resources">
 <h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
-<div class="section" id="using-scipy-optimize">
+<section id="using-scipy-optimize">
 <h3>Using Scipy Optimize<a class="headerlink" href="#using-scipy-optimize" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/optimize.html">Scipy Optimize</a> | <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html">Minimize</a> | <a class="reference external" href="https://stackoverflow.com/questions/13670333/multiple-variables-in-scipys-optimize-minimize">StackOverFlow</a></p></li>
 <li><p><a class="reference external" href="https://scipy-lectures.org/advanced/mathematical_optimization/index.html">Scipy Lectures</a></p></li>
 <li><p><a class="reference external" href="https://realpython.com/python-scipy-cluster-optimize/">Real Python - Scientific Python: Using Scipy for Optimization</a></p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Gaussian Distributions &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Regression" href="regression.html" />
@@ -908,22 +912,22 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="section" id="gaussian-distributions">
+  <section id="gaussian-distributions">
 <h1>Gaussian Distributions<a class="headerlink" href="#gaussian-distributions" title="Permalink to this headline">#</a></h1>
-<div class="section" id="univariate-gaussian">
+<section id="univariate-gaussian">
 <h2>Univariate Gaussian<a class="headerlink" href="#univariate-gaussian" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[\mathcal{P}(x|\mu, \sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}}\text{exp}\left( -\frac{1}{2\sigma^2}(x - \mu)^2 \right)\]</div>
-</div>
-<div class="section" id="multivariate-gaussian">
+</section>
+<section id="multivariate-gaussian">
 <h2>Multivariate Gaussian<a class="headerlink" href="#multivariate-gaussian" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
 \mathcal{P}(x | \mu, \Sigma) &amp;= \mathcal{N}(\mu, \Sigma) \\
 &amp;= \frac{1}{(2\pi)^{\frac{D}{2}}}\frac{1}{\sqrt{\text{det}|\Sigma|}}\text{exp}\left( -\frac{1}{2}(x-\mu)^{\top}\Sigma^{-1}(x-\mu) \right)
 \end{aligned}\end{split}\]</div>
-</div>
-<div class="section" id="joint-gaussian-distribution">
+</section>
+<section id="joint-gaussian-distribution">
 <h2>Joint Gaussian Distribution<a class="headerlink" href="#joint-gaussian-distribution" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}\mathcal{P}(x, y) &amp;= 
@@ -936,8 +940,8 @@ title="Print to PDF"
     A &amp; B \\ B^{\top} &amp; C
     \end{bmatrix} \right)
     \end{aligned}\end{split}\]</div>
-</div>
-<div class="section" id="marginal-distribution-mathcal-p-cdot">
+</section>
+<section id="marginal-distribution-mathcal-p-cdot">
 <h2>Marginal Distribution <span class="math notranslate nohighlight">\(\mathcal{P}(\cdot)\)</span><a class="headerlink" href="#marginal-distribution-mathcal-p-cdot" title="Permalink to this headline">#</a></h2>
 <p>We have the marginal distribution of <span class="math notranslate nohighlight">\(x\)</span></p>
 <div class="math notranslate nohighlight">
@@ -947,8 +951,8 @@ title="Print to PDF"
 <p>and we have the marginal distribution of <span class="math notranslate nohighlight">\(y\)</span></p>
 <div class="math notranslate nohighlight">
 \[\mathcal{P}(y) \sim \mathcal{N}(b, B)\]</div>
-</div>
-<div class="section" id="conditional-distribution-mathcal-p-cdot-cdot">
+</section>
+<section id="conditional-distribution-mathcal-p-cdot-cdot">
 <h2>Conditional Distribution <span class="math notranslate nohighlight">\(\mathcal{P}(\cdot | \cdot)\)</span><a class="headerlink" href="#conditional-distribution-mathcal-p-cdot-cdot" title="Permalink to this headline">#</a></h2>
 <p>We have the conditional distribution of <span class="math notranslate nohighlight">\(x\)</span>  given <span class="math notranslate nohighlight">\(y\)</span>.</p>
 <div class="math notranslate nohighlight">
@@ -978,9 +982,9 @@ title="Print to PDF"
 <li><p>How to generate Gaussian samples = <a class="reference external" href="https://medium.com/mti-technology/how-to-generate-gaussian-samples-347c391b7959s">blog</a></p></li>
 </ul>
 <p>Multivariate Gaussians and Detereminant - <a class="reference external" href="http://courses.washington.edu/b533/lect4.pdf">Lecturee Notes</a></p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="bandwidth-selection">
+<section id="bandwidth-selection">
 <h2>Bandwidth Selection<a class="headerlink" href="#bandwidth-selection" title="Permalink to this headline">#</a></h2>
 <p><strong>Scotts</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">d_dimensions</span> <span class="o">+</span> <span class="mi">4</span><span class="p">))</span>
@@ -990,23 +994,23 @@ title="Print to PDF"
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="p">(</span><span class="n">d_dimensions</span> <span class="o">+</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">d_dimensions</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="gaussian-distribution">
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="gaussian-distribution">
 <h1>Gaussian Distribution<a class="headerlink" href="#gaussian-distribution" title="Permalink to this headline">#</a></h1>
-<div class="section" id="pdf">
+<section id="pdf">
 <h2><strong>PDF</strong><a class="headerlink" href="#pdf" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[f(X)=
 \frac{1}{\sqrt{(2\pi)^D|\Sigma|}}
 \text{exp}\left( -\frac{1}{2} (x-\mu)^\top \Sigma^{-1} (x-\mu)\right)\]</div>
-</div>
-<div class="section" id="likelihood">
+</section>
+<section id="likelihood">
 <h2><strong>Likelihood</strong><a class="headerlink" href="#likelihood" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[- \ln L = \frac{1}{2}\ln|\Sigma| + \frac{1}{2}(x-\mu)^\top \Sigma^{-1} (x - \mu) + \frac{D}{2}\ln 2\pi \]</div>
-</div>
-<div class="section" id="alternative-representation">
+</section>
+<section id="alternative-representation">
 <h2>Alternative Representation<a class="headerlink" href="#alternative-representation" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[X \sim \mathcal{N}(\mu, \Sigma)\]</div>
@@ -1033,7 +1037,7 @@ title="Print to PDF"
 <li><p><span class="math notranslate nohighlight">\(\mu\)</span> is a translation matrix</p></li>
 <li><p><span class="math notranslate nohighlight">\(Z_n \sim \mathcal{N}(0,\Lambda)\)</span></p></li>
 </ul>
-<div class="section" id="reparameterization">
+<section id="reparameterization">
 <h3>Reparameterization<a class="headerlink" href="#reparameterization" title="Permalink to this headline">#</a></h3>
 <p>So often in deep learning we will learn this distribution by a reparameterization like so:</p>
 <div class="math notranslate nohighlight">
@@ -1046,17 +1050,17 @@ title="Print to PDF"
 <li><p><span class="math notranslate nohighlight">\(\Sigma=AA^\top\)</span> - the cholesky decomposition</p></li>
 </ul>
 <hr class="docutils" />
-</div>
-</div>
-<div class="section" id="entropy">
+</section>
+</section>
+<section id="entropy">
 <h2><strong>Entropy</strong><a class="headerlink" href="#entropy" title="Permalink to this headline">#</a></h2>
 <p><strong>1 dimensional</strong></p>
 <div class="math notranslate nohighlight">
 \[H(X) = \frac{1}{2} \log(2\pi e \sigma^2)\]</div>
 <p><strong>D dimensional</strong>
 $<span class="math notranslate nohighlight">\(H(X) = \frac{D}{2} + \frac{D}{2} \ln(2\pi) + \frac{1}{2}\ln|\Sigma|\)</span>$</p>
-</div>
-<div class="section" id="kl-divergence-relative-entropy">
+</section>
+<section id="kl-divergence-relative-entropy">
 <h2><strong>KL-Divergence (Relative Entropy)</strong><a class="headerlink" href="#kl-divergence-relative-entropy" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[
@@ -1079,8 +1083,8 @@ KLD(\Sigma_0||\Sigma_1) = \frac{1}{2} \left[
 <p>where <span class="math notranslate nohighlight">\(\rho_0\)</span> is the correlation matrix from <span class="math notranslate nohighlight">\(\Sigma_0\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[I(X)\]</div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

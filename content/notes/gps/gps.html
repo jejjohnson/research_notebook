@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Gaussian Processes &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -756,7 +760,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="gaussian-processes">
+  <section class="tex2jax_ignore mathjax_ignore" id="gaussian-processes">
 <h1>Gaussian Processes<a class="headerlink" href="#gaussian-processes" title="Permalink to this headline">#</a></h1>
 <p>Consider the regression setting where we assume the following model:
 $<span class="math notranslate nohighlight">\(
@@ -796,7 +800,7 @@ In a regression setting, we are more interested in predictions; given some param
 \end{equation}
 \]</div>
 <hr class="docutils" />
-<div class="section" id="inference">
+<section id="inference">
 <h2>Inference<a class="headerlink" href="#inference" title="Permalink to this headline">#</a></h2>
 <p>First, given the joint distribution of <span class="math notranslate nohighlight">\(\boldsymbol{f}, \boldsymbol{f}_*\)</span> conditioned on <span class="math notranslate nohighlight">\(\mathbf{X,X_*}\)</span></p>
 <div class="math notranslate nohighlight">
@@ -861,8 +865,8 @@ which gives us the mean predictions and the variance in our predictions:
 \end{align}
 \)</span><span class="math notranslate nohighlight">\(
 where \)</span>\alpha = \mathbf{K}^{-1}(y-m(\mathbf{X}))<span class="math notranslate nohighlight">\( and \)</span>\mathbf{K}</em>\mathcal{GP}=\mathbf{K}<em>\theta(\mathbf{X,X})+\sigma^2\mathbf{I}<span class="math notranslate nohighlight">\(. This is the typical formulation~\ref{fig:intro-probabilistic} which assumes that the output of \)</span>\mathbf{x}<span class="math notranslate nohighlight">\( (and \)</span>\mathbf{x}</em><em><span class="math notranslate nohighlight">\() is deterministic. In section~\ref{chapter3:egp}, we will look at the case where \)</span>\mathbf{x}_</em>$ is stochastic.</p>
-</div>
-<div class="section" id="gp-training">
+</section>
+<section id="gp-training">
 <h2>GP Training<a class="headerlink" href="#gp-training" title="Permalink to this headline">#</a></h2>
 <p>In GP model inference, one maximizes the likelihood of the data <span class="math notranslate nohighlight">\(D\)</span> given the hyper-parameters <span class="math notranslate nohighlight">\(\boldsymbol{\theta}, \boldsymbol{\sigma}_y^2\)</span>. The marginal likelihood is given by:</p>
 <div class="math notranslate nohighlight">
@@ -878,8 +882,8 @@ $<span class="math notranslate nohighlight">\(
 \end{equation}
 \)</span>$</p>
 <p>This maximization automatically embodies Occam’s razor which does a trade-off between model complexity and overfitting. This is closed form for all GPs but these days, we typically use automatic differentiation toolboxes to alleviate some of the burden.  Irregardless, the two most expensive calculations are within this procedure as the inversion of <span class="math notranslate nohighlight">\(\matinv{\mathbf{K}}_{\mathcal{GP}}\)</span> and the <span class="math notranslate nohighlight">\(\Det{\mathbf{K}_{\mathcal{GP}}}\)</span>; since <span class="math notranslate nohighlight">\(\mathbf{K} \in \Real^{N \times N}\)</span>, then these calculations are <span class="math notranslate nohighlight">\(\bigO (N^3)\)</span> in operations and <span class="math notranslate nohighlight">\(\bigO (N^2)\)</span> in memory costs. The kernel function is one of the most important aspects within the GP training regime. Once the kernel has been chosen to best reflect the problem at hand it has been found in \cite{GPPRIOR2018} that any prior over the hyper-parameters does not provide significant improvements in GP predictions. However, note that the community is notorious for using the isotropic RBF kernel by default when conducting research. This kernel is the most flexible among the kernel family but not necessarily the most expressive~\cite{AUTOGP2017}.</p>
-</div>
-<div class="section" id="drawbacks">
+</section>
+<section id="drawbacks">
 <h2>Drawbacks<a class="headerlink" href="#drawbacks" title="Permalink to this headline">#</a></h2>
 <p>\begin{displayquote}
 “\textit{It is important to keep in mind that Gaussian processes are not appropriate priors for all problems.}” \
@@ -890,8 +894,8 @@ $<span class="math notranslate nohighlight">\(
 <p>\vspace{2mm} \noindent \textbf{Limited Number of Moments}. This is related to the previous limitation: the idea that an entire function can be captured in terms of two moments: a mean and a covariance. There are some relationships which are difficult to capture without an adequate description, e.g. discontinuities~\citep{Neal96} and non-stationary processes, and thus is a limitation of the GP priors we choose. The advent of warping the inputs or outputs of a GP has becoming a very popular technique to deal with the limited expressivity of kernels. Input warping is popular in methods such as deep kernel learning whereby a Neural network is used to capture the features and are used as inputs to the kernel function output warping is common in chained~\citep{GPCHAINED2016} and heteroscedastic methods where the function output is warped by another GP to capture the noise model of the data. Deep Gaussian processes~\citep{Damianou2015} can be thought of input and output warping methods due the multi-layer composition of function inputs and outputs.</p>
 <p>\vspace{2mm} \noindent \textbf{Linearity of Predictive Mean}. The predictive mean of a GP is linear to the observations, i.e. <span class="math notranslate nohighlight">\(\mu_{GP}=\mathbf{K}\alpha\)</span>. This essentially is a smoother which can be very powerful but also will miss key features. If there is some complex structured embedded within the dataset, then a GP model can never really capture this irregardless of the covariance function found.</p>
 <p>\vspace{2mm} \noindent \textbf{Predictive Covariance}. The GP predictive variance is a function of the training inputs and it is independent of the observed inputs. This is important if the input data has some information which could be used to help determine the regions of uncertainty, e.g. the gradient. An example would be data on a spatial grid whereby some regions points would have more certainty than others which could be obtained by knowing the input location and not necessarily the expected output.</p>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

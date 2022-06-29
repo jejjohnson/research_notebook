@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Remote Computing &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -860,7 +864,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="remote-computing">
+  <section class="tex2jax_ignore mathjax_ignore" id="remote-computing">
 <h1>Remote Computing<a class="headerlink" href="#remote-computing" title="Permalink to this headline">#</a></h1>
 <p>Remote computing is the future. It is</p>
 <p>All of the following tutorials are for remote servers:</p>
@@ -878,7 +882,7 @@ title="Print to PDF"
 <li><p>that’s the path of increasing usefulness.</p></li>
 </ul>
 <hr class="docutils" />
-<div class="section" id="ssh-configuration">
+<section id="ssh-configuration">
 <h2><a class="reference internal" href="ssh.html"><span class="doc std std-doc"><strong>SSH Configuration</strong></span></a><a class="headerlink" href="#ssh-configuration" title="Permalink to this headline">#</a></h2>
 <p>This tutorial will demonstrate how to log in using <code class="docutils literal notranslate"><span class="pre">ssh</span></code> and then how to set up your <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file. <code class="docutils literal notranslate"><span class="pre">ssh</span></code> is probably the most important tool you need to be relatively familiar with in order to have a good workflow. The <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file will automate some of the commands and permissions and it will make things <strong>a lot</strong> easier. For example:</p>
 <ul class="simple">
@@ -886,14 +890,14 @@ title="Print to PDF"
 <li><p>Tunneling</p></li>
 <li><p>Proxy Jumping</p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="conda">
+<section id="conda">
 <h2><a class="reference internal" href="conda.html"><span class="doc std std-doc"><strong>Conda</strong></span></a><a class="headerlink" href="#conda" title="Permalink to this headline">#</a></h2>
 <p>This tutorial will demonstrate how we can set up personal <code class="docutils literal notranslate"><span class="pre">conda</span></code> as our package management on remote servers. We will show how we can have full control of our package environments but still be able to see some of the pre-configured packages that the server admins may have installed.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="jupyter-lab">
+<section id="jupyter-lab">
 <h2><a class="reference internal" href="jlab.html"><span class="doc std std-doc"><strong>Jupyter Lab</strong></span></a><a class="headerlink" href="#jupyter-lab" title="Permalink to this headline">#</a></h2>
 <p>This tutorial will demonstrate how to install, start and use <code class="docutils literal notranslate"><span class="pre">jupyter-lab</span></code> / <code class="docutils literal notranslate"><span class="pre">jupyter-notebook</span></code> effectively on the servers while still being in the comforts of our own home. It will also showcase the different scenarios of how to get it to work using:</p>
 <ul class="simple">
@@ -901,13 +905,13 @@ title="Print to PDF"
 <li><p><code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> - a security-heavy server that uses the <code class="docutils literal notranslate"><span class="pre">slurm</span></code> management system.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">gricad</span></code> - a server that uses the <code class="docutils literal notranslate"><span class="pre">oar</span></code> management system.</p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="jupyter-lab-xtras-todo">
+<section id="jupyter-lab-xtras-todo">
 <h2><a class="reference internal" href="jlab_xtras.html"><span class="doc std std-doc"><strong>Jupyter Lab Xtras</strong></span></a> (TODO)<a class="headerlink" href="#jupyter-lab-xtras-todo" title="Permalink to this headline">#</a></h2>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="organization-todo">
+<section id="organization-todo">
 <h2><a class="reference internal" href="organize.html"><span class="doc std std-doc"><strong>Organization</strong></span></a> (TODO)<a class="headerlink" href="#organization-todo" title="Permalink to this headline">#</a></h2>
 <p>This tutorial will give some tips and tricks for my workflow. It might be useful to showcase how I code and how I use all of the servers and the tools at my disposal to be efficient and effective. There will also be some extra tips and tricks:</p>
 <ul class="simple">
@@ -916,9 +920,9 @@ title="Print to PDF"
 <li><p><code class="docutils literal notranslate"><span class="pre">tmux</span></code> - for running scripts in the background</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tmuxp</span></code> - for automating the navigation pane depending upon the project</p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="visual-studio-code-todo">
+<section id="visual-studio-code-todo">
 <h2><span class="xref myst"><strong>Visual Studio Code</strong></span> (TODO)<a class="headerlink" href="#visual-studio-code-todo" title="Permalink to this headline">#</a></h2>
 <p>This tutorial will demonstrate how we can use a fully-fledged editor for programming via <code class="docutils literal notranslate"><span class="pre">ssh</span></code>-remote-computing. It’s possible but it does require a bit of manipulation.</p>
 <ul class="simple">
@@ -927,9 +931,9 @@ title="Print to PDF"
 <li><p>Debugging on a remote node</p></li>
 </ul>
 <p><strong>Note</strong>: I have not been able to use <code class="docutils literal notranslate"><span class="pre">vscode</span></code> on servers that don’t allow dynamic IPs, e.g. <code class="docutils literal notranslate"><span class="pre">jean-zay</span></code>.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="tips-n-tricks-4-ml-todo">
+<section id="tips-n-tricks-4-ml-todo">
 <h2><span class="xref myst"><strong>Tips n Tricks 4 ML</strong></span> (TODO)<a class="headerlink" href="#tips-n-tricks-4-ml-todo" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p>logging with <em>weights and biases</em></p></li>
@@ -944,10 +948,10 @@ title="Print to PDF"
 
 **IDE**: `Visual Studio Code`
 
-**Dissemination**: `Weights & Biases`, `JupyterBook`, `Docs` --></div>
+**Dissemination**: `Weights & Biases`, `JupyterBook`, `Docs` --></section>
 <div class="toctree-wrapper compound">
 </div>
-</div>
+</section>
 
     <script type="text/x-thebe-config">
     {

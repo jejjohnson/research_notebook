@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Linearization (Taylor Expansions) &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Moment Matching" href="moment_matching.html" />
@@ -992,9 +996,9 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="linearization-taylor-expansions">
+  <section class="tex2jax_ignore mathjax_ignore" id="linearization-taylor-expansions">
 <h1>Linearization (Taylor Expansions)<a class="headerlink" href="#linearization-taylor-expansions" title="Permalink to this headline">#</a></h1>
-<div class="section" id="tldr">
+<section id="tldr">
 <h2>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1010,10 +1014,10 @@ title="Print to PDF"
 \end{aligned}
 \end{split}\]</div>
 <hr class="docutils" />
-<div class="section" id="analytical-moments">
+<section id="analytical-moments">
 <h3>Analytical Moments<a class="headerlink" href="#analytical-moments" title="Permalink to this headline">#</a></h3>
 <p>The posterior of this distribution is non-Gaussian because we have to propagate a probability distribution through a non-linear kernel function. So this integral becomes intractable. We can compute the analytical Gaussian approximation by only computing the mean and the variance of the</p>
-<div class="section" id="mean-function">
+<section id="mean-function">
 <h4>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1029,8 +1033,8 @@ m(\mu_\mathbf{x}, \Sigma_\mathbf{x})
 \mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]
 \end{aligned}
 \end{split}\]</div>
-</div>
-<div class="section" id="variance-function">
+</section>
+<section id="variance-function">
 <h4>Variance Function<a class="headerlink" href="#variance-function" title="Permalink to this headline">#</a></h4>
 <p>The variance term is a bit more complex.</p>
 <div class="math notranslate nohighlight">
@@ -1060,10 +1064,10 @@ v(\mu_\mathbf{x}, \Sigma_\mathbf{x})
 \mathbb{V}_\mathbf{x_*} \left[\mu_\text{GP}(\mathbf{x}_*) \right]
 \end{aligned}
 \end{split}\]</div>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="taylor-approximation">
+<section id="taylor-approximation">
 <h3>Taylor Approximation<a class="headerlink" href="#taylor-approximation" title="Permalink to this headline">#</a></h3>
 <p>We will approximate our mean and variance function via a Taylor Expansion. First the mean function:</p>
 <div class="math notranslate nohighlight">
@@ -1090,7 +1094,7 @@ v(\mu_\mathbf{x}, \Sigma_\mathbf{x})
 \end{aligned}
 \]</div>
 <hr class="docutils" />
-<div class="section" id="linearized-predictive-mean-and-variance">
+<section id="linearized-predictive-mean-and-variance">
 <h4>Linearized Predictive Mean and Variance<a class="headerlink" href="#linearized-predictive-mean-and-variance" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1116,12 +1120,12 @@ v(\mu_\mathbf{x_*}, \Sigma_\mathbf{x_*})
 \end{aligned}
 \end{split}\]</div>
 <p>As seen above, the only extra term we need to include is the derivative of the mean function that is present in the predictive variance term.</p>
-</div>
-</div>
-</div>
-<div class="section" id="conditional-gaussian-distributions">
+</section>
+</section>
+</section>
+<section id="conditional-gaussian-distributions">
 <h2>Conditional Gaussian Distributions<a class="headerlink" href="#conditional-gaussian-distributions" title="Permalink to this headline">#</a></h2>
-<div class="section" id="i-additive-noise-model-x-f">
+<section id="i-additive-noise-model-x-f">
 <h3>I: Additive Noise Model (<span class="math notranslate nohighlight">\(x,f\)</span>)<a class="headerlink" href="#i-additive-noise-model-x-f" title="Permalink to this headline">#</a></h3>
 <p>This is the noise
 $<span class="math notranslate nohighlight">\(
@@ -1157,7 +1161,7 @@ f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \\
 \end{aligned}
 \)</span><span class="math notranslate nohighlight">\(
 where \)</span>\tilde{\Sigma}<em>x = \nabla_x \mu</em>{GP} \Sigma_x \nabla \mu_{GP}^\top$.</p>
-<div class="section" id="other-gp-methods">
+<section id="other-gp-methods">
 <h4>Other GP Methods<a class="headerlink" href="#other-gp-methods" title="Permalink to this headline">#</a></h4>
 <p>We can extend this method to other GP algorithms including sparse GP models. The only thing that changes are the original <span class="math notranslate nohighlight">\(\mu_{GP}\)</span> and <span class="math notranslate nohighlight">\(\nu^2_{GP}\)</span> equations. In a sparse GP we have the following predictive functions
 $<span class="math notranslate nohighlight">\(
@@ -1177,11 +1181,11 @@ So the new predictive functions will be:
 \end{aligned}
 \)</span>$
 As shown above, this is a fairly extensible method that offers a cheap improved predictive variance estimates on an already trained GP model. Some future work could be evaluating how other GP models, e.g. Sparse Spectrum GP, Multi-Output GPs, e.t.c.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="literature">
+<section id="literature">
 <h2>Literature<a class="headerlink" href="#literature" title="Permalink to this headline">#</a></h2>
 <ul>
 <li><p>Gaussian Process Priors with Uncertain Inputs: Multiple-Step-Ahead Prediction - Girard et. al. (2002) - Technical Report</p>
@@ -1210,14 +1214,14 @@ As shown above, this is a fairly extensible method that offers a cheap improved 
 </div></blockquote>
 </li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="supplementary">
+<section id="supplementary">
 <h2>Supplementary<a class="headerlink" href="#supplementary" title="Permalink to this headline">#</a></h2>
 <hr class="docutils" />
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="proof">
+<section id="proof">
 <h2>Proof<a class="headerlink" href="#proof" title="Permalink to this headline">#</a></h2>
 <p>We will approximate our mean and variance function via a Taylor Expansion. First let’s take a step back and look at the taylor expansion of a single function <span class="math notranslate nohighlight">\(f\)</span> w.r.t. to <span class="math notranslate nohighlight">\(\mathbf{x}_*\)</span> which is characterized by its mean <span class="math notranslate nohighlight">\(\mu_\mathbf{x_*}\)</span> and variance function <span class="math notranslate nohighlight">\(\Sigma_\mathbf{x_*}\)</span>. Taking the first two orders, we get</p>
 <div class="math notranslate nohighlight">
@@ -1230,10 +1234,10 @@ As shown above, this is a fairly extensible method that offers a cheap improved 
 (\mathbf{x}_* - \mu_\mathbf{x_*})^\top (\mathbf{x}_* - \mu_\mathbf{x_*})}_\text{2nd Order} +
 \underbrace{\mathcal{O} (\mathbf{x_*}^3)}_\text{Higher Order}
 \end{aligned}\end{split}\]</div>
-<div class="section" id="id1">
+<section id="id1">
 <h3>Mean Function<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
 <p>Now we need to take the expectation of our approximation, <span class="math notranslate nohighlight">\(\mathbb{E}[\mathbf{z}_\mu]\)</span>. We tackle each of the terms individually below.</p>
-<div class="section" id="zeroth-term">
+<section id="zeroth-term">
 <h4>Zeroth Term<a class="headerlink" href="#zeroth-term" title="Permalink to this headline">#</a></h4>
 <p>For the first term, we take the expectation.</p>
 <div class="math notranslate nohighlight">
@@ -1241,8 +1245,8 @@ As shown above, this is a fairly extensible method that offers a cheap improved 
  \mathbb{E}_\mathbf{x_*}\left[ f(\mu_\mathbf{x_*})\right] =  f(\mu_\mathbf{x_*}) 
 \]</div>
 <p>This is the same because the expectation of the mean of a function <span class="math notranslate nohighlight">\(f\)</span> is simply the function <span class="math notranslate nohighlight">\(f\)</span> evaluated at the mean.</p>
-</div>
-<div class="section" id="st-order-term">
+</section>
+<section id="st-order-term">
 <h4>1st Order Term<a class="headerlink" href="#st-order-term" title="Permalink to this headline">#</a></h4>
 <p>The 1st order term is given by:</p>
 <div class="math notranslate nohighlight">
@@ -1252,8 +1256,8 @@ As shown above, this is a fairly extensible method that offers a cheap improved 
 &amp;=  \nabla_\mathbf{x_*} f(\mu_\mathbf{x_*}) \mathbb{E}_\mathbf{x_*}\left[ (\mathbf{x}_* - \mu_\mathbf{x_*}) \right] = 0
 \end{aligned}\]</div>
 <p><span class="math notranslate nohighlight">\(\mathbb{E}[(\mathbf{x}_* - \mu_\mathbf{x_*})]=0\)</span> because the terms cancel each other out.</p>
-</div>
-<div class="section" id="nd-order-term">
+</section>
+<section id="nd-order-term">
 <h4>2nd Order Term<a class="headerlink" href="#nd-order-term" title="Permalink to this headline">#</a></h4>
 <p>The 2nd order term is given by:</p>
 <div class="math notranslate nohighlight">
@@ -1278,8 +1282,8 @@ As shown above, this is a fairly extensible method that offers a cheap improved 
 f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
 \underbrace{\frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} f(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\}}_\text{2nd Order}
 \]</div>
-</div>
-<div class="section" id="linearized-gp-mean">
+</section>
+<section id="linearized-gp-mean">
 <h4>Linearized GP Mean<a class="headerlink" href="#linearized-gp-mean" title="Permalink to this headline">#</a></h4>
 <p>So now instead of a simple function <span class="math notranslate nohighlight">\(f\)</span>, we have our GP predictive mean equation <span class="math notranslate nohighlight">\(\mu_\text{GP}\)</span> which we can simply plug into the approximation.</p>
 <div class="math notranslate nohighlight">
@@ -1287,9 +1291,9 @@ f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
 \tilde{\mu}_\text{LinGP}(\mathbf{x_*}) = \mu_\text{GP}(\mu_\mathbf{x_*}) +
 \underbrace{\frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} \mu_\text{GP}(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\}}_\text{2nd Order}
 \]</div>
-</div>
-</div>
-<div class="section" id="id2">
+</section>
+</section>
+<section id="id2">
 <h3>Variance Function<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
 <p>So the variance term is a bit more difficult to calculate due to the <span class="math notranslate nohighlight">\(\mathbb{V}[\cdot]\)</span> operator.</p>
 <div class="math notranslate nohighlight">
@@ -1328,8 +1332,8 @@ f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
 \left(\nabla_\mathbf{x_*}\mu_\text{GP}(\mu_\mathbf{x_*})\right)^2 \Sigma_\mathbf{x_*}+
 \frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} \sigma^2_\text{GP}(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\} 
 \end{aligned}\]</div>
-</div>
-<div class="section" id="id3">
+</section>
+<section id="id3">
 <h3>Linearized Predictive Mean and Variance<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
@@ -1348,9 +1352,9 @@ f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
 \nu_{GP}^2(\mathbf{x_*}) &amp;= \sigma_y^2 + {\color{red}{\nabla_{\mu_\text{GP}}\,\Sigma_\mathbf{x_*} \,\nabla_{\mu_\text{GP}}^\top} }+ k_{**}- {\mathbf k}_* ({\mathbf K}+\sigma_y^2 \mathbf{I}_N )^{-1} {\mathbf k}_{*}^{\top}
 \end{aligned}\end{split}\]</div>
 <p>As seen above, the only extra term we need to include is the derivative of the mean function that is present in the predictive variance term.</p>
-</div>
-</div>
-<div class="section" id="sparse-gps">
+</section>
+</section>
+<section id="sparse-gps">
 <h2>Sparse GPs<a class="headerlink" href="#sparse-gps" title="Permalink to this headline">#</a></h2>
 <p>We can extend this method to other GP algorithms including sparse GP models. The only thing that changes are the original <span class="math notranslate nohighlight">\(\mu_{GP}\)</span> and <span class="math notranslate nohighlight">\(\nu^2_{GP}\)</span> equations. In a sparse GP we have the following predictive functions</p>
 <div class="math notranslate nohighlight">
@@ -1369,9 +1373,9 @@ f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
 \end{aligned}\end{split}\]</div>
 <p>As shown above, this is a fairly extensible method that offers a cheap improved predictive variance estimates on an already trained GP model. Some future work could be evaluating how other GP models, e.g. Sparse Spectrum GP, Multi-Output GPs, e.t.c.</p>
 <hr class="docutils" />
-<div class="section" id="error-propagation">
+<section id="error-propagation">
 <h3>Error Propagation<a class="headerlink" href="#error-propagation" title="Permalink to this headline">#</a></h3>
-<div class="section" id="taylor-series-expansion">
+<section id="taylor-series-expansion">
 <h4>Taylor Series Expansion<a class="headerlink" href="#taylor-series-expansion" title="Permalink to this headline">#</a></h4>
 <blockquote>
 <div><p>A Taylor series is representation of a function as an infinite sum of terms that are calculated from the values of the functions derivatives at a single point - Wiki</p>
@@ -1380,10 +1384,10 @@ f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
 <p>Let’s take some function <span class="math notranslate nohighlight">\(f(\mathbf x)\)</span> where <span class="math notranslate nohighlight">\(\mathbf{x} \sim \mathcal{N}(\mu_\mathbf{x}, \Sigma_\mathbf{x})\)</span> described by a mean <span class="math notranslate nohighlight">\(\mu_\mathbf{x}\)</span> and covariance <span class="math notranslate nohighlight">\(\Sigma_\mathbf{x}\)</span>. The Taylor series expansion around the function <span class="math notranslate nohighlight">\(f(\mathbf x)\)</span> is:</p>
 <div class="math notranslate nohighlight">
 \[\mathbf z = f(\mathbf x) \approx f(\mu_{\mathbf x}) +   \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \]</div>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

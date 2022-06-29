@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Next Steps &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Notebooks" href="experiments.html" />
@@ -788,34 +792,34 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="next-steps">
+  <section class="tex2jax_ignore mathjax_ignore" id="next-steps">
 <h1>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">#</a></h1>
 <p>So after all of this literature, what is the next step for the community? I have a few suggestions based on what I’ve seen:</p>
-<div class="section" id="apply-these-algorithms-to-different-problems-other-than-dynamical-systems">
+<section id="apply-these-algorithms-to-different-problems-other-than-dynamical-systems">
 <h2>1. Apply these algorithms to different problems (other than dynamical systems)<a class="headerlink" href="#apply-these-algorithms-to-different-problems-other-than-dynamical-systems" title="Permalink to this headline">#</a></h2>
 <p>It’s clear to me that there are a LOT of different algorithms. But in almost every study above, I don’t see many applications outside of dynamical systems. I would love to see other people outside (or within) community use these algorithms on different problems. Like Neil Lawrence said in a recent MLSS talk; “we need to stop jacking around with GPs and actually <strong>apply them</strong>” (paraphrased). There are many little goodies to be had from all of these methods; like the linearized GP predictive variance estimate for better variance estimates is something you get almost for free. So why not use it?</p>
-</div>
-<div class="section" id="improve-the-kernel-expectation-calculations">
+</section>
+<section id="improve-the-kernel-expectation-calculations">
 <h2>2. Improve the Kernel Expectation Calculations<a class="headerlink" href="#improve-the-kernel-expectation-calculations" title="Permalink to this headline">#</a></h2>
 <p>So how we calculate kernel expectations is costly. A typical sparse GP has a cost of <span class="math notranslate nohighlight">\(O(NM^2)\)</span>. But when we do the calculation of kernel expectations, that order goes back up to <span class="math notranslate nohighlight">\(O (DNM^2)\)</span> . It’s not bad considering but it is still now an order of magnitude larger for high dimensional datasets. This is going backwards in terms of efficiency. Also, many implementations attempt to do this in parallel for speed but then the cost of memory becomes prohibitive (especially on GPUs). There are some other good approximation schemes we might be able to use such as advanced Bayesian Quadrature techniques and the many moment transformation techniques that are present in the Kalman Filter literature. I’m sure there are tricks of the trade to be had there.</p>
-</div>
-<div class="section" id="think-about-the-problem-differently">
+</section>
+<section id="think-about-the-problem-differently">
 <h2>3. Think about the problem differently<a class="headerlink" href="#think-about-the-problem-differently" title="Permalink to this headline">#</a></h2>
 <p>An interesting way to approach the method is to perhaps use the idea of covariates. Instead of the noise being additive, perhaps it’s another combination where we have to model it separately. That’s what Salimbeni did for his latest Deep GP and it’s a very interesting way to look at it. It works well too!</p>
-</div>
-<div class="section" id="think-about-pragmatic-solutions">
+</section>
+<section id="think-about-pragmatic-solutions">
 <h2>4. Think about pragmatic solutions<a class="headerlink" href="#think-about-pragmatic-solutions" title="Permalink to this headline">#</a></h2>
 <p>Some of these algorithms are super complicated. It makes it less desireable to actually try them because it’s so easy to get lost in the mathematics of it all. I like pragmatic solutions. For example, using Drop-Out, Ensembles and Noise Constrastive Priors are easy and pragmatic ways of adding reliable uncertainty estimates in Bayesian Neural Networks. I would like some more pragmatic solutions for some of these methods that have been listed above. <strong>Another Shameless Plug</strong>: the method I used is very easy to get better predictive variances almost for free.</p>
-</div>
-<div class="section" id="figure-out-how-to-extend-it-to-deep-gps">
+</section>
+<section id="figure-out-how-to-extend-it-to-deep-gps">
 <h2>5. Figure Out how to extend it to Deep GPs<a class="headerlink" href="#figure-out-how-to-extend-it-to-deep-gps" title="Permalink to this headline">#</a></h2>
 <p>So the original Deep GP is just a stack of BGPLVMs and more recent GPs have regressed back to stacking SVGPs. I would like to know if there is a way to improve the BGPLVM in such a way that we can stack them again and then constrain the solutions with our known prior distributions.</p>
-</div>
-<div class="section" id="time-series-state-space-models">
+</section>
+<section id="time-series-state-space-models">
 <h2>6. Time Series (State-Space Models)<a class="headerlink" href="#time-series-state-space-models" title="Permalink to this headline">#</a></h2>
 <p>State Space Models already inherently do this as they do a sort of forward propagation (in time) and then backwards smoothing (in time), but it would be good to see how we can incorporate prior error knowledge into these frameworks. This would especially be useful in large modeling frameworks like Data Assimilation.</p>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

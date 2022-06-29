@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Standard Python Stack &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -796,7 +800,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="standard-python-stack">
+  <section class="tex2jax_ignore mathjax_ignore" id="standard-python-stack">
 <h1>Standard Python Stack<a class="headerlink" href="#standard-python-stack" title="Permalink to this headline">#</a></h1>
 <p>For the most part, you’ll see this at the top of everyone’s scientific computing notebook/script:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
@@ -810,7 +814,7 @@ title="Print to PDF"
 </div>
 <p>This is the impact of these libraries on the python community. By far, the most mature, the most robust and have the most documentation. In principle, you should be able to do almost any kind of scientific computing from start to finish with these libraries. Below I list them and I give the most useful resources that I have use (and still use). Just remember, when in doubt, stackoverflow is your best friend.</p>
 <hr class="docutils" />
-<div class="section" id="numpy">
+<section id="numpy">
 <h2><strong>Numpy</strong><a class="headerlink" href="#numpy" title="Permalink to this headline">#</a></h2>
 <p>The standard library for utilizing the most fundamental data structure for scientific computing: the array. It also has many linear algebra routines that have been optimized in C/C++ behind the scences. Often times doing things in raw python can get a massive speed up by doing things with numpy. The must have package for everyones python stack. It also has some of the best documentation for python packages.</p>
 <div class="toggle admonition">
@@ -826,9 +830,9 @@ title="Print to PDF"
 <li><p>Einsum - <a class="reference external" href="https://rockt.github.io/2018/04/30/einsum">I</a> | <a class="reference external" href="https://obilaniu6266h16.wordpress.com/2016/02/04/einstein-summation-in-numpy/">II</a></p></li>
 </ul>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="scipy">
+<section id="scipy">
 <h2><strong>Scipy</strong><a class="headerlink" href="#scipy" title="Permalink to this headline">#</a></h2>
 <p>The other defacto library for doing scientific computing. This package is quite heavily linked with numpy but it does have it’s own suite of routines. This library also has linear algebra routines including sparse matrices. But it also has signal processing, probability and statistics and optimization functions. Another library with some of the best documentation.</p>
 <div class="toggle admonition">
@@ -838,9 +842,9 @@ title="Print to PDF"
 <li><p><a class="reference external" href="https://scipy-lectures.org/">Scipy Lecture Notes</a></p></li>
 </ul>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="scikit-learn">
+<section id="scikit-learn">
 <h2><strong>Scikit-Learn</strong><a class="headerlink" href="#scikit-learn" title="Permalink to this headline">#</a></h2>
 <p>This <strong>is the</strong> de facto library for machine learning. It will have all of the standard algorithms for machine learning. They also have a lot of utilities that can be useful when preprocessing or training your algorithms. The API (the famous <code class="docutils literal notranslate"><span class="pre">.fit()</span></code>, <code class="docutils literal notranslate"><span class="pre">.predict()</span></code>, and <code class="docutils literal notranslate"><span class="pre">.transform()</span></code>) is great and has been adopted in many other machine learning packages. There is also no other tutorial that comes close to being helpful as the documentation.</p>
 <div class="toggle admonition">
@@ -851,9 +855,9 @@ title="Print to PDF"
 <li><p><a class="reference external" href="http://danielhnyk.cz/creating-your-own-estimator-scikit-learn/">Creating your own estimator in scikit-learn</a> - Daniel Hnyk (2015)</p></li>
 </ul>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="pandas">
+<section id="pandas">
 <h2><strong>Pandas</strong><a class="headerlink" href="#pandas" title="Permalink to this headline">#</a></h2>
 <p>The also most fundamental package that’s often used in the preprocessing chain is the fundamental datastructure known as a pandas table. Taking inspiration from R, this features data with meaningful meta data attached to it as columns or as rows. It also allows entries other than floats and ints. The best part is that is has reallt fast routines to do data manipulation and advanced calculations. This is the hardest package to get accustomed to compared to the previous packages but with a little time and effort, you can easily become one of the most effective data scientists around. The documentation is excellent but I don’t find it as friendly as the other packages. Because it has a bit of a learning curve and there are likely more than 5 ways to do what you want to do, you’ll find a lot of tutorials online.</p>
 <div class="toggle admonition">
@@ -873,9 +877,9 @@ title="Print to PDF"
 <li><p>Chris Fonnesneck Class - <a class="reference external" href="https://github.com/fonnesbeck/Bios8366">Advanced Statistical Computing Class</a></p></li>
 </ul>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="matplotlib">
+<section id="matplotlib">
 <h2><strong>Matplotlib</strong><a class="headerlink" href="#matplotlib" title="Permalink to this headline">#</a></h2>
 <p>This is the default plotting library for python. Most people have a love-hate relationship with this library. I find it very easy to plot things but it gets difficult when I need to modify something down to the T. Like pandas, I think this library has a bit of a learning curve if you really want to make kick-ass plots. The documentation is good but the problem is I don’t understand the data structures or language for creating plots; creating plotting libraries is quite difficult for this very reason. This is a great library but prepared to be a bit frustrated at times down the road.</p>
 <div class="toggle admonition">
@@ -890,8 +894,8 @@ title="Print to PDF"
 <li><p><a class="reference external" href="https://github.com/rougier/matplotlib-cheatsheet">Matplotlib Cheatsheet</a></p></li>
 </ul>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

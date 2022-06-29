@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Jupyter Lab Xtras &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -826,51 +830,51 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="jupyter-lab-xtras">
+  <section class="tex2jax_ignore mathjax_ignore" id="jupyter-lab-xtras">
 <h1>Jupyter Lab Xtras<a class="headerlink" href="#jupyter-lab-xtras" title="Permalink to this headline">#</a></h1>
 <hr class="docutils" />
-<div class="section" id="notebooks-scripts">
+<section id="notebooks-scripts">
 <h2>Notebooks + Scripts<a class="headerlink" href="#notebooks-scripts" title="Permalink to this headline">#</a></h2>
-<div class="section" id="environment">
+<section id="environment">
 <h3>Environment<a class="headerlink" href="#environment" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyprojroot</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="reloading">
+</section>
+<section id="reloading">
 <h3>Reloading<a class="headerlink" href="#reloading" title="Permalink to this headline">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">load_ext</span> <span class="n">autoreload</span>
 <span class="o">%</span><span class="n">autoreload</span> <span class="mi">2</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="other-environments">
+<section id="other-environments">
 <h2>Other Environments<a class="headerlink" href="#other-environments" title="Permalink to this headline">#</a></h2>
 <p>So you may be wondering if we need to do this with every conda environment we create. No. We just need to have a general JupyterLab environment that calls other environments. The important thing here is that we have the jupyterlab package installed as well as <code class="docutils literal notranslate"><span class="pre">nb_conda_kernels</span></code> package. This allows the jupyterlab to be able to use any other python kernel that’s in your user space (sometimes common shared ones but it depends).</p>
 <p>Now, all other conda environments will need to have the <code class="docutils literal notranslate"><span class="pre">ipykernel</span></code> package installed and it will be visible from your JupyterLab environment.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="extensions">
+<section id="extensions">
 <h2>Extensions<a class="headerlink" href="#extensions" title="Permalink to this headline">#</a></h2>
-<div class="section" id="installation">
+<section id="installation">
 <h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">#</a></h3>
 <p>This will enable you to have extensions for your Jupyterlab. There are so many cool ones out there. I’m particularly fond of the <a class="reference external" href="https://github.com/lckr/jupyterlab-variableInspector">variable inspector</a> and the <a class="reference external" href="https://github.com/jupyterlab/jupyterlab-toc">table of contents</a>. JupyterLab has gotten awesome so you can install most new extensions using the JupyterLab GUI.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install jupyter lab extension maager</span>
-<span class="l l-Scalar l-Scalar-Plain">jupyter labextension install @jupyter-widgets/jupyterlab-manager</span>
-<span class="l l-Scalar l-Scalar-Plain"># Enable</span>
-<span class="l l-Scalar l-Scalar-Plain">jupyter serverextension enable --py jupyterlab-manager</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install jupyter lab extension maager</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">jupyter labextension install @jupyter-widgets/jupyterlab-manager</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain"># Enable</span><span class="w"></span>
+<span class="l l-Scalar l-Scalar-Plain">jupyter serverextension enable --py jupyterlab-manager</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="my-favourite-extensions">
+</section>
+<section id="my-favourite-extensions">
 <h3>My Favourite Extensions<a class="headerlink" href="#my-favourite-extensions" title="Permalink to this headline">#</a></h3>
-<div class="section" id="templates">
+<section id="templates">
 <h4>Templates<a class="headerlink" href="#templates" title="Permalink to this headline">#</a></h4>
-</div>
-</div>
-<div class="section" id="id1">
+</section>
+</section>
+<section id="id1">
 <h3>Templates<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
 <p><strong>Google Colab</strong></p>
 <p><strong>Default</strong></p>
@@ -921,9 +925,9 @@ title="Print to PDF"
 <span class="o">%</span><span class="n">load_ext</span> <span class="n">autoreload</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

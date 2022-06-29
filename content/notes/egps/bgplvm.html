@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Bayesian GPLVM &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Error Propagation" href="error_prop.html" />
@@ -860,14 +864,14 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="bayesian-gplvm">
+  <section class="tex2jax_ignore mathjax_ignore" id="bayesian-gplvm">
 <h1>Bayesian GPLVM<a class="headerlink" href="#bayesian-gplvm" title="Permalink to this headline">#</a></h1>
-<div class="section" id="posterior-approximations">
+<section id="posterior-approximations">
 <h2>Posterior Approximations<a class="headerlink" href="#posterior-approximations" title="Permalink to this headline">#</a></h2>
 <p>What links all of the strategies from uncertain GPs is how they approach the problem of uncertain inputs: approximating the posterior distribution. The methods that use moment matching on stochastic trial points are all using various strategies to construct some posterior approximation. They define their GP model first and then approximate the posterior by using some approximate scheme to account for uncertainty. The NIGP however does change the model which is a product of the Taylor series expansion employed. From there, the resulting posterior is either evaluated or further approximated. My method actually is related because I also avoid changing the model and just attempt to approximate the posterior predictive distribution by augmenting the predictive variance function only (<strong>???</strong>).</p>
 <p>This approach has similar strategies that stem from the wave of methods that appeared using variational inference (VI). VI consists of creating a variational approximation of the posterior distribution <span class="math notranslate nohighlight">\(q(\mathbf u)\approx \mathcal{p}(\mathbf x)\)</span>. Under some assumptions and a baseline distribution for <span class="math notranslate nohighlight">\(q(\mathbf u)\)</span>,  we can try to approximate the complex distribution <span class="math notranslate nohighlight">\(\mathcal{p}(\mathbf x)\)</span> by minimizing the distance between the two distributions, <span class="math notranslate nohighlight">\(D\left[q(\mathbf u)||\mathcal{p}(\mathbf x)\right]\)</span>. Many practioners believe that approximating the posterior and not the model is the better option when doing Bayesian inference; especially for large data (<a class="reference external" href="https://www.prowler.io/blog/sparse-gps-approximate-the-posterior-not-the-model">example blog</a>, <span class="xref myst">VFE paper</span>). The variational family of methods that are common for GPs use the Kullback-Leibler (KL) divergence criteria between the GP posterior approximation <span class="math notranslate nohighlight">\(q(\mathbf u)\)</span> and the true GP posterior <span class="math notranslate nohighlight">\(\mathcal{p}(\mathbf x)\)</span>. From the literature, this has been extended to many different problems related to GPs for regression, classification, dimensionality reduction and more.</p>
 <hr class="docutils" />
-<div class="section" id="variational-gp-model-with-latent-inputs">
+<section id="variational-gp-model-with-latent-inputs">
 <h3>Variational GP Model with Latent Inputs<a class="headerlink" href="#variational-gp-model-with-latent-inputs" title="Permalink to this headline">#</a></h3>
 <p><strong>Posterior Distribution:</strong>
 $<span class="math notranslate nohighlight">\(p(Y) = \int_{\mathcal X} p(Y|X) P(X) dX\)</span>$</p>
@@ -892,9 +896,9 @@ $<span class="math notranslate nohighlight">\(p(Y) = \int_{\mathcal X} p(Y|X) P(
 <p><strong>plug in other bound</strong></p>
 <div class="math notranslate nohighlight">
 \[\mathcal{L}_{2}(q)=\left\langle \mathcal{L}_{1}(q)\right\rangle_{q(F)} - D_{KL} \left( q(X) || p(X)\right) \]</div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="evidence-lower-bound-elbo">
+<section id="evidence-lower-bound-elbo">
 <h3>Evidence Lower Bound (ELBO)<a class="headerlink" href="#evidence-lower-bound-elbo" title="Permalink to this headline">#</a></h3>
 <p>In VI strategies, we never get an explicit function that will lead us to the best variational approximation but we can come close; we can come up with an upper bound.
 Traditional marginal likelhood (evidence) function that we’re given is given by:</p>
@@ -927,10 +931,10 @@ Traditional marginal likelhood (evidence) function that we’re given is given b
 \[\mathcal{F}(q)=\mathbb{E}_{q(\mathbf x)}\left[ \log \mathcal{p}(y|\mathbf x, \theta) \right] - \text{D}_\text{KL}\left[ q(\mathbf x) || \mathcal{p}(\mathbf x) \right]\]</div>
 <p>If we optimize <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> with respect to <span class="math notranslate nohighlight">\(q(\mathbf x)\)</span>, the KL is minimized and we just get the likelihood. As we’ve seen before, the likelihood term is still problematic as it still has the nonlinear portion to propagate the <span class="math notranslate nohighlight">\(\mathbf x\)</span>’s through. So that’s nothing new and we’ve done nothing useful. If we introduce some special structure in <span class="math notranslate nohighlight">\(q(f)\)</span> by introducing sparsity, then we can achieve something useful with this formulation.
 But through augmentation of the variable space with <span class="math notranslate nohighlight">\(\mathbf u\)</span> and <span class="math notranslate nohighlight">\(\mathbf Z\)</span> we can bypass this problem. The second term is simple to calculate because they’re both chosen to be Gaussian.</p>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="uncertain-inputs">
+<section id="uncertain-inputs">
 <h2>Uncertain Inputs<a class="headerlink" href="#uncertain-inputs" title="Permalink to this headline">#</a></h2>
 <p>So how does this relate to uncertain inputs exactly? Let’s look again at our problem setting.</p>
 <div class="math notranslate nohighlight">
@@ -949,7 +953,7 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 \[\mathcal{F}(q)=\mathbb{E}_{q(\mathbf x | m_{p_z}, S_{p_z})}\left[ \log \mathcal{p}(y|\mathbf x, \theta) \right] - \text{D}_\text{KL}\left[ q(\mathbf x | m_{p_z}, S_{p_z}) || \mathcal{p}(\mathbf x | m_{p_x}, S_{p_x}) \right]\]</div>
 <p>Notice that I have expanded the parameters for <span class="math notranslate nohighlight">\(p(X)\)</span> and <span class="math notranslate nohighlight">\(q(X)\)</span> so that we are clear about where the parameters. We would like to figure out a way to incorporate our uncertainties in the <span class="math notranslate nohighlight">\(m_{p_x}\)</span>, <span class="math notranslate nohighlight">\(S_{p_x}\)</span>, <span class="math notranslate nohighlight">\(m_{p_z}\)</span>, and <span class="math notranslate nohighlight">\(S_{p_z}\)</span>. The author had two suggestions about how to account for noise in the inputs but the original formulation assumed that these parameters were unknown. In my problem setting, we know that there is noise in the inputs so the problems that the original formulations had will change. I will outline the formulations below for both known and unknown uncertainties.</p>
 <hr class="docutils" />
-<div class="section" id="case-i-strong-prior">
+<section id="case-i-strong-prior">
 <h3>Case I - Strong Prior<a class="headerlink" href="#case-i-strong-prior" title="Permalink to this headline">#</a></h3>
 <p><strong>Prior</strong>, <span class="math notranslate nohighlight">\(p(X)\)</span></p>
 <p>We can directly assume that we know the parameters for the prior distribution. So we let <span class="math notranslate nohighlight">\(\mu_x\)</span> be our noisy observations and we let <span class="math notranslate nohighlight">\(\Sigma_x\)</span> be our known covariance matrix for <span class="math notranslate nohighlight">\(X\)</span>. These parameters are fixed as we assume we know them and we would like this to be our prior. This seems to be the most natural as is where we have information and we would like to use it. So now our prior is in the form of:</p>
@@ -965,9 +969,9 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 \[\mathcal{F}=\langle \log \mathcal{p}(\mathbf{Y|X}) \rangle_{q(\mathbf X|\mu_x, \Sigma_x)} - \text{KL}\left( q(\mathbf X|\mu_x, \Sigma_x) || p(\mathbf X|\mu_x, \Sigma_x)  \right)\]</div>
 <p><strong>Assessment</strong></p>
 <p>So this is a very strong belief over our parameters. The KL divergence term will be zero because the distributions will be the same and we would have probably done some extra computations for no reason; we do need this in order to make the likelihood tractable but it doesn’t make sense if we’re not learning anything. But this is absolute because we have no reason to change anything. It’s worth testing to see how this goes.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="case-ii-regularized-strong-prior">
+<section id="case-ii-regularized-strong-prior">
 <h3>Case II - Regularized Strong Prior<a class="headerlink" href="#case-ii-regularized-strong-prior" title="Permalink to this headline">#</a></h3>
 <p>This is similar to the above statement, however we would be reducing the prior parameters to a standard 0 mean and 1 standard deviation. So our prior function will look like this</p>
 <div class="math notranslate nohighlight">
@@ -975,9 +979,9 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 <p>This would allow the KL-Divergence criteria extra penalization for the loss function. It might change some of the parameters learned for the other regions of the ELBO. So our final loss function is:</p>
 <div class="math notranslate nohighlight">
 \[\mathcal{F}=\langle \log \mathcal{p}(\mathbf{Y|X}) \rangle_{q(\mathbf X|\mu_x, \Sigma_x)} - \text{KL}\left( q(\mathbf X|\mu_x, \Sigma_x) || p(\mathbf X|0, 1)  \right)\]</div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="case-iii-prior-with-openness">
+<section id="case-iii-prior-with-openness">
 <h3>Case III - Prior with Openness<a class="headerlink" href="#case-iii-prior-with-openness" title="Permalink to this headline">#</a></h3>
 <p>The last option I think is the most interesting. It seems to incorporate the prior but also allow for some flexibility. In this option,</p>
 <p>We can pivot off of what the factor that the KL divergence term is simply a regularizer. So we could also go with a more conservative approach where we</p>
@@ -988,9 +992,9 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 <div class="math notranslate nohighlight">
 \[\mathcal{F}=\langle \log \mathcal{p}(\mathbf{Y|X}) \rangle_{q(\mathbf X|\mu_x, S)} - \text{KL}\left( q(\mathbf X|\mu_x, S) || p(\mathbf X|\mu_x, \Sigma_x)  \right)\]</div>
 <p>So the only free parameter in the variational bound is the actual variance of our inputs <span class="math notranslate nohighlight">\(S\)</span> that stems from our variational distribution <span class="math notranslate nohighlight">\(q(X)\)</span>. Again, this seems like a nice balanced approach where we can incorporate prior information within our model but at the same time allow for some freedom to maybe find a better distribution to represent the noise.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="case-iv-bonus-conservative-freedom">
+<section id="case-iv-bonus-conservative-freedom">
 <h3>Case IV - Bonus, Conservative Freedom<a class="headerlink" href="#case-iv-bonus-conservative-freedom" title="Permalink to this headline">#</a></h3>
 <p>Ok, so the true last option would be to try and see how the algorithm thinks the results should be. We</p>
 <div class="math notranslate nohighlight">
@@ -1034,16 +1038,16 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 </table>
 </center>
 <p><strong>Caption</strong>: Summary of Options</p>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="resources">
+<section id="resources">
 <h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
-<div class="section" id="important-papers">
+<section id="important-papers">
 <h3>Important Papers<a class="headerlink" href="#important-papers" title="Permalink to this headline">#</a></h3>
 <p>These are the important papers that helped me understand what was going on throughout the learning process.</p>
-</div>
-<div class="section" id="summary-thesis">
+</section>
+<section id="summary-thesis">
 <h3>Summary Thesis<a class="headerlink" href="#summary-thesis" title="Permalink to this headline">#</a></h3>
 <p>Often times the papers that people publish in conferences in Journals don’t have enough information in them. Sometimes it’s really difficult to go through some of the mathematics that people put  in their articles especially with cryptic explanations like “it’s easy to show that…” or “trivially it can be shown that…”. For most of us it’s not easy nor is it trivial. So I’ve included a few thesis that help to explain some of the finer details. I’ve arranged them in order starting from the easiest to the most difficult.</p>
 <ul class="simple">
@@ -1064,16 +1068,16 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="talks">
+</section>
+<section id="talks">
 <h3>Talks<a class="headerlink" href="#talks" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Damianou - Bayesian LVM with GPs - <a class="reference external" href="http://gpss.cc/gpss15/talks/gpss_BGPLVMs.pdf">MLSS2015</a></p></li>
 <li><p>Lawrence - Deep GPs - <span class="xref myst">MLSS2019</span></p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

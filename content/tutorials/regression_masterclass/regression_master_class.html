@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Master Class in Regression and Uncertainty with Tensorflow Probability &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -990,10 +994,10 @@ title="Print to PDF"
               <div>
                 
   <p><a href="https://colab.research.google.com/github/jejjohnson/research_notebook/blob/develop/content/tutorials/regression_masterclass/regression_master_class.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
-<div class="tex2jax_ignore mathjax_ignore section" id="master-class-in-regression-and-uncertainty-with-tensorflow-probability">
+<section class="tex2jax_ignore mathjax_ignore" id="master-class-in-regression-and-uncertainty-with-tensorflow-probability">
 <h1>Master Class in Regression and Uncertainty with Tensorflow Probability<a class="headerlink" href="#master-class-in-regression-and-uncertainty-with-tensorflow-probability" title="Permalink to this headline">#</a></h1>
 <p>In this notebook, I will exploring the new <span class="xref myst">tensorflow 2.0</span>, <span class="xref myst">tensorflow probability</span> and <span class="xref myst">edward2</span>. We have come a long way</p>
-<div class="section" id="resources">
+<section id="resources">
 <h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
 <p><strong>BNN</strong></p>
 <ul class="simple">
@@ -1107,8 +1111,8 @@ Successfully installed edward2-0.0.2 loguru-0.5.3
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="data">
+</section>
+<section id="data">
 <h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1152,7 +1156,7 @@ Successfully installed edward2-0.0.2 loguru-0.5.3
 <img alt="../../../_images/regression_master_class_9_0.png" src="../../../_images/regression_master_class_9_0.png" />
 </div>
 </div>
-<div class="section" id="plot-functions">
+<section id="plot-functions">
 <h3>Plot Functions<a class="headerlink" href="#plot-functions" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1189,8 +1193,8 @@ Successfully installed edward2-0.0.2 loguru-0.5.3
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="linear-regression">
+</section>
+<section id="linear-regression">
 <h3>Linear Regression<a class="headerlink" href="#linear-regression" title="Permalink to this headline">#</a></h3>
 <p>This first case, we assume that there is no uncertainty in our model. We are just trying to function that maps our data from <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> to <span class="math notranslate nohighlight">\(\mathcal{Y}\)</span>.</p>
 <div class="math notranslate nohighlight">
@@ -1348,9 +1352,9 @@ Epoch 35/100
 <img alt="../../../_images/regression_master_class_14_0.png" src="../../../_images/regression_master_class_14_0.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="bayesian-linear-regression-maximum-likelihood">
+</section>
+</section>
+<section id="bayesian-linear-regression-maximum-likelihood">
 <h2>Bayesian Linear Regression (Maximum Likelihood)<a class="headerlink" href="#bayesian-linear-regression-maximum-likelihood" title="Permalink to this headline">#</a></h2>
 <p>This will be very similar to the above linear regression formulation.</p>
 <div class="math notranslate nohighlight">
@@ -1550,7 +1554,7 @@ Epoch 64/100
 <img alt="../../../_images/regression_master_class_19_0.png" src="../../../_images/regression_master_class_19_0.png" />
 </div>
 </div>
-<div class="section" id="aleatoric-uncertainty">
+<section id="aleatoric-uncertainty">
 <h3>Aleatoric Uncertainty<a class="headerlink" href="#aleatoric-uncertainty" title="Permalink to this headline">#</a></h3>
 <p>In this demonstration, I make an assumption that we can have uncertain w.r.t. to the inputs. This pivots off the note I mentioned earlier about being able to fit the noise as a function of the inputs.</p>
 <p>If we wanted to actually predict the noise coefficient of the normal distribution we could do something like this:</p>
@@ -1826,8 +1830,8 @@ Epoch 100/100
 </div>
 </div>
 <p>As you can see, our error bars change w.r.t. to the inputs.</p>
-</div>
-<div class="section" id="bayesian-linear-regression-variational">
+</section>
+<section id="bayesian-linear-regression-variational">
 <h3>Bayesian Linear Regression (Variational)<a class="headerlink" href="#bayesian-linear-regression-variational" title="Permalink to this headline">#</a></h3>
 <p>In this example, we will be looking at how we can extend the Bayesian LR method with variational features. From an uncvertainty perspective, we are looking at</p>
 <p>Again, this will be very similar to the above linear regression formulation.</p>
@@ -1862,7 +1866,7 @@ Epoch 100/100
 <span class="p">])</span>
 </pre></div>
 </div>
-<div class="section" id="variational-distribution-poster">
+<section id="variational-distribution-poster">
 <h4>Variational Distribution Poster<a class="headerlink" href="#variational-distribution-poster" title="Permalink to this headline">#</a></h4>
 <p>We will use one of the simplest: the mean field. This will give us a surrogate (pyro guide) distribution to learn for our layer with the weights and bias.</p>
 <div class="cell docutils container">
@@ -1882,8 +1886,8 @@ Epoch 100/100
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="prior-distribution">
+</section>
+<section id="prior-distribution">
 <h4>Prior Distribution<a class="headerlink" href="#prior-distribution" title="Permalink to this headline">#</a></h4>
 <p>We also need to find the prior distribution to put over our layer with the weights and bias terms.</p>
 <div class="cell docutils container">
@@ -2223,10 +2227,10 @@ To change all layers to have dtype float64 by default, call `tf.keras.backend.se
 <img alt="../../../_images/regression_master_class_31_1.png" src="../../../_images/regression_master_class_31_1.png" />
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="neural-network">
+</section>
+</section>
+</section>
+<section id="neural-network">
 <h2>Neural Network<a class="headerlink" href="#neural-network" title="Permalink to this headline">#</a></h2>
 <p>We will do a classic neural network scenario.</p>
 <div class="math notranslate nohighlight">
@@ -2314,8 +2318,8 @@ To change all layers to have dtype float64 by default, call `tf.keras.backend.se
 <img alt="../../../_images/regression_master_class_35_0.png" src="../../../_images/regression_master_class_35_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="probabilistic-neural-network">
+</section>
+<section id="probabilistic-neural-network">
 <h2>Probabilistic Neural Network<a class="headerlink" href="#probabilistic-neural-network" title="Permalink to this headline">#</a></h2>
 <p>So we will have the same NN architecture as above except this time we will add a Gaussian distribution as the last layer of the NN.</p>
 <div class="cell docutils container">
@@ -2393,8 +2397,8 @@ To change all layers to have dtype float64 by default, call `tf.keras.backend.se
 <img alt="../../../_images/regression_master_class_39_0.png" src="../../../_images/regression_master_class_39_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="probabilistic-neural-network-heteroscedasstic">
+</section>
+<section id="probabilistic-neural-network-heteroscedasstic">
 <h2>Probabilistic Neural Network (Heteroscedasstic)<a class="headerlink" href="#probabilistic-neural-network-heteroscedasstic" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2475,8 +2479,8 @@ To change all layers to have dtype float64 by default, call `tf.keras.backend.se
 <img alt="../../../_images/regression_master_class_43_0.png" src="../../../_images/regression_master_class_43_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="bayesian-neural-network-drop-out">
+</section>
+<section id="bayesian-neural-network-drop-out">
 <h2>Bayesian Neural Network (Drop-Out)<a class="headerlink" href="#bayesian-neural-network-drop-out" title="Permalink to this headline">#</a></h2>
 <p>One nice trick to using a normal NN to train</p>
 <div class="cell docutils container">
@@ -2574,8 +2578,8 @@ To change all layers to have dtype float64 by default, call `tf.keras.backend.se
 <img alt="../../../_images/regression_master_class_48_0.png" src="../../../_images/regression_master_class_48_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="probabilisitc-nn-dropout-heteroscedastic">
+</section>
+<section id="probabilisitc-nn-dropout-heteroscedastic">
 <h2>Probabilisitc NN (Dropout - Heteroscedastic)<a class="headerlink" href="#probabilisitc-nn-dropout-heteroscedastic" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2676,8 +2680,8 @@ To change all layers to have dtype float64 by default, call `tf.keras.backend.se
 <img alt="../../../_images/regression_master_class_53_0.png" src="../../../_images/regression_master_class_53_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="bayesian-neural-network-vanilla">
+</section>
+<section id="bayesian-neural-network-vanilla">
 <h2>Bayesian Neural Network (Vanilla)<a class="headerlink" href="#bayesian-neural-network-vanilla" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3104,8 +3108,8 @@ ResourceExhaustedError: OOM when allocating tensor with shape[4160,4160] and typ
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="support-vector-regression-rff-approximations">
+</section>
+<section id="support-vector-regression-rff-approximations">
 <h2>Support Vector Regression (RFF Approximations)<a class="headerlink" href="#support-vector-regression-rff-approximations" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3280,8 +3284,8 @@ ResourceExhaustedError: OOM when allocating tensor with shape[4160,4160] and typ
 <img alt="../../../_images/regression_master_class_69_0.png" src="../../../_images/regression_master_class_69_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="svr-deep">
+</section>
+<section id="svr-deep">
 <h2>SVR (Deep)<a class="headerlink" href="#svr-deep" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3389,8 +3393,8 @@ ResourceExhaustedError: OOM when allocating tensor with shape[4160,4160] and typ
 <img alt="../../../_images/regression_master_class_74_0.png" src="../../../_images/regression_master_class_74_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="gaussian-processes-rff-approx">
+</section>
+<section id="gaussian-processes-rff-approx">
 <h2>Gaussian Processes (RFF Approx.)<a class="headerlink" href="#gaussian-processes-rff-approx" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3475,7 +3479,7 @@ ResourceExhaustedError: OOM when allocating tensor with shape[4160,4160] and typ
 <img alt="../../../_images/regression_master_class_78_0.png" src="../../../_images/regression_master_class_78_0.png" />
 </div>
 </div>
-<div class="section" id="heteroscedastic">
+<section id="heteroscedastic">
 <h3>Heteroscedastic<a class="headerlink" href="#heteroscedastic" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3559,9 +3563,9 @@ ResourceExhaustedError: OOM when allocating tensor with shape[4160,4160] and typ
 <img alt="../../../_images/regression_master_class_82_0.png" src="../../../_images/regression_master_class_82_0.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="deep-gaussian-processes-rff">
+</section>
+</section>
+<section id="deep-gaussian-processes-rff">
 <h2>Deep Gaussian Processes (RFF)<a class="headerlink" href="#deep-gaussian-processes-rff" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3683,8 +3687,8 @@ Epoch 29/500
 <img alt="../../../_images/regression_master_class_84_1.png" src="../../../_images/regression_master_class_84_1.png" />
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Moment Matching &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Bayesian GPLVM" href="bgplvm.html" />
@@ -816,9 +820,9 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="moment-matching">
+  <section class="tex2jax_ignore mathjax_ignore" id="moment-matching">
 <h1>Moment Matching<a class="headerlink" href="#moment-matching" title="Permalink to this headline">#</a></h1>
-<div class="section" id="tldr">
+<section id="tldr">
 <h2>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -844,11 +848,11 @@ title="Print to PDF"
 [\Psi_1]_{ij} = \int k(\mathbf{x}_i, \mathbf{y}_j)p(\mathbf{x}_i)d\mathbf{x}_i \\
 [\Psi_2]_{ijk} = \int k(\mathbf{x}_i, \mathbf{y}_j)k(\mathbf{x}_i, \mathbf{z}_k) d\mathbf{x}_i.
 \end{split}\]</div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="proofs">
+<section id="proofs">
 <h2>Proofs<a class="headerlink" href="#proofs" title="Permalink to this headline">#</a></h2>
-<div class="section" id="mean-function">
+<section id="mean-function">
 <h3>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -870,8 +874,8 @@ title="Print to PDF"
 &amp;= \Psi_1^\top\alpha \\
 \end{aligned}
 \end{split}\]</div>
-</div>
-<div class="section" id="predictive-variance">
+</section>
+<section id="predictive-variance">
 <h3>Predictive Variance<a class="headerlink" href="#predictive-variance" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
@@ -879,7 +883,7 @@ title="Print to PDF"
     \tilde{\sigma}^2_{GP}(\mathbf{x}_*) &amp;=  \underbrace{\mathbb{E}_{\mathbf{x}_*} [\sigma^2_{GP}(\mathbf{x}_*)]}_{\text{Term I}} + \underbrace{\mathbb{E}_{\mathbf{x}_*}[\mu_{GP}^2(\mathbf{x}_*)]}_{\text{Term II}} - \underbrace{\mathbb{E}_{\mathbf{x}_*}[\mu_{GP}(\mathbf{x}_*)]^2}_{\text{Term III}}
 \end{aligned}
 \]</div>
-<div class="section" id="term-i">
+<section id="term-i">
 <h4>Term I<a class="headerlink" href="#term-i" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -892,8 +896,8 @@ title="Print to PDF"
     &amp;=  \psi_0 - \text{Tr}\left( \mathbf{K}_{GP}^{-1} \Psi_2\right)\\
 \end{aligned}
 \end{split}\]</div>
-</div>
-<div class="section" id="term-ii">
+</section>
+<section id="term-ii">
 <h4>Term II<a class="headerlink" href="#term-ii" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -905,8 +909,8 @@ title="Print to PDF"
     &amp;=  \text{Tr}\left( \alpha\alpha^\top \Psi_2\right)\\
 \end{aligned}
 \end{split}\]</div>
-</div>
-<div class="section" id="term-iii">
+</section>
+<section id="term-iii">
 <h4>Term III<a class="headerlink" href="#term-iii" title="Permalink to this headline">#</a></h4>
 <p>This is the squared expected value of the GP mean w.r.t. the noisy inputs <span class="math notranslate nohighlight">\(\mathbf{x}_*\)</span>. We’ve already calculated this above so we can just substitute this expression and square it:</p>
 <div class="math notranslate nohighlight">
@@ -919,8 +923,8 @@ title="Print to PDF"
 &amp;= \text{Tr}\left( \Psi_1\Psi_1^\top\alpha\alpha^\top \right)  \\
 \end{aligned}
 \end{split}\]</div>
-</div>
-<div class="section" id="final-solution">
+</section>
+<section id="final-solution">
 <h4>Final Solution<a class="headerlink" href="#final-solution" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -936,10 +940,10 @@ title="Print to PDF"
 \psi_0 - \text{Tr}\left( \left(\mathbf{K}_{GP}^{-1}  - \alpha\alpha^\top\right) \Psi_2 - (\Psi_1^\top\alpha)^2 \right)
 \end{aligned}
 \end{split}\]</div>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

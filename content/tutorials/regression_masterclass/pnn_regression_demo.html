@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Regression Demo - Neural Network &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -903,7 +907,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="regression-demo-neural-network">
+  <section class="tex2jax_ignore mathjax_ignore" id="regression-demo-neural-network">
 <h1>Regression Demo - Neural Network<a class="headerlink" href="#regression-demo-neural-network" title="Permalink to this headline">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -988,7 +992,7 @@ INFO:tensorflow:Enabling control flow v2
 </div>
 </div>
 </div>
-<div class="section" id="demo-data">
+<section id="demo-data">
 <h2>Demo Data<a class="headerlink" href="#demo-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1118,8 +1122,8 @@ INFO:tensorflow:Enabling control flow v2
 <img alt="../../../_images/pnn_regression_demo_8_0.png" src="../../../_images/pnn_regression_demo_8_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="dataloader">
+</section>
+<section id="dataloader">
 <h2>DataLoader<a class="headerlink" href="#dataloader" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1145,7 +1149,7 @@ INFO:tensorflow:Enabling control flow v2
 </div>
 </div>
 </div>
-<div class="section" id="init-data">
+<section id="init-data">
 <h3>Init Data<a class="headerlink" href="#init-data" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1167,9 +1171,9 @@ INFO:tensorflow:Enabling control flow v2
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="simple-model">
+</section>
+</section>
+<section id="simple-model">
 <h2>Simple Model<a class="headerlink" href="#simple-model" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1303,7 +1307,7 @@ INFO:tensorflow:Enabling control flow v2
 <img alt="../../../_images/pnn_regression_demo_17_1.png" src="../../../_images/pnn_regression_demo_17_1.png" />
 </div>
 </div>
-<div class="section" id="loss-functions">
+<section id="loss-functions">
 <h3>Loss Functions<a class="headerlink" href="#loss-functions" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1365,8 +1369,8 @@ Initial NLL Loss (Train): 3.2785
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="optimizer">
+</section>
+<section id="optimizer">
 <h3>Optimizer<a class="headerlink" href="#optimizer" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1392,8 +1396,8 @@ Initial NLL Loss (Train): 3.2785
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="train-step">
+</section>
+<section id="train-step">
 <h3>Train Step<a class="headerlink" href="#train-step" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1423,8 +1427,8 @@ Initial NLL Loss (Train): 3.2785
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="train-lopp">
+</section>
+<section id="train-lopp">
 <h3>Train Lopp<a class="headerlink" href="#train-lopp" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1480,10 +1484,10 @@ Initial NLL Loss (Train): 3.2785
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="results">
+</section>
+<section id="results">
 <h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">#</a></h3>
-<div class="section" id="losses">
+<section id="losses">
 <h4>Losses<a class="headerlink" href="#losses" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1510,8 +1514,8 @@ Initial NLL Loss (Train): 3.2785
 <img alt="../../../_images/pnn_regression_demo_30_0.png" src="../../../_images/pnn_regression_demo_30_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="predictions">
+</section>
+<section id="predictions">
 <h4>Predictions<a class="headerlink" href="#predictions" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1715,10 +1719,10 @@ Measuring adversarial group calibration by spanning group size between 0.0 and 1
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="heteroscedastic-distribution">
+</section>
+</section>
+</section>
+<section id="heteroscedastic-distribution">
 <h2>Heteroscedastic Distribution<a class="headerlink" href="#heteroscedastic-distribution" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2002,8 +2006,8 @@ Measuring adversarial group calibration by spanning group size between 0.0 and 1
 <img alt="../../../_images/pnn_regression_demo_62_1.png" src="../../../_images/pnn_regression_demo_62_1.png" />
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

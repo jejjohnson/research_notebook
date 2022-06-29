@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>vmap &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Jit" href="jit.html" />
@@ -908,7 +912,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="vmap">
+  <section class="tex2jax_ignore mathjax_ignore" id="vmap">
 <h1>vmap<a class="headerlink" href="#vmap" title="Permalink to this headline">#</a></h1>
 <p>This is a really nifty function that allows you to automatically handle batch dimensions without any cost! It allows you to write your code in a vectorized format and then just use this transformation to handle the batching.</p>
 <p>On the website, they have an example if you have a linear function written in vector format, and you want to make predictions for multiple samples. So an example function is:</p>
@@ -939,7 +943,7 @@ y = \mathbf{Xw} + b
 </pre></div>
 </div>
 <p>This is a pure functional programming as it features a composition of functions. I’m not well versed in functional programming and I had to stare at this for a long time before I understood. So I decided to break this down bit by bit.</p>
-<div class="section" id="partial-fit-function-the-predict-function">
+<section id="partial-fit-function-the-predict-function">
 <h2>1. “Partial” fit function the predict function<a class="headerlink" href="#partial-fit-function-the-predict-function" title="Permalink to this headline">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predict_f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">predict</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 </pre></div>
@@ -950,8 +954,8 @@ y = \mathbf{Xw} + b
 </pre></div>
 </div>
 <p>now I can change the params to be <code class="docutils literal notranslate"><span class="pre">2</span></code> and this will be reflected in the function. It depends on the application but I would avoid lambda functions when it comes to using <code class="docutils literal notranslate"><span class="pre">vmap</span></code> as you can easily get recursion issues. Make a decision, fix the function, then batch process it.</p>
-</div>
-<div class="section" id="map-batches-through-new-function">
+</section>
+<section id="map-batches-through-new-function">
 <h2>2. “Map” batches through new function<a class="headerlink" href="#map-batches-through-new-function" title="Permalink to this headline">#</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">preds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">predict_f</span><span class="p">,</span> <span class="n">input_batch</span><span class="p">))</span>
 </pre></div>
@@ -961,16 +965,16 @@ y = \mathbf{Xw} + b
 </pre></div>
 </div>
 <p>but it’s most succinct. Now our output is a list of all of the predictions.</p>
-</div>
-<div class="section" id="stack-predictions-to-create-an-array-of-outputs">
+</section>
+<section id="stack-predictions-to-create-an-array-of-outputs">
 <h2>3. “stack” predictions to create an array of outputs<a class="headerlink" href="#stack-predictions-to-create-an-array-of-outputs" title="Permalink to this headline">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now we can create the output array but stacking all of the entries on top of each other. We started off with an array of batches, and we looped through all of the inputs. The output from the map function is a list of all batches. And to get an array, we need to stack or concatenate the entries.</p>
 <p><strong>Note</strong>: For a list of 2D arrays, we need to use the <code class="docutils literal notranslate"><span class="pre">np.vstack</span></code> or <code class="docutils literal notranslate"><span class="pre">np.hstack</span></code> depending on if we want to stack arrays via the samples or via the features.</p>
-</div>
-<div class="section" id="vmap-batch-inputs-jax-style">
+</section>
+<section id="vmap-batch-inputs-jax-style">
 <h2>“vmap” batch inputs jax style<a class="headerlink" href="#vmap-batch-inputs-jax-style" title="Permalink to this headline">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a batch function</span>
 <span class="n">predict_batch_f</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">predict</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
@@ -980,7 +984,7 @@ y = \mathbf{Xw} + b
 </pre></div>
 </div>
 <p>Jax has this convenience function <code class="docutils literal notranslate"><span class="pre">vmap</span></code> which essentially vectorizes your operations. This is very similar to the numpy <code class="docutils literal notranslate"><span class="pre">vectorize</span></code> function. However, the numpy implementation isn’t for performance whereas the jax <code class="docutils literal notranslate"><span class="pre">vmap</span></code> function “just works” at apparently no extra cost. We’ve essentially collapsed the <code class="docutils literal notranslate"><span class="pre">stack</span></code> and <code class="docutils literal notranslate"><span class="pre">map</span></code> operations into one. So now we can use our predict function above which was created in vector format, to handle batches, essentially for free!</p>
-<div class="section" id="more-explicit-version">
+<section id="more-explicit-version">
 <h3>More Explicit Version<a class="headerlink" href="#more-explicit-version" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a batch function</span>
 <span class="n">predict_batch_f</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">predict</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
@@ -995,16 +999,16 @@ y = \mathbf{Xw} + b
 <li><p>If you’re function doesn’t have too many arguments, then this is a bit cleaner in my opinion. If not, it may be best to fix a number of arguments in your function first to reduce the clutter.</p></li>
 <li><p>You cannot partially fit arguments in whichever order you please. For example, I cannot partially fit the input_batch and leave the params argument free. I don’t know why this is the case. There are many tricks to get around this like using a <a class="reference external" href="https://stackoverflow.com/questions/11173660/can-one-partially-apply-the-second-argument-of-a-function-that-takes-no-keyword">closure</a> but I think it’s just easier to use the <code class="docutils literal notranslate"><span class="pre">in_axes</span></code> arguments and just be explicit.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="why-do-you-needs-this">
+</section>
+</section>
+<section id="why-do-you-needs-this">
 <h2>Why do you needs this?<a class="headerlink" href="#why-do-you-needs-this" title="Permalink to this headline">#</a></h2>
-<div class="section" id="gradients">
+<section id="gradients">
 <h3>Gradients<a class="headerlink" href="#gradients" title="Permalink to this headline">#</a></h3>
 <p>Well, even if you are going to write your code in a way that supports batch sizes, you’re probably using this so that you can calculate gradients using the <code class="docutils literal notranslate"><span class="pre">jax.grad</span></code> function. You can only take a gradients of functions that output a scalar value. So this is the only way you can vectorize the computation without doing explicit loops.</p>
-</div>
-</div>
-<div class="section" id="practical-example-kernel-matrices">
+</section>
+</section>
+<section id="practical-example-kernel-matrices">
 <h2>Practical Example: Kernel Matrices<a class="headerlink" href="#practical-example-kernel-matrices" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[
@@ -1015,20 +1019,20 @@ k(x,y) = \exp(-\gamma ||x-y||_2^2)
 <li><p>Kernel Function, <span class="math notranslate nohighlight">\(\exp(-\gamma d(\mathbf{x,y}))\)</span></p></li>
 <li><p>Gram Matrix, <span class="math notranslate nohighlight">\(\mathbf{K}\)</span></p></li>
 </ol>
-<div class="section" id="distance-matrices">
+<section id="distance-matrices">
 <h3>1. Distance Matrices<a class="headerlink" href="#distance-matrices" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
 d(x,y) = \sum_{i=1}^N (x_i - y_i)^2
 \]</div>
-<div class="section" id="vector-representation">
+<section id="vector-representation">
 <h4>Vector Representation<a class="headerlink" href="#vector-representation" title="Permalink to this headline">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sqeuclidean_distances</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="numpy-implementation">
+</section>
+<section id="numpy-implementation">
 <h4>Numpy Implementation<a class="headerlink" href="#numpy-implementation" title="Permalink to this headline">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
 </pre></div>
@@ -1040,7 +1044,7 @@ d(x,y) = \sum_{i=1}^N (x_i - y_i)^2
 </div></blockquote>
 </li>
 </ul>
-<div class="section" id="einsum">
+<section id="einsum">
 <h5>Einsum<a class="headerlink" href="#einsum" title="Permalink to this headline">#</a></h5>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">XX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ik,ik-&gt;i&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 <span class="n">YY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ik,ik-&gt;i&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -1052,10 +1056,10 @@ d(x,y) = \sum_{i=1}^N (x_i - y_i)^2
     <span class="n">dists</span> <span class="o">=</span> <span class="n">XX</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">+</span> <span class="n">YY</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">XY</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="dot-products">
+<section id="dot-products">
 <h4>Dot Products<a class="headerlink" href="#dot-products" title="Permalink to this headline">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">XX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 <span class="n">YY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -1067,16 +1071,16 @@ d(x,y) = \sum_{i=1}^N (x_i - y_i)^2
     <span class="n">dists</span> <span class="o">=</span> <span class="n">XX</span> <span class="o">+</span> <span class="n">YY</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">XY</span>
 </pre></div>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="pairwise-distances">
+<section id="pairwise-distances">
 <h4>Pairwise Distances<a class="headerlink" href="#pairwise-distances" title="Permalink to this headline">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dists</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">vmap</span><span class="p">(</span><span class="n">vmap</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="o">**</span><span class="n">arg</span><span class="p">),</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)))</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="rbf-kernel">
+</section>
+</section>
+<section id="rbf-kernel">
 <h3>2. RBF Kernel<a class="headerlink" href="#rbf-kernel" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
@@ -1088,8 +1092,8 @@ k(\mathbf{x,y}) = \exp\left[-\gamma \;d(\mathbf{x,y}) \right]
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;gamma&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">sqeuclidean_distances</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="gram-matrix">
+</section>
+<section id="gram-matrix">
 <h3>3. Gram Matrix<a class="headerlink" href="#gram-matrix" title="Permalink to this headline">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vv</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">vdot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">mv</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">vv</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
@@ -1113,9 +1117,9 @@ k(\mathbf{x,y}) = \exp\left[-\gamma \;d(\mathbf{x,y}) \right]
     <span class="k">return</span> <span class="n">mapx2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

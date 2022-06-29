@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Parameterized Marginal Gaussianization &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Parameterized Rotations" href="lecture_3_gfs_pt2_rot.html" />
@@ -1077,7 +1081,7 @@ title="Print to PDF"
               <div>
                 
   <!-- #region id="QMV_fJikDPKT" -->
-<div class="tex2jax_ignore mathjax_ignore section" id="parameterized-marginal-gaussianization">
+<section class="tex2jax_ignore mathjax_ignore" id="parameterized-marginal-gaussianization">
 <h1>Parameterized Marginal Gaussianization<a class="headerlink" href="#parameterized-marginal-gaussianization" title="Permalink to this headline">#</a></h1>
 <p>This is my notebook where I play around with all things normalizing flow with pyro. I use the following packages:</p>
 <ul class="simple">
@@ -1152,11 +1156,11 @@ title="Print to PDF"
 </pre></div>
 </div>
 <!-- #region id="mREQeNcanvJq" -->
-<div class="section" id="helpful-functions">
+<section id="helpful-functions">
 <h2>HelpFul Functions<a class="headerlink" href="#helpful-functions" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="EhmJphY1oHXc" -->
-<div class="section" id="generate-2d-grid">
+<section id="generate-2d-grid">
 <h3>Generate 2D Grid<a class="headerlink" href="#generate-2d-grid" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_2d_grid</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_grid</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1169,8 +1173,8 @@ title="Print to PDF"
 </pre></div>
 </div>
 <!-- #region id="_2E_YHKyoJa-" -->
-</div>
-<div class="section" id="plot-2d-grid">
+</section>
+<section id="plot-2d-grid">
 <h3>Plot 2D Grid<a class="headerlink" href="#plot-2d-grid" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
@@ -1218,8 +1222,8 @@ title="Print to PDF"
 </pre></div>
 </div>
 <!-- #region id="8UHy3Grgoe03" -->
-</div>
-<div class="section" id="torch-2-numpy">
+</section>
+<section id="torch-2-numpy">
 <h3>Torch 2 Numpy<a class="headerlink" href="#torch-2-numpy" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">torch_2_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -1237,9 +1241,9 @@ title="Print to PDF"
 </pre></div>
 </div>
 <!-- #region id="EMU9GR308W7G" -->
-</div>
-</div>
-<div class="section" id="d-toy-data">
+</section>
+</section>
+<section id="d-toy-data">
 <h2>2D Toy Data<a class="headerlink" href="#d-toy-data" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_toy_data</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">):</span>
@@ -1282,17 +1286,17 @@ title="Print to PDF"
 </pre></div>
 </div>
 <!-- #region id="ZUhElhna-B8f" -->
-</div>
-<div class="section" id="model">
+</section>
+<section id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="AwFeXVKRb369" -->
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h2>Parameterized Marginal Gaussianization<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="cMpoxF2UeUPU" -->
-<div class="section" id="univariate-gmm">
+<section id="univariate-gmm">
 <h3>Univariate GMM<a class="headerlink" href="#univariate-gmm" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
@@ -1325,7 +1329,7 @@ p(\mathbf{x};\boldsymbol{\theta}) = \sum_k^K \pi_k \mathcal{N}(x| \mu_k, \sigma_
 </pre></div>
 </div>
 <!-- #region id="vwiK66PEj5KQ" -->
-<div class="section" id="viz-pdf">
+<section id="viz-pdf">
 <h4>Viz - PDF<a class="headerlink" href="#viz-pdf" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">X_1</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">X_1</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">100</span><span class="p">)</span>
@@ -1340,8 +1344,8 @@ p(\mathbf{x};\boldsymbol{\theta}) = \sum_k^K \pi_k \mathcal{N}(x| \mu_k, \sigma_
 </pre></div>
 </div>
 <!-- #region id="XxRR-bkmep3V" -->
-</div>
-<div class="section" id="cdf-from-scratch">
+</section>
+<section id="cdf-from-scratch">
 <h4>CDF - From Scratch<a class="headerlink" href="#cdf-from-scratch" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[
@@ -1350,7 +1354,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <p>where <span class="math notranslate nohighlight">\(\phi\)</span> is the CDF of the Gaussian distribution.</p>
 <!-- #endregion -->
 <!-- #region id="cxPXStAzkFVM" -->
-<div class="section" id="trick-stabilization">
+<section id="trick-stabilization">
 <h5><strong>Trick:</strong> - Stabilization<a class="headerlink" href="#trick-stabilization" title="Permalink to this headline">#</a></h5>
 <p>We often like to put everything in terms of logs. This reparameterizes the functions so that the gradient updates of the parameters will be small irregardless of the function.</p>
 <div class="math notranslate nohighlight">
@@ -1438,9 +1442,9 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="xq-AIi5wi-24" -->
-</div>
-</div>
-<div class="section" id="pdf-from-scratch">
+</section>
+</section>
+<section id="pdf-from-scratch">
 <h4>PDF - From Scratch<a class="headerlink" href="#pdf-from-scratch" title="Permalink to this headline">#</a></h4>
 <p>We are going to use the same function as before. The only difference is the we will use the PDF instead of the CDF of a Gaussian.</p>
 <div class="math notranslate nohighlight">
@@ -1471,12 +1475,12 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="Ttn56-AKqWwD" -->
-</div>
-<div class="section" id="inverse-cdf">
+</section>
+<section id="inverse-cdf">
 <h4>Inverse CDF<a class="headerlink" href="#inverse-cdf" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <!-- #region id="w6L0e_mCwyJ9" -->
-<div class="section" id="don-t-do-this">
+<section id="don-t-do-this">
 <h5>Don’t do this<a class="headerlink" href="#don-t-do-this" title="Permalink to this headline">#</a></h5>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z_domain</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
@@ -1517,9 +1521,9 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="45JweZPOw2Qp" -->
-</div>
-</div>
-<div class="section" id="bisection-search">
+</section>
+</section>
+<section id="bisection-search">
 <h4>Bisection Search<a class="headerlink" href="#bisection-search" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">survae.transforms.bijections.functional.iterative_inversion</span> <span class="kn">import</span> <span class="n">bisection_inverse</span>
@@ -1574,8 +1578,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="DYBLfdHyvNS1" -->
-</div>
-<div class="section" id="bijections">
+</section>
+<section id="bijections">
 <h4>Bijections<a class="headerlink" href="#bijections" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">survae.transforms.bijections.functional.mixtures.gaussian_mixture</span> <span class="kn">import</span> <span class="n">gaussian_mixture_transform</span>
@@ -1602,8 +1606,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="TLJz7T3XmWLn" -->
-</div>
-<div class="section" id="survae-flows-function">
+</section>
+<section id="survae-flows-function">
 <h4>SurVAE Flows Function<a class="headerlink" href="#survae-flows-function" title="Permalink to this headline">#</a></h4>
 <p>Now, we will translate the code into PyTorch. I will create a functional form so that we just need to call it within our Bijector class.</p>
 <!-- #endregion -->
@@ -1626,8 +1630,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="zZkGooqwlHBQ" -->
-</div>
-<div class="section" id="initialization">
+</section>
+<section id="initialization">
 <h4>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">#</a></h4>
 <p>I will also create an initialization function which will allow us to initialization the parameters from the GMM model.</p>
 <!-- #endregion -->
@@ -1656,9 +1660,9 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="7xeo7jP9s3I8" -->
-</div>
-</div>
-<div class="section" id="pytorch-class">
+</section>
+</section>
+<section id="pytorch-class">
 <h3>PyTorch Class<a class="headerlink" href="#pytorch-class" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">survae.transforms.bijections.elementwise_nonlinear</span> <span class="kn">import</span> <span class="n">GaussianMixtureCDF</span>
@@ -1673,8 +1677,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="A2yKoa1hlVM0" -->
-</div>
-<div class="section" id="flow-model">
+</section>
+<section id="flow-model">
 <h3>Flow Model<a class="headerlink" href="#flow-model" title="Permalink to this headline">#</a></h3>
 <p>So to have a flow model, we need two components:</p>
 <hr class="docutils" />
@@ -1705,7 +1709,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="OJ1MJMjbmINi" -->
-<div class="section" id="forward-transformation">
+<section id="forward-transformation">
 <h4>Forward Transformation<a class="headerlink" href="#forward-transformation" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
@@ -1716,8 +1720,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="3VOdU-HwmNoL" -->
-</div>
-<div class="section" id="inverse-transformation">
+</section>
+<section id="inverse-transformation">
 <h4>Inverse Transformation<a class="headerlink" href="#inverse-transformation" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
@@ -1730,14 +1734,14 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="yX9SRYK-MbD3" -->
 <!-- #endregion -->
 <!-- #region id="qOFtkG4hivgQ" -->
-</div>
-</div>
-</div>
-<div class="section" id="training">
+</section>
+</section>
+</section>
+<section id="training">
 <h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="Wgwd--1eitR6" -->
-<div class="section" id="dataset">
+<section id="dataset">
 <h3>Dataset<a class="headerlink" href="#dataset" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># # Data</span>
@@ -1748,8 +1752,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="MFRD2bP2h3i8" -->
-</div>
-<div class="section" id="loss">
+</section>
+<section id="loss">
 <h3>Loss<a class="headerlink" href="#loss" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">nll_loss</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -1757,8 +1761,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="QOGFZSU0h47U" -->
-</div>
-<div class="section" id="pytorch-lightning-trainer">
+</section>
+<section id="pytorch-lightning-trainer">
 <h3>Pytorch-Lightning Trainer<a class="headerlink" href="#pytorch-lightning-trainer" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytorch_lightning</span> <span class="k">as</span> <span class="nn">pl</span>
@@ -1800,8 +1804,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="np4yqwXQiK9G" -->
-</div>
-<div class="section" id="logging">
+</section>
+<section id="logging">
 <h3>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># %load_ext tensorboard</span>
@@ -1809,8 +1813,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="J7RVhI5hiDfz" -->
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h3>Training<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># train model</span>
@@ -1818,13 +1822,13 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="ifZDTNsWiZos" -->
-</div>
-</div>
-<div class="section" id="results">
+</section>
+</section>
+<section id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="oTUVxFbZ5Vf0" -->
-<div class="section" id="latent-domain">
+<section id="latent-domain">
 <h3>Latent Domain<a class="headerlink" href="#latent-domain" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
@@ -1837,8 +1841,8 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </pre></div>
 </div>
 <!-- #region id="qaMRInWJ5c2L" -->
-</div>
-<div class="section" id="inverse">
+</section>
+<section id="inverse">
 <h3>Inverse<a class="headerlink" href="#inverse" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
@@ -1848,9 +1852,9 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">torch_2_numpy</span><span class="p">(</span><span class="n">X_approx</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

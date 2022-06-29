@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Utils &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/togglebutton.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -1029,7 +1033,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="utils">
+  <section class="tex2jax_ignore mathjax_ignore" id="utils">
 <h1>Utils<a class="headerlink" href="#utils" title="Permalink to this headline">#</a></h1>
 <p>Some helpful utilities when dealing with the IASI data.</p>
 <div class="cell docutils container">
@@ -1067,7 +1071,7 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-<div class="section" id="get-all-orbits">
+<section id="get-all-orbits">
 <h2>Get All Orbits<a class="headerlink" href="#get-all-orbits" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1179,8 +1183,8 @@ Run data is saved locally in <code>/home/emmanuel/documents/research_notebook/re
 </table>
 </div></div></div>
 </div>
-</div>
-<div class="section" id="get-orbits-for-a-specific-data">
+</section>
+<section id="get-orbits-for-a-specific-data">
 <h2>Get Orbits for a specific Data<a class="headerlink" href="#get-orbits-for-a-specific-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1270,8 +1274,8 @@ Run data is saved locally in <code>/home/emmanuel/documents/research_notebook/re
 </table>
 </div></div></div>
 </div>
-</div>
-<div class="section" id="reflectance-errors">
+</section>
+<section id="reflectance-errors">
 <h2>Reflectance Errors<a class="headerlink" href="#reflectance-errors" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1453,10 +1457,10 @@ WARNING:root:Too few points to create valid contours
 <img alt="../../../../_images/dl_loading_18_1.png" src="../../../../_images/dl_loading_18_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="preprocessing">
+</section>
+<section id="preprocessing">
 <h2>PreProcessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">#</a></h2>
-<div class="section" id="labels-standardization">
+<section id="labels-standardization">
 <h3>Labels - Standardization<a class="headerlink" href="#labels-standardization" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1479,8 +1483,8 @@ WARNING:root:Too few points to create valid contours
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="inputs-pca-transformation">
+</section>
+<section id="inputs-pca-transformation">
 <h3>Inputs - PCA Transformation<a class="headerlink" href="#inputs-pca-transformation" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1531,7 +1535,7 @@ Wall time: 1.24 s
 <img alt="../../../../_images/dl_loading_27_0.png" src="../../../../_images/dl_loading_27_0.png" />
 </div>
 </div>
-<div class="section" id="transform-input-covariance">
+<section id="transform-input-covariance">
 <h4>Transform Input Covariance<a class="headerlink" href="#transform-input-covariance" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1608,10 +1612,10 @@ Wall time: 1.24 s
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="model">
+</section>
+</section>
+</section>
+<section id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1704,7 +1708,7 @@ Wall time: 1.24 s
 </div>
 </div>
 </div>
-<div class="section" id="inference">
+<section id="inference">
 <h3>Inference<a class="headerlink" href="#inference" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1740,8 +1744,8 @@ Wall time: 1.24 s
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="training">
+</section>
+<section id="training">
 <h3>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1769,7 +1773,7 @@ Wall time: 1.24 s
 </div>
 </div>
 </div>
-<div class="section" id="loss">
+<section id="loss">
 <h4>Loss<a class="headerlink" href="#loss" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1827,10 +1831,10 @@ Wall time: 1.24 s
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="predictions">
+</section>
+</section>
+</section>
+<section id="predictions">
 <h2>Predictions<a class="headerlink" href="#predictions" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1851,7 +1855,7 @@ Wall time: 1.24 s
 </div>
 </div>
 </div>
-<div class="section" id="uncertain-predictions">
+<section id="uncertain-predictions">
 <h3>Uncertain Predictions<a class="headerlink" href="#uncertain-predictions" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2004,8 +2008,8 @@ Wall time: 1.24 s
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="visualization">
+</section>
+<section id="visualization">
 <h3>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2015,7 +2019,7 @@ Wall time: 1.24 s
 </div>
 </div>
 </div>
-<div class="section" id="standard-gp">
+<section id="standard-gp">
 <h4>Standard GP<a class="headerlink" href="#standard-gp" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2058,8 +2062,8 @@ lims_ext: (-4.020671751919406, 2.066046532972565)
 <img alt="../../../../_images/dl_loading_55_7.png" src="../../../../_images/dl_loading_55_7.png" />
 </div>
 </div>
-</div>
-<div class="section" id="mc-sampling">
+</section>
+<section id="mc-sampling">
 <h4>MC Sampling<a class="headerlink" href="#mc-sampling" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2101,8 +2105,8 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
 <img alt="../../../../_images/dl_loading_57_7.png" src="../../../../_images/dl_loading_57_7.png" />
 </div>
 </div>
-</div>
-<div class="section" id="unscented-transform">
+</section>
+<section id="unscented-transform">
 <h4>Unscented Transform<a class="headerlink" href="#unscented-transform" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2143,8 +2147,8 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
 <img alt="../../../../_images/dl_loading_59_7.png" src="../../../../_images/dl_loading_59_7.png" />
 </div>
 </div>
-</div>
-<div class="section" id="taylor-expansion-1st-order">
+</section>
+<section id="taylor-expansion-1st-order">
 <h4>Taylor Expansion (1st Order)<a class="headerlink" href="#taylor-expansion-1st-order" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2185,8 +2189,8 @@ lims_ext: (-4.02067057174744, 2.066033551080933)
 <img alt="../../../../_images/dl_loading_61_7.png" src="../../../../_images/dl_loading_61_7.png" />
 </div>
 </div>
-</div>
-<div class="section" id="taylor-expansion-2nd-order">
+</section>
+<section id="taylor-expansion-2nd-order">
 <h4>Taylor Expansion (2nd Order)<a class="headerlink" href="#taylor-expansion-2nd-order" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2276,10 +2280,10 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="test-data">
+</section>
+</section>
+</section>
+<section id="test-data">
 <h2>Test Data<a class="headerlink" href="#test-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3152,7 +3156,7 @@ Data variables:
 <img alt="../../../../_images/dl_loading_78_4.png" src="../../../../_images/dl_loading_78_4.png" />
 </div>
 </div>
-<div class="section" id="mae-maps">
+<section id="mae-maps">
 <h3>MAE Maps<a class="headerlink" href="#mae-maps" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3212,8 +3216,8 @@ Data variables:
 <img alt="../../../../_images/dl_loading_82_4.png" src="../../../../_images/dl_loading_82_4.png" />
 </div>
 </div>
-</div>
-<div class="section" id="standard-deviation">
+</section>
+<section id="standard-deviation">
 <h3>Standard Deviation<a class="headerlink" href="#standard-deviation" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3245,8 +3249,8 @@ Data variables:
 <img alt="../../../../_images/dl_loading_85_4.png" src="../../../../_images/dl_loading_85_4.png" />
 </div>
 </div>
-</div>
-<div class="section" id="calibration">
+</section>
+<section id="calibration">
 <h3>Calibration<a class="headerlink" href="#calibration" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3429,9 +3433,9 @@ lims_ext: (-4.044681226470841, 2.156489299577183)
 <img alt="../../../../_images/dl_loading_88_29.png" src="../../../../_images/dl_loading_88_29.png" />
 </div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Gaussian Process Gradients with GPyTorch &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/togglebutton.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Information Theory" href="../../info_theory/overview.html" />
@@ -1034,7 +1038,7 @@ title="Print to PDF"
               <div>
                 
   <p><a href="https://colab.research.google.com/github/jejjohnson/research_notebook/blob/develop/content/notes/egps/notebooks/gpytorch_egp_taylor.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
-<div class="tex2jax_ignore mathjax_ignore section" id="gaussian-process-gradients-with-gpytorch">
+<section class="tex2jax_ignore mathjax_ignore" id="gaussian-process-gradients-with-gpytorch">
 <h1>Gaussian Process Gradients with GPyTorch<a class="headerlink" href="#gaussian-process-gradients-with-gpytorch" title="Permalink to this headline">#</a></h1>
 <p>In this notebook, I will be looking at how one can compute the gradients of different</p>
 <p><strong>Sources</strong></p>
@@ -1100,7 +1104,7 @@ except:
 </div>
 </div>
 </div>
-<div class="section" id="d-datasets">
+<section id="d-datasets">
 <h2>1D Datasets<a class="headerlink" href="#d-datasets" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1177,7 +1181,7 @@ except:
 <img alt="../../../../_images/gpytorch_egp_taylor_7_0.png" src="../../../../_images/gpytorch_egp_taylor_7_0.png" />
 </div>
 </div>
-<div class="section" id="data">
+<section id="data">
 <h3>Data<a class="headerlink" href="#data" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1193,11 +1197,11 @@ except:
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="plots">
+</section>
+</section>
+<section id="plots">
 <h2>Plots<a class="headerlink" href="#plots" title="Permalink to this headline">#</a></h2>
-<div class="section" id="predictions">
+<section id="predictions">
 <h3>Predictions<a class="headerlink" href="#predictions" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1233,8 +1237,8 @@ except:
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="calibrations">
+</section>
+<section id="calibrations">
 <h3>Calibrations<a class="headerlink" href="#calibrations" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1252,9 +1256,9 @@ except:
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="model">
+</section>
+</section>
+<section id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1276,7 +1280,7 @@ except:
 </div>
 </div>
 </div>
-<div class="section" id="training">
+<section id="training">
 <h3>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1332,8 +1336,8 @@ except:
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="losses">
+</section>
+<section id="losses">
 <h3>Losses<a class="headerlink" href="#losses" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1349,8 +1353,8 @@ except:
 <img alt="../../../../_images/gpytorch_egp_taylor_21_0.png" src="../../../../_images/gpytorch_egp_taylor_21_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h3>Predictions<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1409,10 +1413,10 @@ except:
 <img alt="../../../../_images/gpytorch_egp_taylor_26_0.png" src="../../../../_images/gpytorch_egp_taylor_26_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="gradients-w-r-t-inputs-1st-derivative">
+</section>
+<section id="gradients-w-r-t-inputs-1st-derivative">
 <h3>Gradients w.r.t. Inputs (1st Derivative)<a class="headerlink" href="#gradients-w-r-t-inputs-1st-derivative" title="Permalink to this headline">#</a></h3>
-<div class="section" id="tensors">
+<section id="tensors">
 <h4>Tensors<a class="headerlink" href="#tensors" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1429,8 +1433,8 @@ except:
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="autograd">
+</section>
+<section id="autograd">
 <h4>AutoGrad<a class="headerlink" href="#autograd" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1445,8 +1449,8 @@ except:
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="functional">
+</section>
+<section id="functional">
 <h4>Functional<a class="headerlink" href="#functional" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1463,9 +1467,9 @@ except:
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="plot">
+</section>
+</section>
+<section id="plot">
 <h3>Plot<a class="headerlink" href="#plot" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1483,9 +1487,9 @@ except:
 <img alt="../../../../_images/gpytorch_egp_taylor_35_0.png" src="../../../../_images/gpytorch_egp_taylor_35_0.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="gradient-2nd-order-wrt-inputs">
+</section>
+</section>
+<section id="gradient-2nd-order-wrt-inputs">
 <h2>Gradient (2nd Order) wrt Inputs<a class="headerlink" href="#gradient-2nd-order-wrt-inputs" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1525,8 +1529,8 @@ except:
 <img alt="../../../../_images/gpytorch_egp_taylor_38_0.png" src="../../../../_images/gpytorch_egp_taylor_38_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="hessian-wrt-inputs">
+</section>
+<section id="hessian-wrt-inputs">
 <h2>Hessian (wrt Inputs)<a class="headerlink" href="#hessian-wrt-inputs" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1572,11 +1576,11 @@ except:
 <img alt="../../../../_images/gpytorch_egp_taylor_43_0.png" src="../../../../_images/gpytorch_egp_taylor_43_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="uncertain-inputs">
+</section>
+<section id="uncertain-inputs">
 <h2>Uncertain Inputs<a class="headerlink" href="#uncertain-inputs" title="Permalink to this headline">#</a></h2>
 <p>A quick demo showing how we can use the Taylor Series Expansion to propagate the error within our inputs.</p>
-<div class="section" id="st-order">
+<section id="st-order">
 <h3>1st Order<a class="headerlink" href="#st-order" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1629,7 +1633,7 @@ except:
 </div>
 </div>
 </div>
-<div class="section" id="id2">
+<section id="id2">
 <h4>Predictions<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1645,8 +1649,8 @@ except:
 <img alt="../../../../_images/gpytorch_egp_taylor_50_1.png" src="../../../../_images/gpytorch_egp_taylor_50_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="calibration">
+</section>
+<section id="calibration">
 <h4>Calibration<a class="headerlink" href="#calibration" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1658,9 +1662,9 @@ except:
 <img alt="../../../../_images/gpytorch_egp_taylor_52_0.png" src="../../../../_images/gpytorch_egp_taylor_52_0.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="nd-order">
+</section>
+</section>
+<section id="nd-order">
 <h3>2nd Order<a class="headerlink" href="#nd-order" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1713,7 +1717,7 @@ except:
 </div>
 </div>
 </div>
-<div class="section" id="predictive-mean">
+<section id="predictive-mean">
 <h4>Predictive Mean<a class="headerlink" href="#predictive-mean" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1733,8 +1737,8 @@ except:
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="predictive-variance">
+</section>
+<section id="predictive-variance">
 <h4>Predictive Variance<a class="headerlink" href="#predictive-variance" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1791,10 +1795,10 @@ except:
 <img alt="../../../../_images/gpytorch_egp_taylor_62_0.png" src="../../../../_images/gpytorch_egp_taylor_62_0.png" />
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

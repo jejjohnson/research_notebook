@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Error Propagation &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Next Steps" href="next.html" />
@@ -848,7 +852,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="error-propagation">
+  <section class="tex2jax_ignore mathjax_ignore" id="error-propagation">
 <h1>Error Propagation<a class="headerlink" href="#error-propagation" title="Permalink to this headline">#</a></h1>
 <p>We’re in the setting where we have some inputs that come from a distribution <span class="math notranslate nohighlight">\(\mathbf{x} \sim \mathcal{N}(\mathbf{\mu_x}, \Sigma_\mathbf{x})\)</span> and we have some outputs <span class="math notranslate nohighlight">\(y\in\mathbb{R}\)</span>. Typically we have some function <span class="math notranslate nohighlight">\(f(\mathbf)\)</span> that maps the points <span class="math notranslate nohighlight">\(f:\mathbb{R}^D \rightarrow \mathbb{R}\)</span>. So like we do with GPs, we have the following function”</p>
 <div class="math notranslate nohighlight">
@@ -856,7 +860,7 @@ title="Print to PDF"
 y=f(\mathbf{x})
 \]</div>
 <hr class="docutils" />
-<div class="section" id="change-of-variables">
+<section id="change-of-variables">
 <h2>Change of Variables<a class="headerlink" href="#change-of-variables" title="Permalink to this headline">#</a></h2>
 <p>To have this full mapping, we would need to use the change of variables method because we are doing a transformation between of probability distributions.</p>
 <div class="math notranslate nohighlight">
@@ -867,9 +871,9 @@ p(y) &amp;= p(x)\left| \frac{dy}{dx} \right|^{-1} \\
 \end{aligned}
 \end{split}\]</div>
 <p>This is very expensive and can be very difficult depending upon the function.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="conditional-gaussian-distribution">
+<section id="conditional-gaussian-distribution">
 <h2>Conditional Gaussian Distribution<a class="headerlink" href="#conditional-gaussian-distribution" title="Permalink to this headline">#</a></h2>
 <p>Alternatively, if we know that <span class="math notranslate nohighlight">\(f()\)</span> is described by a Gaussian distribution, then we can find the joint distribution between <span class="math notranslate nohighlight">\(\mathbf{x},y\)</span>. This can be described as:</p>
 <div class="math notranslate nohighlight">
@@ -889,9 +893,9 @@ p(y) &amp;= p(x)\left| \frac{dy}{dx} \right|^{-1} \\
     \end{bmatrix}
     \right)
 \end{split}\]</div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="taylor-expansions">
+<section id="taylor-expansions">
 <h2>Taylor Expansions<a class="headerlink" href="#taylor-expansions" title="Permalink to this headline">#</a></h2>
 <p>by using a Taylor series expansion. Let <span class="math notranslate nohighlight">\(\mu_x\)</span> be the true inputs and we perturb these by some noise <span class="math notranslate nohighlight">\(\delta_x\)</span> which is described by a normal distribution <span class="math notranslate nohighlight">\(\delta_x \sim \mathcal{N}(0, \Sigma_x)\)</span>. So we can write an expression for the function <span class="math notranslate nohighlight">\(f(\mathbf{x})\)</span>.</p>
 <div class="math notranslate nohighlight">
@@ -903,15 +907,15 @@ f(\mathbf{x}) &amp;= f(\mu_x + \delta_x) \\
 \end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\nabla_x f(\mu_x)\)</span> is the jacobian of <span class="math notranslate nohighlight">\(f(\cdot)\)</span> evaluated at <span class="math notranslate nohighlight">\(\mu_x\)</span>, <span class="math notranslate nohighlight">\(\nabla_{xx}f(\mu_x)\)</span> is the hessian of <span class="math notranslate nohighlight">\(f(\cdot)\)</span> evaluated at <span class="math notranslate nohighlight">\(\mu_x\)</span> and <span class="math notranslate nohighlight">\(e_i\)</span> is a ones vector (essentially the trace of a full matrix).</p>
 <hr class="docutils" />
-<div class="section" id="joint-distribution">
+<section id="joint-distribution">
 <h3>Joint Distribution<a class="headerlink" href="#joint-distribution" title="Permalink to this headline">#</a></h3>
 <p>So, we want <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{x})\)</span> which is a joint distribution of <span class="math notranslate nohighlight">\(\begin{bmatrix} \mathbf{x} \\ f(\mathbf{x})\end{bmatrix}\)</span>. But as we said, this is difficult to compute so we do a Taylor approximation to this function <span class="math notranslate nohighlight">\(\begin{bmatrix} \mu_\mathbf{x} \\ f(\mu_\mathbf{x} + \delta_x) \end{bmatrix}\)</span>. But we still want the <strong>full joint distribution</strong>, ideally Gaussian. So that would mean we at least need the expectation and the covariance.</p>
 <div class="math notranslate nohighlight">
 \[
 \mathbb{E}_\mathbf{x}\left[ \tilde{f}(\mathbf{x}) \right], \mathbb{V}_\mathbf{x}\left[ \tilde{f}(\mathbf{x}) \right]
 \]</div>
-</div>
-<div class="section" id="derivation">
+</section>
+<section id="derivation">
 <h3>Derivation<a class="headerlink" href="#derivation" title="Permalink to this headline">#</a></h3>
 <p><strong>Mean Function</strong></p>
 <p>The mean function is the easiest to derive. We can just take the expectation of the first two terms and we’ll see why all the higher order terms disappear.</p>
@@ -994,10 +998,10 @@ C_T &amp;= \Sigma_\mathbf{x} \nabla_\mathbf{x}f(\mu_\mathbf{x}) \\
 \nabla_\mathbf{x}f(\mu_\mathbf{x}) \\
 \end{aligned}
 \end{split}\]</div>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="joint-distribution-for-additive-noise">
+<section id="joint-distribution-for-additive-noise">
 <h2>Joint Distribution for Additive Noise<a class="headerlink" href="#joint-distribution-for-additive-noise" title="Permalink to this headline">#</a></h2>
 <p>So in this setting, we are closer to what we typically use for a GP model.</p>
 <div class="math notranslate nohighlight">
@@ -1041,16 +1045,16 @@ f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \\
 \end{aligned}
 \end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\tilde{\Sigma}_x = \nabla_x \mu_{GP} \Sigma_x \nabla \mu_{GP}^\top\)</span>.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="law-of-error-propagation">
+<section id="law-of-error-propagation">
 <h2>Law of Error Propagation<a class="headerlink" href="#law-of-error-propagation" title="Permalink to this headline">#</a></h2>
 <p>This results in a mean and error covariance of the new distribution <span class="math notranslate nohighlight">\(\mathbf z\)</span> defined by:</p>
 <div class="math notranslate nohighlight">
 \[\mu_{\mathbf z} = f(\mu_{\mathbf x})\]</div>
 <div class="math notranslate nohighlight">
 \[\Sigma_\mathbf{z} = \nabla_\mathbf{x} f(\mu_{\mathbf x}) \; \Sigma_\mathbf{x} \; \nabla_\mathbf{x} f(\mu_{\mathbf x})^{\top}\]</div>
-<div class="section" id="font-color-red-proof-font-mean-function">
+<section id="font-color-red-proof-font-mean-function">
 <h3><font color="red">Proof:</font> Mean Function<a class="headerlink" href="#font-color-red-proof-font-mean-function" title="Permalink to this headline">#</a></h3>
 <p>Given the mean function:</p>
 <div class="math notranslate nohighlight">
@@ -1069,8 +1073,8 @@ f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \\
 &amp;= f(\mu_{\mathbf x}) \\
 \end{aligned}
 \end{split}\]</div>
-</div>
-<div class="section" id="font-color-red-proof-font-variance-function">
+</section>
+<section id="font-color-red-proof-font-variance-function">
 <h3><font color="red">Proof:</font> Variance Function<a class="headerlink" href="#font-color-red-proof-font-variance-function" title="Permalink to this headline">#</a></h3>
 <p>Given the variance function</p>
 <div class="math notranslate nohighlight">
@@ -1089,18 +1093,18 @@ f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \\
 \end{aligned}
 \end{split}\]</div>
 <p>I’ve linked a nice tutorial for propagating variances below if you would like to go through the derivations yourself.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="resources">
+<section id="resources">
 <h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Essence of Calculus, Chapter 11 | Taylor Series - 3Blue1Brown - <a class="reference external" href="https://youtu.be/3d6DsjIBzJ4">youtube</a></p></li>
 <li><p>Introduction to Error Propagation: Derivation, Meaning and Examples - <a class="reference external" href="http://srl.informatik.uni-freiburg.de/papers/arrasTR98.pdf">PDF</a></p></li>
 <li><p>Statistical uncertainty and error propagation - Vermeer - <a class="reference external" href="https://users.aalto.fi/~mvermeer/uncertainty.pdf">PDF</a></p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

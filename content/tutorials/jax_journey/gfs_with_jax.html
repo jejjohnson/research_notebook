@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Gaussianization Flows &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Remote Computing" href="../remote/overview.html" />
@@ -995,7 +999,7 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="gaussianization-flows">
+  <section class="tex2jax_ignore mathjax_ignore" id="gaussianization-flows">
 <h1>Gaussianization Flows<a class="headerlink" href="#gaussianization-flows" title="Permalink to this headline">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1028,7 +1032,7 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-<div class="section" id="data">
+<section id="data">
 <h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1052,12 +1056,12 @@ title="Print to PDF"
 <img alt="../../../_images/gfs_with_jax_4_0.png" src="../../../_images/gfs_with_jax_4_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h2>Gaussianization Flows<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
-<div class="section" id="marginal-gaussianization">
+<section id="marginal-gaussianization">
 <h3>Marginal Gaussianization<a class="headerlink" href="#marginal-gaussianization" title="Permalink to this headline">#</a></h3>
-<div class="section" id="initialization">
+<section id="initialization">
 <h4>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1103,9 +1107,9 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="pdf">
+</section>
+</section>
+<section id="pdf">
 <h3>PDF<a class="headerlink" href="#pdf" title="Permalink to this headline">#</a></h3>
 <p>We are going to use the same function as before. The only difference is the we will use the PDF instead of the CDF of a Gaussian.</p>
 <div class="math notranslate nohighlight">
@@ -1324,9 +1328,9 @@ title="Print to PDF"
 <img alt="../../../_images/gfs_with_jax_17_2.png" src="../../../_images/gfs_with_jax_17_2.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="inverse-cdf">
+</section>
+</section>
+<section id="inverse-cdf">
 <h2>Inverse CDF<a class="headerlink" href="#inverse-cdf" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1424,8 +1428,8 @@ title="Print to PDF"
 <img alt="../../../_images/gfs_with_jax_21_2.png" src="../../../_images/gfs_with_jax_21_2.png" />
 </div>
 </div>
-</div>
-<div class="section" id="random-rotations">
+</section>
+<section id="random-rotations">
 <h2>Random Rotations<a class="headerlink" href="#random-rotations" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1501,7 +1505,7 @@ title="Print to PDF"
 <img alt="../../../_images/gfs_with_jax_25_2.png" src="../../../_images/gfs_with_jax_25_2.png" />
 </div>
 </div>
-<div class="section" id="composite-transformation">
+<section id="composite-transformation">
 <h3>Composite Transformation<a class="headerlink" href="#composite-transformation" title="Permalink to this headline">#</a></h3>
 <p>So to have a flow model, we need two components:</p>
 <hr class="docutils" />
@@ -1751,11 +1755,11 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="training">
+</section>
+</section>
+<section id="training">
 <h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h2>
-<div class="section" id="loss">
+<section id="loss">
 <h3>Loss<a class="headerlink" href="#loss" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1802,8 +1806,8 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="gradients">
+</section>
+<section id="gradients">
 <h3>Gradients<a class="headerlink" href="#gradients" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1821,8 +1825,8 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="train-step">
+</section>
+<section id="train-step">
 <h3>Train Step<a class="headerlink" href="#train-step" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1844,8 +1848,8 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="optimizers">
+</section>
+<section id="optimizers">
 <h3>Optimizers<a class="headerlink" href="#optimizers" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1860,8 +1864,8 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h3>Training<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1894,9 +1898,9 @@ Compiling module jit_train_step.11307
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="results">
+</section>
+</section>
+<section id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1905,7 +1909,7 @@ Compiling module jit_train_step.11307
 </div>
 </div>
 </div>
-<div class="section" id="losses">
+<section id="losses">
 <h3>Losses<a class="headerlink" href="#losses" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1921,8 +1925,8 @@ Compiling module jit_train_step.11307
 <img alt="../../../_images/gfs_with_jax_49_0.png" src="../../../_images/gfs_with_jax_49_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="latent-space">
+</section>
+<section id="latent-space">
 <h3>Latent Space<a class="headerlink" href="#latent-space" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1938,8 +1942,8 @@ Compiling module jit_train_step.11307
 <img alt="../../../_images/gfs_with_jax_52_1.png" src="../../../_images/gfs_with_jax_52_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="inverse-transform">
+</section>
+<section id="inverse-transform">
 <h3>Inverse Transform<a class="headerlink" href="#inverse-transform" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1953,8 +1957,8 @@ Compiling module jit_train_step.11307
 <img alt="../../../_images/gfs_with_jax_54_0.png" src="../../../_images/gfs_with_jax_54_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="generated-samples">
+</section>
+<section id="generated-samples">
 <h3>Generated Samples<a class="headerlink" href="#generated-samples" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1982,9 +1986,9 @@ Compiling module jit_train_step.11307
 <img alt="../../../_images/gfs_with_jax_58_1.png" src="../../../_images/gfs_with_jax_58_1.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="density-estimation">
+</section>
+</section>
+<section id="density-estimation">
 <h2>Density Estimation<a class="headerlink" href="#density-estimation" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2069,8 +2073,8 @@ Compiling module jit_train_step.11307
 <img alt="../../../_images/gfs_with_jax_63_0.png" src="../../../_images/gfs_with_jax_63_0.png" />
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

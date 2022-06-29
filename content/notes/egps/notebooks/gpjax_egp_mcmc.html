@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>MCMC + Sigma Points Demo &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/togglebutton.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
     <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -986,7 +990,7 @@ title="Print to PDF"
               <div>
                 
   <p><a href="https://colab.research.google.com/github/jejjohnson/research_notebook/blob/main/research_notebook/content/notes/egps/notebooks/gpjax_egp_mcmc.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
-<div class="tex2jax_ignore mathjax_ignore section" id="mcmc-sigma-points-demo">
+<section class="tex2jax_ignore mathjax_ignore" id="mcmc-sigma-points-demo">
 <h1>MCMC + Sigma Points Demo<a class="headerlink" href="#mcmc-sigma-points-demo" title="Permalink to this headline">#</a></h1>
 <p>My starting notebook where I install all of the necessary libraries and load some easy 1D/2D Regression data to play around with.</p>
 <div class="cell docutils container">
@@ -1061,7 +1065,7 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-<div class="section" id="demo-data">
+<section id="demo-data">
 <h2>Demo Data<a class="headerlink" href="#demo-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1115,10 +1119,10 @@ title="Print to PDF"
 <img alt="../../../../_images/gpjax_egp_mcmc_6_0.png" src="../../../../_images/gpjax_egp_mcmc_6_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="standard-gp-model">
+</section>
+<section id="standard-gp-model">
 <h2>Standard GP Model<a class="headerlink" href="#standard-gp-model" title="Permalink to this headline">#</a></h2>
-<div class="section" id="model">
+<section id="model">
 <h3>Model<a class="headerlink" href="#model" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1147,7 +1151,7 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-<div class="section" id="parameters">
+<section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1181,9 +1185,9 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="inference-svi">
+</section>
+</section>
+<section id="inference-svi">
 <h3>Inference (SVI)<a class="headerlink" href="#inference-svi" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1200,8 +1204,8 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="training">
+</section>
+<section id="training">
 <h3>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1227,7 +1231,7 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-<div class="section" id="losses">
+<section id="losses">
 <h4>Losses<a class="headerlink" href="#losses" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1243,11 +1247,11 @@ title="Print to PDF"
 <img alt="../../../../_images/gpjax_egp_mcmc_17_0.png" src="../../../../_images/gpjax_egp_mcmc_17_0.png" />
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="tex2jax_ignore mathjax_ignore section" id="take-them-directly">
+</section>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="take-them-directly">
 <h1>Take them directly<a class="headerlink" href="#take-them-directly" title="Permalink to this headline">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1332,7 +1336,7 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-<div class="section" id="predictions-on-noisy-data">
+<section id="predictions-on-noisy-data">
 <h2>Predictions on Noisy Data<a class="headerlink" href="#predictions-on-noisy-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1421,8 +1425,8 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="noisy-test-samples">
+</section>
+<section id="noisy-test-samples">
 <h2>Noisy Test Samples<a class="headerlink" href="#noisy-test-samples" title="Permalink to this headline">#</a></h2>
 <p>In Gaussian processes, the original formulation dictates that we assume there is some noise in the observations, <span class="math notranslate nohighlight">\(y\)</span> and that we observe the real inputs <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>. So we’ll see that this it is not trivial to modify this formulation to account for uncertain inputs. Let’s assume that we have a data set <span class="math notranslate nohighlight">\(\mathcal{D}=\{\mathbf{X}, \boldsymbol{y} \}\)</span>. In this case we assume the following relationship between our inputs, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, and outputs, <span class="math notranslate nohighlight">\(y\)</span>:</p>
 <div class="math notranslate nohighlight">
@@ -1451,7 +1455,7 @@ y_n &amp;= f(\mathbf{x}_n)+ \epsilon_y \\
 <div class="math notranslate nohighlight">
 \[p(f_*|\mu_\mathbf{x},\Sigma_\mathbf{x},\mathcal{D}) = \int \mathcal{N}\left(f_*|\mu_\mathcal{GP}(\mathbf{x}_*),\sigma^2_\mathcal{GP}(\mathbf{x}_*) \right) \; \mathcal{N}(\mathbf{x}_*|\mu_\mathbf{x}, \Sigma_\mathbf{x})\; d\mathbf{x}_*\]</div>
 <p>So this integral is intractable because if we consider the terms within the GP predictive mean and predictive variance, we will need to calculate the integral of an inverse kernel function, <span class="math notranslate nohighlight">\(\mathbf{K}_\mathcal{GP}^{-1}\)</span>. Below we outline some of the most popular methods found in the literature.</p>
-<div class="section" id="demo-single-point">
+<section id="demo-single-point">
 <h3>Demo - Single Point<a class="headerlink" href="#demo-single-point" title="Permalink to this headline">#</a></h3>
 <p>For to demonstrate the function, we’re going to do the steps assuming no batch dimension. In other words, we’re working with a test vector <span class="math notranslate nohighlight">\(\mathbf{x}_* \in \mathbb{R}^{D}\)</span>, <strong>not</strong> a matrix of samples <span class="math notranslate nohighlight">\(\mathbf{X}_* \in \mathbb{R}^{N\times D}\)</span>.</p>
 <div class="cell docutils container">
@@ -1514,8 +1518,8 @@ y_n &amp;= f(\mathbf{x}_n)+ \epsilon_y \\
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="monte-carlo-sampling">
+</section>
+<section id="monte-carlo-sampling">
 <h3>Monte Carlo Sampling<a class="headerlink" href="#monte-carlo-sampling" title="Permalink to this headline">#</a></h3>
 <p>In this first example, we will approximate the actual posterior using Monte Carlo sampling. Using the following formula:</p>
 <div class="math notranslate nohighlight">
@@ -1636,7 +1640,7 @@ p(f_*|\mu_\mathbf{x}, \Sigma_\mathbf{x}, \mathcal{D}) \approx \frac{1}{T}\sum_{t
 <img alt="../../../../_images/gpjax_egp_mcmc_44_0.png" src="../../../../_images/gpjax_egp_mcmc_44_0.png" />
 </div>
 </div>
-<div class="section" id="vectorized-over-all-samples">
+<section id="vectorized-over-all-samples">
 <h4>Vectorized Over All Samples<a class="headerlink" href="#vectorized-over-all-samples" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1756,12 +1760,12 @@ p(f_*|\mu_\mathbf{x}, \Sigma_\mathbf{x}, \mathcal{D}) \approx \frac{1}{T}\sum_{t
 </div>
 </div>
 <p>As you can see, this is a non-Gaussian distribution. Below we will see how we can approximate this as a Gaussian.</p>
-</div>
-</div>
-</div>
-<div class="section" id="unscented-transformation">
+</section>
+</section>
+</section>
+<section id="unscented-transformation">
 <h2>Unscented Transformation<a class="headerlink" href="#unscented-transformation" title="Permalink to this headline">#</a></h2>
-<div class="section" id="unscented-weights">
+<section id="unscented-weights">
 <h3>Unscented Weights<a class="headerlink" href="#unscented-weights" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1815,8 +1819,8 @@ p(f_*|\mu_\mathbf{x}, \Sigma_\mathbf{x}, \mathcal{D}) \approx \frac{1}{T}\sum_{t
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="sigma-points">
+</section>
+<section id="sigma-points">
 <h3>Sigma Points<a class="headerlink" href="#sigma-points" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1970,8 +1974,8 @@ p(f_*|\mu_\mathbf{x}, \Sigma_\mathbf{x}, \mathcal{D}) \approx \frac{1}{T}\sum_{t
 <img alt="../../../../_images/gpjax_egp_mcmc_65_0.png" src="../../../../_images/gpjax_egp_mcmc_65_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="vectorized-demo">
+</section>
+<section id="vectorized-demo">
 <h3>Vectorized Demo<a class="headerlink" href="#vectorized-demo" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2084,9 +2088,9 @@ p(f_*|\mu_\mathbf{x}, \Sigma_\mathbf{x}, \mathcal{D}) \approx \frac{1}{T}\sum_{t
 <img alt="../../../../_images/gpjax_egp_mcmc_71_0.png" src="../../../../_images/gpjax_egp_mcmc_71_0.png" />
 </div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

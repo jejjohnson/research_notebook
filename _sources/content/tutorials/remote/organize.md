@@ -46,12 +46,8 @@ credentials/
 ---
 ## Syncing Files Across Servers
 
-:::{tip}
-Be sure to have the `.ssh/config` ready to ease the process. Otherwise the commands will be fairly cumbersome.
-:::
 
-
-### `Projects`
+### `Project`
 
 You should be using `git` and `github`. This is the best way to make sure all changes are being captured and you have the entire history.
 
@@ -69,15 +65,6 @@ git push origin master
 git pull origin master
 ```
 
-
-
----
-### PreProcessing
-
-
-```bash
-salloc --nodes=1 --ntasks-per-node=1 --cpus-per-task=16 --account=cli@cpu 
-```
 
 ### `Data`
 
@@ -102,89 +89,18 @@ rsync -avxH /path/to/project/data login@cargo.univ-grenoble-alpes.fr:/path/to/pr
 
 **Light Data Transfer**
 
-#### RSYNC
-
 ```bash
-rsync -avxH jean_zay:/gpfswork/rech/cli/uvo53rl/test_logs/wandb/ /mnt/meom/workdir/johnsonj/test_logs/wandb/
+rsync -avxH /path/to/project/data login@cargo.univ-grenoble-alpes.fr:/path/to/project/data
 ```
 
-
-##### Functions
-
-```bash
-function pull_wandb_changes(){
-    rsync -avxH jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/ /mnt/meom/workdir/johnsonj/logs/wandb/
-}
-function push_wandb_changes(){
-    rsync -avxH /mnt/meom/workdir/johnsonj/logs/wandb/ jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/
-}
-function sync_wandb_changes(){
-    wandb sync
-}
-```
-
-```bash
-# sync offline runs
-wandb sync --include-offline /mnt/meom/workdir/johnsonj/logs/wandb/offline-*
-```
-
-```bash
-wandb sync --include-offline /mnt/meom/workdir/johnsonj/logs/wandb/offline-run-20220601_065448-2m11j69u
-```
-
-```bash
-# make directory for wandb logs
-if [ ! -d mkdir /gpfsscratch/rech/cli/uvo53rl/logs ]; then
-  mkdir -p mkdir /gpfsscratch/rech/cli/uvo53rl/logs;
-fi
-
-# make directory for wandb logs
-if [ ! -d /gpfsscratch/rech/cli/uvo53rl/wandb ]; then
-  mkdir -p /gpfsscratch/rech/cli/uvo53rl/wandb;
-fi
-
-# make directory for wandb logs
-if [ ! -d /gpfsscratch/rech/cli/uvo53rl/errs ]; then
-  mkdir -p /gpfsscratch/rech/cli/uvo53rl/errs;
-fi
-
-# make directory for wandb logs
-if [ ! -d /gpfsscratch/rech/cli/uvo53rl/jobs ]; then
-  mkdir -p /gpfsscratch/rech/cli/uvo53rl/jobs;
-fi
-
-# make dot files
-if [ ! -d /gpfsscratch/rech/cli/uvo53rl/.conda ]; then
-  mkdir -p /gpfsscratch/rech/cli/uvo53rl/.conda &&
-  conda create --prefix=/gpfsscratch/rech/cli/uvo53rl/.conda/envs/jaxtf_gpu_py39 --clone jax_gpu_py39 &&
-  conda create --prefix=/gpfsscratch/rech/cli/uvo53rl/.conda/envs/jaxtftorch_gpu_py39 --clone jax_gpu_py39;
-fi
-if [ ! -d /gpfsscratch/rech/cli/uvo53rl/.cache ]; then
-  mkdir -p /gpfsscratch/rech/cli/uvo53rl/.cache;
-fi
-```
-
-#### SCP
+**SCP**
 
 A lot of times you'll get coworkers who can't access or they don't use (or don't want to learn) how to use the server effectively. So they might ask you to help them transfer some files. One way to do it is to use the scp package. The command I use is below.
 
 
-**Forward Transfer**
-
 ```bash
-scp -r test jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/
+scp -r user@your.server.example.com:/path/to/foo /home/user/Desktop/
 ```
-
-**Inverse Transfer**
-
-```bash
-scp -r jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/test ./ 
-```
-
-Other Resources:
-
-* [Jean-Zay Docs]()
-* [SCP Guide]()
 
 
 ---
@@ -272,41 +188,3 @@ $LOGDIR/errs
 - `logs` is a subdirectory within logs which will hold all of the slurm log files.
 - `errs` - a subdirectory which will hold all of the slurm error log files.
 - `jobs` - a subdirectory which will hold all of the current job configurations.
-
-
-### Space
-
-**Check Project Space**
-
-```bash
-# summary
-idr_quota_user
-# more detail
-idr_quota_project 
-```
-
-**Check Home Space**
-
-```bash
-# summary
-idrquota -m -t Gio
-# more detail
-du -h --max-depth=1 $HOME
-```
-
-**Check Work Space**
-
-```bash
-# summary
-idrquota -w -t Gio
-# more detail
-du -h --max-depth=1 $WORK
-```
-### Symbolic Links
-
-We need to move **everything** to the other drive. Otherwise, we run out of disk space really quickly...
-* `workdir`
-* `.cache`
-* `.local`
-* `.ipython`
-* `.keras`

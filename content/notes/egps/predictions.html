@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Uncertain Predictions &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
@@ -34,10 +35,13 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -46,8 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Gaussian Approximation" href="gauss_approx.html" />
@@ -874,11 +878,11 @@ title="Print to PDF"
                 
               <div>
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="uncertain-predictions">
+  <section class="tex2jax_ignore mathjax_ignore" id="uncertain-predictions">
 <h1>Uncertain Predictions<a class="headerlink" href="#uncertain-predictions" title="Permalink to this headline">#</a></h1>
-<div class="section" id="numerical">
+<section id="numerical">
 <h2>Numerical<a class="headerlink" href="#numerical" title="Permalink to this headline">#</a></h2>
-<div class="section" id="monte-carlo-methods">
+<section id="monte-carlo-methods">
 <h3>Monte Carlo Methods<a class="headerlink" href="#monte-carlo-methods" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -889,15 +893,15 @@ p(\mathbf{f}_*|\boldsymbol{\mu}_\mathbf{x},\mathbf{\Sigma}_\mathbf{x},\mathcal{D
 &amp;= \frac{1}{T} \sum_{t=1}^T  \mathcal{N}\left(\boldsymbol{\mu}_\mathcal{GP}(\mathbf{x}_*^t),\boldsymbol{\sigma}^2_\mathcal{GP}(\mathbf{x}_*^t) \right)
 \end{aligned}
 \end{split}\]</div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="sigma-point-methods">
+<section id="sigma-point-methods">
 <h3>Sigma Point Methods<a class="headerlink" href="#sigma-point-methods" title="Permalink to this headline">#</a></h3>
 <p><strong>TODO</strong></p>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="approximate-moments">
+<section id="approximate-moments">
 <h2>Approximate Moments<a class="headerlink" href="#approximate-moments" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -922,7 +926,7 @@ m(\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\ma
 </li>
 </ul>
 <hr class="docutils" />
-<div class="section" id="linearization">
+<section id="linearization">
 <h3>Linearization<a class="headerlink" href="#linearization" title="Permalink to this headline">#</a></h3>
 <p>This involves the Taylor Series expansion of the function <span class="math notranslate nohighlight">\(f\)</span>.</p>
 <div class="math notranslate nohighlight">
@@ -938,15 +942,15 @@ m(\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\ma
 \underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \boldsymbol{\sigma}^2_\text{GP}(\boldsymbol{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{second Order}
 \end{aligned}
 \end{split}\]</div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="sigma-points">
+<section id="sigma-points">
 <h3>Sigma Points<a class="headerlink" href="#sigma-points" title="Permalink to this headline">#</a></h3>
 <p><strong>TODO</strong></p>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="more-exact-moments">
+<section id="more-exact-moments">
 <h2>(More) Exact Moments<a class="headerlink" href="#more-exact-moments" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -975,7 +979,7 @@ m(\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\ma
 \end{aligned}
 \end{split}\]</div>
 <hr class="docutils" />
-<div class="section" id="analytical">
+<section id="analytical">
 <h3>Analytical<a class="headerlink" href="#analytical" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>RBF Kernel</p></li>
@@ -983,11 +987,11 @@ m(\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\ma
 <li><p>Spectral Mixture Kernel</p></li>
 </ul>
 <p><strong>TODO</strong></p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="id1">
+<section id="id1">
 <h3>Linearization<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
-<div class="section" id="mean-function">
+<section id="mean-function">
 <h4>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[
@@ -996,8 +1000,8 @@ m(\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\ma
 \frac{1}{2} \sum_{n=1}^N\alpha_n \text{Tr}\left\{ k''(\boldsymbol{\mu}_\mathbf{x_*},\mathbf{x}_n)  \mathbf{\Sigma}_\mathbf{x_*}\right\}
 \end{aligned}
 \]</div>
-</div>
-<div class="section" id="variance-function">
+</section>
+<section id="variance-function">
 <h4>Variance Function<a class="headerlink" href="#variance-function" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1010,15 +1014,15 @@ m(\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\ma
 \left( k(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_i) \text{Tr}\left\{k''(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_j)\mathbf{\Sigma}_\mathbf{x} \right\} + k(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_j)\text{Tr}\left\{k''(\boldsymbol{\mu}_\mathbf{x}, \mathbf{x}_j)\mathbf{\Sigma}_\mathbf{x} \right\}\right)
 \end{aligned}
 \end{split}\]</div>
-</div>
-</div>
+</section>
+</section>
 <hr class="docutils" />
-<div class="section" id="id2">
+<section id="id2">
 <h3>Sigma Points<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
 <p><strong>TODO</strong></p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="monte-carlo-sampling">
+<section id="monte-carlo-sampling">
 <h3>Monte Carlo Sampling<a class="headerlink" href="#monte-carlo-sampling" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -1031,9 +1035,9 @@ m(\boldsymbol{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\ma
 &amp;\approx \frac{1}{T} \sum_{t=1}^T   k(\mathbf{x}^t_*, \mathbf{y}_j) k(\mathbf{x}^t_*, \mathbf{z}_k)
 \end{aligned}
 \end{split}\]</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

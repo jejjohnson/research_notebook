@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SSH Configuration &#8212; Research Notebook</title>
     
-  <link href="../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,33 +19,27 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -62,7 +57,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -71,9 +80,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../../../index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -91,14 +101,15 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../intro.html">
-   Overview
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Resources
  </span>
@@ -512,90 +523,180 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/content/tutorials/remote/ssh.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/jejjohnson/research_notebook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/ssh.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/ssh.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/tutorials/remote/ssh.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#table-of-conents">
    Table of Conents
@@ -725,16 +826,20 @@ const thebe_selector_output = ".output, .cell_output"
      </code>
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#internal-ssh-key">
+     Internal SSH Key
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>SSH Configuration</h1>
@@ -876,6 +981,11 @@ const thebe_selector_output = ".output, .cell_output"
      </code>
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#internal-ssh-key">
+     Internal SSH Key
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -884,11 +994,12 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="ssh-configuration">
-<h1>SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permalink to this headline">¶</a></h1>
+<h1>SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permalink to this headline">#</a></h1>
 <hr class="docutils" />
 <p>We will go over 2 cases:</p>
 <ol class="simple">
@@ -897,7 +1008,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ol>
 <hr class="docutils" />
 <div class="section" id="table-of-conents">
-<h2>Table of Conents<a class="headerlink" href="#table-of-conents" title="Permalink to this headline">¶</a></h2>
+<h2>Table of Conents<a class="headerlink" href="#table-of-conents" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="#table-of-conents">Table of Conents</a></p></li>
 <li><p><a class="reference external" href="#ssh">SSH</a></p>
@@ -931,13 +1042,14 @@ const thebe_selector_output = ".output, .cell_output"
 <li><p><a class="reference external" href="#proxyjump"><code class="docutils literal notranslate"><span class="pre">ProxyJump</span></code></a></p></li>
 <li><p><a class="reference external" href="#example-gricad">Example: <code class="docutils literal notranslate"><span class="pre">Gricad</span></code></a></p></li>
 <li><p><a class="reference external" href="#example-jeanzay">Example: <code class="docutils literal notranslate"><span class="pre">JeanZay</span></code></a></p></li>
+<li><p><a class="reference external" href="#internal-ssh-key">Internal SSH Key</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <hr class="docutils" />
 <div class="section" id="ssh">
-<h2>SSH<a class="headerlink" href="#ssh" title="Permalink to this headline">¶</a></h2>
+<h2>SSH<a class="headerlink" href="#ssh" title="Permalink to this headline">#</a></h2>
 <p>The simplest thing to do would be to just ssh into the remote server. You just need a username and server.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server
 </pre></div>
@@ -951,7 +1063,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p>The remainder of this section will talk about the extra flags we need to in order to accomplish this.</p>
 <hr class="docutils" />
 <div class="section" id="identityfile">
-<h3>IdentityFile<a class="headerlink" href="#identityfile" title="Permalink to this headline">¶</a></h3>
+<h3>IdentityFile<a class="headerlink" href="#identityfile" title="Permalink to this headline">#</a></h3>
 <p>This is important so we don’t have to keep typing import our password all of the time… This can be alleviated with an ssh key. We can generate this with <code class="docutils literal notranslate"><span class="pre">ssh-keygen</span></code> and then copy it over to the remote server using <code class="docutils literal notranslate"><span class="pre">ssh-copy-id</span></code>.</p>
 <p>Please see the detailed <a class="reference external" href="https://www.ssh.com/academy/ssh/keygen"><strong>Instructions</strong></a> for how to use <code class="docutils literal notranslate"><span class="pre">ssh-keygen</span></code> to generate a new SSH key <strong>and</strong> copy it over to your remote server. Below are some brief instructions for how to do it.</p>
 <p><strong>Step 1</strong>: Generate the Key</p>
@@ -969,7 +1081,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <hr class="docutils" />
 <div class="section" id="port-forwarding">
-<h3>Port Forwarding<a class="headerlink" href="#port-forwarding" title="Permalink to this headline">¶</a></h3>
+<h3>Port Forwarding<a class="headerlink" href="#port-forwarding" title="Permalink to this headline">#</a></h3>
 <p>We need to create a tunnel especially if we have applications running on the remote server and we want access to the content. This can be done using the <code class="docutils literal notranslate"><span class="pre">-L</span></code> flag along with the appropriate ports.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@server -L <span class="m">8888</span>:localhost:8888
 </pre></div>
@@ -979,7 +1091,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <hr class="docutils" />
 <div class="section" id="background-ssh-tunneling">
-<h3>Background SSH Tunneling<a class="headerlink" href="#background-ssh-tunneling" title="Permalink to this headline">¶</a></h3>
+<h3>Background SSH Tunneling<a class="headerlink" href="#background-ssh-tunneling" title="Permalink to this headline">#</a></h3>
 <p>Often times we don’t want to have the connection open occupying our terminal. So we can put it in the background where we don’t need to worry about it. This can be done with the <code class="docutils literal notranslate"><span class="pre">-f</span></code> to ensure that it is executed but stays in the background.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a tunnel</span>
 ssh -fN username@server -L <span class="m">8888</span>:localhost:8888 
@@ -988,7 +1100,7 @@ ssh -fN username@server -L <span class="m">8888</span>:localhost:8888
 </div>
 <hr class="docutils" />
 <div class="section" id="closing-background-ssh-tunnels">
-<h3>Closing Background SSH Tunnels<a class="headerlink" href="#closing-background-ssh-tunnels" title="Permalink to this headline">¶</a></h3>
+<h3>Closing Background SSH Tunnels<a class="headerlink" href="#closing-background-ssh-tunnels" title="Permalink to this headline">#</a></h3>
 <p>When you’re done, it’s good practice to make sure you close the ssh-tunnel that you opened. Below, I have some steps to do this in a relatively efficient way. It is a bit tedious to type everything out from scratch but later we can automate this so that we don’t have to keep typing in all of the commands. First we need to find all of the background processes that have an ssh.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span class="s2">&quot;localhost&quot;</span>
 </pre></div>
@@ -1010,14 +1122,14 @@ ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span cla
 </div>
 <hr class="docutils" />
 <div class="section" id="advanced-users-bash-script">
-<h3>Advanced Users - Bash Script<a class="headerlink" href="#advanced-users-bash-script" title="Permalink to this headline">¶</a></h3>
+<h3>Advanced Users - Bash Script<a class="headerlink" href="#advanced-users-bash-script" title="Permalink to this headline">#</a></h3>
 <p>We want to automate a few of the things listed above. It’s too much to type all of that every time. In particular, we will automate:</p>
 <ul class="simple">
 <li><p>Opening up the SSH and Tunneling in the background</p></li>
 <li><p>Closing specific and all background ports</p></li>
 </ul>
 <div class="section" id="ssh-process-background">
-<h4>SSH Process Background<a class="headerlink" href="#ssh-process-background" title="Permalink to this headline">¶</a></h4>
+<h4>SSH Process Background<a class="headerlink" href="#ssh-process-background" title="Permalink to this headline">#</a></h4>
 <p>We want to automate the ssh tunnel process in the background.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># syntatic sugar for launching ssh tunnel given a server and a port</span>
 <span class="k">function</span> ssh_tunnel_bg<span class="o">(){</span>
@@ -1036,7 +1148,7 @@ ps aux <span class="p">|</span> grep ssh <span class="p">|</span> grep <span cla
 <p><strong>Much simpler</strong> and we don’t have to remember all of the commands. It is a bit of <em>syntatic sugar</em> but it’s more understandable.</p>
 </div>
 <div class="section" id="closing-ports">
-<h4>Closing Ports<a class="headerlink" href="#closing-ports" title="Permalink to this headline">¶</a></h4>
+<h4>Closing Ports<a class="headerlink" href="#closing-ports" title="Permalink to this headline">#</a></h4>
 <p>Now we want to automate the removal of ports. I would suggest adding these functions to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code> so that you can just use these easier to find and kill ssh background processes.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># function to show all background ssh processes</span>
 <span class="c1"># demo:</span>
@@ -1091,7 +1203,7 @@ kill_all_bg_sh
 </div>
 <hr class="docutils" />
 <div class="section" id="ssh-config-file">
-<h2>SSH Config File<a class="headerlink" href="#ssh-config-file" title="Permalink to this headline">¶</a></h2>
+<h2>SSH Config File<a class="headerlink" href="#ssh-config-file" title="Permalink to this headline">#</a></h2>
 <p>It ups your game to the next level if you use an ssh config file.</p>
 <p>More resources:</p>
 <ul class="simple">
@@ -1106,7 +1218,7 @@ kill_all_bg_sh
 </div>
 <hr class="docutils" />
 <div class="section" id="remote-server-cal1">
-<h2>Remote Server (Cal1)<a class="headerlink" href="#remote-server-cal1" title="Permalink to this headline">¶</a></h2>
+<h2>Remote Server (Cal1)<a class="headerlink" href="#remote-server-cal1" title="Permalink to this headline">#</a></h2>
 <p>In this example, we will showcase how to automate the connection to</p>
 <p>We can automate this using using</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host cal1
@@ -1133,26 +1245,26 @@ Host *
 <p>Now it is much easier to ssh into the remote server without having to do all of the extra stuff.</p>
 <hr class="docutils" />
 <div class="section" id="important-arguments">
-<h3>Important Arguments<a class="headerlink" href="#important-arguments" title="Permalink to this headline">¶</a></h3>
+<h3>Important Arguments<a class="headerlink" href="#important-arguments" title="Permalink to this headline">#</a></h3>
 <p>There are many important arguments that make our lives a lot easier if they are defined properly.</p>
 <div class="section" id="id1">
-<h4><code class="docutils literal notranslate"><span class="pre">IdentityFile</span></code><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">IdentityFile</span></code><a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h4>
 <p>This will point to the <code class="docutils literal notranslate"><span class="pre">identity_file</span></code> found in your local server. This removes the need to authenticate every time you log in. It’s hard to remember passwords all of the time so this removes that necessity. It’s also more secure due to the encryption.</p>
 <p><strong>Note</strong>: Never share this <code class="docutils literal notranslate"><span class="pre">.pub</span></code> with anyone! It should be kept on your personal computer only.</p>
 </div>
 <div class="section" id="forwardx11">
-<h4><code class="docutils literal notranslate"><span class="pre">ForwardX11</span></code><a class="headerlink" href="#forwardx11" title="Permalink to this headline">¶</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">ForwardX11</span></code><a class="headerlink" href="#forwardx11" title="Permalink to this headline">#</a></h4>
 <p>This allows us to have some visual bits and pieces. This is important for matlab GUIs and even GUIs for <code class="docutils literal notranslate"><span class="pre">spyder</span></code>.</p>
 </div>
 <div class="section" id="localforward">
-<h4><code class="docutils literal notranslate"><span class="pre">LocalForward</span></code><a class="headerlink" href="#localforward" title="Permalink to this headline">¶</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">LocalForward</span></code><a class="headerlink" href="#localforward" title="Permalink to this headline">#</a></h4>
 <p>This takes care of all of the port forwarding. You can also forward multiple ports if there is a reason, e.g. 1 for tensor board, 1 for JupyterLab, 1 for some visualization software, etc.</p>
 </div>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="remote-server-proxyjump">
-<h2>Remote Server + ProxyJump<a class="headerlink" href="#remote-server-proxyjump" title="Permalink to this headline">¶</a></h2>
+<h2>Remote Server + ProxyJump<a class="headerlink" href="#remote-server-proxyjump" title="Permalink to this headline">#</a></h2>
 <p>In this case, we will look at the configuration for <code class="docutils literal notranslate"><span class="pre">gricad</span></code> and <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code>. In this case, we have a head node (not really useful except to enter into the server). And then later we <em>proxy jump</em> to the actual head node for computing.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host server1
   HostName base_server
@@ -1166,12 +1278,12 @@ Host server2
 </div>
 <hr class="docutils" />
 <div class="section" id="proxyjump">
-<h3><code class="docutils literal notranslate"><span class="pre">ProxyJump</span></code><a class="headerlink" href="#proxyjump" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">ProxyJump</span></code><a class="headerlink" href="#proxyjump" title="Permalink to this headline">#</a></h3>
 <p>This is the only extra command is the <code class="docutils literal notranslate"><span class="pre">ProxyJump</span></code> command. This allows</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="example-gricad">
-<h3>Example: <code class="docutils literal notranslate"><span class="pre">Gricad</span></code><a class="headerlink" href="#example-gricad" title="Permalink to this headline">¶</a></h3>
+<h3>Example: <code class="docutils literal notranslate"><span class="pre">Gricad</span></code><a class="headerlink" href="#example-gricad" title="Permalink to this headline">#</a></h3>
 <p>In <code class="docutils literal notranslate"><span class="pre">gricad</span></code> they have a weird system where they have a <em>entry node</em> which you ssh into. And then you need to ssh into a compute node, e.g. <code class="docutils literal notranslate"><span class="pre">dahu</span></code>, <code class="docutils literal notranslate"><span class="pre">bigfoot</span></code>, etc. So this means we need to <em>proxyjump</em> to <code class="docutils literal notranslate"><span class="pre">dahu</span></code> via <code class="docutils literal notranslate"><span class="pre">entrynode</span></code>.</p>
 <p>Below is an example of the <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file with these arguments already in place.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host gricad
@@ -1193,53 +1305,11 @@ Host dahu_gricad
 </div>
 <p>This is <strong>much simpler</strong> than having to do the proxy jumps.</p>
 <p>On the <a class="reference external" href="https://gricad-doc.univ-grenoble-alpes.fr/en/hpc/connexion/#4-transparent-ssh-connexion-configuration"><code class="docutils literal notranslate"><span class="pre">gricad</span></code> docs</a> they have a similar command which uses your <code class="docutils literal notranslate"><span class="pre">&lt;pereseus-login&gt;</span></code>. I have included it below for a side-by-side comparison with my version.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="f03e473d-c2d1-45b2-83ff-aea0ac3c06f8" name="f910278b-57ad-4255-a2b2-1272774646ff" type="radio">
-</input><label class="tabbed-label" for="f03e473d-c2d1-45b2-83ff-aea0ac3c06f8">
-gricad Docs</label><div class="tabbed-content docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host *
-  ServerAliveInterval <span class="m">30</span>
-
-Host *.ciment
-  ProxyCommand ssh -q username@access-gricad.univ-grenoble-alpes.fr <span class="s2">&quot;nc -w 60 `basename %h .ciment` %p&quot;</span>
-
-Host dahu luke froggy bigfoot
-  User username
-  ProxyJump username@access-gricad.univ-grenoble-alpes.fr:22
-</pre></div>
-</div>
-<p><strong>Example Usage</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh dahu
-</pre></div>
-</div>
-</div>
-<input id="4faf322b-d9cd-4457-8cf1-ffe09177c08a" name="f910278b-57ad-4255-a2b2-1272774646ff" type="radio">
-</input><label class="tabbed-label" for="4faf322b-d9cd-4457-8cf1-ffe09177c08a">
-My Version</label><div class="tabbed-content docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host gricad
-	User username
-	HostName access-gricad.univ-grenoble-alpes.fr
-	IdentityFile ~/.ssh/id_rsa_gricad
-
-<span class="c1"># DAHU </span>
-Host dahu
-	User username
-	HostName dahu
-	ProxyJump gricad
-	IdentityFile ~/.ssh/id_rsa_gricad
-</pre></div>
-</div>
-<p><strong>Example Usage</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh dahu
-</pre></div>
-</div>
-</div>
-</div>
 <p>It’s apparently <em>transparent</em> but I really don’t understand the <code class="docutils literal notranslate"><span class="pre">ProxyCommand</span></code> they put in place. I think it is much harder to understand compared to my version. I have yet to see any differences in performance from their command and my own.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="example-jeanzay">
-<h3>Example: <code class="docutils literal notranslate"><span class="pre">JeanZay</span></code><a class="headerlink" href="#example-jeanzay" title="Permalink to this headline">¶</a></h3>
+<h3>Example: <code class="docutils literal notranslate"><span class="pre">JeanZay</span></code><a class="headerlink" href="#example-jeanzay" title="Permalink to this headline">#</a></h3>
 <p>In <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> the permissions are a bit crazy. It doesn’t work to just <code class="docutils literal notranslate"><span class="pre">ssh</span></code> directly to <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> without some sort of hassle and special permissions with custom ips registered in their system. Instead, it’s much easier to just <code class="docutils literal notranslate"><span class="pre">ssh</span></code> into the <code class="docutils literal notranslate"><span class="pre">cal1</span></code> server. Then we can <code class="docutils literal notranslate"><span class="pre">ssh</span></code> from there into the <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> server. So this means we need to <em>proxyjump</em> to <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> via <code class="docutils literal notranslate"><span class="pre">cal1</span></code>.</p>
 <p>Below is an example of the <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file with these arguments already in place.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host cal1
@@ -1262,6 +1332,25 @@ Host jean_zay
 </pre></div>
 </div>
 <p>As you can see, this allows us to log into <code class="docutils literal notranslate"><span class="pre">jeanzay</span></code> in a much simpler manner.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="internal-ssh-key">
+<h3>Internal SSH Key<a class="headerlink" href="#internal-ssh-key" title="Permalink to this headline">#</a></h3>
+<p>I would recommend to generate a ssh-key on the proxy server as well. This will be useful for transferring files and mounting drives for the server. Follow the same instructions as above (<code class="docutils literal notranslate"><span class="pre">ssh-keygen</span></code> + <code class="docutils literal notranslate"><span class="pre">ssh-copy-id</span></code>) and generate a <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file similar to the one below.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host jean_zay
+    User username
+    HostName jean-zay.idris.fr
+    IdentityFile ~/.ssh/id_jz
+</pre></div>
+</div>
+<p><strong>Demo Usage</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ssh into proxy server</span>
+ssh meom_cal1
+<span class="c1"># ssh into the other server</span>
+ssh jean_zay
+</pre></div>
+</div>
+<p><strong>Note</strong>: This is the same as <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">jean_zay</span></code> on the local server via the proxy jump.</p>
 </div>
 </div>
 </div>
@@ -1288,9 +1377,11 @@ Host jean_zay
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="overview.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -1306,24 +1397,28 @@ Host jean_zay
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      By J. Emmanuel Johnson<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Getting Organized &#8212; Research Notebook</title>
     
-  <link href="../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,33 +19,27 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -60,7 +55,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -69,9 +78,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../../../index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -89,14 +99,15 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../intro.html">
-   Overview
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Resources
  </span>
@@ -510,90 +521,180 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/content/tutorials/remote/organize.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/jejjohnson/research_notebook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/organize.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/organize.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/tutorials/remote/organize.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#workflow">
    WorkFlow
@@ -622,12 +723,17 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#project">
+    <a class="reference internal nav-link" href="#projects">
      <code class="docutils literal notranslate">
       <span class="pre">
-       Project
+       Projects
       </span>
      </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#preprocessing">
+     PreProcessing
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -679,6 +785,25 @@ const thebe_selector_output = ".output, .cell_output"
       </span>
      </code>
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#rsync">
+       RSYNC
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#functions">
+         Functions
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#scp">
+       SCP
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -686,15 +811,26 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#organization">
    Organization
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#space">
+     Space
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#symbolic-links">
+     Symbolic Links
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Getting Organized</h1>
@@ -735,12 +871,17 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#project">
+    <a class="reference internal nav-link" href="#projects">
      <code class="docutils literal notranslate">
       <span class="pre">
-       Project
+       Projects
       </span>
      </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#preprocessing">
+     PreProcessing
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -792,6 +933,25 @@ const thebe_selector_output = ".output, .cell_output"
       </span>
      </code>
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#rsync">
+       RSYNC
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#functions">
+         Functions
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#scp">
+       SCP
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -799,6 +959,18 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#organization">
    Organization
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#space">
+     Space
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#symbolic-links">
+     Symbolic Links
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -806,27 +978,28 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="getting-organized">
-<h1>Getting Organized<a class="headerlink" href="#getting-organized" title="Permalink to this headline">¶</a></h1>
+<h1>Getting Organized<a class="headerlink" href="#getting-organized" title="Permalink to this headline">#</a></h1>
 <ul class="simple">
 <li><p>Automating Everything</p></li>
 <li></li>
 </ul>
 <hr class="docutils" />
 <div class="section" id="workflow">
-<h2>WorkFlow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<h2>WorkFlow<a class="headerlink" href="#workflow" title="Permalink to this headline">#</a></h2>
 <div class="section" id="coding">
-<h3>Coding<a class="headerlink" href="#coding" title="Permalink to this headline">¶</a></h3>
+<h3>Coding<a class="headerlink" href="#coding" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Prototype: <code class="docutils literal notranslate"><span class="pre">jupyter-lab</span></code></p></li>
 <li><p>Packaging: <code class="docutils literal notranslate"><span class="pre">vscode</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="big-jobs">
-<h3>Big Jobs<a class="headerlink" href="#big-jobs" title="Permalink to this headline">¶</a></h3>
+<h3>Big Jobs<a class="headerlink" href="#big-jobs" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Setup Codes on My machine</p></li>
 <li><p>Prototype pipeline with <code class="docutils literal notranslate"><span class="pre">jupyter-lab</span></code> + <code class="docutils literal notranslate"><span class="pre">vscode</span></code></p></li>
@@ -841,7 +1014,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <hr class="docutils" />
 <div class="section" id="file-structure">
-<h2>File Structure<a class="headerlink" href="#file-structure" title="Permalink to this headline">¶</a></h2>
+<h2>File Structure<a class="headerlink" href="#file-structure" title="Permalink to this headline">#</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">/</span><span class="n">project</span>
 <span class="n">logs</span><span class="o">/</span><span class="n">project</span>
 <span class="n">project</span><span class="o">/</span>
@@ -854,9 +1027,13 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <hr class="docutils" />
 <div class="section" id="syncing-files-across-servers">
-<h2>Syncing Files Across Servers<a class="headerlink" href="#syncing-files-across-servers" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="project">
-<h3><code class="docutils literal notranslate"><span class="pre">Project</span></code><a class="headerlink" href="#project" title="Permalink to this headline">¶</a></h3>
+<h2>Syncing Files Across Servers<a class="headerlink" href="#syncing-files-across-servers" title="Permalink to this headline">#</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Be sure to have the <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> ready to ease the process. Otherwise the commands will be fairly cumbersome.</p>
+</div>
+<div class="section" id="projects">
+<h3><code class="docutils literal notranslate"><span class="pre">Projects</span></code><a class="headerlink" href="#projects" title="Permalink to this headline">#</a></h3>
 <p>You should be using <code class="docutils literal notranslate"><span class="pre">git</span></code> and <code class="docutils literal notranslate"><span class="pre">github</span></code>. This is the best way to make sure all changes are being captured and you have the entire history.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add files to be commited</span>
 git add file1 file2
@@ -872,10 +1049,17 @@ git pull origin master
 </pre></div>
 </div>
 </div>
+<hr class="docutils" />
+<div class="section" id="preprocessing">
+<h3>PreProcessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>salloc --nodes<span class="o">=</span><span class="m">1</span> --ntasks-per-node<span class="o">=</span><span class="m">1</span> --cpus-per-task<span class="o">=</span><span class="m">16</span> --account<span class="o">=</span>cli@cpu 
+</pre></div>
+</div>
+</div>
 <div class="section" id="data">
-<h3><code class="docutils literal notranslate"><span class="pre">Data</span></code><a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">Data</span></code><a class="headerlink" href="#data" title="Permalink to this headline">#</a></h3>
 <div class="section" id="cal1-gricad">
-<h4><code class="docutils literal notranslate"><span class="pre">cal1</span></code> &lt;—&gt; <code class="docutils literal notranslate"><span class="pre">gricad</span></code><a class="headerlink" href="#cal1-gricad" title="Permalink to this headline">¶</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">cal1</span></code> &lt;—&gt; <code class="docutils literal notranslate"><span class="pre">gricad</span></code><a class="headerlink" href="#cal1-gricad" title="Permalink to this headline">#</a></h4>
 <p><strong>Big Data Transfer</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rsync -avxH /path/to/project/data login@scp.univ-grenoble-alpes.fr:/path/to/project/data
 </pre></div>
@@ -886,25 +1070,92 @@ git pull origin master
 </div>
 </div>
 <div class="section" id="cal1-jean-zay">
-<h4><code class="docutils literal notranslate"><span class="pre">cal1</span></code> &lt;—&gt; <code class="docutils literal notranslate"><span class="pre">jean-zay</span></code><a class="headerlink" href="#cal1-jean-zay" title="Permalink to this headline">¶</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">cal1</span></code> &lt;—&gt; <code class="docutils literal notranslate"><span class="pre">jean-zay</span></code><a class="headerlink" href="#cal1-jean-zay" title="Permalink to this headline">#</a></h4>
 </div>
 </div>
 <div class="section" id="logs">
-<h3><code class="docutils literal notranslate"><span class="pre">Logs</span></code><a class="headerlink" href="#logs" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">Logs</span></code><a class="headerlink" href="#logs" title="Permalink to this headline">#</a></h3>
 <p><strong>Light Data Transfer</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rsync -avxH /path/to/project/data login@cargo.univ-grenoble-alpes.fr:/path/to/project/data
+<div class="section" id="rsync">
+<h4>RSYNC<a class="headerlink" href="#rsync" title="Permalink to this headline">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rsync -avxH jean_zay:/gpfswork/rech/cli/uvo53rl/test_logs/wandb/ /mnt/meom/workdir/johnsonj/test_logs/wandb/
 </pre></div>
 </div>
-<p><strong>SCP</strong></p>
-<p>A lot of times you’ll get coworkers who can’t access or they don’t use (or don’t want to learn) how to use the server effectively. So they might ask you to help them transfer some files. One way to do it is to use the scp package. The command I use is below.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp -r user@your.server.example.com:/path/to/foo /home/user/Desktop/
+<div class="section" id="functions">
+<h5>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">#</a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> pull_wandb_changes<span class="o">(){</span>
+    rsync -avxH jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/ /mnt/meom/workdir/johnsonj/logs/wandb/
+<span class="o">}</span>
+<span class="k">function</span> push_wandb_changes<span class="o">(){</span>
+    rsync -avxH /mnt/meom/workdir/johnsonj/logs/wandb/ jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/
+<span class="o">}</span>
+<span class="k">function</span> sync_wandb_changes<span class="o">(){</span>
+    wandb sync
+<span class="o">}</span>
 </pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># sync offline runs</span>
+wandb sync --include-offline /mnt/meom/workdir/johnsonj/logs/wandb/offline-*
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wandb sync --include-offline /mnt/meom/workdir/johnsonj/logs/wandb/offline-run-20220601_065448-2m11j69u
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># make directory for wandb logs</span>
+<span class="k">if</span> <span class="o">[</span> ! -d mkdir /gpfsscratch/rech/cli/uvo53rl/logs <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  mkdir -p mkdir /gpfsscratch/rech/cli/uvo53rl/logs<span class="p">;</span>
+<span class="k">fi</span>
+
+<span class="c1"># make directory for wandb logs</span>
+<span class="k">if</span> <span class="o">[</span> ! -d /gpfsscratch/rech/cli/uvo53rl/wandb <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  mkdir -p /gpfsscratch/rech/cli/uvo53rl/wandb<span class="p">;</span>
+<span class="k">fi</span>
+
+<span class="c1"># make directory for wandb logs</span>
+<span class="k">if</span> <span class="o">[</span> ! -d /gpfsscratch/rech/cli/uvo53rl/errs <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  mkdir -p /gpfsscratch/rech/cli/uvo53rl/errs<span class="p">;</span>
+<span class="k">fi</span>
+
+<span class="c1"># make directory for wandb logs</span>
+<span class="k">if</span> <span class="o">[</span> ! -d /gpfsscratch/rech/cli/uvo53rl/jobs <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  mkdir -p /gpfsscratch/rech/cli/uvo53rl/jobs<span class="p">;</span>
+<span class="k">fi</span>
+
+<span class="c1"># make dot files</span>
+<span class="k">if</span> <span class="o">[</span> ! -d /gpfsscratch/rech/cli/uvo53rl/.conda <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  mkdir -p /gpfsscratch/rech/cli/uvo53rl/.conda <span class="o">&amp;&amp;</span>
+  conda create --prefix<span class="o">=</span>/gpfsscratch/rech/cli/uvo53rl/.conda/envs/jaxtf_gpu_py39 --clone jax_gpu_py39 <span class="o">&amp;&amp;</span>
+  conda create --prefix<span class="o">=</span>/gpfsscratch/rech/cli/uvo53rl/.conda/envs/jaxtftorch_gpu_py39 --clone jax_gpu_py39<span class="p">;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> ! -d /gpfsscratch/rech/cli/uvo53rl/.cache <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  mkdir -p /gpfsscratch/rech/cli/uvo53rl/.cache<span class="p">;</span>
+<span class="k">fi</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="scp">
+<h4>SCP<a class="headerlink" href="#scp" title="Permalink to this headline">#</a></h4>
+<p>A lot of times you’ll get coworkers who can’t access or they don’t use (or don’t want to learn) how to use the server effectively. So they might ask you to help them transfer some files. One way to do it is to use the scp package. The command I use is below.</p>
+<p><strong>Forward Transfer</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp -r <span class="nb">test</span> jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/
+</pre></div>
+</div>
+<p><strong>Inverse Transfer</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp -r jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/test ./ 
+</pre></div>
+</div>
+<p>Other Resources:</p>
+<ul class="simple">
+<li><p><span class="xref myst">Jean-Zay Docs</span></p></li>
+<li><p><span class="xref myst">SCP Guide</span></p></li>
+</ul>
 </div>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="organization">
-<h2>Organization<a class="headerlink" href="#organization" title="Permalink to this headline">¶</a></h2>
+<h2>Organization<a class="headerlink" href="#organization" title="Permalink to this headline">#</a></h2>
 <ol class="simple">
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">project</span></code> directory - where our code is living</p></li>
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">bin</span></code> directory - where we put all of our executables</p></li>
@@ -967,6 +1218,41 @@ printenv LOGDIR
 <li><p><code class="docutils literal notranslate"><span class="pre">errs</span></code> - a subdirectory which will hold all of the slurm error log files.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">jobs</span></code> - a subdirectory which will hold all of the current job configurations.</p></li>
 </ul>
+<div class="section" id="space">
+<h3>Space<a class="headerlink" href="#space" title="Permalink to this headline">#</a></h3>
+<p><strong>Check Project Space</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># summary</span>
+idr_quota_user
+<span class="c1"># more detail</span>
+idr_quota_project 
+</pre></div>
+</div>
+<p><strong>Check Home Space</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># summary</span>
+idrquota -m -t Gio
+<span class="c1"># more detail</span>
+du -h --max-depth<span class="o">=</span><span class="m">1</span> <span class="nv">$HOME</span>
+</pre></div>
+</div>
+<p><strong>Check Work Space</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># summary</span>
+idrquota -w -t Gio
+<span class="c1"># more detail</span>
+du -h --max-depth<span class="o">=</span><span class="m">1</span> <span class="nv">$WORK</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="symbolic-links">
+<h3>Symbolic Links<a class="headerlink" href="#symbolic-links" title="Permalink to this headline">#</a></h3>
+<p>We need to move <strong>everything</strong> to the other drive. Otherwise, we run out of disk space really quickly…</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">workdir</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.cache</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.local</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.ipython</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.keras</span></code></p></li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -992,28 +1278,34 @@ printenv LOGDIR
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
 <div class='prev-next-area'>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      By J. Emmanuel Johnson<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

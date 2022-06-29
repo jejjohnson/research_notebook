@@ -106,12 +106,34 @@ This method is a nice trade-off between the standard neural network and the Baye
 
 
 ---
-## Other Resources
+## Resources
 
+
+---
+### Videos
 
 **Practical Uncertainty Estimation and Out-of-Distribution Robustness in Deep Learning** - [NeuRIPS 2020 Tutorial](https://nips.cc/virtual/2020/public/tutorial_0f190e6e164eafe66f011073b4486975.html)
 
 > The best tutorial I've seen for uncertainty in Neural networks. They focus almost exclusively on Neural networks (aka not small data problems).
+
+---
+### Papers
+
+**A Review of Unvertainty Quantification in Deep Learning: Techniques, Applications and Challenges** - Abdar et al (2021) - [Information Fusion](https://arxiv.org/abs/2011.06225)
+
+**A Survey of Uncertainty in Deep Neural Networks** - Gawlikowski et al (2021) - [arxiv](https://arxiv.org/abs/2107.03342)
+
+**A Survey on Uncertainty Estimation in Deep Learning Classification Systems from a Bayesian Perspective** - Mena et al (2022) - [ACM Compute Surveys](https://www.semanticscholar.org/paper/A-Survey-on-Uncertainty-Estimation-in-Deep-Learning-Mena-Pujol/a03feff82c32a79ea8a8509193890266ae6fddf7)
+
+
+**On the Pitfalls of Heteroscedastic Uncertainty Estimation with Probabilistic Neural Networks** - Seitzer et al (2022) - [ICLR](https://arxiv.org/abs/2203.09168)
+
+
+
+---
+### Practical Resources
+
+
 
 **A Regression Master Class with Aboleth** - [Blog](https://aboleth.readthedocs.io/en/stable/tutorials/some_regressors.html)
 

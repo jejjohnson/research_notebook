@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Parameterized Marginal Gaussianization &#8212; Research Notebook</title>
     
-  <link href="../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,41 +19,35 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Parameterized Rotations" href="lecture_3_gfs_pt2_rot.html" />
@@ -64,7 +59,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -73,9 +82,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../../../index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -93,14 +103,15 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../intro.html">
-   Overview
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Resources
  </span>
@@ -514,90 +525,180 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/content/tutorials/normalizing_flows/lecture_3_gfs_pt1_mg.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/jejjohnson/research_notebook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/normalizing_flows/lecture_3_gfs_pt1_mg.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/normalizing_flows/lecture_3_gfs_pt1_mg.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/tutorials/normalizing_flows/lecture_3_gfs_pt1_mg.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#helpful-functions">
    HelpFul Functions
@@ -774,12 +875,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Parameterized Marginal Gaussianization</h1>
@@ -972,12 +1072,13 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
   <!-- #region id="QMV_fJikDPKT" -->
 <div class="tex2jax_ignore mathjax_ignore section" id="parameterized-marginal-gaussianization">
-<h1>Parameterized Marginal Gaussianization<a class="headerlink" href="#parameterized-marginal-gaussianization" title="Permalink to this headline">¶</a></h1>
+<h1>Parameterized Marginal Gaussianization<a class="headerlink" href="#parameterized-marginal-gaussianization" title="Permalink to this headline">#</a></h1>
 <p>This is my notebook where I play around with all things normalizing flow with pyro. I use the following packages:</p>
 <ul class="simple">
 <li><p>PyTorch</p></li>
@@ -1052,11 +1153,11 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <!-- #region id="mREQeNcanvJq" -->
 <div class="section" id="helpful-functions">
-<h2>HelpFul Functions<a class="headerlink" href="#helpful-functions" title="Permalink to this headline">¶</a></h2>
+<h2>HelpFul Functions<a class="headerlink" href="#helpful-functions" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="EhmJphY1oHXc" -->
 <div class="section" id="generate-2d-grid">
-<h3>Generate 2D Grid<a class="headerlink" href="#generate-2d-grid" title="Permalink to this headline">¶</a></h3>
+<h3>Generate 2D Grid<a class="headerlink" href="#generate-2d-grid" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_2d_grid</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_grid</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 
@@ -1070,7 +1171,7 @@ const thebe_selector_output = ".output, .cell_output"
 <!-- #region id="_2E_YHKyoJa-" -->
 </div>
 <div class="section" id="plot-2d-grid">
-<h3>Plot 2D Grid<a class="headerlink" href="#plot-2d-grid" title="Permalink to this headline">¶</a></h3>
+<h3>Plot 2D Grid<a class="headerlink" href="#plot-2d-grid" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
 
@@ -1119,7 +1220,7 @@ const thebe_selector_output = ".output, .cell_output"
 <!-- #region id="8UHy3Grgoe03" -->
 </div>
 <div class="section" id="torch-2-numpy">
-<h3>Torch 2 Numpy<a class="headerlink" href="#torch-2-numpy" title="Permalink to this headline">¶</a></h3>
+<h3>Torch 2 Numpy<a class="headerlink" href="#torch-2-numpy" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">torch_2_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
 
@@ -1139,7 +1240,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 <div class="section" id="d-toy-data">
-<h2>2D Toy Data<a class="headerlink" href="#d-toy-data" title="Permalink to this headline">¶</a></h2>
+<h2>2D Toy Data<a class="headerlink" href="#d-toy-data" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_toy_data</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">):</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
@@ -1183,16 +1284,16 @@ const thebe_selector_output = ".output, .cell_output"
 <!-- #region id="ZUhElhna-B8f" -->
 </div>
 <div class="section" id="model">
-<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="AwFeXVKRb369" -->
 </div>
 <div class="section" id="id1">
-<h2>Parameterized Marginal Gaussianization<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>Parameterized Marginal Gaussianization<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="cMpoxF2UeUPU" -->
 <div class="section" id="univariate-gmm">
-<h3>Univariate GMM<a class="headerlink" href="#univariate-gmm" title="Permalink to this headline">¶</a></h3>
+<h3>Univariate GMM<a class="headerlink" href="#univariate-gmm" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
 p(\mathbf{x};\boldsymbol{\theta}) = \sum_k^K \pi_k \mathcal{N}(x| \mu_k, \sigma_k)
@@ -1225,7 +1326,7 @@ p(\mathbf{x};\boldsymbol{\theta}) = \sum_k^K \pi_k \mathcal{N}(x| \mu_k, \sigma_
 </div>
 <!-- #region id="vwiK66PEj5KQ" -->
 <div class="section" id="viz-pdf">
-<h4>Viz - PDF<a class="headerlink" href="#viz-pdf" title="Permalink to this headline">¶</a></h4>
+<h4>Viz - PDF<a class="headerlink" href="#viz-pdf" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">X_1</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">X_1</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">100</span><span class="p">)</span>
 <span class="n">probs</span> <span class="o">=</span> <span class="n">mg_bijection</span><span class="o">.</span><span class="n">score_samples</span><span class="p">(</span><span class="n">x_domain</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
@@ -1241,7 +1342,7 @@ p(\mathbf{x};\boldsymbol{\theta}) = \sum_k^K \pi_k \mathcal{N}(x| \mu_k, \sigma_
 <!-- #region id="XxRR-bkmep3V" -->
 </div>
 <div class="section" id="cdf-from-scratch">
-<h4>CDF - From Scratch<a class="headerlink" href="#cdf-from-scratch" title="Permalink to this headline">¶</a></h4>
+<h4>CDF - From Scratch<a class="headerlink" href="#cdf-from-scratch" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[
 F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
@@ -1250,7 +1351,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #endregion -->
 <!-- #region id="cxPXStAzkFVM" -->
 <div class="section" id="trick-stabilization">
-<h5><strong>Trick:</strong> - Stabilization<a class="headerlink" href="#trick-stabilization" title="Permalink to this headline">¶</a></h5>
+<h5><strong>Trick:</strong> - Stabilization<a class="headerlink" href="#trick-stabilization" title="Permalink to this headline">#</a></h5>
 <p>We often like to put everything in terms of logs. This reparameterizes the functions so that the gradient updates of the parameters will be small irregardless of the function.</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1340,7 +1441,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </div>
 </div>
 <div class="section" id="pdf-from-scratch">
-<h4>PDF - From Scratch<a class="headerlink" href="#pdf-from-scratch" title="Permalink to this headline">¶</a></h4>
+<h4>PDF - From Scratch<a class="headerlink" href="#pdf-from-scratch" title="Permalink to this headline">#</a></h4>
 <p>We are going to use the same function as before. The only difference is the we will use the PDF instead of the CDF of a Gaussian.</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1372,11 +1473,11 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="Ttn56-AKqWwD" -->
 </div>
 <div class="section" id="inverse-cdf">
-<h4>Inverse CDF<a class="headerlink" href="#inverse-cdf" title="Permalink to this headline">¶</a></h4>
+<h4>Inverse CDF<a class="headerlink" href="#inverse-cdf" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <!-- #region id="w6L0e_mCwyJ9" -->
 <div class="section" id="don-t-do-this">
-<h5>Don’t do this<a class="headerlink" href="#don-t-do-this" title="Permalink to this headline">¶</a></h5>
+<h5>Don’t do this<a class="headerlink" href="#don-t-do-this" title="Permalink to this headline">#</a></h5>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z_domain</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 </pre></div>
@@ -1419,7 +1520,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </div>
 </div>
 <div class="section" id="bisection-search">
-<h4>Bisection Search<a class="headerlink" href="#bisection-search" title="Permalink to this headline">¶</a></h4>
+<h4>Bisection Search<a class="headerlink" href="#bisection-search" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">survae.transforms.bijections.functional.iterative_inversion</span> <span class="kn">import</span> <span class="n">bisection_inverse</span>
 </pre></div>
@@ -1475,7 +1576,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="DYBLfdHyvNS1" -->
 </div>
 <div class="section" id="bijections">
-<h4>Bijections<a class="headerlink" href="#bijections" title="Permalink to this headline">¶</a></h4>
+<h4>Bijections<a class="headerlink" href="#bijections" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">survae.transforms.bijections.functional.mixtures.gaussian_mixture</span> <span class="kn">import</span> <span class="n">gaussian_mixture_transform</span>
 </pre></div>
@@ -1503,7 +1604,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="TLJz7T3XmWLn" -->
 </div>
 <div class="section" id="survae-flows-function">
-<h4>SurVAE Flows Function<a class="headerlink" href="#survae-flows-function" title="Permalink to this headline">¶</a></h4>
+<h4>SurVAE Flows Function<a class="headerlink" href="#survae-flows-function" title="Permalink to this headline">#</a></h4>
 <p>Now, we will translate the code into PyTorch. I will create a functional form so that we just need to call it within our Bijector class.</p>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># from survae.transforms.bijections.functional.mixtures import gaussian_mixture_transform</span>
@@ -1527,7 +1628,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="zZkGooqwlHBQ" -->
 </div>
 <div class="section" id="initialization">
-<h4>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h4>
+<h4>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">#</a></h4>
 <p>I will also create an initialization function which will allow us to initialization the parameters from the GMM model.</p>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">survae.transforms.bijections.functional.mixtures.gaussian_mixture</span> <span class="kn">import</span> <span class="n">init_marginal_mixture_weights</span>
@@ -1558,7 +1659,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </div>
 </div>
 <div class="section" id="pytorch-class">
-<h3>PyTorch Class<a class="headerlink" href="#pytorch-class" title="Permalink to this headline">¶</a></h3>
+<h3>PyTorch Class<a class="headerlink" href="#pytorch-class" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">survae.transforms.bijections.elementwise_nonlinear</span> <span class="kn">import</span> <span class="n">GaussianMixtureCDF</span>
 <span class="kn">from</span> <span class="nn">survae.transforms.bijections.elementwise_nonlinear</span> <span class="kn">import</span> <span class="n">InverseGaussCDF</span>
@@ -1574,7 +1675,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="A2yKoa1hlVM0" -->
 </div>
 <div class="section" id="flow-model">
-<h3>Flow Model<a class="headerlink" href="#flow-model" title="Permalink to this headline">¶</a></h3>
+<h3>Flow Model<a class="headerlink" href="#flow-model" title="Permalink to this headline">#</a></h3>
 <p>So to have a flow model, we need two components:</p>
 <hr class="docutils" />
 <p><strong>Base Distribution</strong>: <span class="math notranslate nohighlight">\(p_Z = \mathbb{P}_Z\)</span></p>
@@ -1605,7 +1706,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </div>
 <!-- #region id="OJ1MJMjbmINi" -->
 <div class="section" id="forward-transformation">
-<h4>Forward Transformation<a class="headerlink" href="#forward-transformation" title="Permalink to this headline">¶</a></h4>
+<h4>Forward Transformation<a class="headerlink" href="#forward-transformation" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
 
@@ -1617,7 +1718,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="3VOdU-HwmNoL" -->
 </div>
 <div class="section" id="inverse-transformation">
-<h4>Inverse Transformation<a class="headerlink" href="#inverse-transformation" title="Permalink to this headline">¶</a></h4>
+<h4>Inverse Transformation<a class="headerlink" href="#inverse-transformation" title="Permalink to this headline">#</a></h4>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
 
@@ -1633,11 +1734,11 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </div>
 </div>
 <div class="section" id="training">
-<h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">¶</a></h2>
+<h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="Wgwd--1eitR6" -->
 <div class="section" id="dataset">
-<h3>Dataset<a class="headerlink" href="#dataset" title="Permalink to this headline">¶</a></h3>
+<h3>Dataset<a class="headerlink" href="#dataset" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># # Data</span>
 <span class="n">X_train</span> <span class="o">=</span> <span class="n">get_toy_data</span><span class="p">(</span><span class="mi">5_000</span><span class="p">,</span> <span class="mi">123</span><span class="p">)</span>
@@ -1649,7 +1750,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="MFRD2bP2h3i8" -->
 </div>
 <div class="section" id="loss">
-<h3>Loss<a class="headerlink" href="#loss" title="Permalink to this headline">¶</a></h3>
+<h3>Loss<a class="headerlink" href="#loss" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">nll_loss</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="k">return</span> <span class="o">-</span> <span class="n">model</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -1658,7 +1759,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="QOGFZSU0h47U" -->
 </div>
 <div class="section" id="pytorch-lightning-trainer">
-<h3>Pytorch-Lightning Trainer<a class="headerlink" href="#pytorch-lightning-trainer" title="Permalink to this headline">¶</a></h3>
+<h3>Pytorch-Lightning Trainer<a class="headerlink" href="#pytorch-lightning-trainer" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytorch_lightning</span> <span class="k">as</span> <span class="nn">pl</span>
 
@@ -1701,7 +1802,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="np4yqwXQiK9G" -->
 </div>
 <div class="section" id="logging">
-<h3>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h3>
+<h3>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># %load_ext tensorboard</span>
 <span class="c1"># %tensorboard --logdir tb_logs/</span>
@@ -1710,7 +1811,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="J7RVhI5hiDfz" -->
 </div>
 <div class="section" id="id2">
-<h3>Training<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>Training<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># train model</span>
 <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">learn</span><span class="p">,</span> <span class="p">)</span>
@@ -1720,11 +1821,11 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 </div>
 </div>
 <div class="section" id="results">
-<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">#</a></h2>
 <!-- #endregion -->
 <!-- #region id="oTUVxFbZ5Vf0" -->
 <div class="section" id="latent-domain">
-<h3>Latent Domain<a class="headerlink" href="#latent-domain" title="Permalink to this headline">¶</a></h3>
+<h3>Latent Domain<a class="headerlink" href="#latent-domain" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
     <span class="n">X_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -1738,7 +1839,7 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 <!-- #region id="qaMRInWJ5c2L" -->
 </div>
 <div class="section" id="inverse">
-<h3>Inverse<a class="headerlink" href="#inverse" title="Permalink to this headline">¶</a></h3>
+<h3>Inverse<a class="headerlink" href="#inverse" title="Permalink to this headline">#</a></h3>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
     <span class="c1"># X_ = X_.to(device)</span>
@@ -1773,9 +1874,11 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="lecture_2_gf.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -1791,24 +1894,28 @@ F(x) = \sum_k^K \pi_k \phi(x| \mu_k, \sigma_k)
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      By J. Emmanuel Johnson<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bayesian GPLVM &#8212; Research Notebook</title>
     
-  <link href="../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,41 +19,35 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Error Propagation" href="error_prop.html" />
@@ -64,7 +59,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -73,9 +82,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../../../index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -93,14 +103,15 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../intro.html">
-   Overview
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Resources
  </span>
@@ -514,90 +525,180 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/content/notes/egps/bgplvm.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/jejjohnson/research_notebook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/egps/bgplvm.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/egps/bgplvm.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/notes/egps/bgplvm.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#posterior-approximations">
    Posterior Approximations
@@ -666,12 +767,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Bayesian GPLVM</h1>
@@ -756,18 +856,19 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="bayesian-gplvm">
-<h1>Bayesian GPLVM<a class="headerlink" href="#bayesian-gplvm" title="Permalink to this headline">¶</a></h1>
+<h1>Bayesian GPLVM<a class="headerlink" href="#bayesian-gplvm" title="Permalink to this headline">#</a></h1>
 <div class="section" id="posterior-approximations">
-<h2>Posterior Approximations<a class="headerlink" href="#posterior-approximations" title="Permalink to this headline">¶</a></h2>
+<h2>Posterior Approximations<a class="headerlink" href="#posterior-approximations" title="Permalink to this headline">#</a></h2>
 <p>What links all of the strategies from uncertain GPs is how they approach the problem of uncertain inputs: approximating the posterior distribution. The methods that use moment matching on stochastic trial points are all using various strategies to construct some posterior approximation. They define their GP model first and then approximate the posterior by using some approximate scheme to account for uncertainty. The NIGP however does change the model which is a product of the Taylor series expansion employed. From there, the resulting posterior is either evaluated or further approximated. My method actually is related because I also avoid changing the model and just attempt to approximate the posterior predictive distribution by augmenting the predictive variance function only (<strong>???</strong>).</p>
 <p>This approach has similar strategies that stem from the wave of methods that appeared using variational inference (VI). VI consists of creating a variational approximation of the posterior distribution <span class="math notranslate nohighlight">\(q(\mathbf u)\approx \mathcal{p}(\mathbf x)\)</span>. Under some assumptions and a baseline distribution for <span class="math notranslate nohighlight">\(q(\mathbf u)\)</span>,  we can try to approximate the complex distribution <span class="math notranslate nohighlight">\(\mathcal{p}(\mathbf x)\)</span> by minimizing the distance between the two distributions, <span class="math notranslate nohighlight">\(D\left[q(\mathbf u)||\mathcal{p}(\mathbf x)\right]\)</span>. Many practioners believe that approximating the posterior and not the model is the better option when doing Bayesian inference; especially for large data (<a class="reference external" href="https://www.prowler.io/blog/sparse-gps-approximate-the-posterior-not-the-model">example blog</a>, <span class="xref myst">VFE paper</span>). The variational family of methods that are common for GPs use the Kullback-Leibler (KL) divergence criteria between the GP posterior approximation <span class="math notranslate nohighlight">\(q(\mathbf u)\)</span> and the true GP posterior <span class="math notranslate nohighlight">\(\mathcal{p}(\mathbf x)\)</span>. From the literature, this has been extended to many different problems related to GPs for regression, classification, dimensionality reduction and more.</p>
 <hr class="docutils" />
 <div class="section" id="variational-gp-model-with-latent-inputs">
-<h3>Variational GP Model with Latent Inputs<a class="headerlink" href="#variational-gp-model-with-latent-inputs" title="Permalink to this headline">¶</a></h3>
+<h3>Variational GP Model with Latent Inputs<a class="headerlink" href="#variational-gp-model-with-latent-inputs" title="Permalink to this headline">#</a></h3>
 <p><strong>Posterior Distribution:</strong>
 $<span class="math notranslate nohighlight">\(p(Y) = \int_{\mathcal X} p(Y|X) P(X) dX\)</span>$</p>
 <p><strong>Derive the Lower Bound</strong> (w/ Jensens Inequality):</p>
@@ -794,7 +895,7 @@ $<span class="math notranslate nohighlight">\(p(Y) = \int_{\mathcal X} p(Y|X) P(
 </div>
 <hr class="docutils" />
 <div class="section" id="evidence-lower-bound-elbo">
-<h3>Evidence Lower Bound (ELBO)<a class="headerlink" href="#evidence-lower-bound-elbo" title="Permalink to this headline">¶</a></h3>
+<h3>Evidence Lower Bound (ELBO)<a class="headerlink" href="#evidence-lower-bound-elbo" title="Permalink to this headline">#</a></h3>
 <p>In VI strategies, we never get an explicit function that will lead us to the best variational approximation but we can come close; we can come up with an upper bound.
 Traditional marginal likelhood (evidence) function that we’re given is given by:</p>
 <div class="math notranslate nohighlight">
@@ -830,7 +931,7 @@ But through augmentation of the variable space with <span class="math notranslat
 </div>
 <hr class="docutils" />
 <div class="section" id="uncertain-inputs">
-<h2>Uncertain Inputs<a class="headerlink" href="#uncertain-inputs" title="Permalink to this headline">¶</a></h2>
+<h2>Uncertain Inputs<a class="headerlink" href="#uncertain-inputs" title="Permalink to this headline">#</a></h2>
 <p>So how does this relate to uncertain inputs exactly? Let’s look again at our problem setting.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
@@ -849,7 +950,7 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 <p>Notice that I have expanded the parameters for <span class="math notranslate nohighlight">\(p(X)\)</span> and <span class="math notranslate nohighlight">\(q(X)\)</span> so that we are clear about where the parameters. We would like to figure out a way to incorporate our uncertainties in the <span class="math notranslate nohighlight">\(m_{p_x}\)</span>, <span class="math notranslate nohighlight">\(S_{p_x}\)</span>, <span class="math notranslate nohighlight">\(m_{p_z}\)</span>, and <span class="math notranslate nohighlight">\(S_{p_z}\)</span>. The author had two suggestions about how to account for noise in the inputs but the original formulation assumed that these parameters were unknown. In my problem setting, we know that there is noise in the inputs so the problems that the original formulations had will change. I will outline the formulations below for both known and unknown uncertainties.</p>
 <hr class="docutils" />
 <div class="section" id="case-i-strong-prior">
-<h3>Case I - Strong Prior<a class="headerlink" href="#case-i-strong-prior" title="Permalink to this headline">¶</a></h3>
+<h3>Case I - Strong Prior<a class="headerlink" href="#case-i-strong-prior" title="Permalink to this headline">#</a></h3>
 <p><strong>Prior</strong>, <span class="math notranslate nohighlight">\(p(X)\)</span></p>
 <p>We can directly assume that we know the parameters for the prior distribution. So we let <span class="math notranslate nohighlight">\(\mu_x\)</span> be our noisy observations and we let <span class="math notranslate nohighlight">\(\Sigma_x\)</span> be our known covariance matrix for <span class="math notranslate nohighlight">\(X\)</span>. These parameters are fixed as we assume we know them and we would like this to be our prior. This seems to be the most natural as is where we have information and we would like to use it. So now our prior is in the form of:</p>
 <div class="math notranslate nohighlight">
@@ -867,7 +968,7 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 </div>
 <hr class="docutils" />
 <div class="section" id="case-ii-regularized-strong-prior">
-<h3>Case II - Regularized Strong Prior<a class="headerlink" href="#case-ii-regularized-strong-prior" title="Permalink to this headline">¶</a></h3>
+<h3>Case II - Regularized Strong Prior<a class="headerlink" href="#case-ii-regularized-strong-prior" title="Permalink to this headline">#</a></h3>
 <p>This is similar to the above statement, however we would be reducing the prior parameters to a standard 0 mean and 1 standard deviation. So our prior function will look like this</p>
 <div class="math notranslate nohighlight">
 \[\mathcal{p}(\mathbf X|0, 1) = \prod_{i=1}^{N}\mathcal{N}(\mathbf{x}_i |0, 1)\]</div>
@@ -877,7 +978,7 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 </div>
 <hr class="docutils" />
 <div class="section" id="case-iii-prior-with-openness">
-<h3>Case III - Prior with Openness<a class="headerlink" href="#case-iii-prior-with-openness" title="Permalink to this headline">¶</a></h3>
+<h3>Case III - Prior with Openness<a class="headerlink" href="#case-iii-prior-with-openness" title="Permalink to this headline">#</a></h3>
 <p>The last option I think is the most interesting. It seems to incorporate the prior but also allow for some flexibility. In this option,</p>
 <p>We can pivot off of what the factor that the KL divergence term is simply a regularizer. So we could also go with a more conservative approach where we</p>
 <p>We will introduce a variational constraint to encode the input uncertainty directly into the approximate posterior.</p>
@@ -890,7 +991,7 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 </div>
 <hr class="docutils" />
 <div class="section" id="case-iv-bonus-conservative-freedom">
-<h3>Case IV - Bonus, Conservative Freedom<a class="headerlink" href="#case-iv-bonus-conservative-freedom" title="Permalink to this headline">¶</a></h3>
+<h3>Case IV - Bonus, Conservative Freedom<a class="headerlink" href="#case-iv-bonus-conservative-freedom" title="Permalink to this headline">#</a></h3>
 <p>Ok, so the true last option would be to try and see how the algorithm thinks the results should be. We</p>
 <div class="math notranslate nohighlight">
 \[\mathcal{F}=\langle \log \mathcal{p}(\mathbf{Y|X}) \rangle_{q(\mathbf{X|Z})} - \text{KL}\left( q(\mathbf{X|Z}) || \mathcal{p}(\mathbf{X}) \right)\]</div>
@@ -937,13 +1038,13 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 </div>
 <hr class="docutils" />
 <div class="section" id="resources">
-<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
 <div class="section" id="important-papers">
-<h3>Important Papers<a class="headerlink" href="#important-papers" title="Permalink to this headline">¶</a></h3>
+<h3>Important Papers<a class="headerlink" href="#important-papers" title="Permalink to this headline">#</a></h3>
 <p>These are the important papers that helped me understand what was going on throughout the learning process.</p>
 </div>
 <div class="section" id="summary-thesis">
-<h3>Summary Thesis<a class="headerlink" href="#summary-thesis" title="Permalink to this headline">¶</a></h3>
+<h3>Summary Thesis<a class="headerlink" href="#summary-thesis" title="Permalink to this headline">#</a></h3>
 <p>Often times the papers that people publish in conferences in Journals don’t have enough information in them. Sometimes it’s really difficult to go through some of the mathematics that people put  in their articles especially with cryptic explanations like “it’s easy to show that…” or “trivially it can be shown that…”. For most of us it’s not easy nor is it trivial. So I’ve included a few thesis that help to explain some of the finer details. I’ve arranged them in order starting from the easiest to the most difficult.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://lib.ugent.be/fulltxt/RUG01/002/367/115/RUG01-002367115_2017_0001_AC.pdf">Non-Stationary Surrogate Modeling with Deep Gaussian Processes</a> - Dutordoir (2016)</p>
@@ -965,7 +1066,7 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 </ul>
 </div>
 <div class="section" id="talks">
-<h3>Talks<a class="headerlink" href="#talks" title="Permalink to this headline">¶</a></h3>
+<h3>Talks<a class="headerlink" href="#talks" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Damianou - Bayesian LVM with GPs - <a class="reference external" href="http://gpss.cc/gpss15/talks/gpss_BGPLVMs.pdf">MLSS2015</a></p></li>
 <li><p>Lawrence - Deep GPs - <span class="xref myst">MLSS2019</span></p></li>
@@ -996,9 +1097,11 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="moment_matching.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -1014,24 +1117,28 @@ x &amp;\sim \mathcal{N}(\mu_x, \Sigma_x) \\
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      By J. Emmanuel Johnson<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

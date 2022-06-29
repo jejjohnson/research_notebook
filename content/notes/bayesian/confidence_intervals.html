@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Confidence Intervals &#8212; Research Notebook</title>
     
-  <link href="../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,41 +19,35 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Sleeper Concepts" href="../concepts/overview.html" />
@@ -64,7 +59,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -73,9 +82,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../../../index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -93,14 +103,15 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../intro.html">
-   Overview
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Resources
  </span>
@@ -514,90 +525,180 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/content/notes/bayesian/confidence_intervals.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/jejjohnson/research_notebook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/bayesian/confidence_intervals.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/bayesian/confidence_intervals.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/notes/bayesian/confidence_intervals.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#methods">
    Methods
@@ -680,18 +781,34 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#other-resources">
-   Other Resources
+  <a class="reference internal nav-link" href="#resources">
+   Resources
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#videos">
+     Videos
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#papers">
+     Papers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#practical-resources">
+     Practical Resources
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Confidence Intervals</h1>
@@ -786,9 +903,26 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#other-resources">
-   Other Resources
+  <a class="reference internal nav-link" href="#resources">
+   Resources
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#videos">
+     Videos
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#papers">
+     Papers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#practical-resources">
+     Practical Resources
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -796,11 +930,12 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="confidence-intervals">
-<h1>Confidence Intervals<a class="headerlink" href="#confidence-intervals" title="Permalink to this headline">¶</a></h1>
+<h1>Confidence Intervals<a class="headerlink" href="#confidence-intervals" title="Permalink to this headline">#</a></h1>
 <ul class="simple">
 <li><p>Last Update: 19-April-2021</p></li>
 </ul>
@@ -809,10 +944,10 @@ const thebe_selector_output = ".output, .cell_output"
 </div></blockquote>
 <hr class="docutils" />
 <div class="section" id="methods">
-<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">#</a></h2>
 <hr class="docutils" />
 <div class="section" id="tldr">
-<h3>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">¶</a></h3>
+<h3>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">#</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>A lot of these methods are common within the <strong>machine learning</strong> literature, not the <strong>scientific literature</strong>. There is a huge difference between the fields regarding what’s popular for research and what’s popular for practical applications. A lot of the more complex methods are because people are using giant models trying to fit large and very complex datasets. Many times, smaller data problems (&lt;10K data points) don’t require so much difficult stuff.</p>
@@ -826,16 +961,16 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <hr class="docutils" />
 <div class="section" id="gaussian-processes">
-<h3>Gaussian Processes<a class="headerlink" href="#gaussian-processes" title="Permalink to this headline">¶</a></h3>
+<h3>Gaussian Processes<a class="headerlink" href="#gaussian-processes" title="Permalink to this headline">#</a></h3>
 <div class="section" id="standard">
-<h4>Standard<a class="headerlink" href="#standard" title="Permalink to this headline">¶</a></h4>
+<h4>Standard<a class="headerlink" href="#standard" title="Permalink to this headline">#</a></h4>
 </div>
 <div class="section" id="fully-bayesian">
-<h4>Fully Bayesian<a class="headerlink" href="#fully-bayesian" title="Permalink to this headline">¶</a></h4>
+<h4>Fully Bayesian<a class="headerlink" href="#fully-bayesian" title="Permalink to this headline">#</a></h4>
 <p>These put priors on everything and they solve the inference problem using sampling such as Monte Carlo estimation.</p>
 </div>
 <div class="section" id="sparse">
-<h4>Sparse<a class="headerlink" href="#sparse" title="Permalink to this headline">¶</a></h4>
+<h4>Sparse<a class="headerlink" href="#sparse" title="Permalink to this headline">#</a></h4>
 <p>The problem with standard GPs is that they are very slow after about 10K samples (on a beefy machine). So most people resort to sparse methods. This works by conditioning the best subset of points (inducing points) in order to reduce the computation cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span> to <span class="math notranslate nohighlight">\(\mathcal{O}(NM^2)\)</span> which is significantly less expensive. There are quite a few standard methods out there including:</p>
 <ul class="simple">
 <li><p>Fully Independent Training Conditional (FITC)</p></li>
@@ -845,54 +980,69 @@ const thebe_selector_output = ".output, .cell_output"
 <p>These methods all work really well with SVI being the most flexible and FITC being the most restrictive.</p>
 </div>
 <div class="section" id="deep-kernel-learning">
-<h4>Deep Kernel Learning<a class="headerlink" href="#deep-kernel-learning" title="Permalink to this headline">¶</a></h4>
-<p>One of the biggest limiations of Gaussian processes is the expressivity of the kernel function. There are just some datasets that are hard to fit. So one augmentation is to use something called Deep Kernel Learning (DKL) <span id="id1">[<a class="reference internal" href="../../../markdown.html#id6" title="Andrew Gordon Wilson, Zhiting Hu, Ruslan Salakhutdinov, and Eric P. Xing. Deep kernel learning. In Arthur Gretton and Christian C. Robert, editors, Proceedings of the 19th International Conference on Artificial Intelligence and Statistics, AISTATS 2016, Cadiz, Spain, May 9-11, 2016, volume 51 of JMLR Workshop and Conference Proceedings, 370–378. JMLR.org, 2016. URL: http://proceedings.mlr.press/v51/wilson16.html.">Wilson <em>et al.</em>, 2016</a>, <a class="reference internal" href="../../../markdown.html#id7" title="Andrew Gordon Wilson, Zhiting Hu, Ruslan Salakhutdinov, and Eric P. Xing. Stochastic variational deep kernel learning. In Daniel D. Lee, Masashi Sugiyama, Ulrike von Luxburg, Isabelle Guyon, and Roman Garnett, editors, Advances in Neural Information Processing Systems 29: Annual Conference on Neural Information Processing Systems 2016, December 5-10, 2016, Barcelona, Spain, 2586–2594. 2016. URL: https://proceedings.neurips.cc/paper/2016/hash/bcc0d400288793e8bdcd7c19a8ac0c2b-Abstract.html.">Wilson <em>et al.</em>, 2016</a>]</span>.This works by attaching a neural network before the kernel. So instead of the inputs going directly into the kernel function, they go through a neural network first (kind of like an encoder) and then they are passed through to the kernel function.</p>
-<p>However, because DKL are using neural networks, standard training procedures (i.e. maximum likelihood estimation) tend to exhibit the same pathologies that we see in standard neural networks <span id="id2">[<a class="reference internal" href="../../../markdown.html#id5" title="Sebastian W. Ober, Carl E. Rasmussen, and Mark van der Wilk. The promises and pitfalls of deep kernel learning. CoRR, 2021. URL: https://arxiv.org/abs/2102.12108, arXiv:2102.12108.">Ober <em>et al.</em>, 2021</a>]</span>.</p>
+<h4>Deep Kernel Learning<a class="headerlink" href="#deep-kernel-learning" title="Permalink to this headline">#</a></h4>
+<p>One of the biggest limiations of Gaussian processes is the expressivity of the kernel function. There are just some datasets that are hard to fit. So one augmentation is to use something called Deep Kernel Learning (DKL) <span id="id1">[<a class="reference internal" href="../../../markdown.html#id6">Wilson <em>et al.</em>, 2016</a>, <a class="reference internal" href="../../../markdown.html#id7">Wilson <em>et al.</em>, 2016</a>]</span>.This works by attaching a neural network before the kernel. So instead of the inputs going directly into the kernel function, they go through a neural network first (kind of like an encoder) and then they are passed through to the kernel function.</p>
+<p>However, because DKL are using neural networks, standard training procedures (i.e. maximum likelihood estimation) tend to exhibit the same pathologies that we see in standard neural networks <span id="id2">[<a class="reference internal" href="../../../markdown.html#id5">Ober <em>et al.</em>, 2021</a>]</span>.</p>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="neural-networks">
-<h3>Neural Networks<a class="headerlink" href="#neural-networks" title="Permalink to this headline">¶</a></h3>
+<h3>Neural Networks<a class="headerlink" href="#neural-networks" title="Permalink to this headline">#</a></h3>
 <div class="section" id="dropout">
-<h4>DropOut<a class="headerlink" href="#dropout" title="Permalink to this headline">¶</a></h4>
-<p>Dropout is probably the most common method <span id="id3">[<a class="reference internal" href="../../../markdown.html#id4" title="Yarin Gal and Zoubin Ghahramani. Dropout as a bayesian approximation: representing model uncertainty in deep learning. In Maria-Florina Balcan and Kilian Q. Weinberger, editors, Proceedings of the 33nd International Conference on Machine Learning, ICML 2016, New York City, NY, USA, June 19-24, 2016, volume 48 of JMLR Workshop and Conference Proceedings, 1050–1059. JMLR.org, 2016. URL: http://proceedings.mlr.press/v48/gal16.html.">Gal and Ghahramani, 2016</a>]</span>. Dropout works by randomly removing neurons during the training <strong>and</strong> testing phase. This works as an approximate method to Bayesian neural networks. The advantage of this is that it’s very simple and it’s relatively fast. If you’re already using a neural network, chances are you’re already using dropout as a regularization technique. So there will be minimum changes to your code. The downside is there there have been studies showing that it the confidence intervals aren’t the best quality.</p>
+<h4>DropOut<a class="headerlink" href="#dropout" title="Permalink to this headline">#</a></h4>
+<p>Dropout is probably the most common method <span id="id3">[<a class="reference internal" href="../../../markdown.html#id4">Gal and Ghahramani, 2016</a>]</span>. Dropout works by randomly removing neurons during the training <strong>and</strong> testing phase. This works as an approximate method to Bayesian neural networks. The advantage of this is that it’s very simple and it’s relatively fast. If you’re already using a neural network, chances are you’re already using dropout as a regularization technique. So there will be minimum changes to your code. The downside is there there have been studies showing that it the confidence intervals aren’t the best quality.</p>
 </div>
 <div class="section" id="probabilistic">
-<h4>Probabilistic<a class="headerlink" href="#probabilistic" title="Permalink to this headline">¶</a></h4>
+<h4>Probabilistic<a class="headerlink" href="#probabilistic" title="Permalink to this headline">#</a></h4>
 <p>This method is a nice trade-off between the standard neural network and the Bayesian neural network. Basically, one would just tack on a stochastic layer at the end of the neural network and voila, uncertainty.</p>
 </div>
 <div class="section" id="bayesian-neural-networks">
-<h4>Bayesian Neural Networks<a class="headerlink" href="#bayesian-neural-networks" title="Permalink to this headline">¶</a></h4>
+<h4>Bayesian Neural Networks<a class="headerlink" href="#bayesian-neural-networks" title="Permalink to this headline">#</a></h4>
 <p><strong>Warning</strong>: Training BNNs is very difficult. Especially for high dimensional, large sample problems. If you have the time and computational power, then go for it, why not. Otherwise, I would sit tight and</p>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="bootstrapping">
-<h3>Bootstrapping<a class="headerlink" href="#bootstrapping" title="Permalink to this headline">¶</a></h3>
+<h3>Bootstrapping<a class="headerlink" href="#bootstrapping" title="Permalink to this headline">#</a></h3>
 </div>
 <hr class="docutils" />
 <div class="section" id="ensembles">
-<h3>Ensembles<a class="headerlink" href="#ensembles" title="Permalink to this headline">¶</a></h3>
+<h3>Ensembles<a class="headerlink" href="#ensembles" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="https://arxiv.org/abs/1311.4555">Confidence Intervals for Random Forests: The Jackknife and the Infinitesimal Jackknife</a> - Wager et al (2013) | <a class="reference external" href="https://github.com/scikit-learn-contrib/forest-confidence-interval">Software</a></p></li>
 </ul>
 </div>
 <hr class="docutils" />
 <div class="section" id="quantile-regression">
-<h3>Quantile Regression<a class="headerlink" href="#quantile-regression" title="Permalink to this headline">¶</a></h3>
+<h3>Quantile Regression<a class="headerlink" href="#quantile-regression" title="Permalink to this headline">#</a></h3>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="evaluating-uncertainties">
-<h2>Evaluating Uncertainties<a class="headerlink" href="#evaluating-uncertainties" title="Permalink to this headline">¶</a></h2>
+<h2>Evaluating Uncertainties<a class="headerlink" href="#evaluating-uncertainties" title="Permalink to this headline">#</a></h2>
 </div>
 <hr class="docutils" />
-<div class="section" id="other-resources">
-<h2>Other Resources<a class="headerlink" href="#other-resources" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
+<hr class="docutils" />
+<div class="section" id="videos">
+<h3>Videos<a class="headerlink" href="#videos" title="Permalink to this headline">#</a></h3>
 <p><strong>Practical Uncertainty Estimation and Out-of-Distribution Robustness in Deep Learning</strong> - <a class="reference external" href="https://nips.cc/virtual/2020/public/tutorial_0f190e6e164eafe66f011073b4486975.html">NeuRIPS 2020 Tutorial</a></p>
 <blockquote>
 <div><p>The best tutorial I’ve seen for uncertainty in Neural networks. They focus almost exclusively on Neural networks (aka not small data problems).</p>
 </div></blockquote>
+</div>
+<hr class="docutils" />
+<div class="section" id="papers">
+<h3>Papers<a class="headerlink" href="#papers" title="Permalink to this headline">#</a></h3>
+<p><strong>A Review of Unvertainty Quantification in Deep Learning: Techniques, Applications and Challenges</strong> - Abdar et al (2021) - <a class="reference external" href="https://arxiv.org/abs/2011.06225">Information Fusion</a></p>
+<p><strong>A Survey of Uncertainty in Deep Neural Networks</strong> - Gawlikowski et al (2021) - <a class="reference external" href="https://arxiv.org/abs/2107.03342">arxiv</a></p>
+<p><strong>A Survey on Uncertainty Estimation in Deep Learning Classification Systems from a Bayesian Perspective</strong> - Mena et al (2022) - <a class="reference external" href="https://www.semanticscholar.org/paper/A-Survey-on-Uncertainty-Estimation-in-Deep-Learning-Mena-Pujol/a03feff82c32a79ea8a8509193890266ae6fddf7">ACM Compute Surveys</a></p>
+<p><strong>On the Pitfalls of Heteroscedastic Uncertainty Estimation with Probabilistic Neural Networks</strong> - Seitzer et al (2022) - <a class="reference external" href="https://arxiv.org/abs/2203.09168">ICLR</a></p>
+</div>
+<hr class="docutils" />
+<div class="section" id="practical-resources">
+<h3>Practical Resources<a class="headerlink" href="#practical-resources" title="Permalink to this headline">#</a></h3>
 <p><strong>A Regression Master Class with Aboleth</strong> - <a class="reference external" href="https://aboleth.readthedocs.io/en/stable/tutorials/some_regressors.html">Blog</a></p>
 <blockquote>
 <div><p>Probably the best tutorial I’ve seen for regression methods.</p>
@@ -901,6 +1051,7 @@ const thebe_selector_output = ".output, .cell_output"
 <blockquote>
 <div><p>Another great tutorial showcasing how to get uncertainty using the TensorFlow probability package.</p>
 </div></blockquote>
+</div>
 </div>
 </div>
 
@@ -926,9 +1077,11 @@ const thebe_selector_output = ".output, .cell_output"
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="inference/variational_inference.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -944,24 +1097,28 @@ const thebe_selector_output = ".output, .cell_output"
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      By J. Emmanuel Johnson<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

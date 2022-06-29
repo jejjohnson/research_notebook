@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Conda 4 Remote Servers &#8212; Research Notebook</title>
     
-  <link href="../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,33 +19,27 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -62,7 +57,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -71,9 +80,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../../../index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -91,14 +101,15 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../intro.html">
-   Overview
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Resources
  </span>
@@ -512,90 +523,180 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/content/tutorials/remote/conda.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/jejjohnson/research_notebook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/conda.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/conda.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/tutorials/remote/conda.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#install-miniconda">
    Install Miniconda
@@ -664,12 +765,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Conda 4 Remote Servers</h1>
@@ -754,11 +854,12 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="conda-4-remote-servers">
-<h1>Conda 4 Remote Servers<a class="headerlink" href="#conda-4-remote-servers" title="Permalink to this headline">¶</a></h1>
+<h1>Conda 4 Remote Servers<a class="headerlink" href="#conda-4-remote-servers" title="Permalink to this headline">#</a></h1>
 <p>It’s advisable to create personal conda environments in your <code class="docutils literal notranslate"><span class="pre">/path/to/workdir</span></code> directory. Preconfigured environments are great for quickly prototyping. But, inevitably, you always end up needing more fine-tune control over your environments whenever you are prototyping. In addition, too many people using the same environment results in massive environments with unnecessary packages. Having control over your environment will lead to more reproducible settings especially if you keep track.</p>
 <p>Look at the table of contents to see what could be of interest. If it’s your first time, I would suggest going through all of it first before you start tinkering.</p>
 <ul class="simple">
@@ -784,7 +885,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <hr class="docutils" />
 <div class="section" id="install-miniconda">
-<h2>Install Miniconda<a class="headerlink" href="#install-miniconda" title="Permalink to this headline">¶</a></h2>
+<h2>Install Miniconda<a class="headerlink" href="#install-miniconda" title="Permalink to this headline">#</a></h2>
 <p>Get the appropriate link via <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">this webpage</a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget link_to_miniconda_installer
 </pre></div>
@@ -825,7 +926,7 @@ bash .path/to/file.sh
 </div>
 </div>
 <div class="section" id="testing">
-<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h3>
+<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">#</a></h3>
 <p>If done correctly, you should be able to see the following:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># conda environments:</span>
 <span class="c1">#</span>
@@ -853,28 +954,28 @@ myenv    *  /path/to/workdir/.conda/envs/myenv
 </div>
 <hr class="docutils" />
 <div class="section" id="install-mamba">
-<h3>Install Mamba<a class="headerlink" href="#install-mamba" title="Permalink to this headline">¶</a></h3>
+<h3>Install Mamba<a class="headerlink" href="#install-mamba" title="Permalink to this headline">#</a></h3>
 <p>Conda (currently) is quite slow to install things. Sometimes it hangs for quite a long time for no apparent reason. So I recommend using <code class="docutils literal notranslate"><span class="pre">mamba</span></code>. You need to install mamba in the base environment. You can find more instructions <a class="reference external" href="https://github.com/mamba-org/mamba">here</a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install mamba --name base --channel conda-forge
 </pre></div>
 </div>
 <p>Now you should be able to create, install and remove packages via the <code class="docutils literal notranslate"><span class="pre">mamba</span></code> command.</p>
-<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"># Create environment from scratch</span>
-<span class="gd">- conda create --name myenv python=3.9</span><span class="w"></span>
-<span class="gi">+ mamba create --name myenv python=3.9</span><span class="w"></span>
-<span class="w"># use mamba to create an env from a yaml file</span>
-<span class="gd">- conda env create -f file.yml -n myenv</span><span class="w"></span>
-<span class="gi">+ mamba env create -f file.yml -n myenv</span><span class="w"></span>
-<span class="w"># activate the created environment</span>
-<span class="w">conda activate myenv</span>
-<span class="w"># install packages in the environment</span>
-<span class="gd">- conda install numpy scipy matplotlib pandas xarray</span><span class="w"></span>
-<span class="gi">+ mamba install numpy scipy matplotlib pandas xarray</span><span class="w"></span>
-<span class="w"># deactivate environment</span>
-<span class="w">conda deactivate</span>
-<span class="w"># remove environment</span>
-<span class="gd">- conda remove --name myenv --all</span><span class="w"></span>
-<span class="gi">+ mamba remove --name myenv --all</span><span class="w"></span>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span># Create environment from scratch
+<span class="gd">- conda create --name myenv python=3.9</span>
+<span class="gi">+ mamba create --name myenv python=3.9</span>
+# use mamba to create an env from a yaml file
+<span class="gd">- conda env create -f file.yml -n myenv</span>
+<span class="gi">+ mamba env create -f file.yml -n myenv</span>
+# activate the created environment
+conda activate myenv
+# install packages in the environment
+<span class="gd">- conda install numpy scipy matplotlib pandas xarray</span>
+<span class="gi">+ mamba install numpy scipy matplotlib pandas xarray</span>
+# deactivate environment
+conda deactivate
+# remove environment
+<span class="gd">- conda remove --name myenv --all</span>
+<span class="gi">+ mamba remove --name myenv --all</span>
 </pre></div>
 </div>
 <p><strong>Note</strong>: you only should change the regions where we are <em>creating</em>/<em>removing</em> environments and  <em>installing packages</em> within environments. All other commands should use conda.</p>
@@ -882,7 +983,7 @@ myenv    *  /path/to/workdir/.conda/envs/myenv
 </div>
 <hr class="docutils" />
 <div class="section" id="creating-from-environment-yml">
-<h2>Creating from <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code><a class="headerlink" href="#creating-from-environment-yml" title="Permalink to this headline">¶</a></h2>
+<h2>Creating from <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code><a class="headerlink" href="#creating-from-environment-yml" title="Permalink to this headline">#</a></h2>
 <p>Often times we have a preconfigured environment. This allows us to reproduce the conda environments. This comes in the form of an <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba env create -f environment.yml --prefix<span class="o">=</span>/path/to/workdir/.conda/envs/env_name
 conda activate env_name
@@ -891,7 +992,7 @@ conda activate env_name
 <p>Typically we have the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code></p>
 <hr class="docutils" />
 <div class="section" id="updating-env-with-environment-yml">
-<h3>Updating Env with <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code><a class="headerlink" href="#updating-env-with-environment-yml" title="Permalink to this headline">¶</a></h3>
+<h3>Updating Env with <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code><a class="headerlink" href="#updating-env-with-environment-yml" title="Permalink to this headline">#</a></h3>
 <p>We can also update an existing environment with the packages within the same (or similar) <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file. This happens when we may have updated the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file (externally) and we cannot remember which packages we installed or not.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba env update -f environment.yml --prefix<span class="o">=</span>/path/to/workdir/.conda/envs/env_name
 </pre></div>
@@ -904,7 +1005,7 @@ conda activate env_name
 </div>
 <hr class="docutils" />
 <div class="section" id="example-environments">
-<h2>Example Environments<a class="headerlink" href="#example-environments" title="Permalink to this headline">¶</a></h2>
+<h2>Example Environments<a class="headerlink" href="#example-environments" title="Permalink to this headline">#</a></h2>
 <p>As I mentioned above, it is useful (and advisable) to install your conda environments using <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> files. This ensures that they are reproducible and it’s also easier to install.</p>
 <p>As mentioned before, to install the first time, you can use the following command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda env create --file environment.yaml
@@ -923,83 +1024,83 @@ conda activate env_name
 </pre></div>
 </div>
 <p>Below I have included yaml file for using conda and general Earth science packages.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">earthsci_py39</span><span class="w"></span>
-<span class="nt">channels</span><span class="p">:</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span><span class="w"></span>
-<span class="nt">dependencies</span><span class="p">:</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python=3.9</span><span class="w"></span>
-<span class="c1"># Standard Libraries</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numpy</span><span class="w">             </span><span class="c1"># Numerical Linear Algebra</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scipy</span><span class="w">             </span><span class="c1"># Scientific Computing</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xarray</span><span class="w">            </span><span class="c1"># Data structures</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pandas</span><span class="w">            </span><span class="c1"># Data structure</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-learn</span><span class="w">      </span><span class="c1"># Machine Learning</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-image</span><span class="w">      </span><span class="c1"># Image Processing</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">statsmodels</span><span class="w">       </span><span class="c1"># Statistical Learning</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pymc3</span><span class="w">             </span><span class="c1"># Probabilistic programming library</span><span class="w"></span>
-<span class="c1"># Plotting</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">matplotlib</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seaborn</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bokeh</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plotly::plotly&gt;=4.6.0</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyviz::geoviews</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::cartopy</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datashader</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::cmocean</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyviz::hvplot</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::xmovie</span><span class="w"></span>
-<span class="c1"># Geospatial packages</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">geopandas</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::regionmask</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::xesmf</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::xcube</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::rioxarray</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::shapely</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::pooch</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::cftime</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::pyinterp</span><span class="w"></span>
-<span class="c1"># Scale</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numba</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dask</span><span class="w">              </span><span class="c1"># Out-of-Core processing</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dask-ml</span><span class="w">           </span><span class="c1"># Out-of-Core machine learning</span><span class="w"></span>
-<span class="c1"># Storage</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hdf5</span><span class="w">              </span><span class="c1"># standard large storage h5</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::zarr</span><span class="w"></span>
-<span class="c1"># GUI</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::papermill</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::nb_conda_kernels</span><span class="w">     </span><span class="c1"># Access to other conda kernels</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::nodejs</span><span class="w">               </span><span class="c1"># for extensions in jupyterlab</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::tqdm</span><span class="w">   </span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipykernel</span><span class="w">                         </span><span class="c1"># IMPORTANT: allows other environments to see this environment  </span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::tqdm</span><span class="w">             </span><span class="c1"># progress bar  </span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># Jupyter</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipywidgets</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># Formatters</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">black</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pylint</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isort</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flake8</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mypy</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># Notebook stuff</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyprojroot</span><span class="w"></span>
-<span class="w">  </span><span class="c1"># Extra</span><span class="w"></span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">-&quot;git+https://github.com/swartn/cmipdata.git&quot;</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">emukit</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netCDF4</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shapely</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">affine</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netCDF4</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joblib</span><span class="w">  </span><span class="c1"># Embarssingly parallel</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">earthsci_py39</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">defaults</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">python=3.9</span>
+<span class="c1"># Standard Libraries</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">numpy</span>             <span class="c1"># Numerical Linear Algebra</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">scipy</span>             <span class="c1"># Scientific Computing</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">xarray</span>            <span class="c1"># Data structures</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pandas</span>            <span class="c1"># Data structure</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">scikit-learn</span>      <span class="c1"># Machine Learning</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">scikit-image</span>      <span class="c1"># Image Processing</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">statsmodels</span>       <span class="c1"># Statistical Learning</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pymc3</span>             <span class="c1"># Probabilistic programming library</span>
+<span class="c1"># Plotting</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">matplotlib</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">seaborn</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">bokeh</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">plotly::plotly&gt;=4.6.0</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pyviz::geoviews</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::cartopy</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">datashader</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::cmocean</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pyviz::hvplot</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::xmovie</span>
+<span class="c1"># Geospatial packages</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">geopandas</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::regionmask</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::xesmf</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::xcube</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::rioxarray</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::shapely</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::pooch</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::cftime</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::pyinterp</span>
+<span class="c1"># Scale</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">numba</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dask</span>              <span class="c1"># Out-of-Core processing</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dask-ml</span>           <span class="c1"># Out-of-Core machine learning</span>
+<span class="c1"># Storage</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">hdf5</span>              <span class="c1"># standard large storage h5</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::zarr</span>
+<span class="c1"># GUI</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::papermill</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::nb_conda_kernels</span>     <span class="c1"># Access to other conda kernels</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::nodejs</span>               <span class="c1"># for extensions in jupyterlab</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::tqdm</span>   
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ipykernel</span>                         <span class="c1"># IMPORTANT: allows other environments to see this environment  </span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::tqdm</span>             <span class="c1"># progress bar  </span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip</span>
+<span class="p p-Indicator">-</span> <span class="nt">pip</span><span class="p">:</span>
+  <span class="c1"># Jupyter</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ipywidgets</span>
+  <span class="c1"># Formatters</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">black</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pylint</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">isort</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">flake8</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">mypy</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pytest</span>
+  <span class="c1"># Notebook stuff</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pyprojroot</span>
+  <span class="c1"># Extra</span>
+  <span class="l l-Scalar l-Scalar-Plain">-&quot;git+https://github.com/swartn/cmipdata.git&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">emukit</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">netCDF4</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">shapely</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">affine</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">netCDF4</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">joblib</span>  <span class="c1"># Embarssingly parallel</span>
 </pre></div>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="multiple-conda-directories">
-<h2>Multiple Conda directories<a class="headerlink" href="#multiple-conda-directories" title="Permalink to this headline">¶</a></h2>
+<h2>Multiple Conda directories<a class="headerlink" href="#multiple-conda-directories" title="Permalink to this headline">#</a></h2>
 <p>Sometimes there may be multiple directories where there are packages available. We have our primary <code class="docutils literal notranslate"><span class="pre">miniconda3</span></code> installation but we also want to have access to the other external environments by other people. We simply need to change the <code class="docutils literal notranslate"><span class="pre">.condarc</span></code> script to include all of the directories which have relevant environments.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>envs_dirs:
     - /path/to/workdir/.conda/envs
@@ -1010,11 +1111,11 @@ conda activate env_name
 </div>
 <hr class="docutils" />
 <div class="section" id="server-installations">
-<h2>Server Installations<a class="headerlink" href="#server-installations" title="Permalink to this headline">¶</a></h2>
+<h2>Server Installations<a class="headerlink" href="#server-installations" title="Permalink to this headline">#</a></h2>
 <p>Often times, <code class="docutils literal notranslate"><span class="pre">miniconda</span></code>/<code class="docutils literal notranslate"><span class="pre">conda</span></code> is already installed. You just need to activate it using the command from the server. However, the above steps allow us to have access to our own miniconda installer which gives us fine-grain control. However, <em>we can still access</em> all of the created conda environments by simply adding all of these to the <code class="docutils literal notranslate"><span class="pre">.condarc</span></code> that we showed above. Below are a few servers that I personally have access to and the filenames.</p>
 <hr class="docutils" />
 <div class="section" id="gricad">
-<h3>Gricad<a class="headerlink" href="#gricad" title="Permalink to this headline">¶</a></h3>
+<h3>Gricad<a class="headerlink" href="#gricad" title="Permalink to this headline">#</a></h3>
 <p>For the <code class="docutils literal notranslate"><span class="pre">gricad</span></code> server, there are a few preconfigured environments available. Most of them are for GPU computation so it will be useful for the <code class="docutils literal notranslate"><span class="pre">bigfoot</span></code> cluster. All of the common conda environments are located in the following directory.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/applis/common/miniconda3/envs
 </pre></div>
@@ -1023,13 +1124,97 @@ conda activate env_name
 </div>
 <hr class="docutils" />
 <div class="section" id="jeanzay">
-<h3>JeanZay<a class="headerlink" href="#jeanzay" title="Permalink to this headline">¶</a></h3>
+<h3>JeanZay<a class="headerlink" href="#jeanzay" title="Permalink to this headline">#</a></h3>
 <p>In the jean-zay server, there are quite a lot of preconfigured environments. Mainly for GPU computation. They are located in following directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/gpfslocalsup/pub/anaconda-py3/2021.05/envs
 </pre></div>
 </div>
 <p>So by adding this to the <code class="docutils literal notranslate"><span class="pre">.condarc</span></code> file.</p>
 <p>Again, now we now have access to all of the environments they have already configured! So we can use them but not necessarily if we don’t want to. :D</p>
+<hr class="docutils" />
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nv">MINICONDA_URL</span><span class="o">=</span><span class="s2">&quot;https://repo.anaconda.com/miniconda/Miniconda3-py39_4.9.2-Linux-x86_64.sh&quot;</span>
+<span class="nv">MINICONDA_PREFIX</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$SCRATCH</span><span class="s2">/miniconda&quot;</span>
+
+install_miniconda<span class="o">(){</span>
+  <span class="k">if</span> <span class="o">[</span> ! -d <span class="nv">$SCRATCH</span>/miniconda <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Installing Miniconda&quot;</span>
+    wget <span class="nv">$MINICONDA_URL</span> -O <span class="nv">$WORK</span>/downloads/miniconda.sh
+    bash <span class="nv">$WORK</span>/downloads/miniconda.sh -b -p <span class="nv">$MINICONDA_PREFIX</span>
+    conda init
+    <span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span><span class="nv">$MINICONDA_PREFIX</span>/condabin/conda shell.bash hook<span class="k">)</span><span class="s2">&quot;</span>
+    conda install -y mamba -c conda-forge
+    install_mamba
+  <span class="k">else</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Miniconda already installed&quot;</span>
+  <span class="k">fi</span>
+
+<span class="o">}</span>
+
+install_mamba<span class="o">(){</span>
+  <span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span><span class="nv">$MINICONDA_PREFIX</span>/condabin/conda shell.bash hook<span class="k">)</span><span class="s2">&quot;</span>
+  conda install -y mamba -c conda-forge
+<span class="o">}</span>
+
+clone_dotfiles<span class="o">(){</span>
+  rm -rf <span class="nv">$WORK</span>/projects/dot_files
+  git clone https://github.com/jejjohnson/dot_files.git <span class="nv">$WORK</span>/projects/dot_files/
+<span class="o">}</span>
+
+install_mamba_jlab<span class="o">(){</span>
+	wget https://raw.githubusercontent.com/jejjohnson/dot_files/master/jupyter_scripts/jupyterlab.yml -O <span class="nv">$WORK</span>/downloads/jlab.yaml
+	<span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span><span class="nv">$MINICONDA_PREFIX</span>/condabin/conda shell.bash hook<span class="k">)</span><span class="s2">&quot;</span>
+	mamba env create -f <span class="nv">$WORK</span>/downloads/jlab.yaml
+<span class="o">}</span>
+
+install_mamba_dl<span class="o">(){</span>
+	install_mamba_jax
+  install_conda_pytorch
+  install_conda_tensorflow
+<span class="o">}</span>
+
+install_mamba_jax<span class="o">(){</span>
+	wget https://raw.githubusercontent.com/jejjohnson/dot_files/main/jupyter_scripts/jupyterlab.yaml -O <span class="nv">$WORK</span>/downloads/jlab.yaml
+	<span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span><span class="nv">$MINICONDA_PREFIX</span>/condabin/conda shell.bash hook<span class="k">)</span><span class="s2">&quot;</span>
+	conda env create -f <span class="nv">$WORK</span>/downloads/jlab.yaml
+<span class="o">}</span>
+
+install_conda_pytorch<span class="o">(){</span>
+	wget https://raw.githubusercontent.com/jejjohnson/dot_files/main/jupyter_scripts/jupyterlab.yaml -O <span class="nv">$WORK</span>/downloads/jlab.yaml
+	<span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span><span class="nv">$MINICONDA_PREFIX</span>/condabin/conda shell.bash hook<span class="k">)</span><span class="s2">&quot;</span>
+	conda env create -f <span class="nv">$WORK</span>/downloads/jlab.yaml
+<span class="o">}</span>
+
+install_conda_tensorflow<span class="o">(){</span>
+	wget https://raw.githubusercontent.com/jejjohnson/dot_files/main/jupyter_scripts/jupyterlab.yaml -O <span class="nv">$WORK</span>/downloads/jlab.yaml
+	<span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span><span class="nv">$MINICONDA_PREFIX</span>/condabin/conda shell.bash hook<span class="k">)</span><span class="s2">&quot;</span>
+	conda env create -f <span class="nv">$WORK</span>/downloads/jlab.yaml
+<span class="o">}</span>
+
+
+init_conda_env<span class="o">(){</span>
+	wget https://raw.githubusercontent.com/quentinf00/dotfiles/main/conda/base_environment.yaml -O conda_ide.yaml
+	<span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span><span class="nv">$MINICONDA_PREFIX</span>/condabin/conda shell.bash hook<span class="k">)</span><span class="s2">&quot;</span>
+	conda install -y mamba -c conda-forge
+	mamba env update -f conda_ide.yaml
+	rm -f ~/.zshrc ~/.bashrc
+	conda init <span class="o">&amp;&amp;</span> mv ~/.bashrc ~/.condainitrc
+	conda init zsh <span class="o">&amp;&amp;</span> mv ~/.zshrc ~/.condainitzshrc
+<span class="o">}</span>
+
+
+
+reinstall_everything<span class="o">(){</span>
+        rm -rf <span class="nv">$MINICONDA_PREFIX</span>
+        bash ~/miniconda.sh -b -p <span class="nv">$MINICONDA_PREFIX</span>
+        <span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span><span class="nv">$MINICONDA_PREFIX</span>/condabin/conda shell.bash hook<span class="k">)</span><span class="s2">&quot;</span>
+        conda install -y mamba -c conda-forge
+        mamba env update -f conda_ide.yaml
+        mamba env create -f jlab.yaml
+        conda init
+<span class="o">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -1056,9 +1241,11 @@ conda activate env_name
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="ssh.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -1074,24 +1261,28 @@ conda activate env_name
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      By J. Emmanuel Johnson<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

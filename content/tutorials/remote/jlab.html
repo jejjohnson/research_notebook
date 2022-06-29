@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jupyter Lab 4 Remote Servers &#8212; Research Notebook</title>
     
-  <link href="../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,33 +19,27 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -62,7 +57,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -71,9 +80,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../../../index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
@@ -91,14 +101,15 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../intro.html">
-   Overview
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Resources
  </span>
@@ -512,90 +523,180 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/content/tutorials/remote/jlab.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/jejjohnson/research_notebook"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/jlab.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/tutorials/remote/jlab.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/tutorials/remote/jlab.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#intro">
    Intro
@@ -797,12 +898,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Jupyter Lab 4 Remote Servers</h1>
@@ -1020,21 +1120,22 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="jupyter-lab-4-remote-servers">
-<h1>Jupyter Lab 4 Remote Servers<a class="headerlink" href="#jupyter-lab-4-remote-servers" title="Permalink to this headline">¶</a></h1>
+<h1>Jupyter Lab 4 Remote Servers<a class="headerlink" href="#jupyter-lab-4-remote-servers" title="Permalink to this headline">#</a></h1>
 <hr class="docutils" />
 <div class="section" id="intro">
-<h2>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h2>
+<h2>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">#</a></h2>
 <p>Jupyter Lab (<code class="docutils literal notranslate"><span class="pre">jlab</span></code>) is one of the most popular IDEs for science, data science and machine learning. Firstly, it offers an interactive development environment that greatly speeds up the coding process. Additionally, it also has a lower barrier to entry so many beginners can get started right away. Finally, also serves as an amazing method to document the thought process as it allows others to “walk-through” your code with text, equations, code blocks and visualizations.</p>
 <p>Unfortunately/Fortunately, data is getting bigger and computation is getting expensive. So nowadays, most people are <strong>required</strong> to use some sort of lab server <code class="docutils literal notranslate"><span class="pre">jlab</span></code> because laptops do not have the capacity nor the bandwidth to process such large volumes of data efficiently. There exists some built-in solutions like <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">JupyterHub</span></code></span> which just needs a log-in and then your whole Jupyter suite is available. But, I find that they do not offer the necessary level of granularity that is required for many researchers; especially researchers that really want to make their products reproducible. For example, often times it requires images that are spun up which means the users don’t have control over their python environments and also have to keep re-loading their scripts. This is cumbersome and doesn’t promote good practices outside of simple prototyping. You could <a class="reference external" href="https://www.youtube.com/watch?v=9Q6sLbz37gk">argue for</a> or <a class="reference external" href="https://www.youtube.com/watch?v=7jiPeIFXb6U">argue against</a> the notion that Jupyter notebooks are good enough to do good coding practices and there are <a class="reference external" href="https://nbdev.fast.ai/tutorial.html">certainly tools</a> to get around that. I personally find that the ecosystem doesn’t lend itself well to that kind of development.</p>
 <p>This guide is meant to demonstrate how one can setup <code class="docutils literal notranslate"><span class="pre">jlab</span></code> oneself. Setting <code class="docutils literal notranslate"><span class="pre">jlab</span></code> up by yourself is definitely more work than the prebuilt solutions. However, once you know how to do (and you know how to automate some of the tedious commands), these skills are transferable to many different setups. As long as there is a remote server and you can have an ssh connection, you can have a <code class="docutils literal notranslate"><span class="pre">jlab</span></code> environment.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="tldr">
-<h2>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">¶</a></h2>
+<h2>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">#</a></h2>
 <p>Below is <strong>What You Will Do</strong> in this tutorial:</p>
 <ul class="simple">
 <li><p>Install JupyterLab on a remote server</p></li>
@@ -1118,34 +1219,34 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <hr class="docutils" />
 <div class="section" id="install-jupyterlab">
-<h2>Install JupyterLab<a class="headerlink" href="#install-jupyterlab" title="Permalink to this headline">¶</a></h2>
+<h2>Install JupyterLab<a class="headerlink" href="#install-jupyterlab" title="Permalink to this headline">#</a></h2>
 <p>Here, we will walk-through how we can install <code class="docutils literal notranslate"><span class="pre">jupyterlab</span></code> on the servers.</p>
 <hr class="docutils" />
 <div class="section" id="environment-yaml-file">
-<h3>Environment <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file<a class="headerlink" href="#environment-yaml-file" title="Permalink to this headline">¶</a></h3>
+<h3>Environment <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file<a class="headerlink" href="#environment-yaml-file" title="Permalink to this headline">#</a></h3>
 <p>Below, we have a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file for creating a Jupyter Lab environment. To refresh yourself on how this works, have a look at the <a class="reference internal" href="conda.html"><span class="doc std std-doc">conda tutorial</span></a> to more details on the installation.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jlab</span><span class="w"></span>
-<span class="nt">channels</span><span class="p">:</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge</span><span class="w"></span>
-<span class="nt">dependencies</span><span class="p">:</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python=3.9</span><span class="w"></span>
-<span class="c1"># GUI</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyterlab</span><span class="w">           </span><span class="c1"># JupyterLab GUI</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::nb_conda_kernels</span><span class="w">     </span><span class="c1"># Access to other conda kernels</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::spyder-kernels</span><span class="w">       </span><span class="c1"># Access via spyder kernels</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::nodejs</span><span class="w">               </span><span class="c1"># for extensions in jupyterlab</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyterlab-git</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyter-server-proxy</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda-forge::ipywidgets</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyviz::holoviews</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bokeh::bokeh</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bokeh::jupyter_bokeh</span><span class="w">              </span><span class="c1"># Bokeh</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipykernel</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tqdm</span><span class="w">                              </span><span class="c1"># For status bars</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span><span class="w">                               </span><span class="c1"># To install other packages</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dask_labextension</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jlab</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">defaults</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">python=3.9</span>
+<span class="c1"># GUI</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyterlab</span>           <span class="c1"># JupyterLab GUI</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::nb_conda_kernels</span>     <span class="c1"># Access to other conda kernels</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::spyder-kernels</span>       <span class="c1"># Access via spyder kernels</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::nodejs</span>               <span class="c1"># for extensions in jupyterlab</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyterlab-git</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::jupyter-server-proxy</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">conda-forge::ipywidgets</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pyviz::holoviews</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">bokeh::bokeh</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">bokeh::jupyter_bokeh</span>              <span class="c1"># Bokeh</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ipykernel</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">tqdm</span>                              <span class="c1"># For status bars</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip</span>                               <span class="c1"># To install other packages</span>
+<span class="p p-Indicator">-</span> <span class="nt">pip</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dask_labextension</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -1157,7 +1258,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <hr class="docutils" />
 <div class="section" id="running-jupyterlab">
-<h2>Running JupyterLab<a class="headerlink" href="#running-jupyterlab" title="Permalink to this headline">¶</a></h2>
+<h2>Running JupyterLab<a class="headerlink" href="#running-jupyterlab" title="Permalink to this headline">#</a></h2>
 <p><strong>Step 1</strong>: Install this as a conda environment. (Use mamba because its faster)</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba env create -f environment.yaml --prune
 </pre></div>
@@ -1173,10 +1274,10 @@ const thebe_selector_output = ".output, .cell_output"
 <p>This will give you a</p>
 <hr class="docutils" />
 <div class="section" id="advanced-users">
-<h3>Advanced Users<a class="headerlink" href="#advanced-users" title="Permalink to this headline">¶</a></h3>
+<h3>Advanced Users<a class="headerlink" href="#advanced-users" title="Permalink to this headline">#</a></h3>
 <p>This will allow users to not have to go through all of those above steps each time we want to log in. Instead, we will create a function that automates this for us which will greatly reduce the amount of steps. We will also</p>
 <div class="section" id="bash-script">
-<h4>Bash Script<a class="headerlink" href="#bash-script" title="Permalink to this headline">¶</a></h4>
+<h4>Bash Script<a class="headerlink" href="#bash-script" title="Permalink to this headline">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Launch Jupyter Lab</span>
 <span class="k">function</span> jlab<span class="o">(){</span>
     <span class="c1"># set port (default)</span>
@@ -1198,7 +1299,7 @@ jlab <span class="m">8888</span>
 <p><strong>That was easy</strong>! Just a little bit of customization goes a long way.</p>
 </div>
 <div class="section" id="tmuxp">
-<h4><code class="docutils literal notranslate"><span class="pre">tmuxp</span></code><a class="headerlink" href="#tmuxp" title="Permalink to this headline">¶</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">tmuxp</span></code><a class="headerlink" href="#tmuxp" title="Permalink to this headline">#</a></h4>
 <p>This is the demo for <code class="docutils literal notranslate"><span class="pre">tmuxp</span></code> users.</p>
 <p>Below is my demo <strong><code class="docutils literal notranslate"><span class="pre">jlab.yaml</span></code></strong> file which has the automated commands for <code class="docutils literal notranslate"><span class="pre">tmuxp</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>session_name: cal1_jlab
@@ -1230,18 +1331,18 @@ windows:
 </div>
 <hr class="docutils" />
 <div class="section" id="jlab-on-remote-server">
-<h2>JLab on Remote Server<a class="headerlink" href="#jlab-on-remote-server" title="Permalink to this headline">¶</a></h2>
+<h2>JLab on Remote Server<a class="headerlink" href="#jlab-on-remote-server" title="Permalink to this headline">#</a></h2>
 <p>So the <strong>only difference</strong> between what we did above and what we do now</p>
 <p>So the actual commands are quite similar. But they have different steps:</p>
-<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"># log into remote server</span>
-<span class="gi">+ ssh username@server -L 8888:localhost:8888</span><span class="w"></span>
-<span class="w"># launch jlab via script</span>
-<span class="w">jlab 8888</span>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span># log into remote server
+<span class="gi">+ ssh username@server -L 8888:localhost:8888</span>
+# launch jlab via script
+jlab 8888
 </pre></div>
 </div>
 <hr class="docutils" />
 <div class="section" id="id1">
-<h3>Advanced Users<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>Advanced Users<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h3>
 <p>There are some shortcuts we can apply based on our previous stuff. We will do the following:</p>
 <ol class="simple">
 <li><p>Setup the <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> to streamline the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> flags</p></li>
@@ -1250,7 +1351,7 @@ windows:
 </ol>
 <hr class="docutils" />
 <div class="section" id="ssh-config">
-<h4>SSH Config<a class="headerlink" href="#ssh-config" title="Permalink to this headline">¶</a></h4>
+<h4>SSH Config<a class="headerlink" href="#ssh-config" title="Permalink to this headline">#</a></h4>
 <p>If we have the server information already preconfigured in our <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file, then we can remove a lot of these redundant commands.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host server_name
     HostName server
@@ -1270,11 +1371,11 @@ windows:
 <li><p><code class="docutils literal notranslate"><span class="pre">LocalForward</span></code>/<code class="docutils literal notranslate"><span class="pre">localhost</span></code> - does the tunneling automatically</p></li>
 </ul>
 <p>Take a look at the changes when we have this setup.</p>
-<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"># log into remote server</span>
-<span class="gd">- ssh username@server -L 8888:localhost:8888</span><span class="w"></span>
-<span class="gi">+ ssh server_name</span><span class="w"></span>
-<span class="w"># launch jlab via script</span>
-<span class="w">jlab 8888</span>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span># log into remote server
+<span class="gd">- ssh username@server -L 8888:localhost:8888</span>
+<span class="gi">+ ssh server_name</span>
+# launch jlab via script
+jlab 8888
 </pre></div>
 </div>
 <p><strong>Note</strong>: We could also remove the exact port number since this port number is configured to be the same within the <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file. So the result is the following command:</p>
@@ -1286,7 +1387,7 @@ jlab
 </div>
 <hr class="docutils" />
 <div class="section" id="tmuxp-config">
-<h4><strong>TMUXP</strong> Config<a class="headerlink" href="#tmuxp-config" title="Permalink to this headline">¶</a></h4>
+<h4><strong>TMUXP</strong> Config<a class="headerlink" href="#tmuxp-config" title="Permalink to this headline">#</a></h4>
 <p>We can create a <code class="docutils literal notranslate"><span class="pre">tmux</span></code> environment where we create windows to run commands where everything has already been executed. Below is my demo <strong><code class="docutils literal notranslate"><span class="pre">jlab_cal1.yaml</span></code></strong> file which has the automated commands for <code class="docutils literal notranslate"><span class="pre">tmuxp</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>session_name: cal1_jlab
 windows:
@@ -1310,7 +1411,7 @@ windows:
 </div>
 <hr class="docutils" />
 <div class="section" id="id2">
-<h4>Bash Script<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<h4>Bash Script<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h4>
 <p>Now, the final step, we want to not have to write all of those commands. So we create a nice little bash script that does everything. Remember to add it to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> and restart your terminal.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> jlab_cal1<span class="o">(){</span>
   tmuxp load <span class="nv">$HOME</span>/.tmuxp/jlab_cal1.yaml
@@ -1327,22 +1428,22 @@ windows:
 </div>
 <hr class="docutils" />
 <div class="section" id="jlab-on-slurm">
-<h2>JLab on SLURM<a class="headerlink" href="#jlab-on-slurm" title="Permalink to this headline">¶</a></h2>
+<h2>JLab on SLURM<a class="headerlink" href="#jlab-on-slurm" title="Permalink to this headline">#</a></h2>
 <p>In this section, we will take what we did above and apply it to a cluster managed by SLURM. The biggest difference in steps is that we first need to log into the remote server, then we need to start a compute node, and then we can apply the steps for the jlab:</p>
-<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"># ssh into the remote server</span>
-<span class="gi">+ ssh username@server -L 8888:localhost:8888</span><span class="w"></span>
-<span class="w"># start an interactive compute session</span>
-<span class="gi">+ srun ... or + sbatch</span><span class="w"></span>
-<span class="w"># start jupyter lab environment</span>
-<span class="w">conda activate jlab</span>
-<span class="w"># Fires-up a Jupyter notebook by supplying a specific port</span>
-<span class="w">jupyter-lab --no-browser --ip=0.0.0.0 --port=8888</span>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span># ssh into the remote server
+<span class="gi">+ ssh username@server -L 8888:localhost:8888</span>
+# start an interactive compute session
+<span class="gi">+ srun ... or + sbatch</span>
+# start jupyter lab environment
+conda activate jlab
+# Fires-up a Jupyter notebook by supplying a specific port
+jupyter-lab --no-browser --ip=0.0.0.0 --port=8888
 </pre></div>
 </div>
 <p>Now we can open our browser to <code class="docutils literal notranslate"><span class="pre">localhost:8888</span></code> and we will have access to <code class="docutils literal notranslate"><span class="pre">jlab</span></code>. We have two ways to do this: 1) we can use <code class="docutils literal notranslate"><span class="pre">srun</span></code> which will start an interactive node or 2) <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> which will start a node based on a <code class="docutils literal notranslate"><span class="pre">bash</span></code> script with the configurations. We will go over both options below.</p>
 <hr class="docutils" />
 <div class="section" id="using-srun">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">srun</span></code><a class="headerlink" href="#using-srun" title="Permalink to this headline">¶</a></h3>
+<h3>Using <code class="docutils literal notranslate"><span class="pre">srun</span></code><a class="headerlink" href="#using-srun" title="Permalink to this headline">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># log into remote server</span>
 ssh username@server -L <span class="m">8888</span>:localhost:8888
 <span class="c1"># activate conda environment</span>
@@ -1355,7 +1456,7 @@ srun --nodes<span class="o">=</span><span class="m">1</span> --cpus-per-task<spa
 </div>
 <hr class="docutils" />
 <div class="section" id="using-sbatch">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">sbatch</span></code><a class="headerlink" href="#using-sbatch" title="Permalink to this headline">¶</a></h3>
+<h3>Using <code class="docutils literal notranslate"><span class="pre">sbatch</span></code><a class="headerlink" href="#using-sbatch" title="Permalink to this headline">#</a></h3>
 <p>In this case, we will create a script and then launch the job using the <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> command.</p>
 <p><strong>Pros</strong>:</p>
 <ul class="simple">
@@ -1391,103 +1492,18 @@ jupyter-lab --no-browser --port<span class="o">=</span><span class="si">${</span
 </div>
 <hr class="docutils" />
 <div class="section" id="id3">
-<h3>Advanced Users<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<h3>Advanced Users<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h3>
 <p>For interactive sessions with <code class="docutils literal notranslate"><span class="pre">srun</span></code>, I strongly recommend the use of functions to ensure that your configurations are correct. We can turn the above steps on the server into a script so that we don’t have to keep running these same commands.</p>
 <div class="section" id="demo-setup">
-<h4>Demo Setup<a class="headerlink" href="#demo-setup" title="Permalink to this headline">¶</a></h4>
+<h4>Demo Setup<a class="headerlink" href="#demo-setup" title="Permalink to this headline">#</a></h4>
 <p>Add this function to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code> <strong>on the remote server</strong>.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="6efe39de-be5c-4e19-aad7-f135710cdaeb" name="66875b04-16bf-4dc3-a61f-c7a48b639d5c" type="radio">
-</input><label class="tabbed-label" for="6efe39de-be5c-4e19-aad7-f135710cdaeb">
-srun</label><div class="tabbed-content docutils">
-<p>An example using the SLURM <code class="docutils literal notranslate"><span class="pre">srun</span></code> system:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> jlab_srun<span class="o">(){</span>
-    <span class="c1"># activate conda environment with jlab</span>
-    conda activate jlab
-    <span class="c1"># run jupyterlab via srun</span>
-    srun --nodes<span class="o">=</span><span class="m">1</span> --mem<span class="o">=</span><span class="m">1600</span> --time<span class="o">=</span><span class="m">8</span>:00:00 --account<span class="o">=</span>python --job-name<span class="o">=</span>jlab --pty jupyter-lab --no-browser --port<span class="o">=</span><span class="m">8888</span> --ip<span class="o">=</span><span class="m">0</span>.0.0.0
-<span class="o">}</span>
-</pre></div>
-</div>
-</div>
-<input id="55191a76-eb62-45f9-b28c-ccf0de1a23b7" name="66875b04-16bf-4dc3-a61f-c7a48b639d5c" type="radio">
-</input><label class="tabbed-label" for="55191a76-eb62-45f9-b28c-ccf0de1a23b7">
-sbatch</label><div class="tabbed-content docutils">
-<p>An example using the SLURM <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> system:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> jlab_sbatch<span class="o">(){</span>
-    <span class="c1"># run jupyterlab via srun</span>
-    sbatch jlab_sbatch.sh
-<span class="o">}</span>
-</pre></div>
-</div>
-</div>
-</div>
 <p><strong>Demo Usage</strong>:</p>
 <p>I am assume that we have already configured our <code class="docutils literal notranslate"><span class="pre">.ssh/config</span></code> file as done above.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="398bdb91-0183-450b-bd4d-5a22be04905e" name="09fa7b43-487e-4e7d-b60f-cd57520ada7a" type="radio">
-</input><label class="tabbed-label" for="398bdb91-0183-450b-bd4d-5a22be04905e">
-srun</label><div class="tabbed-content docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ssh into</span>
-ssh meom_cal1
-<span class="c1"># run function</span>
-jlab_srun
-</pre></div>
-</div>
-</div>
-<input id="35de7e89-8ce6-47fc-b29a-2114d8150330" name="09fa7b43-487e-4e7d-b60f-cd57520ada7a" type="radio">
-</input><label class="tabbed-label" for="35de7e89-8ce6-47fc-b29a-2114d8150330">
-sbatch</label><div class="tabbed-content docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ssh into</span>
-ssh meom_cal1
-<span class="c1"># run function</span>
-jlab_sbatch
-</pre></div>
-</div>
-</div>
-</div>
 <p>This is a low easier and less cumbersome than typing out all of the commands from scratch.</p>
 </div>
 <div class="section" id="id4">
-<h4><strong>TMUXP</strong><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<h4><strong>TMUXP</strong><a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h4>
 <p>We can make this even easier with <code class="docutils literal notranslate"><span class="pre">tmuxp</span></code>. We need to create a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file which will store all the commands to be executed. Here is an example for <code class="docutils literal notranslate"><span class="pre">jlab_cal1.yaml</span></code>.</p>
-<div class="tabbed-set docutils">
-<input checked="checked" id="5809f7ee-3f29-407f-a746-d830451435f8" name="c3d3c5e5-df1c-4bb4-9006-1a2a893d044e" type="radio">
-</input><label class="tabbed-label" for="5809f7ee-3f29-407f-a746-d830451435f8">
-srun</label><div class="tabbed-content docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>session_name: jlab_cal1
-windows:
-  - window_name: jlab
-    panes:
-    - shell_command: <span class="p">|</span>
-      ssh meom_cal1
-      conda activate jlab
-      srun --nodes<span class="o">=</span><span class="m">1</span> --cpus-per-task<span class="o">=</span><span class="m">8</span> --mem<span class="o">=</span><span class="m">1600</span> --account<span class="o">=</span>python --pty jupyter-lab --no-browser --ip<span class="o">=</span><span class="m">0</span>.0.0.0 --port<span class="o">=</span><span class="m">8888</span>
-
-  - window_name: git
-    panes:
-    - shell_command: ssh meom_cal1
-</pre></div>
-</div>
-</div>
-<input id="8660abcd-eae9-4f75-bf20-f7036da17227" name="c3d3c5e5-df1c-4bb4-9006-1a2a893d044e" type="radio">
-</input><label class="tabbed-label" for="8660abcd-eae9-4f75-bf20-f7036da17227">
-sbatch</label><div class="tabbed-content docutils">
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>session_name: jlab_cal1
-windows:
-  - window_name: jlab
-    panes:
-    - shell_command: <span class="p">|</span>
-      ssh meom_cal1
-      sbatch jlab_sbatch.sh
-
-  - window_name: git
-    panes:
-    - shell_command: ssh meom_cal1
-</pre></div>
-</div>
-</div>
-</div>
 <p><strong>Demo Usage</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tmuxp load jlab_cal1.yaml
 </pre></div>
@@ -1507,10 +1523,10 @@ windows:
 </div>
 <hr class="docutils" />
 <div class="section" id="slurm-on-jeanzay">
-<h3>SLURM on JeanZay<a class="headerlink" href="#slurm-on-jeanzay" title="Permalink to this headline">¶</a></h3>
+<h3>SLURM on JeanZay<a class="headerlink" href="#slurm-on-jeanzay" title="Permalink to this headline">#</a></h3>
 <p>We have to do the same as above however there are a few different commands we need to take care of which allow for more customization. Furthermore, we now have access to</p>
 <div class="section" id="ssh">
-<h4>SSH<a class="headerlink" href="#ssh" title="Permalink to this headline">¶</a></h4>
+<h4>SSH<a class="headerlink" href="#ssh" title="Permalink to this headline">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sshuttle</span> <span class="o">-</span><span class="n">dns</span> <span class="o">-</span><span class="n">HN</span> <span class="o">-</span><span class="n">r</span> <span class="n">meom_cal1</span> <span class="mf">130.84.132.0</span><span class="o">/</span><span class="mi">24</span>
 </pre></div>
 </div>
@@ -1519,14 +1535,14 @@ windows:
 </pre></div>
 </div>
 <div class="section" id="advanced-usage">
-<h5>Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">¶</a></h5>
+<h5>Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">#</a></h5>
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="id5">
-<h4>Advanced Users<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<h4>Advanced Users<a class="headerlink" href="#id5" title="Permalink to this headline">#</a></h4>
 <div class="section" id="config">
-<h5>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h5>
+<h5>Config<a class="headerlink" href="#config" title="Permalink to this headline">#</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">meom_cal1.conf</span></code> file looks like this:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">130</span>.84.132.0/24
 --remote
@@ -1549,7 +1565,7 @@ meom_cal1
 </div>
 </div>
 <div class="section" id="id6">
-<h5><strong>TMUXP</strong><a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h5>
+<h5><strong>TMUXP</strong><a class="headerlink" href="#id6" title="Permalink to this headline">#</a></h5>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>session_name: jlab_jz_gpu
 windows:
   - window_name: jlab
@@ -1586,14 +1602,14 @@ windows:
 </div>
 <hr class="docutils" />
 <div class="section" id="jlab-on-oar">
-<h2>JLab on OAR<a class="headerlink" href="#jlab-on-oar" title="Permalink to this headline">¶</a></h2>
+<h2>JLab on OAR<a class="headerlink" href="#jlab-on-oar" title="Permalink to this headline">#</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>We can’t actually launch jupyter-lab on the head node. Well, technically we can but it will kill the process almost immediately. You must use the compute nodes to do all computation.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="using-oarsub">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">oarsub</span></code><a class="headerlink" href="#using-oarsub" title="Permalink to this headline">¶</a></h3>
+<h3>Using <code class="docutils literal notranslate"><span class="pre">oarsub</span></code><a class="headerlink" href="#using-oarsub" title="Permalink to this headline">#</a></h3>
 <p>First, take a look at this tutorial to get familiar: <a class="reference external" href="https://gricad-doc.univ-grenoble-alpes.fr/notebook/hpcnb/">https://gricad-doc.univ-grenoble-alpes.fr/notebook/hpcnb/</a></p>
 <p>Below offers a simpler work structure.</p>
 <p><strong>In the First Terminal</strong> - Start the JupyterLab session</p>
@@ -1642,7 +1658,7 @@ lsof -i :portNumber
 </div>
 <hr class="docutils" />
 <div class="section" id="using-oarsh">
-<h3>Using <code class="docutils literal notranslate"><span class="pre">oarsh</span></code><a class="headerlink" href="#using-oarsh" title="Permalink to this headline">¶</a></h3>
+<h3>Using <code class="docutils literal notranslate"><span class="pre">oarsh</span></code><a class="headerlink" href="#using-oarsh" title="Permalink to this headline">#</a></h3>
 <p>Sometimes, it’s a bit annoying to have to keep track of everything (launching interactive job + run jupyter notebook/lab + create tunnel, etc). So below is a way to create a simple script that helps automate the process a little bit.</p>
 <p>Firstly, we need a bash script which can easily be launched. Below is an example.</p>
 <details>
@@ -1732,9 +1748,11 @@ ssh -N -f -L port_number:node_name:port_number server_name
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="conda.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -1750,24 +1768,28 @@ ssh -N -f -L port_number:node_name:port_number server_name
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      By J. Emmanuel Johnson<br/>
-    
-        &copy; Copyright 2022.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

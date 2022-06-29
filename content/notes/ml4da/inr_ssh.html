@@ -1,0 +1,1517 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Implicit Neural Representations &#8212; Research Notebook</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/book_v2.jpeg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
+       Gaussianization Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/ssh.html">
+     SSH Configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/conda.html">
+     Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/jlab.html">
+     Jupyter Lab 4 Remote Servers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../bayesian/overview.html">
+   Bayesian
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/intro.html">
+     Bayesian: Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/regression.html">
+     Regression
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference/inference.html">
+     Solving Hard Integral Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/confidence_intervals.html">
+     Confidence Intervals
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/notation.html">
+     Notation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/kernel_derivatives.html">
+     Kernel Derivatives
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../egps/overview.html">
+   Uncertain Gaussian Processes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/predictions.html">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/gauss_approx.html">
+     Gaussian Approximation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/mcmc.html">
+     Monte Carlo Sampling
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/taylor.html">
+     Linearization (Taylor Expansions)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/moment_matching.html">
+     Moment Matching
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/bgplvm.html">
+     Bayesian GPLVM
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/error_prop.html">
+     Error Propagation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/next.html">
+     Next Steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../egps/experiments.html">
+     Notebooks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../egps/notebooks/gpytorch_egp_taylor.html">
+       Gaussian Process Gradients with GPyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/histogram.html">
+     Entropy Estimator - Histogram
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+     Experiment - RBIG Sample Consistency
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/normalizing_flows/overview.html">
+   Normalizing Flows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/normalizing_flows/lecture_1_ig.html">
+     Lecture I - Iterative Gaussianization
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/normalizing_flows/1.0_univariate_gauss.html">
+       1.1 - Univariate Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/normalizing_flows/1.1_marginal_gauss.html">
+       1.2 - Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/normalizing_flows/1.2_gaussianization.html">
+       1.2 - Iterative Gaussianization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/normalizing_flows/lecture_2_gf.html">
+     Lecture II - Gaussianization Flows
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/normalizing_flows/lecture_3_gfs_pt1_mg.html">
+       Parameterized Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/normalizing_flows/lecture_3_gfs_pt2_rot.html">
+       Parameterized Rotations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/normalizing_flows/lecture_3_gfs_pt3_plane.html">
+       Example - 2D Plane
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/ml4da/inr_ssh.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/notes/ml4da/inr_ssh.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#trade-offs">
+   Trade-offs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pros">
+     Pros
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cons">
+     Cons
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data">
+   Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model">
+   Model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#architectures">
+   Architectures
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#standard-neural-network">
+     Standard Neural Network
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fourier-features">
+     Fourier Features
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#alternative-formulation">
+       Alternative Formulation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#siren">
+     SIREN
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#extended">
+       Extended
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#modulation">
+   Modulation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#affine-modulation">
+     Affine Modulation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#neural-implicit-flows">
+       Neural Implicit Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multiplicative-filter-networks">
+     Multiplicative Filter Networks
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#non-linear-functions">
+       Non-Linear Functions
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#probabilistic">
+   Probabilistic
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#deterministic">
+     Deterministic
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#normalizing-flows">
+     Normalizing Flows
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bayesian">
+     Bayesian
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#physics-constraints">
+   Physics Constraints
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mass">
+     Mass
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#momentum">
+     Momentum
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qg-equations">
+     QG Equations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#applications">
+   Applications
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#interpolation">
+     Interpolation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#surrogate-modeling">
+     Surrogate Modeling
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sampling">
+     Sampling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#feature-engineering">
+   Feature Engineering
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#spatial-features">
+     Spatial Features
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#temporal-features">
+     Temporal Features
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#tanh">
+       Tanh
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       Fourier Features
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sinusoidal-positional-encoding">
+       Sinusoidal Positional Encoding
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Implicit Neural Representations</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#trade-offs">
+   Trade-offs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pros">
+     Pros
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cons">
+     Cons
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data">
+   Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model">
+   Model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#architectures">
+   Architectures
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#standard-neural-network">
+     Standard Neural Network
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fourier-features">
+     Fourier Features
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#alternative-formulation">
+       Alternative Formulation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#siren">
+     SIREN
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#extended">
+       Extended
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#modulation">
+   Modulation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#affine-modulation">
+     Affine Modulation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#neural-implicit-flows">
+       Neural Implicit Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multiplicative-filter-networks">
+     Multiplicative Filter Networks
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#non-linear-functions">
+       Non-Linear Functions
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#probabilistic">
+   Probabilistic
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#deterministic">
+     Deterministic
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#normalizing-flows">
+     Normalizing Flows
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bayesian">
+     Bayesian
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#physics-constraints">
+   Physics Constraints
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mass">
+     Mass
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#momentum">
+     Momentum
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qg-equations">
+     QG Equations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#applications">
+   Applications
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#interpolation">
+     Interpolation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#surrogate-modeling">
+     Surrogate Modeling
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sampling">
+     Sampling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#feature-engineering">
+   Feature Engineering
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#spatial-features">
+     Spatial Features
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#temporal-features">
+     Temporal Features
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#tanh">
+       Tanh
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       Fourier Features
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sinusoidal-positional-encoding">
+       Sinusoidal Positional Encoding
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="implicit-neural-representations">
+<h1>Implicit Neural Representations<a class="headerlink" href="#implicit-neural-representations" title="Permalink to this headline">#</a></h1>
+<hr class="docutils" />
+<div class="section" id="trade-offs">
+<h2>Trade-offs<a class="headerlink" href="#trade-offs" title="Permalink to this headline">#</a></h2>
+<div class="section" id="pros">
+<h3>Pros<a class="headerlink" href="#pros" title="Permalink to this headline">#</a></h3>
+<p><strong>Mesh-Free</strong></p>
+<p><strong>Lots of Data</strong></p>
+</div>
+<div class="section" id="cons">
+<h3>Cons<a class="headerlink" href="#cons" title="Permalink to this headline">#</a></h3>
+<p><strong>Transfer Learning</strong></p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">#</a></h2>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\mathbf{x}_\phi \in \mathbb{R}^{D_\phi}, \;\;\; \mathbf{u} \in \mathbb{R}^{}
+\end{aligned}
+\]</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">#</a></h2>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f_\theta}:\mathcal{X} \rightarrow \mathcal{U}
+\]</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="architectures">
+<h2>Architectures<a class="headerlink" href="#architectures" title="Permalink to this headline">#</a></h2>
+<p>We are interested in the case of regression. We have the following generalized architecture.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathbf{x}^{(1)} &amp;= \boldsymbol{\phi} \left( \mathbf{x} ; \boldsymbol{\gamma}\right) \\
+\mathbf{x}^{(\ell+1)} &amp;= \text{NN}_\ell \left( \mathbf{x}^{(\ell)}; \boldsymbol{\theta}_\ell\right)\\
+\boldsymbol{f}(\mathbf{x}; \boldsymbol{\theta},\boldsymbol{\gamma}) &amp;= \mathbf{w}^{(L)}\mathbf{x}^{(L)} + \mathbf{b}^{(L)}
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\phi}\)</span> is the basis transformation with some hyperparameters <span class="math notranslate nohighlight">\(\gamma\)</span>, <span class="math notranslate nohighlight">\(\text{NN}\)</span> is the neural network layer parameterized by <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>, and we have <span class="math notranslate nohighlight">\(L\)</span> layers, <span class="math notranslate nohighlight">\(L = \{1, 2, \ldots, \ell, \ldots, L-1, L\}\)</span></p>
+<div class="section" id="standard-neural-network">
+<h3>Standard Neural Network<a class="headerlink" href="#standard-neural-network" title="Permalink to this headline">#</a></h3>
+<p>In the standard neural network, we typically have the following standard functions</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\boldsymbol{\phi}(\mathbf{x}) &amp;= \mathbf{x} \\
+ \text{NN}_{siren} \left( \mathbf{x}^{(\ell)}; \boldsymbol{\theta}\right) &amp;= \boldsymbol{\sigma} \left( \mathbf{w}^{(\ell)} \mathbf{x}^{(\ell)} + \mathbf{b}^{(\ell)} \right), \hspace{10mm} \boldsymbol{\theta} = \{ \mathbf{w}^{(\ell)}, \mathbf{b}^{(\ell)} \}
+\end{aligned}
+\end{split}\]</div>
+<p>So more explicitly, we can write it as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathbf{x}^{(1)} &amp;= \mathbf{x} \\
+\boldsymbol{f}^{(\ell)}(\mathbf{x}^{(\ell)}) &amp;= \boldsymbol{\sigma} \left( \mathbf{w}^{(\ell)} \mathbf{x}^{(\ell)} + \mathbf{b}^{(\ell)} \right)\\
+\boldsymbol{f}^{(L)}(\mathbf{x}^{(L)}) &amp;= \mathbf{w}^{(L)}\mathbf{x}^{(L)} + \mathbf{b}^{(L)}
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\ell = \{1, 2, \ldots, L-1\}\)</span>.
+Noteably:</p>
+<ul class="simple">
+<li><p>The first layer is the identity (i.e. there is not basis function transformation)</p></li>
+<li><p>The second layer is the standard neural network architecture, i.e. a linear function and a nonlinear activation function</p></li>
+<li><p>The final layer is always a linear function (in regression; classification would have a sigmoid)</p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="fourier-features">
+<h3>Fourier Features<a class="headerlink" href="#fourier-features" title="Permalink to this headline">#</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\boldsymbol{\phi} \left(\mathbf{x}\right) = 
+\begin{bmatrix}
+\sin \left( \boldsymbol{\omega}\mathbf{x}\right) \\
+\cos \left( \boldsymbol{\omega} \mathbf{x}\right)
+\end{bmatrix},\hspace{10mm} \boldsymbol{\omega} \sim p(\boldsymbol{\omega};\gamma)
+\end{split}\]</div>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-align:center head"><p>Method</p></th>
+<th class="text-align:center head"><p>Kernel</p></th>
+<th class="text-align:center head"><p>Distribution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-align:center"><p>Gaussian</p></td>
+<td class="text-align:center"><p></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\mathcal{N}(\mathbf{0},\frac{1}{\sigma^2}\mathbf{I}_r)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>Laplacian</p></td>
+<td class="text-align:center"><p></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\text{Cauchy}()\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-align:center"><p>Cauchy</p></td>
+<td class="text-align:center"><p></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\text{Laplace}()\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>Matern</p></td>
+<td class="text-align:center"><p></p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(\text{Bessel}()\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-align:center"><p>ArcCosine</p></td>
+<td class="text-align:center"><p></p></td>
+<td class="text-align:center"><p></p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="alternative-formulation">
+<h4>Alternative Formulation<a class="headerlink" href="#alternative-formulation" title="Permalink to this headline">#</a></h4>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\phi}(\mathbf{x}) = \sqrt{\frac{2}{D_{rff}}}\cos \left( \boldsymbol{\omega}\mathbf{x} + \boldsymbol{b}\right)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\omega} \sim p(\boldsymbol{\omega})\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{b} \sim \mathcal{U}(0,2\pi)\)</span>.</p>
+<p><strong>Source</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://gregorygundersen.com/blog/2019/12/23/random-fourier-features/">Blog</a> - Gregory Gundersen</p></li>
+<li><p>Random Features for Large-Scale Kernel Machines - Rahimi &amp; Recht (2008) - <span class="xref myst">Paper</span></p></li>
+<li><p>Random Features for Kernel Approximation: A Survey on Algorithms, Theory, and Beyond - Liu et al (2021)</p></li>
+<li><p>Scalable Kernel Methods via Doubly Stochastic Gradients - Dai et al (2015)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="siren">
+<h3>SIREN<a class="headerlink" href="#siren" title="Permalink to this headline">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\sigma} = \sin \left( \boldsymbol{\omega}_0 (\mathbf{wx} + b)\right)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\sigma} = \boldsymbol{\alpha} \odot \sin \left( \mathbf{wx} + \mathbf{b} \right)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\text{FiLM}(\mathbf{x}) = \boldsymbol{\alpha} \odot \mathbf{x} + \boldsymbol{\beta} 
+\]</div>
+<ul class="simple">
+<li><p>pi-GAN: Periodic Implicit Generative Adversarial Networks for 3D-Aware Image Synthesis - Chan et al (2021)</p></li>
+<li><p>COIN++:</p></li>
+</ul>
+<div class="section" id="extended">
+<h4>Extended<a class="headerlink" href="#extended" title="Permalink to this headline">#</a></h4>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\boldsymbol{\sigma} = \sin \left( \boldsymbol{\gamma}(\mathbf{wx} + b\right) + \boldsymbol{\beta})
+\end{aligned}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\gamma}\)</span> corresponds to the frequencies and <span class="math notranslate nohighlight">\(\boldsymbol{\beta}\)</span> corresponds to the phase shifts.</p>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="modulation">
+<h2>Modulation<a class="headerlink" href="#modulation" title="Permalink to this headline">#</a></h2>
+<p>Modulation is
+$<span class="math notranslate nohighlight">\(
+\boldsymbol{f}^\ell(\mathbf{x},\mathbf{z};\boldsymbol{\theta}) := \boldsymbol{h}_M^\ell\left(\;\text{NN}(\mathbf{x};\boldsymbol{\theta}_{NN})\;,\; \text{M}(\mathbf{z};\boldsymbol{\theta}_{M}) \;\right) 
+\)</span>$</p>
+<p>where <span class="math notranslate nohighlight">\(NN\)</span> is the output of the neural network wrt the input, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, where <span class="math notranslate nohighlight">\(M\)</span> is the output of the modulation function wrt the latent variable, <span class="math notranslate nohighlight">\(\mathbf{z}\)</span>, and <span class="math notranslate nohighlight">\(\times\)</span> is an arbitrary operator.</p>
+<ul class="simple">
+<li><p>Additive Layer</p></li>
+<li><p>Affine Layer</p></li>
+<li><p>Neural Implicit Flowss</p></li>
+<li><p>Neural Flows</p></li>
+</ul>
+<hr class="docutils" />
+<p><span class="xref myst">FILM, 2020</span></p>
+<p><span class="xref myst">Mehta, 2021</span></p>
+<p><span class="xref myst">Dupoint, 2022</span></p>
+<p>Neural Implicit Flows <span class="xref myst">Pan, 2022</span></p>
+<p>Neural</p>
+<hr class="docutils" />
+<div class="section" id="affine-modulation">
+<h3>Affine Modulation<a class="headerlink" href="#affine-modulation" title="Permalink to this headline">#</a></h3>
+<p><strong>Affine Modulations</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathbf{z}^{(1)} &amp;= \mathbf{x} \\
+\mathbf{z}^{(k+1)} &amp;= \boldsymbol{\sigma} \left( \left(\mathbf{w}^{(k)} \mathbf{z}^{(k)} + \mathbf{b}^{(k)}\right)\odot \boldsymbol{s}_m(\mathbf{z}) + \boldsymbol{a}_m(\mathbf{z}) \right)\\
+\boldsymbol{f}(\mathbf{x}) &amp;= \mathbf{w}^{K}\mathbf{z}^{K} + \mathbf{b}^{(k)}
+\end{aligned}
+\end{split}\]</div>
+<p><strong>Shift Modulations</strong></p>
+<div class="section" id="neural-implicit-flows">
+<h4>Neural Implicit Flows<a class="headerlink" href="#neural-implicit-flows" title="Permalink to this headline">#</a></h4>
+<p>In this work, we have a version of the Modulated Siren as mentioned above. However, they use a version that separates the space and time neural networks.
+$<span class="math notranslate nohighlight">\(
+\boldsymbol{f}(\mathbf{x}_\phi, t) = \text{NN}_{space}(\mathbf{x}_\phi;\text{NN}_{time}(t))
+\)</span>$</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="multiplicative-filter-networks">
+<h3>Multiplicative Filter Networks<a class="headerlink" href="#multiplicative-filter-networks" title="Permalink to this headline">#</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathbf{z}^{(1)} &amp;= \mathbf{x} \\
+\mathbf{z}^{(k+1)} &amp;= \boldsymbol{\sigma} \left( \mathbf{w}^{(k)} \mathbf{z}^{(k)} + \mathbf{b}^{(k)} \right) \\
+\boldsymbol{f}(\mathbf{x}) &amp;= \mathbf{w}^{K}\mathbf{z}^{K} + \mathbf{b}^{(k)}
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(K = \{1, 2, \ldots, K\}\)</span></p>
+<div class="section" id="non-linear-functions">
+<h4>Non-Linear Functions<a class="headerlink" href="#non-linear-functions" title="Permalink to this headline">#</a></h4>
+<p><strong>FOURIERNET</strong></p>
+<p>This method corresponds to the random Fourier Feature transformation.</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{g}^{(\ell)}(\mathbf{x};\boldsymbol{\theta}^{(\ell)}) = \sin\left( \mathbf{w}^{(\ell)}\mathbf{x} + \mathbf{b}^{(\ell)}\right)
+\]</div>
+<p>where the parameters to be learned are:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\theta}^{(\ell)} = \{\mathbf{w}_d^{(\ell)}, \;\; \mathbf{b}^{(\ell)}_d \}
+\]</div>
+<p><strong>GABORNET</strong></p>
+<p>This method tries to improve upon the Fourier representation. The Fourier representation has global support and would have more difficulties representing more local features. The Gabor filter (see below) will be able to capture both frequency and spatial locality component.</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{g}^{(\ell)}(\mathbf{x};\boldsymbol{\theta}^{(\ell)}) = \exp\left( - \frac{\gamma_d^{(\ell)}}{2}||\mathbf{x} - \boldsymbol{\mu}_d^{(\ell)}||_2^2 \right) \odot \sin\left( \mathbf{w}^{(\ell)}\mathbf{x} + \mathbf{b}^{(\ell)}\right)
+\]</div>
+<p>where the parameters to be learned are:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\theta}^{(\ell)} = \{ \gamma_d^{(\ell)} \in \mathbb{R},\;\;\boldsymbol{\mu}_d^{(\ell)}, \;\; \mathbf{w}_d^{(\ell)}, \;\; \mathbf{b}^{(\ell)}_d \}
+\]</div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="probabilistic">
+<h2>Probabilistic<a class="headerlink" href="#probabilistic" title="Permalink to this headline">#</a></h2>
+<div class="section" id="deterministic">
+<h3>Deterministic<a class="headerlink" href="#deterministic" title="Permalink to this headline">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\boldsymbol{\theta}) = \underset{\boldsymbol{\theta}}{\text{argmin }} \lambda \sum_{n \in \mathcal{D}} ||\boldsymbol{f}(\mathbf{x}_n;\boldsymbol{\theta}) - \boldsymbol{u}_n||_2^2 - \log p(\boldsymbol{\theta})
+\]</div>
+</div>
+<div class="section" id="normalizing-flows">
+<h3>Normalizing Flows<a class="headerlink" href="#normalizing-flows" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="bayesian">
+<h3>Bayesian<a class="headerlink" href="#bayesian" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Random Feature Expansions (RFEs)</p></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="physics-constraints">
+<h2>Physics Constraints<a class="headerlink" href="#physics-constraints" title="Permalink to this headline">#</a></h2>
+<div class="section" id="mass">
+<h3>Mass<a class="headerlink" href="#mass" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="momentum">
+<h3>Momentum<a class="headerlink" href="#momentum" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="qg-equations">
+<h3>QG Equations<a class="headerlink" href="#qg-equations" title="Permalink to this headline">#</a></h3>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="applications">
+<h2>Applications<a class="headerlink" href="#applications" title="Permalink to this headline">#</a></h2>
+<div class="section" id="interpolation">
+<h3>Interpolation<a class="headerlink" href="#interpolation" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="surrogate-modeling">
+<h3>Surrogate Modeling<a class="headerlink" href="#surrogate-modeling" title="Permalink to this headline">#</a></h3>
+</div>
+<div class="section" id="sampling">
+<h3>Sampling<a class="headerlink" href="#sampling" title="Permalink to this headline">#</a></h3>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="feature-engineering">
+<h2>Feature Engineering<a class="headerlink" href="#feature-engineering" title="Permalink to this headline">#</a></h2>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x} \in \mathbb{R}^{D_\phi}, \hspace{10mm} D = \{ \text{lat, lon, time} \}
+\]</div>
+<hr class="docutils" />
+<div class="section" id="spatial-features">
+<h3>Spatial Features<a class="headerlink" href="#spatial-features" title="Permalink to this headline">#</a></h3>
+<p>For the spatial features, we have spherical coordinates (i.e. longitude and latitude)</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+x &amp;= r \cos(\lambda)\cos(\phi) \\
+y &amp;= r \cos(\lambda)\sin(\phi) \\
+z &amp;= r \sin(\lambda)
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\lambda\)</span> is the latitude, <span class="math notranslate nohighlight">\(\phi\)</span> is the longitude and <span class="math notranslate nohighlight">\(r\)</span> is the radius. Here <span class="math notranslate nohighlight">\(x,y,z\)</span> are bounded between 0 and 1.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="temporal-features">
+<h3>Temporal Features<a class="headerlink" href="#temporal-features" title="Permalink to this headline">#</a></h3>
+<div class="section" id="tanh">
+<h4>Tanh<a class="headerlink" href="#tanh" title="Permalink to this headline">#</a></h4>
+<div class="math notranslate nohighlight">
+\[
+f(t) = \tanh(t)
+\]</div>
+</div>
+<div class="section" id="id1">
+<h4>Fourier Features<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h4>
+</div>
+<div class="section" id="sinusoidal-positional-encoding">
+<h4>Sinusoidal Positional Encoding<a class="headerlink" href="#sinusoidal-positional-encoding" title="Permalink to this headline">#</a></h4>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\boldsymbol{\phi}(t) =
+\begin{bmatrix}
+\sin(\boldsymbol{\omega}_k t) \\
+\cos(\boldsymbol{\omega}_k t)
+\end{bmatrix}
+\end{split}\]</div>
+<p>where
+$<span class="math notranslate nohighlight">\(
+\boldsymbol{\omega}_k = \frac{1}{10,000^{\frac{2k}{d}}}
+\)</span>$</p>
+<p><strong>Sources</strong>:</p>
+<ul class="simple">
+<li><p>Transformer Architecture: The Positional Encoding - Amihossein - <a class="reference external" href="https://kazemnejad.com/blog/transformer_architecture_positional_encoding/">Blog</a></p></li>
+<li><p>Position Information in Transformers: An Overview - Dufter et al (2021) - Arxiv - <span class="xref myst">Paper</span></p></li>
+<li><p>Rethinking Positional Encoding - Zheng et al (2021) - Arxiv <span class="xref myst">Paper</span></p></li>
+<li><p>Self-Attention with Functional Time Representation Learning - Xu et al (2019) - Arxiv - <span class="xref myst">Paper</span></p></li>
+<li><p>AI Coffee Break with Letita - Video <a class="reference external" href="https://www.youtube.com/watch?v=1biZfFLPRSY">1</a> | <a class="reference external" href="https://www.youtube.com/watch?v=M2ToEXF6Olw">2</a></p></li>
+<li><p>Attention is all you need. A Transformer Tutorial: 5. Positional Encoding - <a class="reference external" href="https://www.youtube.com/watch?v=LSCsfeEELso">Video</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/ml4da"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

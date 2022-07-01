@@ -1,0 +1,1580 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Markov Models &#8212; Research Notebook</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Gauss-Markov Models" href="gauss_markov.html" />
+    <link rel="prev" title="Algorithms" href="algorithms.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/book_v2.jpeg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
+       Gaussianization Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/ssh.html">
+     SSH Configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/conda.html">
+     Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/jlab.html">
+     Jupyter Lab 4 Remote Servers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data/overview.html">
+   Data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data/representation.html">
+     Representation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../bayesian/overview.html">
+   Bayesian
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/intro.html">
+     Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/models.html">
+     Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference.html">
+     Inference Schemes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/confidence_intervals.html">
+     Confidence Intervals
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/regression.html">
+     Regression
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/kernel_derivatives.html">
+     Kernel Derivatives
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../egps/overview.html">
+   Uncertain Gaussian Processes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/predictions.html">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/gauss_approx.html">
+     Gaussian Approximation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/mcmc.html">
+     Monte Carlo Sampling
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/taylor.html">
+     Linearization (Taylor Expansions)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/moment_matching.html">
+     Moment Matching
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/bgplvm.html">
+     Bayesian GPLVM
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/error_prop.html">
+     Error Propagation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/next.html">
+     Next Steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../egps/experiments.html">
+     Notebooks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../egps/notebooks/gpytorch_egp_taylor.html">
+       Gaussian Process Gradients with GPyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/histogram.html">
+     Entropy Estimator - Histogram
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+     Experiment - RBIG Sample Consistency
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../normalizing_flows/overview.html">
+   Normalizing Flows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
+     Lecture I - Iterative Gaussianization
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.0_univariate_gauss.html">
+       1.1 - Univariate Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.1_marginal_gauss.html">
+       1.2 - Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.2_gaussianization.html">
+       1.2 - Iterative Gaussianization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
+     Lecture II - Gaussianization Flows
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt1_mg.html">
+       Parameterized Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt2_rot.html">
+       Parameterized Rotations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt3_plane.html">
+       Example - 2D Plane
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../inr/overview.html">
+   Implicit Neural Representations
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/formulation.html">
+     Formulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/literature_review.html">
+     Literature Review
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="overview.html">
+   Data Assimilation
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="dynamical_sys.html">
+     Dynamical Systems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="oi.html">
+     Optimal Interpolation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="interp.html">
+     Interpolation Problem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="emu.html">
+     Emulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inv_problems.html">
+     Inverse Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="projects.html">
+     Projects
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="algorithms.html">
+     Algorithms
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+    <label for="toctree-checkbox-17">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="gauss_markov.html">
+       Gauss-Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="kf.html">
+       Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="nkf.html">
+       Normalizing Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="enskf.html">
+       Ensemble Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="dmm.html">
+       Deep Markov Model
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="4dvarnet.html">
+       4DVarNet
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="markov_gp.html">
+       Markovian Gaussian Processes
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../misc/overview.html">
+   Miscellaneous Notes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+  <label for="toctree-checkbox-18">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/generative_models.html">
+     Generative Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/diffusion_models.html">
+     Diffusion Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/fixed_point.html">
+     Fixed-Point Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/data_assimilation/markov_models.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/notes/data_assimilation/markov_models.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   Motivation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#high-dimensionality">
+     High Dimensionality
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#time-dependencies">
+     Time Dependencies
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#schematic">
+   Schematic
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#markov-properties">
+   Markov Properties
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#property-of-states">
+     Property of States
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#conditional-independence-of-measurements">
+     Conditional Independence of Measurements
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#joint-distribution">
+     Joint Distribution
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#quantities-of-interest">
+   Quantities of Interest
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tldr">
+     TLDR
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#filtering">
+     Filtering
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#predict">
+       Predict
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#filtering-algorithm">
+       Filtering Algorithm
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#update">
+       Update
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#smoothing">
+     Smoothing
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#predictions">
+     Predictions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#likelihood-estimation">
+     Likelihood Estimation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#posterior-samples">
+     Posterior Samples
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#marginal-likelihood">
+     Marginal Likelihood
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#complexity">
+     Complexity
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#viz">
+     Viz
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#bars">
+       Bars
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#regression">
+       Regression
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cons">
+   Cons
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multiscale-time-dependencies">
+     Multiscale Time Dependencies
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#long-term">
+     Long Term
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Markov Models</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   Motivation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#high-dimensionality">
+     High Dimensionality
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#time-dependencies">
+     Time Dependencies
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#schematic">
+   Schematic
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#markov-properties">
+   Markov Properties
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#property-of-states">
+     Property of States
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#conditional-independence-of-measurements">
+     Conditional Independence of Measurements
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#joint-distribution">
+     Joint Distribution
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#quantities-of-interest">
+   Quantities of Interest
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tldr">
+     TLDR
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#filtering">
+     Filtering
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#predict">
+       Predict
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#filtering-algorithm">
+       Filtering Algorithm
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#update">
+       Update
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#smoothing">
+     Smoothing
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#predictions">
+     Predictions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#likelihood-estimation">
+     Likelihood Estimation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#posterior-samples">
+     Posterior Samples
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#marginal-likelihood">
+     Marginal Likelihood
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#complexity">
+     Complexity
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#viz">
+     Viz
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#bars">
+       Bars
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#regression">
+       Regression
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cons">
+   Cons
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multiscale-time-dependencies">
+     Multiscale Time Dependencies
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#long-term">
+     Long Term
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="markov-models">
+<h1>Markov Models<a class="headerlink" href="#markov-models" title="Permalink to this headline">#</a></h1>
+<blockquote>
+<div><p>In these notes, we walk through a model for modeling time-dependent data. By enforcing the Markov chain properties, we only have a variable at time, <span class="math notranslate nohighlight">\(t\)</span>, depend on the variable at a previous time step, <span class="math notranslate nohighlight">\(t-1\)</span>. This results in very efficient directed graph which leads to inference of order <span class="math notranslate nohighlight">\(\mathcal{O}(T)\)</span>.</p>
+</div></blockquote>
+<p>The main source of inspiration for this is the lecture from the Probabilistic ML course from Tubingen <span id="id1">[<a class="reference internal" href="#id16" title="Philipp Henning. Probabilistic ml - lecture 12 - gauss-markov models. 2020. URL: https://youtu.be/FydcrDtZroU (visited on 2021-10-10).">Henning, 2020</a>]</span>. Some of the details we taken from the probabilistic machine learning textbook from Kevin Murphy <span id="id2">[<a class="reference internal" href="#id18" title="Kevin P. Murphy. Machine Learning: A Probabilistic Perspective. MIT Press, 2012. URL: probml.ai.">Murphy, 2012</a>]</span>.</p>
+<hr class="docutils" />
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">#</a></h2>
+<p>Consider a large dimensional dataset, e.g. a data cube. This will be of size:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x} \in \mathbf{R}^D
+\]</div>
+<p>But let’s assume that it is a spatio-temporal dataset. Then we can decompose the dimension, <span class="math notranslate nohighlight">\(D\)</span> into the following components.</p>
+<div class="math notranslate nohighlight">
+\[
+D = [ \text{space} \times \text{T} \times \text{vars}]
+\]</div>
+<section id="high-dimensionality">
+<h3>High Dimensionality<a class="headerlink" href="#high-dimensionality" title="Permalink to this headline">#</a></h3>
+<p>This is a very high dimensional dataset. For example, if we have a very long time series like <span class="math notranslate nohighlight">\(1,000\)</span> time steps, then we will have a massive <span class="math notranslate nohighlight">\(D\)</span>-dimensional vector for the input variable.</p>
+</section>
+<section id="time-dependencies">
+<h3>Time Dependencies<a class="headerlink" href="#time-dependencies" title="Permalink to this headline">#</a></h3>
+<p>These time dependences are very difficult to model. They are highly correlated, especially at very near, e.g. <span class="math notranslate nohighlight">\(t-1\)</span>, <span class="math notranslate nohighlight">\(t\)</span>, and <span class="math notranslate nohighlight">\(t-1\)</span>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="schematic">
+<h2>Schematic<a class="headerlink" href="#schematic" title="Permalink to this headline">#</a></h2>
+<p>This method seeks to decouple time by enforcing the Markov assumption.</p>
+<figure class="align-default" id="markov-chain-graph">
+<a class="reference internal image-reference" href="../../../_images/markov_chain_graph.png"><img alt="../../../_images/markov_chain_graph.png" src="../../../_images/markov_chain_graph.png" style="height: 300px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">A graphical model for the dependencies between the variables x and z. Notice how z only depends on the previous time step.</span><a class="headerlink" href="#markov-chain-graph" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The key is that by enforcing these Markovian assumptions, we have a directed graph structure that results in very efficient inference. This is all due to the Markov property due to the chain structure.</p>
+</section>
+<hr class="docutils" />
+<section id="markov-properties">
+<h2>Markov Properties<a class="headerlink" href="#markov-properties" title="Permalink to this headline">#</a></h2>
+<section id="property-of-states">
+<h3>Property of States<a class="headerlink" href="#property-of-states" title="Permalink to this headline">#</a></h3>
+<p>Given <span class="math notranslate nohighlight">\(z_{t-1}\)</span>, <span class="math notranslate nohighlight">\(z_t\)</span> is independent of any other of the previous states, e.g. <span class="math notranslate nohighlight">\(z_{t-2}, z_{t-3}, \ldots\)</span>.</p>
+<div class="math notranslate nohighlight" id="equation-markov-prop-states">
+<span class="eqno">(12)<a class="headerlink" href="#equation-markov-prop-states" title="Permalink to this equation">#</a></span>\[
+p(z_t | z_{1:t-1}, x_{1:t-1}) = p(z_t|z_{t-1})
+\]</div>
+<p>This is enforcing some kind of <em>local memory</em> within our system. So even if we have the full system of observed variables, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>, and the posterior states, <span class="math notranslate nohighlight">\(z_{1:T}\)</span>, we still only have the dependencies on the previous time step.</p>
+<div class="math notranslate nohighlight">
+\[
+p(z_{t-1}|z_{1:T}, x_{1:T}) = p(z_{t-1}|z_t)
+\]</div>
+<p>Bottom line: The past is independent of the future given the present.</p>
+</section>
+<section id="conditional-independence-of-measurements">
+<h3>Conditional Independence of Measurements<a class="headerlink" href="#conditional-independence-of-measurements" title="Permalink to this headline">#</a></h3>
+<p>We assume that the measurement, <span class="math notranslate nohighlight">\(x_t\)</span>, given the current state, <span class="math notranslate nohighlight">\(z_t\)</span>, is conditionally independent of the measurements and its histories.</p>
+<div class="math notranslate nohighlight">
+\[
+p(x_t|z_{1:t}, x_{1:t-1}) = p(x_t|z_t)
+\]</div>
+<p>So as you can see, the measurement at time, <span class="math notranslate nohighlight">\(t\)</span>, is only dependent on the state, <span class="math notranslate nohighlight">\(z\)</span>, at time <span class="math notranslate nohighlight">\(t\)</span> state irregardless of how many other time steps have been observed.</p>
+</section>
+<hr class="docutils" />
+<section id="joint-distribution">
+<h3>Joint Distribution<a class="headerlink" href="#joint-distribution" title="Permalink to this headline">#</a></h3>
+<p>While this may not be immediately useful, it is useful for certain other quantities of interest.</p>
+<div class="math notranslate nohighlight">
+\[
+p(z_{1:T}, x_{1:T}) = p(x_{1:T}|z_{1:T})p(z_{1:T})
+\]</div>
+<p>Using the Markov local memory and conditioning principal, we can decompose these conditionals wrt to the time, <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<div class="math notranslate nohighlight" id="equation-markov-joint">
+<span class="eqno">(13)<a class="headerlink" href="#equation-markov-joint" title="Permalink to this equation">#</a></span>\[
+p(z_{1:T}, x_{1:T}) = p(z_0)\prod_{t=2}^Tp(z_t|z_{t-1})\prod_{t=1}^T p(x_t|z_t)
+\]</div>
+<p>where we have all of the elements of the distribution.</p>
+<ul class="simple">
+<li><p><strong>Prior</strong>: <span class="math notranslate nohighlight">\(p(z_0)\)</span></p></li>
+<li><p><strong>Transition Model</strong>: <span class="math notranslate nohighlight">\(p(z_t|z_{t-1})\)</span></p></li>
+<li><p><strong>Observation Model</strong>: <span class="math notranslate nohighlight">\(p(x_t|z_t)\)</span></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="quantities-of-interest">
+<h2>Quantities of Interest<a class="headerlink" href="#quantities-of-interest" title="Permalink to this headline">#</a></h2>
+<p>Once we have the model structure, now we are interested in the specific quantities. All of them really boil down to quantities from inference.</p>
+<section id="tldr">
+<h3>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">#</a></h3>
+<p><strong>Posterior</strong> - <span class="math notranslate nohighlight">\(p(z_t|x_{1:t})\)</span></p>
+<blockquote>
+<div><p>the probability of the state, <span class="math notranslate nohighlight">\(z_t\)</span> given the current and previous measurements, <span class="math notranslate nohighlight">\(x_{1:t}\)</span>.</p>
+</div></blockquote>
+<p><strong>Predict Step</strong> - <span class="math notranslate nohighlight">\(p(z_t|x_{1:t-1})=\int p(z_t|z_{t-1})p(z)\)</span></p>
+<blockquote>
+<div><p>The current state, <span class="math notranslate nohighlight">\(z_t\)</span>, given the past measurements, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>.</p>
+</div></blockquote>
+<p><strong>Measurement Step</strong> - <span class="math notranslate nohighlight">\(p(z_t|x_t, x_{1:t-1}) \propto p(x_t|z_t)p(z_t|x_{1:t-1})\)</span></p>
+<blockquote>
+<div><p>The current state, <span class="math notranslate nohighlight">\(z_t\)</span>, given the present measurement <span class="math notranslate nohighlight">\(x_t\)</span> and past measurements, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span></p>
+</div></blockquote>
+<p><strong>Marginal Likelihood</strong> - <span class="math notranslate nohighlight">\(p(x_{1:T}) = \sum_{t}^T p(x_t|x_{1:t-1})\)</span></p>
+<blockquote>
+<div><p>The likelihood of measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>, given the state, <span class="math notranslate nohighlight">\(z_{1:T}\)</span>.</p>
+</div></blockquote>
+<p><strong>Posterior Predictive</strong>: <span class="math notranslate nohighlight">\(p(x_t|x_{1:t-1}) = \int p(x_t|z_t)p(z_t|z_{t-1})dz_t\)</span></p>
+<blockquote>
+<div><p>The probability of the measurement, <span class="math notranslate nohighlight">\(x_t\)</span>, given the previous measurements, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>.</p>
+</div></blockquote>
+<p><strong>Posterior Samples</strong>: <span class="math notranslate nohighlight">\(z_{1:T} \sim p(z_t|x_{1:T})\)</span></p>
+<blockquote>
+<div><p>Trajectories for states, <span class="math notranslate nohighlight">\(z_{1:t}\)</span>, given the measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>.</p>
+</div></blockquote>
+<p><strong>Sampling (Measurements)</strong>: <span class="math notranslate nohighlight">\(x_t \sim p(x_t|x_{1:t-1})\)</span></p>
+<blockquote>
+<div><p>Trajectories for observations, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>, given the state space model, <span class="math notranslate nohighlight">\(z_{1:T}\)</span>.</p>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="filtering">
+<h3>Filtering<a class="headerlink" href="#filtering" title="Permalink to this headline">#</a></h3>
+<p>We are interested in computing the belief of our state, <span class="math notranslate nohighlight">\(z_t\)</span>. This is given by</p>
+<div class="math notranslate nohighlight" id="equation-markov-filter">
+<span class="eqno">(14)<a class="headerlink" href="#equation-markov-filter" title="Permalink to this equation">#</a></span>\[
+p(z_t | x_{1:t})
+\]</div>
+<p>This equation is the posterior probability of <span class="math notranslate nohighlight">\(z_t\)</span> given the present measurement, <span class="math notranslate nohighlight">\(x_t\)</span>, and all of the past measurements, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>. We can compute this using the Bayes method (eq <a class="reference internal" href="../bayesian/intro.html#equation-bayes">(2)</a>) in a sequential way.</p>
+<div class="proof remark admonition" id="filter-name">
+<p class="admonition-title"><span class="caption-number">Remark 2 </span></p>
+<section class="remark-content" id="proof-content">
+<p>The term <em>filter</em> comes from the idea that we reduce the noise of current time step, <span class="math notranslate nohighlight">\(p(z_t|x_t)\)</span>, by taking into account the information within previous time steps, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>.</p>
+</section>
+</div><p>This is given by the predict-update equations.</p>
+<section id="predict">
+<h4>Predict<a class="headerlink" href="#predict" title="Permalink to this headline">#</a></h4>
+<p>This quantity is given via the <em>Chapman-Kolmogrov</em> equation.</p>
+<div class="math notranslate nohighlight" id="equation-chapman-kolmogrov">
+<span class="eqno">(15)<a class="headerlink" href="#equation-chapman-kolmogrov" title="Permalink to this equation">#</a></span>\[
+p(z_t|x_{1:t-1}) = \int p(z_t|z_{t-1})p(z_{t-1}|x_{1:t-1})dx_{t-1}
+\]</div>
+<p><strong>Term I</strong>: This is the posterior of <span class="math notranslate nohighlight">\(z_t\)</span> given all of the previous observations, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>.</p>
+<p><strong>Term II</strong>: the transition distribution between time steps.</p>
+<p><strong>Term III</strong>: the posterior distribution of the state, <span class="math notranslate nohighlight">\(z_{t-1}\)</span>, given all of the observations, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>.</p>
+<p>Note: term III is the posterior distribution but at a previous time step.</p>
+</section>
+<hr class="docutils" />
+<section id="filtering-algorithm">
+<h4>Filtering Algorithm<a class="headerlink" href="#filtering-algorithm" title="Permalink to this headline">#</a></h4>
+<p>The full form for filtering equation is given by an iterative process between the predict step and the update step.</p>
+<p><strong>1. Predict the next hidden state</strong></p>
+<ul class="simple">
+<li><p>First you get the posterior of the previous state, <span class="math notranslate nohighlight">\(\mathbf{z}_{t-1}\)</span>, given all of the observations, <span class="math notranslate nohighlight">\(\mathbf{x}_{1:t-1}\)</span>.</p></li>
+<li><p>Second, you get the posterior of the current state, <span class="math notranslate nohighlight">\(\mathbf{z}_t\)</span>, given all of the observations, <span class="math notranslate nohighlight">\(p(\mathbf{x}_{1:t-1})\)</span></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{z}_{t-1}|\mathbf{x}_{1:t-1}) \rightarrow p(\mathbf{z}_t|\mathbf{x}_{1:t-1})
+\]</div>
+<p><strong>2. Predict the observation</strong></p>
+<ul class="simple">
+<li><p>First, you take the state, <span class="math notranslate nohighlight">\(x_t\)</span>, given the previous measurements, <span class="math notranslate nohighlight">\(y_t\)</span>.</p></li>
+<li><p>Second you predict the current measurement, <span class="math notranslate nohighlight">\(y_t\)</span>, given all previous measurements, <span class="math notranslate nohighlight">\(y_{1:t-1}\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+p(x_t|y_{1:t-1}) \rightarrow p(y_t|y_{1:t-1})
+\]</div>
+<p><strong>3. Update the hidden state given the observation</strong></p>
+<ul class="simple">
+<li><p>First, you take the new observation, <span class="math notranslate nohighlight">\(y_t\)</span></p></li>
+<li><p>Then, you do an update step to get the current state, <span class="math notranslate nohighlight">\(x_t\)</span>, given all previous measurements, <span class="math notranslate nohighlight">\(y_{1:t}\)</span>.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="update">
+<h4>Update<a class="headerlink" href="#update" title="Permalink to this headline">#</a></h4>
+<div class="math notranslate nohighlight" id="equation-markov-update">
+<span class="eqno">(16)<a class="headerlink" href="#equation-markov-update" title="Permalink to this equation">#</a></span>\[
+p(z_t|x_{1:t}) =  \frac{p(x_t|z_t)p(z_t|x_{1:t-1})}{p(x_t)}
+\]</div>
+<p><strong>Term I</strong>: The posterior distribution of state, <span class="math notranslate nohighlight">\(z_t\)</span>, given the current <strong>and</strong> previous measurements, <span class="math notranslate nohighlight">\(x_{1:t}\)</span>.</p>
+<p><strong>Term II</strong>: The observation model for the current measurement, <span class="math notranslate nohighlight">\(x_t\)</span>, given the current state, <span class="math notranslate nohighlight">\(z_t\)</span>.</p>
+<p><strong>Term III</strong>: The posterior distribution of the current state, <span class="math notranslate nohighlight">\(z_t\)</span>, given all of the previous measurements, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>.</p>
+<p><strong>Term IV</strong>: The marginal distribution for the current measurement, <span class="math notranslate nohighlight">\(x_t\)</span>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="smoothing">
+<h3>Smoothing<a class="headerlink" href="#smoothing" title="Permalink to this headline">#</a></h3>
+<p>We compute the state, <span class="math notranslate nohighlight">\(z_t\)</span>, given all of the measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span> where <span class="math notranslate nohighlight">\(1 &lt; t &lt; T\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+p(z_t|x_{1:T})
+\]</div>
+<p>We condition on the past and the future to significantly reduce the uncertainty.</p>
+<div class="proof remark admonition" id="hindsight">
+<p class="admonition-title"><span class="caption-number">Remark 3 </span></p>
+<section class="remark-content" id="proof-content">
+<p>We can see parallels to our own lives. Take the quote “Hindsight is 22”. This implies that we can easily explain an action in our past once we have all of the information available. However, it’s harder to explain our present action given only the past information.</p>
+</section>
+</div><p>This use case is very common when we want to <em>understand</em> and <em>learn</em> from data. In a practical sense, many reanalysis datasets take this into account.</p>
+<div class="math notranslate nohighlight" id="equation-markov-smooth">
+<span class="eqno">(17)<a class="headerlink" href="#equation-markov-smooth" title="Permalink to this equation">#</a></span>\[
+p(z_t|x_{1:T}) = p(z_t|x_{1:t}) \int p(z_{t+1}|z_t) \frac{p(z_{t+1}|x_{1:T})}{p(z_{t+1}|x_{1:t})}dz_{t+1}
+\]</div>
+<p><strong>Term I</strong>: The current state, <span class="math notranslate nohighlight">\(z_t\)</span>, given all of the past, current and future measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span> (smoothing step)</p>
+<p><strong>Term II</strong>: The current state, <span class="math notranslate nohighlight">\(z_t\)</span>, given all of the present and previous measurements, <span class="math notranslate nohighlight">\(x_{1:t}\)</span> (the predict step)</p>
+<p><strong>Term III</strong>: The “future” state, <span class="math notranslate nohighlight">\(z_{t+1}\)</span>, given the previous state, <span class="math notranslate nohighlight">\(z_t\)</span> (transition prob)</p>
+<p><strong>Term IV</strong>: The “future” state, <span class="math notranslate nohighlight">\(z_{t+1}\)</span>, given all of the measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>.</p>
+<p><strong>Term V</strong>: The “future” state, <span class="math notranslate nohighlight">\(z_{t+1}\)</span>, given all of the current and past measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>.</p>
+</section>
+<hr class="docutils" />
+<section id="predictions">
+<h3>Predictions<a class="headerlink" href="#predictions" title="Permalink to this headline">#</a></h3>
+<p>We want to predict the future state, <span class="math notranslate nohighlight">\(z_{T+\tau}\)</span>, given the past measurements, $x_{}.</p>
+<div class="math notranslate nohighlight">
+\[
+p(z_{T+\tau}|x_{1:T})
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tau &gt; 0\)</span>. <span class="math notranslate nohighlight">\(\tau\)</span> is the <em>horizon</em> of our forecasting, i.e. it is how far ahead of <span class="math notranslate nohighlight">\(T\)</span> we are trying to predict. So we can expand this to write that we are interested in the future hidden states, <span class="math notranslate nohighlight">\(z_{T+\tau}\)</span>, given all of the past measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+p(z_{T+\tau}|x_{1:T}) = \sum_{z_{T+\tau}} \sum_{z_T} p(z_{T+\tau}|z_T) p(z_T|x_{1:T})
+\]</div>
+<p>We could also want to get predictions for what we observe</p>
+<div class="math notranslate nohighlight">
+\[
+p(x_{T+\tau}|x_{1:t}) = \sum p(x_{T+\tau}|z_{T+\tau})p(z_{T+\tau}|x_{1:T})
+\]</div>
+<p>This is known as the <em>posterior predictive density</em>.</p>
+<p>This is often the most common use case in applications, e.g. weather predictions and climate model projections. The nice thing is that we will have this as a by-product of our model.</p>
+</section>
+<section id="likelihood-estimation">
+<h3>Likelihood Estimation<a class="headerlink" href="#likelihood-estimation" title="Permalink to this headline">#</a></h3>
+<p>For learning, we need to calculate the most probable state-space that matches the given observations. This assumes that we have access to all of the measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{NLL} = \operatorname*{argmax}_{z_{1:T}} p(z_{1:T}|x_{1:T})
+\]</div>
+<p><strong>Note</strong>: This is a non-probabilistic approach to maximizing the likelihood. However, this could be very useful for some applications. Smoothing would be better but we still need to find the best parameters.</p>
+</section>
+<section id="posterior-samples">
+<h3>Posterior Samples<a class="headerlink" href="#posterior-samples" title="Permalink to this headline">#</a></h3>
+<p>We are interested in generating possible states and state trajectories. In this case, we want the likelihood of a state trajectory, <span class="math notranslate nohighlight">\(z_{1:T}\)</span>, given some measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>. This is given by:</p>
+<div class="math notranslate nohighlight">
+\[
+z_{1:T} \sim p(z_{1:T}|x_{1:T})
+\]</div>
+<p>This is very informative because it can show us plausible interpretations of possible state spaces that could fit the measurements.</p>
+<div class="proof remark admonition" id="markov_useful">
+<p class="admonition-title"><span class="caption-number">Remark 4 </span></p>
+<section class="remark-content" id="proof-content">
+<p>In terms of information, we can show the following relationship.</p>
+<div class="math notranslate nohighlight">
+\[
+\text{MAP} &lt;&lt; \text{Smoothing} &lt;&lt; \text{Posterior Samples}
+\]</div>
+</section>
+</div></section>
+<section id="marginal-likelihood">
+<h3>Marginal Likelihood<a class="headerlink" href="#marginal-likelihood" title="Permalink to this headline">#</a></h3>
+<p>This is the probability of the evidence, i.e., the marginal probability of the measurements. This may be useful as an evaluation of the density of given measurements. We could write this as the joint probabilty</p>
+<div class="math notranslate nohighlight">
+\[
+p(x_{1:T}) = \sum_{z_{1:T}} p(z_{1:T}, x_{1:T})
+\]</div>
+<p>We can decompose this using the conditional probability. This gives us</p>
+<div class="math notranslate nohighlight">
+\[
+p(x_{1:T}) = \sum_{z_{1:T}} p(x_{1:T}|z_{1:T})p(z_{1:T})
+\]</div>
+<p>As shown by the above function, this is done by summing all of the hidden paths.</p>
+<p>This can be useful if we want to use the learned model to classify sequences, perform clustering, or possibly anomaly detection.</p>
+<p>Note: We can use the log version of this equation to deal with instabilities.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L} = \log p(x_{1:T}) = \sum_{z_{1:T}} \log p(z_{1:T},x_{1:T})
+\]</div>
+</section>
+<section id="complexity">
+<h3>Complexity<a class="headerlink" href="#complexity" title="Permalink to this headline">#</a></h3>
+<p>This is the biggest reason why one would do a Markov assumptions aside from the simplicity. Let <span class="math notranslate nohighlight">\(D\)</span> be the dimensionality of the state space, <span class="math notranslate nohighlight">\(z\)</span> and <span class="math notranslate nohighlight">\(T\)</span> be the number of time steps given by the measurements. We can give the computational complexity for each of the quantities listed above.</p>
+<p><strong>Filter-Predict</strong></p>
+<p>This is of order <span class="math notranslate nohighlight">\(\mathcal{O}(D^2T)\)</span></p>
+<p>If we assume sparsity in the methods, then we can reduce this to <span class="math notranslate nohighlight">\(\mathcal{O}(DT)\)</span>.</p>
+<p>We can reduce the complexity even further by assuming some special matrices within the functions to give us a complexity of <span class="math notranslate nohighlight">\(\mathcal{O}(T D \log D)\)</span>.</p>
+<p>If we do a parallel computation, we can even have a really low computational complexity of <span class="math notranslate nohighlight">\(\mathcal{O}(D \log T)\)</span>.</p>
+<p>Overall: the bottleneck of this method is not the computational speed, it’s the memory required to do all of the computations cheaply.</p>
+</section>
+<hr class="docutils" />
+<section id="viz">
+<h3>Viz<a class="headerlink" href="#viz" title="Permalink to this headline">#</a></h3>
+<section id="bars">
+<h4>Bars<a class="headerlink" href="#bars" title="Permalink to this headline">#</a></h4>
+</section>
+<section id="regression">
+<h4>Regression<a class="headerlink" href="#regression" title="Permalink to this headline">#</a></h4>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="cons">
+<h2>Cons<a class="headerlink" href="#cons" title="Permalink to this headline">#</a></h2>
+<p>While we managed to reduce the dimensionality of our dataset, this might not be the optimal model to choose. We assume that <span class="math notranslate nohighlight">\(z_t\)</span> only depends on the previous time step, <span class="math notranslate nohighlight">\(z_{t-t}\)</span>. But it could be the case that <span class="math notranslate nohighlight">\(z_t\)</span> could depend on previous time steps, e.g. <span class="math notranslate nohighlight">\(p(z_t | z_{t-1}, z_{t-2}, z_{t-2}, \ldots)\)</span>. There is no reason to assume that</p>
+<section id="multiscale-time-dependencies">
+<h3>Multiscale Time Dependencies<a class="headerlink" href="#multiscale-time-dependencies" title="Permalink to this headline">#</a></h3>
+<p>One way to overcome this is to assume</p>
+</section>
+<section id="long-term">
+<h3>Long Term<a class="headerlink" href="#long-term" title="Permalink to this headline">#</a></h3>
+<hr class="docutils" />
+<div class="docutils container" id="id3">
+<dl class="citation">
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id1">Hen20</a></span></dt>
+<dd><p>Philipp Henning. Probabilistic ml - lecture 12 - gauss-markov models. 2020. URL: <a class="reference external" href="https://youtu.be/FydcrDtZroU">https://youtu.be/FydcrDtZroU</a> (visited on 2021-10-10).</p>
+</dd>
+<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id2">Mur12</a></span></dt>
+<dd><p>Kevin P. Murphy. <em>Machine Learning: A Probabilistic Perspective</em>. MIT Press, 2012. URL: <a class="reference external" href="probml.ai">probml.ai</a>.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/data_assimilation"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="algorithms.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Algorithms</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="gauss_markov.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Gauss-Markov Models</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,1452 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Kalman Filter &#8212; Research Notebook</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Normalizing Kalman Filter" href="nkf.html" />
+    <link rel="prev" title="Gauss-Markov Models" href="gauss_markov.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/book_v2.jpeg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
+       Gaussianization Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/ssh.html">
+     SSH Configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/conda.html">
+     Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/jlab.html">
+     Jupyter Lab 4 Remote Servers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data/overview.html">
+   Data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data/representation.html">
+     Representation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../bayesian/overview.html">
+   Bayesian
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/intro.html">
+     Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/models.html">
+     Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference.html">
+     Inference Schemes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/confidence_intervals.html">
+     Confidence Intervals
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/regression.html">
+     Regression
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/kernel_derivatives.html">
+     Kernel Derivatives
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../egps/overview.html">
+   Uncertain Gaussian Processes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/predictions.html">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/gauss_approx.html">
+     Gaussian Approximation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/mcmc.html">
+     Monte Carlo Sampling
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/taylor.html">
+     Linearization (Taylor Expansions)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/moment_matching.html">
+     Moment Matching
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/bgplvm.html">
+     Bayesian GPLVM
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/error_prop.html">
+     Error Propagation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/next.html">
+     Next Steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../egps/experiments.html">
+     Notebooks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../egps/notebooks/gpytorch_egp_taylor.html">
+       Gaussian Process Gradients with GPyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/histogram.html">
+     Entropy Estimator - Histogram
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+     Experiment - RBIG Sample Consistency
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../normalizing_flows/overview.html">
+   Normalizing Flows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
+     Lecture I - Iterative Gaussianization
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.0_univariate_gauss.html">
+       1.1 - Univariate Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.1_marginal_gauss.html">
+       1.2 - Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.2_gaussianization.html">
+       1.2 - Iterative Gaussianization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
+     Lecture II - Gaussianization Flows
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt1_mg.html">
+       Parameterized Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt2_rot.html">
+       Parameterized Rotations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt3_plane.html">
+       Example - 2D Plane
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../inr/overview.html">
+   Implicit Neural Representations
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/formulation.html">
+     Formulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/literature_review.html">
+     Literature Review
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="overview.html">
+   Data Assimilation
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="dynamical_sys.html">
+     Dynamical Systems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="oi.html">
+     Optimal Interpolation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="interp.html">
+     Interpolation Problem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="emu.html">
+     Emulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inv_problems.html">
+     Inverse Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="projects.html">
+     Projects
+    </a>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="algorithms.html">
+     Algorithms
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+    <label for="toctree-checkbox-17">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="markov_models.html">
+       Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="gauss_markov.html">
+       Gauss-Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="nkf.html">
+       Normalizing Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="enskf.html">
+       Ensemble Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="dmm.html">
+       Deep Markov Model
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="4dvarnet.html">
+       4DVarNet
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="markov_gp.html">
+       Markovian Gaussian Processes
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../misc/overview.html">
+   Miscellaneous Notes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+  <label for="toctree-checkbox-18">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/generative_models.html">
+     Generative Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/diffusion_models.html">
+     Diffusion Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/fixed_point.html">
+     Fixed-Point Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/data_assimilation/kf.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/notes/data_assimilation/kf.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#methods">
+   Methods
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#filter">
+     Filter
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#predict-step">
+       Predict Step
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#update-step">
+       Update Step
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#innovation-kalman-gain">
+         Innovation &amp; Kalman Gain
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#correction">
+         Correction
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#filtering">
+   Filtering
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#psuedocode">
+     Psuedocode
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#smoothing">
+   Smoothing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#likelihoods">
+   Likelihoods
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#missing-data">
+   Missing Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#courses">
+     Courses
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#papers">
+     Papers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#code">
+     Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Kalman Filter</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#methods">
+   Methods
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#filter">
+     Filter
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#predict-step">
+       Predict Step
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#update-step">
+       Update Step
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#innovation-kalman-gain">
+         Innovation &amp; Kalman Gain
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#correction">
+         Correction
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#filtering">
+   Filtering
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#psuedocode">
+     Psuedocode
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#smoothing">
+   Smoothing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#likelihoods">
+   Likelihoods
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#missing-data">
+   Missing Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#courses">
+     Courses
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#papers">
+     Papers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#code">
+     Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="kalman-filter">
+<h1>Kalman Filter<a class="headerlink" href="#kalman-filter" title="Permalink to this headline">#</a></h1>
+<p>Implementation of the Kalman Filter</p>
+<hr class="docutils" />
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">#</a></h2>
+<section id="filter">
+<h3>Filter<a class="headerlink" href="#filter" title="Permalink to this headline">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{z}_t|\mathbf{x}_{1:t}) = \mathcal{N}(\mathbf{z}_t|\boldsymbol{\mu}_{\mathbf{z}_{t|t-1}}, \boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}})
+\]</div>
+<p>This is a two step process:</p>
+<ol class="simple">
+<li><p>Prediction Step for the Transition Model</p></li>
+<li><p>Measurement Step for the Emission Model</p></li>
+</ol>
+<hr class="docutils" />
+<section id="predict-step">
+<h4>Predict Step<a class="headerlink" href="#predict-step" title="Permalink to this headline">#</a></h4>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{(Pred. Mean)} \hspace{10mm} \boldsymbol{\mu}_{\mathbf{z}_{t|t-1}} &amp;=  \mathbf{F}\mathbf{z}_{t-1} \\
+\text{(Pred. Cov.)} \hspace{10mm} \boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}} &amp;= \mathbf{F} \boldsymbol{\Sigma}_{t-1}\mathbf{F}^\top+\mathbf{Q}
+\end{aligned}
+\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># predictive mean (state), t|t-1</span>
+<span class="n">mu_z_t_cond</span> <span class="o">=</span> <span class="n">F</span> <span class="o">@</span> <span class="n">mu_t</span>
+<span class="c1"># predictive covariance (state), t|t-1</span>
+<span class="n">Sigma_z_t_cond</span> <span class="o">=</span> <span class="n">F</span> <span class="o">@</span> <span class="n">Sigma_t</span> <span class="o">@</span> <span class="n">F</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">Q</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="update-step">
+<h4>Update Step<a class="headerlink" href="#update-step" title="Permalink to this headline">#</a></h4>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{z}_t|\mathbf{x}_{1:t}) = \mathcal{N}(\mathbf{z}_t|\boldsymbol{\mu}_{\mathbf{z}_t}, \boldsymbol{\Sigma}_{\mathbf{z}_t})
+\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}_{\mathbf{z}_t}\)</span> is the estimation of the state mean given the observations</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_{\mathbf{z}_t}\)</span> is the estimation of the state cov given the observations.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{(Pred. Mean)} \hspace{10mm} \boldsymbol{\mu}_{\mathbf{x}_{t}} &amp;=  \mathbf{H}\boldsymbol{\mu}_{\mathbf{z}_{t|t-1}} \\
+\text{(Innovation)} \hspace{10mm} \boldsymbol{\Sigma}_{\mathbf{x}_{t}} &amp;= \mathbf{H} \boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}} \mathbf{H}^\top + \mathbf{R}
+\end{aligned}
+\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pred Mean (obs)</span>
+<span class="n">mu_x_t_cond</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">mu_z_t_cond</span>
+<span class="c1"># Pred Cov (obs)</span>
+<span class="n">Sigma_x_t_cond</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">Sigma_z_t_cond</span> <span class="o">@</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">R</span>
+</pre></div>
+</div>
+<p>We then need to do a correction. This is done via a 2-step process</p>
+<section id="innovation-kalman-gain">
+<h5>Innovation &amp; Kalman Gain<a class="headerlink" href="#innovation-kalman-gain" title="Permalink to this headline">#</a></h5>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{(Innovation)} \hspace{10mm} \boldsymbol{r}_{t} &amp;= \mathbf{x}_t - \boldsymbol{\mu}_{\mathbf{x}_{t}} \\
+\text{(Kalman Gain)} \hspace{10mm} \mathbf{K}_{t} &amp;= \boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}} \mathbf{H}^{-1} \boldsymbol{\Sigma}_{\mathbf{x}_{t}}^{-1}
+\end{aligned}
+\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># innovation</span>
+<span class="n">r_t</span> <span class="o">=</span> <span class="n">x_t</span> <span class="o">-</span> <span class="n">mu_x_t_cond</span>
+<span class="c1"># kalman gain</span>
+<span class="n">K_t</span> <span class="o">=</span> <span class="n">Sigma_z_t_cond</span> <span class="o">@</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">inv</span><span class="p">(</span><span class="n">Sigma_x_t_cond</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="correction">
+<h5>Correction<a class="headerlink" href="#correction" title="Permalink to this headline">#</a></h5>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{(Est. Mean)} \hspace{10mm} \boldsymbol{\mu}_{\mathbf{z}_{t}} &amp;=  \boldsymbol{\mu}_{\mathbf{z}_{t|t-1}} + \mathbf{K}_t\boldsymbol{r}_{t} \\
+\text{(Est. Cov.)} \hspace{10mm} \boldsymbol{\Sigma}_{\mathbf{z}_{t}} &amp;= (\mathbf{I} - \mathbf{K}_t\mathbf{H})\boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}}
+\end{aligned}
+\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimated state mean</span>
+<span class="n">mu_z_t</span> <span class="o">=</span> <span class="n">mu_z_t_cond</span> <span class="o">+</span> <span class="n">K_t</span> <span class="o">@</span> <span class="n">r_t</span>
+<span class="c1"># estimated state covariance </span>
+<span class="n">Sigma_z_t</span> <span class="o">=</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">K_t</span> <span class="o">@</span> <span class="n">H</span><span class="p">)</span> <span class="o">@</span> <span class="n">Sigma_z_t_cond</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="filtering">
+<h2>Filtering<a class="headerlink" href="#filtering" title="Permalink to this headline">#</a></h2>
+<section id="psuedocode">
+<h3>Psuedocode<a class="headerlink" href="#psuedocode" title="Permalink to this headline">#</a></h3>
+<p><strong>Inputs</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathbf{A} \in \mathbb{R}^{D_x \times D_x}\)</span> - transition matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{Q} \in \mathbb{R}^{D_x \times D_x}\)</span> - transition noise</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{H} \in \mathbb{R}^{D_y \times D_x}\)</span> - emission matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}_0 \in \mathbb{R}^{D_x}\)</span> - prior for state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, mean</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_0 \in \mathbb{R}^{D_x \times D_x}\)</span> - prior for state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, covariance</p></li>
+<li></li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_x}\)</span> - transition matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{D_y }\)</span> - transition noise</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{H} \in \mathbb{R}^{D_y \times D_x}\)</span> - emission matrix</p></li>
+</ul>
+<p><strong>Function</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_sequential_kf</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">Rs</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Qs</span><span class="p">,</span> <span class="n">m0</span><span class="p">,</span> <span class="n">P0</span><span class="p">,</span> <span class="n">masks</span><span class="p">,</span> <span class="n">return_predict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  F : np.ndarray, shape=(state_dim, state_dim)</span>
+<span class="sd">    transition matrix for the transition function</span>
+<span class="sd">  Rs : np.ndarray, shape=(n_time, state_dim, state_dim)</span>
+<span class="sd">    noise matrices for the transition function</span>
+<span class="sd">  H : np.ndarray, shape=(obs_dim, state_dim)</span>
+<span class="sd">    the emission matrix for the emission function</span>
+<span class="sd">  Qs: np.ndarray, shape=(n_time, obs_dim, obs_dim)</span>
+<span class="sd">    the noises for the emission </span>
+<span class="sd">  ys : np.ndarray, shape=(batch, n_time, obs_dim)</span>
+<span class="sd">    the observations</span>
+<span class="sd">  m0 : np.ndarray, shape=(obs_dim)</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">body</span><span class="p">(</span><span class="n">carry</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="c1"># ==================</span>
+        <span class="c1"># Unroll Inputs</span>
+        <span class="c1"># ==================</span>
+        <span class="c1"># extract constants</span>
+        <span class="n">y</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">inputs</span>
+        <span class="c1"># extract next steps (mu, sigma, ll)</span>
+        <span class="n">m</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">ell</span> <span class="o">=</span> <span class="n">carry</span>
+
+        <span class="c1"># ==================</span>
+        <span class="c1"># Predict Step</span>
+        <span class="c1"># ==================</span>
+        <span class="n">m_</span> <span class="o">=</span> <span class="n">F</span> <span class="o">@</span> <span class="n">m</span>
+        <span class="n">P_</span> <span class="o">=</span> <span class="n">F</span> <span class="o">@</span> <span class="n">P</span> <span class="o">@</span> <span class="n">F</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">Q</span>
+
+        <span class="c1"># ==================</span>
+        <span class="c1"># Update Step</span>
+        <span class="c1"># ==================</span>
+
+        <span class="c1"># residuals</span>
+        <span class="n">obs_mean</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">m_</span>
+        <span class="n">HP</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">P_</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">HP</span> <span class="o">@</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">R</span>
+
+        <span class="c1"># log likelihood</span>
+        <span class="n">ell_n</span> <span class="o">=</span> <span class="n">mvn_logpdf</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">obs_mean</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="n">ell</span> <span class="o">=</span> <span class="n">ell</span> <span class="o">+</span> <span class="n">ell_n</span>
+
+        <span class="n">K</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">HP</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="c1"># correction step</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">m_</span> <span class="o">+</span> <span class="n">K</span> <span class="o">@</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">obs_mean</span><span class="p">)</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">P_</span> <span class="o">-</span> <span class="n">K</span> <span class="o">@</span> <span class="n">HP</span>
+        <span class="k">if</span> <span class="n">return_predict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">ell</span><span class="p">),</span> <span class="p">(</span><span class="n">m_</span><span class="p">,</span> <span class="n">P_</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">ell</span><span class="p">),</span> <span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">loglik</span><span class="p">),</span> <span class="p">(</span><span class="n">fms</span><span class="p">,</span> <span class="n">fPs</span><span class="p">)</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span>
+      <span class="n">f</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+      <span class="n">init</span><span class="o">=</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">P0</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span>
+      <span class="n">xs</span><span class="o">=</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">Qs</span><span class="p">,</span> <span class="n">Rs</span><span class="p">,</span> <span class="n">masks</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">loglik</span><span class="p">,</span> <span class="n">fms</span><span class="p">,</span> <span class="n">fPs</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">kalman_filter</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">noise_cov</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_predict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run the Kalman filter to get p(fₙ|y₁,...,yₙ).</span>
+<span class="sd">    Assumes a heteroscedastic Gaussian observation model, i.e. var is vector valued</span>
+<span class="sd">    :param dt: step sizes [N, 1]</span>
+<span class="sd">    :param kernel: an instantiation of the kernel class, used to determine the state space model</span>
+<span class="sd">    :param y: observations [N, D, 1]</span>
+<span class="sd">    :param noise_cov: observation noise covariances [N, D, D]</span>
+<span class="sd">    :param mask: boolean mask for the observations (to indicate missing data locations) [N, D, 1]</span>
+<span class="sd">    :param return_predict: flag whether to return predicted state, rather than updated state</span>
+<span class="sd">    :return:</span>
+<span class="sd">        ell: the log-marginal likelihood log p(y), for hyperparameter optimisation (learning) [scalar]</span>
+<span class="sd">        means: intermediate filtering means [N, state_dim, 1]</span>
+<span class="sd">        covs: intermediate filtering covariances [N, state_dim, state_dim]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">Pinf</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">stationary_covariance</span><span class="p">()</span>
+    <span class="n">minf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">Pinf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># get constant params</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># transition matrix</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># emission matrix</span>
+
+    <span class="c1"># generate noise matrices</span>
+    <span class="n">Rs</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># generate noise for transitions</span>
+    <span class="n">Qs</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># generate noise for emissions</span>
+
+    <span class="n">ell</span><span class="p">,</span> <span class="n">means</span><span class="p">,</span> <span class="n">covs</span> <span class="o">=</span> <span class="n">_sequential_kf</span><span class="p">(</span><span class="n">As</span><span class="p">,</span> <span class="n">Qs</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">noise_cov</span><span class="p">,</span> <span class="n">minf</span><span class="p">,</span> <span class="n">Pinf</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">return_predict</span><span class="o">=</span><span class="n">return_predict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ell</span><span class="p">,</span> <span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">covs</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="smoothing">
+<h2>Smoothing<a class="headerlink" href="#smoothing" title="Permalink to this headline">#</a></h2>
+</section>
+<hr class="docutils" />
+<section id="likelihoods">
+<h2>Likelihoods<a class="headerlink" href="#likelihoods" title="Permalink to this headline">#</a></h2>
+</section>
+<hr class="docutils" />
+<section id="missing-data">
+<h2>Missing Data<a class="headerlink" href="#missing-data" title="Permalink to this headline">#</a></h2>
+<!-- ---
+## Task List
+
+
+**Components**
+
+* [ ] Filter
+  * [ ] Sequential
+  * [ ] Parallel
+* [ ] Smoothing
+  * [ ] Sequential
+  * [ ] Parallel
+* [ ] Log Probability
+* [ ] Posterior
+  * [ ] Predictions, obs
+  * [ ] Samples, state
+* [ ] Masked Log (Missing Data)
+* [ ] Augmentation 
+  * [ ] EOF
+  * [ ] AutoEncoder (AE)
+  * [ ] Flow Model
+  * [ ] SurVae Flow
+
+
+**Fixed Param Examples**
+
+* [ ] Random Walk
+* [ ] Object Tracking
+
+
+**Training Procedures**
+
+* [ ] Gradient-Based
+  * [ ] SGD
+* [ ] Iterative
+  * [ ] E/M
+* [ ] PPL - Numpyro
+* [ ] PPL - Pyro
+
+**Demonstrations**
+
+* [ ] Random Walk
+  * [ ] Fixed Params
+  * [ ] Free Params
+* [ ] Object Tracking
+  * [ ] Fixed Params
+  * [ ] Free Params
+* [ ] Lorenz-63
+* [ ] Lorenz-84
+* [ ] Lorenz-96
+* [ ] 1D Spatio-Temporal
+  * [ ] Missing Data 
+* [ ] 2D Spatio-Temporal
+  * [ ] Missing Data
+* [ ] 3D Spatio-Temporal
+  * [ ] Missing Data
+ -->
+</section>
+<hr class="docutils" />
+<section id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
+<section id="courses">
+<h3>Courses<a class="headerlink" href="#courses" title="Permalink to this headline">#</a></h3>
+<blockquote>
+<div><p><em>Sensor Fusion and Non-Linear Filtering</em> - <a class="reference external" href="https://youtube.com/playlist?list=PLTD_k0sZVYFqjFDkJV8GE2EwfxNK59fJY">Youtube Playlist</a></p>
+</div></blockquote>
+<blockquote>
+<div><p>Kalman Filter (ML TV) - <a class="reference external" href="https://youtu.be/LioOvUZ1MiM">Video I</a> | <a class="reference external" href="https://youtu.be/8oeg2fdV8jE">Video II</a></p>
+</div></blockquote>
+<blockquote>
+<div><p>Kalman Filtering and Applications in Finance - <a class="reference external" href="https://youtu.be/R63dU5w_djQ">Youtube</a></p>
+</div></blockquote>
+</section>
+<section id="papers">
+<h3>Papers<a class="headerlink" href="#papers" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p><span id="id1">[<a class="reference internal" href="../../../bib.html#id25" title="Said Ouala, Ronan Fablet, Cédric Herzet, Bertrand Chapron, Ananda Pascual, Fabrice Collard, and Lucile Gaultier. Neural network based kalman filters for the spatio-temporal interpolation of satellite-derived sea surface temperature. Remote Sensing, 2018. URL: https://www.mdpi.com/2072-4292/10/12/1864, doi:10.3390/rs10121864.">Ouala <em>et al.</em>, 2018</a>]</span></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="code">
+<h3>Code<a class="headerlink" href="#code" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Kalman Filter with Dask/XArray - <a class="reference external" href="https://github.com/CedricTravelletti/Climate/tree/main">Repo</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/data_assimilation"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="gauss_markov.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Gauss-Markov Models</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="nkf.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Normalizing Kalman Filter</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

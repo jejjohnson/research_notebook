@@ -1,17 +1,28 @@
 # Linear Algebra Tricks
 
 
+
+
+## Identities
+
+
+### Woodbury Identity
+
+Given some matrices $\mathbf{A} \in \mathbb{R}^{D \times D}, \mathbf{U} \in \mathbb{R}^{D \times d}, \mathbf{B} \in \mathbb{R}^{d \times d}, \mathbf{V} \in \mathbb{R}^{d \times D}$ where $d < D$.
+
+$$
+(A + UBV^\top)^{-1} = A^{-1} - A^{-1} U (B^{-1} + V^\top A^{-1} U)^{-1}V^\top A^{-1}
+$$(woodbury)
+
+#### Symmetric Version
+
+This is an easier version with symmetric assumptions about the decomposition.
+
+$$
+(A + CBC^\top)^{-1} = A^{-1} - A^{-1} C (B^{-1} + C^\top A^{-1} C)^{-1}C^\top A^{-1}
+$$(woodbury_sum)
+
 ---
-
-- [Frobenius Norm (Hilbert-Schmidt Norm)](#frobenius-norm-hilbert-schmidt-norm)
-  - [Intiution](#intiution)
-  - [Formulation](#formulation)
-  - [Code](#code)
-- [Frobenius Norm](#frobenius-norm)
-  - [Frobenius Norm (or Hilbert-Schmidt Norm) a matrix](#frobenius-norm-or-hilbert-schmidt-norm-a-matrix)
-
----
-
 ## Frobenius Norm (Hilbert-Schmidt Norm)
 
 ### Intiution

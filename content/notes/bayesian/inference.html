@@ -1,0 +1,1395 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Inference Schemes &#8212; Research Notebook</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Variational Inference" href="inference/variational_inference.html" />
+    <link rel="prev" title="Models" href="models.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/book_v2.jpeg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
+       Gaussianization Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/ssh.html">
+     SSH Configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/conda.html">
+     Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/jlab.html">
+     Jupyter Lab 4 Remote Servers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/notation.html">
+   Notation
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data/overview.html">
+   Data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data/representation.html">
+     Representation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="overview.html">
+   Bayesian
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="intro.html">
+     Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="models.html">
+     Models
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Inference Schemes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="confidence_intervals.html">
+     Confidence Intervals
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="regression.html">
+     Regression
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/kernel_derivatives.html">
+     Kernel Derivatives
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../egps/overview.html">
+   Uncertain Gaussian Processes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/predictions.html">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/gauss_approx.html">
+     Gaussian Approximation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/mcmc.html">
+     Monte Carlo Sampling
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/taylor.html">
+     Linearization (Taylor Expansions)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/moment_matching.html">
+     Moment Matching
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/bgplvm.html">
+     Bayesian GPLVM
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/error_prop.html">
+     Error Propagation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/next.html">
+     Next Steps
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../egps/experiments.html">
+     Notebooks
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+    <label for="toctree-checkbox-10">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../egps/notebooks/gpytorch_egp_taylor.html">
+       Gaussian Process Gradients with GPyTorch
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+  <label for="toctree-checkbox-11">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/histogram.html">
+     Entropy Estimator - Histogram
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+     Experiment - RBIG Sample Consistency
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../normalizing_flows/overview.html">
+   Normalizing Flows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+  <label for="toctree-checkbox-12">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
+     Lecture I - Iterative Gaussianization
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+    <label for="toctree-checkbox-13">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.0_univariate_gauss.html">
+       1.1 - Univariate Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.1_marginal_gauss.html">
+       1.2 - Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.2_gaussianization.html">
+       1.2 - Iterative Gaussianization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
+     Lecture II - Gaussianization Flows
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt1_mg.html">
+       Parameterized Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt2_rot.html">
+       Parameterized Rotations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt3_plane.html">
+       Example - 2D Plane
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../inr/overview.html">
+   Implicit Neural Representations
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+  <label for="toctree-checkbox-15">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/formulation.html">
+     Formulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/literature_review.html">
+     Literature Review
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data_assimilation/overview.html">
+   Data Assimilation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/dynamical_sys.html">
+     Dynamical Systems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/oi.html">
+     Optimal Interpolation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/interp.html">
+     Interpolation Problem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/emu.html">
+     Emulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/inv_problems.html">
+     Inverse Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/projects.html">
+     Projects
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../data_assimilation/algorithms.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+    <label for="toctree-checkbox-17">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/markov_models.html">
+       Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/gauss_markov.html">
+       Gauss-Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/kf.html">
+       Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/nkf.html">
+       Normalizing Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/enskf.html">
+       Ensemble Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/dmm.html">
+       Deep Markov Model
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/4dvarnet.html">
+       4DVarNet
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/markov_gp.html">
+       Markovian Gaussian Processes
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../misc/overview.html">
+   Miscellaneous Notes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+  <label for="toctree-checkbox-18">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/generative_models.html">
+     Generative Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/diffusion_models.html">
+     Diffusion Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/fixed_point.html">
+     Fixed-Point Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/bayesian/inference.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/notes/bayesian/inference.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#local-methods">
+   Local Methods
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mean-squared-error-mse">
+     Mean Squared Error (MSE)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#maximum-a-priori-map">
+     Maximum A Priori (MAP)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#loss-function">
+       Loss Function
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#maximum-likelihood-estimation-mle">
+     Maximum Likelihood Estimation (MLE)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       Loss Function
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kl-divergence-forward">
+     KL-Divergence (Forward)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#laplace-approximation">
+     Laplace Approximation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#variational-inference">
+     Variational Inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sampling-methods">
+   Sampling Methods
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#monte-carlo">
+     Monte Carlo
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hamiltonian-monte-carlo">
+     Hamiltonian Monte Carlo
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#stochastic-langevin-dynamics">
+     Stochastic Langevin Dynamics
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Inference Schemes</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#local-methods">
+   Local Methods
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mean-squared-error-mse">
+     Mean Squared Error (MSE)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#maximum-a-priori-map">
+     Maximum A Priori (MAP)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#loss-function">
+       Loss Function
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#maximum-likelihood-estimation-mle">
+     Maximum Likelihood Estimation (MLE)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       Loss Function
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kl-divergence-forward">
+     KL-Divergence (Forward)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#laplace-approximation">
+     Laplace Approximation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#variational-inference">
+     Variational Inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sampling-methods">
+   Sampling Methods
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#monte-carlo">
+     Monte Carlo
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hamiltonian-monte-carlo">
+     Hamiltonian Monte Carlo
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#stochastic-langevin-dynamics">
+     Stochastic Langevin Dynamics
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="inference-schemes">
+<h1>Inference Schemes<a class="headerlink" href="#inference-schemes" title="Permalink to this headline">#</a></h1>
+<p><a class="reference external" href="https://www.cs.ubc.ca/~schmidtm/MLRG/GaussianProcesses.pdf"><strong>Source</strong></a> | Deisenroth - <a class="reference external" href="https://drive.google.com/file/d/1Ryb1zDzndnv1kOe8nT0Iu4OD6m0KC8ry/view">Sampling</a></p>
+<p><strong>Advances in VI</strong> - <a class="reference external" href="https://github.com/magister-informatica-uach/INFO320/blob/master/6_advances_in_VI.ipynb">Notebook</a></p>
+<ul class="simple">
+<li><p>Numerical Integration (low dimension)</p></li>
+<li><p>Bayesian Quadrature</p></li>
+<li><p>Expectation Propagation</p></li>
+<li><p>Conjugate Priors (Gaussian Likelihood w/ GP Prior)</p></li>
+<li><p>Subset Methods (Nystrom)</p></li>
+<li><p>Fast Linear Algebra (Krylov, Fast Transforms, KD-Trees)</p></li>
+<li><p>Variational Methods (Laplace, Mean-Field, Expectation Propagation)</p></li>
+<li><p>Monte Carlo Methods (Gibbs, Metropolis-Hashings, Particle Filter)</p></li>
+</ul>
+<p><strong>Local Methods</strong></p>
+<p><strong>Sampling Methods</strong></p>
+<hr class="docutils" />
+<section id="local-methods">
+<h2>Local Methods<a class="headerlink" href="#local-methods" title="Permalink to this headline">#</a></h2>
+<section id="mean-squared-error-mse">
+<h3>Mean Squared Error (MSE)<a class="headerlink" href="#mean-squared-error-mse" title="Permalink to this headline">#</a></h3>
+<p>In the case of regression, we can use the MSE as a loss function. This will exactly solve for the negative log-likelihood term above.</p>
+<hr class="docutils" />
+<p><strong>Proof</strong></p>
+<div class="proof example admonition" id="mse_nll">
+<p class="admonition-title"><span class="caption-number">Example 1 </span> (Proof)</p>
+<section class="example-content" id="proof-content">
+</section>
+</div><p>The likelihood of our model is:</p>
+<div class="math notranslate nohighlight">
+\[\log p(y|\mathbf{X,w}) = \sum_{i=1}^N \log p(y_i|x_i,\theta)\]</div>
+<p>And for simplicity, we assume the noise <span class="math notranslate nohighlight">\(\epsilon\)</span> comes from a Gaussian distribution and that it is constant. So we can rewrite our likelihood as</p>
+<div class="math notranslate nohighlight">
+\[\log p(y|\mathbf{X,w}) = \sum_{i=1}^N \log \mathcal{N}(y_i | \mathbf{x}_i\mathbf{w}, \sigma^2)\]</div>
+<p>Plugging in the full formula for the Gaussian distribution with some simplifications gives us:</p>
+<div class="math notranslate nohighlight">
+\[
+\log p(y|\mathbf{X,w}) = 
+\sum_{i=1}^N 
+\log \frac{1}{\sqrt{2 \pi \sigma_e^2}} 
+\exp\left( - \frac{(y_i - \mathbf{x}_i\mathbf{w})^2}{2\sigma_e^2} \right)
+\]</div>
+<p>We can use the log rule <span class="math notranslate nohighlight">\(\log ab = \log a + \log b\)</span> to rewrite this expression to separate the constant term from the exponential. Also, <span class="math notranslate nohighlight">\(\log e^x = x\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\log p(y|\mathbf{X,w}) = - \frac{N}{2} \log 2 \pi \sigma_e^2 - \sum_{i=1}^N \frac{(y_i - \mathbf{x_iw})^2}{2\sigma_e^2}
+\]</div>
+<p>So, the first term is constant so that we can ignore that in our loss function. We can do the same for the denominator for the second term. Let’s simplify it to make our life easier.</p>
+<div class="math notranslate nohighlight">
+\[
+\log p(y|\mathbf{X,w}) = - \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2
+\]</div>
+<p>So we want to maximize this quantity: in other words, I want to find the parameter <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> s.t. this equation is maximum.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{w}_{MLE} = \operatorname*{argmin}_{\mathbf{w}} - \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2
+\]</div>
+<p>We can rewrite this expression because the maximum of a negative quantity is the same as minimizing a positive quantity.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{w}_{MLE} = \operatorname*{argmin}_{\mathbf{w}} \frac{1}{N} \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2
+\]</div>
+<p>This is the same as the MSE error expression; with the edition of a scalar value <span class="math notranslate nohighlight">\(1/N\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathbf{w}_{MLE} &amp;= \operatorname*{argmin}_{\mathbf{w}} \frac{1}{N} \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2 \\
+&amp;= \operatorname*{argmin}_{\mathbf{w}} \text{MSE}
+\end{aligned}
+\end{split}\]</div>
+<p><strong>Note</strong>: If we did not know <span class="math notranslate nohighlight">\(\sigma_y^2\)</span> then we would have to optimize this as well.</p>
+<p><strong>Sources</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://python-intro.quantecon.org/mle.html">Intro to Quantitative Econ w. Python</a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="maximum-a-priori-map">
+<h3>Maximum A Priori (MAP)<a class="headerlink" href="#maximum-a-priori-map" title="Permalink to this headline">#</a></h3>
+<section id="loss-function">
+<h4>Loss Function<a class="headerlink" href="#loss-function" title="Permalink to this headline">#</a></h4>
+<div class="math notranslate nohighlight" id="equation-map-loss">
+<span class="eqno">(6)<a class="headerlink" href="#equation-map-loss" title="Permalink to this equation">#</a></span>\[
+\boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} - \frac{1}{N}\sum_n^N\log p\left(y_n|f(x_n; \theta)\right) + \log p(\theta)
+\]</div>
+<div class="proof example admonition" id="map">
+<p class="admonition-title"><span class="caption-number">Example 2 </span> (Proof)</p>
+<section class="example-content" id="proof-content">
+</section>
+</div><div class="math notranslate nohighlight">
+\[
+\boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} \log p(\boldsymbol{\theta}|\mathcal{D})
+\]</div>
+<p>We can plug in the base Bayesian formulation</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} \log \left[ \frac{p(\mathcal{D}|\boldsymbol{\theta})p(\boldsymbol{\theta})}{p(\mathcal{D})} \right]
+\]</div>
+<p>We can expand this term using the log rules</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmax}_\theta \left[ \log p(D|\theta) + \log p(\theta) - \log p(D) \right]
+\]</div>
+<p>Notice that <span class="math notranslate nohighlight">\(\log p(D)\)</span> is a constant as the distribution of the data won’t change. It also does not depend on the parameters, <span class="math notranslate nohighlight">\(\theta\)</span>. So we can cancel that term out.</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmax}_\theta \left[ \log p(D|\theta) + \log p(\theta) \right]\]</div>
+<p>We will change this problem into a minimization problem instead of maximization</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmin}_{\theta} - \log p(D|\theta)
+\]</div>
+<p>We cannot find the probability distribution of <span class="math notranslate nohighlight">\(p(D|\theta)\)</span> irregardless of what it is conditioned on. So we need to take some sort of expectations over the entire data.</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmin}_{\theta} - \mathbb{E}_{\mathbf{x}\sim P_X} \left[ \log p(D|\theta)\right] + \log p(\theta)
+\]</div>
+<p>We can approximate this using Monte carlo samples. This is given by:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_{x}[\log p(D|\theta)] \approx \frac{1}{N}\sum_n^N p(y_n | f(x_n; \theta))
+\]</div>
+<p>and we assume that with enough samples, we will capture the essence of our data.</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))+ \log p(\theta)
+\]</div>
+<hr class="docutils" />
+</section>
+</section>
+<section id="maximum-likelihood-estimation-mle">
+<h3>Maximum Likelihood Estimation (MLE)<a class="headerlink" href="#maximum-likelihood-estimation-mle" title="Permalink to this headline">#</a></h3>
+<section id="id1">
+<h4>Loss Function<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h4>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))
+\]</div>
+<div class="proof example admonition" id="mle">
+<p class="admonition-title"><span class="caption-number">Example 3 </span> (Proof)</p>
+<section class="example-content" id="proof-content">
+</section>
+</div><p>This is straightforward to derive because we can pick up from the proof of the MAP loss function, eq:<a class="reference internal" href="#equation-map-loss">(6)</a>.</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))+ \log p(\theta)
+\]</div>
+<p>In this case, we will assume a uniform prior on our parameters, <span class="math notranslate nohighlight">\(\theta\)</span>. This means that any parameter value would work to solve the problem. The uniform distribution has a constant probability of 1. As a result, the <span class="math notranslate nohighlight">\(\log\)</span> of <span class="math notranslate nohighlight">\(p(\theta)=1\)</span> is equal to 0. So we can simply remove the log prior on our parameters in the above equation.</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))
+\]</div>
+<div class="proof remark admonition" id="remark-3">
+<p class="admonition-title"><span class="caption-number">Remark 1 </span></p>
+<section class="remark-content" id="proof-content">
+<p>You can get an intuition that this will lead to local minimum as there are many possible solutions that would minimize this equation. Or even worse, there are many possible local minimum that we could get stuck in when trying to optimize for this.</p>
+</section>
+</div></section>
+</section>
+<section id="kl-divergence-forward">
+<h3>KL-Divergence (Forward)<a class="headerlink" href="#kl-divergence-forward" title="Permalink to this headline">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+\text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = \mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right]
+\]</div>
+<p>This is the distance between the best distribution, <span class="math notranslate nohighlight">\(p_*(x)\)</span>, for the data and the parameterized version, <span class="math notranslate nohighlight">\(p(x;\theta)\)</span>.</p>
+<p>There is an equivalence between the (Forward) KL-Divergence and the Maximum Likelihood Estimation. Maximizing the likelihood expresses it as maximizing the likelihood of the data given our estimated distribution. Whereas the KL-divergence is a distance measure between the parameterized distribution and the “true” or “best” distribution of the real data. They are equivalent formulations but the MLE equations shows how this is a proxy for fitting the “real” data distribution to the estimated distribution function.</p>
+<div class="proof example admonition" id="nll_kl">
+<p class="admonition-title"><span class="caption-number">Example 4 </span> (Proof)</p>
+<section class="example-content" id="proof-content">
+</section>
+</div><div class="math notranslate nohighlight">
+\[
+\text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = \mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right]
+\]</div>
+<p>We can expand this term via logs</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right] = \mathbb{E}_{x\sim p_*}\left[ \log p_*(x) - \log p(x;\theta)  \right]
+\]</div>
+<p>The first expectation, <span class="math notranslate nohighlight">\(\mathbb{E}_{x\sim p_*}[p_*(x)]\)</span>, is the <em>entropy</em> term (i.e. the expected uncertainty in the data). This is a constant term because no matter how well we estimate this distribution via our parameterized representation, <span class="math notranslate nohighlight">\(p(x;\theta)\)</span>, this term will not change. So we can ignore this term in our loss function.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right] = -\mathbb{E}_{x\sim p_*}\left[ \log p(x;\theta)\right]
+\]</div>
+<p>We can rewrite this in its integral form:</p>
+<div class="math notranslate nohighlight">
+\[
+-\mathbb{E}_{x\sim p_*}\left[ \log p(x;\theta)\right] = - \int \log p(x;\theta) p_*(x)dx
+\]</div>
+<p>We will assume that the data distribution is a delta function, <span class="math notranslate nohighlight">\(p_*(x) = \delta (x - x_i)\)</span>. This means that each data point is represented equally. If we plug that into our model, we see that it is</p>
+<div class="math notranslate nohighlight">
+\[
+-\int \log p(x;\theta) p_*(x)dx = - \int \log p(x;\theta) \delta (x - x_i)dx
+\]</div>
+<p>We will do the same approximation of the integral with samples from our delta distribution.</p>
+<div class="math notranslate nohighlight">
+\[
+-\int \log p(x;\theta) \delta (x - x_i)dx = - \frac{1}{N}\sum_n^N \log p(x_n;\theta)
+\]</div>
+<p>So we have:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = - \frac{1}{N}\sum_n^N \log p(x_n;\theta) = \mathcal{L}_{NLL}(\theta)
+\]</div>
+<p>which exactly the function for the NLL Loss</p>
+</section>
+<hr class="docutils" />
+<section id="laplace-approximation">
+<h3>Laplace Approximation<a class="headerlink" href="#laplace-approximation" title="Permalink to this headline">#</a></h3>
+<p>This is where we approximate the posterior with a Gaussian distribution <span class="math notranslate nohighlight">\(\mathcal{N}(\mu, A^{-1})\)</span>.</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(w=w_{map}\)</span>, finds a mode (local max) of <span class="math notranslate nohighlight">\(p(w|D)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(A = \nabla\nabla \log p(D|w) p(w)\)</span> - very expensive calculation</p></li>
+<li><p>Only captures a single mode and discards the probability mass</p>
+<ul>
+<li><p>similar to the KLD in one direction.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Sources</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://agustinus.kristia.de/techblog/2021/10/27/laplace/">Modern Arts of Laplace Approximation</a> - Agustinus - Blog</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="variational-inference">
+<h3>Variational Inference<a class="headerlink" href="#variational-inference" title="Permalink to this headline">#</a></h3>
+<p><strong>Definition</strong>: We can find the best approximation within a given family w.r.t. KL-Divergence.
+$<span class="math notranslate nohighlight">\(
+\text{KLD}[q||p] = \int_w q(w) \log \frac{q(w)}{p(w|D)}dw 
+\)</span><span class="math notranslate nohighlight">\(
+Let \)</span>q(w)=\mathcal{N}(\mu, S)<span class="math notranslate nohighlight">\( and then we minimize KLD\)</span>(q||p)<span class="math notranslate nohighlight">\( to find the parameters \)</span>\mu, S$.</p>
+<blockquote>
+<div><p>“Approximate the posterior, not the model” - James Hensman.</p>
+</div></blockquote>
+<p>We write out the marginal log-likelihood term for our observations, <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\log p(y;\theta) = \mathbb{E}_{x \sim p(x|y;\theta)}\left[  \log p(y|\theta) \right]
+\]</div>
+<p>We can expand this term using Bayes rule: <span class="math notranslate nohighlight">\(p(y) = p(x,y)p(x|y)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\log p(y;\theta) = \mathbb{E}_{x \sim p(x|y;\theta)}\left[ \log \underbrace{p(x,y;\theta)}_{prior} - \log \underbrace{p(x|y;\theta)}_{posterior}\right]
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(p(x,y;\theta)\)</span> is the joint distribution function and <span class="math notranslate nohighlight">\(p(x|y;\theta)\)</span> is the posterior distribution function.</p>
+<p>We can use a variational distribution, <span class="math notranslate nohighlight">\(q(x|y;\phi)\)</span> which will approximate the</p>
+<div class="math notranslate nohighlight">
+\[
+\log p(y;\theta) \geq \mathcal{L}_{ELBO}(\theta,\phi)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{L}_{ELBO}\)</span> is the Evidence Lower Bound (ELBO) term. This serves as an upper bound to the true marginal likelihood.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{ELBO}(\theta,\phi) = \mathbb{E}_{q(x|y;\phi)}\left[ \log p(x,y;\theta) - \log q(x|y;\phi) \right]
+\]</div>
+<p>we can rewrite this to single out the expectations. This will result in two important quantities.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{ELBO}(\theta,\phi) = \underbrace{\mathbb{E}_{q(x|y;\phi)}\left[ \log p(x,y;\theta)\right]}_{\text{Reconstruction}} - \underbrace{\text{D}_{\text{KL}}\left[ \log q(x|y;\phi) || p(x;\theta)\right]}_{\text{Regularization}}
+\]</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="sampling-methods">
+<h2>Sampling Methods<a class="headerlink" href="#sampling-methods" title="Permalink to this headline">#</a></h2>
+<section id="monte-carlo">
+<h3>Monte Carlo<a class="headerlink" href="#monte-carlo" title="Permalink to this headline">#</a></h3>
+<p>We can produce samples from the exact posterior by defining a specific Monte Carlo chain.</p>
+<p>We actually do this in practice with NNs because of the stochastic training regimes. We modify the SGD algorithm to define a scalable MCMC sampler.</p>
+<p><a class="reference external" href="https://chi-feng.github.io/mcmc-demo/">Here</a> is a visual demonstration of some popular MCMC samplers.</p>
+</section>
+<section id="hamiltonian-monte-carlo">
+<h3>Hamiltonian Monte Carlo<a class="headerlink" href="#hamiltonian-monte-carlo" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="stochastic-langevin-dynamics">
+<h3>Stochastic Langevin Dynamics<a class="headerlink" href="#stochastic-langevin-dynamics" title="Permalink to this headline">#</a></h3>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/bayesian"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="models.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Models</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="inference/variational_inference.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Variational Inference</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

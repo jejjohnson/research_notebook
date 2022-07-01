@@ -1,3 +1,4 @@
+# Gaussian Processes
 
 ---
 ## Objective
@@ -11,66 +12,7 @@ We have a set of sparsely distributed observations from satellite altimetry data
 
 **Outputs**: The outputs are a vector of quantities of interest. For example, we could have a variable which describes the state of the ocean such as sea surface height (SSH) and or sea surface temperature (SST). These variables are then stacked together which gives us a p-dimensional vector, $\mathbf{y} \in \mathbb{R}^{D_p}$.  
 
----
-## Representation
 
-### Field Representation
-
-
-We basically present a 'raveled' version of the state whereby we measure the entire field. This can be shown as:
-
-
-$$
-\mathbf{x} = \left[\text{lon}_1, \ldots, \text{lon}_{D_\text{lat}}, \text{lat}_1, \ldots, \text{lat}_{D_\text{lon}},, \text{time}_1, \ldots, \text{time}_{D_\text{time}} \right] \in \mathbb{R}^{D_\text{lat} \times D_\text{lon} \times D_\text{time}}
-$$
-
-**Example**: if we have a *full* spatial lat-lon grid of `30x30` points and `30` time steps, then the vector is `30x30x30` which is `27,000`-dimensional vector! This is compounded if we wish to calculate correlations between each of the grid points which would result in a matrix of size `27,000 x 27,000` points. As we see below, this is a very high dimensional problem.
-
-
-$$
-D_\mathbf{x} = [\text{lat}_1, \ldots, \text{lat}_D, \text{lon}_1, \ldots, \text{lon}_D, \text{time}_1, \ldots, \text{time}_D]
-$$
-
-And the final vector, $\mathbf{x}$, can be massive for this unrolled spatio-temporal vector. So stacking all of these together gives us a very large vector of $\mathbf{X} \in \mathbb{R}^{D_\mathbf{x}}$. Estimating the covariance between each of coordinates would results in a massive matrix, $\mathbf{C}_{XX} \in \mathbb{R}^{D_x \times D_x}$. In the above algorithm, we need to do a matrix inversion in conjunction which is very expensive. Below you have the computational complexity when considering the state, $\mathbf{x}$:
-
-State $\mathbf{x}$: 
-
-- computational complexity - $\mathcal{O}(D_{\mathbf{x}}^3)$
-- memory $\mathcal{O}(D_{\mathbf{x}}^2)$
-
----
-### Coordinate Representation
-
-The coordinate representation assumes the input vector, $\boldsymbol{x}$, is a single set of coordinates.
-
-$$
-D_\phi = [\text{lat,lon,time}]
-$$
-
-If we assume we have a large number of sparsely distributed coordinate values. This gives us a large number of samples, $N$. Stacked together, we get a matrix of samples and features (coordinates), $\boldsymbol{X} \in \mathbb{R}^{N \times D_\phi}$. 
-
-**Example**: Take the full grid from the field representation, i.e. `30x30x30=27,000`-dimensional vector. Under this representation, we would have a vector which is three times the size, i.e. `N x D = 27,000 x 3` because for every grid point, we have a lat, lon, time coordinate. However, in our specific application, we have very sparse observations which means that we will never have to have a full grid of that size in memory (or during compute). If we assume there to be only 20% of the grid observed, then we have: `0.20 * 27,000 = 5,400` and a covariance of `5,400x5,400`. This is significantly less data that the full grid. This allows us to push the upper limit of the amount of observations where we can learn the parameters. For example, if we have a budget of `20,000` points for our memory (including the covariance), then we could potentially have a grid size of `46x46x46` if we wanted an evenly distribued spatio-temporal grid, `54x54x30` for a spatially dense grid and `30x30x74` for a temporal dense grid. This would allow the methods to capture processes at a finer scale without sacrificing computability.
-
-
-This operation is still very expensive however, we assume that the observations are 
-
-State $\boldsymbol{x}$:
-- computational complexity $\mathcal{O}(N^3)$
-- memory $\mathcal{O}(N^2)$
-
-As you can see, the covariance matrix is still very expensive to calculate. However, the observations are very sparse compared to the full coordinate grid, i.e. $N << D_\mathbf{x}$. 
-
-#### Pros and Cons
-
-**Coordinate Transformations**: We have direct access to the lat-lon-time coordinates. This gives us the flexibility to perform transformations such that this is reflected within the input representation. 3 coordinates might lack information and it might be useful to transform these coordinates into a high representation. For example, if we transform the spatial coordinates from lat-lon to spherical coordinates, it goes from 2 to 3 dimensions. If we transform the time coordinate to a cyclic coordinate that encodes the minute, hour, day, month, year, then we go from a 1D vector to a 5D vector which could potentially encode some multi-scale dynamics.
-
-**Large Upper Limit**: The data is sparse so that enables us to see more observations in space and time. The more data seen, the better the interpolation will be.
-
-<span style="color:green">**Complete Space**</span>: We seen the complete space (all of the grid points). In many state-space methods, it is not possibly to put the entire dataset in memory. In addition, we can query observations which are not in a fine grid.
-
-
-
-<span style="color:red">**No Physical Models**</span>: We are mapping a set of coordinates to a physical quantity of interest. This is different than the field representation which removes the physical sense. In this case, we are using a pure interpolation / smoothing setting. Many of the methods are based in proximity, e.g. nearest neighbour calculation. There is no direct physical interpretation between the space of coordinates to the physical quantity. When we consider the state-space representation, this becomes more feasible because we assume the 
 
 
 ---
@@ -266,53 +208,8 @@ $$
 ---
 ## Scaling
 
----
-### Conjugate Gradients
 
-Consider the following optimal solution to the GP given the best optimal hyper-parameters, $\boldsymbol{\theta} = \{ \boldsymbol{\psi, \phi}, \sigma^2 \}$:
 
-$$
-\boldsymbol{\alpha} = \mathbf{K}_{\boldsymbol{\phi}}^{-1} \bar{\mathbf{Y}}_{\boldsymbol{\psi}}
-$$
-
-We can rewrite this as a linear system.
-
-$$
-\mathbf{K}_{\boldsymbol{\phi}}\boldsymbol{\alpha} - \bar{\mathbf{Y}}_{\boldsymbol{\psi}} = \mathbf{0}
-$$
-
-We can reformulate this as a quadratic optimization problem:
-
-$$
-\boldsymbol{\alpha}^* = \argmin_{\boldsymbol{\alpha}} \boldsymbol{\alpha}^\top \mathbf{K}_{\boldsymbol{\phi}}\boldsymbol{\alpha} - \boldsymbol{\alpha}^\top \bar{\mathbf{Y}}_{\boldsymbol{\psi}}
-$$
-
-There are many efficient ways to solve this problem where one of them is the *conjugate gradient* operation. This is an iterative algorithm that recovers the exact solution after $k$ iterations. But we can recover an approximate solution after $\tilde{k}$ iterations where $\tilde{k} << k$. Each iteration is $\mathcal{O}(N^2)$.
-
-**GPyTorch: BlackBox Matrix-Matrix Gaussian Process Inference with GPU Acceleration** - Gardner et al (2018) 
-
----
-## Structured Kernel Interpolation
-
-$$
-\tilde{\boldsymbol{k}}(\mathbf{x}, \mathbf{x}') = \mathbf{w}_\mathbf{x}\mathbf{K}_{\mathbf{XX}}\mathbf{w}_{\mathbf{x}'}
-$$
-
-$$
-\tilde{\mathbf{K}}_{\mathbf{XX}} = \mathbf{W} \mathbf{K}_{\mathbf{XX}}\mathbf{W}^\top
-$$
-
-$$
-\tilde{\mathbf{K}}_{\mathbf{XU}} \approx \boldsymbol{w}_{U}(\mathbf{x})\mathbf{K_{UU}}
-$$
-
-where $\mathbf{W_U} \in \mathbb{R}^{N \times M}$ is matrix of interpolation weights.
-
-Here we have the standard decomposition of the inverse
-
-$$
-(\mathbf{K} + \sigma^2 \mathbf{I})^{-1}\mathbf{y} = (\mathbf{QVQ}^\top + \sigma^2\mathbf{I})^{-1}\mathbf{y}
-$$
 
 
 
@@ -354,3 +251,186 @@ $$
 * KISS-GP - $\approx\mathcal{O}(N)$
 * Inducing Points - $\mathcal{O}(NM^2)$
 * Variational Stochastic - $\mathcal{O}(M^2)$
+
+
+
+
+## Regression
+
+Let's assume we have $N$ input data points with $D$ dimensions, $\mathbf{X} = \{\mathbf{x}_i\}^N_{i=1} \in \mathbb{R}^{N \times D}$ and noisy outputs, $\mathbf{y} = \{ y_i \}^{N}_{i=1} \in \mathbb{R}^{N}$. We want to compute the predictive distribution of $y_*$ at a test location $\mathbf{x}_*$. So:
+
+$$
+y_i = f(\mathbf{x}_i) + \epsilon_i
+$$
+
+where $f$ is an unknown latent function that is corrupted by Gaussian observation noise $\epsilon_i \sim \mathcal{N}(0, \sigma^2)$. 
+
+
+### Gaussian Process
+
+A Gaussian process is a probability distribution over functions. It places a non-parametric Bayesian model which places a GP prior over a latent function $f$ as
+
+$$
+f(\mathbf{x}) \sim \mathcal{GP}\left( m(\mathbf{x}), k(\mathbf{x},\mathbf{x}') \right).
+$$
+
+where we see it is characterized by a mean function, $m(\mathbf{x})$ and kernel function $k(\mathbf{x,x}')$:
+
+$$
+\begin{aligned}
+m(\mathbf{x}) &= \mathbb{E}[f(\mathbf{x})] \\
+k(\mathbf{x,x}') &= \mathbb{E}\left[ (f(\mathbf{x}) - m(\mathbf{x}))(f(\mathbf{x}') - m(\mathbf{x}))  \right]
+\end{aligned}
+$$
+
+
+ The mean function $m(\mathbf{x})$ is typically zero (for easier computations) and the kernel function typically characterizes the smoothness, scale and ... of the GP. Given the training data $\mathcal{D}=\{\mathbf{X},\mathbf{y}\}$,
+
+
+
+mean function GP prior, $m_\mathcal{GP}$, (typically zero) and a covariance function $k(\mathbf{x}, \mathbf{x}')$ on $f$. 
+
+**Prior**
+
+**Likelihood** A GP regression model assumes that the outputs can be modeled as 
+
+$$
+p(\mathbf{y}|f, \mathbf{X}) \sim \mathcal{N}(y|f, \sigma_y^2\mathbf{I})
+$$
+
+**Posterior**
+
+
+
+
+---
+
+We can obtain a marginal likelihood (model evidence) since any finite set of GPs follows a multivariate Gaussian distribution
+
+$$
+p(\mathbf{y}|\theta) = \int p(\mathbf{y}|f)p(f)df = \mathcal{N}(\mathbf{y}|m_\phi, \mathbf{K}_{GP})
+$$
+
+In the simple model (conjugate case due to the Gaussian likelihood), the posterior over $f, p(f|y)$ can be computed analytically. 
+
+$$
+p(\mathbf{y}|\theta) = \mathcal{N}(\mathbf{y}|m_\phi, \mathbf{K}_{GP})
+$$
+
+where $\mathbf{K}_{GP}=\mathbf{K}_{ff}+ \sigma^2 \mathbf{I}$ and $\theta$ comprises of the hyperparameters found on the mean function and covariance function. We would then maximize the hyperparameters $\theta$ via, log marginal-likelihood (see below).
+
+
+The prediction of $y_*$ for a test point $\mathbf{x}_*$ is what we're really interested in. We can consider the joint distribution of our training data, $\mathbf{y}$ and test data, $y_*$:
+
+$$
+\begin{bmatrix}
+\mathbf{y} \\
+y_*
+\end{bmatrix} \sim
+\mathcal{N}\left(
+\begin{bmatrix} 
+    \mathbf{K}_{GP} & k_*^\top\\
+    k_* & k_{**}+\sigma^2
+\end{bmatrix}   \right)
+$$
+
+$k_{*}=\left[ k(\mathbf{x}_1, \mathbf{x}_*), \ldots, k(\mathbf{x}_N, \mathbf{x}_*)  \right]^\top$ is the projection kernel and $k_{**}=k(\mathbf{x}_*, \mathbf{x}_*)$ is the test kernel. By way of normally distributed variables, we can obtain the predictive distribution of $y_*$ conditioned on the training data $\mathbf{y}$:
+
+$$
+p(y_*|\mathbf{y}) = \mathcal{N}(\mu_\mathcal{GP}, \sigma^2_\mathcal{GP})
+$$
+
+
+and subsequently closed-form predictive mean and variance equations:
+
+$$
+\begin{aligned}
+\mu_\mathcal{GP}(\mathbf{x}_*) &= k_{*}^\top \mathbf{K}_{GP}^{-1} \mathbf{y} = k_{*}^\top \alpha  \\
+\sigma^2_\mathcal{GP}(\mathbf{x}_*) &= \sigma^2 + k_{**} - k_{*}^\top \mathbf{K}_{GP}^{-1}k_{*}
+\end{aligned}
+$$
+
+
+### Inference
+
+The covariance function $k(\mathbf{x}, \mathbf{x}
+)$ depends on hyperparameters are usually learned by maximizing the log marginal likelihood.
+
+$$
+\theta^* = \underset{\theta}{\text{argmax}} \log p(\mathbf{y}|\mathbf{X},\theta) = \log \mathcal{N}(\mathbf{y}; 0, \mathbf{K}_\mathcal{GP})
+$$
+
+Using the log pdf of a multivariate distribution, we have
+
+$$
+\begin{aligned}
+\log \mathcal{N}(\mathbf{y}; 0, \mathbf{K}_\mathcal{GP}) &= - \frac{1}{2} \mathbf{y}^\top \mathbf{K}_\mathcal{GP}^{-1}\mathbf{y} - \frac{1}{2} \log \left| \mathbf{K}_\mathcal{GP} \right| - \frac{N}{2} \log 2 \pi
+\end{aligned}
+$$
+
+This optimization is done by differentiating the above equation with respect to the hyperparameters. This maximization automatically embodies Occam's razor as it is a trade-off between the model complexity and overfitting. Typically we do the Cholesky decomposition to efficiently calculate the inversion and determinant measures.
+
+$$
+\begin{aligned}
+\log p(\mathbf{y}) &= - \frac{1}{2} \mathbf{y}^\top \mathbf{K}_\mathcal{GP}^{-1}\mathbf{y} - \frac{1}{2} \log \left| \mathbf{K}_\mathcal{GP} \right| - \frac{N}{2} \log 2 \pi \\
+&= -\frac{1}{2} \||\mathbf{L}^{-1}\mathbf{y}||^2  - \sum_i\log \mathbf{L}_{ii} - \frac{N}{2} \log 2 \pi
+\end{aligned}
+$$
+
+where the $\mathbf{L}$ is the Cholesky decomposition $\mathbf{L}= \text{chol}(\mathbf{K}_\mathcal{GP})$. This gives us a computational complexity of $\mathcal{O}(N^3 + N^2 + N)$ which is overal $\mathcal{O}(N^3)$. So this GPR method is really only suited for \~2K-5K problems maximum.
+
+---
+## Kernel Functions
+
+
+**Composition Kernels**. Kernels can be combined using sums and products to obtain more expressive formations. Additive kernels (**cite**: Duvenaud) 
+
+**Input Warping**. This is also the choice for many kernel methods where another model is used instead.
+
+
+---
+## Strengths and Limitations
+
+
+### Limitations
+
+```{epigraph}
+“It is important to keep in mind that Gaussian processes are not appropriate priors for all problems”.
+
+--Neal, 1998
+```
+
+It is important to note that although the GP algorithm is one of the most trusted and reliable algorithms, it is not always the best algorithm to use for all problems. Below we mention a few drawbacks that the standard GP algorithm has along with some of the standard approaches to overcoming these drawbacks.
+
+**Gaussian Marginals**: GPs have problems modeling heavy-tailed, asymmetric or multi-modal marginal distributions. There are some methods that change the likelihood so that it is heavy tailed~\citep{GPTSTUDENT2011,GPTSTUDENT2014} but this would remove the conjugacy of the likelihood term which would incur difficulties during fitting. Deep GPs and latent covariate models are an improvement to this limitation. A very popular approach is to construct a fully Bayesian model. This entails hyperpriors over the kernel parameters and Monte carlo sampling methods such as Gibbs sampling~\citep{GPGIBBS08}, slice sampling~\citep{GPSLICE2010}, Hamiltonian Monte Carlo~\citep{GPHMC2018}, and Sequential Monte Carlo~\citep{GPSMC15}. These techniques will capture more complex distributions. With the advent of better software~\citep{PYMC16,NUMPYRO2019} and more advanced sampling techniques like a differentiable iterative NUTS implementation~\citep{NUMPYRO2019}, the usefulness of MC schemes is resurfacing.
+
+**Limited Number of Moments**. This is related to the previous limitation: the idea that an entire function can be captured in terms of two moments: a mean and a covariance. There are some relationships which are difficult to capture without an adequate description, e.g. discontinuities~\citep{Neal96} and non-stationary processes, and thus is a limitation of the GP priors we choose. The advent of warping the inputs or outputs of a GP has becoming a very popular technique to deal with the limited expressivity of kernels. Input warping is popular in methods such as deep kernel learning whereby a Neural network is used to capture the features and are used as inputs to the kernel function output warping is common in chained~\citep{GPCHAINED2016} and heteroscedastic methods where the function output is warped by another GP to capture the noise model of the data. Deep Gaussian processes~\citep{Damianou2015} can be thought of input and output warping methods due the multi-layer composition of function inputs and outputs.
+
+**Linearity of Predictive Mean**. The predictive mean of a GP is linear to the observations, i.e. $\mu_{GP}=\mathbf{K}\alpha$. This essentially is a smoother which can be very powerful but also will miss key features. If there is some complex structured embedded within the dataset, then a GP model can never really capture this irregardless of the covariance function found.
+
+**Predictive Covariance**. The GP predictive variance is a function of the training inputs and it is independent of the observed inputs. This is important if the input data has some information which could be used to help determine the regions of uncertainty, e.g. the gradient. An example would be data on a spatial grid whereby some regions points would have more certainty than others which could be obtained by knowing the input location and not necessarily the expected output.
+
+
+
+## Conjugate Case
+
+
+---
+### Inference
+
+After specifying the prior distributions, we need to infer the posterior distributions of the parameters $\theta,\phi,f$.
+
+
+We represent this as the 
+
+
+We can optimize this function using the negative log-likelihood of $\mathbf{y}$:
+
+$$
+\mathcal{L}(\Theta) = \frac{1}{2} \left| \mathbf{K}_\mathcal{GP}+ \sigma^2 \mathbf{I} \right| + \frac{1}{2}\mathbf{y}^\top
+$$
+
+
+## Non-Conjugate Case
+
+

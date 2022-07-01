@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Objective &#8212; Research Notebook</title>
+    <title>Gaussian Processes &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -55,6 +55,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Basics" href="gps.html" />
+    <link rel="prev" title="Maximum Mean Discrepancy (MMD)" href="../kernels/mmd.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -220,11 +222,6 @@ const thebe_selector_output = ".output, .cell_output"
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
-       GP from Scratch
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
        Gaussianization Flows
       </a>
@@ -266,35 +263,18 @@ const thebe_selector_output = ".output, .cell_output"
   Notes
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../concepts/notation.html">
-   Notation
+  <a class="reference internal" href="../concepts/uncertainty.html">
+   Modeling Uncertainty
   </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../data/overview.html">
-   Data
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../data/representation.html">
-     Representation
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../bayesian/overview.html">
    Bayesian
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -335,8 +315,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../concepts/overview.html">
    Sleeper Concepts
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-  <label for="toctree-checkbox-7">
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -377,8 +357,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../kernels/overview.html">
    Kernel Methods
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-  <label for="toctree-checkbox-8">
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -388,71 +368,152 @@ const thebe_selector_output = ".output, .cell_output"
      Kernel Derivatives
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/rv.html">
+     RV Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/congruence_coeff.html">
+     Congruence Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/hsic.html">
+     HSIC
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/mmd.html">
+     Maximum Mean Discrepancy (MMD)
+    </a>
+   </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../egps/overview.html">
-   Uncertain Gaussian Processes
+ <li class="toctree-l1 current active has-children">
+  <a class="current reference internal" href="#">
+   Gaussian Processes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/predictions.html">
-     Uncertain Predictions
+    <a class="reference internal" href="gps.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/gauss_approx.html">
-     Gaussian Approximation
+    <a class="reference internal" href="literature.html">
+     Literature Review
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/mcmc.html">
-     Monte Carlo Sampling
+    <a class="reference internal" href="cg.html">
+     Conjugate Gradients
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/taylor.html">
-     Linearization (Taylor Expansions)
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/moment_matching.html">
-     Moment Matching
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/bgplvm.html">
-     Bayesian GPLVM
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/error_prop.html">
-     Error Propagation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/next.html">
-     Next Steps
+    <a class="reference internal" href="sgps.html">
+     Sparse Gaussian Processes
     </a>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../egps/experiments.html">
-     Notebooks
+    <a class="reference internal" href="algorithms.html">
+     Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
-    <label for="toctree-checkbox-10">
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
      <i class="fas fa-chevron-down">
      </i>
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../egps/notebooks/gpytorch_egp_taylor.html">
-       Gaussian Process Gradients with GPyTorch
+      <a class="reference internal" href="gpr_code.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="sgp_code.html">
+       Sparse GP From Scratch
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/overview.html">
+     Input Uncertainty in GPs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../info_theory/similarity.html">
+   Similarity
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/measures.html">
+     Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+    <label for="toctree-checkbox-11">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/information.html">
+       Information Theory
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/entropy.html">
+       Entropy &amp; Relative Entropy
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/mutual_info.html">
+       Mutual Information and Total Correlation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/estimators.html">
+     Information Theory Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/classic.html">
+       Classic Methods
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/histogram.html">
+       Entropy Estimator - Histogram
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+       Experiment - RBIG Sample Consistency
       </a>
      </li>
     </ul>
@@ -460,43 +521,36 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../info_theory/overview.html">
-   Information Theory
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
-  <label for="toctree-checkbox-11">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/histogram.html">
-     Entropy Estimator - Histogram
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
-     Experiment - RBIG Sample Consistency
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
   <a class="reference internal" href="../normalizing_flows/overview.html">
    Normalizing Flows
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
-  <label for="toctree-checkbox-12">
+  <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+  <label for="toctree-checkbox-13">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/linear.html">
+     Linear Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/coupling_layers.html">
+     Coupling Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/conditional.html">
+     Conditional Normalizing Flows
+    </a>
+   </li>
    <li class="toctree-l2 has-children">
     <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
      Lecture I - Iterative Gaussianization
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
-    <label for="toctree-checkbox-13">
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -522,8 +576,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
      Lecture II - Gaussianization Flows
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
-    <label for="toctree-checkbox-14">
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -551,8 +605,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../inr/overview.html">
    Implicit Neural Representations
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
-  <label for="toctree-checkbox-15">
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -573,8 +627,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../data_assimilation/overview.html">
    Data Assimilation
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
-  <label for="toctree-checkbox-16">
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -613,8 +667,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../data_assimilation/algorithms.html">
      Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-    <label for="toctree-checkbox-17">
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -667,8 +721,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../misc/overview.html">
    Miscellaneous Notes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-  <label for="toctree-checkbox-18">
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -867,122 +921,86 @@ title="Print to PDF"
     </div>
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#objective">
    Objective
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#quantities-of-interest">
    Quantities of Interest
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#representation">
-   Representation
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#field-representation">
-     Field Representation
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#coordinate-representation">
-     Coordinate Representation
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#pros-and-cons">
-       Pros and Cons
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#data">
    Data
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#gaussian-processes">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
    Gaussian Processes
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#problem-setting">
    Problem Setting
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#model-assumptions">
    Model Assumptions
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#training">
    Training
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#exact-gp-inference">
      Exact GP Inference
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#optimal-solution">
      Optimal Solution
     </a>
    </li>
   </ul>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#bottleneck">
    Bottleneck
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#predictive-uncertainty">
      Predictive Uncertainty
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#conditional-sampling">
      Conditional Sampling
     </a>
    </li>
   </ul>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#scaling">
    Scaling
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#conjugate-gradients">
-     Conjugate Gradients
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#structured-kernel-interpolation">
-   Structured Kernel Interpolation
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#ski-inference">
      SKI Inference
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#derivations">
      Derivations
     </a>
     <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#predictive-mean">
        Predictive Mean
       </a>
@@ -990,6 +1008,57 @@ title="Print to PDF"
     </ul>
    </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#regression">
+   Regression
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gaussian-process">
+     Gaussian Process
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#inference">
+     Inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kernel-functions">
+   Kernel Functions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#strengths-and-limitations">
+   Strengths and Limitations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#limitations">
+     Limitations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conjugate-case">
+   Conjugate Case
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     Inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#non-conjugate-case">
+   Non-Conjugate Case
+  </a>
  </li>
 </ul>
 
@@ -1000,7 +1069,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Objective</h1>
+                <h1>Gaussian Processes</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -1010,122 +1079,86 @@ title="Print to PDF"
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#objective">
    Objective
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#quantities-of-interest">
    Quantities of Interest
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#representation">
-   Representation
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#field-representation">
-     Field Representation
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#coordinate-representation">
-     Coordinate Representation
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#pros-and-cons">
-       Pros and Cons
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#data">
    Data
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#gaussian-processes">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
    Gaussian Processes
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#problem-setting">
    Problem Setting
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#model-assumptions">
    Model Assumptions
   </a>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#training">
    Training
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#exact-gp-inference">
      Exact GP Inference
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#optimal-solution">
      Optimal Solution
     </a>
    </li>
   </ul>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#bottleneck">
    Bottleneck
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#predictive-uncertainty">
      Predictive Uncertainty
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#conditional-sampling">
      Conditional Sampling
     </a>
    </li>
   </ul>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#scaling">
    Scaling
   </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#conjugate-gradients">
-     Conjugate Gradients
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#structured-kernel-interpolation">
-   Structured Kernel Interpolation
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#ski-inference">
      SKI Inference
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#derivations">
      Derivations
     </a>
     <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
+     <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#predictive-mean">
        Predictive Mean
       </a>
@@ -1133,6 +1166,57 @@ title="Print to PDF"
     </ul>
    </li>
   </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#regression">
+   Regression
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gaussian-process">
+     Gaussian Process
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#inference">
+     Inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kernel-functions">
+   Kernel Functions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#strengths-and-limitations">
+   Strengths and Limitations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#limitations">
+     Limitations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conjugate-case">
+   Conjugate Case
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     Inference
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#non-conjugate-case">
+   Non-Conjugate Case
+  </a>
  </li>
 </ul>
 
@@ -1144,77 +1228,31 @@ title="Print to PDF"
                 
               <div>
                 
-  <hr class="docutils" />
+  <section class="tex2jax_ignore mathjax_ignore" id="gaussian-processes">
+<h1>Gaussian Processes<a class="headerlink" href="#gaussian-processes" title="Permalink to this headline">#</a></h1>
+<hr class="docutils" />
 <section id="objective">
-<h1>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">#</a></h1>
+<h2>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">#</a></h2>
 <p>We have a set of sparsely distributed observations from satellite altimetry data. For each observation, there is an associated latitude and longitude spatial coordinate as well as a temporal coordinate. The objective is to interpolate the missing observations for the remaining spatio-temporal coordinates.</p>
 </section>
 <hr class="docutils" />
 <section id="quantities-of-interest">
-<h1>Quantities of Interest<a class="headerlink" href="#quantities-of-interest" title="Permalink to this headline">#</a></h1>
+<h2>Quantities of Interest<a class="headerlink" href="#quantities-of-interest" title="Permalink to this headline">#</a></h2>
 <p><strong>Inputs</strong>: We assume that the inputs are a vector of coordinates: latitude, longitude and time, i.e. <span class="math notranslate nohighlight">\(\mathbf{x} = [\text{lat, lon, time}]\)</span>. So a single data point is a 3-dimensional vector, <span class="math notranslate nohighlight">\(\mathbf{x}\in \mathbb{R}^{D_\phi}\)</span>. It is important to note that we are free to do any coordinate transform that we want in order to better represent the data. For example, the temporal coordinates can be converted to spherical coordinates to represent the curvature of the earth. Another example is to convert the temporal coordinates into cyclic coordinates where each hour, day, month, year, etc are converted into a sine and cosine. We will see later that this can be encoded within the kernel function for the Gaussian process which will allow us to capture the assumed dynamics. However, many times physical knowledge of your system can be encoded a priori which can lead to better results.</p>
 <p><strong>Outputs</strong>: The outputs are a vector of quantities of interest. For example, we could have a variable which describes the state of the ocean such as sea surface height (SSH) and or sea surface temperature (SST). These variables are then stacked together which gives us a p-dimensional vector, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{D_p}\)</span>.</p>
 </section>
 <hr class="docutils" />
-<section id="representation">
-<h1>Representation<a class="headerlink" href="#representation" title="Permalink to this headline">#</a></h1>
-<section id="field-representation">
-<h2>Field Representation<a class="headerlink" href="#field-representation" title="Permalink to this headline">#</a></h2>
-<p>We basically present a ‘raveled’ version of the state whereby we measure the entire field. This can be shown as:</p>
-<div class="math notranslate nohighlight">
-\[
-\mathbf{x} = \left[\text{lon}_1, \ldots, \text{lon}_{D_\text{lat}}, \text{lat}_1, \ldots, \text{lat}_{D_\text{lon}},, \text{time}_1, \ldots, \text{time}_{D_\text{time}} \right] \in \mathbb{R}^{D_\text{lat} \times D_\text{lon} \times D_\text{time}}
-\]</div>
-<p><strong>Example</strong>: if we have a <em>full</em> spatial lat-lon grid of <code class="docutils literal notranslate"><span class="pre">30x30</span></code> points and <code class="docutils literal notranslate"><span class="pre">30</span></code> time steps, then the vector is <code class="docutils literal notranslate"><span class="pre">30x30x30</span></code> which is <code class="docutils literal notranslate"><span class="pre">27,000</span></code>-dimensional vector! This is compounded if we wish to calculate correlations between each of the grid points which would result in a matrix of size <code class="docutils literal notranslate"><span class="pre">27,000</span> <span class="pre">x</span> <span class="pre">27,000</span></code> points. As we see below, this is a very high dimensional problem.</p>
-<div class="math notranslate nohighlight">
-\[
-D_\mathbf{x} = [\text{lat}_1, \ldots, \text{lat}_D, \text{lon}_1, \ldots, \text{lon}_D, \text{time}_1, \ldots, \text{time}_D]
-\]</div>
-<p>And the final vector, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, can be massive for this unrolled spatio-temporal vector. So stacking all of these together gives us a very large vector of <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{D_\mathbf{x}}\)</span>. Estimating the covariance between each of coordinates would results in a massive matrix, <span class="math notranslate nohighlight">\(\mathbf{C}_{XX} \in \mathbb{R}^{D_x \times D_x}\)</span>. In the above algorithm, we need to do a matrix inversion in conjunction which is very expensive. Below you have the computational complexity when considering the state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>:</p>
-<p>State <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>:</p>
-<ul class="simple">
-<li><p>computational complexity - <span class="math notranslate nohighlight">\(\mathcal{O}(D_{\mathbf{x}}^3)\)</span></p></li>
-<li><p>memory <span class="math notranslate nohighlight">\(\mathcal{O}(D_{\mathbf{x}}^2)\)</span></p></li>
-</ul>
-</section>
-<hr class="docutils" />
-<section id="coordinate-representation">
-<h2>Coordinate Representation<a class="headerlink" href="#coordinate-representation" title="Permalink to this headline">#</a></h2>
-<p>The coordinate representation assumes the input vector, <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>, is a single set of coordinates.</p>
-<div class="math notranslate nohighlight">
-\[
-D_\phi = [\text{lat,lon,time}]
-\]</div>
-<p>If we assume we have a large number of sparsely distributed coordinate values. This gives us a large number of samples, <span class="math notranslate nohighlight">\(N\)</span>. Stacked together, we get a matrix of samples and features (coordinates), <span class="math notranslate nohighlight">\(\boldsymbol{X} \in \mathbb{R}^{N \times D_\phi}\)</span>.</p>
-<p><strong>Example</strong>: Take the full grid from the field representation, i.e. <code class="docutils literal notranslate"><span class="pre">30x30x30=27,000</span></code>-dimensional vector. Under this representation, we would have a vector which is three times the size, i.e. <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">x</span> <span class="pre">D</span> <span class="pre">=</span> <span class="pre">27,000</span> <span class="pre">x</span> <span class="pre">3</span></code> because for every grid point, we have a lat, lon, time coordinate. However, in our specific application, we have very sparse observations which means that we will never have to have a full grid of that size in memory (or during compute). If we assume there to be only 20% of the grid observed, then we have: <code class="docutils literal notranslate"><span class="pre">0.20</span> <span class="pre">*</span> <span class="pre">27,000</span> <span class="pre">=</span> <span class="pre">5,400</span></code> and a covariance of <code class="docutils literal notranslate"><span class="pre">5,400x5,400</span></code>. This is significantly less data that the full grid. This allows us to push the upper limit of the amount of observations where we can learn the parameters. For example, if we have a budget of <code class="docutils literal notranslate"><span class="pre">20,000</span></code> points for our memory (including the covariance), then we could potentially have a grid size of <code class="docutils literal notranslate"><span class="pre">46x46x46</span></code> if we wanted an evenly distribued spatio-temporal grid, <code class="docutils literal notranslate"><span class="pre">54x54x30</span></code> for a spatially dense grid and <code class="docutils literal notranslate"><span class="pre">30x30x74</span></code> for a temporal dense grid. This would allow the methods to capture processes at a finer scale without sacrificing computability.</p>
-<p>This operation is still very expensive however, we assume that the observations are</p>
-<p>State <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>:</p>
-<ul class="simple">
-<li><p>computational complexity <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span></p></li>
-<li><p>memory <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span></p></li>
-</ul>
-<p>As you can see, the covariance matrix is still very expensive to calculate. However, the observations are very sparse compared to the full coordinate grid, i.e. <span class="math notranslate nohighlight">\(N &lt;&lt; D_\mathbf{x}\)</span>.</p>
-<section id="pros-and-cons">
-<h3>Pros and Cons<a class="headerlink" href="#pros-and-cons" title="Permalink to this headline">#</a></h3>
-<p><strong>Coordinate Transformations</strong>: We have direct access to the lat-lon-time coordinates. This gives us the flexibility to perform transformations such that this is reflected within the input representation. 3 coordinates might lack information and it might be useful to transform these coordinates into a high representation. For example, if we transform the spatial coordinates from lat-lon to spherical coordinates, it goes from 2 to 3 dimensions. If we transform the time coordinate to a cyclic coordinate that encodes the minute, hour, day, month, year, then we go from a 1D vector to a 5D vector which could potentially encode some multi-scale dynamics.</p>
-<p><strong>Large Upper Limit</strong>: The data is sparse so that enables us to see more observations in space and time. The more data seen, the better the interpolation will be.</p>
-<p><span style="color:green"><strong>Complete Space</strong></span>: We seen the complete space (all of the grid points). In many state-space methods, it is not possibly to put the entire dataset in memory. In addition, we can query observations which are not in a fine grid.</p>
-<p><span style="color:red"><strong>No Physical Models</strong></span>: We are mapping a set of coordinates to a physical quantity of interest. This is different than the field representation which removes the physical sense. In this case, we are using a pure interpolation / smoothing setting. Many of the methods are based in proximity, e.g. nearest neighbour calculation. There is no direct physical interpretation between the space of coordinates to the physical quantity. When we consider the state-space representation, this becomes more feasible because we assume the</p>
-<hr class="docutils" />
-</section>
-</section>
-</section>
 <section id="data">
-<h1>Data<a class="headerlink" href="#data" title="Permalink to this headline">#</a></h1>
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">#</a></h2>
 <p>We assume that we have some set of input and output data points, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{x}_n, \mathbf{y}_n \right\}_{n=1}^N\)</span>. This dataset, <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>, will be used for training to find the parameters of interest, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>.</p>
 </section>
 <hr class="docutils" />
-<section id="gaussian-processes">
-<h1>Gaussian Processes<a class="headerlink" href="#gaussian-processes" title="Permalink to this headline">#</a></h1>
+<section id="id1">
+<h2>Gaussian Processes<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
 </section>
 <hr class="docutils" />
 <section id="problem-setting">
-<h1>Problem Setting<a class="headerlink" href="#problem-setting" title="Permalink to this headline">#</a></h1>
+<h2>Problem Setting<a class="headerlink" href="#problem-setting" title="Permalink to this headline">#</a></h2>
 <p>We are interested in the regression problem where we have some quantity of interest, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>, given some inputs, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>. We also assume that there exists some function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, parameterized by, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>, that provides us with a mapping between the inputs, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, and the outputs, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>. And lastly, we assume that it is corrupted by some identically independently distributed noise, i.e. Gaussian noise. This can be written as:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1224,7 +1262,7 @@ D_\phi = [\text{lat,lon,time}]
 </section>
 <hr class="docutils" />
 <section id="model-assumptions">
-<h1>Model Assumptions<a class="headerlink" href="#model-assumptions" title="Permalink to this headline">#</a></h1>
+<h2>Model Assumptions<a class="headerlink" href="#model-assumptions" title="Permalink to this headline">#</a></h2>
 <p>We follow the Bayesian formulation but in functional space. Bayes formula can be written as follows:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1293,7 +1331,7 @@ p(\boldsymbol{f}(\mathbf{x}_*)|\mathcal{D}) = \mathcal{N}\left(\boldsymbol{\mu}_
 </section>
 <hr class="docutils" />
 <section id="training">
-<h1>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h1>
+<h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h2>
 <p>As is very typically in the Bayesian formulation, we can maximize the m
 $<span class="math notranslate nohighlight">\(
 \boldsymbol{\theta}^* = \argmin_{\boldsymbol{\theta}} - \mathcal{L}(\boldsymbol{\theta})
@@ -1303,7 +1341,7 @@ $<span class="math notranslate nohighlight">\(
 \mathcal{L}(\boldsymbol{\theta}) := \log p(\mathbf{y}|\mathbf{X}, \boldsymbol{\theta})
 \]</div>
 <section id="exact-gp-inference">
-<h2>Exact GP Inference<a class="headerlink" href="#exact-gp-inference" title="Permalink to this headline">#</a></h2>
+<h3>Exact GP Inference<a class="headerlink" href="#exact-gp-inference" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
 \log p(\mathbf{y}|\mathbf{X}, \boldsymbol{\theta}) = - \frac{N}{2} \log 2 \pi - \frac{1}{2} \log |\mathbf{K}_{\mathbf{XX}} + \sigma^2\mathbf{I}| - \frac{1}{2} (\mathbf{y} - \boldsymbol{m}(\mathbf{X}))^\top\left( \mathbf{K}_{\mathbf{XX}} + \sigma^2\mathbf{I} \right)^{-1}(\mathbf{y} - \boldsymbol{m}(\mathbf{X}))
@@ -1325,16 +1363,16 @@ $<span class="math notranslate nohighlight">\(
 <p>where the parameters are the hyper-parameters of the mean function, the noise likelihood and the kernel function respectively. <span class="math notranslate nohighlight">\(\boldsymbol{\theta} = \left\{ \boldsymbol{\psi}, \sigma, \boldsymbol{\phi} \right\}\)</span>.</p>
 </section>
 <section id="optimal-solution">
-<h2>Optimal Solution<a class="headerlink" href="#optimal-solution" title="Permalink to this headline">#</a></h2>
+<h3>Optimal Solution<a class="headerlink" href="#optimal-solution" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
 \boldsymbol{\alpha} := (\mathbf{K_{XX}} + \sigma^2\mathbf{I})^{-1}(\mathbf{Y} - \boldsymbol{m}(\mathbf{X}))
 \]</div>
+</section>
+</section>
 <hr class="docutils" />
-</section>
-</section>
 <section id="bottleneck">
-<h1>Bottleneck<a class="headerlink" href="#bottleneck" title="Permalink to this headline">#</a></h1>
+<h2>Bottleneck<a class="headerlink" href="#bottleneck" title="Permalink to this headline">#</a></h2>
 <p><strong>Training</strong></p>
 <div class="math notranslate nohighlight">
 \[
@@ -1347,70 +1385,27 @@ $<span class="math notranslate nohighlight">\(
 \]</div>
 <hr class="docutils" />
 <section id="predictive-uncertainty">
-<h2>Predictive Uncertainty<a class="headerlink" href="#predictive-uncertainty" title="Permalink to this headline">#</a></h2>
+<h3>Predictive Uncertainty<a class="headerlink" href="#predictive-uncertainty" title="Permalink to this headline">#</a></h3>
 </section>
 <hr class="docutils" />
 <section id="conditional-sampling">
-<h2>Conditional Sampling<a class="headerlink" href="#conditional-sampling" title="Permalink to this headline">#</a></h2>
+<h3>Conditional Sampling<a class="headerlink" href="#conditional-sampling" title="Permalink to this headline">#</a></h3>
+</section>
+</section>
 <hr class="docutils" />
-</section>
-</section>
 <section id="scaling">
-<h1>Scaling<a class="headerlink" href="#scaling" title="Permalink to this headline">#</a></h1>
-<hr class="docutils" />
-<section id="conjugate-gradients">
-<h2>Conjugate Gradients<a class="headerlink" href="#conjugate-gradients" title="Permalink to this headline">#</a></h2>
-<p>Consider the following optimal solution to the GP given the best optimal hyper-parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta} = \{ \boldsymbol{\psi, \phi}, \sigma^2 \}\)</span>:</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{\alpha} = \mathbf{K}_{\boldsymbol{\phi}}^{-1} \bar{\mathbf{Y}}_{\boldsymbol{\psi}}
-\]</div>
-<p>We can rewrite this as a linear system.</p>
-<div class="math notranslate nohighlight">
-\[
-\mathbf{K}_{\boldsymbol{\phi}}\boldsymbol{\alpha} - \bar{\mathbf{Y}}_{\boldsymbol{\psi}} = \mathbf{0}
-\]</div>
-<p>We can reformulate this as a quadratic optimization problem:</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{\alpha}^* = \argmin_{\boldsymbol{\alpha}} \boldsymbol{\alpha}^\top \mathbf{K}_{\boldsymbol{\phi}}\boldsymbol{\alpha} - \boldsymbol{\alpha}^\top \bar{\mathbf{Y}}_{\boldsymbol{\psi}}
-\]</div>
-<p>There are many efficient ways to solve this problem where one of them is the <em>conjugate gradient</em> operation. This is an iterative algorithm that recovers the exact solution after <span class="math notranslate nohighlight">\(k\)</span> iterations. But we can recover an approximate solution after <span class="math notranslate nohighlight">\(\tilde{k}\)</span> iterations where <span class="math notranslate nohighlight">\(\tilde{k} &lt;&lt; k\)</span>. Each iteration is <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span>.</p>
-<p><strong>GPyTorch: BlackBox Matrix-Matrix Gaussian Process Inference with GPU Acceleration</strong> - Gardner et al (2018)</p>
-<hr class="docutils" />
-</section>
-</section>
-<section id="structured-kernel-interpolation">
-<h1>Structured Kernel Interpolation<a class="headerlink" href="#structured-kernel-interpolation" title="Permalink to this headline">#</a></h1>
-<div class="math notranslate nohighlight">
-\[
-\tilde{\boldsymbol{k}}(\mathbf{x}, \mathbf{x}') = \mathbf{w}_\mathbf{x}\mathbf{K}_{\mathbf{XX}}\mathbf{w}_{\mathbf{x}'}
-\]</div>
-<div class="math notranslate nohighlight">
-\[
-\tilde{\mathbf{K}}_{\mathbf{XX}} = \mathbf{W} \mathbf{K}_{\mathbf{XX}}\mathbf{W}^\top
-\]</div>
-<div class="math notranslate nohighlight">
-\[
-\tilde{\mathbf{K}}_{\mathbf{XU}} \approx \boldsymbol{w}_{U}(\mathbf{x})\mathbf{K_{UU}}
-\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mathbf{W_U} \in \mathbb{R}^{N \times M}\)</span> is matrix of interpolation weights.</p>
-<p>Here we have the standard decomposition of the inverse</p>
-<div class="math notranslate nohighlight">
-\[
-(\mathbf{K} + \sigma^2 \mathbf{I})^{-1}\mathbf{y} = (\mathbf{QVQ}^\top + \sigma^2\mathbf{I})^{-1}\mathbf{y}
-\]</div>
+<h2>Scaling<a class="headerlink" href="#scaling" title="Permalink to this headline">#</a></h2>
 <section id="ski-inference">
-<h2>SKI Inference<a class="headerlink" href="#ski-inference" title="Permalink to this headline">#</a></h2>
+<h3>SKI Inference<a class="headerlink" href="#ski-inference" title="Permalink to this headline">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
 \log p(\mathbf{y}|\mathbf{X},\boldsymbol{\theta}) \approx - \frac{1}{2} \log \left|\det \tilde{\mathbf{K}}_{\mathbf{XX}} + \sigma^2 \mathbf{I}\right| - \frac{1}{2}(\mathbf{y} - \boldsymbol{m}(\mathbf{X}))\left( \tilde{\mathbf{K}}_{\mathbf{XX}} + \sigma^2 \mathbf{I} \right)^{-1} -\frac{N}{2} \log 2\pi
 \]</div>
 </section>
 <section id="derivations">
-<h2>Derivations<a class="headerlink" href="#derivations" title="Permalink to this headline">#</a></h2>
+<h3>Derivations<a class="headerlink" href="#derivations" title="Permalink to this headline">#</a></h3>
 <section id="predictive-mean">
-<h3>Predictive Mean<a class="headerlink" href="#predictive-mean" title="Permalink to this headline">#</a></h3>
+<h4>Predictive Mean<a class="headerlink" href="#predictive-mean" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[
 \begin{aligned}
@@ -1436,6 +1431,145 @@ $<span class="math notranslate nohighlight">\(
 </ul>
 </section>
 </section>
+</section>
+<section id="regression">
+<h2>Regression<a class="headerlink" href="#regression" title="Permalink to this headline">#</a></h2>
+<p>Let’s assume we have <span class="math notranslate nohighlight">\(N\)</span> input data points with <span class="math notranslate nohighlight">\(D\)</span> dimensions, <span class="math notranslate nohighlight">\(\mathbf{X} = \{\mathbf{x}_i\}^N_{i=1} \in \mathbb{R}^{N \times D}\)</span> and noisy outputs, <span class="math notranslate nohighlight">\(\mathbf{y} = \{ y_i \}^{N}_{i=1} \in \mathbb{R}^{N}\)</span>. We want to compute the predictive distribution of <span class="math notranslate nohighlight">\(y_*\)</span> at a test location <span class="math notranslate nohighlight">\(\mathbf{x}_*\)</span>. So:</p>
+<div class="math notranslate nohighlight">
+\[
+y_i = f(\mathbf{x}_i) + \epsilon_i
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(f\)</span> is an unknown latent function that is corrupted by Gaussian observation noise <span class="math notranslate nohighlight">\(\epsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span>.</p>
+<section id="gaussian-process">
+<h3>Gaussian Process<a class="headerlink" href="#gaussian-process" title="Permalink to this headline">#</a></h3>
+<p>A Gaussian process is a probability distribution over functions. It places a non-parametric Bayesian model which places a GP prior over a latent function <span class="math notranslate nohighlight">\(f\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+f(\mathbf{x}) \sim \mathcal{GP}\left( m(\mathbf{x}), k(\mathbf{x},\mathbf{x}') \right).
+\]</div>
+<p>where we see it is characterized by a mean function, <span class="math notranslate nohighlight">\(m(\mathbf{x})\)</span> and kernel function <span class="math notranslate nohighlight">\(k(\mathbf{x,x}')\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+m(\mathbf{x}) &amp;= \mathbb{E}[f(\mathbf{x})] \\
+k(\mathbf{x,x}') &amp;= \mathbb{E}\left[ (f(\mathbf{x}) - m(\mathbf{x}))(f(\mathbf{x}') - m(\mathbf{x}))  \right]
+\end{aligned}
+\end{split}\]</div>
+<p>The mean function <span class="math notranslate nohighlight">\(m(\mathbf{x})\)</span> is typically zero (for easier computations) and the kernel function typically characterizes the smoothness, scale and … of the GP. Given the training data <span class="math notranslate nohighlight">\(\mathcal{D}=\{\mathbf{X},\mathbf{y}\}\)</span>,</p>
+<p>mean function GP prior, <span class="math notranslate nohighlight">\(m_\mathcal{GP}\)</span>, (typically zero) and a covariance function <span class="math notranslate nohighlight">\(k(\mathbf{x}, \mathbf{x}')\)</span> on <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<p><strong>Prior</strong></p>
+<p><strong>Likelihood</strong> A GP regression model assumes that the outputs can be modeled as</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{y}|f, \mathbf{X}) \sim \mathcal{N}(y|f, \sigma_y^2\mathbf{I})
+\]</div>
+<p><strong>Posterior</strong></p>
+<hr class="docutils" />
+<p>We can obtain a marginal likelihood (model evidence) since any finite set of GPs follows a multivariate Gaussian distribution</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{y}|\theta) = \int p(\mathbf{y}|f)p(f)df = \mathcal{N}(\mathbf{y}|m_\phi, \mathbf{K}_{GP})
+\]</div>
+<p>In the simple model (conjugate case due to the Gaussian likelihood), the posterior over <span class="math notranslate nohighlight">\(f, p(f|y)\)</span> can be computed analytically.</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{y}|\theta) = \mathcal{N}(\mathbf{y}|m_\phi, \mathbf{K}_{GP})
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{K}_{GP}=\mathbf{K}_{ff}+ \sigma^2 \mathbf{I}\)</span> and <span class="math notranslate nohighlight">\(\theta\)</span> comprises of the hyperparameters found on the mean function and covariance function. We would then maximize the hyperparameters <span class="math notranslate nohighlight">\(\theta\)</span> via, log marginal-likelihood (see below).</p>
+<p>The prediction of <span class="math notranslate nohighlight">\(y_*\)</span> for a test point <span class="math notranslate nohighlight">\(\mathbf{x}_*\)</span> is what we’re really interested in. We can consider the joint distribution of our training data, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> and test data, <span class="math notranslate nohighlight">\(y_*\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{bmatrix}
+\mathbf{y} \\
+y_*
+\end{bmatrix} \sim
+\mathcal{N}\left(
+\begin{bmatrix} 
+    \mathbf{K}_{GP} &amp; k_*^\top\\
+    k_* &amp; k_{**}+\sigma^2
+\end{bmatrix}   \right)
+\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(k_{*}=\left[ k(\mathbf{x}_1, \mathbf{x}_*), \ldots, k(\mathbf{x}_N, \mathbf{x}_*)  \right]^\top\)</span> is the projection kernel and <span class="math notranslate nohighlight">\(k_{**}=k(\mathbf{x}_*, \mathbf{x}_*)\)</span> is the test kernel. By way of normally distributed variables, we can obtain the predictive distribution of <span class="math notranslate nohighlight">\(y_*\)</span> conditioned on the training data <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+p(y_*|\mathbf{y}) = \mathcal{N}(\mu_\mathcal{GP}, \sigma^2_\mathcal{GP})
+\]</div>
+<p>and subsequently closed-form predictive mean and variance equations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mu_\mathcal{GP}(\mathbf{x}_*) &amp;= k_{*}^\top \mathbf{K}_{GP}^{-1} \mathbf{y} = k_{*}^\top \alpha  \\
+\sigma^2_\mathcal{GP}(\mathbf{x}_*) &amp;= \sigma^2 + k_{**} - k_{*}^\top \mathbf{K}_{GP}^{-1}k_{*}
+\end{aligned}
+\end{split}\]</div>
+</section>
+<section id="inference">
+<h3>Inference<a class="headerlink" href="#inference" title="Permalink to this headline">#</a></h3>
+<p>The covariance function <span class="math notranslate nohighlight">\(k(\mathbf{x}, \mathbf{x}
+)\)</span> depends on hyperparameters are usually learned by maximizing the log marginal likelihood.</p>
+<div class="math notranslate nohighlight">
+\[
+\theta^* = \underset{\theta}{\text{argmax}} \log p(\mathbf{y}|\mathbf{X},\theta) = \log \mathcal{N}(\mathbf{y}; 0, \mathbf{K}_\mathcal{GP})
+\]</div>
+<p>Using the log pdf of a multivariate distribution, we have</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\log \mathcal{N}(\mathbf{y}; 0, \mathbf{K}_\mathcal{GP}) &amp;= - \frac{1}{2} \mathbf{y}^\top \mathbf{K}_\mathcal{GP}^{-1}\mathbf{y} - \frac{1}{2} \log \left| \mathbf{K}_\mathcal{GP} \right| - \frac{N}{2} \log 2 \pi
+\end{aligned}
+\]</div>
+<p>This optimization is done by differentiating the above equation with respect to the hyperparameters. This maximization automatically embodies Occam’s razor as it is a trade-off between the model complexity and overfitting. Typically we do the Cholesky decomposition to efficiently calculate the inversion and determinant measures.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\log p(\mathbf{y}) &amp;= - \frac{1}{2} \mathbf{y}^\top \mathbf{K}_\mathcal{GP}^{-1}\mathbf{y} - \frac{1}{2} \log \left| \mathbf{K}_\mathcal{GP} \right| - \frac{N}{2} \log 2 \pi \\
+&amp;= -\frac{1}{2} \||\mathbf{L}^{-1}\mathbf{y}||^2  - \sum_i\log \mathbf{L}_{ii} - \frac{N}{2} \log 2 \pi
+\end{aligned}
+\end{split}\]</div>
+<p>where the <span class="math notranslate nohighlight">\(\mathbf{L}\)</span> is the Cholesky decomposition <span class="math notranslate nohighlight">\(\mathbf{L}= \text{chol}(\mathbf{K}_\mathcal{GP})\)</span>. This gives us a computational complexity of <span class="math notranslate nohighlight">\(\mathcal{O}(N^3 + N^2 + N)\)</span> which is overal <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span>. So this GPR method is really only suited for ~2K-5K problems maximum.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="kernel-functions">
+<h2>Kernel Functions<a class="headerlink" href="#kernel-functions" title="Permalink to this headline">#</a></h2>
+<p><strong>Composition Kernels</strong>. Kernels can be combined using sums and products to obtain more expressive formations. Additive kernels (<strong>cite</strong>: Duvenaud)</p>
+<p><strong>Input Warping</strong>. This is also the choice for many kernel methods where another model is used instead.</p>
+</section>
+<hr class="docutils" />
+<section id="strengths-and-limitations">
+<h2>Strengths and Limitations<a class="headerlink" href="#strengths-and-limitations" title="Permalink to this headline">#</a></h2>
+<section id="limitations">
+<h3>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">#</a></h3>
+<blockquote class="epigraph">
+<div><p>“It is important to keep in mind that Gaussian processes are not appropriate priors for all problems”.</p>
+<p class="attribution">—Neal, 1998</p>
+</div></blockquote>
+<p>It is important to note that although the GP algorithm is one of the most trusted and reliable algorithms, it is not always the best algorithm to use for all problems. Below we mention a few drawbacks that the standard GP algorithm has along with some of the standard approaches to overcoming these drawbacks.</p>
+<p><strong>Gaussian Marginals</strong>: GPs have problems modeling heavy-tailed, asymmetric or multi-modal marginal distributions. There are some methods that change the likelihood so that it is heavy tailed~\citep{GPTSTUDENT2011,GPTSTUDENT2014} but this would remove the conjugacy of the likelihood term which would incur difficulties during fitting. Deep GPs and latent covariate models are an improvement to this limitation. A very popular approach is to construct a fully Bayesian model. This entails hyperpriors over the kernel parameters and Monte carlo sampling methods such as Gibbs sampling~\citep{GPGIBBS08}, slice sampling~\citep{GPSLICE2010}, Hamiltonian Monte Carlo~\citep{GPHMC2018}, and Sequential Monte Carlo~\citep{GPSMC15}. These techniques will capture more complex distributions. With the advent of better software~\citep{PYMC16,NUMPYRO2019} and more advanced sampling techniques like a differentiable iterative NUTS implementation~\citep{NUMPYRO2019}, the usefulness of MC schemes is resurfacing.</p>
+<p><strong>Limited Number of Moments</strong>. This is related to the previous limitation: the idea that an entire function can be captured in terms of two moments: a mean and a covariance. There are some relationships which are difficult to capture without an adequate description, e.g. discontinuities~\citep{Neal96} and non-stationary processes, and thus is a limitation of the GP priors we choose. The advent of warping the inputs or outputs of a GP has becoming a very popular technique to deal with the limited expressivity of kernels. Input warping is popular in methods such as deep kernel learning whereby a Neural network is used to capture the features and are used as inputs to the kernel function output warping is common in chained~\citep{GPCHAINED2016} and heteroscedastic methods where the function output is warped by another GP to capture the noise model of the data. Deep Gaussian processes~\citep{Damianou2015} can be thought of input and output warping methods due the multi-layer composition of function inputs and outputs.</p>
+<p><strong>Linearity of Predictive Mean</strong>. The predictive mean of a GP is linear to the observations, i.e. <span class="math notranslate nohighlight">\(\mu_{GP}=\mathbf{K}\alpha\)</span>. This essentially is a smoother which can be very powerful but also will miss key features. If there is some complex structured embedded within the dataset, then a GP model can never really capture this irregardless of the covariance function found.</p>
+<p><strong>Predictive Covariance</strong>. The GP predictive variance is a function of the training inputs and it is independent of the observed inputs. This is important if the input data has some information which could be used to help determine the regions of uncertainty, e.g. the gradient. An example would be data on a spatial grid whereby some regions points would have more certainty than others which could be obtained by knowing the input location and not necessarily the expected output.</p>
+</section>
+</section>
+<section id="conjugate-case">
+<h2>Conjugate Case<a class="headerlink" href="#conjugate-case" title="Permalink to this headline">#</a></h2>
+<hr class="docutils" />
+<section id="id2">
+<h3>Inference<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h3>
+<p>After specifying the prior distributions, we need to infer the posterior distributions of the parameters <span class="math notranslate nohighlight">\(\theta,\phi,f\)</span>.</p>
+<p>We represent this as the</p>
+<p>We can optimize this function using the negative log-likelihood of <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\Theta) = \frac{1}{2} \left| \mathbf{K}_\mathcal{GP}+ \sigma^2 \mathbf{I} \right| + \frac{1}{2}\mathbf{y}^\top
+\]</div>
+</section>
+</section>
+<section id="non-conjugate-case">
+<h2>Non-Conjugate Case<a class="headerlink" href="#non-conjugate-case" title="Permalink to this headline">#</a></h2>
+</section>
+<div class="toctree-wrapper compound">
+</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1465,6 +1599,20 @@ $<span class="math notranslate nohighlight">\(
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../kernels/mmd.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Maximum Mean Discrepancy (MMD)</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="gps.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Basics</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>

@@ -51,9 +51,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Lecture I - Iterative Gaussianization" href="lecture_1_ig.html" />
+    <link rel="next" title="Linear Layers" href="linear.html" />
     <link rel="prev" title="Experiment - RBIG Sample Consistency" href="../info_theory/experiments/rbig_sample_consistency.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -220,11 +222,6 @@ const thebe_selector_output = ".output, .cell_output"
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
-       GP from Scratch
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
        Gaussianization Flows
       </a>
@@ -268,33 +265,16 @@ const thebe_selector_output = ".output, .cell_output"
 </p>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../concepts/notation.html">
-   Notation
+  <a class="reference internal" href="../concepts/uncertainty.html">
+   Modeling Uncertainty
   </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../data/overview.html">
-   Data
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../data/representation.html">
-     Representation
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../bayesian/overview.html">
    Bayesian
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -335,8 +315,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../concepts/overview.html">
    Sleeper Concepts
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-  <label for="toctree-checkbox-7">
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -377,8 +357,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../kernels/overview.html">
    Kernel Methods
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-  <label for="toctree-checkbox-8">
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -388,96 +368,155 @@ const thebe_selector_output = ".output, .cell_output"
      Kernel Derivatives
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/rv.html">
+     RV Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/congruence_coeff.html">
+     Congruence Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/hsic.html">
+     HSIC
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/mmd.html">
+     Maximum Mean Discrepancy (MMD)
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../egps/overview.html">
-   Uncertain Gaussian Processes
+  <a class="reference internal" href="../gps/intro.html">
+   Gaussian Processes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/predictions.html">
-     Uncertain Predictions
+    <a class="reference internal" href="../gps/gps.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/gauss_approx.html">
-     Gaussian Approximation
+    <a class="reference internal" href="../gps/literature.html">
+     Literature Review
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/mcmc.html">
-     Monte Carlo Sampling
+    <a class="reference internal" href="../gps/cg.html">
+     Conjugate Gradients
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/taylor.html">
-     Linearization (Taylor Expansions)
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/moment_matching.html">
-     Moment Matching
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/bgplvm.html">
-     Bayesian GPLVM
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/error_prop.html">
-     Error Propagation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/next.html">
-     Next Steps
+    <a class="reference internal" href="../gps/sgps.html">
+     Sparse Gaussian Processes
     </a>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../egps/experiments.html">
-     Notebooks
+    <a class="reference internal" href="../gps/algorithms.html">
+     Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
-    <label for="toctree-checkbox-10">
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
      <i class="fas fa-chevron-down">
      </i>
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../egps/notebooks/gpytorch_egp_taylor.html">
-       Gaussian Process Gradients with GPyTorch
+      <a class="reference internal" href="../gps/gpr_code.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../gps/sgp_code.html">
+       Sparse GP From Scratch
       </a>
      </li>
     </ul>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/overview.html">
+     Input Uncertainty in GPs
+    </a>
+   </li>
   </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../info_theory/similarity.html">
+   Similarity
+  </a>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../info_theory/overview.html">
    Information Theory
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
-  <label for="toctree-checkbox-11">
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/histogram.html">
-     Entropy Estimator - Histogram
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/measures.html">
+     Measures
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+    <label for="toctree-checkbox-11">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/information.html">
+       Information Theory
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/entropy.html">
+       Entropy &amp; Relative Entropy
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/mutual_info.html">
+       Mutual Information and Total Correlation
+      </a>
+     </li>
+    </ul>
    </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
-     Experiment - RBIG Sample Consistency
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/estimators.html">
+     Information Theory Measures
     </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/classic.html">
+       Classic Methods
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/histogram.html">
+       Entropy Estimator - Histogram
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+       Experiment - RBIG Sample Consistency
+      </a>
+     </li>
+    </ul>
    </li>
   </ul>
  </li>
@@ -485,18 +524,33 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="current reference internal" href="#">
    Normalizing Flows
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
-  <label for="toctree-checkbox-12">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+  <label for="toctree-checkbox-13">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="linear.html">
+     Linear Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="coupling_layers.html">
+     Coupling Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="conditional.html">
+     Conditional Normalizing Flows
+    </a>
+   </li>
    <li class="toctree-l2 has-children">
     <a class="reference internal" href="lecture_1_ig.html">
      Lecture I - Iterative Gaussianization
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
-    <label for="toctree-checkbox-13">
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -522,8 +576,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="lecture_2_gf.html">
      Lecture II - Gaussianization Flows
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
-    <label for="toctree-checkbox-14">
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -551,8 +605,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../inr/overview.html">
    Implicit Neural Representations
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
-  <label for="toctree-checkbox-15">
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -573,8 +627,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../data_assimilation/overview.html">
    Data Assimilation
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
-  <label for="toctree-checkbox-16">
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -613,8 +667,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../data_assimilation/algorithms.html">
      Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-    <label for="toctree-checkbox-17">
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -667,8 +721,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../misc/overview.html">
    Miscellaneous Notes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-  <label for="toctree-checkbox-18">
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -868,6 +922,43 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jacobian-form">
+   Jacobian Form
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#diagonal">
+     Diagonal
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#low-rank">
+     Low Rank
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#lower-triangular">
+     Lower Triangular
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#structured">
+     Structured
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#free-form">
+     Free-Form
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-do-they-compare">
+     How do they compare?
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#tutorials">
    Tutorials
   </a>
@@ -892,6 +983,43 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jacobian-form">
+   Jacobian Form
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#diagonal">
+     Diagonal
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#low-rank">
+     Low Rank
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#lower-triangular">
+     Lower Triangular
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#structured">
+     Structured
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#free-form">
+     Free-Form
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-do-they-compare">
+     How do they compare?
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#tutorials">
    Tutorials
   </a>
@@ -908,7 +1036,68 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="normalizing-flows">
 <h1>Normalizing Flows<a class="headerlink" href="#normalizing-flows" title="Permalink to this headline">#</a></h1>
-<p>Some lecture notes on normalizing Flows.</p>
+<p>Let <span class="math notranslate nohighlight">\(\mathbf{Z}\in \mathbb{R}^D\)</span> be a random variable with a tractable PDF: <span class="math notranslate nohighlight">\(p_{\mathbf{z}}: \mathbb{R}^D \rightarrow \mathbb{R}^D\)</span>. The objective is to find some invertible function <span class="math notranslate nohighlight">\(\boldsymbol{f}_{\boldsymbol \theta}\)</span> such that <span class="math notranslate nohighlight">\(\boldsymbol{f}_{\boldsymbol \theta}(\mathbf{x})=\mathbf{z}\)</span>. This function is parameterized by <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> which allows us to learn the transformation. Using the change-of-variables formula, we can compute the density of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+    p_{\boldsymbol \theta}(\mathbf{x}) = p(\boldsymbol{f}_\theta(\mathbf{x})) \left| \boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}_{\boldsymbol \theta}(\mathbf{x})\right|
+\end{equation}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\nabla}_\mathbf{x}\)</span> is the Jacobian of <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span> and <span class="math notranslate nohighlight">\(|\cdot|\)</span> is the absolute determinant. Intuitively, this <span class="math notranslate nohighlight">\(|\cdot|\)</span> represents the change in volume of the transformation. <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span> is the normalizing direction as it goes from a more complicated data distribution to a simpler base distribution <span class="math notranslate nohighlight">\(p_{\mathbf{z}}\)</span>. The inverse function of <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, i.e. <span class="math notranslate nohighlight">\(\boldsymbol{f}^{-1}\)</span>, is the generative direction as it allows us to sample from <span class="math notranslate nohighlight">\(\mathbf{z}\)</span> which we can propagate the samples from the latent space through the function <span class="math notranslate nohighlight">\(\boldsymbol{f}^{-1}\)</span> to get samples in <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
+<p>Now the challenge is to design a function <span class="math notranslate nohighlight">\(\mathbf{f}(\cdot)\)</span> such that we can learn the mapping from our data to the latent domain. In the case of high-dimensional data, it is nearly impossible to define a transformation expressive enough such that one transformation is enough. Analogous to standard neural networks, we can stack together multiple compositions of simpler arbitrary functions to create more expressive transformations, e.g. figure~\ref{fig:c4.4-flows}. As <span class="math notranslate nohighlight">\(\mathbf{f}\)</span> is invertible, we can have <span class="math notranslate nohighlight">\(\mathbf{f}=\mathbf{f}_L \circ \ldots \circ \mathbf{f}_1\)</span> which would result in a more expressive transformation. Likewise the inverse is possible <span class="math notranslate nohighlight">\(\mathbf{f}^{-1} = \mathbf{f}^{-1}_1 \circ \ldots \circ \mathbf{f}_L^{-1}\)</span>. The determinant of the Jacobian in this case is simply the product of all of the transformations <span class="math notranslate nohighlight">\(\mathbf{f}_\ell\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+    \left|\boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}(\mathbf{x})\right| = \prod_{\ell=1}^L \left| \boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}_\ell(\mathbf{x}) \right|,
+\end{equation}
+\]</div>
+<p>which gives us more expressivity to transform arbitrarily complex distributions to simpler distributions. Given the correctly chosen set of <span class="math notranslate nohighlight">\(\boldsymbol{f}(\cdot)\)</span>, this would be sufficient to estimate any arbitrary distribution~\citep{Bogachev2005,JainiKYB20,Meng2020}.</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+    \mathcal{L}(\boldsymbol{\theta}) &amp;= \arg\min_{\boldsymbol{\theta}} \mathbb{E}_\mathbf{x} \left[ -\log p_{\boldsymbol{\theta}}(\mathbf{x}) \right] = \mathbb{E}_\mathbf{x} \left[ -\log p(\boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x})) - \log \left| \boldsymbol{\nabla}_{\mathbf{x}} \boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x})\right| \right].
+\end{aligned}
+\]</div>
+<p>The standard procedure is to estimate this using Monte Carlo sampling using stochastic gradients. Given the need to constantly evaluate the Jacobian during training, this becomes a bottleneck of this procedure. We want a transformation <span class="math notranslate nohighlight">\(\boldsymbol{f}(·)\)</span> that is universal i.e. it can approximate any density function arbitrarily well. Hence, the community has put a lot of effort into constructing Jacobian matrices that are easy and cheap to compute yet still expressive enough to learn the complex distribution.</p>
+<hr class="docutils" />
+<section id="jacobian-form">
+<h2>Jacobian Form<a class="headerlink" href="#jacobian-form" title="Permalink to this headline">#</a></h2>
+<p>As alluded to in the previous section, the bottleneck during the training procedure is evaluating the determinant of the Jacobian.</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}
+\log p(\mathbf{x}) =
+\log p\left(\boldsymbol{f}_{\theta}(\mathbf{x})\right)+
+\log \; \underbrace{\left| \boldsymbol{\nabla}_{\mathbf{x}} \boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x})\right| }_{\color{black}{\text{Bottleneck}}}.
+\end{equation}
+\]</div>
+<p>This is an area of intensive research and a really effective way to break down each of the methods~\citep{Kobyzev2020, PapamakariosNFs}. There are many different (and complicated) frameworks but almost all of them can be put into different categories for how the Jacobian is constructed. A naive full Jacobian matrix is of order <span class="math notranslate nohighlight">\(\mathcal{O}(D^3)\)</span>. This is fine with simple datasets but this can be prohibitive with datasets with more dimensions. A diagonal Jacobian is <span class="math notranslate nohighlight">\(\mathcal{O}(D)\)</span> to evaluate but it lacks the expressivity due to its lack of cross-dimensional considerations. There are also hybrid methods in between these extremes. %, each constructed in a different way.
+Figure~\ref{fig:c4-jacobian} gives a visual reference for the differences. Below we list and briefly highlight each of the Jacobians found in the literature. For a more in-depth breakdown, please see the NF survey literature~\citep{PapamakariosNFs, KobyzevNFs}.</p>
+<section id="diagonal">
+<h3>Diagonal<a class="headerlink" href="#diagonal" title="Permalink to this headline">#</a></h3>
+<p>This is known in the NF community as \textit{element-wise} transformations. A function <span class="math notranslate nohighlight">\(f(x)\)</span> is applied to each of the features of the dataset. This is analogous to the non-linear layer for neural networks. These Jacobian matrices incorporate the least structure as every transformation has no mixing of variables thus it cannot model correlations between dimensions (figure~\ref{fig:c4-jacobian} (a)). While it is the least expressive transformation, it is the cheapest and simplest to compute as well, mainly because the determinant of a diagonal matrix is the sum of its diagonal entries. Originally, the NF community used the invertible Leaky ReLU~\citep{NFLEAKYRELU2015} in order to incorporate this non-linearity into Flow models. More recently, there has been a lot of success in Mixture of Gaussian CDF transformations~\citep{NFFLOWPP2019} as well as spline transformations~\citep{NFSPLINE2019,NFLRSPLINE2020}. Both of these methods have shown SOTA results. The Gaussianization Flow~\citep{MengGaussFlow} utilizes the Mixture of Logistics (similar to the Mixture of Gaussians) as one of the layers and it has shown competitive results. Because these transformations cannot model correlations between dimensions, they are often coupled with other transformations which do have cross-correlation considerations.</p>
+</section>
+<section id="low-rank">
+<h3>Low Rank<a class="headerlink" href="#low-rank" title="Permalink to this headline">#</a></h3>
+<p>These are Jacobian matrices whose determinant can be easily computed due to some transformation or property which often result in low-rank matrices (figure~\ref{fig:c4-jacobian} (b)). Some simple examples include orthogonal transformations, e.g. PLU flows~\citep{NFORTHOAUTO2018}, QR flows~\citep{NFORTHO2019}, Expontential &amp; Cayley map, and Householder transformations~\citep{NFHOUSE16}. The Jacobian of these transformations typically have a determinant of exactly <span class="math notranslate nohighlight">\(\pm 1\)</span>. However, these are the least expressive transformations even when multiple transformations are composed. Thus they are not typically used alone and instead are often coupled with other transformations~\citep{NFORTHO2019,NFSYLVESTER18}. Some non-linear transformations, like planar flows~\citep{RezendeM15} and radial flows~\citep{NFTABAK2013}, utilize the matrix determinant lemma~\citep{RezendeM15} which allows for more efficient computation of the determinant of the Jacobian; often <span class="math notranslate nohighlight">\(\mathcal{O}(D)\)</span> instead of <span class="math notranslate nohighlight">\(\mathcal{O}(D^3)\)</span>. Sylvester flows~\citep{NFSYLVESTER18} extend planar flows to allow for more expressivity by doing an additional matrix multiplications parameterized by an orthogonal transformation. One disadvantage of these low-rank transformations is that they do not have analytical inverse transformations. So many times, these non-linear affine flows are used for variational inference~\citep{RezendeM15} and not for standard generative models.</p>
+</section>
+<section id="lower-triangular">
+<h3>Lower Triangular<a class="headerlink" href="#lower-triangular" title="Permalink to this headline">#</a></h3>
+<p>Another very popular class of models which feature more general neural network architectures are autoregressive functions (AFs) which are constructed by factorizing over the dimension. This results in a lower triangular structure (figure~\ref{fig:c4-jacobian} (c)) which is cheap determinant calculation <span class="math notranslate nohighlight">\(\mathcal{O}(D)\)</span>. Some noteable examples include the Invertible AF (IAF)~\citep{NFIAF2016}, the Neural AF (NAF)~\citep{NFNAF2018}, the Masked AF (MAF)~\citep{NFMAF2017}, and the Block NAF (BNAF)~\citep{NFBAF2019}. These methods are very flexible and allow the user to use arbitrary neural network architectures within the algorithm which help with expressivity. Both the forward direction <span class="math notranslate nohighlight">\(\boldsymbol{f}_\theta\)</span> and the inverse direction <span class="math notranslate nohighlight">\(\boldsymbol{f}_\theta\)</span> are theoretically equivalent given some conditions~\citep{NFMAF2017}, but one has to be conscious about the application because AFs are dimension sensitive. For example, for density estimation, the standard AF methods are applicable~\citep{NFMAF2017,NFNAF2018,NFBAF2019} whereas for sampling, one should use the inverse variant~\citep{NFIAF2016}.</p>
+</section>
+<section id="structured">
+<h3>Structured<a class="headerlink" href="#structured" title="Permalink to this headline">#</a></h3>
+<p>These are by far the most popular forms of normalizing flows because they are fairly flexible yet inexpensive to compute. They work by partitioning the transformations such that they are only applied on a subset of dimensions. This results in a structured triangular Jacobian with a block sparse-like structure (figure~\ref{fig:c4-jacobian} (d)). Because of the structure, the determinant of the Jacobian is as cost efficient as the diagonal Jacobian, <span class="math notranslate nohighlight">\(\mathcal{O}(D)\)</span>. Some notable examples include the NICE algorithm~\citep{NFNICE14} and its successor RealNVP~\citep{NFREALNVP16}. Like AFs, one can use any parameterized NN architecture for the block-regions and these transformations do allow for more feature dependencies to be capture across dimensions yet they do not increase the computational complexity.  It also includes one of the most popular methods for image GLOW~\citep{NFGLOW18}, which features 1x1 Convolutional blocks.</p>
+</section>
+<section id="free-form">
+<h3>Free-Form<a class="headerlink" href="#free-form" title="Permalink to this headline">#</a></h3>
+<p>The final class of methods features free-form transformations. There is no restriction and thereby is the most expressive transformation in the literature (figure~\ref{fig:c4-jacobian} (e)). Residual Flows (RFs)~\citep{NFRESFLOW19,NFRESFLOW219} are based on residual neural network architectures. These have a very expensive Jacobian to calculate but they use a biased stochastic estimate~\citep{NFRESFLOW19} and an unbiased stochastic estimate via a power series approximation~\citep{NFRESFLOW219}. There are also a class of continuous-time flows~\citep{NFCTF19} which are based on the neural ODEs literature~\citep{NFNODE18}. All free-form methods tend to be more expensive (even with the estimation tricks) and a lot more complicated to implement. But of course the trade-off is that you’ll have more expressive Jacobians, and thus will need a lot less layers to effectively learn the probability density function of a difficult dataset.</p>
+</section>
+<section id="how-do-they-compare">
+<h3>How do they compare?<a class="headerlink" href="#how-do-they-compare" title="Permalink to this headline">#</a></h3>
+<p>As seen in the above section, there is an abundance of methods available for the NF literature. It is, however, very difficult to compare each of them because of the many combinations one could choose. In general, the best method it depends on the task at hand. For tabular datasets (e.g. POWER, GAS, HEPMASS, etc) in the latest review survey~\citep{KobyzevNFs}, the Neural Autoregressive Flow (NAF) algorithm~\citep{NFNAF2018} and the AF with a Spline coupling layer does the best. However, the recent Gaussianization Flows paper~\citep{MengGaussFlow} (which was not included in the survey) shows substantial improvement for their method over some of the tabular datasets. For the standard image datasets, the Flow++ model~\citep{NFFLOWPP2019} (which is a make up of convolutions and CDF Mixture Layers) performs substantially better than the other methods. Surprisingly, the free-form methods are not the best despite the fact that they are the most expressive and flexible. Instead, it appears that a combination of simpler transformations and element-wise transformations like splines or cumulative distribution function (CDF) mixtures seem to perform the best for the standard datasets.</p>
+</section>
+</section>
 <hr class="docutils" />
 <section id="tutorials">
 <h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">#</a></h2>
@@ -958,10 +1147,10 @@ title="Print to PDF"
             <p class="prev-next-title">Experiment - RBIG Sample Consistency</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="lecture_1_ig.html" title="next page">
+    <a class='right-next' id="next-link" href="linear.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Lecture I - Iterative Gaussianization</p>
+        <p class="prev-next-title">Linear Layers</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

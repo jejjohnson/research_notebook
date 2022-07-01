@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Uncertain Gaussian Processes &#8212; Research Notebook</title>
+    <title>Input Uncertainty in GPs &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -51,10 +51,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Uncertain Predictions" href="predictions.html" />
-    <link rel="prev" title="Kernel Derivatives" href="../kernels/kernel_derivatives.html" />
+    <link rel="next" title="Similarity" href="../info_theory/similarity.html" />
+    <link rel="prev" title="Sparse GP From Scratch" href="../gps/sgp_code.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -220,11 +222,6 @@ const thebe_selector_output = ".output, .cell_output"
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
-       GP from Scratch
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
        Gaussianization Flows
       </a>
@@ -268,33 +265,16 @@ const thebe_selector_output = ".output, .cell_output"
 </p>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../concepts/notation.html">
-   Notation
+  <a class="reference internal" href="../concepts/uncertainty.html">
+   Modeling Uncertainty
   </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../data/overview.html">
-   Data
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../data/representation.html">
-     Representation
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../bayesian/overview.html">
    Bayesian
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -335,8 +315,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../concepts/overview.html">
    Sleeper Concepts
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-  <label for="toctree-checkbox-7">
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -377,8 +357,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../kernels/overview.html">
    Kernel Methods
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-  <label for="toctree-checkbox-8">
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -388,71 +368,152 @@ const thebe_selector_output = ".output, .cell_output"
      Kernel Derivatives
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/rv.html">
+     RV Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/congruence_coeff.html">
+     Congruence Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/hsic.html">
+     HSIC
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/mmd.html">
+     Maximum Mean Discrepancy (MMD)
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 current active has-children">
-  <a class="current reference internal" href="#">
-   Uncertain Gaussian Processes
+  <a class="reference internal" href="../gps/intro.html">
+   Gaussian Processes
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="predictions.html">
-     Uncertain Predictions
+    <a class="reference internal" href="../gps/gps.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="gauss_approx.html">
-     Gaussian Approximation
+    <a class="reference internal" href="../gps/literature.html">
+     Literature Review
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="mcmc.html">
-     Monte Carlo Sampling
+    <a class="reference internal" href="../gps/cg.html">
+     Conjugate Gradients
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="taylor.html">
-     Linearization (Taylor Expansions)
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="moment_matching.html">
-     Moment Matching
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="bgplvm.html">
-     Bayesian GPLVM
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="error_prop.html">
-     Error Propagation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="next.html">
-     Next Steps
+    <a class="reference internal" href="../gps/sgps.html">
+     Sparse Gaussian Processes
     </a>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="experiments.html">
-     Notebooks
+    <a class="reference internal" href="../gps/algorithms.html">
+     Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
-    <label for="toctree-checkbox-10">
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
      <i class="fas fa-chevron-down">
      </i>
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="notebooks/gpytorch_egp_taylor.html">
-       Gaussian Process Gradients with GPyTorch
+      <a class="reference internal" href="../gps/gpr_code.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../gps/sgp_code.html">
+       Sparse GP From Scratch
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Input Uncertainty in GPs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../info_theory/similarity.html">
+   Similarity
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/measures.html">
+     Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+    <label for="toctree-checkbox-11">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/information.html">
+       Information Theory
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/entropy.html">
+       Entropy &amp; Relative Entropy
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/mutual_info.html">
+       Mutual Information and Total Correlation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/estimators.html">
+     Information Theory Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/classic.html">
+       Classic Methods
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/histogram.html">
+       Entropy Estimator - Histogram
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+       Experiment - RBIG Sample Consistency
       </a>
      </li>
     </ul>
@@ -460,43 +521,36 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../info_theory/overview.html">
-   Information Theory
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
-  <label for="toctree-checkbox-11">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/histogram.html">
-     Entropy Estimator - Histogram
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
-     Experiment - RBIG Sample Consistency
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
   <a class="reference internal" href="../normalizing_flows/overview.html">
    Normalizing Flows
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
-  <label for="toctree-checkbox-12">
+  <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+  <label for="toctree-checkbox-13">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/linear.html">
+     Linear Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/coupling_layers.html">
+     Coupling Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/conditional.html">
+     Conditional Normalizing Flows
+    </a>
+   </li>
    <li class="toctree-l2 has-children">
     <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
      Lecture I - Iterative Gaussianization
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
-    <label for="toctree-checkbox-13">
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -522,8 +576,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
      Lecture II - Gaussianization Flows
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
-    <label for="toctree-checkbox-14">
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -551,8 +605,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../inr/overview.html">
    Implicit Neural Representations
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
-  <label for="toctree-checkbox-15">
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -573,8 +627,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../data_assimilation/overview.html">
    Data Assimilation
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
-  <label for="toctree-checkbox-16">
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -613,8 +667,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../data_assimilation/algorithms.html">
      Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-    <label for="toctree-checkbox-17">
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -667,8 +721,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../misc/overview.html">
    Miscellaneous Notes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-  <label for="toctree-checkbox-18">
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -868,14 +922,153 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#uncertain-predictions">
-   Uncertain Predictions
+  <a class="reference internal nav-link" href="#history">
+   History
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#gps-w-training-data">
-   GPs w/ Training Data
+  <a class="reference internal nav-link" href="#predictions">
+   Predictions
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#monte-carlo">
+     Monte Carlo
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gaussian-approximation">
+   Gaussian Approximation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#taylor-expansion">
+     Taylor Expansion
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#moment-matching">
+     Moment Matching
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#toy-example">
+   Toy Example
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next Steps
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kernel-functions">
+     Kernel Functions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#heteroscedastic-likelihoods">
+     Heteroscedastic Likelihoods
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#latent-variables">
+     Latent Variables
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#connection-to-mm-methods">
+     Connection to MM Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#thoughts">
+   Thoughts
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#posterior-approximations">
+   Posterior Approximations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#post-training">
+     Post Training
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#monte-carlo-sampling">
+       Monte Carlo Sampling
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       Moment-Matching
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#during-training">
+     During-Training
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#distribution-kernels">
+       Distribution Kernels
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id4">
+       Latent Variables
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#latent-co-variate-models">
+       Latent Co-Variate Models
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#neural-networks">
+   Neural Networks
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#deep-gaussian-processes">
+   Deep Gaussian Processes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contribution-impact">
+   Contribution &amp; Impact
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusions">
+   Conclusions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#uncertain-predictions">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gps-w-training-data">
+     GPs w/ Training Data
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -886,7 +1079,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Uncertain Gaussian Processes</h1>
+                <h1>Input Uncertainty in GPs</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -897,14 +1090,153 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#uncertain-predictions">
-   Uncertain Predictions
+  <a class="reference internal nav-link" href="#history">
+   History
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#gps-w-training-data">
-   GPs w/ Training Data
+  <a class="reference internal nav-link" href="#predictions">
+   Predictions
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#monte-carlo">
+     Monte Carlo
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gaussian-approximation">
+   Gaussian Approximation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#taylor-expansion">
+     Taylor Expansion
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#moment-matching">
+     Moment Matching
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#toy-example">
+   Toy Example
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next Steps
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kernel-functions">
+     Kernel Functions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#heteroscedastic-likelihoods">
+     Heteroscedastic Likelihoods
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#latent-variables">
+     Latent Variables
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#connection-to-mm-methods">
+     Connection to MM Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#thoughts">
+   Thoughts
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#posterior-approximations">
+   Posterior Approximations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#post-training">
+     Post Training
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#monte-carlo-sampling">
+       Monte Carlo Sampling
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       Moment-Matching
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#during-training">
+     During-Training
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#distribution-kernels">
+       Distribution Kernels
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id4">
+       Latent Variables
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#latent-co-variate-models">
+       Latent Co-Variate Models
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#neural-networks">
+   Neural Networks
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#deep-gaussian-processes">
+   Deep Gaussian Processes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contribution-impact">
+   Contribution &amp; Impact
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusions">
+   Conclusions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#uncertain-predictions">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gps-w-training-data">
+     GPs w/ Training Data
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -916,26 +1248,313 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="uncertain-gaussian-processes">
-<h1>Uncertain Gaussian Processes<a class="headerlink" href="#uncertain-gaussian-processes" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="input-uncertainty-in-gps">
+<h1>Input Uncertainty in GPs<a class="headerlink" href="#input-uncertainty-in-gps" title="Permalink to this headline">#</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/drive/1dsHjk0n_0kZEBIB1vxkvs1KlvySxZ_5Z?usp=sharing">Notebook</a> to reproduce the plots.</p>
+<p>In real-world applications, we often need to consider uncertain inputs in our machine learning models. Every instrument we use to collect data will have some level of uncertainty and this is often explicitly available in certain datasets like observational products (cite: HSTAFR, FAPAR, etc) and  satellite datasets (cite: IASI). Alternatively, we could have inputs from from other models like a trained regressor which would also have uncertainty. Not including this information into our datasets can have adverse effects on our predictions and uncertainty as we are not actually propagating error through our model. So we should definitely take this information into consideration when choosing the appropriate model. In this first section, we will set up the problem and cover some of the methods literature found in the literature.</p>
+<hr class="docutils" />
+<section id="history">
+<h2>History<a class="headerlink" href="#history" title="Permalink to this headline">#</a></h2>
+<p>In traditional statistical models, accounting for uncertain inputs is known as error-in-variables (cite: Kendall &amp; Stuart, 1958) a form of linear regression. There were a few competing ways in the literature of the relationship of how the inputs could be described: 1) we observe a noise corrupted version of the inputs, 2) we observe the actual inputs and assume the noise is independent. With either method, it’s difficult to estimate the true inputs and model parameters. A deterministic approach was to use moment reconstruction (cite: Freedman et al 2004, Freedman et al., 2008) which is an idea similar to regression calibration (cite: Hardin et al, 2003). More Bayesian approaches were to (cite: Snoussi et al, 2002; Spiegelman et al., 2011) used an modified expectation maximization scheme and treated the inputs as hidden variables and (cite: Dellaportas and Stephens, 1995) used Gibbs sampling to perform inference.</p>
+<p>In other fields, there have been some attention in fields such as stochastic simulation (cite: Lam, 2016) and GP optimization schemes (cite: Wang et al 2019-GPOpt)</p>
+</section>
+<hr class="docutils" />
+<section id="predictions">
+<h2>Predictions<a class="headerlink" href="#predictions" title="Permalink to this headline">#</a></h2>
+<!-- 
+![](./pics/c3_megaplot.png) -->
+<figure class="align-default" id="c3-plot">
+<a class="reference internal image-reference" href="../../../_images/c3_megaplot.png"><img alt="../../../_images/c3_megaplot.png" src="../../../_images/c3_megaplot.png" style="height: 400px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">A demonstration showing how an uncertain input propagates through a non-linear GP function.</span><a class="headerlink" href="#c3-plot" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In Gaussian processes, the original formulation dictates that we assume there is some noise in the observations, <span class="math notranslate nohighlight">\(y\)</span> and that we observe the real inputs <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>. So we’ll see that this it is not trivial to modify this formulation to account for uncertain inputs. Let’s assume that we have a data set <span class="math notranslate nohighlight">\(\mathcal{D}=\{\mathbf{X}, \boldsymbol{y} \}\)</span>. In this case we assume the following relationship between our inputs, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, and outputs, <span class="math notranslate nohighlight">\(y\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+y_n &amp;= f(\mathbf{x}_n)+ \epsilon_y \\
+\epsilon_y &amp;\sim \mathcal{N}(0,\sigma_y^2)
+\end{aligned}
+\end{split}\]</div>
+<p>Let’s also assume that we have a standard GP model optimized and fitted to this data set. We’re not assuming noisy inputs during the training phase so we will use the standard log-likelihood maximization procedure. However, during the testing phase, we will assume that our inputs are noisy. For simplicity, we can assume our test data set is normally distributed with a mean <span class="math notranslate nohighlight">\(\mu_\mathbf{x}\)</span> and variance <span class="math notranslate nohighlight">\(\Sigma_\mathbf{x}\)</span>. So we will have:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_* \sim \mathcal{N}(\mu_\mathbf{x}, \Sigma_\mathbf{x}) \]</div>
+<p>or equivalently we can reparameterize it like so:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathbf{x}_* &amp;=\mu_\mathbf{x}+ \epsilon_\mathbf{x} \\
+\epsilon_\mathbf{x} &amp;\sim \mathcal{N}(0, \Sigma_\mathbf{x})
+\end{aligned}
+\end{split}\]</div>
+<p>If we consider the predictive distribution given by <span class="math notranslate nohighlight">\(p(f_*|\mathbf{x}_*, \mathcal{D})\)</span>,  we need to marginalize out the input distribution. So the full integral appears as follows.</p>
+<div class="math notranslate nohighlight">
+\[p(f_*|\mu_\mathbf{x}, \Sigma_\mathbf{x},\mathcal{D}) = \int p(f_*|\mathbf{x}_*,\mathcal{D})\;\mathcal{N}(\mathbf{x}_*|\mu_\mathbf{x},\Sigma_\mathbf{x})\; d\mathbf{x}_*\]</div>
+<p>If we use the GP formulation, we have a closed-form deterministic predictive distribution for <span class="math notranslate nohighlight">\(p(f_*|\mathbf{x}_*,\mathcal{D})\)</span>. Plugging this into the above equation gives us:</p>
+<div class="math notranslate nohighlight">
+\[p(f_*|\mu_\mathbf{x},\Sigma_\mathbf{x},\mathcal{D}) = \int \mathcal{N}\left(f_*|\mu_\mathcal{GP}(\mathbf{x}_*),\sigma^2_\mathcal{GP}(\mathbf{x}_*) \right) \; \mathcal{N}(\mathbf{x}_*|\mu_\mathbf{x}, \Sigma_\mathbf{x})\; d\mathbf{x}_*\]</div>
+<p>So this integral is intractable because if we consider the terms within the GP predictive mean and predictive variance, we will need to calculate the integral of an inverse kernel function, <span class="math notranslate nohighlight">\(\mathbf{K}_\mathcal{GP}^{-1}\)</span>. Below we outline some of the most popular methods found in the literature.</p>
+<hr class="docutils" />
+<section id="monte-carlo">
+<h3>Monte Carlo<a class="headerlink" href="#monte-carlo" title="Permalink to this headline">#</a></h3>
+<p>The most exact solution would be to use Monte-Carlo simulations.  We draw <span class="math notranslate nohighlight">\(T\)</span> samples from the distribution of our <span class="math notranslate nohighlight">\(\mathbf{x}\sim \mathcal{N}(\mathbf{x}_*|\mu_\mathbf{x},\Sigma_\mathbf{x})\)</span> and propagate this through the predictive mean and standard deviation of the Gaussian process .</p>
+<div class="math notranslate nohighlight">
+\[
+p(f_*|\mu_\mathbf{x}, \Sigma_\mathbf{x}, \mathcal{D}) \approx \frac{1}{T}\sum_{t=1}^T \mathcal{N}\left(f_*|\mu_\mathcal{GP}(\mathbf{x}_*^t),\sigma^2_\mathcal{GP}(\mathbf{x}_*^t) \right) 
+\]</div>
+<p>to obtain our samples. This will be exact as the number of MC samples, <span class="math notranslate nohighlight">\(T\)</span> grows. In addition, one could use any distribution they want to represent the inputs <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> like the T-Student for more noisy scenarios. The downside is that this method can be very expensive as we will have propagate our inputs through the predictive mean function <span class="math notranslate nohighlight">\(T\)</span> times. This is especially true for the exact GP but possibly can be mitigated by more sparse approximations (cite: SVGP, Unified)or better sampling schemes (cite: pathwise, GPyTorch-CQ). This method hasn’t been demonstrated in real world examples, only in toy examples in a PhD thesis of (cite: Girard). There has been many developments in the literature with regards to MC methods especially in relation to GPs including Gibbs sampling (cite: ), Elliptical slice sampling (cite: ), and NUTS (cite: ). MC methods have gotten more efficient over the years and so this method has the potential to be critical in applications with high uncertainty and a more thorough investigation of the parameters is needed especially with small-medium data problems.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="gaussian-approximation">
+<h2>Gaussian Approximation<a class="headerlink" href="#gaussian-approximation" title="Permalink to this headline">#</a></h2>
+<!-- ![](./pics/c3_posteriors.png) -->
+<figure class="align-default" id="c3-posteriors">
+<a class="reference internal image-reference" href="../../../_images/c3_posteriors.png"><img alt="../../../_images/c3_posteriors.png" src="../../../_images/c3_posteriors.png" style="height: 400px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">A closer look at the shape of the posteriors for each of the uncertain operations (Taylor, Moment Matching) versus the golden standard Monte Carlo sampling.</span><a class="headerlink" href="#c3-posteriors" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The integral of the GP predictive distribution is intractable as mentioned before so we need a way to approximate this distribution. In this family of methods, we approximate the predictive distribution as a Gaussian with the first and second moments. We can compute the moments of the predictive mean and variance equations by using the law of iterative expectations (cite: Fubinis theorem).</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+m(\mu_\mathbf{x}, \Sigma_\mathbf{x}) &amp;= \mathbb{E}_\mathbf{x_*}\left[ \mathbb{E}_{f_*} \left[ f_* |\mathbf{x}_* \right] \right] = \mathbb{E}_\mathbf{x_*}\left[ \mu(\mathbf{x}) \right] \\
+\nu(\mu_\mathbf{x}, \Sigma_\mathbf{x}) &amp;= \mathbb{E}_\mathbf{x_*} \left[ \mathbb{V}_{f_*} \left[ f_* | \mathbf{x_*} \right]  \right] + \mathbb{V}_\mathbf{x_*}\left[ \mathbb{E}_{f_*} \left[  f_*|\mathbf{x}_* \right] \right] \\
+&amp;= \mathbb{E}_\mathbf{x_*}\left[ \sigma^2(\mathbf{x_*}) \right] + \mathbb{V}\left[ \mu(\mathbf{x_*}) \right] \\
+&amp;= \mathbb{E}_\mathbf{x_*}\left[ \sigma^2(\mathbf{x_*}) \right] + \mathbb{E}_\mathbf{x_*}\left[ \mu^2(\mathbf{x_*}) \right] - \mathbb{E}^2_\mathbf{x_*}\left[ \mu(\mathbf{x_*}) \right]
+\end{aligned}
+\end{split}\]</div>
+<p>So our final sets of equations involve expectations over varying degrees of the predictive mean and variance equations for the GP algorithm. There are two competing methods in the literature for computing the expectations and variances of the predictive mean and variance: linearization and moment-matching. Linearization entails approximating the expectation with a Taylor expansion and moment-matching entails computing the moments exactly and then approximating the remaining integrals with quadrature methods like Gauss-Hermite or Unscented transformations. The Taylor transformation is easier to compute but less exact whereas the moment matching method is more exact but more expensive to compute. In paper 2, we chose the linearization approach but we will outline below the details of both approaches as well as some other approaches.</p>
+<hr class="docutils" />
+<section id="taylor-expansion">
+<h3>Taylor Expansion<a class="headerlink" href="#taylor-expansion" title="Permalink to this headline">#</a></h3>
+<p>This is the simplest approach that is found in many of the earlier uncertain input GP literature. In this framework, we approximate the expected predictive mean and variance via a first and second order Taylor. Using this expansion, it is easier to compute the first and second moments (mean and variance) of the predictive distribution. This is a relatively fast and approximate method incorporate information into the predictive variance without needing to retrain the GP model. The equations are summarized below:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\tilde{\mu}_\text{LinGP}(\mathbf{x_*},) &amp;= \mu_\text{GP}(\mu_\mathbf{x_*}) +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \mu_\text{GP}(\mu_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \Sigma_\mathbf{x_*}\right\}}_\text{2nd Order}\\
+\tilde{\sigma}^2_\text{LinGP} (\mathbf{x_*},) &amp;= 
+\sigma^2_\text{GP}(\mu_\mathbf{x_*}) + 
+\underbrace{\frac{\partial \mu_\text{GP}(\mu_\mathbf{x_*})}{\partial \mathbf{x_*}}^\top
+\Sigma_\mathbf{x_*}
+\frac{\partial \mu_\text{GP}(\mu_\mathbf{x_*})}{\partial \mathbf{x_*}}}_\text{1st Order} +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \sigma^2_\text{GP}(\mu_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \Sigma_\mathbf{x_*}\right\}}_\text{2nd Order}
+\end{aligned}
+\end{split}\]</div>
+<p>As shown, we still include the original predictive mean and variance terms (see <span class="xref myst">appendix</span> for the full derivation). In the end, this approximation augments the predictive mean and variance equations with terms that incorporate the first derivative of the predictive mean (1st order) and the second derivative of the predictive mean and variance (2nd order). This was originally proposed by (cite: Girard, Girard + Murray) as they were able to augment the gaussian process predictive mean and variance with the derivative of the predictive mean and the trace of the predictive variance. Subsequently, we saw other approaches (cite: Oakley and O’Hagan, 2002; Quinonero-Candela et al., 2003; Oakley, 1999,2004) implement the same strategy with great success on dynamical problems.</p>
+<p>(cite: McHutchon) modeled this during the training regime as well by incorporating the linearization term into the GP likelihood. The results were promising and the confidence intervals were better. However, due to including the derivative of the kernel in the formulation, this resulted in a cyclic optimization scheme where one would need to optimize, find the derivative, repeat until convergence which is an expensive operation. In general in today’s literature, this is not the dominant method used although (cite: Deisenroth) referenced this method as a good alternative when one needs an easy and scalable approximation and it was revisited as an alternative in GP classification (cite: Lobato). Please see (cite:  Girard (Tech Report), Bijl) for the full derivation.</p>
+</section>
+<hr class="docutils" />
+<section id="moment-matching">
+<h3>Moment Matching<a class="headerlink" href="#moment-matching" title="Permalink to this headline">#</a></h3>
+<p>This is one of the most commonly used methods to date for dealing with uncertain predictions in GPs. It works by computing the first and second moments of the new predictive distribution and then applying quadrature methods to solve all of the remaining integrals. So explicitly, we need to take expectations (integrals) of the GP predictive mean and variance w.r.t. our distribution for <span class="math notranslate nohighlight">\(\mathbf{x}_*\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\tilde{\mu}_{GP}(\mathbf{x_*}) &amp;= \int \mu_{GP}(\mathbf{x_*}) p(\mathbf{x_*})d\mathbf{x_*} \\
+\tilde{\sigma}^2_{GP}(\mathbf{x}_*) &amp;= \int \sigma^2_{GP}(\mathbf{x_*}) p(\mathbf{x_*}) d\mathbf{x}_* + \int  \mu_{GP}^2(\mathbf{x_*})p(\mathbf{x_*})d\mathbf{x_*}  - \left[ \int \mu_{GP}(\mathbf{x_*}) p(\mathbf{x_*})d\mathbf{x_*}\right]^2
+\end{aligned}
+\end{split}\]</div>
+<p>After some manipulation, this results in the follow equations for the predictive mean and variance (<strong>cite</strong>).</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\tilde{\mu}_{GP}(\mathbf{x_*}) &amp;= \Psi_1^\top\alpha \\
+\tilde{\sigma}^2_{GP}(\mathbf{x}_*)
+&amp;=
+\psi_0 - \text{Tr}\left( \left(\mathbf{K}_{GP}^{-1}  - \alpha\alpha^\top\right) \Psi_2\right) - \text{Tr}\left( \Psi_1\Psi_1^\top\alpha\alpha^\top \right)
+\end{aligned}
+\end{split}\]</div>
+<p>where we have <span class="math notranslate nohighlight">\(\Psi_i\)</span> quantities called kernel expectations denoted by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+[\Psi_0][\Psi_0]_{i}  &amp;= \int k(\mathbf{x}_i, \mathbf{x}_i)p(\mathbf{x}_i)d\mathbf{x}_i \\
+[\Psi_1]_{ij} &amp;= \int k(\mathbf{x}_i, \mathbf{y}_i)p(\mathbf{x}_i)d\mathbf{x}_i \\
+[\Psi_2]_{ijk} &amp;= \int k(\mathbf{x}_i, \mathbf{y}_j)k(\mathbf{x}_i, \mathbf{z}_k) d\mathbf{x}_i
+\end{aligned}
+\end{split}\]</div>
+<p>Notice how we have expectations where we need to use quadrature methods to calculate these quantities.  So compared to the linearization approach, this will give us a more exact solution and better representation than the Taylor approximation especially for more complex functions. This method was used in (cite: Girdard,Candela) for dynamical time series problems and later it become more popular in applications such as the PILCO problem where (cite: Deisenroth) used the same formulation. Later, this method was seen in more recent GP developments like the Bayesian GPLVM (cite: Titsias) and the original Deep GP (cite: Damianou) where they use the variational approach (more below). See (cite:  Deisenroth, Dutodoir, Bijl) for the full derivation of the above equations or <span class="xref myst">appendix</span> for a more succinct version.</p>
+<p>This is often the preferred method for many applications with uncertain predictions. One advantage is the geometric meaning as it is akin to approximating the forward KL-Divergence between a prior <span class="math notranslate nohighlight">\(p\)</span> and an approximate variational distribution <span class="math notranslate nohighlight">\(q\)</span>, i.e.  <span class="math notranslate nohighlight">\(\text{KLD}[p||q]\)</span>. The moment matching distribution is similar to the approximate variation distribution <span class="math notranslate nohighlight">\(q\)</span> and the uncertain input data is similar to the prior term <span class="math notranslate nohighlight">\(p\)</span>  (ref: figure)(cite: Deisenroth thesis, 2010). The forward KL is a conservative estimate to ensure all regions of <span class="math notranslate nohighlight">\(p(x)&gt;0\)</span> is covered by <span class="math notranslate nohighlight">\(q(x)\)</span>. This is very similar to the approach taken by the <span class="math notranslate nohighlight">\(\alpha\)</span>-divergence and expectation propagation when <span class="math notranslate nohighlight">\(\alpha=1\)</span> (cite: ).  However practically, this is an expensive measure to calculate due to the kernel expectations. It is only <em>exact</em> to specific kernel functions that have been derived like the linear, RBF (cite: Girard, McHutchon, Damianou) and spectral kernel (cite: Vincent). In all other cases, the integrals need to be approximated via quadrature methods. Gauss-Hermite is the most popular method found in standard GP toolboxes (cite: GPy, GPFlow, GPyTorch) but there have been explorations to use unscented transform (cite: ) which are more scalable and are exact enough in lower dimensional settings.</p>
+<!-- - Demo for KL
+
+    ![3%202%20-%20Input%20Uncertainty%20b0d1278cf1384971a50fe83e29ceabb8/Untitled%206.png](3%202%20-%20Input%20Uncertainty%20b0d1278cf1384971a50fe83e29ceabb8/Untitled%206.png)
+
+    [https://wiseodd.github.io/techblog/2016/12/21/forward-reverse-kl/](https://wiseodd.github.io/techblog/2016/12/21/forward-reverse-kl/)
+
+    Other Source: [http://timvieira.github.io/blog/post/2014/10/06/kl-divergence-as-an-objective-function/](http://timvieira.github.io/blog/post/2014/10/06/kl-divergence-as-an-objective-function/) -->
+</section>
+</section>
+<hr class="docutils" />
+<section id="toy-example">
+<h2>Toy Example<a class="headerlink" href="#toy-example" title="Permalink to this headline">#</a></h2>
+<p>Now, we want to demonstrate how each of these methods perform and how well they improve the confidence intervals of the data. In this toy example, we will look at how each of the methods compare. More specifically, we will look at the confidence intervals and see if they sufficiently capture the outliers. We have a standard GP and we see that the confidence intervals do not sufficiently encapsulate the noisy inputs.</p>
+<!-- ![](./pics/egp_demo_o.png) -->
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../../../_images/egp_demo_o.png"><img alt="../../../_images/egp_demo_o.png" src="../../../_images/egp_demo_o.png" style="height: 200px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">A closer look at the shape of the posteriors for each of the uncertain operations (Taylor, Moment Matching) versus the golden standard Monte Carlo sampling.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Whereas we see the other methods do a better job. The MC method is the golden standard and the other methods are more Gaussian approximations. Although they are approximations, they still do a better job at capturing the input noise.</p>
+<!-- ![](./pics/egp_demo.png) -->
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="../../../_images/egp_demo.png"><img alt="../../../_images/egp_demo.png" src="../../../_images/egp_demo.png" style="height: 400px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">A closer look at the shape of the posteriors for each of the uncertain operations (Taylor, Moment Matching) versus the golden standard Monte Carlo sampling.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<hr class="docutils" />
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">#</a></h2>
+<p>In the above methods, they assume that a GP regression algorithm has already been trained on a dataset <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>. They are advantageous because they are relatively simple and we can use the exact GP formulation for our training procedures and   However, in the case where we have the whole data set with the noisy inputs <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, and <span class="math notranslate nohighlight">\(y\)</span>, this is not a good assumption and ideally we would want to take the whole dataset into account. For most of the intended applications above, they were focused on dynamical systems with time series so propagating error was very important.</p>
+<hr class="docutils" />
+<section id="kernel-functions">
+<h3>Kernel Functions<a class="headerlink" href="#kernel-functions" title="Permalink to this headline">#</a></h3>
+<p>Another frame of thinking involved modifying the kernel function to allow one to include error in. This is advantageous as it allows one to incorporate the uncertainty into the training of the GP method in addition to the testing without having to use approximate posterior methods (see latent variables).  In one method (cite: Dallaire), the motivation was to modify the length scale of the RBF kernel to account for the covariance within the inputs. The limitations of this method is that it assumes a constant covariance for each of the inputs which isn’t flexible and also (cite: McHutchson) found that the length scales describing the RBF kernel function collapses to the scale of the covariance.  Surprisingly, this approach hasn’t been explored more seeing how a common limitation of Gaussian process methods is the expressiveness of the kernel function (cite: Bonilla-AGP) and so creating a kernel to incorporate the error in the inputs would be a clever way to mitigate this issue.  For example,  (cite: Moreno-KLDKernel) created a specialized kernel based off of the KL-Divergence which works for Gaussian noise inputs. Even though this isn’t a valid kernel (cite: <a class="reference external" href="https://math.stackexchange.com/questions/31515/kullback-leibler-divergence-based-kernel">blog</a>), the results showed improvement. Deep kernel learning (cite: Wilson) is an example of a fully parameterized kernel functions via neural networks which would allow uses to use methods like the noise constrastive prior (cite: NCP) to deal with noisy inputs.</p>
+</section>
+<hr class="docutils" />
+<section id="heteroscedastic-likelihoods">
+<h3>Heteroscedastic Likelihoods<a class="headerlink" href="#heteroscedastic-likelihoods" title="Permalink to this headline">#</a></h3>
+<p>In this field of literature, the problem is transformed to finding a parameterized function. The challenge is that this cannot be applied to the exact GP model because it won’t be an explicit Gaussian likelihood which is non-conjugate and thus we would require approximate inference methods like variational inference or expectation propagation or sample-based schemes like Monte Carlo schemes.</p>
+<p><strong>Literature</strong></p>
+<ul class="simple">
+<li><p>Kersting et al 2007</p></li>
+<li><p>Golbery et al 1998</p></li>
+<li><p>Lazaro-Gredilla and Titsias, 2011</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="latent-variables">
+<h3>Latent Variables<a class="headerlink" href="#latent-variables" title="Permalink to this headline">#</a></h3>
+<p>Another approach to incorporate noise into the inputs is to assume that the inputs are a latent variables. We presume to observe the noisy versions of the real variable <span class="math notranslate nohighlight">\(\mathbf{}\)</span>. We would specify a prior distribution over</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{X},\mathbf{X}, y, \mathbf{F})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_\text{LVM}(\Theta) = \sum_{i=1}^N\mathbb{E}_{q(\mathbf{x}_n)} \left[\mathbb{E}_{q(f(\mathbf{x}_n))}\left[ \log p(\mathbf{y}_n | f(\mathbf{x}_n)) \right]  \right] -
+\sum_{n=1}^N \text{KL}\left[q_n(\mathbf{x}_n)||p(\mathbf{x}_n)  \right] 
+\]</div>
+<p>From a practical perspective, there are many options for the practioner to configure the trade-off between the prior configuration and the variational configuration. For example, we could be very loose with our assumptions by intializing the prior with the mean of the noisy inputs and then let both the prior and the variational distribution be a free parameters. Or we could be very strict with our assumptions and set the prior and variational distributions to be our</p>
+</section>
+<section id="connection-to-mm-methods">
+<h3>Connection to MM Methods<a class="headerlink" href="#connection-to-mm-methods" title="Permalink to this headline">#</a></h3>
+<p>We can make the connection that</p>
+<figure class="align-default" id="thesis-plot">
+<a class="reference internal image-reference" href="../../../_images/law_expectations.png"><img alt="../../../_images/law_expectations.png" src="../../../_images/law_expectations.png" style="height: 100px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">Efficient Reinforcement Learning using Gaussian Processes</span><a class="headerlink" href="#thesis-plot" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="thoughts">
+<h2>Thoughts<a class="headerlink" href="#thoughts" title="Permalink to this headline">#</a></h2>
+<p>So after all of this literature, what is the next step for the community? I have a few suggestions based on what I’ve seen:</p>
+<ol>
+<li><p>Apply these algorithms to different problems (other than dynamical systems)</p>
+<p>It’s clear to me that there are a LOT of different algorithms. But in almost every study above, I don’t see many applications outside of dynamical systems. I would love to see other people outside (or within) community use these algorithms on different problems. Like Neil Lawrence said in a recent MLSS talk; “we need to stop jacking around with GPs and actually <strong>apply them</strong>” (paraphrased). There are many little goodies to be had from all of these methods; like the linearized GP predictive variance estimate for better variance estimates is something you get almost for free. So why not use it?</p>
+</li>
+<li><p>Improve the Kernel Expectation Calculations</p>
+<p>So how we calculate kernel expectations is costly. A typical sparse GP has a cost of <span class="math notranslate nohighlight">\(O(NM^2)\)</span>. But when we do the calculation of kernel expectations, that order goes back up to <span class="math notranslate nohighlight">\(O (DNM^2)\)</span> . It’s not bad considering but it is still now an order of magnitude larger for high dimensional datasets. This is going backwards in terms of efficiency. Also, many implementations attempt to do this in parallel for speed but then the cost of memory becomes prohibitive (especially on GPUs). There are some other good approximation schemes we might be able to use such as advanced Bayesian Quadrature techniques and the many moment transformation techniques that are present in the Kalman Filter literature. I’m sure there are tricks of the trade to be had there.</p>
+</li>
+<li><p>Think about the problem differently</p>
+<p>An interesting way to approach the method is to perhaps use the idea of covariates. Instead of the noise being additive, perhaps it’s another combination where we have to model it separately. That’s what Salimbeni did for his latest Deep GP and it’s a very interesting way to look at it. It works well too!</p>
+</li>
+<li><p>Think about pragmatic solutions</p>
+<p>Some of these algorithms are super complicated. It makes it less desireable to actually try them because it’s so easy to get lost in the mathematics of it all. I like pragmatic solutions. For example, using Drop-Out, Ensembles and Noise Constrastive Priors are easy and pragmatic ways of adding reliable uncertainty estimates in Bayesian Neural Networks. I would like some more pragmatic solutions for some of these methods that have been listed above. <strong>Another Shameless Plug</strong>: the method I used is very easy to get better predictive variances almost for free.</p>
+</li>
+<li><p>Figure Out how to extend it to Deep GPs</p>
+<p>So the original Deep GP is just a stack of BGPLVMs and more recent GPs have regressed back to stacking SVGPs. I would like to know if there is a way to improve the BGPLVM in such a way that we can stack them again and then constrain the solutions with our known prior distributions.</p>
+</li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="posterior-approximations">
+<h2>Posterior Approximations<a class="headerlink" href="#posterior-approximations" title="Permalink to this headline">#</a></h2>
+<hr class="docutils" />
+<section id="post-training">
+<h3>Post Training<a class="headerlink" href="#post-training" title="Permalink to this headline">#</a></h3>
+<hr class="docutils" />
+<section id="monte-carlo-sampling">
+<h4>Monte Carlo Sampling<a class="headerlink" href="#monte-carlo-sampling" title="Permalink to this headline">#</a></h4>
+</section>
+<hr class="docutils" />
+<section id="id3">
+<h4>Moment-Matching<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h4>
+<p><strong>Gauss-Hermite</strong></p>
+<p><strong>Unscented Transforms</strong></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="during-training">
+<h3>During-Training<a class="headerlink" href="#during-training" title="Permalink to this headline">#</a></h3>
+<hr class="docutils" />
+<section id="distribution-kernels">
+<h4>Distribution Kernels<a class="headerlink" href="#distribution-kernels" title="Permalink to this headline">#</a></h4>
+</section>
+<hr class="docutils" />
+<section id="id4">
+<h4>Latent Variables<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h4>
+</section>
+<hr class="docutils" />
+<section id="latent-co-variate-models">
+<h4>Latent Co-Variate Models<a class="headerlink" href="#latent-co-variate-models" title="Permalink to this headline">#</a></h4>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="neural-networks">
+<h2>Neural Networks<a class="headerlink" href="#neural-networks" title="Permalink to this headline">#</a></h2>
+</section>
+<hr class="docutils" />
+<section id="deep-gaussian-processes">
+<h2>Deep Gaussian Processes<a class="headerlink" href="#deep-gaussian-processes" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Naturally deal with uncertain inputs</p></li>
+<li><p>More expressive</p></li>
+<li><p>Not clear about error propagation</p></li>
+</ul>
+</section>
+<section id="contribution-impact">
+<h2>Contribution &amp; Impact<a class="headerlink" href="#contribution-impact" title="Permalink to this headline">#</a></h2>
+</section>
+<section id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">#</a></h2>
 <section id="uncertain-predictions">
-<h2>Uncertain Predictions<a class="headerlink" href="#uncertain-predictions" title="Permalink to this headline">#</a></h2>
+<h3>Uncertain Predictions<a class="headerlink" href="#uncertain-predictions" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Monte Carlo Sampling</p></li>
 <li><p>Moment Matching</p></li>
 </ul>
 </section>
 <section id="gps-w-training-data">
-<h2>GPs w/ Training Data<a class="headerlink" href="#gps-w-training-data" title="Permalink to this headline">#</a></h2>
+<h3>GPs w/ Training Data<a class="headerlink" href="#gps-w-training-data" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Stochastic Variational GPs</p></li>
 <li><p>Bayesian Latent Variable Model</p></li>
 <li><p>Deep Gaussian Processes</p></li>
 <li><p>Normalizing Flows (Hybrid Models)</p></li>
 </ul>
+<!-- ![3%202%20-%20Input%20Uncertainty%20b0d1278cf1384971a50fe83e29ceabb8/Untitled%208.png](3%202%20-%20Input%20Uncertainty%20b0d1278cf1384971a50fe83e29ceabb8/Untitled%208.png)
+
+[Source](https://www.researchgate.net/publication/271212951_Statistical_Analysis_of_Data_in_the_Linear_Regime/figures?lo=1)
+
+![3%202%20-%20Input%20Uncertainty%20b0d1278cf1384971a50fe83e29ceabb8/Untitled%209.png](3%202%20-%20Input%20Uncertainty%20b0d1278cf1384971a50fe83e29ceabb8/Untitled%209.png)
+
+[Source](http://slittlefair.staff.shef.ac.uk/teaching/phy217/lectures/stats/L18/index.html)
+
+![3%202%20-%20Input%20Uncertainty%20b0d1278cf1384971a50fe83e29ceabb8/Untitled%2010.png](3%202%20-%20Input%20Uncertainty%20b0d1278cf1384971a50fe83e29ceabb8/Untitled%2010.png)
+
+[Source](https://github.com/baggepinnen/MonteCarloMeasurements.jl) --></section>
 </section>
-<div class="toctree-wrapper compound">
-</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -965,17 +1584,17 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../kernels/kernel_derivatives.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="../gps/sgp_code.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Kernel Derivatives</p>
+            <p class="prev-next-title">Sparse GP From Scratch</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="predictions.html" title="next page">
+    <a class='right-next' id="next-link" href="../info_theory/similarity.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Uncertain Predictions</p>
+        <p class="prev-next-title">Similarity</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

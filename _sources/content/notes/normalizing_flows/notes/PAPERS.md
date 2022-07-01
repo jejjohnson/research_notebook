@@ -65,7 +65,7 @@
 
 * BigEarthNet
 * Hyperspectral Images
-* Emulation Data
+* QG Emulation Data
 
 **Updated Theoretical Formulation**
 

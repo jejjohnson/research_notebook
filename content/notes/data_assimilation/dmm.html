@@ -222,11 +222,6 @@ const thebe_selector_output = ".output, .cell_output"
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
-       GP from Scratch
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
        Gaussianization Flows
       </a>
@@ -270,33 +265,16 @@ const thebe_selector_output = ".output, .cell_output"
 </p>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../concepts/notation.html">
-   Notation
+  <a class="reference internal" href="../concepts/uncertainty.html">
+   Modeling Uncertainty
   </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../data/overview.html">
-   Data
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../data/representation.html">
-     Representation
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../bayesian/overview.html">
    Bayesian
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -337,8 +315,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../concepts/overview.html">
    Sleeper Concepts
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-  <label for="toctree-checkbox-7">
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -379,8 +357,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../kernels/overview.html">
    Kernel Methods
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-  <label for="toctree-checkbox-8">
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -390,71 +368,152 @@ const thebe_selector_output = ".output, .cell_output"
      Kernel Derivatives
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/rv.html">
+     RV Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/congruence_coeff.html">
+     Congruence Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/hsic.html">
+     HSIC
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/mmd.html">
+     Maximum Mean Discrepancy (MMD)
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../egps/overview.html">
-   Uncertain Gaussian Processes
+  <a class="reference internal" href="../gps/intro.html">
+   Gaussian Processes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/predictions.html">
-     Uncertain Predictions
+    <a class="reference internal" href="../gps/gps.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/gauss_approx.html">
-     Gaussian Approximation
+    <a class="reference internal" href="../gps/literature.html">
+     Literature Review
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/mcmc.html">
-     Monte Carlo Sampling
+    <a class="reference internal" href="../gps/cg.html">
+     Conjugate Gradients
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/taylor.html">
-     Linearization (Taylor Expansions)
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/moment_matching.html">
-     Moment Matching
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/bgplvm.html">
-     Bayesian GPLVM
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/error_prop.html">
-     Error Propagation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/next.html">
-     Next Steps
+    <a class="reference internal" href="../gps/sgps.html">
+     Sparse Gaussian Processes
     </a>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../egps/experiments.html">
-     Notebooks
+    <a class="reference internal" href="../gps/algorithms.html">
+     Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
-    <label for="toctree-checkbox-10">
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
      <i class="fas fa-chevron-down">
      </i>
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../egps/notebooks/gpytorch_egp_taylor.html">
-       Gaussian Process Gradients with GPyTorch
+      <a class="reference internal" href="../gps/gpr_code.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../gps/sgp_code.html">
+       Sparse GP From Scratch
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/overview.html">
+     Input Uncertainty in GPs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../info_theory/similarity.html">
+   Similarity
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/measures.html">
+     Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+    <label for="toctree-checkbox-11">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/information.html">
+       Information Theory
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/entropy.html">
+       Entropy &amp; Relative Entropy
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/mutual_info.html">
+       Mutual Information and Total Correlation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/estimators.html">
+     Information Theory Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/classic.html">
+       Classic Methods
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/histogram.html">
+       Entropy Estimator - Histogram
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+       Experiment - RBIG Sample Consistency
       </a>
      </li>
     </ul>
@@ -462,43 +521,36 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../info_theory/overview.html">
-   Information Theory
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
-  <label for="toctree-checkbox-11">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/histogram.html">
-     Entropy Estimator - Histogram
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
-     Experiment - RBIG Sample Consistency
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
   <a class="reference internal" href="../normalizing_flows/overview.html">
    Normalizing Flows
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
-  <label for="toctree-checkbox-12">
+  <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+  <label for="toctree-checkbox-13">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/linear.html">
+     Linear Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/coupling_layers.html">
+     Coupling Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/conditional.html">
+     Conditional Normalizing Flows
+    </a>
+   </li>
    <li class="toctree-l2 has-children">
     <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
      Lecture I - Iterative Gaussianization
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
-    <label for="toctree-checkbox-13">
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -524,8 +576,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
      Lecture II - Gaussianization Flows
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
-    <label for="toctree-checkbox-14">
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -553,8 +605,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../inr/overview.html">
    Implicit Neural Representations
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
-  <label for="toctree-checkbox-15">
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -575,8 +627,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="overview.html">
    Data Assimilation
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
-  <label for="toctree-checkbox-16">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -615,8 +667,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="algorithms.html">
      Algorithms
     </a>
-    <input checked="" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-    <label for="toctree-checkbox-17">
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -669,8 +721,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../misc/overview.html">
    Miscellaneous Notes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-  <label for="toctree-checkbox-18">
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -1051,13 +1103,13 @@ p(x_t|z_t) &amp;= \mathcal{N}(x_t|\boldsymbol{\mu}_{\text{emiss}}(z_t), \boldsym
 <figure class="align-default" id="dmm-chain-graph">
 <a class="reference internal image-reference" href="../../../_images/dmm_graph.png"><img alt="../../../_images/dmm_graph.png" src="../../../_images/dmm_graph.png" style="height: 300px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">This showcases the interaction between the hidden state and the observations wrt time. The most important property is the Markovian property which dictates that the future state only depends upon the current state and no other previous states obtained before. Source: pyro Deep Markov Model Tutorial.</span><a class="headerlink" href="#dmm-chain-graph" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">This showcases the interaction between the hidden state and the observations wrt time. The most important property is the Markovian property which dictates that the future state only depends upon the current state and no other previous states obtained before. Source: pyro Deep Markov Model Tutorial.</span><a class="headerlink" href="#dmm-chain-graph" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>We are taking the same state-space model as before. However, this time, we do not restrict ourselves to linear functions. We allow for non-linear functions for the transition and emission functions.</p>
 <p>We allow for a non-linear function, <span class="math notranslate nohighlight">\(\boldsymbol f\)</span>, for the transition model between states.</p>
 <div class="math notranslate nohighlight" id="equation-dmm-transition">
-<span class="eqno">(37)<a class="headerlink" href="#equation-dmm-transition" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(43)<a class="headerlink" href="#equation-dmm-transition" title="Permalink to this equation">#</a></span>\[
 \mathbf{z}_t = \boldsymbol{f}(\mathbf{z}_{t-1}; \boldsymbol{\theta}_t) + \boldsymbol{\delta}_t 
 \]</div>
 <p>We also put a non-linear function, <span class="math notranslate nohighlight">\(\boldsymbol h\)</span>, for the emission model to describe the relationship between the state and the measurements.
@@ -1080,13 +1132,13 @@ p(\mathbf{x}_{1:T}, \mathbf{z}_{1:T}) = p(\mathbf{x}_{1:T}|\mathbf{z}_{1:T})p(\m
 \]</div>
 <p>If we wish to find the best function parameters based on the data, we can still calculate the marginal likelihood by integrating out the state, <span class="math notranslate nohighlight">\(\mathbf{z}_{1:T}\)</span>:</p>
 <div class="math notranslate nohighlight" id="equation-dmm-ml">
-<span class="eqno">(38)<a class="headerlink" href="#equation-dmm-ml" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(44)<a class="headerlink" href="#equation-dmm-ml" title="Permalink to this equation">#</a></span>\[
 p_{\boldsymbol \theta}(\mathbf{x}_{1:T}) = \int p_{\theta_e}(\mathbf{x}_{1:T}|\mathbf{z}_{1:T})p_{\theta_e}(\mathbf{z}_{1:T})d\mathbf{z}_{1:T}
 \]</div>
 </section>
 <section id="inference">
 <h2>Inference<a class="headerlink" href="#inference" title="Permalink to this headline">#</a></h2>
-<p>We can learn the parameters, <span class="math notranslate nohighlight">\(\boldsymbol \theta\)</span>, of the prescribed model by minimizing the marginal log-likelihood. We can log transform the marginal likelihood function (eq <a class="reference internal" href="#equation-dmm-ml">(38)</a>).</p>
+<p>We can learn the parameters, <span class="math notranslate nohighlight">\(\boldsymbol \theta\)</span>, of the prescribed model by minimizing the marginal log-likelihood. We can log transform the marginal likelihood function (eq <a class="reference internal" href="#equation-dmm-ml">(44)</a>).</p>
 <div class="math notranslate nohighlight">
 \[
 \log p_{\boldsymbol \theta}(\mathbf{x}) = \mathbb{E}_{\mathbf{z} \sim p_{\boldsymbol \theta}(\mathbf{z}|\mathbf{x})} \left[ \log p_{\theta_e}(\mathbf{x}|\mathbf{z}) + \log p_{\theta_e}(\mathbf{z})\right] 
@@ -1096,7 +1148,7 @@ p_{\boldsymbol \theta}(\mathbf{x}_{1:T}) = \int p_{\theta_e}(\mathbf{x}_{1:T}|\m
 <section id="loss-function">
 <h2>Loss Function<a class="headerlink" href="#loss-function" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight" id="equation-dmm-loss">
-<span class="eqno">(39)<a class="headerlink" href="#equation-dmm-loss" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(45)<a class="headerlink" href="#equation-dmm-loss" title="Permalink to this equation">#</a></span>\[
 \mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi}; \mathbf{x}) 
 = \sum_{t=1}^T \mathbb{E}_{q_{\boldsymbol \phi}}\left[ 
     \log \underbrace{p_{\boldsymbol{\theta}_t}(\mathbf{z}_t|\mathbf{z}_{t-1})}_{\text{Transition}} 
@@ -1113,11 +1165,11 @@ p_{\boldsymbol \theta}(\mathbf{x}_{1:T}) = \int p_{\theta_e}(\mathbf{x}_{1:T}|\m
 <section id="literature">
 <h2>Literature<a class="headerlink" href="#literature" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
-<li><p>2D Convolutional Neural Markov Models for Spatiotemporal Sequence Forecasting - <span id="id1">[<a class="reference internal" href="../../../bib.html#id27" title="Calvin Janitra Halim and K. Kawamoto. 2d convolutional neural markov models for spatiotemporal sequence forecasting. Sensors (Basel, Switzerland), 2020.">Halim and Kawamoto, 2020</a>]</span></p></li>
-<li><p>Physics-guided Deep Markov Models for Learning Nonlinear Dynamical Systems with Uncertainty - <span id="id2">[<a class="reference internal" href="../../../bib.html#id28" title="Wei Liu, Zhilu Lai, Kiran Bacsa, and Eleni Chatzi. Physics-guided deep markov models for learning nonlinear dynamical systems with uncertainty. 2021. arXiv:2110.08607.">Liu <em>et al.</em>, 2021</a>]</span></p></li>
-<li><p>Kalman Variational AutoEncoder - <span id="id3">[<a class="reference internal" href="../../../bib.html#id29" title="Marco Fraccaro, Simon Kamronn, Ulrich Paquet, and Ole Winther. A disentangled recognition and nonlinear dynamics model for unsupervised learning. 2017. arXiv:1710.05741.">Fraccaro <em>et al.</em>, 2017</a>]</span> | <a class="reference external" href="https://github.com/simonkamronn/kvae">Code</a></p></li>
-<li><p>Normalizing Kalman Filter - <span id="id4">[<a class="reference internal" href="../../../bib.html#id30" title="Emmanuel de Bézenac, Syama Sundar Rangapuram, Konstantinos Benidis, Michael Bohlke-Schneider, Richard Kurle, Lorenzo Stella, Hilaf Hasson, Patrick Gallinari, and Tim Januschowski. Normalizing kalman filters for multivariate time series analysis. In H. Larochelle, M. Ranzato, R. Hadsell, M. F. Balcan, and H. Lin, editors, Advances in Neural Information Processing Systems, volume 33, 2995–3007. Curran Associates, Inc., 2020. URL: https://proceedings.neurips.cc/paper/2020/file/1f47cef5e38c952f94c5d61726027439-Paper.pdf.">de Bézenac <em>et al.</em>, 2020</a>]</span></p></li>
-<li><p>Dynamical VAEs - <span id="id5">[<a class="reference internal" href="../../../bib.html#id31" title="Laurent Girin, Simon Leglaive, Xiaoyu Bie, Julien Diard, Thomas Hueber, and Xavier Alameda-Pineda. Dynamical variational autoencoders: a comprehensive review. Foundations and Trends® in Machine Learning, 15(1-2):1–175, 2021. URL: http://dx.doi.org/10.1561/2200000089, doi:10.1561/2200000089.">Girin <em>et al.</em>, 2021</a>]</span> | <a class="reference external" href="https://github.com/XiaoyuBIE1994/DVAE">Code</a></p></li>
+<li><p>2D Convolutional Neural Markov Models for Spatiotemporal Sequence Forecasting - <span id="id1">[<a class="reference internal" href="../info_theory/similarity.html#id51" title="Calvin Janitra Halim and K. Kawamoto. 2d convolutional neural markov models for spatiotemporal sequence forecasting. Sensors (Basel, Switzerland), 2020.">Halim and Kawamoto, 2020</a>]</span></p></li>
+<li><p>Physics-guided Deep Markov Models for Learning Nonlinear Dynamical Systems with Uncertainty - <span id="id2">[<a class="reference internal" href="../info_theory/similarity.html#id52" title="Wei Liu, Zhilu Lai, Kiran Bacsa, and Eleni Chatzi. Physics-guided deep markov models for learning nonlinear dynamical systems with uncertainty. 2021. arXiv:2110.08607.">Liu <em>et al.</em>, 2021</a>]</span></p></li>
+<li><p>Kalman Variational AutoEncoder - <span id="id3">[<a class="reference internal" href="../info_theory/similarity.html#id53" title="Marco Fraccaro, Simon Kamronn, Ulrich Paquet, and Ole Winther. A disentangled recognition and nonlinear dynamics model for unsupervised learning. 2017. arXiv:1710.05741.">Fraccaro <em>et al.</em>, 2017</a>]</span> | <a class="reference external" href="https://github.com/simonkamronn/kvae">Code</a></p></li>
+<li><p>Normalizing Kalman Filter - <span id="id4">[<a class="reference internal" href="../info_theory/similarity.html#id54" title="Emmanuel de Bézenac, Syama Sundar Rangapuram, Konstantinos Benidis, Michael Bohlke-Schneider, Richard Kurle, Lorenzo Stella, Hilaf Hasson, Patrick Gallinari, and Tim Januschowski. Normalizing kalman filters for multivariate time series analysis. In H. Larochelle, M. Ranzato, R. Hadsell, M. F. Balcan, and H. Lin, editors, Advances in Neural Information Processing Systems, volume 33, 2995–3007. Curran Associates, Inc., 2020. URL: https://proceedings.neurips.cc/paper/2020/file/1f47cef5e38c952f94c5d61726027439-Paper.pdf.">de Bézenac <em>et al.</em>, 2020</a>]</span></p></li>
+<li><p>Dynamical VAEs - <span id="id5">[<a class="reference internal" href="../info_theory/similarity.html#id55" title="Laurent Girin, Simon Leglaive, Xiaoyu Bie, Julien Diard, Thomas Hueber, and Xavier Alameda-Pineda. Dynamical variational autoencoders: a comprehensive review. Foundations and Trends® in Machine Learning, 15(1-2):1–175, 2021. URL: http://dx.doi.org/10.1561/2200000089, doi:10.1561/2200000089.">Girin <em>et al.</em>, 2021</a>]</span> | <a class="reference external" href="https://github.com/XiaoyuBIE1994/DVAE">Code</a></p></li>
 <li><p>Latent Linear Dynamics in Spatiotemporal Medical Data - Gunnarsson et al. (2021) <a class="reference external" href="https://arxiv.org/abs/2103.00930">arxiv</a></p></li>
 </ul>
 </section>

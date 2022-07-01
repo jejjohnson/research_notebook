@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>GP Resources &#8212; Research Notebook</title>
+    <title>Mutual Information and Total Correlation &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -51,8 +51,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Information Theory Measures" href="estimators.html" />
+    <link rel="prev" title="Entropy &amp; Relative Entropy" href="entropy.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -218,11 +222,6 @@ const thebe_selector_output = ".output, .cell_output"
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/gpr.html">
-       GP from Scratch
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
        Gaussianization Flows
       </a>
@@ -264,35 +263,18 @@ const thebe_selector_output = ".output, .cell_output"
   Notes
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../concepts/notation.html">
-   Notation
+  <a class="reference internal" href="../concepts/uncertainty.html">
+   Modeling Uncertainty
   </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../data/overview.html">
-   Data
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../data/representation.html">
-     Representation
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../bayesian/overview.html">
    Bayesian
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -333,8 +315,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../concepts/overview.html">
    Sleeper Concepts
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-  <label for="toctree-checkbox-7">
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -375,8 +357,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../kernels/overview.html">
    Kernel Methods
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-  <label for="toctree-checkbox-8">
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -386,71 +368,152 @@ const thebe_selector_output = ".output, .cell_output"
      Kernel Derivatives
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/rv.html">
+     RV Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/congruence_coeff.html">
+     Congruence Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/hsic.html">
+     HSIC
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/mmd.html">
+     Maximum Mean Discrepancy (MMD)
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../egps/overview.html">
-   Uncertain Gaussian Processes
+  <a class="reference internal" href="../gps/intro.html">
+   Gaussian Processes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/predictions.html">
-     Uncertain Predictions
+    <a class="reference internal" href="../gps/gps.html">
+     Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/gauss_approx.html">
-     Gaussian Approximation
+    <a class="reference internal" href="../gps/literature.html">
+     Literature Review
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/mcmc.html">
-     Monte Carlo Sampling
+    <a class="reference internal" href="../gps/cg.html">
+     Conjugate Gradients
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../egps/taylor.html">
-     Linearization (Taylor Expansions)
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/moment_matching.html">
-     Moment Matching
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/bgplvm.html">
-     Bayesian GPLVM
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/error_prop.html">
-     Error Propagation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../egps/next.html">
-     Next Steps
+    <a class="reference internal" href="../gps/sgps.html">
+     Sparse Gaussian Processes
     </a>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../egps/experiments.html">
-     Notebooks
+    <a class="reference internal" href="../gps/algorithms.html">
+     Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
-    <label for="toctree-checkbox-10">
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
      <i class="fas fa-chevron-down">
      </i>
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../egps/notebooks/gpytorch_egp_taylor.html">
-       Gaussian Process Gradients with GPyTorch
+      <a class="reference internal" href="../gps/gpr_code.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../gps/sgp_code.html">
+       Sparse GP From Scratch
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/overview.html">
+     Input Uncertainty in GPs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="similarity.html">
+   Similarity
+  </a>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="overview.html">
+   Information Theory
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="measures.html">
+     Measures
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+    <label for="toctree-checkbox-11">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="information.html">
+       Information Theory
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="entropy.html">
+       Entropy &amp; Relative Entropy
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Mutual Information and Total Correlation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="estimators.html">
+     Information Theory Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="classic.html">
+       Classic Methods
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="histogram.html">
+       Entropy Estimator - Histogram
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="experiments/rbig_sample_consistency.html">
+       Experiment - RBIG Sample Consistency
       </a>
      </li>
     </ul>
@@ -458,43 +521,36 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../info_theory/overview.html">
-   Information Theory
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
-  <label for="toctree-checkbox-11">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/histogram.html">
-     Entropy Estimator - Histogram
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
-     Experiment - RBIG Sample Consistency
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
   <a class="reference internal" href="../normalizing_flows/overview.html">
    Normalizing Flows
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
-  <label for="toctree-checkbox-12">
+  <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+  <label for="toctree-checkbox-13">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/linear.html">
+     Linear Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/coupling_layers.html">
+     Coupling Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/conditional.html">
+     Conditional Normalizing Flows
+    </a>
+   </li>
    <li class="toctree-l2 has-children">
     <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
      Lecture I - Iterative Gaussianization
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
-    <label for="toctree-checkbox-13">
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -520,8 +576,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
      Lecture II - Gaussianization Flows
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
-    <label for="toctree-checkbox-14">
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -549,8 +605,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../inr/overview.html">
    Implicit Neural Representations
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
-  <label for="toctree-checkbox-15">
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -571,8 +627,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../data_assimilation/overview.html">
    Data Assimilation
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
-  <label for="toctree-checkbox-16">
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -611,8 +667,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../data_assimilation/algorithms.html">
      Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-    <label for="toctree-checkbox-17">
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -665,8 +721,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../misc/overview.html">
    Miscellaneous Notes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-  <label for="toctree-checkbox-18">
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -778,7 +834,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/gps/resources.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/info_theory/mutual_info.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -806,7 +862,7 @@ title="Open an issue"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../../../_sources/content/notes/gps/resources.md"
+        <a href="../../../_sources/content/notes/info_theory/mutual_info.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -866,8 +922,23 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#code">
-   Code
+  <a class="reference internal nav-link" href="#total-correlation">
+   Total Correlation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#higher-order">
+   Higher Order
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#normalized-variants">
+   Normalized Variants
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
   </a>
  </li>
 </ul>
@@ -879,7 +950,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>GP Resources</h1>
+                <h1>Mutual Information and Total Correlation</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -890,8 +961,23 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#code">
-   Code
+  <a class="reference internal nav-link" href="#total-correlation">
+   Total Correlation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#higher-order">
+   Higher Order
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#normalized-variants">
+   Normalized Variants
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
   </a>
  </li>
 </ul>
@@ -904,11 +990,101 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="gp-resources">
-<h1>GP Resources<a class="headerlink" href="#gp-resources" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="mutual-information-and-total-correlation">
+<h1>Mutual Information and Total Correlation<a class="headerlink" href="#mutual-information-and-total-correlation" title="Permalink to this headline">#</a></h1>
 <hr class="docutils" />
-<section id="code">
-<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">#</a></h2>
+<p>This is the reduction of uncertainty of one random variable due to the knowledge of another (like the definition above). It is the amount of information one r.v. contains about another r.v..</p>
+<p><strong>Definition</strong>: The mutual information (MI) between two discreet r.v.s <span class="math notranslate nohighlight">\(X,Y\)</span> jointly distributed according to <span class="math notranslate nohighlight">\(p(x,y)\)</span> is given by:</p>
+<div class="math notranslate nohighlight">
+\[I(X;Y) = \sum_{x,y} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}\]</div>
+<div class="math notranslate nohighlight">
+\[I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)\]</div>
+<div class="math notranslate nohighlight">
+\[I(X;Y) = H(X) + H(Y) - H(X,Y)\]</div>
+<p><strong>Sources</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.scholarpedia.org/article/Mutual_information">Scholarpedia</a></p></li>
+</ul>
+<details>
+<summary>Code</summary>
+<ol class="simple">
+<li><p>We need a PDF estimation…</p></li>
+<li><p>Normalize counts to probability values</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pxy</span> <span class="o">=</span> <span class="n">bin_counts</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">bin_counts</span><span class="p">))</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>Get the marginal distributions</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">px</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pxy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># marginal for x over y</span>
+<span class="n">py</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pxy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># marginal for y over x</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>Joint Probability</p></li>
+</ol>
+</details>
+<hr class="docutils" />
+<section id="total-correlation">
+<h2>Total Correlation<a class="headerlink" href="#total-correlation" title="Permalink to this headline">#</a></h2>
+<p>This isn’t really talked about outside of the ML community but I think this is a useful measure to have; especially when dealing with multi-dimensional and multi-variate datesets.</p>
+<p>In general, the formula for Total Correlation (TC) between two random variables is as follows:</p>
+<div class="math notranslate nohighlight">
+\[TC(X,Y) = H(X) + H(Y) - H(X,Y)\]</div>
+<p><strong>Note</strong>: This is the same as the equation for mutual information between two random variables, <span class="math notranslate nohighlight">\(I(X;Y)=H(X)+H(Y)-H(X,Y)\)</span>. This makes sense because for a Venn Diagram between two r.v.s will only have one part that intersects. This is different for the multivariate case where the number of r.v.s is greater than 2.</p>
+<p>Let’s have <span class="math notranslate nohighlight">\(D\)</span> random variables for <span class="math notranslate nohighlight">\(X = \{ X_1, X_2, \ldots, X_D\}\)</span>. The TC is:</p>
+<div class="math notranslate nohighlight">
+\[TC(X) = \sum_{d=1}^{D}H(X_d) - H(X_1, X_2, \ldots, X_D)\]</div>
+<p>In this case, <span class="math notranslate nohighlight">\(D\)</span> can be a feature for <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>Now, let’s say we would like to get the <strong>difference in total correlation</strong> between two random variables, <span class="math notranslate nohighlight">\(\Delta\)</span>TC.</p>
+<div class="math notranslate nohighlight">
+\[\Delta\text{TC}(X,Y) =  \text{TC}(X) - \text{TC}(Y)\]</div>
+<div class="math notranslate nohighlight">
+\[\Delta\text{TC}(X,Y) =  \sum_{d=1}^{D}H(X_d) - \sum_{d=1}^{D} H(Y_d) - H(X) + H(Y)\]</div>
+<p><strong>Note</strong>: There is a special case in <a class="reference external" href="https://github.com/jejjohnson/rbig">RBIG</a> where the two random variables are simply rotations of one another. So each feature will have a difference in entropy but the total overall dataset will not. So our function would be reduced to: <span class="math notranslate nohighlight">\(\Delta\text{TC}(X,Y) =  \sum_{d=1}^{D}H(X_d) - \sum_{d=1}^{D} H(Y_d)\)</span> which is overall much easier to solve.</p>
+</section>
+<hr class="docutils" />
+<section id="higher-order">
+<h2>Higher Order<a class="headerlink" href="#higher-order" title="Permalink to this headline">#</a></h2>
+<p>This is a term that measures the statistical dependency of multi-variate sources using the common mutual-information measure.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+I(\mathbf{x})
+&amp;= 
+D_\text{KL} \left[ p(\mathbf{x}) || \prod_d p(\mathbf{x}_d) \right] \\
+&amp;= \sum_{d=1}^D H(x_d) - H(\mathbf{x})
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(H(\mathbf{x})\)</span> is the differential entropy of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(H(x_d)\)</span> represents the differential entropy of the <span class="math notranslate nohighlight">\(d^\text{th}\)</span> component of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>. This is nicely summaries in equation 1 from ([Lyu &amp; Simoncelli, 2008][1]).</p>
+<p>?&gt; Note: We find that <span class="math notranslate nohighlight">\(I\)</span> in 2 dimensions is the same as mutual information.</p>
+<p>We can decompose this measure into two parts representing second order and higher-order dependencies:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+I(\mathbf{x}) &amp;=
+\underbrace{\sum_{d=1}^D \log{\Sigma_{dd}} - \log{|\Sigma|}}_{\text{2nd Order Dependencies}} \\
+&amp;- \underbrace{D_\text{KL} \left[ p(\mathbf{x}) || \mathcal{G}_\theta (\mathbf{x}) \right] - \sum_{d=1}^D D_\text{KL} \left[ p(x_d) || \mathcal{G}_\theta (x_d) \right]}_{\text{high-order dependencies}}
+\end{aligned}
+\end{split}\]</div>
+<p>again, nicely summarized with equation 2 from ([Lyu &amp; Simoncelli, 2008][1]).</p>
+<p><strong>Sources</strong>:</p>
+<ul class="simple">
+<li><p>Nonlinear Extraction of “Independent Components” of elliptically symmetric densities using radial Gaussianization - Lyu &amp; Simoncelli - <a class="reference external" href="https://www.cns.nyu.edu/pub/lcv/lyu08a.pdf">PDF</a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="normalized-variants">
+<h2>Normalized Variants<a class="headerlink" href="#normalized-variants" title="Permalink to this headline">#</a></h2>
+</section>
+<hr class="docutils" />
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/20491028/optimal-way-to-compute-pairwise-mutual-information-using-numpy">MI w. Numpy</a></p></li>
+<li><p><a class="reference external" href="https://www.freecodecamp.org/news/how-machines-make-predictions-finding-correlations-in-complex-data-dfd9f0d87889/">Predictions and Correlations in Complex Data</a></p></li>
+</ul>
 </section>
 </section>
 
@@ -925,7 +1101,7 @@ title="Print to PDF"
         },
         kernelOptions: {
             kernelName: "python3",
-            path: "./content/notes/gps"
+            path: "./content/notes/info_theory"
         },
         predefinedOutput: true
     }
@@ -939,6 +1115,20 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="entropy.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Entropy &amp; Relative Entropy</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="estimators.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Information Theory Measures</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>

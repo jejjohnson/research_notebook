@@ -1,0 +1,1881 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Similarity &#8212; Research Notebook</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Information Theory" href="overview.html" />
+    <link rel="prev" title="Input Uncertainty in GPs" href="../egps/overview.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/book_v2.jpeg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
+       Gaussianization Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/ssh.html">
+     SSH Configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/conda.html">
+     Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/jlab.html">
+     Jupyter Lab 4 Remote Servers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/uncertainty.html">
+   Modeling Uncertainty
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../bayesian/overview.html">
+   Bayesian
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/intro.html">
+     Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/models.html">
+     Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference.html">
+     Inference Schemes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/confidence_intervals.html">
+     Confidence Intervals
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/regression.html">
+     Regression
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../kernels/overview.html">
+   Kernel Methods
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/kernel_derivatives.html">
+     Kernel Derivatives
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/rv.html">
+     RV Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/congruence_coeff.html">
+     Congruence Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/hsic.html">
+     HSIC
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../kernels/mmd.html">
+     Maximum Mean Discrepancy (MMD)
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../gps/intro.html">
+   Gaussian Processes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../gps/gps.html">
+     Basics
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../gps/literature.html">
+     Literature Review
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../gps/cg.html">
+     Conjugate Gradients
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../gps/sgps.html">
+     Sparse Gaussian Processes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../gps/algorithms.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../gps/gpr_code.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../gps/sgp_code.html">
+       Sparse GP From Scratch
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/overview.html">
+     Input Uncertainty in GPs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Similarity
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="measures.html">
+     Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+    <label for="toctree-checkbox-11">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="information.html">
+       Information Theory
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="entropy.html">
+       Entropy &amp; Relative Entropy
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="mutual_info.html">
+       Mutual Information and Total Correlation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="estimators.html">
+     Information Theory Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="classic.html">
+       Classic Methods
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="histogram.html">
+       Entropy Estimator - Histogram
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="experiments/rbig_sample_consistency.html">
+       Experiment - RBIG Sample Consistency
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../normalizing_flows/overview.html">
+   Normalizing Flows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+  <label for="toctree-checkbox-13">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/linear.html">
+     Linear Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/coupling_layers.html">
+     Coupling Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/conditional.html">
+     Conditional Normalizing Flows
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
+     Lecture I - Iterative Gaussianization
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.0_univariate_gauss.html">
+       1.1 - Univariate Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.1_marginal_gauss.html">
+       1.2 - Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.2_gaussianization.html">
+       1.2 - Iterative Gaussianization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
+     Lecture II - Gaussianization Flows
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt1_mg.html">
+       Parameterized Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt2_rot.html">
+       Parameterized Rotations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt3_plane.html">
+       Example - 2D Plane
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../inr/overview.html">
+   Implicit Neural Representations
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/formulation.html">
+     Formulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/literature_review.html">
+     Literature Review
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data_assimilation/overview.html">
+   Data Assimilation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/dynamical_sys.html">
+     Dynamical Systems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/oi.html">
+     Optimal Interpolation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/interp.html">
+     Interpolation Problem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/emu.html">
+     Emulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/inv_problems.html">
+     Inverse Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/projects.html">
+     Projects
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../data_assimilation/algorithms.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/markov_models.html">
+       Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/gauss_markov.html">
+       Gauss-Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/kf.html">
+       Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/nkf.html">
+       Normalizing Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/enskf.html">
+       Ensemble Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/dmm.html">
+       Deep Markov Model
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/4dvarnet.html">
+       4DVarNet
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/markov_gp.html">
+       Markovian Gaussian Processes
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../misc/overview.html">
+   Miscellaneous Notes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/generative_models.html">
+     Generative Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/diffusion_models.html">
+     Diffusion Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/fixed_point.html">
+     Fixed-Point Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/info_theory/similarity.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/notes/info_theory/similarity.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#what-is-it">
+   What is it?
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#trends">
+     Trends
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#constraints">
+   Constraints
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transformations">
+     Transformations
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#orthogonal-transformations">
+     Orthogonal Transformations
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#linear-transformations">
+     Linear Transformations
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#isotropic-scaling">
+     Isotropic Scaling
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multivariate">
+     Multivariate
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#curse-of-dimensionality">
+       Curse of Dimensionality
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#classic-methods">
+   Classic Methods
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#congruence-coefficient">
+     Congruence Coefficient
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#rv-coefficient">
+     RV Coefficient
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#single-sample-multiple-features">
+       Single Sample, Multiple Features
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#multiple-samples-multiple-features">
+       Multiple Samples, Multiple Features
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sample-space">
+       Sample Space
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#relation">
+       Relation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#distance-correlation">
+     Distance Correlation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kernel-methods">
+     Kernel Methods
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#normalized-variants">
+       Normalized Variants
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#randomized-kernels">
+       Randomized Kernels
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mutual-information">
+   Mutual Information
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#information-theory">
+     Information Theory
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-primer">
+       A Primer
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#variation-of-information">
+     Variation of Information
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#summary-of-methods">
+   Summary of Methods
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#questions">
+   Questions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#classes-of-methods">
+     Classes of Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#websites">
+     Websites
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#papers">
+     Papers
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Similarity</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#what-is-it">
+   What is it?
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#trends">
+     Trends
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#constraints">
+   Constraints
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transformations">
+     Transformations
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#orthogonal-transformations">
+     Orthogonal Transformations
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#linear-transformations">
+     Linear Transformations
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#isotropic-scaling">
+     Isotropic Scaling
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multivariate">
+     Multivariate
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#curse-of-dimensionality">
+       Curse of Dimensionality
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#classic-methods">
+   Classic Methods
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#congruence-coefficient">
+     Congruence Coefficient
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#rv-coefficient">
+     RV Coefficient
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#single-sample-multiple-features">
+       Single Sample, Multiple Features
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#multiple-samples-multiple-features">
+       Multiple Samples, Multiple Features
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sample-space">
+       Sample Space
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#relation">
+       Relation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#distance-correlation">
+     Distance Correlation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kernel-methods">
+     Kernel Methods
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#normalized-variants">
+       Normalized Variants
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#randomized-kernels">
+       Randomized Kernels
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mutual-information">
+   Mutual Information
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#information-theory">
+     Information Theory
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#a-primer">
+       A Primer
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#variation-of-information">
+     Variation of Information
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#summary-of-methods">
+   Summary of Methods
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#questions">
+   Questions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#classes-of-methods">
+     Classes of Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#websites">
+     Websites
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#papers">
+     Papers
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="similarity">
+<h1>Similarity<a class="headerlink" href="#similarity" title="Permalink to this headline">#</a></h1>
+<section id="what-is-it">
+<h2>What is it?<a class="headerlink" href="#what-is-it" title="Permalink to this headline">#</a></h2>
+<p>When making comparisons between objects, the simplest question we can ask ourselves is how ‘similar’ one object is to another. It’s a simple question but it’s very difficult to answer. Simalirity in everyday life is somewhat easy to grasp intuitively but it’s not easy to convey specific instructions to a computer. A <span class="xref myst">1</span>. For example, the saying, “it’s like comparing apples to oranges” is usually said when you try to tell someone that something is not comparable. But actually, we can compare apples and oranges. We can compare the shape, color, composition and even how delicious we personally think they are. So let’s consider the datacube structure that was mentioned above. How would we compare two variables <span class="math notranslate nohighlight">\(z_1\)</span> and <span class="math notranslate nohighlight">\(z_2\)</span>.</p>
+<section id="trends">
+<h3>Trends<a class="headerlink" href="#trends" title="Permalink to this headline">#</a></h3>
+<p>In this representation, we are essentially doing one type or processing and then</p>
+<ul class="simple">
+<li><p>A parallel coordinate visualization is practical byt only certain pairwise comparisons are possible.</p></li>
+</ul>
+<p>If we look at just the temporal component, then we could just plot the time series at different points along the globe.</p>
+<blockquote>
+<div><p>Trends often do not expose similarity in an intuitive way.</p>
+</div></blockquote>
+<p><span id="id1">[]</span></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="constraints">
+<h2>Constraints<a class="headerlink" href="#constraints" title="Permalink to this headline">#</a></h2>
+<ol class="simple">
+<li><p>Invariance to Rotations</p></li>
+<li><p>Invariance to Permutations</p></li>
+<li><p>Invariance to Isotropic Scaling</p></li>
+<li><p>Invariance to Linear Transformations</p></li>
+<li><p>Invariance to Sample Size</p></li>
+</ol>
+<section id="transformations">
+<h3>Transformations<a class="headerlink" href="#transformations" title="Permalink to this headline">#</a></h3>
+<blockquote>
+<div><p>Affect the size and position of the data</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Position -&gt; Translation, Rotation, Reflection</p></li>
+<li><p>Size -&gt; Dilation (e.g. isotropic scaling)</p></li>
+</ul>
+<p><strong>Translation</strong>: slides across a plane or through space (some distance, some direction)</p>
+<ul class="simple">
+<li><p>Transformation that slides across a plane or through a space</p></li>
+<li><p>All points of a figure/dataset move the same distance and in the same direction</p></li>
+<li><p>“change of location”, specified by direction and distance</p></li>
+</ul>
+<p><strong>Rotation</strong>: turns a figure around a point or line</p>
+<ul class="simple">
+<li><p>spin in the shape</p></li>
+<li><p>turn a figure</p></li>
+<li><p>reflection symmetry</p></li>
+</ul>
+<p><strong>Reflection</strong>: transformation that flips across a line</p>
+<ul class="simple">
+<li><p>rotation symmetry</p></li>
+</ul>
+<p><strong>Dilation</strong>: changes the size but not the actual shape</p>
+<ul class="simple">
+<li><p>e.g. enlarge, reduce</p></li>
+<li><p>usually given as a scale factor</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\alpha \mathbf{X} \mathbf{R} + b
+\]</div>
+</section>
+<section id="orthogonal-transformations">
+<h3>Orthogonal Transformations<a class="headerlink" href="#orthogonal-transformations" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="linear-transformations">
+<h3>Linear Transformations<a class="headerlink" href="#linear-transformations" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="isotropic-scaling">
+<h3>Isotropic Scaling<a class="headerlink" href="#isotropic-scaling" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="multivariate">
+<h3>Multivariate<a class="headerlink" href="#multivariate" title="Permalink to this headline">#</a></h3>
+<section id="curse-of-dimensionality">
+<h4>Curse of Dimensionality<a class="headerlink" href="#curse-of-dimensionality" title="Permalink to this headline">#</a></h4>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="classic-methods">
+<h2>Classic Methods<a class="headerlink" href="#classic-methods" title="Permalink to this headline">#</a></h2>
+<p>These are some notes based off of an excellent review paper <span id="id2">[]</span>.</p>
+<ul class="simple">
+<li><p>Evaluate Similarity of the whole config of units</p></li>
+<li><p>Transform the data into an <span class="math notranslate nohighlight">\(N\times N\)</span> square matrix, b) evaluate the similarity.</p></li>
+</ul>
+<section id="congruence-coefficient">
+<h3>Congruence Coefficient<a class="headerlink" href="#congruence-coefficient" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Unadjusted Correlation - <span id="id3">[]</span></p></li>
+<li><p>Congruence - <span id="id4">[]</span></p></li>
+<li><p>Monotonicty Coefficient - <span id="id5">[]</span></p></li>
+</ul>
+<blockquote>
+<div><p>Sensitive to patters of similarity byt not to rotations of dilations.</p>
+</div></blockquote>
+</section>
+<section id="rv-coefficient">
+<h3>RV Coefficient<a class="headerlink" href="#rv-coefficient" title="Permalink to this headline">#</a></h3>
+<blockquote>
+<div><p>Early instance of a natural generalization of the notion of correlation to groups of variables. Can explain everything and can be generalized to almost every other method!</p>
+</div></blockquote>
+<ul>
+<li><p><span id="id6">[]</span></p>
+<blockquote>
+<div><p>Measure the similarity between squared matrices (PSD); multivariate analysis techniques</p>
+</div></blockquote>
+</li>
+<li><p>Abdi (2003), Abdi &amp; Valentin (2007), Abdi (2007, 2009), Holmes (1989, 2007)</p>
+<blockquote>
+<div><p>STATB; DISTATIS
+Transform rectangular matrices into squared matrices
+Proof Abdi 2007a,</p>
+</div></blockquote>
+</li>
+</ul>
+<section id="single-sample-multiple-features">
+<h4>Single Sample, Multiple Features<a class="headerlink" href="#single-sample-multiple-features" title="Permalink to this headline">#</a></h4>
+<p><span class="math notranslate nohighlight">\(\mathbf{x,y}\in \mathcal{R}^D\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\rho V(\mathbf{x,y}) = \frac{\text{Tr}\left( \sum_{\mathbf{xy}} \sum_{\mathbf{yx}}\right)}{\sqrt{\text{Tr}\left( \sum_{\mathbf{xx}}^2\right)\text{Tr}\left( \sum_{\mathbf{yy}}^2\right)}}
+\]</div>
+<ul class="simple">
+<li><p>Relation to Pearson Correlation Coefficient: <span class="math notranslate nohighlight">\(D=1, \rho V=\rho^2\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\rho V \in [0,1]\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\rho V (\mathbf{x}, a\mathbf{xr}+c)=1\)</span></p></li>
+</ul>
+<p><strong>Connections</strong></p>
+<ul class="simple">
+<li><p><span id="id7">[]</span>; Connections between RV and PCA, LDA, LR, etc.</p></li>
+</ul>
+</section>
+<section id="multiple-samples-multiple-features">
+<h4>Multiple Samples, Multiple Features<a class="headerlink" href="#multiple-samples-multiple-features" title="Permalink to this headline">#</a></h4>
+<blockquote>
+<div><p>Considers two sets of variables similar if the relative positions of the observations in one set is similar to the relative positions of another.</p>
+</div></blockquote>
+<p><span class="math notranslate nohighlight">\(\mathbf{X,Y}\in \mathcal{R}^{N \times D}\)</span>. Let’s create some matrices describing the empirical covaraince: <span class="math notranslate nohighlight">\(\sum_\mathbf{XY} = \frac{1}{N-1}\mathbf{X^\top Y}\in\mathcal{R}^{D \times D}\)</span>. We can summarize this as follows:</p>
+<div class="math notranslate nohighlight">
+\[
+\rho_\text{RV}(\mathbf{X,Y}) = \frac{\text{Tr}(\sum_\mathbf{XY}\sum_\mathbf{YX})}{\sqrt{\text{Tr}\left(\sum_\mathbf{XX}^2\right) \text{Tr}\left(\sum_\mathbf{YY}^2\right)}}
+\]</div>
+</section>
+<section id="sample-space">
+<h4>Sample Space<a class="headerlink" href="#sample-space" title="Permalink to this headline">#</a></h4>
+<p>Consider matrices in the sample space: <span class="math notranslate nohighlight">\(\mathbf{K_x}=\mathbf{XX^\top}\in\mathcal{R}^{N \times N}\)</span>. By taking the Hilbert-Schmidt norm, we can measure their proximity:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle \mathbf{K_X, K_Y}\rangle_F = \text{Tr}(\mathbf{K_X K_Y}) = \sum_i^{D_\mathbf{x}}\sum_j^{D_\mathbf{y}} \text{Cov}^2(\mathbf{X_{.i}},\mathbf{Y_{.j}})
+\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\rho_\text{RV}(\mathbf{X,Y}) 
+&amp;= \frac{\langle \mathbf{K_X}\mathbf{K_Y}\rangle_F}{||\mathbf{K_X}||_F ||\mathbf{K_Y}||_F } \\
+&amp;= \frac{\text{Tr}(\mathbf{K_X}\mathbf{K_Y})}{\sqrt{\text{Tr}\left(\mathbf{K_X}\right)^2 \text{Tr}\left(\mathbf{K_Y}\right)^2}} 
+\end{aligned}
+\end{split}\]</div>
+</section>
+<section id="relation">
+<h4>Relation<a class="headerlink" href="#relation" title="Permalink to this headline">#</a></h4>
+<blockquote>
+<div><p>Comparing features is the same as comparing samples. <span id="id8">[]</span> (<a class="reference external" href="https://icml.cc/media/Slides/icml/2019/halla(13-11-00)-13-12-15-4871-similarity_of_n.pdf">slides</a>)</p>
+</div></blockquote>
+<div class="math notranslate nohighlight" id="equation-eq-symmetry">
+<span class="eqno">(14)<a class="headerlink" href="#equation-eq-symmetry" title="Permalink to this equation">#</a></span>\[
+||\mathbf{X}^\top \mathbf{Y}||_F^2 = \text{Tr}\left(\mathbf{XX^\top YY^\top} \right)
+\]</div>
+<ul class="simple">
+<li><p>The LHS is the sum of squared dot product similarities between the features</p></li>
+<li><p>The RHS is the dot product between reshaped inter-example similarity matrices</p></li>
+</ul>
+<details>
+<summary>Proof</summary>
+<p>A very simple proof as we simply need to expand the following the trace term using the “cyclic property” of matrices.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{Tr}\left(\mathbf{XX^\top YY^\top} \right) 
+&amp;= \text{Tr}\left(\mathbf{X^\top YY^\top X} \right)\\
+&amp;= \text{Tr}\left(\mathbf{X^\top Y} \right)^2 \\
+&amp;= ||\mathbf{X}^\top \mathbf{Y}||_F^2 \\
+\end{aligned}
+\end{split}\]</div>
+</details>
+<p>In the same way as the <span class="math notranslate nohighlight">\(\rho\)</span> coefficient, we can normalize both sides of the equation to get equivalent bounded correlations:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{||\mathbf{X}^\top \mathbf{Y}||_F^2}{||\mathbf{X}^\top \mathbf{X}||_F||\mathbf{Y}^\top \mathbf{Y}||_F} 
+= \frac{\text{Tr}\left(\mathbf{XX^\top YY^\top} \right)}{||\mathbf{X} \mathbf{X}^\top||_F||\mathbf{Y} \mathbf{Y}^\top||_F}
+\]</div>
+<p>as shown in <span id="id9">[]</span></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="distance-correlation">
+<h3>Distance Correlation<a class="headerlink" href="#distance-correlation" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Originally proposed by: <span id="id10">[]</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+K_{ij} = - \frac{1}{2}(d_{ij}^2 - d_{i.}^2 - d_{.j}^2 + d_{..}^2)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(.\)</span> is the mean sum.</p>
+<div class="math notranslate nohighlight">
+\[
+\rho_\text{RV} = \frac{\langle H\triangle_x^2H, H\triangle_y^2H  \rangle_F}{|| H\triangle_x^2H||_F ||H\triangle_y^2H ||_F}
+\]</div>
+<p>where:</p>
+<div class="math notranslate nohighlight" id="equation-centering">
+<span class="eqno">(11)<a class="headerlink" href="#equation-centering" title="Permalink to this equation">#</a></span>\[ 
+  \mathbf{H}=\mathbf{I}_N - \left(\frac{1}{N} \right)\mathbf{1}_N
+\]</div>
+<ol class="simple">
+<li><p>The features are standardized to have unit variance. So we have to be careful with the preprocessing.</p></li>
+<li><p>It’s a unifying tool that maximizes the association coefficients under certain constraints.</p></li>
+</ol>
+<p>Assuming Euclidean distance, we can have:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{dCor}(\mathbf{X,Y}) = \frac{\langle H\triangle_xH, H\triangle_yH  \rangle_F}{|| H\triangle_xH||_F ||H\triangle_yH ||_F}
+\]</div>
+<ul class="simple">
+<li><p>We use <span class="math notranslate nohighlight">\(\triangle\)</span> instead of square matrices</p></li>
+<li><p><span class="math notranslate nohighlight">\(\text{dCorr}\)</span> can detect non-linear relationships, RV can only detect linear relationships</p></li>
+<li><p>If we don’t square the distances, we can pick up more complex relationships</p></li>
+<li><p>Statistical consistency: <span class="math notranslate nohighlight">\(n \rightarrow \infty\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(0 \leq \text{dCor}(\mathbf{X,Y}) \leq 1\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\((\mathbf{X,Y})=0\)</span> iff <span class="math notranslate nohighlight">\(\mathbf{X,Y}\)</span> are independent</p></li>
+<li><p><span class="math notranslate nohighlight">\(\text{dCor}(\mathbf{X}, a \mathbf{XB} + c)=1\)</span></p></li>
+</ul>
+<p><strong>Connections</strong></p>
+<ul class="simple">
+<li><p>PCA <span id="id11">[]</span></p></li>
+<li><p>Discriminant Analysis, <span id="id12">[]</span></p></li>
+<li><p>Canonical Analysis, <span id="id13">[]</span></p></li>
+<li><p>Multivariate Regression <span id="id14">[]</span></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="kernel-methods">
+<h3>Kernel Methods<a class="headerlink" href="#kernel-methods" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>MMD -&gt; distance between the joint distribution of two random variables &amp; the product of their marginal distributions</p></li>
+<li><p>HSIC</p></li>
+</ul>
+<div class="math notranslate nohighlight" id="equation-hsic">
+<span class="eqno">(12)<a class="headerlink" href="#equation-hsic" title="Permalink to this equation">#</a></span>\[
+  \rho_\text{HSIC}(\mathbf{X,Y}) = \frac{1}{(N-1)^2}\text{Tr}(\tilde{\mathbf{K}}_\mathbf{x}\tilde{\mathbf{K}}_\mathbf{y})
+\]</div>
+<p>where: <span class="math notranslate nohighlight">\(\tilde{\mathbf{K}}=\mathbf{HKH}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{H}\)</span> is the same centering matrix as above in equation <a class="reference internal" href="#equation-centering">(11)</a>.</p>
+<p><strong>Connections</strong>:</p>
+<ul class="simple">
+<li><p><span id="id15">[]</span>: some talks, <a class="reference external" href="http://www.mmds-data.org/presentations/2010/Holmes.pdf">Slides</a> | <a class="reference external" href="https://web.stanford.edu/class/bios221/Pune/Lectures/Lecture_Day5_CCA_Multitable.pdf">Slides</a></p></li>
+<li><p><span id="id16">[]</span>; multivariate kernel methods in the analysis of graphs</p></li>
+<li><p><span id="id17">[]</span>; Kernel Tangent Alignment -&gt; Normalized version HSIC (w/o centering)</p></li>
+<li><p><span id="id18">[]</span>; Centered Kernel Tangent Alignment -&gt; Normalized Version of HSIC</p></li>
+<li><p><span id="id19">[]</span>; Energy statistics; connections between distance correlations and kernel methods.</p></li>
+</ul>
+<hr class="docutils" />
+<section id="normalized-variants">
+<h4>Normalized Variants<a class="headerlink" href="#normalized-variants" title="Permalink to this headline">#</a></h4>
+<p>Just like comparing covariance versus correlation, HSIC is difficult to interpret because it is unbounded and inconsistent with respect to samples and dimensions. HSIC suffers from the curse of dimensionality because for a certain set of samples and dimensions you can get a vastly different HSIC values even though they should be more consistent. As such, normalized variants were used such as <span id="id20">[]</span> which sought to alleviate this issue. Just like correlation, this works by normalizing the HSIC metric with the corresponding</p>
+<div class="math notranslate nohighlight" id="equation-nhsic">
+<span class="eqno">(13)<a class="headerlink" href="#equation-nhsic" title="Permalink to this equation">#</a></span>\[
+  \rho_\text{nHSIC}(\mathbf{X,Y}) = \frac{\text{Tr}(\tilde{\mathbf{K}}_\mathbf{x}\tilde{\mathbf{K}}_\mathbf{y})}{\sqrt{||\tilde{\mathbf{K}}_\mathbf{x}||_F ||\tilde{\mathbf{K}}_\mathbf{y}||_F} }
+\]</div>
+<p>This particular variant is called the Centered Kernel Alignment <span id="id21">[]</span> but through-out this thesis, we will just called it <em>normalized HSIC</em> to simplify the terminology. For more information, see this <span class="xref myst"><strong><em>reference</em></strong></span> in the appendix for more details regarding HSIC.</p>
+</section>
+<hr class="docutils" />
+<section id="randomized-kernels">
+<h4>Randomized Kernels<a class="headerlink" href="#randomized-kernels" title="Permalink to this headline">#</a></h4>
+<p>Randomized kernel approximations allow us to estimate kernel matrices <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> in less time by means of an approximation.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{K} \approx \hat{\mathbf{K}}= \mathbf{Z}\mathbf{Z}^\top
+\]</div>
+<p>The most important thing to take home from this is that using the relationship between the dot product of kernel matrices in the sample space versus the dot product of datasets in the feature as seen in equation <a class="reference internal" href="#equation-eq-symmetry">(14)</a>, we can potentially estimate the Frobenius norm much easily especially for very large scale datasets.</p>
+<div class="math notranslate nohighlight" id="equation-eq-symmetry">
+<span class="eqno">(14)<a class="headerlink" href="#equation-eq-symmetry" title="Permalink to this equation">#</a></span>\[\begin{split}
+\begin{aligned}
+\text{Tr}\left(\tilde{\mathbf{K}}_\mathbf{x}\tilde{\mathbf{K}}_\mathbf{y} \right) &amp;= 
+\text{Tr}\left(\hat{\mathbf{K}}_\mathbf{x}\hat{\mathbf{K}}_\mathbf{y} \right)\\
+&amp;= \text{Tr}\left(\mathbf{Z}_\mathbf{x}\mathbf{Z}^\top_\mathbf{x}\mathbf{Z}_\mathbf{y}\mathbf{Z}^\top_\mathbf{y} \right)\\
+&amp;= ||\mathbf{Z}_\mathbf{x}^\top \mathbf{Z}_\mathbf{y}||_F^2
+\end{aligned}
+\end{split}\]</div>
+<p>In <span id="id22">[]</span>, did an experiment to see how well approximation methods such as random fourier features (RFF) and Nyström did versus their original counterparts in independence testing. They found that for large-scale synthetic data, these methods performed rather well and encouraged uses to use these in applications in the future.</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="mutual-information">
+<h2>Mutual Information<a class="headerlink" href="#mutual-information" title="Permalink to this headline">#</a></h2>
+<section id="information-theory">
+<h3>Information Theory<a class="headerlink" href="#information-theory" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Mutual Information is the counterpart to using information theory methods.</p></li>
+<li><p>It requires an estimation step which may introduce additional uncertainties</p></li>
+<li><p>Extends nicely to different types of data (e.g. discrete, categorical, multivariate, multidimentional)</p></li>
+<li><p>Exposes non-linearities which may be difficult to see via (linear) correlations</p></li>
+<li><p>Kernel Approximations: Although there are some differences for different estimators, relative distances are consistent</p></li>
+</ul>
+<section id="a-primer">
+<h4>A Primer<a class="headerlink" href="#a-primer" title="Permalink to this headline">#</a></h4>
+<ul class="simple">
+<li><p>Entropy - measure of information uncertainty of <span class="math notranslate nohighlight">\(X\)</span></p></li>
+<li><p>Joint Entropy - uncertinaty of <span class="math notranslate nohighlight">\(X,Y\)</span></p></li>
+<li><p>Conditional Entropy - uncertainty of <span class="math notranslate nohighlight">\(X\)</span> given that I know <span class="math notranslate nohighlight">\(Y\)</span></p></li>
+<li><p>Mutual Information - how much knowning <span class="math notranslate nohighlight">\(X\)</span> reduces the uncertainty of <span class="math notranslate nohighlight">\(Y\)</span></p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(I(X,Y)=\)</span></p></li>
+</ul>
+</li>
+<li><p>Normalized Mutual Information</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(\tilde{I}(X,Y) = \frac{I(X,Y)}{\sqrt{H(X)H(Y)}}\)</span></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="variation-of-information">
+<h3>Variation of Information<a class="headerlink" href="#variation-of-information" title="Permalink to this headline">#</a></h3>
+<blockquote>
+<div><p>A measure of distance in information theory space.</p>
+</div></blockquote>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+VI(X,Y) &amp;= H(X|Y) + H(Y|X)\\
+&amp;= H(X) + H(Y) -2I(X,Y)
+\end{aligned}
+\end{split}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(VI(X,Y)=0\)</span> Iff <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are the same</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(H(X,Y)=H(X)=H(Y)=I(X,Y)\)</span></p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\(VI(X,Y) &lt; H(X,Y)\)</span> If <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are different but dependent</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(H(X,Y)&lt;H(X) + H(Y)\)</span></p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\(VI(X,Y)=H(X,Y)\)</span> if <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are independent</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(H(X,Y)=H(X) + H(Y)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(I(X,Y)=0\)</span></p></li>
+</ul>
+</li>
+<li><p>Variation of Information: <span id="id23">[]</span></p></li>
+<li><p>Normalized Variants: <span id="id24">[]</span></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="summary-of-methods">
+<h2>Summary of Methods<a class="headerlink" href="#summary-of-methods" title="Permalink to this headline">#</a></h2>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="text-align:center head"><p>Name</p></th>
+<th class="text-align:center head"><p>Non-Linear</p></th>
+<th class="text-align:center head"><p>Multi-Dimensional</p></th>
+<th class="text-align:center head"><p>Isotropic Scaling</p></th>
+<th class="text-align:center head"><p>Orthogonal Transforms</p></th>
+<th class="text-align:center head"><p>Coefficient</p></th>
+<th class="text-align:center head"><p>Computational Cost</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-align:center"><p>Pearson, <span class="math notranslate nohighlight">\(\rho\)</span></p></td>
+<td class="text-align:center"><p>:x:</p></td>
+<td class="text-align:center"><p>:x:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(n\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>Spearman, <span class="math notranslate nohighlight">\(\rho\)</span></p></td>
+<td class="text-align:center"><p>:x:</p></td>
+<td class="text-align:center"><p>:x:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(n\log n\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-align:center"><p>RV Coeff, <span class="math notranslate nohighlight">\(\rho RV\)</span></p></td>
+<td class="text-align:center"><p>:x:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(n^2\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>dCorr</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(n^2\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-align:center"><p>HSIC</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:x:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:x:</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(n^2\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>nHSIC</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p><span class="math notranslate nohighlight">\(n^2\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-align:center"><p>MI</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:x:</p></td>
+<td class="text-align:center"><p>-</p></td>
+</tr>
+<tr class="row-odd"><td class="text-align:center"><p>nMI</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:heavy_check_mark:</p></td>
+<td class="text-align:center"><p>:x:</p></td>
+<td class="text-align:center"><p>-</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="questions">
+<h2>Questions<a class="headerlink" href="#questions" title="Permalink to this headline">#</a></h2>
+<ol class="simple">
+<li><p>Are there <strong>correlations</strong> across seasons or latitudes</p></li>
+<li><p>Are there large descrepancies in the different outputs?</p></li>
+</ol>
+<section id="classes-of-methods">
+<h3>Classes of Methods<a class="headerlink" href="#classes-of-methods" title="Permalink to this headline">#</a></h3>
+</section>
+</section>
+<hr class="docutils" />
+<section id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
+<section id="websites">
+<h3>Websites<a class="headerlink" href="#websites" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://climatedataguide.ucar.edu/climate-data-tools-and-analysis/taylor-diagrams">Taylor Diagrams</a></p></li>
+<li></li>
+</ul>
+</section>
+<section id="papers">
+<h3>Papers<a class="headerlink" href="#papers" title="Permalink to this headline">#</a></h3>
+<p>[1]:   “The Mutual Information Diagram for Uncertainty Visualization - Correa &amp; Lindstrom (2012)”
+[2]: 	“Summarizing multiple aspects of model performance in a single diagram”</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<div class="docutils container" id="id25">
+<dl class="citation">
+<dt class="label" id="id54"><span class="brackets">dBezenacRB+20</span></dt>
+<dd><p>Emmanuel de Bézenac, Syama Sundar Rangapuram, Konstantinos Benidis, Michael Bohlke-Schneider, Richard Kurle, Lorenzo Stella, Hilaf Hasson, Patrick Gallinari, and Tim Januschowski. Normalizing kalman filters for multivariate time series analysis. In H. Larochelle, M. Ranzato, R. Hadsell, M. F. Balcan, and H. Lin, editors, <em>Advances in Neural Information Processing Systems</em>, volume 33, 2995–3007. Curran Associates, Inc., 2020. URL: <a class="reference external" href="https://proceedings.neurips.cc/paper/2020/file/1f47cef5e38c952f94c5d61726027439-Paper.pdf">https://proceedings.neurips.cc/paper/2020/file/1f47cef5e38c952f94c5d61726027439-Paper.pdf</a>.</p>
+</dd>
+<dt class="label" id="id53"><span class="brackets">FKPW17</span></dt>
+<dd><p>Marco Fraccaro, Simon Kamronn, Ulrich Paquet, and Ole Winther. A disentangled recognition and nonlinear dynamics model for unsupervised learning. 2017. <a class="reference external" href="https://arxiv.org/abs/1710.05741">arXiv:1710.05741</a>.</p>
+</dd>
+<dt class="label" id="id55"><span class="brackets">GLB+21</span></dt>
+<dd><p>Laurent Girin, Simon Leglaive, Xiaoyu Bie, Julien Diard, Thomas Hueber, and Xavier Alameda-Pineda. Dynamical variational autoencoders: a comprehensive review. <em>Foundations and Trends® in Machine Learning</em>, 15(1-2):1–175, 2021. URL: <a class="reference external" href="http://dx.doi.org/10.1561/2200000089">http://dx.doi.org/10.1561/2200000089</a>, <a class="reference external" href="https://doi.org/10.1561/2200000089">doi:10.1561/2200000089</a>.</p>
+</dd>
+<dt class="label" id="id51"><span class="brackets">HK20</span></dt>
+<dd><p>Calvin Janitra Halim and K. Kawamoto. 2d convolutional neural markov models for spatiotemporal sequence forecasting. <em>Sensors (Basel, Switzerland)</em>, 2020.</p>
+</dd>
+<dt class="label" id="id38"><span class="brackets">Hen20</span></dt>
+<dd><p>Philipp Henning. Probabilistic ml - lecture 12 - gauss-markov models. 2020. URL: <a class="reference external" href="https://youtu.be/FydcrDtZroU">https://youtu.be/FydcrDtZroU</a> (visited on 2021-10-10).</p>
+</dd>
+<dt class="label" id="id26"><span class="brackets">HdHPK14</span></dt>
+<dd><p>Christopher Ramsay Holdgraf, Wendy de Heer, Brian N. Pasley, and Robert T. Knight. Evidence for Predictive Coding in Human Auditory Cortex. In <em>International Conference on Cognitive Neuroscience</em>. Brisbane, Australia, Australia, 2014. Frontiers in Neuroscience.</p>
+</dd>
+<dt class="label" id="id52"><span class="brackets">LLBC21</span></dt>
+<dd><p>Wei Liu, Zhilu Lai, Kiran Bacsa, and Eleni Chatzi. Physics-guided deep markov models for learning nonlinear dynamical systems with uncertainty. 2021. <a class="reference external" href="https://arxiv.org/abs/2110.08607">arXiv:2110.08607</a>.</p>
+</dd>
+<dt class="label" id="id40"><span class="brackets">Mur12</span></dt>
+<dd><p>Kevin P. Murphy. <em>Machine Learning: A Probabilistic Perspective</em>. MIT Press, 2012. URL: <a class="reference external" href="probml.ai">probml.ai</a>.</p>
+</dd>
+<dt class="label" id="id49"><span class="brackets">OFH+18</span></dt>
+<dd><p>Said Ouala, Ronan Fablet, Cédric Herzet, Bertrand Chapron, Ananda Pascual, Fabrice Collard, and Lucile Gaultier. Neural network based kalman filters for the spatio-temporal interpolation of satellite-derived sea surface temperature. <em>Remote Sensing</em>, 2018. URL: <a class="reference external" href="https://www.mdpi.com/2072-4292/10/12/1864">https://www.mdpi.com/2072-4292/10/12/1864</a>, <a class="reference external" href="https://doi.org/10.3390/rs10121864">doi:10.3390/rs10121864</a>.</p>
+</dd>
+<dt class="label" id="id36"><span class="brackets">Wen21</span></dt>
+<dd><p>Lilian Weng. What are diffusion models? 2021. URL: <a class="reference external" href="https://lilianweng.github.io/lil-log/2021/07/11/diffusion-models.html">https://lilianweng.github.io/lil-log/2021/07/11/diffusion-models.html</a>.</p>
+</dd>
+<dt class="label" id="id34"><span class="brackets">WHSX16</span></dt>
+<dd><p>Andrew Gordon Wilson, Zhiting Hu, Ruslan Salakhutdinov, and Eric P. Xing. Deep kernel learning. In Arthur Gretton and Christian C. Robert, editors, <em>Proceedings of the 19th International Conference on Artificial Intelligence and Statistics, AISTATS 2016, Cadiz, Spain, May 9-11, 2016</em>, volume 51 of JMLR Workshop and Conference Proceedings, 370–378. JMLR.org, 2016. URL: <a class="reference external" href="http://proceedings.mlr.press/v51/wilson16.html">http://proceedings.mlr.press/v51/wilson16.html</a>.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/info_theory"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../egps/overview.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Input Uncertainty in GPs</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="overview.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Information Theory</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

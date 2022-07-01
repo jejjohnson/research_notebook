@@ -1,0 +1,1406 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Maximum Mean Discrepancy (MMD) &#8212; Research Notebook</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Gaussian Processes" href="../gps/intro.html" />
+    <link rel="prev" title="HSIC" href="hsic.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../_static/book_v2.jpeg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Resources
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../resources/python/overview.html">
+   Python
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/ides.html">
+     Integraded Development Environment (IDE)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/stack.html">
+     Standard Python Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/earthsci_stack.html">
+     Earth Science Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/dl_stack.html">
+     Deep Learning Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/scale_stack.html">
+     Scaling Stack
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../resources/python/good_code.html">
+     Good Code
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Tutorials
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/jax_journey/overview.html">
+   My JAX Journey
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/ecosystem.html">
+     Ecosystem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/vmap.html">
+     vmap
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/jit.html">
+     Jit
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/jax_journey/classes.html">
+     Classes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../tutorials/jax_journey/algorithms/overview.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/bisection.html">
+       Bisection search
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
+       Kernel Derivatives
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">
+       Gaussianization Flows
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../tutorials/remote/overview.html">
+   Remote Computing
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/ssh.html">
+     SSH Configuration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/conda.html">
+     Conda 4 Remote Servers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../tutorials/remote/jlab.html">
+     Jupyter Lab 4 Remote Servers
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Notes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../concepts/uncertainty.html">
+   Modeling Uncertainty
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../bayesian/overview.html">
+   Bayesian
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/intro.html">
+     Language of Uncertainty
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/models.html">
+     Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference.html">
+     Inference Schemes
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/inference/variational_inference.html">
+     Variational Inference
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/confidence_intervals.html">
+     Confidence Intervals
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bayesian/regression.html">
+     Regression
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../concepts/overview.html">
+   Sleeper Concepts
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/gaussian.html">
+     Gaussian Distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/change_of_variables.html">
+     Change of Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/identity_trick.html">
+     Identity Trick
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/inverse_function.html">
+     Inverse Function Theorem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/jensens.html">
+     Jensens Inequality
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../concepts/lin_alg.html">
+     Linear Algebra Tricks
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="overview.html">
+   Kernel Methods
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+  <label for="toctree-checkbox-7">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="kernel_derivatives.html">
+     Kernel Derivatives
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="rv.html">
+     RV Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="congruence_coeff.html">
+     Congruence Coefficient
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="hsic.html">
+     HSIC
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Maximum Mean Discrepancy (MMD)
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../gps/intro.html">
+   Gaussian Processes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+  <label for="toctree-checkbox-8">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../gps/gps.html">
+     Basics
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../gps/literature.html">
+     Literature Review
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../gps/cg.html">
+     Conjugate Gradients
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../gps/sgps.html">
+     Sparse Gaussian Processes
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../gps/algorithms.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+    <label for="toctree-checkbox-9">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../gps/gpr_code.html">
+       GP from Scratch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../gps/sgp_code.html">
+       Sparse GP From Scratch
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../egps/overview.html">
+     Input Uncertainty in GPs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../info_theory/similarity.html">
+   Similarity
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../info_theory/overview.html">
+   Information Theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
+  <label for="toctree-checkbox-10">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/measures.html">
+     Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
+    <label for="toctree-checkbox-11">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/information.html">
+       Information Theory
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/entropy.html">
+       Entropy &amp; Relative Entropy
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/mutual_info.html">
+       Mutual Information and Total Correlation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../info_theory/estimators.html">
+     Information Theory Measures
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
+    <label for="toctree-checkbox-12">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/classic.html">
+       Classic Methods
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/histogram.html">
+       Entropy Estimator - Histogram
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">
+       Experiment - RBIG Sample Consistency
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../normalizing_flows/overview.html">
+   Normalizing Flows
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
+  <label for="toctree-checkbox-13">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/linear.html">
+     Linear Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/coupling_layers.html">
+     Coupling Layers
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../normalizing_flows/conditional.html">
+     Conditional Normalizing Flows
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">
+     Lecture I - Iterative Gaussianization
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
+    <label for="toctree-checkbox-14">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.0_univariate_gauss.html">
+       1.1 - Univariate Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.1_marginal_gauss.html">
+       1.2 - Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/1.2_gaussianization.html">
+       1.2 - Iterative Gaussianization
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">
+     Lecture II - Gaussianization Flows
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
+    <label for="toctree-checkbox-15">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt1_mg.html">
+       Parameterized Marginal Gaussianization
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt2_rot.html">
+       Parameterized Rotations
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt3_plane.html">
+       Example - 2D Plane
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../inr/overview.html">
+   Implicit Neural Representations
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
+  <label for="toctree-checkbox-16">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/formulation.html">
+     Formulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../inr/literature_review.html">
+     Literature Review
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../data_assimilation/overview.html">
+   Data Assimilation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <label for="toctree-checkbox-17">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/dynamical_sys.html">
+     Dynamical Systems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/oi.html">
+     Optimal Interpolation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/interp.html">
+     Interpolation Problem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/emu.html">
+     Emulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/inv_problems.html">
+     Inverse Problems
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../data_assimilation/projects.html">
+     Projects
+    </a>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../data_assimilation/algorithms.html">
+     Algorithms
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/markov_models.html">
+       Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/gauss_markov.html">
+       Gauss-Markov Models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/kf.html">
+       Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/nkf.html">
+       Normalizing Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/enskf.html">
+       Ensemble Kalman Filter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/dmm.html">
+       Deep Markov Model
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/4dvarnet.html">
+       4DVarNet
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../data_assimilation/markov_gp.html">
+       Markovian Gaussian Processes
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../misc/overview.html">
+   Miscellaneous Notes
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/generative_models.html">
+     Generative Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/diffusion_models.html">
+     Diffusion Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../misc/fixed_point.html">
+     Fixed-Point Methods
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/kernels/mmd.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/content/notes/kernels/mmd.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#idea">
+   Idea
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#formulation">
+   Formulation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kernel-trick">
+   Kernel Trick
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#empirical-estimate">
+   Empirical Estimate
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#unbiased-estimate">
+     Unbiased Estimate
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#biased-estimate">
+     Biased Estimate
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#equivalence">
+   Equivalence
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#euclidean-distance">
+     Euclidean Distance
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kl-divergence">
+     KL-Divergence
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#variation-of-information">
+     Variation of Information
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hsic">
+     HSIC
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary-font-color-red-proof-font-summary">
+     <strong>
+      <summary>
+       <font color="red">
+        Proof
+       </font>
+      </summary>
+     </strong>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Maximum Mean Discrepancy (MMD)</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#idea">
+   Idea
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#formulation">
+   Formulation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kernel-trick">
+   Kernel Trick
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#empirical-estimate">
+   Empirical Estimate
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#unbiased-estimate">
+     Unbiased Estimate
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#biased-estimate">
+     Biased Estimate
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#equivalence">
+   Equivalence
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#euclidean-distance">
+     Euclidean Distance
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kl-divergence">
+     KL-Divergence
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#variation-of-information">
+     Variation of Information
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hsic">
+     HSIC
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary-font-color-red-proof-font-summary">
+     <strong>
+      <summary>
+       <font color="red">
+        Proof
+       </font>
+      </summary>
+     </strong>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="maximum-mean-discrepancy-mmd">
+<h1>Maximum Mean Discrepancy (MMD)<a class="headerlink" href="#maximum-mean-discrepancy-mmd" title="Permalink to this headline">#</a></h1>
+<blockquote>
+<div><p>The Maximum Mean Discrepency (MMD) measurement is a distance measure between feature means.</p>
+</div></blockquote>
+<section id="idea">
+<h2>Idea<a class="headerlink" href="#idea" title="Permalink to this headline">#</a></h2>
+<p>This is done by taking the between dataset similarity of each of the datasets individually and then taking the cross-dataset similarity.</p>
+</section>
+<hr class="docutils" />
+<section id="formulation">
+<h2>Formulation<a class="headerlink" href="#formulation" title="Permalink to this headline">#</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+MMD^2(P,Q)
+&amp;= ||\mu_P - \mu_Q||\mathcal{F}^2 \\
+&amp;= \mathbb{E}{\mathcal{X} \sim P}\left[ k(x,x')\right] +
+\mathbb{E}{\mathcal{Y} \sim Q}\left[ k(y,y')\right] -
+2 \mathbb{E}{\mathcal{X,Y} \sim P,Q}\left[ k(x,y)\right]
+\end{aligned}\end{split}\]</div>
+<ul>
+<li><p><strong>Proof</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+    ||\mu_P - \mu_Q||\mathcal{F}^2
+    &amp;=
+    \langle \mu_P - \mu_Q, \mu_P - \mu_Q \rangle\mathcal{F} \\
+    &amp;=
+    \langle \mu_P, \mu_P \rangle_\mathcal{F} +
+    \langle \mu_Q, \mu_Q \rangle_\mathcal{F} -
+    2 \langle \mu_P,\mu_Q \rangle_\mathcal{F} \\
+    &amp;=
+    \mathbb{E}{\mathcal{X} \sim P} \left[ \mu_Q(x) \right] +
+    \mathbb{E}{\mathcal{Y} \sim Q} \left[ \mu_P(y) \right] -
+    2 \mathbb{E}{\mathcal{X} \sim P, Y \sim Q} \left[ \mu_P(x) \right] ??? \\
+    &amp;=
+    \mathbb{E}{\mathcal{X} \sim P} \langle \mu_P, \varphi(x) \rangle_\mathcal{F} +
+    \mathbb{E}{\mathcal{Y} \sim Q} \langle \mu_Q, \varphi(y) \rangle\mathcal{F} -
+    2 ... ??? \\
+    &amp;=
+    \mathbb{E}{\mathcal{X} \sim P} \langle \mu_P, k(x, \cdot) \rangle\mathcal{F} +
+    \mathbb{E}{\mathcal{Y} \sim Q} \langle \mu_Q, k(y, \cdot) \rangle\mathcal{F} -
+    2 ... ??? \\
+    &amp;=
+    \mathbb{E}{\mathcal{X} \sim P} \left[ k(x,x') \right] +
+    \mathbb{E}{\mathcal{Y} \sim Q} \left[ k(y,y') \right] -
+    2 \mathbb{E}_{\mathcal{X,Y} \sim P,Q } \left[ k(x,y) \right]
+    \end{aligned}\end{split}\]</div>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="kernel-trick">
+<h2>Kernel Trick<a class="headerlink" href="#kernel-trick" title="Permalink to this headline">#</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(k(X,Y) = \langle \varphi(x), \varphi(y) \rangle_\mathcal{H}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{MMD}^2(P, Q)
+&amp;=
+|| \mathbb{E}*{X \sim P} \varphi(X) - \mathbb{E}*{Y \sim P} \varphi(Y) ||^2_\mathcal{H} \\
+&amp;=
+\langle \mathbb{E}*{X \sim P} \varphi(X), \mathbb{E}*{X' \sim P} \varphi(X')\rangle_\mathcal{H} +
+\langle \mathbb{E}*{Y \sim Q} \varphi(Y), \mathbb{E}*{Y' \sim Q} \varphi(Y')\rangle_\mathcal{H} -
+2 \langle \mathbb{E}*{X \sim P} \varphi(X), \mathbb{E}*{Y' \sim Q} \varphi(Y')\rangle_\mathcal{H}
+\end{aligned}
+\end{split}\]</div>
+<p><strong>Source</strong>: <a class="reference external" href="https://stats.stackexchange.com/questions/276497/maximum-mean-discrepancy-distance-distribution">Stackoverflow</a></p>
+</section>
+<hr class="docutils" />
+<section id="empirical-estimate">
+<h2>Empirical Estimate<a class="headerlink" href="#empirical-estimate" title="Permalink to this headline">#</a></h2>
+<section id="unbiased-estimate">
+<h3>Unbiased Estimate<a class="headerlink" href="#unbiased-estimate" title="Permalink to this headline">#</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\widehat{\text{MMD}}^2 &amp;=
+\frac{1}{n(n-1)} \sum_{i\neq j}^N k(x_i, x_j) +
+\frac{1}{n(n-1)} \sum_{i\neq j}^N k(y_i, y_j) -
+\frac{2}{n^2} \sum_{i,j}^N k(x_i, y_j)
+\end{aligned}\]</div>
+<ul>
+<li><p>Code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Term 1</span>
+<span class="n">c1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span> <span class="n">m</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Kxx</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">Kxx</span><span class="p">)))</span>
+
+<span class="c1"># Term II</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Kyy</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">Kyy</span><span class="p">)))</span>
+
+<span class="c1"># Term III</span>
+<span class="n">c3</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Kxy</span><span class="p">)</span>
+
+<span class="c1"># estimate MMD</span>
+<span class="n">mmd_est</span> <span class="o">=</span> <span class="n">c1</span> <span class="o">*</span> <span class="n">A</span> <span class="o">+</span> <span class="n">c2</span> <span class="o">*</span> <span class="n">B</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">c3</span> <span class="o">*</span> <span class="n">C</span>
+
+</pre></div>
+</div>
+<p><strong>Sources</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/dougalsutherland/opt-mmd/blob/master/two_sample/mmd.py">Douglas Sutherland</a></p></li>
+<li><p><a class="reference external" href="https://github.com/choasma/HSIC-bottleneck/blob/master/source/hsicbt/math/hsic.py">HSIC BottleNeck</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eugenium/MMD/blob/master/mmd.py">Eugene Belilovsky</a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="biased-estimate">
+<h3>Biased Estimate<a class="headerlink" href="#biased-estimate" title="Permalink to this headline">#</a></h3>
+</section>
+</section>
+<hr class="docutils" />
+<section id="equivalence">
+<h2>Equivalence<a class="headerlink" href="#equivalence" title="Permalink to this headline">#</a></h2>
+<section id="euclidean-distance">
+<h3>Euclidean Distance<a class="headerlink" href="#euclidean-distance" title="Permalink to this headline">#</a></h3>
+<p>Let’s assume that <span class="math notranslate nohighlight">\(\mathbf{x,y}\)</span> come from two distributions, so <span class="math notranslate nohighlight">\(\mathbf{x} \sim \mathbb{P}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{x} \sim \mathbb{Q}\)</span>. We can write the MMD as norm of the difference between the means in feature spaces.</p>
+<div class="math notranslate nohighlight">
+\[\text{D}{ED}(\mathbb{P,Q})
+= ||\mu\mathbf{x} - \mu_\mathbf{y}||^2_F
+= ||\mu_\mathbf{x}||^2_F + ||\mu_\mathbf{y}||^2_F -
+2 \langle \mu_\mathbf{x}, \mu_\mathbf{y}\rangle_F\]</div>
+<p><strong>Empirical Estimation</strong></p>
+<p>This is only good for Gaussian kernels. But we can empirically estimate this as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\text{D}{ED}(\mathbb{P,Q})
+= \\ \frac{1}{N_x^2}
+\sum_{i=1}^{N_x}\sum_{j=1}^{N_x}
+\text{G}(\mathbf{x}_i, \mathbf{x}_j) \\ +
+\frac{1}{N_y^2}
+\sum_{i=1}^{N_y}\sum_{j=1}^{N_y}
+\text{G}(\mathbf{y}_i, \mathbf{y}_j) \\-
+2 \frac{1}{N_x N_y}
+\sum_{i=1}^{N_x}\sum_{j=1}^{N_y}
+\text{G}(\mathbf{x}_i, \mathbf{y}_j)\end{split}\]</div>
+<p>where G is the Gaussian kernel with a standard deviation of <span class="math notranslate nohighlight">\(\sigma\)</span>.</p>
+<ul class="simple">
+<li><p>Information Theoretic Learning: Renyi’s Entropy and Kernel Perspectives - Principe</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="kl-divergence">
+<h3>KL-Divergence<a class="headerlink" href="#kl-divergence" title="Permalink to this headline">#</a></h3>
+<p>This has some alternative interpretation that is similar to the Kullback-Leibler Divergence. Remember, the MMD is the distance between the joint distribution <span class="math notranslate nohighlight">\(P=\mathbb{P}_{x,y}\)</span> and the product of the marginals <span class="math notranslate nohighlight">\(Q=\mathbb{P}_x\mathbb{P}_y\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\text{MMD}(P_{XY},P_X P_Y, \mathcal{H}k) = || \mu{PQ} - \mu_{P}\mu_{Q}||\]</div>
+<p>This is similar to the KLD which has a similar interpretation in terms of the Mutual information: the difference between the joint distribution <span class="math notranslate nohighlight">\(P(x,y)\)</span> and the product of the marginal distributions <span class="math notranslate nohighlight">\(p_x p_y\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[I(X,Y) = D_{KL} \left[ P(x,y) || p_x p_y \right]\]</div>
+</section>
+<hr class="docutils" />
+<section id="variation-of-information">
+<h3>Variation of Information<a class="headerlink" href="#variation-of-information" title="Permalink to this headline">#</a></h3>
+<p>In informaiton theory, we have a measure of variation of information (aka the shared information distance) which a simple linear expression involving mutual information. However, it is a valid distance metric that obeys the triangle inequality.</p>
+<div class="math notranslate nohighlight">
+\[\text{VI}(X,Y) = H(X) + H(Y) - 2 I (X,Y)\]</div>
+<p>where <span class="math notranslate nohighlight">\(H(X)\)</span> is the entropy of <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> and <span class="math notranslate nohighlight">\(I(X,Y)\)</span> is the mutual information between <span class="math notranslate nohighlight">\(\mathcal{X,Y}\)</span>.</p>
+<p><strong>Properties</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\text{VI}(X,Y) \geq 0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\text{VI}(X,Y) = 0 \implies X=Y\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\text{VI}(X,Y) = d(Y,X)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\text{VI}(X,Z) \leq d(X,Y) + d(Y,Z)\)</span></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="hsic">
+<h3>HSIC<a class="headerlink" href="#hsic" title="Permalink to this headline">#</a></h3>
+<p>Similar to the KLD interpretation, this formulation is equivalent to the Hilbert-Schmidt Independence Criterion. If we think of the MMD distance between the joint distribution &amp; the product of the marginals then we get the HSIC measure.</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\text{MMD}^2(P_{XY}, P_XP_Y; \mathcal{H}*k) &amp;= ||\mu*{\mathbb{P}*{XY}} - \mu*{P_XP_Y}||
+\end{aligned}
+\]</div>
+<p>which is the exact formulation for HSIC.</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\text{MMD}^2(P_{XY}, P_XP_Y; \mathcal{H}*k) &amp;= \text{HSIC}^2(P*{XY}; \mathcal{F}, \mathcal{G})
+\end{aligned}
+\]</div>
+<p>where we have some equivalences.</p>
+</section>
+<section id="summary-font-color-red-proof-font-summary">
+<h3><strong><summary><font color="red">Proof</font></summary></strong><a class="headerlink" href="#summary-font-color-red-proof-font-summary" title="Permalink to this headline">#</a></h3>
+<p>First we need to do some equivalences. First the norm of two feature spaces <span class="math notranslate nohighlight">\(\varphi(\cdot, \cdot)\)</span> is the same as the kernel of the cross product.</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\langle \varphi(x,y), \varphi(x,y) \rangle_\mathcal{F} &amp;= k \left((x,y),(x',y')\right)
+\end{aligned}
+\]</div>
+<p>The second is the equivalence of the kernel of the cross-product of <span class="math notranslate nohighlight">\(\mathcal{X,Y}\)</span> is equal to the multiplication of the respective kernels for <span class="math notranslate nohighlight">\(\mathcal{X,Y}\)</span>. So, let’s say we have a kernel <span class="math notranslate nohighlight">\(k\)</span> on dataset <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> in the feature space <span class="math notranslate nohighlight">\(\mathcal{F}\)</span>. We also have a kernel <span class="math notranslate nohighlight">\(k\)</span> on dataset <span class="math notranslate nohighlight">\(\mathcal{Y}\)</span> with feature space <span class="math notranslate nohighlight">\(\mathcal{G}\)</span>. The kernel <span class="math notranslate nohighlight">\(k\)</span> on the <span class="math notranslate nohighlight">\(\mathcal{X,Y}\)</span> pairs are similar.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+k\left((x,y),(x',y')\right) &amp;= k(x,x')\,k(y,y') \\
+\end{aligned}
+\end{split}\]</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Arthur Grettons Lectures - <a class="reference external" href="http://www.gatsby.ucl.ac.uk/~gretton/coursefiles/lecture5_distribEmbed_1.pdf">lec 5</a> | <a class="reference external" href="https://www.notion.so/jejjohnson/Maximum-Mean-Discrepancy-MMD-075e5a776c2443e589b87270d050af25">lec 2</a></p>
+<ul>
+<li><p><a class="reference external" href="http://www.gatsby.ucl.ac.uk/~gretton/coursefiles/lecture5_covarianceOperator.pdf">Notes on Mean Embedding</a></p></li>
+<li><p><a class="reference external" href="http://www.stats.ox.ac.uk/~sejdinov/teaching/atml14/Theory_2014.pdf">What is RKHS</a></p></li>
+<li><p><a class="reference external" href="http://members.cbio.mines-paristech.fr/~jvert/svn/kernelcourse/course/2019mva/gretton.pdf">The Maximum Mean Discrepancy for Training Generative Adversarial Networks</a></p></li>
+<li><p><a class="reference external" href="http://users.umiacs.umd.edu/~hal/docs/daume04rkhs.pdf">From Zero to RKHS</a></p></li>
+<li><p><a class="reference external" href="http://users.umiacs.umd.edu/~hal/docs/daume04rkhs.pdf">RKHS in ML</a></p></li>
+</ul>
+</li>
+<li><p>Similarity Loss (TF2) - <a class="reference external" href="https://github.com/tensorflow/models/blob/master/research/domain_adaptation/domain_separation/losses.py#L40">code</a></p></li>
+<li><p><a class="reference external" href="http://alex.smola.org/teaching/iconip2006/iconip_3.pdf">MMD Smola</a></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\text{MMD}(\mathcal{F}, p, q) = \mathbb{E}_{\mathbf{x,x}'}\left[k(\mathbf{x,x'})\right] + 
+\mathbb{E}_{\mathbf{y,y}'}\left[k(\mathbf{y,y'})\right] -2 
+\mathbb{E}_{\mathbf{x,y}'}\left[k(\mathbf{x,y})\right]\]</div>
+<p><strong>Biased Estimate</strong></p>
+<ul>
+<li><p>Code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mmd</span> <span class="o">=</span> <span class="n">Kx</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">+</span> <span class="n">Ky</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">Kxy</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li></li>
+</ul>
+<p><strong>Unbiased Estimate</strong></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./content/notes/kernels"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="hsic.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">HSIC</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../gps/intro.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Gaussian Processes</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By J. Emmanuel Johnson<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

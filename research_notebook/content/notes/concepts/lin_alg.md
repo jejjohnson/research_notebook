@@ -22,6 +22,14 @@ $$
 (A + CBC^\top)^{-1} = A^{-1} - A^{-1} C (B^{-1} + C^\top A^{-1} C)^{-1}C^\top A^{-1}
 $$(woodbury_sum)
 
+
+### Sylvester Determinant Theorem
+
+$$
+\left|A + \sigma_y^2 \mathbf I_N \right| \approx |\mathbf \Lambda_{MM} | \left|\sigma_y^{2} \mathbf \Lambda_{MM}^{-1} + U_{NM}^{\top} \mathbf U_{NM} \right|
+$$(woodbury_det)
+
+
 ---
 ## Frobenius Norm (Hilbert-Schmidt Norm)
 

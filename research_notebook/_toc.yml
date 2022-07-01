@@ -32,11 +32,29 @@ parts:
       - file: content/tutorials/remote/conda
       - file: content/tutorials/remote/jlab
   - caption: Notes
+    # ==================
+    # NOTATION
+    # ==================
     chapters:
     - file: content/notes/concepts/notation
+    # ==================
+    # QUOTES
+    # ==================
+    - file: content/notes/concepts/quotes
+    # ======
+    # DATA
+    # ======
     - file: content/notes/data/overview
       sections:
       - file: content/notes/data/representation.md
+    # ==================
+    # UNCERTAINTY
+    # ==================
+    chapters:
+    - file: content/notes/concepts/uncertainty.md
+    # ==================
+    # BAYESIAN
+    # ==================
     - file: content/notes/bayesian/overview
       sections:
       - file: content/notes/bayesian/intro
@@ -45,6 +63,9 @@ parts:
       - file: content/notes/bayesian/inference/variational_inference
       - file: content/notes/bayesian/confidence_intervals
       - file: content/notes/bayesian/regression
+    # ==================
+    # SLEEPER CONCEPTS
+    # ==================
     - file: content/notes/concepts/overview
       sections:
       - file: content/notes/concepts/gaussian.md
@@ -53,44 +74,91 @@ parts:
       - file: content/notes/concepts/inverse_function
       - file: content/notes/concepts/jensens
       - file: content/notes/concepts/lin_alg
+    # ==================
+    # KERNEL METHODS
+    # ==================
     - file: content/notes/kernels/overview
       sections:
       - file: content/notes/kernels/kernel_derivatives
-    - file: content/notes/egps/overview
+      - file: content/notes/kernels/rv.md
+      - file: content/notes/kernels/congruence_coeff.md
+      - file: content/notes/kernels/hsic.md
+      - file: content/notes/kernels/mmd.md
+    # ==================
+    # GAUSSIAN PROCESSES
+    # ==================
+    - file: content/notes/gps/intro.md
       sections:
-      - file: content/notes/egps/predictions
-      - file: content/notes/egps/gauss_approx
-      - file: content/notes/egps/mcmc
-      - file: content/notes/egps/taylor
-      - file: content/notes/egps/moment_matching
-      - file: content/notes/egps/bgplvm
-      - file: content/notes/egps/error_prop
-      - file: content/notes/egps/next
-      - file: content/notes/egps/experiments
+      - file: content/notes/gps/gps.md
+      - file: content/notes/gps/literature.md
+      - file: content/notes/gps/cg.md
+      - file: content/notes/gps/sgps.md
+      - file: content/notes/gps/algorithms.md
         sections:
-        - file: content/notes/egps/notebooks/gpytorch_egp_taylor
+        - file: content/notes/gps/gpr_code.md
+        - file: content/notes/gps/sgp_code.md
+      # UNCERTAIN GAUSSIAN PROCESSES
+      - file: content/notes/egps/overview
+      - file: content/notes/egps/2_input_gp.md
+        sections:
+        - file: content/notes/egps/predictions
+        - file: content/notes/egps/gauss_approx
+        - file: content/notes/egps/mcmc
+        - file: content/notes/egps/taylor
+        - file: content/notes/egps/moment_matching
+        - file: content/notes/egps/bgplvm
+        - file: content/notes/egps/error_prop
+        - file: content/notes/egps/next
+        - file: content/notes/egps/experiments
+          sections:
+          - file: content/notes/egps/notebooks/gpytorch_egp_taylor
+    # ==================
+    # SIMILARITY METRICS
+    # ==================
+    - file: content/notes/info_theory/similarity.md
+    # ==================
+    # INFORMATION THEORY
+    # ==================
     - file: content/notes/info_theory/overview
       sections:
-      - file: content/notes/info_theory/histogram.ipynb
-      - file: content/notes/info_theory/experiments/rbig_sample_consistency.ipynb
+      - file: content/notes/info_theory/measures.md
+        sections:
+          - file: content/notes/info_theory/information.md
+          - file: content/notes/info_theory/entropy.md
+          - file: content/notes/info_theory/mutual_info.md
+      - file: content/notes/info_theory/estimators.md
+        sections:
+          - file: content/notes/info_theory/classic.md
+          - file: content/notes/info_theory/histogram.ipynb
+          - file: content/notes/info_theory/experiments/rbig_sample_consistency.ipynb
+    # ==================
+    # NORMALIZING FLOWS
+    # ==================
     - file: content/notes/normalizing_flows/overview
       sections:
-      - file: content/notes/normalizing_flows/coupling_flows.md
-      sections:
+      - file: content/notes/normalizing_flows/linear.md
+      - file: content/notes/normalizing_flows/coupling_layers.md
+      - file: content/notes/normalizing_flows/conditional.md
       - file: content/notes/normalizing_flows/lecture_1_ig.md
         sections:
-        - file: content/notes/normalizing_flows/1.0_univariate_gauss.ipynb
-        - file: content/notes/normalizing_flows/1.1_marginal_gauss.ipynb
-        - file: content/notes/normalizing_flows/1.2_gaussianization.ipynb
+          - file: content/notes/normalizing_flows/1.0_univariate_gauss.ipynb
+          - file: content/notes/normalizing_flows/1.1_marginal_gauss.ipynb
+          - file: content/notes/normalizing_flows/1.2_gaussianization.ipynb
       - file: content/notes/normalizing_flows/lecture_2_gf.md
         sections:
-        - file: content/notes/normalizing_flows/lecture_3_gfs_pt1_mg.md
-        - file: content/notes/normalizing_flows/lecture_3_gfs_pt2_rot.md
-        - file: content/notes/normalizing_flows/lecture_3_gfs_pt3_plane.md
+          - file: content/notes/normalizing_flows/lecture_3_gfs_pt1_mg.md
+          - file: content/notes/normalizing_flows/lecture_3_gfs_pt2_rot.md
+          - file: content/notes/normalizing_flows/lecture_3_gfs_pt3_plane.md
+    # ================================
+    # IMPLICIT NEURAL REPRESENTATIONS
+    # ================================
     - file: content/notes/inr/overview.md
       sections:
       - file: content/notes/inr/formulation.md
       - file: content/notes/inr/literature_review.md
+    # ================================
+    # DATA ASSIMILATION
+    # ================================
     - file: content/notes/data_assimilation/overview.md
       sections:
       - file: content/notes/data_assimilation/dynamical_sys.md
@@ -109,6 +177,9 @@ parts:
         - file: content/notes/data_assimilation/dmm.md
         - file: content/notes/data_assimilation/4dvarnet.md
         - file: content/notes/data_assimilation/markov_gp.md
+    # ================================
+    # MISCELLANEOUS
+    # ================================
     - file: content/notes/misc/overview.md
       sections:
       - file: content/notes/misc/generative_models.md

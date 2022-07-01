@@ -2,7 +2,14 @@
 ## Class
 
 
-### Algorithm Focus
+### Algorithm Walk-Through
+
+
+**Iterative Gaussianization**
+
+**Parametric Gaussianization**
+
+**Coupling Layers**
 
 * Coupling Layers
   * Additive, Affine, Splines, Combo (MixtureCDF, Logit, Affine)

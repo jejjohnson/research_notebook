@@ -1,7 +1,5 @@
 # Sparse Gaussian Processes
 
-[toc]
-
 ---
 
 Sparse GPs refer to a family of methods that seek to take a subset of points in order to approximate the full dataset. Typically we can break them down into 5 categories:
@@ -13,6 +11,11 @@ Sparse GPs refer to a family of methods that seek to take a subset of points in 
 * Approximate Inference (Variational Methods)
 
 Each of these methods ultimately augment the model so that the largest computation goes from $\mathcal{O}(N^3)$ to $\mathcal{O}(MN^2)$ where $M<<N$.
+
+
+---
+
+
 
 ---
 ## Subset of Data
@@ -76,6 +79,28 @@ Now the matrix that we need to invert is $(K_{zz}+\sigma^{-2}K_z^{\top}K_z)^{-1}
 
 ---
 ## Sparse GPs - Inducing Points Summary
+
+
+One big issue with the above expression is that the inverse of the $\mathbf{K}_\mathcal{GP}^{-1}$ is $\mathcal{O}(N^3)$ which can be very expensive. One can use inducing points which act as a subset of points of size $M << N$. This can be used to reduce the computation to a cost of $\mathcal{O}(NM^2)$. There are a number of different methods using this idea including earlier methods like subset of regressors, ..., Fully Independent Training t
+
+In this thesis, we focus on a particular implementation called *sparse variational free energy* (VFE) method `cite`. This performs an approximate inference scheme by introducing a variational parameter $q(f)$ over the latent function. Then, we can optimize a lower bound on the likelihood (ELBO) to approximate the posterior.
+
+$$
+\begin{aligned}
+\log p(\mathbf{y}) &\geq \log p(\mathbf{y}) - \text{KL}\left[ q(f)||p(f|\mathbf{y}) \right] \\
+&\geq \log \mathcal{N}(\mathbf{y}; 0, \mathbf{Q}_ff + \sigma^2\mathbf{I}) - \frac{1}{2\sigma^2} \text{Tr}\left( \mathbf{K}_{ff} - \mathbf{Q}_{ff} \right) 
+\end{aligned}
+$$
+
+where $\mathbf{Q}_{ff}=\mathbf{K}_{fu}\mathbf{K}^{-1}_{uu}\mathbf{K}_{uf}$ is the Nystrom approximation of $\mathbf{K}_{ff}$ and $u$ is a small subset of $M<<N$ inducing points at locations $\{ z_j \}^M_{j=1}$ which makes $[\mathbf{K}_{fu}]_{ij}=k(\mathbf{x}_i, \mathbf{z}_j)$ and $[\mathbf{K}_{uu}]_{ij}=k(\mathbf{z}_i, \mathbf{z}_j)$. The first term of the ELBO corresponds to a deterministic training conditional (DTC, `cite`) and the added regularization trace term prevents overfitting which has is a problem with the DTC. Since this variational approximation is a Gaussian distribution, $q(y_*)=\mathcal{N}(y_*; \mu_*, \sigma^2_*)$, there is a closed-form predictive mean and variance given by:
+
+$$
+\begin{aligned}
+\mu_\mathcal{SGP}(\mathbf{x}_*) &= k_{u*}^\top \left( \mathbf{K}_{uf}\mathbf{K}_{fu} + \sigma^2 \mathbf{K}_{uu} \right)^{-1} \mathbf{K}_{uf}\mathbf{y} \\
+\sigma^2_\mathcal{SGP}(\mathbf{x}_*) &= \sigma^2 + k_{**} - k_{u*}^\top \mathbf{K}_{uu}^\top k_{u*} + k_{u*}^\top \left( \sigma^{-2}\mathbf{K}_{uf}\mathbf{K}_{fu}+ \mathbf{K}_{uu} \right)k_{u*}
+\end{aligned}
+$$
+
 
 
 ---

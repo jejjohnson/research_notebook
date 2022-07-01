@@ -1,4 +1,4 @@
-# Sparse GP (Numpyro Tutorial)
+# Sparse GP From Scratch
 
 
 ## Objective Function

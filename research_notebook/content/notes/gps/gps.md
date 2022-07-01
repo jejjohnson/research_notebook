@@ -1,4 +1,4 @@
-# Gaussian Processes
+# Basics
 
 Consider the regression setting where we assume the following model:
 $$

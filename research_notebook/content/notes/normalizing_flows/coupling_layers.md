@@ -48,6 +48,8 @@ $$
 \mathbf{z} = \text{Concat}(\mathbf{z}^A, \mathbf{z}^B)
 $$
 
+
+
 ---
 ## Formulation
 
@@ -140,6 +142,80 @@ We can write this more generally if we consider a masked transformation. This fo
 
 $$
 
+$$
+
+---
+## Whirlwind Tour
+
+### Additive
+
+$$
+h(x;\boldsymbol) = x + \theta_a
+$$
+
+where $\theta_a \in \mathbb{R}$.
+
+---
+### Affine
+
+$$
+h(x;\boldsymbol) = x \odot \theta_s + \theta_a
+$$
+
+where $\theta_s \neq 0$ and $\theta_a \in \mathbb{R}$.
+
+---
+### Neural Splines
+
+
+$$
+h(x; \boldsymbol) = \text{Spline}(x;\theta_p)
+$$
+
+---
+### Mixture CDF
+
+
+$$
+h(x; \boldsymbol) = \text{MixCDF}(x;\theta_p)
+$$
+
+
+where $\theta_p = \left[ \boldsymbol{\pi}, \boldsymbol{\mu}, \boldsymbol{s}\right] \in \mathbb{R}^K\times\mathbb{R}^{K}\times\mathbb{R}^K$ are the parameters of the mixture CDF function, $F$. The function, $F$, is the Mixture CDF Transformation given by:
+
+$$
+\text{MixCDF}(x\;\boldsymbol{\pi}, \boldsymbol{\mu}, \boldsymbol{s}) = \sigma^{-1}\left( \sum_{j=1}^K \pi_j \sigma\left( \frac{x - \mu_j}{s_k} \right) \right)
+$$
+
+
+### Inverse CDF
+
+We have the inverse CDF transform function, $\text{InvCDF}(x_u): [0, 1]\rightarrow \mathbb{R}$.
+
+$$
+h(x; \boldsymbol) = \text{InvCDF} \odot \text{MixCDF}(x;\theta_p)
+$$
+
+
+
+#### Flow++
+
+The Flow++ algorithm did a composition of the Mixture CDF Flow and the Affine Flow.
+
+$$
+\begin{aligned}
+h(x; \boldsymbol) &= \text{Affine}(x;\theta_s, \theta_a)\circ\text{InvCDF}(x) \circ\text{MixCDF}(x;\theta_p) \\
+ &= \text{MixCDF}(x;\theta_p)\odot \text{InvCDF}(x) \odot \theta_s + \theta_a
+\end{aligned}
+$$
+
+
+---
+### NAF
+
+
+$$
+h(x; \boldsymbol) = \text{NN}(x;\theta_p)
 $$
 
 

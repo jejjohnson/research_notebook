@@ -1,0 +1,4 @@
+"mdmath.macros": {
+    "\\x": "\boldsymbol{x}",
+    "\\y": "\\boldsymbol{y}",
+}

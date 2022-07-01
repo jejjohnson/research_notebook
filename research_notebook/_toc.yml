@@ -33,17 +33,21 @@ parts:
       - file: content/tutorials/remote/jlab
   - caption: Notes
     chapters:
+    - file: content/notes/concepts/notation
+    - file: content/notes/data/overview
+      sections:
+      - file: content/notes/data/representation.md
     - file: content/notes/bayesian/overview
       sections:
       - file: content/notes/bayesian/intro
-      - file: content/notes/bayesian/gaussian
-      - file: content/notes/bayesian/regression
-      - file: content/notes/bayesian/inference/inference
+      - file: content/notes/bayesian/models.md
+      - file: content/notes/bayesian/inference.md
       - file: content/notes/bayesian/inference/variational_inference
       - file: content/notes/bayesian/confidence_intervals
+      - file: content/notes/bayesian/regression
     - file: content/notes/concepts/overview
       sections:
-      - file: content/notes/concepts/notation.md
+      - file: content/notes/concepts/gaussian.md
       - file: content/notes/concepts/change_of_variables
       - file: content/notes/concepts/identity_trick
       - file: content/notes/concepts/inverse_function
@@ -69,18 +73,47 @@ parts:
       sections:
       - file: content/notes/info_theory/histogram.ipynb
       - file: content/notes/info_theory/experiments/rbig_sample_consistency.ipynb
-    - file: content/tutorials/normalizing_flows/overview
+    - file: content/notes/normalizing_flows/overview
       sections:
-      - file: content/tutorials/normalizing_flows/lecture_1_ig.md
+      - file: content/notes/normalizing_flows/coupling_flows.md
+      sections:
+      - file: content/notes/normalizing_flows/lecture_1_ig.md
         sections:
-        - file: content/tutorials/normalizing_flows/1.0_univariate_gauss.ipynb
-        - file: content/tutorials/normalizing_flows/1.1_marginal_gauss.ipynb
-        - file: content/tutorials/normalizing_flows/1.2_gaussianization.ipynb
-      - file: content/tutorials/normalizing_flows/lecture_2_gf.md
+        - file: content/notes/normalizing_flows/1.0_univariate_gauss.ipynb
+        - file: content/notes/normalizing_flows/1.1_marginal_gauss.ipynb
+        - file: content/notes/normalizing_flows/1.2_gaussianization.ipynb
+      - file: content/notes/normalizing_flows/lecture_2_gf.md
         sections:
-        - file: content/tutorials/normalizing_flows/lecture_3_gfs_pt1_mg.md
-        - file: content/tutorials/normalizing_flows/lecture_3_gfs_pt2_rot.md
-        - file: content/tutorials/normalizing_flows/lecture_3_gfs_pt3_plane.md
+        - file: content/notes/normalizing_flows/lecture_3_gfs_pt1_mg.md
+        - file: content/notes/normalizing_flows/lecture_3_gfs_pt2_rot.md
+        - file: content/notes/normalizing_flows/lecture_3_gfs_pt3_plane.md
+    - file: content/notes/inr/overview.md
+      sections:
+      - file: content/notes/inr/formulation.md
+      - file: content/notes/inr/literature_review.md
+    - file: content/notes/data_assimilation/overview.md
+      sections:
+      - file: content/notes/data_assimilation/dynamical_sys.md
+      - file: content/notes/data_assimilation/oi.md
+      - file: content/notes/data_assimilation/interp.md
+      - file: content/notes/data_assimilation/emu.md
+      - file: content/notes/data_assimilation/inv_problems.md
+      - file: content/notes/data_assimilation/projects.md
+      - file: content/notes/data_assimilation/algorithms.md
+        sections:
+        - file: content/notes/data_assimilation/markov_models.md
+        - file: content/notes/data_assimilation/gauss_markov.md
+        - file: content/notes/data_assimilation/kf.md
+        - file: content/notes/data_assimilation/nkf.md
+        - file: content/notes/data_assimilation/enskf.md
+        - file: content/notes/data_assimilation/dmm.md
+        - file: content/notes/data_assimilation/4dvarnet.md
+        - file: content/notes/data_assimilation/markov_gp.md
+    - file: content/notes/misc/overview.md
+      sections:
+      - file: content/notes/misc/generative_models.md
+      - file: content/notes/misc/diffusion_models.md
+      - file: content/notes/misc/fixed_point.md
 # - caption: Data
 #   chapters:
 #   - file: content/notes/data/overview.md

@@ -24,14 +24,32 @@ html:
   use_issues_button: true
   use_repository_button: true
 
+# bibtex_bibfiles:
+#   - references.bib
+#   - bibliographies/software.bib
+
+# BIBLIO
 bibtex_bibfiles:
-  - references.bib
+  - bibliographies/references.bib
   - bibliographies/software.bib
+  - bibliographies/bayes.bib
+  - bibliographies/blogs.bib
+  - bibliographies/videos.bib
+  - bibliographies/books.bib
+  - bibliographies/spatiotemp.bib
+  - bibliographies/kf.bib
+  - bibliographies/dmm.bib
+  - bibliographies/ssm.bib
 
 sphinx:
   config:
+    mathjax_path: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
     bibtex_reference_style: author_year 
     # - content/notes/bayesian/bayesian.bib
+  extra_extensions:
+    - sphinx_proof
+  #   - sphinx_togglebutton
+    
 
 # parse:
 #   myst_enable_extensions:

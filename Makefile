@@ -7,7 +7,7 @@ help:
 	@echo "	build		build jupyter book"
 	@echo " clean 		clean previously built files"
 
-clean:
+install:
 	conda env create -f environment_jb.yml
 
 update:

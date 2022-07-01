@@ -1,0 +1,85 @@
+@misc{shi2018machine,
+  title         = {Machine Learning for Spatiotemporal Sequence Forecasting: A Survey},
+  author        = {Xingjian Shi and Dit-Yan Yeung},
+  year          = {2018},
+  eprint        = {1808.06865},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.LG}
+}
+
+@misc{grigsby2021longrange,
+  title         = {Long-Range Transformers for Dynamic Spatiotemporal Forecasting},
+  author        = {Jake Grigsby and Zhe Wang and Yanjun Qi},
+  year          = {2021},
+  eprint        = {2109.12218},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.LG}
+}
+@article{Amato2020,
+  title     = {A novel framework for spatio-temporal prediction of environmental data using deep learning},
+  volume    = {10},
+  issn      = {2045-2322},
+  url       = {http://dx.doi.org/10.1038/s41598-020-79148-7},
+  doi       = {10.1038/s41598-020-79148-7},
+  number    = {1},
+  journal   = {Scientific Reports},
+  publisher = {Springer Science and Business Media LLC},
+  author    = {Amato, Federico and Guignard, Fabian and Robert, Sylvain and Kanevski, Mikhail},
+  year      = {2020},
+  month     = {Dec}
+}
+
+@inproceedings{Zhang2019LSTMKF,
+  author    = {Zhang, Ziqiao and Hou, Mengxue and Zhang, Fumin and Edwards, Catherine R.},
+  title     = {An LSTM Based Kalman Filter for Spatio-Temporal Ocean Currents Assimilation},
+  year      = {2019},
+  isbn      = {9781450377409},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/3366486.3366522},
+  doi       = {10.1145/3366486.3366522},
+  abstract  = {In this paper, we present a Long Short-Term Memory (LSTM)-based Kalman Filter for data assimilation of a 2D spatio-temporally varying depth-averaged ocean flow field for underwater glider path planning. The data source to the filter combines both the Eulerian flow map with the Lagrangian mobile sensor data stream. The depth-averaged flow is modeled as two components, the tidal and the non-tidal flow component. The tidal flow is modeled with ADCIRC (Advanced Three-Dimensional Circulation Model), while the non-tidal flow field is modeled by a set of spatial basis functions and their time series coefficients. The spatial basis functions are the principal modes derived by performing EOF (Empirical Orthogonal Functions) analysis on the historical surface flow field measured by high frequency radar (HFR), and the temporal coefficients of the spatial basis function are modeled by an LSTM neural network. The Kalman Filter is performed to combine the dynamics derived from the LSTM network, and the observations from the glider flow estimation data. Simulation results demonstrate that the proposed data assimilation method can give flow field prediction of reasonable accuracy.},
+  booktitle = {Proceedings of the International Conference on Underwater Networks & Systems},
+  articleno = {28},
+  numpages  = {7},
+  keywords  = {ocean flow field, LSTM, data assimilation},
+  location  = {Atlanta, GA, USA},
+  series    = {WUWNET'19}
+}
+
+@misc{tekin2021convlstmspatiotemporal,
+  title         = {Spatio-temporal Weather Forecasting and Attention Mechanism on Convolutional LSTMs},
+  author        = {Selim Furkan Tekin and Oguzhan Karaahmetoglu and Fatih Ilhan and Ismail Balaban and Suleyman Serdar Kozat},
+  year          = {2021},
+  eprint        = {2102.00696},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.LG}
+}
+@misc{wang2019spatempsurvey,
+  title         = {Deep Learning for Spatio-Temporal Data Mining: A Survey},
+  author        = {Senzhang Wang and Jiannong Cao and Philip S. Yu},
+  year          = {2019},
+  eprint        = {1906.04928},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.LG}
+}
+@misc{hu2021spatiotemporal,
+  title         = {A spatio-temporal LSTM model to forecast across multiple temporal and spatial scales},
+  author        = {Yihao Hu and Fearghal O'Donncha and Paulito Palmes and Meredith Burke and Ramon Filgueira and Jon Grant},
+  year          = {2021},
+  eprint        = {2108.11875},
+  archiveprefix = {arXiv},
+  primaryclass  = {stat.ML}
+}
+@article{Serifi2021SpaTempDown,
+  author   = {Serifi, Agon and Günther, Tobias and Ban, Nikolina},
+  title    = {Spatio-Temporal Downscaling of Climate Data Using Convolutional and Error-Predicting Neural Networks},
+  journal  = {Frontiers in Climate},
+  volume   = {3},
+  pages    = {26},
+  year     = {2021},
+  url      = {https://www.frontiersin.org/article/10.3389/fclim.2021.656479},
+  doi      = {10.3389/fclim.2021.656479},
+  issn     = {2624-9553},
+  abstract = {Numerical weather and climate simulations nowadays produce terabytes of data, and the data volume continues to increase rapidly since an increase in resolution greatly benefits the simulation of weather and climate. In practice, however, data is often available at lower resolution only, for which there are many practical reasons, such as data coarsening to meet memory constraints, limited computational resources, favoring multiple low-resolution ensemble simulations over few high-resolution simulations, as well as limits of sensing instruments in observations. In order to enable a more insightful analysis, we investigate the capabilities of neural networks to reconstruct high-resolution data from given low-resolution simulations. For this, we phrase the data reconstruction as a super-resolution problem from multiple data sources, tailored toward meteorological and climatological data. We therefore investigate supervised machine learning using multiple deep convolutional neural network architectures to test the limits of data reconstruction for various spatial and temporal resolutions, low-frequent and high-frequent input data, and the generalization to numerical and observed data. Once such downscaling networks are trained, they serve two purposes: First, legacy low-resolution simulations can be downscaled to reconstruct high-resolution detail. Second, past observations that have been taken at lower resolutions can be increased to higher resolutions, opening new analysis possibilities. For the downscaling of high-frequent fields like precipitation, we show that error-predicting networks are far less suitable than deconvolutional neural networks due to the poor learning performance. We demonstrate that deep convolutional downscaling has the potential to become a building block of modern weather and climate analysis in both research and operational forecasting, and show that the ideal choice of the network architecture depends on the type of data to predict, i.e., there is no single best architecture for all variables.}
+}

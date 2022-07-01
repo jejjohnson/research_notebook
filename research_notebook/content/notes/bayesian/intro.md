@@ -1,4 +1,4 @@
-# Bayesian: Language of Uncertainty
+# Language of Uncertainty
 
 
 
@@ -110,8 +110,45 @@ Once again, we don't have access to this joint distribution, but we do have acce
 
 $$P(\mathcal{D}|\mathcal{M})=\int P(\mathcal{D}|\theta,\mathcal{M})P(\mathcal{\theta}|\mathcal{M})d\theta$$
 
+---
+
+## Conditional Probability
+
+$$
+p(x,y) = p(x|y)p(y) = p(y|x)p(x)
+$$(cond_prob)
 
 
+
+## Bayes Rule
+
+$$
+p(x|y) = \frac{p(y|x)p(x)}{p(y)}
+$$(bayes)
+
+### Parameters
+
+We can change the notation to suit data, $\mathcal{D}=\{x_i, y_i \}_{i=1}^N$, and parameters, $\theta$.
+
+$$
+p(\theta|\mathcal{D}) = \frac{p(\mathcal{D}|\theta)p(\theta)}{p(\mathcal{D})}
+$$(bayes_param)
+
+This is often useful when thinking about machine learning and model parameters.
+
+
+## Predictive Density
+
+$$
+p(x_*|x) = \int p(x_*|\theta) p(\theta|x)d\theta
+$$(bayes_posterior_predict)
+
+
+We can do this for pairs of data points.
+
+$$
+p(y_* |x_*,\mathcal{D}) = \int p(y_*|x_*,\theta) p(\theta|\mathcal{D})d\theta
+$$(bayes_posterior_predict_data)
 
 
 ---

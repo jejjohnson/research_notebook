@@ -86,3 +86,62 @@
 |    $\boldsymbol{\sigma}^2_\mathcal{GP}$    | GP predictive variance function.                                                                                  |
 |     $\boldsymbol{\Sigma}_\mathcal{GP}$     | GP predictive covariance function.                                                                                |
 
+---
+
+## Field Space
+
+The first case, we have
+
+$$
+\mathbf{y} = \boldsymbol{H}(\mathbf{x}) + \epsilon
+$$
+
+This represents the state, $\mathbf{x}$, as a representation fo the field
+
+
+* $\mathbf{x} \in \mathbb{R}^{D_x}$ - state
+* $\boldsymbol{\mu}_{\mathbf{x}} \in \mathbb{R}^{D_x}$ - mean prediction for state vector
+* $\boldsymbol{\sigma^2}_{\mathbf{x}} \in \mathbb{R}^{D_x}$ - variance prediction for state vector
+* $\mathbf{X}_{\boldsymbol{\Sigma}} \in \mathbb{R}^{D_x \times D_x}$ - covariance prediction for state vector
+* $\mathbf{X}_{\boldsymbol{\mu}} \in \mathbb{R}^{N \times D_x}$ - variance prediction for state vector
+
+
+## State (Coordinates)
+
+* $\boldsymbol{x} \in \mathbb{R}^{D_\phi}$ - the coordinate vector
+* $\boldsymbol{\mu}_{\boldsymbol{x}} \in \mathbb{R}^{D_\phi}$ - mean prediction for state vector
+* $\boldsymbol{\sigma^2}_{\boldsymbol{x}} \in \mathbb{R}^{D_x}$ - variance prediction for state vector
+* $\boldsymbol{X}_{\boldsymbol{\Sigma}} \in \mathbb{R}^{D_\phi \times D_\phi}$ - covariance prediction for state vector
+* $\boldsymbol{X}_{\boldsymbol{\mu}} \in \mathbb{R}^{N \times D_\phi}$ - variance prediction for state vector
+
+
+## Observations
+
+* $\mathbf{z} \in \mathbb{R}^{D_z}$ - latent domain
+* $\mathbf{y} \in \mathbb{R}^{D_y}$ - observations
+
+## Matrices
+
+* $\mathbf{Z} \in \mathbb{R}^{N \times D_z}$ - latent domain
+* $\mathbf{X} \in \mathbb{R}^{N \times D_x}$ - state
+
+* $\mathbf{Y} \in \mathbb{R}^{N \times D_y}$ - observations
+
+## Functions
+
+**Coordinates**
+
+In this case, we assume that the state, $\mathbf{x} \in \mathbb{R}^{D_\phi}$, are the coordinates, $[\text{lat,lon,time}]$, and the output is the value of the variable of interest, $\mathbf{y}$, at that point in space and time.
+
+
+* $[\mathbf{K}]_{ij} = \boldsymbol{k}(\mathbf{x}_i, \mathbf{x}_j)$ - covariance matrix for the coordinates
+* $\boldsymbol{k}_{\mathbf{X}}(\mathbf{x}_i) = \boldsymbol{k}(\mathbf{X}, \mathbf{x}_i)$ - cross covariance for the data
+* $\boldsymbol{k}(\mathbf{x}_i, \mathbf{x}_j) : \mathbb{R}^{D_\phi} \times \mathbb{R}^{D_\phi} \rightarrow \mathbb{R}$ - the kernel function applied to two vectors.
+
+
+**Data Field**
+
+In this case, we assume that the state, $\mathbf{x}$, is the input
+
+* $[\mathbf{C}]_{ij} = \boldsymbol{c}(\mathbf{x}_i, \mathbf{x}_j)$ - covariance matrix for the data field
+* 

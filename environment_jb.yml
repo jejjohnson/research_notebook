@@ -1,4 +1,4 @@
-name: jupyterbook
+name: jbook
 channels:
 - defaults
 dependencies:
@@ -8,3 +8,4 @@ dependencies:
     - pip:
         - jupyter-book
         - cookiecutter
+        - sphinx-proof

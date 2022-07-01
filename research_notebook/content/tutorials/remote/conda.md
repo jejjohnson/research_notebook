@@ -338,3 +338,90 @@ So by adding this to the `.condarc` file.
 
 Again, now we now have access to all of the environments they have already configured! So we can use them but not necessarily if we don't want to. :D
 
+
+---
+
+```bash
+#!/bin/bash
+MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-py39_4.9.2-Linux-x86_64.sh"
+MINICONDA_PREFIX="$SCRATCH/miniconda"
+
+install_miniconda(){
+  if [ ! -d $SCRATCH/miniconda ]; then
+    echo "Installing Miniconda"
+    wget $MINICONDA_URL -O $WORK/downloads/miniconda.sh
+    bash $WORK/downloads/miniconda.sh -b -p $MINICONDA_PREFIX
+    conda init
+    eval "$($MINICONDA_PREFIX/condabin/conda shell.bash hook)"
+    conda install -y mamba -c conda-forge
+    install_mamba
+  else
+    echo "Miniconda already installed"
+  fi
+
+}
+
+install_mamba(){
+  eval "$($MINICONDA_PREFIX/condabin/conda shell.bash hook)"
+  conda install -y mamba -c conda-forge
+}
+
+clone_dotfiles(){
+  rm -rf $WORK/projects/dot_files
+  git clone https://github.com/jejjohnson/dot_files.git $WORK/projects/dot_files/
+}
+
+install_mamba_jlab(){
+	wget https://raw.githubusercontent.com/jejjohnson/dot_files/master/jupyter_scripts/jupyterlab.yml -O $WORK/downloads/jlab.yaml
+	eval "$($MINICONDA_PREFIX/condabin/conda shell.bash hook)"
+	mamba env create -f $WORK/downloads/jlab.yaml
+}
+
+install_mamba_dl(){
+	install_mamba_jax
+  install_conda_pytorch
+  install_conda_tensorflow
+}
+
+install_mamba_jax(){
+	wget https://raw.githubusercontent.com/jejjohnson/dot_files/main/jupyter_scripts/jupyterlab.yaml -O $WORK/downloads/jlab.yaml
+	eval "$($MINICONDA_PREFIX/condabin/conda shell.bash hook)"
+	conda env create -f $WORK/downloads/jlab.yaml
+}
+
+install_conda_pytorch(){
+	wget https://raw.githubusercontent.com/jejjohnson/dot_files/main/jupyter_scripts/jupyterlab.yaml -O $WORK/downloads/jlab.yaml
+	eval "$($MINICONDA_PREFIX/condabin/conda shell.bash hook)"
+	conda env create -f $WORK/downloads/jlab.yaml
+}
+
+install_conda_tensorflow(){
+	wget https://raw.githubusercontent.com/jejjohnson/dot_files/main/jupyter_scripts/jupyterlab.yaml -O $WORK/downloads/jlab.yaml
+	eval "$($MINICONDA_PREFIX/condabin/conda shell.bash hook)"
+	conda env create -f $WORK/downloads/jlab.yaml
+}
+
+
+init_conda_env(){
+	wget https://raw.githubusercontent.com/quentinf00/dotfiles/main/conda/base_environment.yaml -O conda_ide.yaml
+	eval "$($MINICONDA_PREFIX/condabin/conda shell.bash hook)"
+	conda install -y mamba -c conda-forge
+	mamba env update -f conda_ide.yaml
+	rm -f ~/.zshrc ~/.bashrc
+	conda init && mv ~/.bashrc ~/.condainitrc
+	conda init zsh && mv ~/.zshrc ~/.condainitzshrc
+}
+
+
+
+reinstall_everything(){
+        rm -rf $MINICONDA_PREFIX
+        bash ~/miniconda.sh -b -p $MINICONDA_PREFIX
+        eval "$($MINICONDA_PREFIX/condabin/conda shell.bash hook)"
+        conda install -y mamba -c conda-forge
+        mamba env update -f conda_ide.yaml
+        mamba env create -f jlab.yaml
+        conda init
+}
+
+```

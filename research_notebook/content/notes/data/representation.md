@@ -14,7 +14,6 @@ $$
 
 **Example**: if we have a *full* spatial lat-lon grid of `30x30` points and `30` time steps, then the vector is `30x30x30` which is `27,000`-dimensional vector! This is compounded if we wish to calculate correlations between each of the grid points which would result in a matrix of size `27,000 x 27,000` points. As we see below, this is a very high dimensional problem.
 
-
 $$
 D_\mathbf{x} = [\text{lat}_1, \ldots, \text{lat}_D, \text{lon}_1, \ldots, \text{lon}_D, \text{time}_1, \ldots, \text{time}_D]
 $$

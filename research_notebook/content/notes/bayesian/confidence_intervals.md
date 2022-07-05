@@ -85,6 +85,13 @@ This method is a nice trade-off between the standard neural network and the Baye
 
 
 ---
+#### Laplace Approximation
+
+
+* [Laplace Redux](https://arxiv.org/abs/2106.14806)
+
+
+---
 
 ### Bootstrapping
 
@@ -98,6 +105,14 @@ This method is a nice trade-off between the standard neural network and the Baye
 
 ---
 ### Quantile Regression
+
+
+---
+### Conformal Prediction
+
+* A Tutorial on Conformal Prediction - Shafer and Vovk (2008) - [PDF](https://arxiv.org/abs/0706.3188)
+* A Gentle Intro to Conformal Prediction and Distribution-Free Uncertainty Quantification - Angelopoulos & Bates (2022) - [arxiv](https://arxiv.org/abs/2107.07511)
+* [Demo Notebook](https://nbviewer.org/github/gpeyre/numerical-tours/blob/master/python/ml_11_conformal_prediction.ipynb) - Numerical-Tours - Gabriel-Peyré
 
 
 

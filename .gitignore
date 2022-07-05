@@ -3,3 +3,5 @@
 rbig_consistency.csv
 \.ipynb_checkpoints/
 *.DS_Store
+
+\__pycache__/

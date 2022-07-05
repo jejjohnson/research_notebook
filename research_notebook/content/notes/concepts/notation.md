@@ -33,34 +33,40 @@
 | :----------------------------------------------------: | :--------------------------------------------------------------------------------------------------- |
 |       $f : \mathcal{X} \rightarrow \mathcal{Y}$        | a latent function that operates on a scaler and maps a space $\mathcal{X}$ to a space $\mathcal{Y}$  |
 | $\boldsymbol{f} : \mathcal{X} \rightarrow \mathcal{Y}$ | a latent function  that operates on a vector and maps a space $\mathcal{X}$ to a space $\mathcal{Y}$ |
+|    $\boldsymbol{f}(\;\cdot\;;\boldsymbol{\theta})$     | a latent function parameterized by $\boldsymbol{\theta}$                                             |
+|      $\boldsymbol{f}_{\boldsymbol \theta}(\cdot)$      | a latent function parameterized by $\boldsymbol{\theta}$ (succinct version)                          |
 |             $\boldsymbol{k}(\cdot, \cdot)$             | kernel or covariance function                                                                        |
 
 
 ---
 ## Common Terms
 
-|       Notation        | Description                                                                                                 |
-| :-------------------: | :---------------------------------------------------------------------------------------------------------- |
-|       $\theta$        | parameter or hyperparameter                                                                                 |
-| $\boldsymbol{\theta}$ | a collection of parameters or hyperparameters, $\boldsymbol{\theta}=[\theta_1, \theta_2, \ldots, \theta_p]$ |
+|           Notation           | Description                                                                                                                     |
+| :--------------------------: | :------------------------------------------------------------------------------------------------------------------------------ |
+|           $\theta$           | a parameter                                                                                                                     |
+|       $\theta_\alpha$        | a hyperparameter                                                                                                                |
+|    $\boldsymbol{\theta}$     | a collection of parameters, $\boldsymbol{\theta}=[\theta_1, \theta_2, \ldots, \theta_p]$                                        |
+| $\boldsymbol{\theta_\alpha}$ | a collection of hyperparameters, $\boldsymbol{\theta_\alpha}=[\theta_{\alpha,1}, \theta_{\alpha,2}, \ldots, \theta_{\alpha,p}]$ |
 
 
 ---
 ## Probability
 
 
-|                        Notation                         | Description                                                                                                           |
-| :-----------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------- |
-|                     $\mathcal{X,Y}$                     | the space of data                                                                                                     |
-|                          $P,Q$                          | the probability space of data                                                                                         |
-|               $f_\mathcal{X}(\mathbf{x})$               | the probability density function (PDF) on $\mathbf{x}$                                                                |
-|               $F_\mathcal{X}(\mathbf{x})$               | the cumulative density function (CDF) on $\mathbf{x}$                                                                 |
-|            $F_\mathcal{X}^{-1}(\mathbf{x})$             | the  Quantile or Point Percentile Function (ppf) (i.e. inverse cumulative density function) on $\mathbf{x}$           |
-|                      $p(x;\theta)$                      | A probability distribution, $p$, of the variable $x$, parameterized by $\theta$                                       |
-|           $p(\mathbf{x};\boldsymbol{\theta})$           | A probability distribution, p, of the multidimensional variable, $\mathbf{x}$, parameterized by $\boldsymbol{\theta}$ |
-|              $\mathcal{N}(x; \mu, \sigma)$              | A normal distribution for $x$ parameterized by $\mu$ and $\sigma$.                                                    |
-| $\mathcal{N}(x; \boldsymbol{\mu}, \boldsymbol{\Sigma})$ | A multivariate normal distribution for $\mathbf{x}$ parameterized by $\boldsymbol{\mu}$ and $\boldsymbol{\Sigma}$.    |
-|         $\mathcal{N}(\mathbf{0}, \mathbf{I}_D)$         | A multivariate normal distribution with a zero mean and 1 variance.                                                   |
+|                             Notation                             | Description                                                                                                                              |
+| :--------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------- |
+|                         $\mathcal{X,Y}$                          | the space of data                                                                                                                        |
+|                              $P,Q$                               | the probability space of data                                                                                                            |
+|                   $f_\mathcal{X}(\mathbf{x})$                    | the probability density function (PDF) on $\mathbf{x}$                                                                                   |
+|                   $F_\mathcal{X}(\mathbf{x})$                    | the cumulative density function (CDF) on $\mathbf{x}$                                                                                    |
+|                 $F_\mathcal{X}^{-1}(\mathbf{x})$                 | the  Quantile or Point Percentile Function (ppf) (i.e. inverse cumulative density function) on $\mathbf{x}$                              |
+|                          $p(x;\theta)$                           | A probability distribution, $p$, of the variable $x$, parameterized by $\theta$                                                          |
+|                          $p_\theta(x)$                           | A probability distribution, $p$, of the variable $x$, parameterized by $\theta$ (succinct version)                                       |
+|               $p(\mathbf{x};\boldsymbol{\theta})$                | A probability distribution, p, of the multidimensional variable, $\mathbf{x}$, parameterized by $\boldsymbol{\theta}$                    |
+|              $p_{\boldsymbol{\theta}}(\mathbf{x})$               | A probability distribution, p, of the multidimensional variable, $\mathbf{x}$, parameterized by $\boldsymbol{\theta}$ (succinct version) |
+|                  $\mathcal{N}(x; \mu, \sigma)$                   | A normal distribution for $x$ parameterized by $\mu$ and $\sigma$.                                                                       |
+| $\mathcal{N}(\mathbf{x}; \boldsymbol{\mu}, \boldsymbol{\Sigma})$ | A multivariate normal distribution for $\mathbf{x}$ parameterized by $\boldsymbol{\mu}$ and $\boldsymbol{\Sigma}$.                       |
+|             $\mathcal{N}(\mathbf{0}, \mathbf{I}_D)$              | A multivariate normal distribution with a zero mean and 1 variance.                                                                      |
 
 ---
 ## Information Theory

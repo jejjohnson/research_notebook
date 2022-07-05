@@ -1,6 +1,9 @@
 format: jb-book
 root: intro
 parts:
+  # ###################################################################
+  # RESOURCES
+  # ###################################################################
   - caption: Resources
     chapters:
     - file: content/resources/python/overview
@@ -11,6 +14,9 @@ parts:
       - file: content/resources/python/dl_stack
       - file: content/resources/python/scale_stack
       - file: content/resources/python/good_code
+  # ###################################################################
+  # TUTORIALS
+  # ###################################################################
   - caption: Tutorials
     chapters:
     - file: content/tutorials/jax_journey/overview
@@ -31,6 +37,9 @@ parts:
       - file: content/tutorials/remote/ssh
       - file: content/tutorials/remote/conda
       - file: content/tutorials/remote/jlab
+  # ###################################################################
+  # NOTES
+  # ###################################################################
   - caption: Notes
     # ==================
     # NOTATION
@@ -47,10 +56,10 @@ parts:
     - file: content/notes/data/overview
       sections:
       - file: content/notes/data/representation.md
+      - file: content/notes/data/models.md
     # ==================
     # UNCERTAINTY
     # ==================
-    chapters:
     - file: content/notes/concepts/uncertainty.md
     # ==================
     # BAYESIAN
@@ -139,6 +148,7 @@ parts:
       - file: content/notes/normalizing_flows/linear.md
       - file: content/notes/normalizing_flows/coupling_layers.md
       - file: content/notes/normalizing_flows/conditional.md
+      - file: content/notes/normalizing_flows/multiscale.md
       - file: content/notes/normalizing_flows/lecture_1_ig.md
         sections:
           - file: content/notes/normalizing_flows/1.0_univariate_gauss.ipynb
@@ -185,6 +195,17 @@ parts:
       - file: content/notes/misc/generative_models.md
       - file: content/notes/misc/diffusion_models.md
       - file: content/notes/misc/fixed_point.md
+  # ###################################################################
+  # CHEATSHEETS
+  # ###################################################################
+  - caption: Cheat Sheets
+    # ==================
+    # NOTATION
+    # ==================
+    chapters:
+    - file: content/cheatsheets/bash.md
+    - file: content/cheatsheets/cli.md
+    - file: content/cheatsheets/python.md
 # - caption: Data
 #   chapters:
 #   - file: content/notes/data/overview.md

@@ -77,6 +77,12 @@ Noteably:
 * The final layer is always a linear function (in regression; classification would have a sigmoid)
 
 ---
+### Positional Encoding
+
+* [Seq2Seq](https://github.com/facebookresearch/fairseq/blob/main/fairseq/modules/sinusoidal_positional_embedding.py)
+* [All Functional Comparisons](https://github.com/jmclong/random-fourier-features-pytorch/blob/main/rff/functional.py)
+
+---
 ### Fourier Features
 
 
@@ -109,7 +115,7 @@ where $\boldsymbol{\omega} \sim p(\boldsymbol{\omega})$ and $\boldsymbol{b} \sim
 * [Blog](https://gregorygundersen.com/blog/2019/12/23/random-fourier-features/) - Gregory Gundersen
 * Random Features for Large-Scale Kernel Machines - Rahimi & Recht (2008) - [Paper]()
 * Random Features for Kernel Approximation: A Survey on Algorithms, Theory, and Beyond - Liu et al (2021)
-* Scalable Kernel Methods via Doubly Stochastic Gradients - Dai et al (2015)
+* Scalable Kernel Methods via Doubly Stochastic Gradients - Dai et al (2015) -
 
 ### SIREN
 
@@ -242,7 +248,10 @@ $$
 \boldsymbol{\theta}^{(\ell)} = \{ \gamma_d^{(\ell)} \in \mathbb{R},\;\;\boldsymbol{\mu}_d^{(\ell)}, \;\; \mathbf{w}_d^{(\ell)}, \;\; \mathbf{b}^{(\ell)}_d \}
 $$
 
+**Sources**:
 
+* Reimplementation (PyTorch) - [BoschResearch](https://github.com/boschresearch/multiplicative-filter-networks)
+* 
 
 ---
 ## Probabilistic

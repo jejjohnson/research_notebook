@@ -105,6 +105,16 @@ where $||\cdot ||_2^2$ is the Maholanobis Distance.
 
 ## Different Parameterizations
 
+
+|   Model    |                                                                        Equation                                                                         |
+| :--------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  Identity  |                                                                      $ \mathbf{x}$                                                                      |
+|   Linear   |                                                                $\mathbf{wx}+\mathbf{b}$                                                                 |
+|   Basis    |                                                 $\mathbf{w}\boldsymbol{\phi}(\mathbf{x}) + \mathbf{b}$                                                  |
+| Non-Linear |                                                     $\sigma\left( \mathbf{wx} + \mathbf{b}\right)$                                                      |
+| Functional | $\boldsymbol{f} \sim \mathcal{GP}\left(\boldsymbol{\mu}_{\boldsymbol \alpha}(\mathbf{x}),\boldsymbol{\sigma}^2_{\boldsymbol \alpha}(\mathbf{x})\right)$ |
+
+---
 #### Identity
 
 
@@ -152,6 +162,7 @@ $$
 * $\phi(x) = (1, x, x^2, \ldots)$
 * $\phi(x) = \tanh(x + \gamma)^\alpha$
 * $\phi(x) = \exp(- \gamma||x-y||_2^2)$
+* $\phi(x) = \left[\sin(2\pi\boldsymbol{\omega}\mathbf{x}),\cos(2\pi\boldsymbol{\omega}\mathbf{x}) \right]^\top$
 
 **Prob Formulation**
 
@@ -250,4 +261,5 @@ $$
 $$
 -\log p(y|x,\theta) = \frac{1}{2}\log \boldsymbol{\sigma}^2(\mathbf{x};\boldsymbol{\theta}) + \frac{1}{2}||\mathbf{y} - \boldsymbol{\mu}(\mathbf{x};\boldsymbol{\theta})||^2_{\boldsymbol{\sigma}^2(\mathbf{x};\boldsymbol{\theta})} + \text{C}
 $$
+
 

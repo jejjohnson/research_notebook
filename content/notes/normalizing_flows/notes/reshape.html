@@ -991,6 +991,18 @@ title="Print to PDF"
      DownSampling
     </a>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#irev-reshaping">
+   IRev Reshaping
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#upsampling">
+     Upsampling
+    </a>
+   </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#id2">
      DownSampling
@@ -1030,6 +1042,18 @@ title="Print to PDF"
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#downsampling">
      DownSampling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#irev-reshaping">
+   IRev Reshaping
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#upsampling">
+     Upsampling
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -1127,37 +1151,32 @@ title="Print to PDF"
 
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+</section>
+</section>
+<hr class="docutils" />
+<section id="irev-reshaping">
+<h2>IRev Reshaping<a class="headerlink" href="#irev-reshaping" title="Permalink to this headline">#</a></h2>
+<section id="upsampling">
+<h3>Upsampling<a class="headerlink" href="#upsampling" title="Permalink to this headline">#</a></h3>
+<p><strong>Source</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/VLL-HD/FrEIA/blob/master/FrEIA/modules/reshapes.py">https://github.com/VLL-HD/FrEIA/blob/master/FrEIA/modules/reshapes.py</a></p></li>
+<li><p><a class="reference external" href="http://github.com/jhjacobsen/pytorch-i-revnet/blob/master/models/model_utils.py">github.com/jhjacobsen/pytorch-i-revnet/blob/master/models/model_utils.py</a></p></li>
+</ul>
+<p><strong>calculate kernel</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="k">def</span> <span class="nf">init_kernel</span><span class="p">(</span><span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
 
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
+    <span class="n">kernel</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">kernel</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">kernel</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">kernel</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">kernel</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_channels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
----
-
-## IRev Reshaping
-
-### Upsampling
-
-**Source**: 
-* https://github.com/VLL-HD/FrEIA/blob/master/FrEIA/modules/reshapes.py
-* github.com/jhjacobsen/pytorch-i-revnet/blob/master/models/model_utils.py
-
-**calculate kernel**
-
-```python
-
-def init_kernel(n_channels: int=3):
-
-    kernel = np.zeros(4, 1, 2, 2)
-    
-    kernel[0, 0, 0, 0] = 1
-    kernel[1, 0, 0, 1] = 1
-    kernel[2, 0, 1, 0] = 1
-    kernel[3, 0, 1, 1] = 1
-
-    kernel = np.concatenate([kernel] * n_channels, axis=0)
-
-    return kernel
+    <span class="k">return</span> <span class="n">kernel</span>
 </pre></div>
 </div>
 <p><strong>calculate output dims</strong></p>

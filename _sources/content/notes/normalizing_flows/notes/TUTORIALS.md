@@ -2,10 +2,44 @@
 ## Class
 
 
+
+## TLDR
+
+
+**Algorithm Deep Dives**
+
+* Iterative Gaussianization
+* Gaussianization Flows
+* NICE
+* RealNVP
+* GLOW
+* Neural Spline Flows
+* Mixture CDF (MixtureCDF + InverseCDF + Affine)
+* NAF
+* BNAF
+
+**Normalizing Flow Components**
+
+* Marginal Gaussianization - Uniformization + InverseCDF
+* Linear Layers ->
+* Coupling Layers -> Additive, Affine, Splines, MixtureCDF, NN, Hierarchical, Masked
+* Discrete Data -> Dequantization
+* Multiscale -> Slicing
+* Dimension Reduction -> Slicing
+* Augmentation -> Priors
+* Images -> Multiscale + 1x1Conv + Discrete
+* SpatioTemporal
+* Conditional -> Prior, Slicing, Bijectors
+
+
+---
+
 ### Algorithm Walk-Through
 
 
 **Iterative Gaussianization**
+
+*
 
 **Parametric Gaussianization**
 
@@ -32,6 +66,9 @@
 ## Algorithm Deep Dives
 
 
+
+
+
 * Gaussianization Flows - Linear (Orthogonal), Element-Wise Transform (Marginal Gauss)
 * NICE/RealNVP - Additive Coupling, BatchNorm, Permutation, MultiScale (Slicing), Image Preprocessing
 * GLOW - ActNorm, 1x1 Convs (Ortho), Double Coupling (?), Image Preprocessing
@@ -45,5 +82,3 @@
 * Continious Flows - FFJORD
 * (B)NAF
 * Convex Potential Flows
-
-

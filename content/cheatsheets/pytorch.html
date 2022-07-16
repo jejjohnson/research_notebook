@@ -6,53 +6,53 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Class &#8212; Research Notebook</title>
+    <title>PyTorch &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
-    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
   <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
   <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/proof.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/jquery.js"></script>
-    <script src="../../../../_static/underscore.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/clipboard.min.js"></script>
-    <script src="../../../../_static/copybutton.js"></script>
-    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../../_static/togglebutton.js"></script>
+    <script src="../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../../_static/design-tabs.js"></script>
+    <script src="../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
-    <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
-    <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" />
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -87,19 +87,19 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="bd-sidebar noprint" id="site-navigation">
     <div class="bd-sidebar__content">
         <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../../../index.html">
+    <a class="navbar-brand text-wrap" href="../../index.html">
       
         <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
         
       
       
-      <img src="../../../../_static/book_v2.jpeg" class="logo" alt="logo">
+      <img src="../../_static/book_v2.jpeg" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Research Notebook</h1>
       
     </a>
-</div><form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -107,7 +107,7 @@ const thebe_selector_output = ".output, .cell_output"
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
-                <a class="reference internal" href="../../../../intro.html">
+                <a class="reference internal" href="../../intro.html">
                     Overview
                 </a>
             </li>
@@ -119,7 +119,7 @@ const thebe_selector_output = ".output, .cell_output"
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../resources/python/overview.html">
+  <a class="reference internal" href="../resources/python/overview.html">
    Python
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
@@ -129,32 +129,32 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/ides.html">
+    <a class="reference internal" href="../resources/python/ides.html">
      Integraded Development Environment (IDE)
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/stack.html">
+    <a class="reference internal" href="../resources/python/stack.html">
      Standard Python Stack
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/earthsci_stack.html">
+    <a class="reference internal" href="../resources/python/earthsci_stack.html">
      Earth Science Stack
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/dl_stack.html">
+    <a class="reference internal" href="../resources/python/dl_stack.html">
      Deep Learning Stack
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/scale_stack.html">
+    <a class="reference internal" href="../resources/python/scale_stack.html">
      Scaling Stack
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/good_code.html">
+    <a class="reference internal" href="../resources/python/good_code.html">
      Good Code
     </a>
    </li>
@@ -168,7 +168,7 @@ const thebe_selector_output = ".output, .cell_output"
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../tutorials/jax_journey/overview.html">
+  <a class="reference internal" href="../tutorials/jax_journey/overview.html">
    My JAX Journey
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
@@ -178,27 +178,27 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/ecosystem.html">
+    <a class="reference internal" href="../tutorials/jax_journey/ecosystem.html">
      Ecosystem
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/vmap.html">
+    <a class="reference internal" href="../tutorials/jax_journey/vmap.html">
      vmap
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/jit.html">
+    <a class="reference internal" href="../tutorials/jax_journey/jit.html">
      Jit
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/classes.html">
+    <a class="reference internal" href="../tutorials/jax_journey/classes.html">
      Classes
     </a>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/overview.html">
+    <a class="reference internal" href="../tutorials/jax_journey/algorithms/overview.html">
      Algorithms
     </a>
     <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
@@ -208,17 +208,17 @@ const thebe_selector_output = ".output, .cell_output"
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/bisection.html">
+      <a class="reference internal" href="../tutorials/jax_journey/algorithms/bisection.html">
        Bisection search
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
+      <a class="reference internal" href="../tutorials/jax_journey/algorithms/kernel_derivatives.html">
        Kernel Derivatives
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../../tutorials/jax_journey/gfs_with_jax.html">
+      <a class="reference internal" href="../tutorials/jax_journey/gfs_with_jax.html">
        Gaussianization Flows
       </a>
      </li>
@@ -227,7 +227,7 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../tutorials/remote/overview.html">
+  <a class="reference internal" href="../tutorials/remote/overview.html">
    Remote Computing
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
@@ -237,17 +237,17 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/remote/ssh.html">
+    <a class="reference internal" href="../tutorials/remote/ssh.html">
      SSH Configuration
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/remote/conda.html">
+    <a class="reference internal" href="../tutorials/remote/conda.html">
      Conda 4 Remote Servers
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/remote/jlab.html">
+    <a class="reference internal" href="../tutorials/remote/jlab.html">
      Jupyter Lab 4 Remote Servers
     </a>
    </li>
@@ -261,17 +261,17 @@ const thebe_selector_output = ".output, .cell_output"
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../../concepts/notation.html">
+  <a class="reference internal" href="../notes/concepts/notation.html">
    Notation
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../concepts/quotes.html">
+  <a class="reference internal" href="../notes/concepts/quotes.html">
    Quotes
   </a>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../data/overview.html">
+  <a class="reference internal" href="../notes/data/overview.html">
    Data
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
@@ -281,24 +281,24 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../data/representation.html">
+    <a class="reference internal" href="../notes/data/representation.html">
      Representation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../data/models.html">
+    <a class="reference internal" href="../notes/data/models.html">
      Models
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../concepts/uncertainty.html">
+  <a class="reference internal" href="../notes/concepts/uncertainty.html">
    Modeling Uncertainty
   </a>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../bayesian/overview.html">
+  <a class="reference internal" href="../notes/bayesian/overview.html">
    Bayesian
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
@@ -308,39 +308,39 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/intro.html">
+    <a class="reference internal" href="../notes/bayesian/intro.html">
      Language of Uncertainty
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/models.html">
+    <a class="reference internal" href="../notes/bayesian/models.html">
      Models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/inference.html">
+    <a class="reference internal" href="../notes/bayesian/inference.html">
      Inference Schemes
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/inference/variational_inference.html">
+    <a class="reference internal" href="../notes/bayesian/inference/variational_inference.html">
      Variational Inference
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/confidence_intervals.html">
+    <a class="reference internal" href="../notes/bayesian/confidence_intervals.html">
      Confidence Intervals
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/regression.html">
+    <a class="reference internal" href="../notes/bayesian/regression.html">
      Regression
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../concepts/overview.html">
+  <a class="reference internal" href="../notes/concepts/overview.html">
    Sleeper Concepts
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
@@ -350,39 +350,39 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/gaussian.html">
+    <a class="reference internal" href="../notes/concepts/gaussian.html">
      Gaussian Distributions
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/change_of_variables.html">
+    <a class="reference internal" href="../notes/concepts/change_of_variables.html">
      Change of Variables
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/identity_trick.html">
+    <a class="reference internal" href="../notes/concepts/identity_trick.html">
      Identity Trick
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/inverse_function.html">
+    <a class="reference internal" href="../notes/concepts/inverse_function.html">
      Inverse Function Theorem
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/jensens.html">
+    <a class="reference internal" href="../notes/concepts/jensens.html">
      Jensens Inequality
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/lin_alg.html">
+    <a class="reference internal" href="../notes/concepts/lin_alg.html">
      Linear Algebra Tricks
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../kernels/overview.html">
+  <a class="reference internal" href="../notes/kernels/overview.html">
    Kernel Methods
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
@@ -392,34 +392,34 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/kernel_derivatives.html">
+    <a class="reference internal" href="../notes/kernels/kernel_derivatives.html">
      Kernel Derivatives
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/rv.html">
+    <a class="reference internal" href="../notes/kernels/rv.html">
      RV Coefficient
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/congruence_coeff.html">
+    <a class="reference internal" href="../notes/kernels/congruence_coeff.html">
      Congruence Coefficient
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/hsic.html">
+    <a class="reference internal" href="../notes/kernels/hsic.html">
      HSIC
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/mmd.html">
+    <a class="reference internal" href="../notes/kernels/mmd.html">
      Maximum Mean Discrepancy (MMD)
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../gps/intro.html">
+  <a class="reference internal" href="../notes/gps/intro.html">
    Gaussian Processes
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
@@ -429,27 +429,27 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/gps.html">
+    <a class="reference internal" href="../notes/gps/gps.html">
      Basics
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/literature.html">
+    <a class="reference internal" href="../notes/gps/literature.html">
      Literature Review
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/cg.html">
+    <a class="reference internal" href="../notes/gps/cg.html">
      Conjugate Gradients
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/sgps.html">
+    <a class="reference internal" href="../notes/gps/sgps.html">
      Sparse Gaussian Processes
     </a>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../gps/algorithms.html">
+    <a class="reference internal" href="../notes/gps/algorithms.html">
      Algorithms
     </a>
     <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
@@ -459,31 +459,31 @@ const thebe_selector_output = ".output, .cell_output"
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../gps/gpr_code.html">
+      <a class="reference internal" href="../notes/gps/gpr_code.html">
        GP from Scratch
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../gps/sgp_code.html">
+      <a class="reference internal" href="../notes/gps/sgp_code.html">
        Sparse GP From Scratch
       </a>
      </li>
     </ul>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../egps/overview.html">
+    <a class="reference internal" href="../notes/egps/overview.html">
      Input Uncertainty in GPs
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../info_theory/similarity.html">
+  <a class="reference internal" href="../notes/info_theory/similarity.html">
    Similarity
   </a>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../info_theory/overview.html">
+  <a class="reference internal" href="../notes/info_theory/overview.html">
    Information Theory
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
@@ -493,7 +493,7 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../info_theory/measures.html">
+    <a class="reference internal" href="../notes/info_theory/measures.html">
      Measures
     </a>
     <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
@@ -503,24 +503,24 @@ const thebe_selector_output = ".output, .cell_output"
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/information.html">
+      <a class="reference internal" href="../notes/info_theory/information.html">
        Information Theory
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/entropy.html">
+      <a class="reference internal" href="../notes/info_theory/entropy.html">
        Entropy &amp; Relative Entropy
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/mutual_info.html">
+      <a class="reference internal" href="../notes/info_theory/mutual_info.html">
        Mutual Information and Total Correlation
       </a>
      </li>
     </ul>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../info_theory/estimators.html">
+    <a class="reference internal" href="../notes/info_theory/estimators.html">
      Information Theory Measures
     </a>
     <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
@@ -530,17 +530,17 @@ const thebe_selector_output = ".output, .cell_output"
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/classic.html">
+      <a class="reference internal" href="../notes/info_theory/classic.html">
        Classic Methods
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/histogram.html">
+      <a class="reference internal" href="../notes/info_theory/histogram.html">
        Entropy Estimator - Histogram
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/experiments/rbig_sample_consistency.html">
+      <a class="reference internal" href="../notes/info_theory/experiments/rbig_sample_consistency.html">
        Experiment - RBIG Sample Consistency
       </a>
      </li>
@@ -549,7 +549,7 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../overview.html">
+  <a class="reference internal" href="../notes/normalizing_flows/overview.html">
    Normalizing Flows
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
@@ -559,27 +559,27 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../linear.html">
+    <a class="reference internal" href="../notes/normalizing_flows/linear.html">
      Linear Layers
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../coupling_layers.html">
+    <a class="reference internal" href="../notes/normalizing_flows/coupling_layers.html">
      Coupling Layers
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../conditional.html">
+    <a class="reference internal" href="../notes/normalizing_flows/conditional.html">
      Conditional Normalizing Flows
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../multiscale.html">
+    <a class="reference internal" href="../notes/normalizing_flows/multiscale.html">
      Multiscale
     </a>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../lecture_1_ig.html">
+    <a class="reference internal" href="../notes/normalizing_flows/lecture_1_ig.html">
      Lecture I - Iterative Gaussianization
     </a>
     <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
@@ -589,24 +589,24 @@ const thebe_selector_output = ".output, .cell_output"
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1.0_univariate_gauss.html">
+      <a class="reference internal" href="../notes/normalizing_flows/1.0_univariate_gauss.html">
        1.1 - Univariate Gaussianization
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1.1_marginal_gauss.html">
+      <a class="reference internal" href="../notes/normalizing_flows/1.1_marginal_gauss.html">
        1.2 - Marginal Gaussianization
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../1.2_gaussianization.html">
+      <a class="reference internal" href="../notes/normalizing_flows/1.2_gaussianization.html">
        1.2 - Iterative Gaussianization
       </a>
      </li>
     </ul>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../lecture_2_gf.html">
+    <a class="reference internal" href="../notes/normalizing_flows/lecture_2_gf.html">
      Lecture II - Gaussianization Flows
     </a>
     <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
@@ -616,17 +616,17 @@ const thebe_selector_output = ".output, .cell_output"
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../lecture_3_gfs_pt1_mg.html">
+      <a class="reference internal" href="../notes/normalizing_flows/lecture_3_gfs_pt1_mg.html">
        Parameterized Marginal Gaussianization
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../lecture_3_gfs_pt2_rot.html">
+      <a class="reference internal" href="../notes/normalizing_flows/lecture_3_gfs_pt2_rot.html">
        Parameterized Rotations
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../lecture_3_gfs_pt3_plane.html">
+      <a class="reference internal" href="../notes/normalizing_flows/lecture_3_gfs_pt3_plane.html">
        Example - 2D Plane
       </a>
      </li>
@@ -635,7 +635,7 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../inr/overview.html">
+  <a class="reference internal" href="../notes/inr/overview.html">
    Implicit Neural Representations
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
@@ -645,19 +645,19 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../inr/formulation.html">
+    <a class="reference internal" href="../notes/inr/formulation.html">
      Formulation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../inr/literature_review.html">
+    <a class="reference internal" href="../notes/inr/literature_review.html">
      Literature Review
     </a>
    </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../data_assimilation/overview.html">
+  <a class="reference internal" href="../notes/data_assimilation/overview.html">
    Data Assimilation
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
@@ -667,37 +667,37 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/dynamical_sys.html">
+    <a class="reference internal" href="../notes/data_assimilation/dynamical_sys.html">
      Dynamical Systems
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/oi.html">
+    <a class="reference internal" href="../notes/data_assimilation/oi.html">
      Optimal Interpolation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/interp.html">
+    <a class="reference internal" href="../notes/data_assimilation/interp.html">
      Interpolation Problem
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/emu.html">
+    <a class="reference internal" href="../notes/data_assimilation/emu.html">
      Emulation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/inv_problems.html">
+    <a class="reference internal" href="../notes/data_assimilation/inv_problems.html">
      Inverse Problems
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/projects.html">
+    <a class="reference internal" href="../notes/data_assimilation/projects.html">
      Projects
     </a>
    </li>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../data_assimilation/algorithms.html">
+    <a class="reference internal" href="../notes/data_assimilation/algorithms.html">
      Algorithms
     </a>
     <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
@@ -707,42 +707,42 @@ const thebe_selector_output = ".output, .cell_output"
     </label>
     <ul>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/markov_models.html">
+      <a class="reference internal" href="../notes/data_assimilation/markov_models.html">
        Markov Models
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/gauss_markov.html">
+      <a class="reference internal" href="../notes/data_assimilation/gauss_markov.html">
        Gauss-Markov Models
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/kf.html">
+      <a class="reference internal" href="../notes/data_assimilation/kf.html">
        Kalman Filter
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/nkf.html">
+      <a class="reference internal" href="../notes/data_assimilation/nkf.html">
        Normalizing Kalman Filter
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/enskf.html">
+      <a class="reference internal" href="../notes/data_assimilation/enskf.html">
        Ensemble Kalman Filter
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/dmm.html">
+      <a class="reference internal" href="../notes/data_assimilation/dmm.html">
        Deep Markov Model
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/4dvarnet.html">
+      <a class="reference internal" href="../notes/data_assimilation/4dvarnet.html">
        4DVarNet
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/markov_gp.html">
+      <a class="reference internal" href="../notes/data_assimilation/markov_gp.html">
        Markovian Gaussian Processes
       </a>
      </li>
@@ -751,7 +751,7 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../misc/overview.html">
+  <a class="reference internal" href="../notes/misc/overview.html">
    Miscellaneous Notes
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
@@ -761,17 +761,17 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../misc/generative_models.html">
+    <a class="reference internal" href="../notes/misc/generative_models.html">
      Generative Models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../misc/diffusion_models.html">
+    <a class="reference internal" href="../notes/misc/diffusion_models.html">
      Diffusion Models
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../misc/fixed_point.html">
+    <a class="reference internal" href="../notes/misc/fixed_point.html">
      Fixed-Point Methods
     </a>
    </li>
@@ -785,17 +785,17 @@ const thebe_selector_output = ".output, .cell_output"
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../cheatsheets/bash.html">
+  <a class="reference internal" href="bash.html">
    Bash
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../cheatsheets/cli.html">
+  <a class="reference internal" href="cli.html">
    Command Line
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../../../cheatsheets/python.html">
+  <a class="reference internal" href="python.html">
    Python
   </a>
  </li>
@@ -889,7 +889,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/normalizing_flows/notes/TUTORIALS.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/cheatsheets/pytorch.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -917,7 +917,7 @@ title="Open an issue"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../../../../_sources/content/notes/normalizing_flows/notes/TUTORIALS.md"
+        <a href="../../_sources/content/cheatsheets/pytorch.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -976,32 +976,17 @@ title="Print to PDF"
     </div>
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Class
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#skorch">
+   Skorch
   </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#tldr">
-   TLDR
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#algorithm-walk-through">
-     Algorithm Walk-Through
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#application-focus">
-     Application Focus
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#vae-loss">
+     VAE Loss
     </a>
    </li>
   </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#algorithm-deep-dives">
-   Algorithm Deep Dives
-  </a>
  </li>
 </ul>
 
@@ -1012,7 +997,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Class</h1>
+                <h1>PyTorch</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -1022,32 +1007,17 @@ title="Print to PDF"
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Class
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#skorch">
+   Skorch
   </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#tldr">
-   TLDR
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#algorithm-walk-through">
-     Algorithm Walk-Through
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#application-focus">
-     Application Focus
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#vae-loss">
+     VAE Loss
     </a>
    </li>
   </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#algorithm-deep-dives">
-   Algorithm Deep Dives
-  </a>
  </li>
 </ul>
 
@@ -1059,90 +1029,36 @@ title="Print to PDF"
                 
               <div>
                 
-  <section id="class">
-<h1>Class<a class="headerlink" href="#class" title="Permalink to this headline">#</a></h1>
-</section>
-<section id="tldr">
-<h1>TLDR<a class="headerlink" href="#tldr" title="Permalink to this headline">#</a></h1>
-<p><strong>Algorithm Deep Dives</strong></p>
-<ul class="simple">
-<li><p>Iterative Gaussianization</p></li>
-<li><p>Gaussianization Flows</p></li>
-<li><p>NICE</p></li>
-<li><p>RealNVP</p></li>
-<li><p>GLOW</p></li>
-<li><p>Neural Spline Flows</p></li>
-<li><p>Mixture CDF (MixtureCDF + InverseCDF + Affine)</p></li>
-<li><p>NAF</p></li>
-<li><p>BNAF</p></li>
-</ul>
-<p><strong>Normalizing Flow Components</strong></p>
-<ul class="simple">
-<li><p>Marginal Gaussianization - Uniformization + InverseCDF</p></li>
-<li><p>Linear Layers -&gt;</p></li>
-<li><p>Coupling Layers -&gt; Additive, Affine, Splines, MixtureCDF, NN, Hierarchical, Masked</p></li>
-<li><p>Discrete Data -&gt; Dequantization</p></li>
-<li><p>Multiscale -&gt; Slicing</p></li>
-<li><p>Dimension Reduction -&gt; Slicing</p></li>
-<li><p>Augmentation -&gt; Priors</p></li>
-<li><p>Images -&gt; Multiscale + 1x1Conv + Discrete</p></li>
-<li><p>SpatioTemporal</p></li>
-<li><p>Conditional -&gt; Prior, Slicing, Bijectors</p></li>
-</ul>
-<hr class="docutils" />
-<section id="algorithm-walk-through">
-<h2>Algorithm Walk-Through<a class="headerlink" href="#algorithm-walk-through" title="Permalink to this headline">#</a></h2>
-<p><strong>Iterative Gaussianization</strong></p>
-<ul class="simple">
-<li></li>
-</ul>
-<p><strong>Parametric Gaussianization</strong></p>
-<p><strong>Coupling Layers</strong></p>
-<ul class="simple">
-<li><p>Coupling Layers</p>
-<ul>
-<li><p>Additive, Affine, Splines, Combo (MixtureCDF, Logit, Affine)</p></li>
-</ul>
-</li>
-<li><p>Advanced Coupling Layers</p>
-<ul>
-<li><p>DenseFlows, HINT</p></li>
-</ul>
-</li>
-<li><p>AutoRegressive Transformations</p></li>
-<li><p>Linear Transformations</p></li>
-<li><p>Discrete Data</p></li>
-<li><p>MultiScale Data</p></li>
-</ul>
-</section>
-<section id="application-focus">
-<h2>Application Focus<a class="headerlink" href="#application-focus" title="Permalink to this headline">#</a></h2>
-<ul class="simple">
-<li><p>Hybrid Models - Regression, Classification</p></li>
-<li><p>Feature Extractions</p></li>
-<li><p>Variational Inference - VAEs, Neutra-Param, DAIS</p></li>
-<li><p>Conditional Density Estimations - Prior, Coupling, Augmentation</p></li>
-</ul>
-<hr class="docutils" />
+  <section class="tex2jax_ignore mathjax_ignore" id="pytorch">
+<h1>PyTorch<a class="headerlink" href="#pytorch" title="Permalink to this headline">#</a></h1>
+<section id="skorch">
+<h2>Skorch<a class="headerlink" href="#skorch" title="Permalink to this headline">#</a></h2>
+<section id="vae-loss">
+<h3>VAE Loss<a class="headerlink" href="#vae-loss" title="Permalink to this headline">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="k">class</span> <span class="nc">VAELoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VAELoss</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_output</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Comments.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            None.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Xhat</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">log_var</span> <span class="o">=</span> <span class="n">model_output</span>
+        <span class="n">KL_Divergence</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">log_var</span> <span class="o">-</span> <span class="n">mu</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">log_var</span><span class="o">.</span><span class="n">exp</span><span class="p">())</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">Reconstruction_Loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">Xhat</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">Reconstruction_Loss</span> <span class="o">+</span> <span class="n">KL_Divergence</span>
+
+        <span class="k">return</span> <span class="n">loss</span>
+</pre></div>
+</div>
 </section>
 </section>
-<section id="algorithm-deep-dives">
-<h1>Algorithm Deep Dives<a class="headerlink" href="#algorithm-deep-dives" title="Permalink to this headline">#</a></h1>
-<ul class="simple">
-<li><p>Gaussianization Flows - Linear (Orthogonal), Element-Wise Transform (Marginal Gauss)</p></li>
-<li><p>NICE/RealNVP - Additive Coupling, BatchNorm, Permutation, MultiScale (Slicing), Image Preprocessing</p></li>
-<li><p>GLOW - ActNorm, 1x1 Convs (Ortho), Double Coupling (?), Image Preprocessing</p></li>
-<li><p>NSF - Spline Couplings, ResNet</p></li>
-<li><p>Mixture CDF - MixtureCDF Couplings, Attention, Variational Quantization</p></li>
-<li><p>Convolutional Exponential - Spatial Linear</p></li>
-<li><p>Augmentations</p></li>
-<li><p>SurVAE Flows - Generalization (Stochastic, Discrete, Dim Reduction)</p></li>
-<li><p>DenseNet + HINT - clever coupling</p></li>
-<li><p>iResNet - (iRevNet, iResNet)</p></li>
-<li><p>Continious Flows - FFJORD</p></li>
-<li><p>(B)NAF</p></li>
-<li><p>Convex Potential Flows</p></li>
-</ul>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1158,7 +1074,7 @@ title="Print to PDF"
         },
         kernelOptions: {
             kernelName: "python3",
-            path: "./content/notes/normalizing_flows/notes"
+            path: "./content/cheatsheets"
         },
         predefinedOutput: true
     }
@@ -1193,7 +1109,7 @@ title="Print to PDF"
     </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
 
 
   </body>

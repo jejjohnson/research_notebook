@@ -5,3 +5,4 @@ rbig_consistency.csv
 *.DS_Store
 
 \__pycache__/
+\.obsidian/

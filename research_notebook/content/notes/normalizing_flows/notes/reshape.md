@@ -3,14 +3,14 @@
 * Reshaping
   * [Squeeze2D](https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/squeeze.py) | [Unsqueeze2D](https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/unsqueeze.py)
 * IRev-Net - [Freia](https://github.com/VLL-HD/FrEIA/blob/master/FrEIA/modules/reshapes.py#L12)
-* Haar Wavelet - [Freia](https://github.com/VLL-HD/FrEIA/blob/master/FrEIA/modules/reshapes.py#L191) | [DenseFlow](https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/wavelet.py) | [Other](https://github.com/JingyunLiang/HCFlow/blob/main/codes/models/modules/Basic.py#L450) | 
+* Haar Wavelet - [Freia](https://github.com/VLL-HD/FrEIA/blob/master/FrEIA/modules/reshapes.py#L191) | [DenseFlow](https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/wavelet.py) | [Other](https://github.com/JingyunLiang/HCFlow/blob/main/codes/models/modules/Basic.py#L450) |
 * Rotation [Source](https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/rotate.py)
 * Orthogonal Squeeze - [DenseFlow](https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/orth_squeeze_pgd.py)
 
 ---
 ## Reshaping
 
-* [Source](https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/reshape.py) 
+* [Source](https://github.com/matejgrcic/DenseFlow/blob/main/denseflow/transforms/bijections/reshape.py)
 
 ```python
 class Reshape(Bijection):
@@ -75,11 +75,6 @@ class WaveletDownSampling:
 
 ```
 
-```
-
-
-
-
 
 ---
 
@@ -87,7 +82,7 @@ class WaveletDownSampling:
 
 ### Upsampling
 
-**Source**: 
+**Source**:
 * https://github.com/VLL-HD/FrEIA/blob/master/FrEIA/modules/reshapes.py
 * github.com/jhjacobsen/pytorch-i-revnet/blob/master/models/model_utils.py
 
@@ -98,7 +93,7 @@ class WaveletDownSampling:
 def init_kernel(n_channels: int=3):
 
     kernel = np.zeros(4, 1, 2, 2)
-    
+
     kernel[0, 0, 0, 0] = 1
     kernel[1, 0, 0, 1] = 1
     kernel[2, 0, 1, 0] = 1

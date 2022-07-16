@@ -1,0 +1,78 @@
+name: torch_py39
+channels:
+- defaults
+- conda-forge
+- pytorch
+dependencies:
+- python=3.9
+# Standard Libraries
+- numpy                           # Numerical Linear Algebra
+- scipy                           # Scientific Computing
+- conda-forge::xarray             # Data structures
+- scikit-learn                    # Machine Learning
+- scikit-image                    # Image processing Library
+# GEOSPATIAL PACKAGES
+- conda-forge::pooch              # Data Download
+- conda-forge::cftime             # Xarray compatible time stamps
+- conda-forge::pyinterp           # Interpolation
+# PLOTTING LIBRARY
+- matplotlib                      # standard plotting library
+- seaborn                         # Stats viz library
+- pyviz::geoviews                 # holoviews for geo data
+- pyviz::hvplot                   # interactive plots
+- conda-forge::cartopy            # EO plotting
+- datashader                      # scale plots
+- conda-forge::xmovie             # xarray movies/gifs
+# Scale
+- dask                            # Out-of-Core processing
+# Storage
+- hdf5                            # standard large storage h5
+- conda-forge::zarr               # optimized zarr storage
+# PYTORCH ECOSYSTEM
+- pytorch::pytorch                # pytorch tensor library
+- pytorch::torchvision            # pytorch vision library
+- pytorch::torchaudio             # pytorch audio library
+- conda-forge::pytorch-lightning  # pytorch training utils/org
+# GUI
+- ipython                         # interactive python
+- conda-forge::ipywidgets         # widgets for jupyter
+- conda-forge::nodejs             # for extensions in jupyterlab
+- ipykernel                       # visible from jupyterlab
+- conda-forge::tqdm               # progress bar
+- pip
+- pip:
+  # PYTORCH ECOSYSTEM
+  - torchtyping
+  - pyro-ppl        # probabilistic programming library
+  - gpytorch        # Gaussian Processes
+  - lightning
+  - skorch
+  - torchgeo
+  - einops
+  # OTHER
+  - plum-dispatch
+  - netCDF4
+  # formatting
+  - black
+  - pylint
+  - isort
+  - flake8
+  - mypy
+  - pytest
+  - pre-commit
+  - rich
+  - sh
+  - pudb
+  # Notebook stuff
+  - pyprojroot
+  - python-dotenv
+  # logging
+  - wandb
+  - loguru
+  # plotting
+  - celluloid
+  - corner
+  # experiment
+  - hydra-core
+  - hydra-colorlog
+  - hydra-optuna-sweeper

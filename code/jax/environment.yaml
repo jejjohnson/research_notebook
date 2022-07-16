@@ -1,0 +1,97 @@
+name: jax_py39
+channels:
+- defaults
+- conda-forge
+- pytorch
+dependencies:
+- python=3.9
+# Standard Libraries
+- numpy            # Numerical Linear Algebra
+- scipy             # Scientific Computing
+- conda-forge::xarray            # Data structures
+- scikit-learn     # Machine Learning
+- conda-forge::statsmodels
+- scikit-image
+- conda-forge::pymc
+# Geospatial packages
+- geopandas
+- conda-forge::regionmask
+- conda-forge::rasterio
+- conda-forge::rioxarray
+- conda-forge::shapely
+- conda-forge::pooch
+- conda-forge::cftime
+# PLOTTING LIBRARY
+- matplotlib        # standard plotting library
+- seaborn           # Stats viz library
+- bokeh
+- plotly::plotly>=4.6.0
+- pyviz::geoviews
+- conda-forge::cartopy
+- datashader
+- conda-forge::xmovie
+# Scale
+- numba
+- dask              # Out-of-Core processing
+- dask-ml           # Out-of-Core machine learning
+# Storage
+- hdf5              # standard large storage h5
+- conda-forge::zarr
+- conda-forge::tqdm              #
+# GUI
+- ipython
+- conda-forge::ipywidgets
+- conda-forge::nodejs            # for extensions in jupyterlab
+- ipykernel
+- conda-forge::tqdm
+- pip
+- pip:
+  # Jax framework
+  - "jax[cpu] -f https://storage.googleapis.com/jax-releases/jax_releases.html"
+  - chex
+  - tensor_annotations
+  - tensor_annotations_jax_stubs
+  - einops
+  # deep learning
+  - equinox
+  - diffrax
+  - flax
+  - elegy
+  - jaxtyping
+  # optimization
+  - optax
+  - jaxopt
+  # probabilistic
+  - tinygp
+  - distrax
+  - blackjax
+  - numpyro
+  - tensorflow_probability
+  - bayesnewton
+  # OTHER
+  - plum-dispatch
+  - netCDF4
+  # formatting
+  - black
+  - pylint
+  - isort
+  - flake8
+  - mypy
+  - pytest
+  - pre-commit
+  - rich
+  - sh
+  - pudb
+  # Notebook stuff
+  - pyprojroot
+  - python-dotenv
+  # logging
+  - wandb
+  - loguru
+  # plotting
+  - celluloid
+  - corner
+  # experiment
+  - hydra-core
+  - hydra-colorlog
+  - hydra-optuna-sweeper

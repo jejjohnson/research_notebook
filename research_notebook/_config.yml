@@ -1,6 +1,6 @@
 #######################################################################################
 # A default configuration that will be loaded for all jupyter books
-# See the documentation for help and more options: 
+# See the documentation for help and more options:
 # https://jupyterbook.org/customize/config.html
 
 #######################################################################################
@@ -9,9 +9,13 @@ title                       : Research Notebook  # The title of the book. Will b
 author                      : J. Emmanuel Johnson  # The author of the book
 copyright                   : "2022"  # Copyright year to be placed in the footer
 logo                        : book_v2.jpeg  # A path to the book logo
-# bibtex_reference_style: author_year 
+# bibtex_reference_style: author_year
+
+# Force re-execution of notebooks on each build.
+# See https://jupyterbook.org/content/execute.html
 execute:
-  execute_notebooks: "off"
+  execute_notebooks: "off" #cache
+  timeout: 120
 
 repository:
   url                       : https://github.com/jejjohnson/research_notebook # Online location of your book
@@ -44,12 +48,12 @@ bibtex_bibfiles:
 sphinx:
   config:
     mathjax_path: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-    bibtex_reference_style: author_year 
+    bibtex_reference_style: author_year
     # - content/notes/bayesian/bayesian.bib
   extra_extensions:
     - sphinx_proof
   #   - sphinx_togglebutton
-    
+
 
 # parse:
 #   myst_enable_extensions:

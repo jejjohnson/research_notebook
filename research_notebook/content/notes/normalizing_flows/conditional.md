@@ -20,7 +20,7 @@ $$
 We can also add a type of encoder function for the inputs, $\mathbf{x}$.
 
 $$
-\tilde{\mathbf{x}} = \text{NN}_{\boldsymbol \theta}(\mathbf{x}) 
+\tilde{\mathbf{x}} = \text{NN}_{\boldsymbol \theta}(\mathbf{x})
 $$
 
 So this alters the formulation slightly:
@@ -55,9 +55,21 @@ p(\mathbf{z}_{\ell+1}|\mathbf{z}_\ell, \mathbf{x}) = \mathcal{N}(\mathbf{z}_{\el
 $$
 
 ---
-## Coupling
+## Transformations
 
 This is arguably the most powerful method to incorporate prior knowledge.
+
+
+### Bijections
+
+
+
+
+
+
+---
+## Coupling
+
 
 $$
 \mathbf{z}_\ell = \boldsymbol{T}(\mathbf{x}; \text{NN}_{\boldsymbol \theta}(\mathbf{z}_\ell,\mathbf{x}))

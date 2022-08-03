@@ -166,6 +166,9 @@ parts:
       sections:
       - file: content/notes/inr/formulation.md
       - file: content/notes/inr/literature_review.md
+      - file: content/notes/inr/pinns.md
+        sections:
+          - file: content/notes/inr/qg.md
     # ================================
     # DATA ASSIMILATION
     # ================================

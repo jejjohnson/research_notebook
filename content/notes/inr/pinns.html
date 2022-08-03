@@ -55,6 +55,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="QG PDE" href="qg.html" />
+    <link rel="prev" title="Literature Review" href="literature_review.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -261,7 +263,7 @@ const thebe_selector_output = ".output, .cell_output"
   Notes
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../concepts/notation.html">
    Notation
@@ -636,16 +638,16 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
+ <li class="toctree-l1 current active has-children">
   <a class="reference internal" href="overview.html">
    Implicit Neural Representations
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
   <label for="toctree-checkbox-17">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
     <a class="reference internal" href="formulation.html">
      Formulation
@@ -656,14 +658,31 @@ const thebe_selector_output = ".output, .cell_output"
      Literature Review
     </a>
    </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="current reference internal" href="#">
+     Physics-Informed Loss
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="qg.html">
+       QG PDE
+      </a>
+     </li>
+    </ul>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../data_assimilation/overview.html">
    Data Assimilation
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-  <label for="toctree-checkbox-18">
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -702,8 +721,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../data_assimilation/algorithms.html">
      Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
-    <label for="toctree-checkbox-19">
+    <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+    <label for="toctree-checkbox-20">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -756,8 +775,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../misc/overview.html">
    Miscellaneous Notes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
-  <label for="toctree-checkbox-20">
+  <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+  <label for="toctree-checkbox-21">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -891,7 +910,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/inr/pinns_loss.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/inr/pinns.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -919,7 +938,7 @@ title="Open an issue"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../../../_sources/content/notes/inr/pinns_loss.md"
+        <a href="../../../_sources/content/notes/inr/pinns.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -979,14 +998,33 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qg-model">
-   QG Model
+  <a class="reference internal nav-link" href="#function">
+   Function
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#jacobian">
-   Jacobian
+  <a class="reference internal nav-link" href="#loss">
+   Loss
   </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#examples">
+   Examples
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qg-equation">
+     QG Equation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#qg-equation-4-ssh-tldr">
+       QG Equation 4 SSH (TLDR)
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -1008,14 +1046,33 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#qg-model">
-   QG Model
+  <a class="reference internal nav-link" href="#function">
+   Function
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#jacobian">
-   Jacobian
+  <a class="reference internal nav-link" href="#loss">
+   Loss
   </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#examples">
+   Examples
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#qg-equation">
+     QG Equation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#qg-equation-4-ssh-tldr">
+       QG Equation 4 SSH (TLDR)
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -1029,63 +1086,63 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="physics-informed-loss">
 <h1>Physics-Informed Loss<a class="headerlink" href="#physics-informed-loss" title="Permalink to this headline">#</a></h1>
-<section id="qg-model">
-<h2>QG Model<a class="headerlink" href="#qg-model" title="Permalink to this headline">#</a></h2>
-<p><strong>Assumptions</strong></p>
+<hr class="docutils" />
+<section id="function">
+<h2>Function<a class="headerlink" href="#function" title="Permalink to this headline">#</a></h2>
+<p>The learned function, <span class="math notranslate nohighlight">\(\boldsymbol{f_\theta}\)</span>, will map the spatial coordinates, <span class="math notranslate nohighlight">\(\mathbf{x}_\phi \in \mathbb{R}^{D\phi}\)</span>, and time coordinate, <span class="math notranslate nohighlight">\(t \in \mathbb{R}\)</span>, to sea surface height, <span class="math notranslate nohighlight">\(u \in \mathbb{R}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[
-\text{Pressure} \propto \text{Sea Surface Height (SSH)}
-\]</div>
-<div class="math notranslate nohighlight">
-\[
-\text{Coriolis Force} \propto \text{Velocity}
-\]</div>
-<p><strong>Equations</strong></p>
-<div class="math notranslate nohighlight">
-\[
-\frac{\partial \mathbf{q}}{\partial t} + \det \mathbf{J}(\boldsymbol{\psi},\boldsymbol{q}) = 0
-\]</div>
-<p><strong>Stream Function</strong></p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{\psi} = \frac{g}{f}SSH
-\]</div>
-<p>where <span class="math notranslate nohighlight">\(g\)</span> is the gravity constant and <span class="math notranslate nohighlight">\(f\)</span> is the coriolis parameter.</p>
-<p><strong>Potential Vorticity</strong></p>
-<p>This function will implement the conservation of potential vorticity.</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{q} = \boldsymbol{\nabla}^2 \boldsymbol{\psi} - \frac{1}{LR^2}\boldsymbol{\psi}
-\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\nabla}^2\)</span> is the Laplace operator, <span class="math notranslate nohighlight">\(LR^2\)</span> is the baroclinic Rossby radius of deformation,<span class="math notranslate nohighlight">\(\boldsymbol{\nabla}^2 \boldsymbol{\psi}\)</span> is the relative vorticity and <span class="math notranslate nohighlight">\(\frac{1}{LR^2}\boldsymbol{\psi}\)</span> is the vortex streatching.</p>
-<p><strong>Potential Vorticity</strong>: the vorticity of a fluid as viewed in the rotating frame of Earth</p>
-<p><strong>Vortex Stretching</strong> - describes the mechanisms of stretching of the fluid column.</p>
-<p>So we can plug in the definition of the stream function within the potential vorticity term.</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{q} = \boldsymbol{\nabla}^2 \left(\frac{g}{f}SSH\right) - \frac{1}{LR^2}\left(\frac{g}{f}SSH\right) 
+u = \boldsymbol{f_\theta}(\mathbf{x}_\phi, t)
 \]</div>
 </section>
 <hr class="docutils" />
-<section id="jacobian">
-<h2>Jacobian<a class="headerlink" href="#jacobian" title="Permalink to this headline">#</a></h2>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\boldsymbol{J}
-\begin{bmatrix}
-A(x,y) \\
-B(x,y)
-\end{bmatrix} =
-\begin{bmatrix}
-\frac{\partial A}{\partial x} &amp; \frac{\partial A}{\partial y} \\
-\frac{\partial B}{\partial x} &amp; \frac{\partial B}{\partial y} 
-\end{bmatrix}
-\end{split}\]</div>
+<section id="loss">
+<h2>Loss<a class="headerlink" href="#loss" title="Permalink to this headline">#</a></h2>
+<p>The standard loss term is data-driven</p>
 <div class="math notranslate nohighlight">
 \[
-\det \mathbf{J} = AD - BC
+\mathcal{L}_{data} = \text{MSE}(u, \hat{u}) = \frac{1}{N} \sum_{n=1}^N  \left(u - \boldsymbol{f_\phi}(\mathbf{x}_\phi, t) \right)^2
 \]</div>
+<p>However, there is no penalization to make the field behave the way we would expect. We also want a regularization which makes the field, <span class="math notranslate nohighlight">\(u\)</span>, behave how we would expect. This can be achieved by adding a physics-informed loss regularization term to the total loss.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L} = \mathcal{L}_{data} + \lambda \mathcal{L}_{phy}
+\]</div>
+<p>This loss term can be minimized by effectively minimizing a PDE function. For example:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f}_{phy}(\mathbf{x},t):= \partial_t u(\mathbf{x},t) + \mathcal{N}[u(\mathbf{x},t)] = 0
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\partial_t\)</span> is the derivative of the field, <span class="math notranslate nohighlight">\(u\)</span>, wrt to time and <span class="math notranslate nohighlight">\(\mathcal{N}[\cdot]\)</span> are some partial differential equations. We are interested in minimizing the full PDE, which we denote <span class="math notranslate nohighlight">\(\boldsymbol{f}_{phy}\)</span>, st it is 0. So the standard loss function applies.</p>
 </section>
+<hr class="docutils" />
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">#</a></h2>
+<p>Below are some examples of how I have used the PINNs loss/regularization formulation in my own research.</p>
+<hr class="docutils" />
+<section id="qg-equation">
+<h3>QG Equation<a class="headerlink" href="#qg-equation" title="Permalink to this headline">#</a></h3>
+<p>We have the following PDE for the QG dynamics:</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t q + \det J(\psi, q) = 0
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(q(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the potential vorticity (PV), <span class="math notranslate nohighlight">\(\psi(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the stream function, <span class="math notranslate nohighlight">\(\partial_t\)</span> is the partial derivative wrt <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(\boldsymbol{J}\)</span>, is the Jacobian operator and <span class="math notranslate nohighlight">\(\det \boldsymbol{J}(\cdot,\cdot)\)</span> is the <em>determinant</em> of the Jacobian.</p>
+<p><strong>Objective</strong>: We want to convert this PDE in terms of sea surface height (SSH) instead of PV and the stream function.</p>
+<hr class="docutils" />
+<section id="qg-equation-4-ssh-tldr">
+<h4>QG Equation 4 SSH (TLDR)<a class="headerlink" href="#qg-equation-4-ssh-tldr" title="Permalink to this headline">#</a></h4>
+<p><strong>Note</strong>: For the ease of notation, let’s denote <span class="math notranslate nohighlight">\(u\)</span> as the SSH. The above PDE can be written in terms of <span class="math notranslate nohighlight">\(u\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t \nabla^2 u + c_2 \partial_t u + c_1\det \boldsymbol{J}(u, \nabla^2 u) +  c_3 \det \boldsymbol{J}(u, u) = 0
+\]</div>
+<p>See <a class="reference internal" href="qg.html"><span class="doc std std-doc">the following page</span></a> for more and how this equation was derived.</p>
+</section>
+</section>
+</section>
+<div class="toctree-wrapper compound">
+</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1115,6 +1172,20 @@ B(x,y)
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="literature_review.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Literature Review</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="qg.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">QG PDE</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>

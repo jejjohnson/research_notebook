@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Error Propagation &#8212; Research Notebook</title>
+    <title>QG PDE &#8212; Research Notebook</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -55,6 +55,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Data Assimilation" href="../data_assimilation/overview.html" />
+    <link rel="prev" title="Physics-Informed Loss" href="pinns.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -261,7 +263,7 @@ const thebe_selector_output = ".output, .cell_output"
   Notes
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../concepts/notation.html">
    Notation
@@ -473,7 +475,7 @@ const thebe_selector_output = ".output, .cell_output"
     </ul>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="overview.html">
+    <a class="reference internal" href="../egps/overview.html">
      Input Uncertainty in GPs
     </a>
    </li>
@@ -636,38 +638,38 @@ const thebe_selector_output = ".output, .cell_output"
    </li>
   </ul>
  </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../inr/overview.html">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="overview.html">
    Implicit Neural Representations
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
   <label for="toctree-checkbox-17">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul>
+  <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="../inr/formulation.html">
+    <a class="reference internal" href="formulation.html">
      Formulation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../inr/literature_review.html">
+    <a class="reference internal" href="literature_review.html">
      Literature Review
     </a>
    </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../inr/pinns.html">
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="pinns.html">
      Physics-Informed Loss
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
     <label for="toctree-checkbox-18">
      <i class="fas fa-chevron-down">
      </i>
     </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../inr/qg.html">
+    <ul class="current">
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
        QG PDE
       </a>
      </li>
@@ -908,7 +910,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/egps/error_prop.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/inr/qg.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -936,7 +938,7 @@ title="Open an issue"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="../../../_sources/content/notes/egps/error_prop.md"
+        <a href="../../../_sources/content/notes/inr/qg.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -996,61 +998,125 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#change-of-variables">
-   Change of Variables
+  <a class="reference internal nav-link" href="#assumptions">
+   Assumptions
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#conditional-gaussian-distribution">
-   Conditional Gaussian Distribution
+  <a class="reference internal nav-link" href="#representation">
+   Representation
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#taylor-expansions">
-   Taylor Expansions
+  <a class="reference internal nav-link" href="#pde">
+   PDE
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pinns-loss-derivation">
+   PINNs Loss Derivation
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#joint-distribution">
-     Joint Distribution
+    <a class="reference internal nav-link" href="#stream-function">
+     Stream Function
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#span-style-color-red-proof-span-constants-and-determinant-jacobians">
+       <span style="color:red">
+        <strong>
+         Proof
+        </strong>
+       </span>
+       : Constants and determinant Jacobians
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#potential-vorticity">
+     Potential Vorticity
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#span-style-color-red-proof-span-determinant-jacobian-expansion">
+       <span style="color:red">
+        <strong>
+         Proof
+        </strong>
+       </span>
+       : Determinant Jacobian Expansion
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#final-form">
+     Final Form
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#derivation">
-     Derivation
+    <a class="reference internal nav-link" href="#expanded-form">
+     Expanded Form
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#joint-distribution-for-additive-noise">
-   Joint Distribution for Additive Noise
+  <a class="reference internal nav-link" href="#qg-equation-ssh">
+   QG Equation (SSH)
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#law-of-error-propagation">
-   Law of Error Propagation
+  <a class="reference internal nav-link" href="#id1">
+   Expanded Form
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#font-color-red-proof-font-mean-function">
-     <font color="red">
-      Proof:
-     </font>
-     Mean Function
+    <a class="reference internal nav-link" href="#gradient-1st-order">
+     Gradient (1st Order)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#code">
+       Code
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#laplacian-gradient">
+     Laplacian + Gradient
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id2">
+       Code
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#loss">
+     Loss
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#font-color-red-proof-font-variance-function">
-     <font color="red">
-      Proof:
-     </font>
-     Variance Function
+    <a class="reference internal nav-link" href="#my-code">
+     My Code
     </a>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#previous-code">
+   Previous Code
+  </a>
+  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#resources">
-     Resources
+    <a class="reference internal nav-link" href="#redouane">
+     Redouane
     </a>
    </li>
   </ul>
@@ -1064,7 +1130,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Error Propagation</h1>
+                <h1>QG PDE</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -1075,61 +1141,125 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#change-of-variables">
-   Change of Variables
+  <a class="reference internal nav-link" href="#assumptions">
+   Assumptions
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#conditional-gaussian-distribution">
-   Conditional Gaussian Distribution
+  <a class="reference internal nav-link" href="#representation">
+   Representation
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#taylor-expansions">
-   Taylor Expansions
+  <a class="reference internal nav-link" href="#pde">
+   PDE
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pinns-loss-derivation">
+   PINNs Loss Derivation
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#joint-distribution">
-     Joint Distribution
+    <a class="reference internal nav-link" href="#stream-function">
+     Stream Function
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#span-style-color-red-proof-span-constants-and-determinant-jacobians">
+       <span style="color:red">
+        <strong>
+         Proof
+        </strong>
+       </span>
+       : Constants and determinant Jacobians
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#potential-vorticity">
+     Potential Vorticity
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#span-style-color-red-proof-span-determinant-jacobian-expansion">
+       <span style="color:red">
+        <strong>
+         Proof
+        </strong>
+       </span>
+       : Determinant Jacobian Expansion
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#final-form">
+     Final Form
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#derivation">
-     Derivation
+    <a class="reference internal nav-link" href="#expanded-form">
+     Expanded Form
     </a>
    </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#joint-distribution-for-additive-noise">
-   Joint Distribution for Additive Noise
+  <a class="reference internal nav-link" href="#qg-equation-ssh">
+   QG Equation (SSH)
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#law-of-error-propagation">
-   Law of Error Propagation
+  <a class="reference internal nav-link" href="#id1">
+   Expanded Form
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#font-color-red-proof-font-mean-function">
-     <font color="red">
-      Proof:
-     </font>
-     Mean Function
+    <a class="reference internal nav-link" href="#gradient-1st-order">
+     Gradient (1st Order)
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#code">
+       Code
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#laplacian-gradient">
+     Laplacian + Gradient
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id2">
+       Code
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#loss">
+     Loss
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#font-color-red-proof-font-variance-function">
-     <font color="red">
-      Proof:
-     </font>
-     Variance Function
+    <a class="reference internal nav-link" href="#my-code">
+     My Code
     </a>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#previous-code">
+   Previous Code
+  </a>
+  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#resources">
-     Resources
+    <a class="reference internal nav-link" href="#redouane">
+     Redouane
     </a>
    </li>
   </ul>
@@ -1144,256 +1274,621 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="error-propagation">
-<h1>Error Propagation<a class="headerlink" href="#error-propagation" title="Permalink to this headline">#</a></h1>
-<p>We’re in the setting where we have some inputs that come from a distribution <span class="math notranslate nohighlight">\(\mathbf{x} \sim \mathcal{N}(\mathbf{\mu_x}, \Sigma_\mathbf{x})\)</span> and we have some outputs <span class="math notranslate nohighlight">\(y\in\mathbb{R}\)</span>. Typically we have some function <span class="math notranslate nohighlight">\(f(\mathbf)\)</span> that maps the points <span class="math notranslate nohighlight">\(f:\mathbb{R}^D \rightarrow \mathbb{R}\)</span>. So like we do with GPs, we have the following function”</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="qg-pde">
+<h1>QG PDE<a class="headerlink" href="#qg-pde" title="Permalink to this headline">#</a></h1>
+<p align="center">
+<img src="https://ggos.org/wp-content/uploads/2021/04/satellite_altimetry_ggos-web-2020-1024x893.png" alt="drawing" width="400"/>
+<figcaption align = "center">
+  <b>Fig.1 - Various quantities related to sea surface height. Source:
+    <a href="https://ggos.org/item/sea-surface-heights/">GGOS</a>
+  </b>
+  </figcaption>
+</p>
+<section id="assumptions">
+<h2>Assumptions<a class="headerlink" href="#assumptions" title="Permalink to this headline">#</a></h2>
 <div class="math notranslate nohighlight">
 \[
-y=f(\mathbf{x})
+\text{Pressure} \propto \text{Sea Surface Height (SSH)}
 \]</div>
-<hr class="docutils" />
-<section id="change-of-variables">
-<h2>Change of Variables<a class="headerlink" href="#change-of-variables" title="Permalink to this headline">#</a></h2>
-<p>To have this full mapping, we would need to use the change of variables method because we are doing a transformation between of probability distributions.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-p(y) &amp;= p(x)\left| \frac{dy}{dx} \right|^{-1} \\
-&amp;= p(f^{-1}(y)|\mu_x,\Sigma_x)|\nabla f(y)|
-\end{aligned}
-\end{split}\]</div>
-<p>This is very expensive and can be very difficult depending upon the function.</p>
-</section>
-<hr class="docutils" />
-<section id="conditional-gaussian-distribution">
-<h2>Conditional Gaussian Distribution<a class="headerlink" href="#conditional-gaussian-distribution" title="Permalink to this headline">#</a></h2>
-<p>Alternatively, if we know that <span class="math notranslate nohighlight">\(f()\)</span> is described by a Gaussian distribution, then we can find the joint distribution between <span class="math notranslate nohighlight">\(\mathbf{x},y\)</span>. This can be described as:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{bmatrix}
-    \mathbf{x} \\
-    y
-    \end{bmatrix}
-    \sim \mathcal{N} \left( 
-    \begin{bmatrix}
-    \mu_\mathbf{x} \\ 
-    f(\mathbf{x})
-    \end{bmatrix}, 
-    \begin{bmatrix}
-    \Sigma_\mathbf{x} &amp; C \\
-    C^\top &amp; \Pi
-    \end{bmatrix}
-    \right)
-\end{split}\]</div>
-</section>
-<hr class="docutils" />
-<section id="taylor-expansions">
-<h2>Taylor Expansions<a class="headerlink" href="#taylor-expansions" title="Permalink to this headline">#</a></h2>
-<p>by using a Taylor series expansion. Let <span class="math notranslate nohighlight">\(\mu_x\)</span> be the true inputs and we perturb these by some noise <span class="math notranslate nohighlight">\(\delta_x\)</span> which is described by a normal distribution <span class="math notranslate nohighlight">\(\delta_x \sim \mathcal{N}(0, \Sigma_x)\)</span>. So we can write an expression for the function <span class="math notranslate nohighlight">\(f(\mathbf{x})\)</span>.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-f(\mathbf{x}) &amp;= f(\mu_x + \delta_x) \\
-&amp;\approx f(\mu_x) + \nabla_x f(\mu_x)\delta_x + \frac{1}{2}\sum_i \delta_x^\top \nabla_{xx}^{(i)}f(\mu_x)\delta_x e_i + \ldots
-\end{aligned}
-\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\nabla_x f(\mu_x)\)</span> is the jacobian of <span class="math notranslate nohighlight">\(f(\cdot)\)</span> evaluated at <span class="math notranslate nohighlight">\(\mu_x\)</span>, <span class="math notranslate nohighlight">\(\nabla_{xx}f(\mu_x)\)</span> is the hessian of <span class="math notranslate nohighlight">\(f(\cdot)\)</span> evaluated at <span class="math notranslate nohighlight">\(\mu_x\)</span> and <span class="math notranslate nohighlight">\(e_i\)</span> is a ones vector (essentially the trace of a full matrix).</p>
-<hr class="docutils" />
-<section id="joint-distribution">
-<h3>Joint Distribution<a class="headerlink" href="#joint-distribution" title="Permalink to this headline">#</a></h3>
-<p>So, we want <span class="math notranslate nohighlight">\(\tilde{f}(\mathbf{x})\)</span> which is a joint distribution of <span class="math notranslate nohighlight">\(\begin{bmatrix} \mathbf{x} \\ f(\mathbf{x})\end{bmatrix}\)</span>. But as we said, this is difficult to compute so we do a Taylor approximation to this function <span class="math notranslate nohighlight">\(\begin{bmatrix} \mu_\mathbf{x} \\ f(\mu_\mathbf{x} + \delta_x) \end{bmatrix}\)</span>. But we still want the <strong>full joint distribution</strong>, ideally Gaussian. So that would mean we at least need the expectation and the covariance.</p>
 <div class="math notranslate nohighlight">
 \[
-\mathbb{E}_\mathbf{x}\left[ \tilde{f}(\mathbf{x}) \right], \mathbb{V}_\mathbf{x}\left[ \tilde{f}(\mathbf{x}) \right]
+\text{Coriolis Force} \propto \text{Velocity}
 \]</div>
 </section>
-<section id="derivation">
-<h3>Derivation<a class="headerlink" href="#derivation" title="Permalink to this headline">#</a></h3>
-<p><strong>Mean Function</strong></p>
-<p>The mean function is the easiest to derive. We can just take the expectation of the first two terms and we’ll see why all the higher order terms disappear.</p>
+<hr class="docutils" />
+<section id="representation">
+<h2>Representation<a class="headerlink" href="#representation" title="Permalink to this headline">#</a></h2>
+<p>We have a coordinate vector, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^D\)</span>, which describe the state 2D space <span class="math notranslate nohighlight">\((x,y)\)</span>. We also have a time component, <span class="math notranslate nohighlight">\(t\)</span>, which describes the 2D space at a specific point in time. We also have a two functions which describe the flow state: the potential function, <span class="math notranslate nohighlight">\(\boldsymbol{q}\)</span>, is the … and the <span class="math notranslate nohighlight">\(\boldsymbol{\psi}\)</span> is an auxilary function which …. Both functions take in the coordinate vector and time and output a scalar value.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{aligned}
-\mathbb{E}_\mathbf{x}\left[ \tilde{f}(\mathbf{x}) \right] &amp;=
-\mathbb{E}_\mathbf{x}\left[ \tilde{f}(\mu_\mathbf{x})  + \nabla_\mathbf{x}f(\mu_\mathbf{x})\epsilon_\mathbf{x} \right] \\
-&amp;= \mathbb{E}_\mathbf{x}\left[ \tilde{f}(\mu_\mathbf{x}) \right]  +
-\mathbb{E}_\mathbf{x}\left[ \nabla_\mathbf{x}f(\mu_\mathbf{x})\epsilon_\mathbf{x} \right] \\
-&amp;= \tilde{f}(\mu_\mathbf{x})  +
-\nabla_\mathbf{x}\mathbb{E}_\mathbf{x}\left[ f(\mathbf{x})\epsilon_\mathbf{x} \right] \\
-&amp;= \tilde{f}(\mu_\mathbf{x})\\
+q &amp;= \boldsymbol{q}(\mathbf{x},t) \\
+\psi &amp;= \boldsymbol{\psi}(\mathbf{x},t)
 \end{aligned}
 \end{split}\]</div>
-<p><strong>Covariance Function</strong></p>
-<p>The covariance function is a bit harder. But again, the final expression is quite simple.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-\mathbb{V}_\mathbf{x}\left[ \tilde{f}(\mathbf{x}) \right] &amp;=
-\mathbb{E}_\mathbf{x}\left[f(\mathbf{x}) - \mathbb{E}_\mathbf{x}\left[f(\mathbf{x})\right] \right] \;
-\mathbb{E}_\mathbf{x}\left[f(\mathbf{x}) - \mathbb{E}_\mathbf{x}\left[f(\mathbf{x})\right] \right]^\top \\
-&amp;\approx
-\mathbb{E}_\mathbf{x}
-\left[f(\mathbf{x}) - f(\mu_\mathbf{x}) \right] \;
-\mathbb{E}_\mathbf{x}
-\left[f(\mathbf{x}) - f(\mu_\mathbf{x}) \right]^\top\\
-&amp;\approx
-\mathbb{E}_\mathbf{x}
-\left[f(\mu_\mathbf{x}) + \nabla_\mathbf{x}f(\mu_\mathbf{x})\epsilon_\mathbf{x} - f(\mu_\mathbf{x}) \right] \;
-\mathbb{E}_\mathbf{x}
-\left[f(\mu_\mathbf{x}) + \nabla_\mathbf{x}f(\mu_\mathbf{x})\epsilon_\mathbf{x}- f(\mu_\mathbf{x}) \right]^\top\\
-&amp;\approx
-\mathbb{E}_\mathbf{x}
-\left[\nabla_\mathbf{x}f(\mu_\mathbf{x})\epsilon_\mathbf{x} \right] \;
-\mathbb{E}_\mathbf{x}
-\left[\nabla_\mathbf{x}f(\mu_\mathbf{x})\epsilon_\mathbf{x} \right]^\top\\
-&amp;\approx
-\mathbb{E}_\mathbf{x}
-\left[\left(\nabla_\mathbf{x}f(\mu_\mathbf{x})\epsilon_\mathbf{x}\right) \left(\nabla_\mathbf{x}f(\mu_\mathbf{x})\epsilon_\mathbf{x}\right)^\top \right] \\
-&amp;\approx
-\nabla_\mathbf{x}f(\mu_\mathbf{x})
-\mathbb{E}_\mathbf{x}
-\left[\left(\epsilon_\mathbf{x}\right) \left(\epsilon_\mathbf{x}\right)^\top \right]
-\nabla_\mathbf{x}f(\mu_\mathbf{x}) \\
-&amp;\approx
-\nabla_\mathbf{x}f(\mu_\mathbf{x})
-\Sigma_\mathbf{x}
-\nabla_\mathbf{x}f(\mu_\mathbf{x})
-\end{aligned}
-\end{split}\]</div>
-<p>So now we can have a full expression for the joint distribution with the Taylor expansion.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{bmatrix}
-    x \\
-    y
-    \end{bmatrix}
-    \sim \mathcal{N} \left( 
-    \begin{bmatrix}
-    \mu_{x} \\ 
-    \mu_y
-    \end{bmatrix}, 
-    \begin{bmatrix}
-    \Sigma_\mathbf{x} &amp; C_\mathcal{T} \\
-    C_\mathcal{T}^\top &amp; \Pi_\mathcal{T}
-    \end{bmatrix}
-    \right)
-\end{split}\]</div>
-<p>where:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-\mu_y &amp;= f(\mu_\mathbf{x})\\
-C_T &amp;= \Sigma_\mathbf{x} \nabla_\mathbf{x}f(\mu_\mathbf{x}) \\
-\Pi_T &amp;= 
-\nabla_\mathbf{x}f(\mu_\mathbf{x})
-\Sigma_\mathbf{x} 
-\nabla_\mathbf{x}f(\mu_\mathbf{x}) \\
-\end{aligned}
-\end{split}\]</div>
-</section>
 </section>
 <hr class="docutils" />
-<section id="joint-distribution-for-additive-noise">
-<h2>Joint Distribution for Additive Noise<a class="headerlink" href="#joint-distribution-for-additive-noise" title="Permalink to this headline">#</a></h2>
-<p>So in this setting, we are closer to what we typically use for a GP model.</p>
+<section id="pde">
+<h2>PDE<a class="headerlink" href="#pde" title="Permalink to this headline">#</a></h2>
+<p>We have the following PDE for the QG dynamics:</p>
 <div class="math notranslate nohighlight">
 \[
-y = f(\mathbf{x}) + \epsilon
+\partial_t q + \det J(\psi, q) = 0
 \]</div>
-<p>where we have noisy inputs with additive Gaussian noise<span class="math notranslate nohighlight">\(\mathbf{x} \sim \mathcal{N}(\mathbf{\mu_x}, \Sigma_\mathbf{x})\)</span> and we assume additive Gaussian noise for the outputs <span class="math notranslate nohighlight">\(\epsilon \sim \mathcal{N}(0, \sigma_y^2 \mathbf{I})\)</span>. We want a joint distribution of <span class="math notranslate nohighlight">\(\mathbf{x},y\)</span>. So using the same sequences of steps as above, we actually get a very similar joint distribution, just with an additional term.</p>
+<p>where <span class="math notranslate nohighlight">\(q(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the potential vorticity (PV), <span class="math notranslate nohighlight">\(\psi(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the stream function, <span class="math notranslate nohighlight">\(\partial_t\)</span> is the partial derivative wrt <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(\boldsymbol{J}\)</span>, is the Jacobian operator and <span class="math notranslate nohighlight">\(\det \boldsymbol{J}(\cdot,\cdot)\)</span> is the <em>determinant</em> of the Jacobian.</p>
+<p><strong>Objective</strong>: We want to convert this PDE in terms of sea surface height (SSH) instead of PV and the stream function.</p>
+</section>
+<hr class="docutils" />
+<section id="pinns-loss-derivation">
+<h2>PINNs Loss Derivation<a class="headerlink" href="#pinns-loss-derivation" title="Permalink to this headline">#</a></h2>
+<section id="stream-function">
+<h3>Stream Function<a class="headerlink" href="#stream-function" title="Permalink to this headline">#</a></h3>
+<p>Let’s define the relationship between the SSH, <span class="math notranslate nohighlight">\(u\)</span>, and the stream function <span class="math notranslate nohighlight">\(\psi\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\psi = \frac{f}{g}u = c_1 u
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_1 = \frac{f}{g}\)</span>. If we plug in the SSH into the PDE, we get:</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t q + \det J(c_1 u, q) = 0
+\]</div>
+<p>To simplify the notation, we will factor out the constant, <span class="math notranslate nohighlight">\(c_1\)</span>, from the determinant Jacobian term.</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t q + c_1\det J(u, q) = 0
+\]</div>
+<hr class="docutils" />
+<section id="span-style-color-red-proof-span-constants-and-determinant-jacobians">
+<h4><span style="color:red"><strong>Proof</strong></span>: Constants and determinant Jacobians<a class="headerlink" href="#span-style-color-red-proof-span-constants-and-determinant-jacobians" title="Permalink to this headline">#</a></h4>
 <div class="math notranslate nohighlight">
 \[\begin{split}
+\begin{aligned}
+\det J(c_1 u, q) &amp;= \partial_x c_1 u \partial_y q - \partial_y c_1 u \partial_x q \\
+\det J(c_1 u, q) &amp;= c_1 \partial_x u \partial_y q - c_1 \partial_y u \partial_x q  \\
+c_1\det J(u, q) &amp;= c_1 \left(\partial_x u \partial_y q - \partial_y u \partial_x q\right) \\
+\end{aligned}
+\end{split}\]</div>
+<p><strong>Note</strong>: we used the property that <span class="math notranslate nohighlight">\(\partial (c f) = c \partial f\)</span>.</p>
+<p><span style="color:red"><strong>QED</strong></span>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="potential-vorticity">
+<h3>Potential Vorticity<a class="headerlink" href="#potential-vorticity" title="Permalink to this headline">#</a></h3>
+<p>Now, let’s define the relationship between the stream function and the PV. This is given by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+q &amp;= \nabla^2 \psi + \frac{1}{L_R^2} \psi \\
+&amp;= \nabla^2 \psi + c_2 \psi
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nabla^2\)</span> is the Laplacian operator and <span class="math notranslate nohighlight">\(c_2 = \frac{1}{L_R^2}\)</span>. If we plug in SSH, <span class="math notranslate nohighlight">\(u\)</span>, into the stream function, as defined above, we get:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+q &amp;= \nabla^2 (c_1 u) + c_2 (c_1 u) \\
+ &amp;= c_1 \nabla^2 u + c_3 u
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_3 = c_1 c_2 = \frac{f}{g L_R^2}\)</span>. We can plug in the PV, <span class="math notranslate nohighlight">\(q\)</span>, into the PDE in terms of SSH, <span class="math notranslate nohighlight">\(u\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t \left(c_1 \nabla^2 u + c_3 u \right) + c_1\det J \left(u, c_1 \nabla^2 u + c_3 u \right) = 0
+\]</div>
+<hr class="docutils" />
+<p>Now, we can expand this equation but first let’s break this up into two terms:</p>
+<div class="math notranslate nohighlight">
+\[
+\underbrace{\partial_t \left(c_1 \nabla^2 u + c_3 u \right)}_{\text{Term I}} + c_1\underbrace{\det J \left( u, c_1 \nabla^2 u + c_3 u \right)}_{\text{Term II}} = 0
+\]</div>
+<p>Now we will tackle both of these terms one at a time.</p>
+<hr class="docutils" />
+<p><strong>Term I</strong></p>
+<p>So term I is:</p>
+<div class="math notranslate nohighlight">
+\[
+f_1 := \partial_t \left(c_1 \nabla^2 u + c_3 u \right)
+\]</div>
+<p>We can expand this via the partial derivative, <span class="math notranslate nohighlight">\(\partial_t\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+f_1 := c_1 \partial_t \nabla^2 u + c_3 \partial_t u
+\]</div>
+<p>So plugging this back into the PDE gives us:</p>
+<div class="math notranslate nohighlight">
+\[
+c_1 \partial_t \nabla^2 u + c_3 \partial_t u +c_1 \underbrace{\det J \left(u, c_1 \nabla^2 u + c_3 u \right)}_{\text{Term II}} = 0
+\]</div>
+<hr class="docutils" />
+<p><strong>Term II</strong></p>
+<p>We can factorize this determinant Jacobian term.</p>
+<div class="math notranslate nohighlight">
+\[
+c_1\det J \left(u, c_1 \nabla^2 u + c_3 u \right) = c_1\det \boldsymbol{J}(u, c_1 \nabla^2 u) +  \det \boldsymbol{J}(c_1 u, c_3 u)
+\]</div>
+<p>And furthermore, we can factor out the constants</p>
+<div class="math notranslate nohighlight">
+\[
+c_1\det J \left( u, c_1 \nabla^2 u + c_3 u \right) = c_1^2\det \boldsymbol{J}(u, \nabla^2 u) +  c_1c_3 \det \boldsymbol{J}(u, u)
+\]</div>
+<hr class="docutils" />
+<section id="span-style-color-red-proof-span-determinant-jacobian-expansion">
+<h4><span style="color:red"><strong>Proof</strong></span>: Determinant Jacobian Expansion<a class="headerlink" href="#span-style-color-red-proof-span-determinant-jacobian-expansion" title="Permalink to this headline">#</a></h4>
+<p>So term II is:</p>
+<div class="math notranslate nohighlight">
+\[
+f_2 := \det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right)
+\]</div>
+<p>We know the definition of the determinant of the Jacobian for a vector-valued function, <span class="math notranslate nohighlight">\(\boldsymbol{f} = [f_1(x,y), f_2(x,y)]^\top: \mathbb{R}^2 \rightarrow \mathbb{R}^2\)</span>, as there is an identity.</p>
+<div class="math notranslate nohighlight">
+\[
+\det J \left( f_1(x,y), f_2(x,y)\right) =
+\partial_x f_1 \partial_y f_2 - \partial_y f_1 \partial_x f_2
+\]</div>
+<p>If use this identity with term II, we get:</p>
+<div class="math notranslate nohighlight">
+\[
+\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \partial_x (c_1 u) \partial_y (c_1 \nabla^2u + c_3 u) - \partial_y (c_1 u) \partial_x (c_1 \nabla^2u + c_3 u)
+\]</div>
+<p>Again, let’s split this up into two subterms and tackle them one-by-one.</p>
+<div class="math notranslate nohighlight">
+\[
+\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \underbrace{\partial_x (c_1 u) \partial_y (c_1 \nabla^2u + c_3 u)}_{\text{Term IIa}} - \underbrace{\partial_y (c_1 u) \partial_x (c_1 \nabla^2u + c_3 u)}_{\text{Term IIa}}
+\]</div>
+<hr class="docutils" />
+<p><strong>Term IIa</strong></p>
+<p>We have the following term for Term IIa:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{2a} := \partial_x (c_1 u) \partial_y (c_1 \nabla^2u + c_3 u)
+\]</div>
+<p>We can expand the terms to get the following:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{2a} := \partial_x (c_1 u) \partial_y \nabla^2 (c_1 u) + \partial_x (c_1 u) \partial_y (c_3 u)
+\]</div>
+<p>And we can simplify, by factoring out constants, to get:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{2a} := c_1^2 \partial_x u \partial_y \nabla^2 u + c_1c_3 \partial_x u \partial_y u
+\]</div>
+<hr class="docutils" />
+<p><strong>Term IIb</strong></p>
+<div class="math notranslate nohighlight">
+\[
+f_{2b} := \partial_y (c_1 u) \partial_x (c_1 \nabla^2u + c_3 u)
+\]</div>
+<p>We can expand the terms to get the following:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{2b} := c_1^2 \partial_y u \partial_x \nabla^2u + c_1 c_3 \partial_y u \partial_x u
+\]</div>
+<hr class="docutils" />
+<p><strong>Combined</strong> (Term IIa, IIb)</p>
+<p>We can substitute all of these two terms into our original expression</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \\
+c_1^2 \partial_x u \partial_y \nabla^2 u + c_1c_3 \partial_x u \partial_y u \\ - c_1^2 \partial_y u \partial_x \nabla^2u - c_1 c_3 \partial_y u \partial_x u
+\end{split}\]</div>
+<p>If we group the terms by operators, <span class="math notranslate nohighlight">\(\partial, \nabla^2\)</span>, then we get:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \\
+\underbrace{c_1^2 \partial_x u \partial_y \nabla^2 u -  c_1^2 \partial_y u \partial_x \nabla^2u}_{\nabla^2} +  \underbrace{c_1c_3 \partial_x u \partial_y u - c_1c_3\partial_y u \partial_x u}_{\partial}
+\end{split}\]</div>
+<p>So each of these terms are determinant Jacobian terms, <span class="math notranslate nohighlight">\(\det \boldsymbol J\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = c_1^2\det \boldsymbol{J}(u, \nabla^2 u) +  c_1c_3 \det \boldsymbol{J}(u, u)
+\]</div>
+<p>We have the final form for our PDE in terms of SSH, <span class="math notranslate nohighlight">\(u\)</span>, which combines terms I and II.</p>
+<p><span style="color:red"><strong>QED</strong></span>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="final-form">
+<h3>Final Form<a class="headerlink" href="#final-form" title="Permalink to this headline">#</a></h3>
+<p>So we have the final form for our PDE in terms of SSH.</p>
+<div class="math notranslate nohighlight">
+\[
+c_1 \partial_t \nabla^2 u + c_3 \partial_t u + c_1^2\det \boldsymbol{J}(u, \nabla^2 u) +  c_1c_3 \det \boldsymbol{J}(u, u) = 0
+\]</div>
+<p>We will factor out a constant term</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t \nabla^2 u + c_2 \partial_t u + c_1\det \boldsymbol{J}(u, \nabla^2 u) +  c_3 \det \boldsymbol{J}(u, u) = 0
+\]</div>
+</section>
+<hr class="docutils" />
+<section id="expanded-form">
+<h3>Expanded Form<a class="headerlink" href="#expanded-form" title="Permalink to this headline">#</a></h3>
+<p>It is also good to do the expanded form with all of the partial derivatives because then we can see the computational portions with the gradient operations.</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t \nabla^2 u + c_2 \partial_t u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u = 0
+\]</div>
+<p>Again, we will group the terms together in terms of the order of their derivatives, <span class="math notranslate nohighlight">\((\nabla^2, \partial)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u +  c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u = 0
+\]</div>
+<p>Now, another grouping:</p>
+<div class="math notranslate nohighlight">
+\[
+\underbrace{\partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u}_{\nabla^2} +  \underbrace{c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u}_{\partial} = 0
+\]</div>
+<!-- ---
+**Gradient** (order 1)
+
+$$
+\nabla u =
 \begin{bmatrix}
-    x \\
-    y
-    \end{bmatrix}
-    \sim \mathcal{N} \left( 
-    \begin{bmatrix}
-    \mu_{x} \\ 
-    \mu_{\mathcal{GP}} 
-    \end{bmatrix}, 
-    \begin{bmatrix}
-    \Sigma_\mathbf{x} &amp; C_\mathcal{eGP} \\
-    C_\mathcal{eGP}^\top &amp; \Pi_\mathcal{eGP}
-    \end{bmatrix}
-    \right)
-\end{split}\]</div>
-<p>where</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-\mu_y &amp;= f(\mu_x) \\
-\Pi_\mathcal{eGP} &amp;= \nabla_x f(\mu_x) \: \Sigma_x \: \nabla_x f(\mu_x)^\top + \nu^2(x) \\
-C_\mathcal{eGP} &amp;= \Sigma_x \: \nabla_x^\top f(\mu_x)
-\end{aligned}
-\end{split}\]</div>
-<p>So if we want to make predictions with our new model, we will have the final equation as:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \\
-    \mu_\mathcal{eGP} &amp;= K_{*} K_{GP}^{-1}y=K_{*} \alpha \\
-    \sigma^2_\mathcal{eGP} &amp;= K_{**} - K_{*} K_{GP}^{-1}K_{*}^{\top} + \tilde{\Sigma}_x
-\end{aligned}
-\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\tilde{\Sigma}_x = \nabla_x \mu_{GP} \Sigma_x \nabla \mu_{GP}^\top\)</span>.</p>
+\nabla_t u \\ \nabla_x u \\ \nabla_y u
+\end{bmatrix}
+$$
+
+---
+**Gradient** (order 3)
+
+$$
+\nabla^3 u =
+\begin{bmatrix}
+\nabla^3_t u \\ \nabla^3_x u \\ \nabla^3_y u
+\end{bmatrix}
+$$
+
+
+$$
+\nabla \cdot \nabla^2 u =
+\begin{bmatrix}
+\nabla_t & \nabla_x & \nabla_y
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+1 \\ c_1 \\ -c_1
+\end{bmatrix}
+\circ
+\begin{bmatrix}
+\nabla^2_t u \\ \nabla^2_x u \\ \nabla^2_y u
+\end{bmatrix}
+$$
+
+ -->
+</section>
 </section>
 <hr class="docutils" />
-<section id="law-of-error-propagation">
-<h2>Law of Error Propagation<a class="headerlink" href="#law-of-error-propagation" title="Permalink to this headline">#</a></h2>
-<p>This results in a mean and error covariance of the new distribution <span class="math notranslate nohighlight">\(\mathbf z\)</span> defined by:</p>
+<section id="qg-equation-ssh">
+<h2>QG Equation (SSH)<a class="headerlink" href="#qg-equation-ssh" title="Permalink to this headline">#</a></h2>
+<p><strong>Note</strong>: For the ease of notation, let’s denote <span class="math notranslate nohighlight">\(u\)</span> as the SSH. The above PDE can be written in terms of <span class="math notranslate nohighlight">\(u\)</span></p>
 <div class="math notranslate nohighlight">
-\[\mu_{\mathbf z} = f(\mu_{\mathbf x})\]</div>
-<div class="math notranslate nohighlight">
-\[\Sigma_\mathbf{z} = \nabla_\mathbf{x} f(\mu_{\mathbf x}) \; \Sigma_\mathbf{x} \; \nabla_\mathbf{x} f(\mu_{\mathbf x})^{\top}\]</div>
-<section id="font-color-red-proof-font-mean-function">
-<h3><font color="red">Proof:</font> Mean Function<a class="headerlink" href="#font-color-red-proof-font-mean-function" title="Permalink to this headline">#</a></h3>
-<p>Given the mean function:</p>
-<div class="math notranslate nohighlight">
-\[\mathbb{E}[\mathbf{x}] = \frac{1}{N} \sum_{i=1} x_i\]</div>
-<p>We can simply apply this to the first-order Taylor series function.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-\mu_\mathbf{z} &amp;= 
-\mathbb{E}_{\mathbf{x}} \left[  f(\mu_{\mathbf x}) +   \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \right] \\
-&amp;= \mathbb{E}_{\mathbf{x}} \left[  f(\mu_{\mathbf x}) \right] +   \mathbb{E}_{\mathbf{x}} \left[  \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \right] \\
-&amp;= f(\mu_{\mathbf x}) + 
-\mathbb{E}_{\mathbf{x}} \left[  \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}  \mathbf x  \right]- \mathbb{E}_{\mathbf{x}} \left[ \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\mu_{\mathbf x} \right] \\
-&amp;= f(\mu_{\mathbf x}) +
- \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}  \mu_\mathbf{x} -  \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\mu_{\mathbf x}  \\
-&amp;= f(\mu_{\mathbf x}) \\
-\end{aligned}
-\end{split}\]</div>
-</section>
-<section id="font-color-red-proof-font-variance-function">
-<h3><font color="red">Proof:</font> Variance Function<a class="headerlink" href="#font-color-red-proof-font-variance-function" title="Permalink to this headline">#</a></h3>
-<p>Given the variance function</p>
-<div class="math notranslate nohighlight">
-\[\mathbb{V}[\mathbf{x}] = \mathbb{E}\left[ \mathbf{x} - \mu_\mathbf{x} \right]^2\]</div>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-\sigma_\mathbf{z}^2
-&amp;=
-\mathbb{E} \left[ f(\mu_\mathbf{x}) - \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}} (\mathbf{x} - \mu_\mathbf{x}) - \mu_\mathbf{x} \right] \\
-&amp;=
-\mathbb{E} \left[ \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}}  (\mathbf{x} - \mu_\mathbf{x})\right]^2 \\
-&amp;=
-\left( \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}} \right)^2 \mathbb{E}\left[  \mathbf{x} - \mu_\mathbf{x}\right]^2\\
-&amp;= \left( \frac{\partial f}{\partial \mathbf{x}} \bigg\vert_{\mathbf{x}=\mu_\mathbf{x}} \right)^2 \Sigma_\mathbf{x}
-\end{aligned}
-\end{split}\]</div>
-<p>I’ve linked a nice tutorial for propagating variances below if you would like to go through the derivations yourself.</p>
+\[
+\partial_t \nabla^2 u + c_2 \partial_t u + c_1\det \boldsymbol{J}(u, \nabla^2 u) +  c_3 \det \boldsymbol{J}(u, u) = 0
+\]</div>
+<p><strong>Note</strong>: See <a class="reference external" href="https://hackmd.io/&#64;jejjohnson/r1ITccw69">derivation</a> for how I came up with this term.</p>
 </section>
 <hr class="docutils" />
-<section id="resources">
-<h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h3>
-<ul class="simple">
-<li><p>Essence of Calculus, Chapter 11 | Taylor Series - 3Blue1Brown - <a class="reference external" href="https://youtu.be/3d6DsjIBzJ4">youtube</a></p></li>
-<li><p>Introduction to Error Propagation: Derivation, Meaning and Examples - <a class="reference external" href="http://srl.informatik.uni-freiburg.de/papers/arrasTR98.pdf">PDF</a></p></li>
-<li><p>Statistical uncertainty and error propagation - Vermeer - <a class="reference external" href="https://users.aalto.fi/~mvermeer/uncertainty.pdf">PDF</a></p></li>
-</ul>
+<section id="id1">
+<h2>Expanded Form<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<p>We will do the expanded form with all of the partial derivatives so that we can see the gradient operations which we will need for the computational portions.</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t \nabla^2 u + c_2 \partial_t u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u = 0
+\]</div>
+<p>Again, we will group the terms together in terms of the order of their derivatives, <span class="math notranslate nohighlight">\((\nabla^2, \partial)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u +  c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u = 0
+\]</div>
+<p>Now, another grouping:</p>
+<div class="math notranslate nohighlight">
+\[
+\underbrace{\partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u}_{\nabla^2} +  \underbrace{c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u}_{\nabla} = 0
+\]</div>
+<hr class="docutils" />
+<p>Now, we will use the expanded forms to do the code. I have snippets using PyTorch and Jax (<strong>TODO</strong>). They use the DAG/OOP and Functional approach (respectively) so the notation is slightly different.</p>
+<hr class="docutils" />
+<section id="gradient-1st-order">
+<h3>Gradient (1st Order)<a class="headerlink" href="#gradient-1st-order" title="Permalink to this headline">#</a></h3>
+<p>Let’s look at the first-order gradients.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_\partial := c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u
+\]</div>
+<hr class="docutils" />
+<section id="code">
+<h4>Code<a class="headerlink" href="#code" title="Permalink to this headline">#</a></h4>
+<p>Let’s use the following notation:</p>
+<div class="math notranslate nohighlight">
+\[
+u = \boldsymbol{f_\theta}(\mathbf{x})
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^D\)</span>, <span class="math notranslate nohighlight">\(\mathbf{u} \in \mathbb{R}\)</span>, and <span class="math notranslate nohighlight">\(D = [N_x, N_y, N_t]\)</span>.</p>
+<p><strong>Note</strong>: This is the PyTorch notation.</p>
+<div class="highlight-python= notranslate"><div class="highlight"><pre><span></span># coords variable, (B, D)
+x = torch.Variable(x, requires_grad=True)
+
+# output variable, (B,)
+u = model(x)
+
+# Jacobian vector, (B, D)
+u_jac = jacobian(u, x)
+
+# partial derivatives, (B,)
+u_x, u_y, u_t = split(u_jac, dim=1)
+
+# calculate term 2, (B,)
+term2 = c2 * u_t + c3 * u_x * u_y - c3 * u_y * u_x
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="laplacian-gradient">
+<h3>Laplacian + Gradient<a class="headerlink" href="#laplacian-gradient" title="Permalink to this headline">#</a></h3>
+<p>Now we can look at the second order gradients.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{\nabla^2} := \partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u
+\]</div>
+<p><strong>Note</strong>: This is where all of the computational expense will come from.</p>
+<hr class="docutils" />
+<section id="id2">
+<h4>Code<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h4>
+<div class="highlight-python= notranslate"><div class="highlight"><pre><span></span># coords variable, (B, D)
+x = torch.Variable(x, requires_grad=True)
+
+# output variable, (B,)
+u = model(x)
+
+# Laplacian (B,)
+u_lap = laplacian(u, x)
+
+# gradient of laplacian, (B, D)
+u_lap_jac = jacobian(u_lap, x)
+
+# partial derivatives, (B,)
+u_lap_x, u_lap_y, u_lap_t = split(u_lap_jac, dim=1)
+
+# calculate term
+term1 = u_lap_t + c1 * u_x * u_lap_y - c1 * u_y * u_lap_x
+</pre></div>
+</div>
+<p><strong>Althernative</strong> (cheaper?)</p>
+<p>We can also try this re-using the gradients we have already computed (from term 1). This will reduce the computations a bit by reusing our previous jacobian calculation to remove recalculating the Laplacian.</p>
+<div class="highlight-python= notranslate"><div class="highlight"><pre><span></span># coords variable, (B, D)
+x = torch.Variable(x, requires_grad=True)
+
+# output variable, (B,)
+u = model(x)
+
+# Jacobian vector, (B, D)
+u_jac = jacobian(u, x)
+
+u_jac2 = jacobian(u_jac, x)
+
+u_xx, u_yy, u_tt = split(u_jac2, dim=1)
+
+# Laplacian (B,)
+u_lap = u_xx + u_yy
+
+# gradient of laplacian, (B, D)
+u_lap_jac = jacobian(u_lap, x)
+
+# partial derivatives, (B,)
+u_lap_x, u_lap_y, u_lap_t = split(u_lap_jac, dim=1)
+
+# calculate term
+term1 = u_lap_t + c1 * u_x * u_lap_y - c1 * u_y * u_lap_x
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="loss">
+<h3>Loss<a class="headerlink" href="#loss" title="Permalink to this headline">#</a></h3>
+<p>So now we combine both losses to get the full loss.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{phy} := (\mathcal{L}_{\partial} + \mathcal{L}_{\nabla^2})^2 = 0
+\]</div>
+<p><strong>Note</strong>: We typically square this term. It helps during the minimization process to always have a positive value. Otherwise, it will try to minimize a negative value. Instead of the squared term, we can also do the absolute value or perhaos the square root of the squared term.</p>
+<div class="highlight-python=! notranslate"><div class="highlight"><pre><span></span>
+# (B,)
+term_partial = ...
+
+# (B,)
+term_nabla = ...
+
+# combine terms
+loss = term_partial + term_nabla
+
+# compute loss term
+loss = loss.square().mean()
+
+# scale the loss
+loss *= alpha
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="my-code">
+<h3>My Code<a class="headerlink" href="#my-code" title="Permalink to this headline">#</a></h3>
+<p>You can find the full function here. I have included the full function below for anyone interested.</p>
+<div class="highlight-python= notranslate"><div class="highlight"><pre><span></span># from ..operators.differential_simp import gradient
+from ..operators.differential import grad as gradient
+import torch
+import torch.nn as nn
+
+
+class QGRegularization(nn.Module):
+    def __init__(
+        self, f: float = 1e-4, g: float = 9.81, Lr: float = 1.0, reduction: str = &quot;mean&quot;
+    ):
+        super().__init__()
+
+        self.f = f
+        self.g = g
+        self.Lr = Lr
+        self.reduction = reduction
+
+    def forward(self, out, x):
+
+        x = x.requires_grad_(True)
+
+        # gradient, nabla x
+        out_jac = gradient(out, x)
+        assert out_jac.shape == x.shape
+
+        # calculate term 1
+        loss1 = _qg_term1(out_jac, x, self.f, self.g, self.Lr)
+        # calculate term 2
+        loss2 = _qg_term2(out_jac, self.f, self.g, self.Lr)
+
+        loss = (loss1 + loss2).sq
+
+        if self.reduction == &quot;sum&quot;:
+            return loss.sum()
+        elif self.reduction == &quot;mean&quot;:
+            return loss.mean()
+        else:
+            raise ValueError(f&quot;Unrecognized reduction: {self.reduction}&quot;)
+
+
+def qg_constants(f, g, L_r):
+    c_1 = f / g
+    c_2 = 1 / L_r**2
+    c_3 = c_1 * c_2
+    return c_1, c_2, c_3
+
+
+def qg_loss(
+    ssh, x, f: float = 1e-4, g: float = 9.81, Lr: float = 1.0, reduction: str = &quot;mean&quot;
+):
+    # gradient, nabla x
+    # x = x.detach().clone().requires_grad_(True)
+    # print(x.shape, ssh.shape)
+    ssh_jac = gradient(ssh, x)
+    assert ssh_jac.shape == x.shape
+
+    # calculate term 1
+    loss1 = _qg_term1(ssh_jac, x, f, g, Lr)
+    # calculate term 2
+    loss2 = _qg_term2(ssh_jac, f, g, Lr)
+
+    loss = torch.sqrt((loss1 + loss2) ** 2)
+
+    if reduction == &quot;sum&quot;:
+        return loss.sum()
+    elif reduction == &quot;mean&quot;:
+        return loss.mean()
+    else:
+        raise ValueError(f&quot;Unrecognized reduction: {reduction}&quot;)
+
+
+def _qg_term1(u_grad, x_var, f: float = 1.0, g: float = 1.0, L_r: float = 1.0):
+    &quot;&quot;&quot;
+    t1 = ∂𝑡∇2𝑢 + 𝑐1 ∂𝑥𝑢 ∂𝑦∇2𝑢 − 𝑐1 ∂𝑦𝑢 ∂𝑥∇2𝑢
+    Parameters:
+    ----------
+    u_grad: torch.Tensor, (B, Nx, Ny, T)
+    x_var: torch.Tensor, (B,
+    f: float, (,)
+    g: float, (,)
+    Lr: float, (,)
+    Returns:
+    --------
+    loss : torch.Tensor, (B,)
+    &quot;&quot;&quot;
+
+    x_var = x_var.requires_grad_(True)
+    c_1, c_2, c_3 = qg_constants(f, g, L_r)
+
+    # get partial derivatives | partial x, y, t
+    u_x, u_y, u_t = torch.split(u_grad, [1, 1, 1], dim=1)
+
+    # jacobian^2 x2, ∇2
+    u_grad2 = gradient(u_grad, x_var)
+    assert u_grad2.shape == x_var.shape
+
+    # split jacobian -&gt; partial x, partial y, partial t
+    u_xx, u_yy, u_tt = torch.split(u_grad2, [1, 1, 1], dim=1)
+    assert u_xx.shape == u_yy.shape == u_tt.shape
+
+    # laplacian (spatial), nabla^2
+    u_lap = u_xx + u_yy
+    assert u_lap.shape == u_xx.shape == u_yy.shape
+
+    # gradient of laplacian, ∇ ∇2
+    u_lap_grad = gradient(u_lap, x_var)
+    assert u_lap_grad.shape == x_var.shape
+
+    # split laplacian into partials
+    u_lap_grad_x, u_lap_grad_y, u_lap_grad_t = torch.split(u_lap_grad, [1, 1, 1], dim=1)
+    assert u_lap_grad_x.shape == u_lap_grad_y.shape == u_lap_grad_t.shape
+
+    # term 1
+    loss = u_lap_grad_t + c_1 * u_x * u_lap_grad_y - c_1 * u_y * u_lap_grad_x
+    assert loss.shape == u_lap_grad_t.shape == u_lap_grad_y.shape == u_lap_grad_x.shape
+
+    return loss
+
+
+def _qg_term2(u_grad, f: float = 1.0, g: float = 1.0, Lr: float = 1.0):
+    &quot;&quot;&quot;
+    t2 = 𝑐2 ∂𝑡(𝑢) + 𝑐3 ∂𝑥(𝑢) ∂𝑦(𝑢) − 𝑐3 ∂𝑦(𝑢) ∂𝑥(𝑢)
+    Parameters:
+    ----------
+    ssh_grad: torch.Tensor, (B, Nx, Ny, T)
+    f: float, (,)
+    g: float, (,)
+    Lr: float, (,)
+    Returns:
+    --------
+    loss : torch.Tensor, (B,)
+    &quot;&quot;&quot;
+    _, c_2, c_3 = qg_constants(f, g, Lr)
+
+    # get partial derivatives | partial x, y, t
+    u_x, u_y, u_t = torch.split(u_grad, [1, 1, 1], dim=1)
+
+    # calculate term 2
+    loss = c_2 * u_t + c_3 * u_x * u_y - c_3 * u_y * u_x
+
+    return loss
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="previous-code">
+<h2>Previous Code<a class="headerlink" href="#previous-code" title="Permalink to this headline">#</a></h2>
+<hr class="docutils" />
+<section id="redouane">
+<h3>Redouane<a class="headerlink" href="#redouane" title="Permalink to this headline">#</a></h3>
+<p>He previously made some attempts to use this as a regularization term. Here is his code snippet.</p>
+<div class="highlight-python= notranslate"><div class="highlight"><pre><span></span>def forward(self, coords):
+        coords = coords.clone().detach().requires_grad_(True) # allows to take derivative w.r.t. input
+        SSH = self.firstnet(coords)
+        gradSSH = self.gradient(SSH, coords)
+        dSSHdx = gradSSH[:,0:1]
+        dSSHdy = gradSSH[:,1:2]
+        d2SHHd2x = self.gradient(dSSHdx, coords)[:,0:1]
+        d2SHHd2y = self.gradient(dSSHdy, coords)[:,1:2]
+        dQ = self.gradient(d2SHHd2x+d2SHHd2y, coords)
+        output = self.secondnet(self.Bnorm(torch.cat((dSSHdy,
+                                                      dSSHdx,
+                                                      d2SHHd2x+d2SHHd2y,
+                                                      dQ[:,0:1],
+                                                      dQ[:,1:2]),1)))
+                                                      #dQ[:,0:1] * dSSHdy,
+                                                      #dQ[:,1:2] * dSSHdx
+        output =  dSSHdx *  dQ[:,1:2] -   dSSHdy * dQ[:,0:1]
+        return (1e-5*dQ[:,2:3]-output), coords, SSH
+</pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -1411,7 +1906,7 @@ f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \\
         },
         kernelOptions: {
             kernelName: "python3",
-            path: "./content/notes/egps"
+            path: "./content/notes/inr"
         },
         predefinedOutput: true
     }
@@ -1425,6 +1920,20 @@ f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \\
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="pinns.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Physics-Informed Loss</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../data_assimilation/overview.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Data Assimilation</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>

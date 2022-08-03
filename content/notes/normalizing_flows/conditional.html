@@ -658,14 +658,31 @@ const thebe_selector_output = ".output, .cell_output"
      Literature Review
     </a>
    </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../inr/pinns.html">
+     Physics-Informed Loss
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../inr/qg.html">
+       QG PDE
+      </a>
+     </li>
+    </ul>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../data_assimilation/overview.html">
    Data Assimilation
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-  <label for="toctree-checkbox-18">
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -704,8 +721,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../data_assimilation/algorithms.html">
      Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
-    <label for="toctree-checkbox-19">
+    <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+    <label for="toctree-checkbox-20">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -758,8 +775,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../misc/overview.html">
    Miscellaneous Notes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
-  <label for="toctree-checkbox-20">
+  <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+  <label for="toctree-checkbox-21">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -1001,6 +1018,18 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#transformations">
+   Transformations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bijections">
+     Bijections
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#coupling">
    Coupling
   </a>
@@ -1050,6 +1079,18 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#transformations">
+   Transformations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bijections">
+     Bijections
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#coupling">
    Coupling
   </a>
@@ -1092,7 +1133,7 @@ title="Print to PDF"
 <p>We can also add a type of encoder function for the inputs, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[
-\tilde{\mathbf{x}} = \text{NN}_{\boldsymbol \theta}(\mathbf{x}) 
+\tilde{\mathbf{x}} = \text{NN}_{\boldsymbol \theta}(\mathbf{x})
 \]</div>
 <p>So this alters the formulation slightly:</p>
 <div class="math notranslate nohighlight">
@@ -1122,9 +1163,16 @@ p(\mathbf{z}_{\ell+1}|\mathbf{z}_\ell, \mathbf{x}) = \mathcal{N}(\mathbf{z}_{\el
 \]</div>
 </section>
 <hr class="docutils" />
+<section id="transformations">
+<h2>Transformations<a class="headerlink" href="#transformations" title="Permalink to this headline">#</a></h2>
+<p>This is arguably the most powerful method to incorporate prior knowledge.</p>
+<section id="bijections">
+<h3>Bijections<a class="headerlink" href="#bijections" title="Permalink to this headline">#</a></h3>
+</section>
+</section>
+<hr class="docutils" />
 <section id="coupling">
 <h2>Coupling<a class="headerlink" href="#coupling" title="Permalink to this headline">#</a></h2>
-<p>This is arguably the most powerful method to incorporate prior knowledge.</p>
 <div class="math notranslate nohighlight">
 \[
 \mathbf{z}_\ell = \boldsymbol{T}(\mathbf{x}; \text{NN}_{\boldsymbol \theta}(\mathbf{z}_\ell,\mathbf{x}))

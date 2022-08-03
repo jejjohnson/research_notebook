@@ -658,14 +658,31 @@ const thebe_selector_output = ".output, .cell_output"
      Literature Review
     </a>
    </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../inr/pinns.html">
+     Physics-Informed Loss
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
+    <label for="toctree-checkbox-18">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../inr/qg.html">
+       QG PDE
+      </a>
+     </li>
+    </ul>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
   <a class="reference internal" href="../data_assimilation/overview.html">
    Data Assimilation
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-  <label for="toctree-checkbox-18">
+  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
+  <label for="toctree-checkbox-19">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -704,8 +721,8 @@ const thebe_selector_output = ".output, .cell_output"
     <a class="reference internal" href="../data_assimilation/algorithms.html">
      Algorithms
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
-    <label for="toctree-checkbox-19">
+    <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
+    <label for="toctree-checkbox-20">
      <i class="fas fa-chevron-down">
      </i>
     </label>
@@ -758,8 +775,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../misc/overview.html">
    Miscellaneous Notes
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
-  <label for="toctree-checkbox-20">
+  <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
+  <label for="toctree-checkbox-21">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -1039,6 +1056,40 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#id1">
    Functions
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#coordinates">
+     Coordinates
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#data-field">
+     Data Field
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#operators">
+   Operators
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#jacobian">
+     Jacobian
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#special-cases">
+     Special Cases
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#determinant-jacobian">
+     Determinant Jacobian
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -1118,6 +1169,40 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#id1">
    Functions
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#coordinates">
+     Coordinates
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#data-field">
+     Data Field
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#operators">
+   Operators
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#jacobian">
+     Jacobian
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#special-cases">
+     Special Cases
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#determinant-jacobian">
+     Determinant Jacobian
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -1220,6 +1305,83 @@ title="Print to PDF"
 </tr>
 </tbody>
 </table>
+<hr class="docutils" />
+<p>Below, we have some specificities for these functions and how they translate to real situations.</p>
+<p><strong>Scalar Input - Scalar Output</strong></p>
+<div class="math notranslate nohighlight">
+\[
+f: \mathbb{R} \rightarrow \mathbb{R}
+\]</div>
+<hr class="docutils" />
+<p><strong>Vector Input - Scalar Output</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f}: \mathbb{R}^D \rightarrow \mathbb{R}
+\]</div>
+<hr class="docutils" />
+<p><em>Example</em>: 1D Spatio-Temporal Scalar Field</p>
+<div class="math notranslate nohighlight">
+\[
+y = \boldsymbol{f}(x_\phi, t)
+\]</div>
+<hr class="docutils" />
+<p><em>Example</em>: 2D Spatial Scalar Field</p>
+<p>We have a 2-dimensional scalar field. The coordinates, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_\phi}\)</span>, are 2D, e.g. (lat,lon) coordinates <span class="math notranslate nohighlight">\(D_\phi = [\phi, \psi]\)</span>. Then each of these coordinates are represented by a scalar value, <span class="math notranslate nohighlight">\(y \in \mathbb{R}\)</span>. So we have a function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, maps each coordinate, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, of the field to a scalar value, <span class="math notranslate nohighlight">\(y\)</span>, i.e. <span class="math notranslate nohighlight">\(\boldsymbol{f}: \mathbb{R}^{D_\phi} \rightarrow \mathbb{R}\)</span>. More explicitly, we can write this function as:</p>
+<div class="math notranslate nohighlight">
+\[
+y = \boldsymbol{f}(\mathbf{x}_\phi)
+\]</div>
+<p>if we stack a lot of samples together, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{x}_n, y_n\right\}_{n=1}^N\)</span>, we get a matrix for the coordinates, <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, and a vector for the scalar values, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>. So we have <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{X}, \mathbf{y}\right\}\)</span>.</p>
+<p><strong>Note</strong>: For more consistent and aesthetically pleasing notation, we have <span class="math notranslate nohighlight">\(\mathbf{Y} = \mathbf{y}^\top\)</span> so we can have the dataset, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{X}, \mathbf{Y}\right\}\)</span></p>
+<hr class="docutils" />
+<p><em>Example</em>: 2D Spatio-Temporal Scalar Field</p>
+<div class="math notranslate nohighlight">
+\[
+y = \boldsymbol{f}(\mathbf{x}_\phi, t)
+\]</div>
+<hr class="docutils" />
+<p><strong>Vector Input - Vector Output</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f}: \mathbb{R}^D \rightarrow \mathbb{R}^P
+\]</div>
+<hr class="docutils" />
+<p><em>Example</em>: 2D Vector Field</p>
+<p>We have a 2-dimensional vector field (similar to the above example). The coordinates, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_\phi}\)</span>, are 2D, e.g. (lat,lon) coordinates <span class="math notranslate nohighlight">\(D_\phi = [\phi, \psi]\)</span>. Then each of these coordinates are represented by a <strong>vector</strong> value, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{P}\)</span>. In this case, let the dimensions be the (u,v) fields, i.e. <span class="math notranslate nohighlight">\(P=[u,v]\)</span>. So we have a function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, maps each coordinate, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, of the field to a vector value, <span class="math notranslate nohighlight">\(y\)</span>, i.e. <span class="math notranslate nohighlight">\(\boldsymbol{f}: \mathbb{R}^{D_\phi} \rightarrow \mathbb{R}^{P}\)</span>. More explicitly, we can write this function as:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{y} = \boldsymbol{f}(\mathbf{x})
+\]</div>
+<p>Again, if we stack a lot of samples together, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{x}_n, \mathbf{y}_n\right\}_{n=1}^N\)</span>, we get a stack of matrices, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{X}, \mathbf{Y}\right\}\)</span>.</p>
+<hr class="docutils" />
+<p><strong>Special Case: <span class="math notranslate nohighlight">\(D = P\)</span></strong></p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f}:\mathbb{R}^2 \rightarrow \mathbb{R}^2
+\]</div>
+<p>where each of the functions takes in a 2D vector, <span class="math notranslate nohighlight">\((x,y)\)</span>, and outputs a vector, <span class="math notranslate nohighlight">\((u, v)\)</span>. This is analagous to scalar field for <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span> which appears in physics. So</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+f_1(x,y) &amp;= u \\
+f_2(x,y) &amp;= v
+\end{aligned}
+\end{split}\]</div>
+<p>We have our functional form given by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{f}\left(
+\begin{bmatrix}
+x \\ y
+\end{bmatrix}
+\right) =
+\begin{bmatrix}
+f_1(x,y) \\ f_2(x,y)
+\end{bmatrix} =
+\begin{bmatrix}
+u \\ v
+\end{bmatrix}
+\end{split}\]</div>
 </section>
 <hr class="docutils" />
 <section id="common-terms">
@@ -1399,21 +1561,207 @@ title="Print to PDF"
 <li><p><span class="math notranslate nohighlight">\(\mathbf{Y} \in \mathbb{R}^{N \times D_y}\)</span> - observations</p></li>
 </ul>
 </section>
+<hr class="docutils" />
 <section id="id1">
 <h2>Functions<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
-<p><strong>Coordinates</strong></p>
+<section id="coordinates">
+<h3>Coordinates<a class="headerlink" href="#coordinates" title="Permalink to this headline">#</a></h3>
 <p>In this case, we assume that the state, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_\phi}\)</span>, are the coordinates, <span class="math notranslate nohighlight">\([\text{lat,lon,time}]\)</span>, and the output is the value of the variable of interest, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>, at that point in space and time.</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\([\mathbf{K}]_{ij} = \boldsymbol{k}(\mathbf{x}_i, \mathbf{x}_j)\)</span> - covariance matrix for the coordinates</p></li>
 <li><p><span class="math notranslate nohighlight">\(\boldsymbol{k}_{\mathbf{X}}(\mathbf{x}_i) = \boldsymbol{k}(\mathbf{X}, \mathbf{x}_i)\)</span> - cross covariance for the data</p></li>
 <li><p><span class="math notranslate nohighlight">\(\boldsymbol{k}(\mathbf{x}_i, \mathbf{x}_j) : \mathbb{R}^{D_\phi} \times \mathbb{R}^{D_\phi} \rightarrow \mathbb{R}\)</span> - the kernel function applied to two vectors.</p></li>
 </ul>
-<p><strong>Data Field</strong></p>
+</section>
+<section id="data-field">
+<h3>Data Field<a class="headerlink" href="#data-field" title="Permalink to this headline">#</a></h3>
 <p>In this case, we assume that the state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, is the input</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\([\mathbf{C}]_{ij} = \boldsymbol{c}(\mathbf{x}_i, \mathbf{x}_j)\)</span> - covariance matrix for the data field</p></li>
-<li></li>
 </ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="operators">
+<h2>Operators<a class="headerlink" href="#operators" title="Permalink to this headline">#</a></h2>
+<hr class="docutils" />
+<section id="jacobian">
+<h3>Jacobian<a class="headerlink" href="#jacobian" title="Permalink to this headline">#</a></h3>
+<p>So here, we’re talking about gradients and how they operate on functions.</p>
+<p><strong>Scalar Input-Output</strong></p>
+<div class="math notranslate nohighlight">
+\[
+f: \mathbb{R} \rightarrow \mathbb{R}
+\]</div>
+<p>There are no vectors in this operation so this is simply the derivative.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+J_f: \mathbb{R} &amp;\rightarrow \mathbb{R} \\
+J_f(x) &amp;= \frac{df}{dx}
+\end{aligned}
+\end{split}\]</div>
+<hr class="docutils" />
+<p><strong>Vector Input, Scalar Output</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f} : \mathbb{R}^D \rightarrow \mathbb{R}
+\]</div>
+<p>This has vector-inputs so the output dimension of the Jacobian operator will be the same dimensionality as the input vector.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\boldsymbol{J}_{\boldsymbol{f}} &amp;: \mathbb{R}^{D} \rightarrow \mathbb{R}^D \\
+\mathbf{J}_{\boldsymbol{f}}(\mathbf{x}) &amp;=
+\begin{bmatrix}
+\frac{\partial f}{\partial x_1} &amp;\cdots \frac{\partial f}{\partial x_D}
+\end{bmatrix}
+\end{aligned}
+\end{split}\]</div>
+<hr class="docutils" />
+<p><strong>Vector Input, Vector Output</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f} : \mathbb{R}^D \rightarrow \mathbb{R}^P
+\]</div>
+<p>The inputs are the vector, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^D\)</span>, and the outputs are a vector, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^P\)</span>. So the Jacobian operator will produce a matrix of size <span class="math notranslate nohighlight">\(\mathbf{J} \in \mathbb{R}^{P \times D}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\boldsymbol{J}_{\boldsymbol{f}} &amp;: \mathbb{R}^{D} \rightarrow \mathbb{R}^{P\times D}\\
+\mathbf{J}_{\boldsymbol{f}}(\mathbf{x}) &amp;=
+\begin{bmatrix}
+\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_D} \\
+\ldots &amp;\ddots &amp; \ldots \\
+\frac{\partial f_p}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_p}{\partial x_D}
+\end{bmatrix}
+\end{aligned}
+\end{split}\]</div>
+<hr class="docutils" />
+<p><strong>Alternative Forms</strong></p>
+<p>I’ve also seen alternative forms which depends on whether the authors want to highlight the inputs or the outputs.</p>
+<p><strong>Form I</strong>: Highlight the input vectors</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{J}_{\boldsymbol{f}}(\mathbf{x}) =
+\begin{bmatrix}
+\frac{\partial \boldsymbol{f}}{\partial x_1} &amp; \cdots &amp; \frac{\partial \boldsymbol{f}}{\partial x_D}
+\end{bmatrix} =
+\begin{bmatrix}
+\frac{\nabla \boldsymbol{f}}{\partial x_1} &amp; \cdots &amp; \frac{\nabla \boldsymbol{f}}{\partial x_D}
+\end{bmatrix}
+\]</div>
+<p><strong>Form II</strong>: Highlights the output vectors</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{J}_{\boldsymbol{f}}(\mathbf{x}) =
+\begin{bmatrix}
+\frac{\partial \boldsymbol{f}_1}{\partial \mathbf{x}} \\ \vdots \\ \frac{\partial \boldsymbol{f}_p}{\partial \mathbf{x}}
+\end{bmatrix} =
+\begin{bmatrix}
+\boldsymbol{\nabla}^\top \boldsymbol{f}_1 \\ \vdots \\ \boldsymbol{\nabla}^\top \boldsymbol{f}_P
+\end{bmatrix}
+\end{split}\]</div>
+</section>
+<hr class="docutils" />
+<section id="special-cases">
+<h3>Special Cases<a class="headerlink" href="#special-cases" title="Permalink to this headline">#</a></h3>
+<p>There are probably many special cases where we have closed-form operators but I will highlight one here which comes up in physics a lot.</p>
+<hr class="docutils" />
+<p><strong>2D Vector Input, 2D Vector Output</strong></p>
+<p>Recall the special case from the above vectors where the dimensionality of the input vector, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^2\)</span>, is the same dimensionality of the output vector, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^2\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\boldsymbol{f}&amp;:\mathbb{R}^2 \rightarrow \mathbb{R}^2 \\
+\end{aligned}
+\end{split}\]</div>
+<p>The functional form was:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{f}\left(
+\begin{bmatrix}
+x \\ y
+\end{bmatrix}
+\right) =
+\begin{bmatrix}
+f_1(x,y) \\ f_2(x,y)
+\end{bmatrix} =
+\begin{bmatrix}
+u \\ v
+\end{bmatrix}
+\end{split}\]</div>
+<p>So in this special case, our Jacobian matrix, <span class="math notranslate nohighlight">\(\mathbf{J}\)</span>, will be:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\mathbf{J}_{\boldsymbol{f}(x,y)} =
+\begin{bmatrix}
+\frac{\partial u}{\partial x} &amp; \frac{\partial u}{\partial y} \\
+\frac{\partial v}{\partial x} &amp; \frac{\partial v}{\partial y}
+\end{bmatrix}
+\end{split}\]</div>
+<p><strong>Note</strong>: This is a square matrix because the dimension of the input vector, <span class="math notranslate nohighlight">\((x,y)\)</span>, matches the dimension of the output vector, <span class="math notranslate nohighlight">\((u,v)\)</span>.</p>
+</section>
+<hr class="docutils" />
+<section id="determinant-jacobian">
+<h3>Determinant Jacobian<a class="headerlink" href="#determinant-jacobian" title="Permalink to this headline">#</a></h3>
+<p>The determinant of the Jacobian is the amount of (volumetric) change. It is given by:</p>
+<div class="math notranslate nohighlight">
+\[
+\det \boldsymbol{J}_{\boldsymbol{f}}(\mathbf{x}): \mathbb{R}^D \rightarrow \mathbb{R}
+\]</div>
+<p>Notice how we input the vectors, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, and it results in a scalar, <span class="math notranslate nohighlight">\(\mathbb{R}\)</span>.</p>
+<p><strong>Note</strong>: This can be a very expensive operation especially with high dimensional data. A naive linear function, <span class="math notranslate nohighlight">\(\boldsymbol{f}(\mathbf{x}) = \mathbf{Ax}\)</span>, will have an operation of <span class="math notranslate nohighlight">\(\mathcal{O}(D^3)\)</span>. So the name of the game is to try and look at the Jacobian structure and find tricks to reduce the expense of the calculation.</p>
+<hr class="docutils" />
+<p><strong>Special Case: Input Vector 2D, Output Vector - 2D</strong></p>
+<p>Again, let’s go back to the special case where we have a two input vector, <span class="math notranslate nohighlight">\(\mathbf{x}\in \mathbb{R}^2\)</span>, and a 2D output vector, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^2\)</span>. Recall that the Jacobian matrix for the function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, is a <span class="math notranslate nohighlight">\(2\times 2\)</span> square matrix. More generally, we can write this as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\boldsymbol{J}
+\begin{bmatrix}
+A(x,y) \\
+B(x,y)
+\end{bmatrix} =
+\begin{bmatrix}
+\frac{\partial A}{\partial x} &amp; \frac{\partial A}{\partial y} \\
+\frac{\partial B}{\partial x} &amp; \frac{\partial B}{\partial y}
+\end{bmatrix}
+\end{split}\]</div>
+<p>To calculate the determinant of this Jacobian matrix, we has a closed-form expression. It’s given by:</p>
+<div class="math notranslate nohighlight">
+\[
+\det \mathbf{J} = AD - BC
+\]</div>
+<p>So if we apply it to our notation</p>
+<div class="math notranslate nohighlight">
+\[
+\det \mathbf{J}_{\mathbf{f}}(x,y) = \frac{\partial f_1}{\partial x}\frac{\partial f_2}{\partial y} - \frac{\partial f_1}{\partial y}\frac{\partial f_2}{\partial x}
+\]</div>
+<p>This is probably the <strong>easiest</strong> determinant Jacobian to calculate (apart from the scalar-valued which is simply the gradient) and it comes up from time to time in physics.</p>
+<p><strong>Note</strong>: I have seem an alternaive form in the geoscience literature, <span class="math notranslate nohighlight">\(\boldsymbol{J}(\boldsymbol{f}_1, \boldsymbol{f}_2)\)</span>. I personally don’t like this notation because in no way does it specify the <strong>determinant</strong>. I propose a better, clearer notation: <span class="math notranslate nohighlight">\(\det \boldsymbol{J}(\boldsymbol{f}_1, \boldsymbol{f}_2)\)</span>. Now we at least have the</p>
+<hr class="docutils" />
+<p><strong>Example</strong>: This is in the QG PDE. It is given by:</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t q + \boldsymbol{J}(\psi, q) = 0
+\]</div>
+<p>where the Jacobian operator is given by:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{J}(\psi, q) = \partial_x \psi \partial_y q - \partial_y \psi \partial_x q
+\]</div>
+<p>With my updated notation, this would now be:</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t q + \det\boldsymbol{J}(\psi, q) = 0
+\]</div>
+<p>where the <em>determinant</em> Jacobian operator is given:</p>
+<div class="math notranslate nohighlight">
+\[
+\det\boldsymbol{J}(\psi, q) = \partial_x \psi \partial_y q - \partial_y \psi \partial_x q
+\]</div>
+<p>In my eyes, this is clearer. Especially in the papers where people recycle the equations without explicitly defining the operators and their meaning.</p>
+</section>
 </section>
 </section>
 

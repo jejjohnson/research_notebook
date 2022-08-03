@@ -70,6 +70,7 @@ parts:
       - file: content/notes/bayesian/models.md
       - file: content/notes/bayesian/inference.md
       - file: content/notes/bayesian/inference/variational_inference
+      - file: content/notes/bayesian/inference/cond_vi
       - file: content/notes/bayesian/confidence_intervals
       - file: content/notes/bayesian/regression
     # ==================

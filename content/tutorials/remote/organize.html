@@ -1355,7 +1355,7 @@ git pull origin master
 <hr class="docutils" />
 <section id="preprocessing">
 <h3>PreProcessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>salloc --nodes<span class="o">=</span><span class="m">1</span> --ntasks-per-node<span class="o">=</span><span class="m">1</span> --cpus-per-task<span class="o">=</span><span class="m">16</span> --account<span class="o">=</span>cli@cpu 
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>salloc --nodes<span class="o">=</span><span class="m">1</span> --ntasks-per-node<span class="o">=</span><span class="m">1</span> --cpus-per-task<span class="o">=</span><span class="m">16</span> --account<span class="o">=</span>cli@cpu
 </pre></div>
 </div>
 </section>
@@ -1387,7 +1387,7 @@ git pull origin master
 <section id="functions">
 <h5>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">#</a></h5>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span> pull_wandb_changes<span class="o">(){</span>
-    rsync -avxH jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/ /mnt/meom/workdir/johnsonj/logs/wandb/
+    rsync -avxH jean_zay:/gpfsssd/scratch/rech/cli/uvo53rl/wandb/ /mnt/meom/workdir/johnsonj/logs/wandb/
 <span class="o">}</span>
 <span class="k">function</span> push_wandb_changes<span class="o">(){</span>
     rsync -avxH /mnt/meom/workdir/johnsonj/logs/wandb/ jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/
@@ -1445,7 +1445,7 @@ wandb sync --include-offline /mnt/meom/workdir/johnsonj/logs/wandb/offline-*
 </pre></div>
 </div>
 <p><strong>Inverse Transfer</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp -r jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/test ./ 
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp -r jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/test ./
 </pre></div>
 </div>
 <p>Other Resources:</p>
@@ -1527,7 +1527,7 @@ printenv LOGDIR
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># summary</span>
 idr_quota_user
 <span class="c1"># more detail</span>
-idr_quota_project 
+idr_quota_project
 </pre></div>
 </div>
 <p><strong>Check Home Space</strong></p>

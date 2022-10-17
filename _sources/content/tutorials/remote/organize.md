@@ -2,7 +2,7 @@
 
 
 * Automating Everything
-*
+* 
 
 
 ---
@@ -40,7 +40,7 @@ credentials/
 
 **`project`**: this is where all of your source code lives. It should be an environment under version control (e.g. git) so that you can track all of the changes.
 
-**`data/project`**: this should contain all of your data. It can be a symbolic link, or a mounted drive. It's important that all of the subsequent files within the data-drive have the same file structure across
+**`data/project`**: this should contain all of your data. It can be a symbolic link, or a mounted drive. It's important that all of the subsequent files within the data-drive have the same file structure across 
 
 
 ---
@@ -76,7 +76,7 @@ git pull origin master
 
 
 ```bash
-salloc --nodes=1 --ntasks-per-node=1 --cpus-per-task=16 --account=cli@cpu
+salloc --nodes=1 --ntasks-per-node=1 --cpus-per-task=16 --account=cli@cpu 
 ```
 
 ### `Data`
@@ -113,7 +113,7 @@ rsync -avxH jean_zay:/gpfswork/rech/cli/uvo53rl/test_logs/wandb/ /mnt/meom/workd
 
 ```bash
 function pull_wandb_changes(){
-    rsync -avxH jean_zay:/gpfsssd/scratch/rech/cli/uvo53rl/wandb/ /mnt/meom/workdir/johnsonj/logs/wandb/
+    rsync -avxH jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/ /mnt/meom/workdir/johnsonj/logs/wandb/
 }
 function push_wandb_changes(){
     rsync -avxH /mnt/meom/workdir/johnsonj/logs/wandb/ jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/
@@ -178,7 +178,7 @@ scp -r test jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/
 **Inverse Transfer**
 
 ```bash
-scp -r jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/test ./
+scp -r jean_zay:/gpfswork/rech/cli/uvo53rl/logs/wandb/test ./ 
 ```
 
 Other Resources:
@@ -192,7 +192,7 @@ Other Resources:
 
 1. Create a `project` directory - where our code is living
 2. Create a `bin` directory - where we put all of our executables
-3. Create `$WORKDIR` -
+3. Create `$WORKDIR` - 
 4. Create `$LOGSDIR`
 5. Create necessary files (`logs`, `jobs`, `errs`)
 
@@ -282,7 +282,7 @@ $LOGDIR/errs
 # summary
 idr_quota_user
 # more detail
-idr_quota_project
+idr_quota_project 
 ```
 
 **Check Home Space**

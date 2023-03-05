@@ -1,18 +1,4 @@
----
-title: Discretization
-suptitle: Loops, Slicing, and Stencils
-short_title: Finite Difference
-date: 2023-02-21
-authors:
-  - name: J. Emmanuel Johnson
-    affiliations:
-      - MEOM Lab
-    roles:
-      - Primary Programmer
-    email: jemanjohnson34@gmail.com
-license: CC-BY-4.0
-keywords: PDE, ODE, TimeStepper, Diffrax
----
+# Discretization
 
 ## Motivation
 

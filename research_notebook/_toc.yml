@@ -50,6 +50,13 @@ parts:
     # QUOTES
     # ==================
     - file: content/notes/concepts/quotes
+    # ======
+    # DATA
+    # ======
+    - file: content/notes/data/overview
+      sections:
+      - file: content/notes/data/representation.md
+      - file: content/notes/data/models.md
     # =============================================
     # GRAND MASTER THEORY OF DATA-DRIVEN LEARNING
     # =============================================
@@ -59,13 +66,7 @@ parts:
       - file: content/notes/gmt/hierarchical_rep.md
       - file: content/notes/gmt/functa.md
       - file: content/notes/gmt/discretization.md
-    # ======
-    # DATA
-    # ======
-    - file: content/notes/data/overview
-      sections:
-      - file: content/notes/data/representation.md
-      - file: content/notes/data/models.md
+      - file: content/notes/gmt/learning.md
     # ==================
     # UNCERTAINTY
     # ==================
@@ -159,6 +160,8 @@ parts:
       - file: content/notes/normalizing_flows/coupling_layers.md
       - file: content/notes/normalizing_flows/conditional.md
       - file: content/notes/normalizing_flows/multiscale.md
+      - file: content/notes/normalizing_flows/inverse.md
+      - file: content/notes/normalizing_flows/losses.md
       - file: content/notes/normalizing_flows/lecture_1_ig.md
         sections:
           - file: content/notes/normalizing_flows/1.0_univariate_gauss.ipynb
@@ -212,6 +215,7 @@ parts:
       - file: content/notes/misc/generative_models.md
       - file: content/notes/misc/diffusion_models.md
       - file: content/notes/misc/fixed_point.md
+      - file: content/notes/misc/bilevel_opt.md
   # ###################################################################
   # CHEATSHEETS
   # ###################################################################

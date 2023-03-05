@@ -3,6 +3,8 @@
 ---
 ## Motivations
 
+![figure](https://cvws.icloud-content.com/B/AXJ9rUeugE62r5wOOJGZplFkqQ2AAciBENkJg7AR6H79V70Lrc3KTPH6/Motivation.jpg?o=ApLY0goJWL5NkZyyYTtwj8USHSjRYJLQZJqTVK3czpdn&v=1&x=3&a=CAogRHJLzZNCKG3vI1B4x3b7JcTBaU0HlUFRE9KjoKC6YkASbRDvk6TV2zAY7_D_1tswIgEAUgRkqQ2AWgTKTPH6aiaYk08JNOG61Pu_HMRe7MCQrI-mGrILCwleX8wCib2pfpjdDxfg_nImR8i0It6Sw5Co0EnCW0BSrDmW6t2xhv2n-8JkGJN6lQspVQ7h7eQ&e=1673877518&fl=&r=6b99f1f8-20fb-4a9f-a718-8de67620876f-1&k=KzYtz42KdChgNAei2IZb7g&ckc=com.apple.clouddocs&ckz=com.apple.CloudDocs&p=70&s=B5SVOB5laiQ7qAU_RI8bJZLaxCc&cd=i)
+
 Variational inference is the most scalable inference method the machine learning community has (as of 2019).
 
 Ultimately, we are interested in approximating the likelihood distribution of our observations, $\mathcal{Y}$, which we assume come from some $\mathcal{X}$.
@@ -10,6 +12,10 @@ Ultimately, we are interested in approximating the likelihood distribution of ou
 $$
 y \sim p(y|x)
 $$
+
+```{note}
+With a tip!
+```
 
 We write some sort of approximation of the *true* (or best) underlying distribution via some parameterized form like so
 

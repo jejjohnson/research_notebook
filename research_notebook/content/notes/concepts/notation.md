@@ -289,7 +289,7 @@ This has vector-inputs so the output dimension of the Jacobian operator will be 
 
 $$
 \begin{aligned}
-\boldsymbol{J}_{\boldsymbol{f}} &: \mathbb{R}^{D} \rightarrow \mathbb{R}^D \\
+\boldsymbol{J}[\boldsymbol{f}](\mathbf{x}) &: \mathbb{R}^{D} \rightarrow \mathbb{R}^D \\
 \mathbf{J}_{\boldsymbol{f}}(\mathbf{x}) &=
 \begin{bmatrix}
 \frac{\partial f}{\partial x_1} &\cdots \frac{\partial f}{\partial x_D}
@@ -303,15 +303,15 @@ $$
 **Vector Input, Vector Output**
 
 $$
-\boldsymbol{f} : \mathbb{R}^D \rightarrow \mathbb{R}^P
+\vec{\boldsymbol{f}} : \mathbb{R}^D \rightarrow \mathbb{R}^P
 $$
 
 The inputs are the vector, $\mathbf{x} \in \mathbb{R}^D$, and the outputs are a vector, $\mathbf{y} \in \mathbb{R}^P$. So the Jacobian operator will produce a matrix of size $\mathbf{J} \in \mathbb{R}^{P \times D}$.
 
 $$
 \begin{aligned}
-\boldsymbol{J}_{\boldsymbol{f}} &: \mathbb{R}^{D} \rightarrow \mathbb{R}^{P\times D}\\
-\mathbf{J}_{\boldsymbol{f}}(\mathbf{x}) &=
+\boldsymbol{J}[{\boldsymbol{f}}](\mathbf{x}) &: \mathbb{R}^{D} \rightarrow \mathbb{R}^{P\times D}\\
+\mathbf{J}[\boldsymbol{f}](\mathbf{x}) &=
 \begin{bmatrix}
 \frac{\partial f_1}{\partial x_1} &\cdots &\frac{\partial f_1}{\partial x_D} \\
 \ldots &\ddots & \ldots \\

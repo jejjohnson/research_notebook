@@ -8,3 +8,11 @@ rbig_consistency.csv
 \.obsidian/
 \.vscode/
 \code/jax/notebooks/numpyro/results/
+*.zarr
+*.zip
+*.nc
+*.js
+*.css
+*.woff
+*.xml
+\.idea/

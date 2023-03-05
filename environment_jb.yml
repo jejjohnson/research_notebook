@@ -1,11 +1,13 @@
 name: jbook
 channels:
-- defaults
+  - conda-forge
 dependencies:
-    - python=3.9
-    - conda-forge::jupytext
-    - pip
-    - pip:
-        - jupyter-book
-        - cookiecutter
-        - sphinx-proof
+  - python=3.10
+  - conda-forge::jupytext
+  - conda-forge::jupyter-book
+  - conda-forge::myst-parser
+  - conda-forge::pre-commit
+  - pip
+  - pip:
+      - cookiecutter
+    #   - sphinx-proof

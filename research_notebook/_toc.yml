@@ -6,14 +6,14 @@ parts:
   # ###################################################################
   - caption: Resources
     chapters:
-    - file: content/resources/python/overview
-      sections:
-      - file: content/resources/python/ides
-      - file: content/resources/python/stack
-      - file: content/resources/python/earthsci_stack
-      - file: content/resources/python/dl_stack
-      - file: content/resources/python/scale_stack
-      - file: content/resources/python/good_code
+      - file: content/resources/python/overview
+        sections:
+          - file: content/resources/python/ides
+          - file: content/resources/python/stack
+          - file: content/resources/python/earthsci_stack
+          - file: content/resources/python/dl_stack
+          - file: content/resources/python/scale_stack
+          - file: content/resources/python/good_code
   # ###################################################################
   # TUTORIALS
   # ###################################################################
@@ -50,6 +50,15 @@ parts:
     # QUOTES
     # ==================
     - file: content/notes/concepts/quotes
+    # =============================================
+    # GRAND MASTER THEORY OF DATA-DRIVEN LEARNING
+    # =============================================
+    chapters:
+    - file: content/notes/gmt/overview
+      sections:
+      - file: content/notes/gmt/hierarchical_rep.md
+      - file: content/notes/gmt/functa.md
+      - file: content/notes/gmt/discretization.md
     # ======
     # DATA
     # ======
@@ -191,6 +200,10 @@ parts:
         - file: content/notes/data_assimilation/dmm.md
         - file: content/notes/data_assimilation/4dvarnet.md
         - file: content/notes/data_assimilation/markov_gp.md
+      - file: content/notes/data_assimilation/nbs/notebooks.md
+        sections:
+        - file: content/notes/data_assimilation/nbs/powerspectra_walkthrough.ipynb
+
     # ================================
     # MISCELLANEOUS
     # ================================

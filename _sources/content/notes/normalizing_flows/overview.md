@@ -3,21 +3,17 @@
 Let $\mathbf{Z}\in \mathbb{R}^D$ be a random variable with a tractable PDF: $p_{\mathbf{z}}: \mathbb{R}^D \rightarrow \mathbb{R}^D$. The objective is to find some invertible function $\boldsymbol{f}_{\boldsymbol \theta}$ such that $\boldsymbol{f}_{\boldsymbol \theta}(\mathbf{x})=\mathbf{z}$. This function is parameterized by $\boldsymbol{\theta}$ which allows us to learn the transformation. Using the change-of-variables formula, we can compute the density of $\mathbf{x}$:
 
 $$
-\begin{equation}
-    p_{\boldsymbol \theta}(\mathbf{x}) = p(\boldsymbol{f}_\theta(\mathbf{x})) \left| \boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}_{\boldsymbol \theta}(\mathbf{x})\right|
-\end{equation}
+p_{\boldsymbol \theta}(\mathbf{x}) = p(\boldsymbol{f}_\theta(\mathbf{x})) \left| \boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}_{\boldsymbol \theta}(\mathbf{x})\right|
 $$
 
-where $\boldsymbol{\nabla}_\mathbf{x}$ is the Jacobian of $\boldsymbol{f}$ and $|\cdot|$ is the absolute determinant. Intuitively, this $|\cdot|$ represents the change in volume of the transformation. $\boldsymbol{f}$ is the normalizing direction as it goes from a more complicated data distribution to a simpler base distribution $p_{\mathbf{z}}$. The inverse function of $\boldsymbol{f}$, i.e. $\boldsymbol{f}^{-1}$, is the generative direction as it allows us to sample from $\mathbf{z}$ which we can propagate the samples from the latent space through the function $\boldsymbol{f}^{-1}$ to get samples in $\mathbf{x}$. 
+where $\boldsymbol{\nabla}_\mathbf{x}$ is the Jacobian of $\boldsymbol{f}$ and $|\cdot|$ is the absolute determinant. Intuitively, this $|\cdot|$ represents the change in volume of the transformation. $\boldsymbol{f}$ is the normalizing direction as it goes from a more complicated data distribution to a simpler base distribution $p_{\mathbf{z}}$. The inverse function of $\boldsymbol{f}$, i.e. $\boldsymbol{f}^{-1}$, is the generative direction as it allows us to sample from $\mathbf{z}$ which we can propagate the samples from the latent space through the function $\boldsymbol{f}^{-1}$ to get samples in $\mathbf{x}$.
 
 
 
 Now the challenge is to design a function $\mathbf{f}(\cdot)$ such that we can learn the mapping from our data to the latent domain. In the case of high-dimensional data, it is nearly impossible to define a transformation expressive enough such that one transformation is enough. Analogous to standard neural networks, we can stack together multiple compositions of simpler arbitrary functions to create more expressive transformations, e.g. figure~\ref{fig:c4.4-flows}. As $\mathbf{f}$ is invertible, we can have $\mathbf{f}=\mathbf{f}_L \circ \ldots \circ \mathbf{f}_1$ which would result in a more expressive transformation. Likewise the inverse is possible $\mathbf{f}^{-1} = \mathbf{f}^{-1}_1 \circ \ldots \circ \mathbf{f}_L^{-1}$. The determinant of the Jacobian in this case is simply the product of all of the transformations $\mathbf{f}_\ell$,
 
 $$
-\begin{equation}
-    \left|\boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}(\mathbf{x})\right| = \prod_{\ell=1}^L \left| \boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}_\ell(\mathbf{x}) \right|,
-\end{equation}
+\left|\boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}(\mathbf{x})\right| = \prod_{\ell=1}^L \left| \boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}_\ell(\mathbf{x}) \right|,
 $$
 
 which gives us more expressivity to transform arbitrarily complex distributions to simpler distributions. Given the correctly chosen set of $\boldsymbol{f}(\cdot)$, this would be sufficient to estimate any arbitrary distribution~\citep{Bogachev2005,JainiKYB20,Meng2020}.
@@ -25,7 +21,7 @@ which gives us more expressivity to transform arbitrarily complex distributions 
 
 $$
 \begin{aligned}
-    \mathcal{L}(\boldsymbol{\theta}) &= \arg\min_{\boldsymbol{\theta}} \mathbb{E}_\mathbf{x} \left[ -\log p_{\boldsymbol{\theta}}(\mathbf{x}) \right] = \mathbb{E}_\mathbf{x} \left[ -\log p(\boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x})) - \log \left| \boldsymbol{\nabla}_{\mathbf{x}} \boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x})\right| \right].
+\mathcal{L}(\boldsymbol{\theta}) &= \arg\min_{\boldsymbol{\theta}} \mathbb{E}_\mathbf{x} \left[ -\log p_{\boldsymbol{\theta}}(\mathbf{x}) \right] = \mathbb{E}_\mathbf{x} \left[ -\log p(\boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x})) - \log \left| \boldsymbol{\nabla}_{\mathbf{x}} \boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x})\right| \right].
 \end{aligned}
 $$
 
@@ -34,17 +30,17 @@ The standard procedure is to estimate this using Monte Carlo sampling using stoc
 ---
 ## Jacobian Form
 
-As alluded to in the previous section, the bottleneck during the training procedure is evaluating the determinant of the Jacobian. 
+As alluded to in the previous section, the bottleneck during the training procedure is evaluating the determinant of the Jacobian.
 
 $$
-\begin{equation}
+
 \log p(\mathbf{x}) =
 \log p\left(\boldsymbol{f}_{\theta}(\mathbf{x})\right)+
 \log \; \underbrace{\left| \boldsymbol{\nabla}_{\mathbf{x}} \boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x})\right| }_{\color{black}{\text{Bottleneck}}}.
-\end{equation}
+
 $$
 
-This is an area of intensive research and a really effective way to break down each of the methods~\citep{Kobyzev2020, PapamakariosNFs}. There are many different (and complicated) frameworks but almost all of them can be put into different categories for how the Jacobian is constructed. A naive full Jacobian matrix is of order $\mathcal{O}(D^3)$. This is fine with simple datasets but this can be prohibitive with datasets with more dimensions. A diagonal Jacobian is $\mathcal{O}(D)$ to evaluate but it lacks the expressivity due to its lack of cross-dimensional considerations. There are also hybrid methods in between these extremes. %, each constructed in a different way. 
+This is an area of intensive research and a really effective way to break down each of the methods~\citep{Kobyzev2020, PapamakariosNFs}. There are many different (and complicated) frameworks but almost all of them can be put into different categories for how the Jacobian is constructed. A naive full Jacobian matrix is of order $\mathcal{O}(D^3)$. This is fine with simple datasets but this can be prohibitive with datasets with more dimensions. A diagonal Jacobian is $\mathcal{O}(D)$ to evaluate but it lacks the expressivity due to its lack of cross-dimensional considerations. There are also hybrid methods in between these extremes. %, each constructed in a different way.
 Figure~\ref{fig:c4-jacobian} gives a visual reference for the differences. Below we list and briefly highlight each of the Jacobians found in the literature. For a more in-depth breakdown, please see the NF survey literature~\citep{PapamakariosNFs, KobyzevNFs}.
 
 ### Diagonal
@@ -53,7 +49,7 @@ This is known in the NF community as \textit{element-wise} transformations. A fu
 
 ### Low Rank
 
-These are Jacobian matrices whose determinant can be easily computed due to some transformation or property which often result in low-rank matrices (figure~\ref{fig:c4-jacobian} (b)). Some simple examples include orthogonal transformations, e.g. PLU flows~\citep{NFORTHOAUTO2018}, QR flows~\citep{NFORTHO2019}, Expontential \& Cayley map, and Householder transformations~\citep{NFHOUSE16}. The Jacobian of these transformations typically have a determinant of exactly $\pm 1$. However, these are the least expressive transformations even when multiple transformations are composed. Thus they are not typically used alone and instead are often coupled with other transformations~\citep{NFORTHO2019,NFSYLVESTER18}. Some non-linear transformations, like planar flows~\citep{RezendeM15} and radial flows~\citep{NFTABAK2013}, utilize the matrix determinant lemma~\citep{RezendeM15} which allows for more efficient computation of the determinant of the Jacobian; often $\mathcal{O}(D)$ instead of $\mathcal{O}(D^3)$. Sylvester flows~\citep{NFSYLVESTER18} extend planar flows to allow for more expressivity by doing an additional matrix multiplications parameterized by an orthogonal transformation. One disadvantage of these low-rank transformations is that they do not have analytical inverse transformations. So many times, these non-linear affine flows are used for variational inference~\citep{RezendeM15} and not for standard generative models. 
+These are Jacobian matrices whose determinant can be easily computed due to some transformation or property which often result in low-rank matrices (figure~\ref{fig:c4-jacobian} (b)). Some simple examples include orthogonal transformations, e.g. PLU flows~\citep{NFORTHOAUTO2018}, QR flows~\citep{NFORTHO2019}, Expontential \& Cayley map, and Householder transformations~\citep{NFHOUSE16}. The Jacobian of these transformations typically have a determinant of exactly $\pm 1$. However, these are the least expressive transformations even when multiple transformations are composed. Thus they are not typically used alone and instead are often coupled with other transformations~\citep{NFORTHO2019,NFSYLVESTER18}. Some non-linear transformations, like planar flows~\citep{RezendeM15} and radial flows~\citep{NFTABAK2013}, utilize the matrix determinant lemma~\citep{RezendeM15} which allows for more efficient computation of the determinant of the Jacobian; often $\mathcal{O}(D)$ instead of $\mathcal{O}(D^3)$. Sylvester flows~\citep{NFSYLVESTER18} extend planar flows to allow for more expressivity by doing an additional matrix multiplications parameterized by an orthogonal transformation. One disadvantage of these low-rank transformations is that they do not have analytical inverse transformations. So many times, these non-linear affine flows are used for variational inference~\citep{RezendeM15} and not for standard generative models.
 
 ### Lower Triangular
 

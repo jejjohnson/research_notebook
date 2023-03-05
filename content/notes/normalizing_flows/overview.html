@@ -929,16 +929,12 @@ title="Print to PDF"
 <h1>Normalizing Flows<a class="headerlink" href="#normalizing-flows" title="Permalink to this heading">#</a></h1>
 <p>Let $\mathbf{Z}\in \mathbb{R}^D$ be a random variable with a tractable PDF: $p_{\mathbf{z}}: \mathbb{R}^D \rightarrow \mathbb{R}^D$. The objective is to find some invertible function $\boldsymbol{f}<em>{\boldsymbol \theta}$ such that $\boldsymbol{f}</em>{\boldsymbol \theta}(\mathbf{x})=\mathbf{z}$. This function is parameterized by $\boldsymbol{\theta}$ which allows us to learn the transformation. Using the change-of-variables formula, we can compute the density of $\mathbf{x}$:</p>
 <p>$$
-\begin{equation}
 p_{\boldsymbol \theta}(\mathbf{x}) = p(\boldsymbol{f}<em>\theta(\mathbf{x})) \left| \boldsymbol{\nabla}</em>\mathbf{x} \boldsymbol{f}_{\boldsymbol \theta}(\mathbf{x})\right|
-\end{equation}
 $$</p>
 <p>where $\boldsymbol{\nabla}<em>\mathbf{x}$ is the Jacobian of $\boldsymbol{f}$ and $|\cdot|$ is the absolute determinant. Intuitively, this $|\cdot|$ represents the change in volume of the transformation. $\boldsymbol{f}$ is the normalizing direction as it goes from a more complicated data distribution to a simpler base distribution $p</em>{\mathbf{z}}$. The inverse function of $\boldsymbol{f}$, i.e. $\boldsymbol{f}^{-1}$, is the generative direction as it allows us to sample from $\mathbf{z}$ which we can propagate the samples from the latent space through the function $\boldsymbol{f}^{-1}$ to get samples in $\mathbf{x}$.</p>
 <p>Now the challenge is to design a function $\mathbf{f}(\cdot)$ such that we can learn the mapping from our data to the latent domain. In the case of high-dimensional data, it is nearly impossible to define a transformation expressive enough such that one transformation is enough. Analogous to standard neural networks, we can stack together multiple compositions of simpler arbitrary functions to create more expressive transformations, e.g. figure~\ref{fig:c4.4-flows}. As $\mathbf{f}$ is invertible, we can have $\mathbf{f}=\mathbf{f}_L \circ \ldots \circ \mathbf{f}_1$ which would result in a more expressive transformation. Likewise the inverse is possible $\mathbf{f}^{-1} = \mathbf{f}^{-1}_1 \circ \ldots \circ \mathbf{f}<em>L^{-1}$. The determinant of the Jacobian in this case is simply the product of all of the transformations $\mathbf{f}</em>\ell$,</p>
 <p>$$
-\begin{equation}
 \left|\boldsymbol{\nabla}<em>\mathbf{x} \boldsymbol{f}(\mathbf{x})\right| = \prod</em>{\ell=1}^L \left| \boldsymbol{\nabla}<em>\mathbf{x} \boldsymbol{f}</em>\ell(\mathbf{x}) \right|,
-\end{equation}
 $$</p>
 <p>which gives us more expressivity to transform arbitrarily complex distributions to simpler distributions. Given the correctly chosen set of $\boldsymbol{f}(\cdot)$, this would be sufficient to estimate any arbitrary distribution~\citep{Bogachev2005,JainiKYB20,Meng2020}.</p>
 <p>$$
@@ -951,13 +947,11 @@ $$</p>
 <section id="jacobian-form">
 <h2>Jacobian Form<a class="headerlink" href="#jacobian-form" title="Permalink to this heading">#</a></h2>
 <p>As alluded to in the previous section, the bottleneck during the training procedure is evaluating the determinant of the Jacobian.</p>
-<p>$$
-\begin{equation}
-\log p(\mathbf{x}) =
+<p>$$</p>
+<p>\log p(\mathbf{x}) =
 \log p\left(\boldsymbol{f}<em>{\theta}(\mathbf{x})\right)+
-\log ; \underbrace{\left| \boldsymbol{\nabla}</em>{\mathbf{x}} \boldsymbol{f}<em>{\boldsymbol{\theta}}(\mathbf{x})\right| }</em>{\color{black}{\text{Bottleneck}}}.
-\end{equation}
-$$</p>
+\log ; \underbrace{\left| \boldsymbol{\nabla}</em>{\mathbf{x}} \boldsymbol{f}<em>{\boldsymbol{\theta}}(\mathbf{x})\right| }</em>{\color{black}{\text{Bottleneck}}}.</p>
+<p>$$</p>
 <p>This is an area of intensive research and a really effective way to break down each of the methods~\citep{Kobyzev2020, PapamakariosNFs}. There are many different (and complicated) frameworks but almost all of them can be put into different categories for how the Jacobian is constructed. A naive full Jacobian matrix is of order $\mathcal{O}(D^3)$. This is fine with simple datasets but this can be prohibitive with datasets with more dimensions. A diagonal Jacobian is $\mathcal{O}(D)$ to evaluate but it lacks the expressivity due to its lack of cross-dimensional considerations. There are also hybrid methods in between these extremes. %, each constructed in a different way.
 Figure~\ref{fig:c4-jacobian} gives a visual reference for the differences. Below we list and briefly highlight each of the Jacobians found in the literature. For a more in-depth breakdown, please see the NF survey literature~\citep{PapamakariosNFs, KobyzevNFs}.</p>
 <section id="diagonal">

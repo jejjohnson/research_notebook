@@ -5,3 +5,4 @@ ghp-import
 sphinx-proof
 myst-parser
 sphinx-copybutton
+sphinx-mermaid

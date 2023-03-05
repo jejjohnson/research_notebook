@@ -60,8 +60,6 @@ parse:
     # including those that are enabled by default!
     - amsmath
     - mathtools
-    - dollarmath
-    - sphinxcontrib.mermaid
 
 # parse:
 #   myst_enable_extensions:

@@ -1,49 +1,57 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Variational Inference &#8212; Research Notebook</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../../../../_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../../_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
 
-    
-  <link rel="stylesheet"
-    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=4ec06e9971c5264fbd345897d5258098f11cc577" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/proof.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
 
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
-    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=8bf782fb4ee92b3d3646425e50f299c4e1fd152d"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -53,61 +61,496 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/bayesian/inference/variational_inference';</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Conditional Variational Inference" href="cond_vi.html" />
     <link rel="prev" title="Inference Schemes" href="../inference.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../../../index.html">
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+<form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../../../intro.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../../../_static/book_v2.jpeg" class="logo__image only-light" alt="Logo image">
+    <img src="../../../../_static/book_v2.jpeg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
         
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../resources/python/overview.html">
+                        Python
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../tutorials/jax_journey/overview.html">
+                        My JAX Journey
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../tutorials/remote/overview.html">
+                        Remote Computing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../gmt/overview.html">
+                        Grand Master Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../data/overview.html">
+                        Data
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../concepts/uncertainty.html">
+                        Modeling Uncertainty
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../overview.html">
+                        Bayesian
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../concepts/overview.html">
+                        Sleeper Concepts
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../kernels/overview.html">
+                        Kernel Methods
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../gps/intro.html">
+                        Gaussian Processes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../info_theory/similarity.html">
+                        Similarity
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../info_theory/overview.html">
+                        Information Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../normalizing_flows/overview.html">
+                        Normalizing Flows
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../inr/overview.html">
+                        Implicit Neural Representations
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../data_assimilation/overview.html">
+                        Data Assimilation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../misc/overview.html">
+                        Miscellaneous Notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/bash.html">
+                        Bash
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/cli.html">
+                        Command Line
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/python.html">
+                        Python
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
+          
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
       
       
-      <img src="../../../../_static/book_v2.jpeg" class="logo" alt="logo">
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
       
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
       
-      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../resources/python/overview.html">
+                        Python
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../tutorials/jax_journey/overview.html">
+                        My JAX Journey
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../tutorials/remote/overview.html">
+                        Remote Computing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../gmt/overview.html">
+                        Grand Master Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../data/overview.html">
+                        Data
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../concepts/uncertainty.html">
+                        Modeling Uncertainty
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../overview.html">
+                        Bayesian
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../concepts/overview.html">
+                        Sleeper Concepts
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../kernels/overview.html">
+                        Kernel Methods
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../gps/intro.html">
+                        Gaussian Processes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../info_theory/similarity.html">
+                        Similarity
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../info_theory/overview.html">
+                        Information Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../normalizing_flows/overview.html">
+                        Normalizing Flows
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../inr/overview.html">
+                        Implicit Neural Representations
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../data_assimilation/overview.html">
+                        Data Assimilation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../misc/overview.html">
+                        Miscellaneous Notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/bash.html">
+                        Bash
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/cli.html">
+                        Command Line
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/python.html">
+                        Python
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item">
+  
+
+
+<a class="navbar-brand logo" href="../../../../intro.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../../../_static/book_v2.jpeg" class="logo__image only-light" alt="Logo image">
+    <img src="../../../../_static/book_v2.jpeg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    </div>
+    <div class="sidebar-start-items__item">
+<form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -116,1144 +559,463 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Resources
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../resources/python/overview.html">
-   Python
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/ides.html">
-     Integraded Development Environment (IDE)
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/stack.html">
-     Standard Python Stack
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/earthsci_stack.html">
-     Earth Science Stack
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/dl_stack.html">
-     Deep Learning Stack
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/scale_stack.html">
-     Scaling Stack
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/good_code.html">
-     Good Code
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../resources/python/overview.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/ides.html">Integraded Development Environment (IDE)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/stack.html">Standard Python Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/earthsci_stack.html">Earth Science Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/dl_stack.html">Deep Learning Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/scale_stack.html">Scaling Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/good_code.html">Good Code</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Tutorials
- </span>
-</p>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../tutorials/jax_journey/overview.html">
-   My JAX Journey
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/ecosystem.html">
-     Ecosystem
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/vmap.html">
-     vmap
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/jit.html">
-     Jit
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/classes.html">
-     Classes
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/overview.html">
-     Algorithms
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-    <label for="toctree-checkbox-3">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/bisection.html">
-       Bisection search
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
-       Kernel Derivatives
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../tutorials/jax_journey/gfs_with_jax.html">
-       Gaussianization Flows
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../tutorials/remote/overview.html">
-   Remote Computing
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/remote/ssh.html">
-     SSH Configuration
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/remote/conda.html">
-     Conda 4 Remote Servers
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/remote/jlab.html">
-     Jupyter Lab 4 Remote Servers
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/jax_journey/overview.html">My JAX Journey</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/jax_journey/ecosystem.html">Ecosystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/jax_journey/vmap.html">vmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/jax_journey/jit.html">Jit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/jax_journey/classes.html">Classes</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../tutorials/jax_journey/algorithms/overview.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/jax_journey/algorithms/bisection.html">Bisection search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/jax_journey/algorithms/kernel_derivatives.html">Kernel Derivatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/jax_journey/gfs_with_jax.html">Gaussianization Flows</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Notes
- </span>
-</p>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/remote/overview.html">Remote Computing</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/remote/ssh.html">SSH Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/remote/conda.html">Conda 4 Remote Servers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/remote/jlab.html">Jupyter Lab 4 Remote Servers</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../concepts/notation.html">
-   Notation
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../concepts/quotes.html">
-   Quotes
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../data/overview.html">
-   Data
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data/representation.html">
-     Representation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data/models.html">
-     Models
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../concepts/uncertainty.html">
-   Modeling Uncertainty
-  </a>
- </li>
- <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="../overview.html">
-   Bayesian
-  </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul class="current">
-   <li class="toctree-l2">
-    <a class="reference internal" href="../intro.html">
-     Language of Uncertainty
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../models.html">
-     Models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../inference.html">
-     Inference Schemes
-    </a>
-   </li>
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
-     Variational Inference
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cond_vi.html">
-     Conditional Variational Inference
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../confidence_intervals.html">
-     Confidence Intervals
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../regression.html">
-     Regression
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../concepts/overview.html">
-   Sleeper Concepts
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-  <label for="toctree-checkbox-7">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/gaussian.html">
-     Gaussian Distributions
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/change_of_variables.html">
-     Change of Variables
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/identity_trick.html">
-     Identity Trick
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/inverse_function.html">
-     Inverse Function Theorem
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/jensens.html">
-     Jensens Inequality
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/lin_alg.html">
-     Linear Algebra Tricks
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../kernels/overview.html">
-   Kernel Methods
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-  <label for="toctree-checkbox-8">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/kernel_derivatives.html">
-     Kernel Derivatives
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/rv.html">
-     RV Coefficient
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/congruence_coeff.html">
-     Congruence Coefficient
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/hsic.html">
-     HSIC
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/mmd.html">
-     Maximum Mean Discrepancy (MMD)
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../gps/intro.html">
-   Gaussian Processes
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/gps.html">
-     Basics
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/literature.html">
-     Literature Review
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/cg.html">
-     Conjugate Gradients
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/sgps.html">
-     Sparse Gaussian Processes
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../gps/algorithms.html">
-     Algorithms
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
-    <label for="toctree-checkbox-10">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../gps/gpr_code.html">
-       GP from Scratch
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../gps/sgp_code.html">
-       Sparse GP From Scratch
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../egps/overview.html">
-     Input Uncertainty in GPs
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../info_theory/similarity.html">
-   Similarity
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../info_theory/overview.html">
-   Information Theory
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
-  <label for="toctree-checkbox-11">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../info_theory/measures.html">
-     Measures
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
-    <label for="toctree-checkbox-12">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/information.html">
-       Information Theory
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/entropy.html">
-       Entropy &amp; Relative Entropy
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/mutual_info.html">
-       Mutual Information and Total Correlation
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../info_theory/estimators.html">
-     Information Theory Measures
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
-    <label for="toctree-checkbox-13">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/classic.html">
-       Classic Methods
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/histogram.html">
-       Entropy Estimator - Histogram
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/experiments/rbig_sample_consistency.html">
-       Experiment - RBIG Sample Consistency
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../normalizing_flows/overview.html">
-   Normalizing Flows
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
-  <label for="toctree-checkbox-14">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../normalizing_flows/linear.html">
-     Linear Layers
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../normalizing_flows/coupling_layers.html">
-     Coupling Layers
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../normalizing_flows/conditional.html">
-     Conditional Normalizing Flows
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../normalizing_flows/multiscale.html">
-     Multiscale
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../normalizing_flows/lecture_1_ig.html">
-     Lecture I - Iterative Gaussianization
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
-    <label for="toctree-checkbox-15">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/1.0_univariate_gauss.html">
-       1.1 - Univariate Gaussianization
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/1.1_marginal_gauss.html">
-       1.2 - Marginal Gaussianization
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/1.2_gaussianization.html">
-       1.2 - Iterative Gaussianization
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../normalizing_flows/lecture_2_gf.html">
-     Lecture II - Gaussianization Flows
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
-    <label for="toctree-checkbox-16">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt1_mg.html">
-       Parameterized Marginal Gaussianization
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt2_rot.html">
-       Parameterized Rotations
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt3_plane.html">
-       Example - 2D Plane
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../inr/overview.html">
-   Implicit Neural Representations
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-  <label for="toctree-checkbox-17">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../inr/formulation.html">
-     Formulation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../inr/literature_review.html">
-     Literature Review
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../inr/pinns.html">
-     Physics-Informed Loss
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-    <label for="toctree-checkbox-18">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../inr/qg.html">
-       QG PDE
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../data_assimilation/overview.html">
-   Data Assimilation
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
-  <label for="toctree-checkbox-19">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/dynamical_sys.html">
-     Dynamical Systems
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/oi.html">
-     Optimal Interpolation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/interp.html">
-     Interpolation Problem
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/emu.html">
-     Emulation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/inv_problems.html">
-     Inverse Problems
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/projects.html">
-     Projects
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../data_assimilation/algorithms.html">
-     Algorithms
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
-    <label for="toctree-checkbox-20">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/markov_models.html">
-       Markov Models
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/gauss_markov.html">
-       Gauss-Markov Models
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/kf.html">
-       Kalman Filter
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/nkf.html">
-       Normalizing Kalman Filter
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/enskf.html">
-       Ensemble Kalman Filter
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/dmm.html">
-       Deep Markov Model
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/4dvarnet.html">
-       4DVarNet
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/markov_gp.html">
-       Markovian Gaussian Processes
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../misc/overview.html">
-   Miscellaneous Notes
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
-  <label for="toctree-checkbox-21">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../misc/generative_models.html">
-     Generative Models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../misc/diffusion_models.html">
-     Diffusion Models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../misc/fixed_point.html">
-     Fixed-Point Methods
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../gmt/overview.html">Grand Master Theory</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../gmt/hierarchical_rep.html">Hierarchical Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gmt/functa.html">Functa</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../gmt/discretization.html">Motivation</a></li>
+
+
+
+
+
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Cheat Sheets
- </span>
-</p>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../data/overview.html">Data</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../data/representation.html">Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data/models.html">Models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/uncertainty.html">Modeling Uncertainty</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../overview.html">Bayesian</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../intro.html">Language of Uncertainty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../inference.html">Inference Schemes</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Variational Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cond_vi.html">Conditional Variational Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../confidence_intervals.html">Confidence Intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../regression.html">Regression</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../concepts/overview.html">Sleeper Concepts</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/gaussian.html">Gaussian Distributions</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/change_of_variables.html">Change of Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/identity_trick.html">Identity Trick</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/inverse_function.html">Inverse Function Theorem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/jensens.html">Jensens Inequality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/lin_alg.html">Linear Algebra Tricks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../kernels/overview.html">Kernel Methods</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/kernel_derivatives.html">Kernel Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/rv.html">RV Coefficient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/congruence_coeff.html">Congruence Coefficient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/hsic.html">HSIC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/mmd.html">Maximum Mean Discrepancy (MMD)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../gps/intro.html">Gaussian Processes</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../gps/gps.html">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gps/literature.html">Literature Review</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gps/cg.html">Conjugate Gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gps/sgps.html">Sparse Gaussian Processes</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../gps/algorithms.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../gps/gpr_code.html">GP from Scratch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gps/sgp_code.html">Sparse GP From Scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../egps/overview.html">Input Uncertainty in GPs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../info_theory/similarity.html">Similarity</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../info_theory/overview.html">Information Theory</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../info_theory/measures.html">Measures</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/information.html">Information Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/entropy.html">Entropy &amp; Relative Entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/mutual_info.html">Mutual Information and Total Correlation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../info_theory/estimators.html">Information Theory Measures</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/classic.html">Classic Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/histogram.html">Entropy Estimator - Histogram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/experiments/rbig_sample_consistency.html">Experiment - RBIG Sample Consistency</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../normalizing_flows/overview.html">Normalizing Flows</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../normalizing_flows/linear.html">Linear Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../normalizing_flows/coupling_layers.html">Coupling Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../normalizing_flows/conditional.html">Conditional Normalizing Flows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../normalizing_flows/multiscale.html">Multiscale</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../normalizing_flows/lecture_1_ig.html">Lecture I - Iterative Gaussianization</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/1.0_univariate_gauss.html">1.1 - Univariate Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/1.1_marginal_gauss.html">1.2 - Marginal Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/1.2_gaussianization.html">1.2 - Iterative Gaussianization</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../normalizing_flows/lecture_2_gf.html">Lecture II - Gaussianization Flows</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt1_mg.html">Parameterized Marginal Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt2_rot.html">Parameterized Rotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt3_plane.html">Example - 2D Plane</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../inr/overview.html">Implicit Neural Representations</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../inr/formulation.html">Formulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../inr/literature_review.html">Literature Review</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../inr/pinns.html">Physics-Informed Loss</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-19"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../inr/qg.html">QG PDE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../data_assimilation/overview.html">Data Assimilation</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-20"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/dynamical_sys.html">Dynamical Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/oi.html">Optimal Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/interp.html">Interpolation Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/emu.html">Emulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/inv_problems.html">Inverse Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/projects.html">Projects</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_assimilation/algorithms.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-21"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/markov_models.html">Markov Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/gauss_markov.html">Gauss-Markov Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/kf.html">Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/nkf.html">Normalizing Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/enskf.html">Ensemble Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/dmm.html">Deep Markov Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/4dvarnet.html">4DVarNet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/markov_gp.html">Markovian Gaussian Processes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_assimilation/nbs/notebooks.html">Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-22"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../misc/overview.html">Miscellaneous Notes</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-23"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/generative_models.html">Generative Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/diffusion_models.html">Diffusion Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/fixed_point.html">Fixed-Point Methods</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cheat Sheets</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../cheatsheets/bash.html">
-   Bash
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../cheatsheets/cli.html">
-   Command Line
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../cheatsheets/python.html">
-   Python
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cheatsheets/bash.html">Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cheatsheets/cli.html">Command Line</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cheatsheets/python.html">Python</a></li>
 </ul>
 
     </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
+</nav>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
+  </div>
+  
 
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
 
-          
+  
+  <div id="rtd-footer-container"></div>
 
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
+      </div>
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
 
 
 
 <div class="col py-1 d-flex header-article-main">
     <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
+        <label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" data-toggle="tooltip" data-placement="right" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars"></span>
+        </label>
     </div>
     <div class="header-article__right">
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
+  class="btn btn-sm"
   data-toggle="tooltip"
 data-placement="bottom"
 title="Fullscreen mode"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<div class="dropdown dropdown-repository-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/jejjohnson/research_notebook"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="https://github.com/jejjohnson/research_notebook" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Source repository"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-<span class="headerbtn__text-container">repository</span>
+<span class="btn__text-container">repository</span>
 </a>
-
-      </li>
+</a>
       
-      <li>
-        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/bayesian/inference/variational_inference.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
+      <li><a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/bayesian/inference/variational_inference.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Open an issue"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-lightbulb"></i>
   </span>
-<span class="headerbtn__text-container">open issue</span>
+<span class="btn__text-container">open issue</span>
 </a>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../../../../_sources/content/notes/bayesian/inference/variational_inference.md"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="../../../../_sources/content/notes/bayesian/inference/variational_inference.md" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Download source file"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.md</span>
+<span class="btn__text-container">.md</span>
 </a>
-
-      </li>
+</a>
       
       <li>
-        
 <button onclick="printPdf(this)"
-  class="headerbtn"
+  class="btn btn-sm dropdown-item"
   data-toggle="tooltip"
 data-placement="left"
 title="Print to PDF"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
   </span>
-<span class="headerbtn__text-container">.pdf</span>
+<span class="btn__text-container">.pdf</span>
 </button>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
     </div>
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivations">
-   Motivations
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pros-and-cons">
-   Pros and Cons
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#why-variational-inference">
-     Why Variational Inference?
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#why-not-variational-inference">
-     Why Not Variational Inference?
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#variational-distribution">
-   Variational Distribution
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#simple-q-z">
-     Simple,
-     <span class="math notranslate nohighlight">
-      \(q(z)\)
-     </span>
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mixture-distribution">
-     Mixture Distribution
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#bijective-transformation-flow">
-     Bijective Transformation (Flow)
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#stochastic-transformation-encoder-amortization">
-     Stochastic Transformation (Encoder, Amortization)
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#elbo-encoder-derivation">
-   ELBO (Encoder) - Derivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#reconstruction-loss">
-   Reconstruction Loss
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#volume-correction">
-   Volume Correction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#variational-free-energy-vfe">
-   Variational Free Energy (VFE)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#elbo-non-encoder-derivation">
-   ELBO (Non-Encoder) - Derivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#elbo-derivation-old">
-   ELBO - Derivation (Old)
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#comments-on-q-x">
-     Comments on
-     <span class="math notranslate nohighlight">
-      \(q(x)\)
-     </span>
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#resources">
-   Resources
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#from-scratch">
-     From Scratch
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id1">
-   Variational Inference
-  </a>
- </li>
-</ul>
-
-    </nav>
-</div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Variational Inference</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#motivations">
-   Motivations
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pros-and-cons">
-   Pros and Cons
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#why-variational-inference">
-     Why Variational Inference?
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#why-not-variational-inference">
-     Why Not Variational Inference?
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#variational-distribution">
-   Variational Distribution
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#simple-q-z">
-     Simple,
-     <span class="math notranslate nohighlight">
-      \(q(z)\)
-     </span>
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mixture-distribution">
-     Mixture Distribution
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#bijective-transformation-flow">
-     Bijective Transformation (Flow)
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#stochastic-transformation-encoder-amortization">
-     Stochastic Transformation (Encoder, Amortization)
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#elbo-encoder-derivation">
-   ELBO (Encoder) - Derivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#reconstruction-loss">
-   Reconstruction Loss
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#volume-correction">
-   Volume Correction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#variational-free-energy-vfe">
-   Variational Free Energy (VFE)
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#elbo-non-encoder-derivation">
-   ELBO (Non-Encoder) - Derivation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#elbo-derivation-old">
-   ELBO - Derivation (Old)
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#comments-on-q-x">
-     Comments on
-     <span class="math notranslate nohighlight">
-      \(q(x)\)
-     </span>
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#resources">
-   Resources
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#from-scratch">
-     From Scratch
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id1">
-   Variational Inference
-  </a>
- </li>
-</ul>
-
-                        </nav>
-                    </div>
-                </div>
             </div>
-            <main id="main-content" role="main">
-                
-              <div>
-                
+            
+            
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Variational Inference</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivations">
+   Motivations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pros-and-cons">
+   Pros and Cons
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#why-variational-inference">
+     Why Variational Inference?
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#why-not-variational-inference">
+     Why Not Variational Inference?
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#variational-distribution">
+   Variational Distribution
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#simple-q-z">
+     Simple,
+     <span class="math notranslate nohighlight">
+      \(q(z)\)
+     </span>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mixture-distribution">
+     Mixture Distribution
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bijective-transformation-flow">
+     Bijective Transformation (Flow)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#stochastic-transformation-encoder-amortization">
+     Stochastic Transformation (Encoder, Amortization)
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#elbo-encoder-derivation">
+   ELBO (Encoder) - Derivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#reconstruction-loss">
+   Reconstruction Loss
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#volume-correction">
+   Volume Correction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#variational-free-energy-vfe">
+   Variational Free Energy (VFE)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#elbo-non-encoder-derivation">
+   ELBO (Non-Encoder) - Derivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#elbo-derivation-old">
+   ELBO - Derivation (Old)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#comments-on-q-x">
+     Comments on
+     <span class="math notranslate nohighlight">
+      \(q(x)\)
+     </span>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#from-scratch">
+     From Scratch
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   Variational Inference
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+            <article class="bd-article" role="main">
+              
   <section class="tex2jax_ignore mathjax_ignore" id="variational-inference">
-<h1>Variational Inference<a class="headerlink" href="#variational-inference" title="Permalink to this headline">#</a></h1>
+<h1>Variational Inference<a class="headerlink" href="#variational-inference" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <section id="motivations">
-<h2>Motivations<a class="headerlink" href="#motivations" title="Permalink to this headline">#</a></h2>
+<h2>Motivations<a class="headerlink" href="#motivations" title="Permalink to this heading">#</a></h2>
 <p>Variational inference is the most scalable inference method the machine learning community has (as of 2019).</p>
 <p>Ultimately, we are interested in approximating the marginal distribution of our data, <span class="math notranslate nohighlight">\(\mathcal{X}\)</span>.</p>
 <div class="math notranslate nohighlight">
@@ -1283,12 +1045,12 @@ p_\theta(x) = \int p_\theta(x|z)p_\theta(z)dz
 </section>
 <hr class="docutils" />
 <section id="pros-and-cons">
-<h2>Pros and Cons<a class="headerlink" href="#pros-and-cons" title="Permalink to this headline">#</a></h2>
+<h2>Pros and Cons<a class="headerlink" href="#pros-and-cons" title="Permalink to this heading">#</a></h2>
 <blockquote>
 <div><p>These were taken from the slides of Shakir Mohamed (prob methods MLSS 2019)</p>
 </div></blockquote>
 <section id="why-variational-inference">
-<h3>Why Variational Inference?<a class="headerlink" href="#why-variational-inference" title="Permalink to this headline">#</a></h3>
+<h3>Why Variational Inference?<a class="headerlink" href="#why-variational-inference" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Applicable to all probabilistic models</p></li>
 <li><p>Transforms a problem from integration to one of optimization</p></li>
@@ -1302,7 +1064,7 @@ p_\theta(x) = \int p_\theta(x|z)p_\theta(z)dz
 </ul>
 </section>
 <section id="why-not-variational-inference">
-<h3>Why Not Variational Inference?<a class="headerlink" href="#why-not-variational-inference" title="Permalink to this headline">#</a></h3>
+<h3>Why Not Variational Inference?<a class="headerlink" href="#why-not-variational-inference" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Approximate posterior only</p></li>
 <li><p>Difficulty in optimization due to local minima</p></li>
@@ -1313,7 +1075,7 @@ p_\theta(x) = \int p_\theta(x|z)p_\theta(z)dz
 </section>
 <hr class="docutils" />
 <section id="variational-distribution">
-<h2>Variational Distribution<a class="headerlink" href="#variational-distribution" title="Permalink to this headline">#</a></h2>
+<h2>Variational Distribution<a class="headerlink" href="#variational-distribution" title="Permalink to this heading">#</a></h2>
 <p>We defined the variationa distribution as <span class="math notranslate nohighlight">\(q(z|x)\)</span>. However, we have many types of variational distributions we can impose. For example, we have some of the following:</p>
 <ul class="simple">
 <li><p><em>Gaussian</em>, <span class="math notranslate nohighlight">\(q(z)\)</span></p></li>
@@ -1325,7 +1087,7 @@ p_\theta(x) = \int p_\theta(x|z)p_\theta(z)dz
 <p>Below we will go through each of them and outline some potential strengths and weaknesses of each of the methods.</p>
 <hr class="docutils" />
 <section id="simple-q-z">
-<h3>Simple, <span class="math notranslate nohighlight">\(q(z)\)</span><a class="headerlink" href="#simple-q-z" title="Permalink to this headline">#</a></h3>
+<h3>Simple, <span class="math notranslate nohighlight">\(q(z)\)</span><a class="headerlink" href="#simple-q-z" title="Permalink to this heading">#</a></h3>
 <p>This is the simplest case where we often assume a very simple distribution can describe the distribution.</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1370,7 +1132,7 @@ q(z) = \delta(z - \hat{z})
 </section>
 <hr class="docutils" />
 <section id="mixture-distribution">
-<h3>Mixture Distribution<a class="headerlink" href="#mixture-distribution" title="Permalink to this headline">#</a></h3>
+<h3>Mixture Distribution<a class="headerlink" href="#mixture-distribution" title="Permalink to this heading">#</a></h3>
 <p>The principal behind this is that a simple base distribution, e.g. Gaussian, is not expressive enough. However, a mixture of simple distributions, e.g. Mixture of Gaussians, will be more expressive. So the idea is to choose simple base distribution and replicate it <span class="math notranslate nohighlight">\(k\)</span> times. Then, we then do a normalized weighted summation of each component to produce our mixture distribution.</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1391,7 +1153,7 @@ q_{\boldsymbol \theta}(\mathbf{z}) = \sum_{k}^K \pi_k \mathcal{N}(\mathbf{z} |\b
 </section>
 <hr class="docutils" />
 <section id="bijective-transformation-flow">
-<h3>Bijective Transformation (Flow)<a class="headerlink" href="#bijective-transformation-flow" title="Permalink to this headline">#</a></h3>
+<h3>Bijective Transformation (Flow)<a class="headerlink" href="#bijective-transformation-flow" title="Permalink to this heading">#</a></h3>
 <p>It may be that the variational distribution, <span class="math notranslate nohighlight">\(q\)</span>, is not sufficiently expressive enough even with the complex Gaussian parameterization and/or the mixture distribution. So another option is to use a bijective transformation to map the data from a simple base distribution, e.g. Gaussian, to a more complex distribution for our variational parameter, <span class="math notranslate nohighlight">\(z\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1406,7 +1168,7 @@ q(z) = p_e(\tilde{z})|\boldsymbol{\nabla}_\mathbf{z}\boldsymbol{T_\phi}^{-1}(\ma
 </section>
 <hr class="docutils" />
 <section id="stochastic-transformation-encoder-amortization">
-<h3>Stochastic Transformation (Encoder, Amortization)<a class="headerlink" href="#stochastic-transformation-encoder-amortization" title="Permalink to this headline">#</a></h3>
+<h3>Stochastic Transformation (Encoder, Amortization)<a class="headerlink" href="#stochastic-transformation-encoder-amortization" title="Permalink to this heading">#</a></h3>
 <p>Another type of transformation is a stochastic transformation. This is given by <span class="math notranslate nohighlight">\(q(z|x)\)</span>. In this case, we assume some non-linear. For example, a Gaussian distribution with a parameterized mean and variance via neural networks</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1422,7 +1184,7 @@ q(\mathbf{z}|\mathbf{x}) = \mathcal{N}\left(\boldsymbol{\mu}, \text{diag}(\exp (
 </section>
 <hr class="docutils" />
 <section id="elbo-encoder-derivation">
-<h2>ELBO (Encoder) - Derivation<a class="headerlink" href="#elbo-encoder-derivation" title="Permalink to this headline">#</a></h2>
+<h2>ELBO (Encoder) - Derivation<a class="headerlink" href="#elbo-encoder-derivation" title="Permalink to this heading">#</a></h2>
 <blockquote>
 <div><p>This derivation comes from the book by Probabilistic Machine Learning by Kevin Murphy. I find it to be a much better and intuitive derivation.</p>
 </div></blockquote>
@@ -1497,7 +1259,7 @@ p_\theta(x) = \frac{p_\theta(z,x)}{p_\theta(z|x)}
 </section>
 <hr class="docutils" />
 <section id="reconstruction-loss">
-<h2>Reconstruction Loss<a class="headerlink" href="#reconstruction-loss" title="Permalink to this headline">#</a></h2>
+<h2>Reconstruction Loss<a class="headerlink" href="#reconstruction-loss" title="Permalink to this heading">#</a></h2>
 <p>If we group the prior probability and the variational distribution together, we get:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1530,7 +1292,7 @@ p_\theta(x) = \frac{p_\theta(z,x)}{p_\theta(z|x)}
 </section>
 <hr class="docutils" />
 <section id="volume-correction">
-<h2>Volume Correction<a class="headerlink" href="#volume-correction" title="Permalink to this headline">#</a></h2>
+<h2>Volume Correction<a class="headerlink" href="#volume-correction" title="Permalink to this heading">#</a></h2>
 <p>Another approach is more along the lines of the transform distribution. Assume we have our original data domain <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> and we have some stochastic transformation, p(z|x), which transforms the data from our original domain to a transform domain, <span class="math notranslate nohighlight">\(\mathcal{Z}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1555,7 +1317,7 @@ z \sim p(z|x)
 </section>
 <hr class="docutils" />
 <section id="variational-free-energy-vfe">
-<h2>Variational Free Energy (VFE)<a class="headerlink" href="#variational-free-energy-vfe" title="Permalink to this headline">#</a></h2>
+<h2>Variational Free Energy (VFE)<a class="headerlink" href="#variational-free-energy-vfe" title="Permalink to this heading">#</a></h2>
 <p>There is one more main derivation that remains (that’s often seen in the literature). Looking at the equation again</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1575,7 +1337,7 @@ z \sim p(z|x)
 </section>
 <hr class="docutils" />
 <section id="elbo-non-encoder-derivation">
-<h2>ELBO (Non-Encoder) - Derivation<a class="headerlink" href="#elbo-non-encoder-derivation" title="Permalink to this headline">#</a></h2>
+<h2>ELBO (Non-Encoder) - Derivation<a class="headerlink" href="#elbo-non-encoder-derivation" title="Permalink to this heading">#</a></h2>
 <p>In all of these formulas, we have an <em>encoder</em> as our variational distribution, i.e. <span class="math notranslate nohighlight">\(q(z|x)\)</span>, which seeks to amortize the inference. Sometimes this is not necessary and we can find a complicated enough variational distribution, i.e. <span class="math notranslate nohighlight">\(q(z)\)</span>. This often happens in very simple models, e.g. <span class="math notranslate nohighlight">\(y = \mathbf{Wx} + \mathbf{b} + \epsilon\)</span></p>
 <p>So this will be a similar derivation as the above, however we will</p>
 <div class="math notranslate nohighlight">
@@ -1602,7 +1364,7 @@ z \sim p(z|x)
 </section>
 <hr class="docutils" />
 <section id="elbo-derivation-old">
-<h2>ELBO - Derivation (Old)<a class="headerlink" href="#elbo-derivation-old" title="Permalink to this headline">#</a></h2>
+<h2>ELBO - Derivation (Old)<a class="headerlink" href="#elbo-derivation-old" title="Permalink to this heading">#</a></h2>
 <blockquote>
 <div><p>This is my own derivation from a few years ago. I have improved it (see above) but I keep it here for reference. :)</p>
 </div></blockquote>
@@ -1670,7 +1432,7 @@ z \sim p(z|x)
 <p>If we optimize <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> with respect to <span class="math notranslate nohighlight">\(q(\mathbf x)\)</span>, the KL is minimized and we just get the likelihood. As we’ve seen before, the likelihood term is still problematic as it still has the nonlinear portion to propagate the <span class="math notranslate nohighlight">\(\mathbf x\)</span>’s through. So that’s nothing new and we’ve done nothing useful. If we introduce some special structure in <span class="math notranslate nohighlight">\(q(f)\)</span> by introducing sparsity, then we can achieve something useful with this formulation.
 But through augmentation of the variable space with <span class="math notranslate nohighlight">\(\mathbf u\)</span> and <span class="math notranslate nohighlight">\(\mathbf Z\)</span> we can bypass this problem. The second term is simple to calculate because they’re both chosen to be Gaussian.</p>
 <section id="comments-on-q-x">
-<h3>Comments on <span class="math notranslate nohighlight">\(q(x)\)</span><a class="headerlink" href="#comments-on-q-x" title="Permalink to this headline">#</a></h3>
+<h3>Comments on <span class="math notranslate nohighlight">\(q(x)\)</span><a class="headerlink" href="#comments-on-q-x" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>We have now transformed our problem from an integration problem to an optimization problem where we optimize for <span class="math notranslate nohighlight">\(q(x)\)</span> directly.</p></li>
 <li><p>Many people tend to simplify <span class="math notranslate nohighlight">\(q\)</span> but we could easily write some dependencies on the data for example <span class="math notranslate nohighlight">\(q(x|\mathcal{D})\)</span>.</p></li>
@@ -1682,7 +1444,7 @@ But through augmentation of the variable space with <span class="math notranslat
 </section>
 <hr class="docutils" />
 <section id="resources">
-<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">#</a></h2>
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Tutorial Series - <a class="reference external" href="https://chrisorm.github.io/VI-Why.html">Why?</a> | <a class="reference external" href="https://chrisorm.github.io/VI-ELBO.html">ELBO</a> | <a class="reference external" href="https://chrisorm.github.io/VI-MC.html">MC ELBO</a> | <a class="reference external" href="https://chrisorm.github.io/VI-reparam.html">Reparameterization</a> | <a class="reference external" href="https://chrisorm.github.io/VI-ELBO-MC-approx.html">MC ELBO unBias</a> | <a class="reference external" href="https://chrisorm.github.io/VI-MC-PYT.html">MC ELBO PyTorch</a> | <a class="reference external" href="https://chrisorm.github.io/pydata-2018.html">Talk</a></p></li>
 <li><p>Blog Posts: Neural Variational Inference</p>
@@ -1737,7 +1499,7 @@ But through augmentation of the variable space with <span class="math notranslat
 <li><p><a class="reference external" href="http://artem.sobolev.name/posts/2019-04-26-neural-samplers-and-hierarchical-variational-inference.html">Neural Samplers and Hierarchical Variational Inference</a></p></li>
 </ul>
 <section id="from-scratch">
-<h3>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">#</a></h3>
+<h3>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Programming a Neural Network from Scratch - Ritchie Vink (2017) - <a class="reference external" href="https://www.ritchievink.com/blog/2017/07/10/programming-a-neural-network-from-scratch/">blog</a></p></li>
 <li><p>An Introduction to Probability and Computational Bayesian Statistcs - Eric Ma 0<a class="reference external" href="https://ericmjl.github.io/essays-on-data-science/machine-learning/computational-bayesian-stats/">Blog</a></p></li>
@@ -1748,7 +1510,7 @@ But through augmentation of the variable space with <span class="math notranslat
 </section>
 </section>
 <section id="id1">
-<h2>Variational Inference<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<h2>Variational Inference<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Variational Bayes and The Mean-Field Approximation - Keng (2017) - <a class="reference external" href="http://bjlkeng.github.io/posts/variational-bayes-and-the-mean-field-approximation/">blog</a></p></li>
 <li><p><a class="reference external" href="https://www.ritchievink.com/blog/2019/06/10/bayesian-inference-how-we-are-able-to-chase-the-posterior/">https://www.ritchievink.com/blog/2019/06/10/bayesian-inference-how-we-are-able-to-chase-the-posterior/</a></p></li>
@@ -1769,7 +1531,7 @@ But through augmentation of the variable space with <span class="math notranslat
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./content/notes/bayesian/inference"
         },
         predefinedOutput: true
@@ -1777,50 +1539,209 @@ But through augmentation of the variable space with <span class="math notranslat
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
-              
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
+            </article>
+            
+
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../inference.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Inference Schemes</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="cond_vi.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Conditional Variational Inference</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
+  <a class='left-prev' id="prev-link" href="../inference.html" title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Inference Schemes</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="cond_vi.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Conditional Variational Inference</p>
+  </div>
+  <i class="fa-solid fa-angle-right"></i>
+  </a>
 </div>
             </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
   
-    By J. Emmanuel Johnson<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
-    
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivations">
+   Motivations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pros-and-cons">
+   Pros and Cons
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#why-variational-inference">
+     Why Variational Inference?
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#why-not-variational-inference">
+     Why Not Variational Inference?
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#variational-distribution">
+   Variational Distribution
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#simple-q-z">
+     Simple,
+     <span class="math notranslate nohighlight">
+      \(q(z)\)
+     </span>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mixture-distribution">
+     Mixture Distribution
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bijective-transformation-flow">
+     Bijective Transformation (Flow)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#stochastic-transformation-encoder-amortization">
+     Stochastic Transformation (Encoder, Amortization)
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#elbo-encoder-derivation">
+   ELBO (Encoder) - Derivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#reconstruction-loss">
+   Reconstruction Loss
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#volume-correction">
+   Volume Correction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#variational-free-energy-vfe">
+   Variational Free Energy (VFE)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#elbo-non-encoder-derivation">
+   ELBO (Non-Encoder) - Derivation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#elbo-derivation-old">
+   ELBO - Derivation (Old)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#comments-on-q-x">
+     Comments on
+     <span class="math notranslate nohighlight">
+      \(q(x)\)
+     </span>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#resources">
+   Resources
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#from-scratch">
+     From Scratch
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   Variational Inference
+  </a>
+ </li>
+</ul>
+
+</nav>
 </div>
 
-
-      </div>
-    </div>
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+<div class="bd-footer-content__inner container">
   
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <div class="footer-item">
+    
+<p class="component-author">
+By J. Emmanuel Johnson
+</p>
 
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2023.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+Last updated on None.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </div>
+        </footer>
+        
+
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
 
   </body>
 </html>

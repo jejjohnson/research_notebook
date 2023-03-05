@@ -1,0 +1,1449 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Functa &#8212; Research Notebook</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=4ec06e9971c5264fbd345897d5258098f11cc577" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=8bf782fb4ee92b3d3646425e50f299c4e1fd152d"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gmt/functa';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Motivation" href="discretization.html" />
+    <link rel="prev" title="Hierarchical Representation" href="hierarchical_rep.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../../intro.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../../_static/book_v2.jpeg" class="logo__image only-light" alt="Logo image">
+    <img src="../../../_static/book_v2.jpeg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../resources/python/overview.html">
+                        Python
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorials/jax_journey/overview.html">
+                        My JAX Journey
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorials/remote/overview.html">
+                        Remote Computing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="overview.html">
+                        Grand Master Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../data/overview.html">
+                        Data
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../concepts/uncertainty.html">
+                        Modeling Uncertainty
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../bayesian/overview.html">
+                        Bayesian
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../concepts/overview.html">
+                        Sleeper Concepts
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../kernels/overview.html">
+                        Kernel Methods
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../gps/intro.html">
+                        Gaussian Processes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../info_theory/similarity.html">
+                        Similarity
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../info_theory/overview.html">
+                        Information Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../normalizing_flows/overview.html">
+                        Normalizing Flows
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../inr/overview.html">
+                        Implicit Neural Representations
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../data_assimilation/overview.html">
+                        Data Assimilation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../misc/overview.html">
+                        Miscellaneous Notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/bash.html">
+                        Bash
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/cli.html">
+                        Command Line
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/python.html">
+                        Python
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
+          
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
+      
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../resources/python/overview.html">
+                        Python
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorials/jax_journey/overview.html">
+                        My JAX Journey
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorials/remote/overview.html">
+                        Remote Computing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="overview.html">
+                        Grand Master Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../data/overview.html">
+                        Data
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../concepts/uncertainty.html">
+                        Modeling Uncertainty
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../bayesian/overview.html">
+                        Bayesian
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../concepts/overview.html">
+                        Sleeper Concepts
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../kernels/overview.html">
+                        Kernel Methods
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../gps/intro.html">
+                        Gaussian Processes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../info_theory/similarity.html">
+                        Similarity
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../info_theory/overview.html">
+                        Information Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../normalizing_flows/overview.html">
+                        Normalizing Flows
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../inr/overview.html">
+                        Implicit Neural Representations
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../data_assimilation/overview.html">
+                        Data Assimilation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../misc/overview.html">
+                        Miscellaneous Notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/bash.html">
+                        Bash
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/cli.html">
+                        Command Line
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/python.html">
+                        Python
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item">
+  
+
+
+<a class="navbar-brand logo" href="../../../intro.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../../_static/book_v2.jpeg" class="logo__image only-light" alt="Logo image">
+    <img src="../../../_static/book_v2.jpeg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    </div>
+    <div class="sidebar-start-items__item">
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../resources/python/overview.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/ides.html">Integraded Development Environment (IDE)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/stack.html">Standard Python Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/earthsci_stack.html">Earth Science Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/dl_stack.html">Deep Learning Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/scale_stack.html">Scaling Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/good_code.html">Good Code</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/jax_journey/overview.html">My JAX Journey</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/jax_journey/ecosystem.html">Ecosystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/jax_journey/vmap.html">vmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/jax_journey/jit.html">Jit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/jax_journey/classes.html">Classes</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/jax_journey/algorithms/overview.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/jax_journey/algorithms/bisection.html">Bisection search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/jax_journey/algorithms/kernel_derivatives.html">Kernel Derivatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">Gaussianization Flows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/remote/overview.html">Remote Computing</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/remote/ssh.html">SSH Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/remote/conda.html">Conda 4 Remote Servers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/remote/jlab.html">Jupyter Lab 4 Remote Servers</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="overview.html">Grand Master Theory</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hierarchical_rep.html">Hierarchical Representation</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Functa</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="discretization.html">Motivation</a></li>
+
+
+
+
+
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data/overview.html">Data</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/representation.html">Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/models.html">Models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/uncertainty.html">Modeling Uncertainty</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../bayesian/overview.html">Bayesian</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/intro.html">Language of Uncertainty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/inference.html">Inference Schemes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/inference/variational_inference.html">Variational Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/inference/cond_vi.html">Conditional Variational Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/confidence_intervals.html">Confidence Intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/regression.html">Regression</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../concepts/overview.html">Sleeper Concepts</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/gaussian.html">Gaussian Distributions</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../concepts/change_of_variables.html">Change of Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/identity_trick.html">Identity Trick</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/inverse_function.html">Inverse Function Theorem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/jensens.html">Jensens Inequality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/lin_alg.html">Linear Algebra Tricks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../kernels/overview.html">Kernel Methods</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/kernel_derivatives.html">Kernel Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/rv.html">RV Coefficient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/congruence_coeff.html">Congruence Coefficient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/hsic.html">HSIC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/mmd.html">Maximum Mean Discrepancy (MMD)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gps/intro.html">Gaussian Processes</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gps/gps.html">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gps/literature.html">Literature Review</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gps/cg.html">Conjugate Gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gps/sgps.html">Sparse Gaussian Processes</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../gps/algorithms.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gps/gpr_code.html">GP from Scratch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gps/sgp_code.html">Sparse GP From Scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../egps/overview.html">Input Uncertainty in GPs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../info_theory/similarity.html">Similarity</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../info_theory/overview.html">Information Theory</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../info_theory/measures.html">Measures</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/information.html">Information Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/entropy.html">Entropy &amp; Relative Entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/mutual_info.html">Mutual Information and Total Correlation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../info_theory/estimators.html">Information Theory Measures</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/classic.html">Classic Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/histogram.html">Entropy Estimator - Histogram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">Experiment - RBIG Sample Consistency</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../normalizing_flows/overview.html">Normalizing Flows</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/linear.html">Linear Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/coupling_layers.html">Coupling Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/conditional.html">Conditional Normalizing Flows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/multiscale.html">Multiscale</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">Lecture I - Iterative Gaussianization</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/1.0_univariate_gauss.html">1.1 - Univariate Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/1.1_marginal_gauss.html">1.2 - Marginal Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/1.2_gaussianization.html">1.2 - Iterative Gaussianization</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">Lecture II - Gaussianization Flows</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt1_mg.html">Parameterized Marginal Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt2_rot.html">Parameterized Rotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt3_plane.html">Example - 2D Plane</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../inr/overview.html">Implicit Neural Representations</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../inr/formulation.html">Formulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../inr/literature_review.html">Literature Review</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../inr/pinns.html">Physics-Informed Loss</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-19"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../inr/qg.html">QG PDE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data_assimilation/overview.html">Data Assimilation</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-20"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/dynamical_sys.html">Dynamical Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/oi.html">Optimal Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/interp.html">Interpolation Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/emu.html">Emulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/inv_problems.html">Inverse Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/projects.html">Projects</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../data_assimilation/algorithms.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-21"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/markov_models.html">Markov Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/gauss_markov.html">Gauss-Markov Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/kf.html">Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/nkf.html">Normalizing Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/enskf.html">Ensemble Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/dmm.html">Deep Markov Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/4dvarnet.html">4DVarNet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/markov_gp.html">Markovian Gaussian Processes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../data_assimilation/nbs/notebooks.html">Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-22"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../misc/overview.html">Miscellaneous Notes</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-23"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../misc/generative_models.html">Generative Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../misc/diffusion_models.html">Diffusion Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../misc/fixed_point.html">Fixed-Point Methods</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cheat Sheets</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cheatsheets/bash.html">Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cheatsheets/cli.html">Command Line</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cheatsheets/python.html">Python</a></li>
+</ul>
+
+    </div>
+</nav>
+    </div>
+  </div>
+  
+
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
+
+  
+  <div id="rtd-footer-container"></div>
+
+      </div>
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        <label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" data-toggle="tooltip" data-placement="right" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars"></span>
+        </label>
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="dropdown dropdown-repository-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      <li><a href="https://github.com/jejjohnson/research_notebook" target="_blank"
+   class="btn btn-sm dropdown-item"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">repository</span>
+</a>
+</a>
+      
+      <li><a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/gmt/functa.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm dropdown-item"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">open issue</span>
+</a>
+</a>
+      
+  </ul>
+</div>
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      <li><a href="../../../_sources/content/notes/gmt/functa.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</a>
+      
+      <li>
+<button onclick="printPdf(this)"
+  class="btn btn-sm dropdown-item"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</a>
+      
+  </ul>
+</div>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
+    </div>
+</div>
+            </div>
+            
+            
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Functa</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Functa
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   Motivation
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#my-objective">
+     My Objective
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#format">
+     Format
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#space">
+   Space
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#domain">
+   Domain
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#functa-data">
+   Functa (Data)
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#physical-model">
+   Physical Model
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Domain
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#parameterized-model">
+   Parameterized Model
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#non-parametric-models">
+     Non-Parametric Models
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#observations">
+   Observations
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#real-problems">
+   Real Problems
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#discretization">
+     Discretization
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-specification">
+     Model Specification
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#learning-problem">
+     Learning Problem
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+            <article class="bd-article" role="main">
+              
+  <section class="tex2jax_ignore mathjax_ignore" id="functa">
+<h1>Functa<a class="headerlink" href="#functa" title="Permalink to this heading">#</a></h1>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="motivation">
+<h1>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h1>
+<p>In my experience, we seem to jump a little bit when talking about models and data representations, especially in the geosciences. We often jump straight to image-to-image applications without really thinking about the data/functa. I think there is a logical progression that describes data by the means of coordinates, data, and models. This is my interpretation of how we can describe data and its representations and what we hope to achieve. Throughout this entire tutorial, I will be using sea surface height (SSH) as my example quantity of interest to showcase how each of these quantities are related.</p>
+<section id="my-objective">
+<h2>My Objective<a class="headerlink" href="#my-objective" title="Permalink to this heading">#</a></h2>
+<p>I hope that this will bring some cohesion between different concepts in terms of <em>data</em> and <em>modeling</em>. I also think it will help me as a (future) machine learning research engineer to make some things <em>more</em> concrete with different abstractions. I sincerely believe that it will make my research skills better and also my programming skills as I try to tame the wildness. Abstraction and Ontology is very important in SWE and I think it should be important in geosciences. Also, those who know me, always know that I like to understand the <em>information flow</em> of peoples ideas and that I will almost always ask what the <em>shape of the data</em> is when fed into our machines. I have strong feelings about the <em>information flow</em> of systems (more later) but I also think that thinking about data representations in geoscience is really an underrated idea…</p>
+</section>
+<section id="format">
+<h2>Format<a class="headerlink" href="#format" title="Permalink to this heading">#</a></h2>
+<p>The rest of the blog post will go through some of the fundamental concepts we need for modeling in geoscience. From the data side, we have the <em>space</em> that defines the coordinate system and the <em>domain</em> which defines the range of values for the coordinates. From the modeling side, we have the <em>physical model</em> which defines some constraints in the form differential operators in space and time and we also have <em>parameterized models</em> which are functions with learnable parameters. Lastly, we come back to reality with observations which can be the same as the data or some other proxy which we believe is related. I end this will some somber news about why these abstracts are only the containers because the real world we live in really limit our ability to learn models based on data.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="space">
+<h1>Space<a class="headerlink" href="#space" title="Permalink to this heading">#</a></h1>
+<p>Almost no quantity of interest (QOI) exist within a vacuum. We almost always assume that our quantities of interest lie within some spatial-temporal space, even if we choose to ignore it. For example, they may spatially lie within a pixel space (e.g. an image) and temporally lie along a time line. In most geoscience applications, we can define some arbitrary coordinate system which varies in space and time. Let</p>
+<div class="math notranslate nohighlight" id="equation-functa-space">
+<span class="eqno">(1)<a class="headerlink" href="#equation-functa-space" title="Permalink to this equation">#</a></span>\[
+\mathbf{x}_s \in \mathbb{R}^{D_s}, \hspace{5mm} t \in\mathbb{R}^+
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbb{R}^{D_s},\mathbb{R}^{+}\)</span> is the domain for all possible queries in space and time. It represents the form of the queries for each of these QOIs. The full domain <span class="math notranslate nohighlight">\(\mathbb{R}\)</span> represent the infinite values that the coordinates can have and the exponent defines the properties of the coordinate. In general, a single spatial coordinate is a vector of size <span class="math notranslate nohighlight">\(D_s\)</span> and a single temporal coordinate is a positive integer. These coordinates define the entire space where “data” can lie.  For example, we can have the Cartesian coordinate system which is generally rectangular, cubic or hyper-cubic. We could also have the spherical coordinate system which is circular, spherical or hyper-spherical. We can also have some hybrid version of the two, e.g. the cylindrical coordinate system, or some other very funky coordinate systems.</p>
+<div class="dropdown idea admonition">
+<p class="admonition-title">Code Formulation</p>
+<p>One example of a space</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_domain</span><span class="p">:</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">Space</span><span class="p">(</span><span class="s2">&quot;euclidean&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Perhaps we could sample from this domain</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_samples</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;100&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_domain</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now the minimum and maximum of these samples would be between <span class="math notranslate nohighlight">\((-\infty,\infty)\)</span>.</p>
+</div>
+<div class="dropdown info admonition">
+<p class="admonition-title">Example: Sea Surface Height</p>
+<p>My application is geoscience so everything lives on the Earths core, surface or atmosphere.</p>
+</div>
+<div class="dropdown seealso admonition">
+<p class="admonition-title">Better Discussion</p>
+<p>For more details on the notion of spaces and coordinates, please see <a class="reference external" href="https://r-spatial.org/book/02-Spaces.html">this jbook</a> where they have a detailed discussion about coordinate reference systems. It is the jupyter-book of the full book: <a class="reference external" href="https://www.routledge.com/Spatial-Data-Science-With-Applications-in-R/Pebesma-Bivand/p/book/9781138311183">Spatial Data Science with Applications in R</a>.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="domain">
+<h1>Domain<a class="headerlink" href="#domain" title="Permalink to this heading">#</a></h1>
+<p>In almost all cases in geoscience, we can take the Earth as the domain where all the geophysical quantities lie. If we were to think about Cartesian coordinate system and the Earth, we could assume that the center of the earth is the origin of the domain and the values are bounded between 0 and the radius of the Earth, e.g. ~6,371 km (perhaps a bit further into space if we account for the atmosphere). We can also think about it in spherical terms which bounds the domain in terms of how many rotations, e.g. <span class="math notranslate nohighlight">\(-2\pi,2\pi\)</span>. We can even be interested in subregions along the globe like the Mediterranean sea or the open ocean. For the spatial domain, we define <span class="math notranslate nohighlight">\(\Omega\)</span> as proper subset of the entire domain <span class="math notranslate nohighlight">\(\mathbb{R}^{D_s}\)</span>. For the temporal domain, <span class="math notranslate nohighlight">\(\mathcal{T}\)</span>, it is usually defined along a bounded number line <span class="math notranslate nohighlight">\(\mathcal{T}\in[0, T]\)</span>. However, we could also use the 24 hour clock as well as cyclic calendars with years, months and days. So more concretely, we define our coordinate system where our quantities of interest lie as</p>
+<div class="math notranslate nohighlight" id="equation-functa-domain">
+<span class="eqno">(2)<a class="headerlink" href="#equation-functa-domain" title="Permalink to this equation">#</a></span>\[
+\mathbf{x}_s \in \Omega \subset \mathbb{R}^{D_s}, \hspace{5mm} t\in\mathcal{T}\subset\mathbb{R}^+
+\]</div>
+<p>There are of course simplifications to this system. For example, we could be looking for processes that stationary (don’t change in time) or constant (don’t change in space). However, both are sub-cases and are still covered within this notation!</p>
+<div class="dropdown idea admonition">
+<p class="admonition-title">Code Formulation</p>
+<p>One example of a domain on a line</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">t_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;line&quot;</span>
+<span class="n">time_domain</span><span class="p">:</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">Domain</span><span class="p">(</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Perhaps we could sample from this domain (infinitely)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;inf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_domain</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">inf</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now the minimum and maximum of these samples would be between <span class="math notranslate nohighlight">\([0,1.0]\)</span>. This would be nearly equivalent with a vector of spatial coordinates along a line.</p>
+<p><strong>2D Space Domain</strong></p>
+<p>So let’s assume we have a 2D domain that’s defined on Euclidean space.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_space</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">Domain</span><span class="p">((</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">))</span>
+<span class="n">y_space</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">Domain</span><span class="p">((</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Now we want to create an object</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">xy_domain</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">Domain</span><span class="p">((</span><span class="n">x_domain</span><span class="p">,</span> <span class="n">y_domain</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="dropdown tip admonition">
+<p class="admonition-title">Example: Sea Surface Height</p>
+<p>For sea surface height, it can exist on the surface of a sphere (roughly). This has the spatial coordinates as latitude, longitude and we can set some arbitrary temporal some coordinates as days.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_s = [\text{latitude},\text{longitude}], \hspace{5mm} t=[0 \text{ day},1 \text{ day}]
+\]</div>
+<p>We can also transform these coordinates into an x,y plane with a higher frequency. For example, we can use the local tangent coordinate system defined over the Gulfstream where SSH is queried every hour.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_s=[x,y], \hspace{5mm} t=[\text{hours}]
+\]</div>
+<p>This is typically what we do in numerical schemes as it can be quite difficult to march along the entire globe, especially at finer resolutions (see my discussion on discretization).</p>
+</div>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="functa-data">
+<h1>Functa (Data)<a class="headerlink" href="#functa-data" title="Permalink to this heading">#</a></h1>
+<p>Coordinates alone can be thought of as references (or query points) to an actual quantity of interest, <span class="math notranslate nohighlight">\(\boldsymbol{f}\in\mathbb{R}^{D}\)</span>, which could be a scalar or a vector. Almost all of these quantities live on some domain. I really like the term <em>functa</em> to describe these quantities, i.e. the quantity of interest and its context which includes the set of coordinates, the mapping, and the resulting function value. So the function mapping the coordinates to the variable is give as:</p>
+<div class="math notranslate nohighlight" id="equation-functa">
+<span class="eqno">(3)<a class="headerlink" href="#equation-functa" title="Permalink to this equation">#</a></span>\[
+\boldsymbol{f}=\boldsymbol{f}(\mathbf{x}_s,t), \hspace{10mm} \boldsymbol{f}:\Omega\times\mathcal{T}\rightarrow\mathbb{R}^{D}
+\]</div>
+<p>In physics, we typically call this a scalar or vector field which means that each value within this field is a scalar or vector value with an associated spatio-temporal coordinate. These <em>functa</em> are continuous as there exists infinitely many spatial-temporal queries we can do which lead to infinitely many values of the functa. The actual functa values could also be infinite. I don’t put any restrictions on the actual functa values themselves. I just say that there is a functa value for the infinitely many coordinates we could query which, by association, would result in infinitely many functa values.</p>
+<p><strong>Note</strong>: I did not include any stochastic term in this formulation but one could easily include this here. I don’t know if there exists any stochasticity in nature and it could just be an artefact of our parameterizations. That’s an open debate I have with myself. In either case, I leave this as an artefact and have included a short discussion below.</p>
+<div class="dropdown tip admonition">
+<p class="admonition-title">Emans Thoughts: Storage</p>
+<ul class="simple">
+<li><p>it’s cheaper to store the mapping rather than the actual (see functa paper)</p></li>
+<li><p>Can do both! - store the coordinates &amp; values, xarray</p></li>
+</ul>
+</div>
+<div class="dropdown tip admonition">
+<p class="admonition-title">Emans Thoughts: Images vs. Geoscience Data</p>
+<p>Pixels -  <code class="docutils literal notranslate"><span class="pre">height</span> <span class="pre">x</span> <span class="pre">width</span> <span class="pre">x</span> <span class="pre">channels</span></code>
+Don’t think about it as an image →  think about it as a mapping</p>
+<p>Images don’t have to… - live in an isolated space with implied coordinates</p>
+<p>Geosciences don’t have the luxury of images (we need the coordinates as well)</p>
+<ul class="simple">
+<li><p>everything lives in a relative space</p></li>
+<li><p>Need transformations from one domain to another</p></li>
+</ul>
+<p>===
+I often get these requirements from geoscientists to want to encode the physical relationships (i.e. interactions between variables) and global information (i.e. the relative position of the measurement and its effect on the overall structure).</p>
+<p>For example, when using ML to map the state from <span class="math notranslate nohighlight">\(f_1\)</span> to <span class="math notranslate nohighlight">\(f_2\)</span>, they often don’t want to give the model the actual global, <span class="math notranslate nohighlight">\((\mathbf{x}_s,t)\)</span>, coordinates because they are afraid that the model will memorize the state based on it’s global position. But they want the model to know the global structure of the state when making predictions. To get global structure, you need a relative position (not a global position).</p>
+<p>I think this conversation always comes up because our intuition doesn’t fit the standard mathematical model / objects that we use.</p>
+<p>Practically speaking, you can do this my normalizing your input coordinates, i.e. <span class="math notranslate nohighlight">\((\mathbf{x}_s, t) \rightarrow (\hat{\mathbf{x}_s}, \hat{t})\)</span>.</p>
+</div>
+<div class="dropdown idea admonition">
+<p class="admonition-title">Example: Sea Surface Height</p>
+<p>For SSH, we are interested in the height of the ocean above the mean sea level. We can denote this as:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Sea Surface Height [m]} \hspace{10mm} \eta = \boldsymbol{\eta}(\mathbf{x}_s,t)
+\]</div>
+<p>So although we typically take the SSH values as “data”, they are actually fields/functa which have an associated coordinate for every SSH value and (as mentioned above), in nature, there are infinitely queries we could use which would result in potentially infinitely many SSH values.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="physical-model">
+<h1>Physical Model<a class="headerlink" href="#physical-model" title="Permalink to this heading">#</a></h1>
+<p>The objective would be to somehow find the true functa. In geosciences, we can write some partial differential equations (PDE) that we believe describe how this field changes in space and time. In most cases, we typically denote this evolving field as <span class="math notranslate nohighlight">\(u\)</span> which is some approximation to the true field <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>.</p>
+<div class="math notranslate nohighlight" id="equation-functa-field">
+<span class="eqno">(4)<a class="headerlink" href="#equation-functa-field" title="Permalink to this equation">#</a></span>\[
+\boldsymbol{f}(\mathbf{x}_s,t)\approx\boldsymbol{u}(\mathbf{x}_s,t)\hspace{15mm}\boldsymbol{u}:\Omega\times\mathcal{T}\rightarrow\mathbb{R}^{D}
+\]</div>
+<p>where field <span class="math notranslate nohighlight">\(u\)</span> is a representation of the true field <span class="math notranslate nohighlight">\(f\)</span>. However, we need some way for this field, <span class="math notranslate nohighlight">\(u\)</span>, to be close to the true field <span class="math notranslate nohighlight">\(f\)</span>. So this is where the (partial) differential equations come into play. We state that this field needs to satisfy some constraints which we define as space-time operations. The associated PDE constraint is defined by some arbitrary differential operators on the field to describe how it changes in space and time. Therefore, the PDE can be thought of a set of equations that act as constraints to how the field needs to behave in space and time.  So we can add the PDE constraints as:</p>
+<div class="math notranslate nohighlight" id="equation-functa-pde">
+<span class="eqno">(5)<a class="headerlink" href="#equation-functa-pde" title="Permalink to this equation">#</a></span>\[\begin{split}
+\begin{aligned}
+u &amp;= \boldsymbol{u}(\mathbf{x}_s,t) \\
+\text{s.t.  } \partial_tu &amp;=\mathcal{N}[u;\boldsymbol{\theta}](\mathbf{x}_s,t)
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{N}\)</span> is the differential operator on the field and <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> are the (hyper-) parameters for the PDE. These parameters don’t actually exist in nature. They are artefacts introduced by the PDE which are often unknown and/or assumed based on some prior knowledge.</p>
+<div class="dropdown idea admonition">
+<p class="admonition-title">Example: Sea Surface Height</p>
+<p>For our SSH variable, there are many approximate models we can use to describe the dynamics. One such model is the Quasi-Geostrophic equations given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\eta &amp;= \boldsymbol{\eta_\theta}(\mathbf{x}_s,t) &amp;&amp; &amp;&amp; &amp;\boldsymbol{\eta_\theta}:\Omega\times\mathcal{T}\rightarrow\mathbb{R} \\
+\text{s.t.   }\dot{\eta} &amp;= -\frac{g}{f} \det\boldsymbol{J}(\eta,\nabla\eta)
+\end{aligned}
+\end{split}\]</div>
+<p>Through a series of assumptions, we approximate this. For this example, we know that this is a crude approximate of the actual dynamics. However, we can assume that this is “good enough”.</p>
+</div>
+<section id="id1">
+<h2>Domain<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>Because our functa is often defined on a bounded domain, our PDE must also be able to understand the field on the bounded domain. For the spatial domain, we need to describe what happens at the edges (e.g. rectangle) of the domain. For the temporal domain, we need to describe what happens at the beginning of the domain, e.g. <span class="math notranslate nohighlight">\(t=0\)</span>. We can also define these as operators. Let’s define these as:</p>
+<div class="math notranslate nohighlight" id="equation-functa-pde-domain">
+<span class="eqno">(6)<a class="headerlink" href="#equation-functa-pde-domain" title="Permalink to this equation">#</a></span>\[\begin{split}
+\begin{aligned}
+\mathcal{BC}[u;\boldsymbol{\theta}](\mathbf{x}_s,t) &amp;=  \boldsymbol{u}_b, &amp;&amp; &amp;&amp;
+ \mathbf{x}_s\in\partial\Omega &amp;&amp;
+ &amp; &amp;t\in\mathcal{T} \\
+\mathcal{IC}[u; \boldsymbol{\theta}](\mathbf{x}_s,0) &amp;= \boldsymbol{u}_0, &amp;&amp; &amp;&amp; \mathbf{x}_s\in\Omega
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{BC}\)</span>, are the boundary conditions on the field, <span class="math notranslate nohighlight">\(\mathcal{IC}\)</span> are the initial conditions on the field. The boundary conditions dictate the behaviour on the spatial domain on the boundaries and the initial conditions dictate the behaviour at the initial condition, <span class="math notranslate nohighlight">\(t=0\)</span>. We find these a lot even in ML applications. For example, whenever we deal with convolutions on images, we need to think about what to do at the boundaries (the solution is almost always padding, a.k.a. ghost points). In toy problems in physics, we also often simplify these to make the problem easier and well-behaved. A common approach is to use periodic boundary conditions; which are very rare in nature; but they are very convenient because they allow us to use simpler solvers like spectral and pseudo-spectral solvers. If we have access to observations, then we can use these as initial and boundary conditions. This is often done in data assimilation fields like gap-filling and reanalysis.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="parameterized-model">
+<h1>Parameterized Model<a class="headerlink" href="#parameterized-model" title="Permalink to this heading">#</a></h1>
+<p>We could also assume that we don’t know anything about the physical equations that govern the system. However, we believe that we can learn about it from <em>data</em>. Let’s assume (by luck) we can define each pairwise spatial-temporal coordinate and field value of the <em>functa</em> that we are interested in. So we have a set of pairwise points which we can call a dataset <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> defined as</p>
+<div class="math notranslate nohighlight" id="equation-functa-model">
+<span class="eqno">(7)<a class="headerlink" href="#equation-functa-model" title="Permalink to this equation">#</a></span>\[
+\mathcal{D} = \left\{(\mathbf{x}_{s,n},t_n),\boldsymbol{f}_n \right\}_n^{\infty}
+\]</div>
+<p>I say this is infinite because technically we can sample any continuous function infinitely many times without revisiting any previous samples (even on a bounded domain). The objective would be to find some sort of approximation of the actual function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, which maps each of these coordinate-values to the correct scaler/vector value. So we can define some arbitrary parameterized function, <span class="math notranslate nohighlight">\(\boldsymbol{f_\theta}\)</span>, which tries to approximate the functa. We can say that:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f}(\mathbf{x}_s,t)\approx\boldsymbol{f_\theta}(\mathbf{x}_s,t)
+\]</div>
+<p>This parameters depend upon the architecture of the function we choose. Again, like the PDE, these parameters are artefacts introduced by the function. So for a linear function, we may have just a few set of parameters (weights and bias), for a basis function we may the same parameters with some additional hyper-parameters for the basis, and neural networks have many weights and biases which we apply compositionally. Now, if we have a flexible enough model and infinite data, we should be able to find such parameters to fit the functa. However, the problem becomes <em>how</em> to find those parameters. This is the <em>learning problem.</em> We assume the solution exists and we can find it. But the question becomes: 1) how do we find it and 2) how do we know we have found it. However, there is an entire field dedicated to trying to resolve these issues, e.g. optimization for finding the solution and defining the metrics for knowing if we’ve found it. In addition, I stated that we assume the problem exists and we have infinite data which is never true at all. So that only adds more problems…</p>
+<section id="non-parametric-models">
+<h2>Non-Parametric Models<a class="headerlink" href="#non-parametric-models" title="Permalink to this heading">#</a></h2>
+<ul>
+<li><p><strong>Example: Regression</strong></p>
+<p>Which functions do we use will depend upon the data representation, the assumptions of the solutions, the computational power we have, the amount of datapoints we have, and any additional constraints. We can use neural fields (NerFs) which are coordinate-based neural networks. We can also use Gaussian processes (GPs) which are non-parametric, probabilistic, functional methods.</p>
+</li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="observations">
+<h1>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">#</a></h1>
+<p>Throughout this note, we have assumed that there exists a true field, <span class="math notranslate nohighlight">\(f\)</span>, for some QOI, e.g. SSH. And we have determined that one can either write down a PDE function, <span class="math notranslate nohighlight">\(u\)</span>, using physical equations or we can write a parametric function, <span class="math notranslate nohighlight">\(\boldsymbol{f_\theta}\)</span>, where we can learn from samples from the field. However, in practice, we often never actually observe the true field that we are interested in. In the best case scenario, we observe noisy, sparse or incomplete measurements of the field; symptoms of circumstance. So we define some observation variable <span class="math notranslate nohighlight">\(y\)</span> and we can define a function, <span class="math notranslate nohighlight">\(\boldsymbol{h}\)</span>, that maps the “true” field to the observations.</p>
+<div class="math notranslate nohighlight" id="equation-functa-obs">
+<span class="eqno">(8)<a class="headerlink" href="#equation-functa-obs" title="Permalink to this equation">#</a></span>\[
+y = \mathcal{H}[u](\mathbf{x}_s,t)
+\]</div>
+<p>In the worst case scenario, we observe proxy variables which are related to the QOI through some complex, unknown dynamics. This is often the case (especially in geosciences) as we are interested in one variable but for some reason, we cannot observe this variable. However, we can observe another variable which is related in some way, shape or form.</p>
+<div class="dropdown hint admonition">
+<p class="admonition-title">Example: Geosciences</p>
+<p>The use of proxy variables is very common in geosciences. We have many satellites but we cannot observe all of the interesting quantities on the Earth. In the case of oceanography, we have an abundance of SST and SSH data. SST is the most abundant and it is available at a higher frequency (hourly) and finer spatial resolution (~500 m) whereas SSH is less abundant with a frequency of 1 day with a spatial resolution of 100km. So one natural thing is to find a relationship between SSH and SST which would allow us to to find a function that can fit the SSH field and then…</p>
+</div>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="real-problems">
+<h1>Real Problems<a class="headerlink" href="#real-problems" title="Permalink to this heading">#</a></h1>
+<p>Now, this is all idealized where everything is continuous and accessible. But reality strikes quickly and we realize that much of the stuff above becomes impossible. I alluded to a few of these issues above but I will expand upon a few of them below. I try to go in a “logical” order that increases the impending doom and the ill-posedness of the problem we are trying to solve.</p>
+<hr class="docutils" />
+<section id="discretization">
+<h2>Discretization<a class="headerlink" href="#discretization" title="Permalink to this heading">#</a></h2>
+<p>This is easily the cause of most of our problems with real-world data. The world may be continuous but the society we live in and how we operate is discrete. In terms of computation, continuous is very expensive and thus impractical (and possibly unnecessary). Continuous is also expensive. The way that we do computation doesn’t work this way. The way that we collect measurements also are fundamentally discrete.</p>
+<div class="dropdown tip admonition">
+<p class="admonition-title">Sparse Observations</p>
+<p>The idea of limited or sparse observations is an artefact of discretization.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="model-specification">
+<h2>Model Specification<a class="headerlink" href="#model-specification" title="Permalink to this heading">#</a></h2>
+<p>This is the second thing that causes the most problems. Even if we had continuous/infinite data, there is no guarantees that our assumed model actually captures the underlying processes of the system. From a physical perspective, this can be attributed to unknown physics. From a parametric modeling perspective, this can be due to not a sufficiently flexible model. And even if we have a non-parametric model, the problem of limited observations (discretization) causes this to be a moot point.</p>
+<div class="dropdown tip admonition">
+<p class="admonition-title">Stochasticity &amp; Noise</p>
+<p>We often put <em>stochasticity</em> and/or <em>noise</em> as an inherent problem in the system. I disagree. I think that this is an artefact of model specification.</p>
+</div>
+<div class="dropdown tip admonition">
+<p class="admonition-title">Chaos</p>
+<p>We often put <em>chaos</em> as an inherent problem in the system. I disagree. I think that this is an artefact of model specification.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="learning-problem">
+<h2>Learning Problem<a class="headerlink" href="#learning-problem" title="Permalink to this heading">#</a></h2>
+<p>This is the final icing on the cake. Even if we were to have sufficient observations and the most flexible model possible, there are no guarantees that we can actual <em>learn</em> the appropriate function. Similarly, if we have</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./content/notes/gmt"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+            </article>
+            
+
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="hierarchical_rep.html" title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Hierarchical Representation</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="discretization.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Motivation</p>
+  </div>
+  <i class="fa-solid fa-angle-right"></i>
+  </a>
+</div>
+            </footer>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Functa
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#motivation">
+   Motivation
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#my-objective">
+     My Objective
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#format">
+     Format
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#space">
+   Space
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#domain">
+   Domain
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#functa-data">
+   Functa (Data)
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#physical-model">
+   Physical Model
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Domain
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#parameterized-model">
+   Parameterized Model
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#non-parametric-models">
+     Non-Parametric Models
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#observations">
+   Observations
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#real-problems">
+   Real Problems
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#discretization">
+     Discretization
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-specification">
+     Model Specification
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#learning-problem">
+     Learning Problem
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+</div>
+
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By J. Emmanuel Johnson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2023.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+Last updated on None.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </div>
+        </footer>
+        
+
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
+
+  </body>
+</html>

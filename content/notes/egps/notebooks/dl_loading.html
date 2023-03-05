@@ -1,49 +1,57 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Utils &#8212; Research Notebook</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../../../../_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../../_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
 
-    
-  <link rel="stylesheet"
-    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=4ec06e9971c5264fbd345897d5258098f11cc577" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/proof.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
 
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
-    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=8bf782fb4ee92b3d3646425e50f299c4e1fd152d"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -51,59 +59,494 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/egps/notebooks/dl_loading';</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../../../index.html">
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+<form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../../../intro.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../../../_static/book_v2.jpeg" class="logo__image only-light" alt="Logo image">
+    <img src="../../../../_static/book_v2.jpeg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
         
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../resources/python/overview.html">
+                        Python
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../tutorials/jax_journey/overview.html">
+                        My JAX Journey
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../tutorials/remote/overview.html">
+                        Remote Computing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../gmt/overview.html">
+                        Grand Master Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../data/overview.html">
+                        Data
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../concepts/uncertainty.html">
+                        Modeling Uncertainty
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../bayesian/overview.html">
+                        Bayesian
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../concepts/overview.html">
+                        Sleeper Concepts
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../kernels/overview.html">
+                        Kernel Methods
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../gps/intro.html">
+                        Gaussian Processes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../info_theory/similarity.html">
+                        Similarity
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../info_theory/overview.html">
+                        Information Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../normalizing_flows/overview.html">
+                        Normalizing Flows
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../inr/overview.html">
+                        Implicit Neural Representations
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../data_assimilation/overview.html">
+                        Data Assimilation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../misc/overview.html">
+                        Miscellaneous Notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/bash.html">
+                        Bash
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/cli.html">
+                        Command Line
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/python.html">
+                        Python
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
+          
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
       
       
-      <img src="../../../../_static/book_v2.jpeg" class="logo" alt="logo">
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
       
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
       
-      <h1 class="site-logo" id="site-title">Research Notebook</h1>
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../resources/python/overview.html">
+                        Python
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../tutorials/jax_journey/overview.html">
+                        My JAX Journey
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../tutorials/remote/overview.html">
+                        Remote Computing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../gmt/overview.html">
+                        Grand Master Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../data/overview.html">
+                        Data
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../concepts/uncertainty.html">
+                        Modeling Uncertainty
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../bayesian/overview.html">
+                        Bayesian
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../concepts/overview.html">
+                        Sleeper Concepts
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../kernels/overview.html">
+                        Kernel Methods
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../gps/intro.html">
+                        Gaussian Processes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../info_theory/similarity.html">
+                        Similarity
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../info_theory/overview.html">
+                        Information Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../normalizing_flows/overview.html">
+                        Normalizing Flows
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../inr/overview.html">
+                        Implicit Neural Representations
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../data_assimilation/overview.html">
+                        Data Assimilation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../misc/overview.html">
+                        Miscellaneous Notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/bash.html">
+                        Bash
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/cli.html">
+                        Command Line
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../cheatsheets/python.html">
+                        Python
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item">
+  
+
+
+<a class="navbar-brand logo" href="../../../../intro.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../../../_static/book_v2.jpeg" class="logo__image only-light" alt="Logo image">
+    <img src="../../../../_static/book_v2.jpeg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    </div>
+    <div class="sidebar-start-items__item">
+<form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -112,1228 +555,506 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Resources
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../resources/python/overview.html">
-   Python
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/ides.html">
-     Integraded Development Environment (IDE)
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/stack.html">
-     Standard Python Stack
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/earthsci_stack.html">
-     Earth Science Stack
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/dl_stack.html">
-     Deep Learning Stack
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/scale_stack.html">
-     Scaling Stack
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../resources/python/good_code.html">
-     Good Code
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../resources/python/overview.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/ides.html">Integraded Development Environment (IDE)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/stack.html">Standard Python Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/earthsci_stack.html">Earth Science Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/dl_stack.html">Deep Learning Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/scale_stack.html">Scaling Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resources/python/good_code.html">Good Code</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Tutorials
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../tutorials/jax_journey/overview.html">
-   My JAX Journey
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/ecosystem.html">
-     Ecosystem
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/vmap.html">
-     vmap
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/jit.html">
-     Jit
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/jax_journey/classes.html">
-     Classes
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/overview.html">
-     Algorithms
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-    <label for="toctree-checkbox-3">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/bisection.html">
-       Bisection search
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../tutorials/jax_journey/algorithms/kernel_derivatives.html">
-       Kernel Derivatives
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../tutorials/jax_journey/gfs_with_jax.html">
-       Gaussianization Flows
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../tutorials/remote/overview.html">
-   Remote Computing
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/remote/ssh.html">
-     SSH Configuration
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/remote/conda.html">
-     Conda 4 Remote Servers
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../tutorials/remote/jlab.html">
-     Jupyter Lab 4 Remote Servers
-    </a>
-   </li>
-  </ul>
- </li>
+</li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Notes
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../concepts/notation.html">
-   Notation
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../concepts/quotes.html">
-   Quotes
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../data/overview.html">
-   Data
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data/representation.html">
-     Representation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data/models.html">
-     Models
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../concepts/uncertainty.html">
-   Modeling Uncertainty
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../bayesian/overview.html">
-   Bayesian
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/intro.html">
-     Language of Uncertainty
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/models.html">
-     Models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/inference.html">
-     Inference Schemes
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/inference/variational_inference.html">
-     Variational Inference
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/inference/cond_vi.html">
-     Conditional Variational Inference
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/confidence_intervals.html">
-     Confidence Intervals
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../bayesian/regression.html">
-     Regression
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../concepts/overview.html">
-   Sleeper Concepts
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-  <label for="toctree-checkbox-7">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/gaussian.html">
-     Gaussian Distributions
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/change_of_variables.html">
-     Change of Variables
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/identity_trick.html">
-     Identity Trick
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/inverse_function.html">
-     Inverse Function Theorem
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/jensens.html">
-     Jensens Inequality
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../concepts/lin_alg.html">
-     Linear Algebra Tricks
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../kernels/overview.html">
-   Kernel Methods
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-  <label for="toctree-checkbox-8">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/kernel_derivatives.html">
-     Kernel Derivatives
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/rv.html">
-     RV Coefficient
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/congruence_coeff.html">
-     Congruence Coefficient
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/hsic.html">
-     HSIC
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../kernels/mmd.html">
-     Maximum Mean Discrepancy (MMD)
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../gps/intro.html">
-   Gaussian Processes
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/gps.html">
-     Basics
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/literature.html">
-     Literature Review
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/cg.html">
-     Conjugate Gradients
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../gps/sgps.html">
-     Sparse Gaussian Processes
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../gps/algorithms.html">
-     Algorithms
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
-    <label for="toctree-checkbox-10">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../gps/gpr_code.html">
-       GP from Scratch
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../gps/sgp_code.html">
-       Sparse GP From Scratch
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../overview.html">
-     Input Uncertainty in GPs
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../info_theory/similarity.html">
-   Similarity
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../info_theory/overview.html">
-   Information Theory
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
-  <label for="toctree-checkbox-11">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../info_theory/measures.html">
-     Measures
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
-    <label for="toctree-checkbox-12">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/information.html">
-       Information Theory
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/entropy.html">
-       Entropy &amp; Relative Entropy
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/mutual_info.html">
-       Mutual Information and Total Correlation
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../info_theory/estimators.html">
-     Information Theory Measures
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
-    <label for="toctree-checkbox-13">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/classic.html">
-       Classic Methods
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/histogram.html">
-       Entropy Estimator - Histogram
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../info_theory/experiments/rbig_sample_consistency.html">
-       Experiment - RBIG Sample Consistency
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../normalizing_flows/overview.html">
-   Normalizing Flows
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
-  <label for="toctree-checkbox-14">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../normalizing_flows/linear.html">
-     Linear Layers
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../normalizing_flows/coupling_layers.html">
-     Coupling Layers
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../normalizing_flows/conditional.html">
-     Conditional Normalizing Flows
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../normalizing_flows/multiscale.html">
-     Multiscale
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../normalizing_flows/lecture_1_ig.html">
-     Lecture I - Iterative Gaussianization
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
-    <label for="toctree-checkbox-15">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/1.0_univariate_gauss.html">
-       1.1 - Univariate Gaussianization
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/1.1_marginal_gauss.html">
-       1.2 - Marginal Gaussianization
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/1.2_gaussianization.html">
-       1.2 - Iterative Gaussianization
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../normalizing_flows/lecture_2_gf.html">
-     Lecture II - Gaussianization Flows
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
-    <label for="toctree-checkbox-16">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt1_mg.html">
-       Parameterized Marginal Gaussianization
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt2_rot.html">
-       Parameterized Rotations
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt3_plane.html">
-       Example - 2D Plane
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../inr/overview.html">
-   Implicit Neural Representations
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-  <label for="toctree-checkbox-17">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../inr/formulation.html">
-     Formulation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../inr/literature_review.html">
-     Literature Review
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../inr/pinns.html">
-     Physics-Informed Loss
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-    <label for="toctree-checkbox-18">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../inr/qg.html">
-       QG PDE
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../data_assimilation/overview.html">
-   Data Assimilation
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
-  <label for="toctree-checkbox-19">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/dynamical_sys.html">
-     Dynamical Systems
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/oi.html">
-     Optimal Interpolation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/interp.html">
-     Interpolation Problem
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/emu.html">
-     Emulation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/inv_problems.html">
-     Inverse Problems
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../data_assimilation/projects.html">
-     Projects
-    </a>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../data_assimilation/algorithms.html">
-     Algorithms
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
-    <label for="toctree-checkbox-20">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/markov_models.html">
-       Markov Models
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/gauss_markov.html">
-       Gauss-Markov Models
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/kf.html">
-       Kalman Filter
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/nkf.html">
-       Normalizing Kalman Filter
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/enskf.html">
-       Ensemble Kalman Filter
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/dmm.html">
-       Deep Markov Model
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/4dvarnet.html">
-       4DVarNet
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../data_assimilation/markov_gp.html">
-       Markovian Gaussian Processes
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../misc/overview.html">
-   Miscellaneous Notes
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
-  <label for="toctree-checkbox-21">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../misc/generative_models.html">
-     Generative Models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../misc/diffusion_models.html">
-     Diffusion Models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../misc/fixed_point.html">
-     Fixed-Point Methods
-    </a>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/jax_journey/overview.html">My JAX Journey</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/jax_journey/ecosystem.html">Ecosystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/jax_journey/vmap.html">vmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/jax_journey/jit.html">Jit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/jax_journey/classes.html">Classes</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../tutorials/jax_journey/algorithms/overview.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/jax_journey/algorithms/bisection.html">Bisection search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/jax_journey/algorithms/kernel_derivatives.html">Kernel Derivatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/jax_journey/gfs_with_jax.html">Gaussianization Flows</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Cheat Sheets
- </span>
-</p>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/remote/overview.html">Remote Computing</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/remote/ssh.html">SSH Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/remote/conda.html">Conda 4 Remote Servers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/remote/jlab.html">Jupyter Lab 4 Remote Servers</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../cheatsheets/bash.html">
-   Bash
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../cheatsheets/cli.html">
-   Command Line
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../cheatsheets/python.html">
-   Python
-  </a>
- </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../gmt/overview.html">Grand Master Theory</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../gmt/hierarchical_rep.html">Hierarchical Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gmt/functa.html">Functa</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../gmt/discretization.html">Motivation</a></li>
+
+
+
+
+
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../data/overview.html">Data</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../data/representation.html">Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data/models.html">Models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/uncertainty.html">Modeling Uncertainty</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../bayesian/overview.html">Bayesian</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bayesian/intro.html">Language of Uncertainty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bayesian/models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bayesian/inference.html">Inference Schemes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bayesian/inference/variational_inference.html">Variational Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bayesian/inference/cond_vi.html">Conditional Variational Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bayesian/confidence_intervals.html">Confidence Intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bayesian/regression.html">Regression</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../concepts/overview.html">Sleeper Concepts</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/gaussian.html">Gaussian Distributions</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/change_of_variables.html">Change of Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/identity_trick.html">Identity Trick</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/inverse_function.html">Inverse Function Theorem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/jensens.html">Jensens Inequality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/lin_alg.html">Linear Algebra Tricks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../kernels/overview.html">Kernel Methods</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/kernel_derivatives.html">Kernel Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/rv.html">RV Coefficient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/congruence_coeff.html">Congruence Coefficient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/hsic.html">HSIC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernels/mmd.html">Maximum Mean Discrepancy (MMD)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../gps/intro.html">Gaussian Processes</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../gps/gps.html">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gps/literature.html">Literature Review</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gps/cg.html">Conjugate Gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../gps/sgps.html">Sparse Gaussian Processes</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../gps/algorithms.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../gps/gpr_code.html">GP from Scratch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gps/sgp_code.html">Sparse GP From Scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">Input Uncertainty in GPs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../info_theory/similarity.html">Similarity</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../info_theory/overview.html">Information Theory</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../info_theory/measures.html">Measures</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/information.html">Information Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/entropy.html">Entropy &amp; Relative Entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/mutual_info.html">Mutual Information and Total Correlation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../info_theory/estimators.html">Information Theory Measures</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/classic.html">Classic Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/histogram.html">Entropy Estimator - Histogram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../info_theory/experiments/rbig_sample_consistency.html">Experiment - RBIG Sample Consistency</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../normalizing_flows/overview.html">Normalizing Flows</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../normalizing_flows/linear.html">Linear Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../normalizing_flows/coupling_layers.html">Coupling Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../normalizing_flows/conditional.html">Conditional Normalizing Flows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../normalizing_flows/multiscale.html">Multiscale</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../normalizing_flows/lecture_1_ig.html">Lecture I - Iterative Gaussianization</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/1.0_univariate_gauss.html">1.1 - Univariate Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/1.1_marginal_gauss.html">1.2 - Marginal Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/1.2_gaussianization.html">1.2 - Iterative Gaussianization</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../normalizing_flows/lecture_2_gf.html">Lecture II - Gaussianization Flows</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt1_mg.html">Parameterized Marginal Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt2_rot.html">Parameterized Rotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../normalizing_flows/lecture_3_gfs_pt3_plane.html">Example - 2D Plane</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../inr/overview.html">Implicit Neural Representations</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../inr/formulation.html">Formulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../inr/literature_review.html">Literature Review</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../inr/pinns.html">Physics-Informed Loss</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-19"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../inr/qg.html">QG PDE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../data_assimilation/overview.html">Data Assimilation</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-20"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/dynamical_sys.html">Dynamical Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/oi.html">Optimal Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/interp.html">Interpolation Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/emu.html">Emulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/inv_problems.html">Inverse Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_assimilation/projects.html">Projects</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_assimilation/algorithms.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-21"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/markov_models.html">Markov Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/gauss_markov.html">Gauss-Markov Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/kf.html">Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/nkf.html">Normalizing Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/enskf.html">Ensemble Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/dmm.html">Deep Markov Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/4dvarnet.html">4DVarNet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../data_assimilation/markov_gp.html">Markovian Gaussian Processes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_assimilation/nbs/notebooks.html">Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-22"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../misc/overview.html">Miscellaneous Notes</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-23"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/generative_models.html">Generative Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/diffusion_models.html">Diffusion Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/fixed_point.html">Fixed-Point Methods</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cheat Sheets</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../cheatsheets/bash.html">Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cheatsheets/cli.html">Command Line</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cheatsheets/python.html">Python</a></li>
 </ul>
 
     </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
+</nav>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
+  </div>
+  
 
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
 
-          
+  
+  <div id="rtd-footer-container"></div>
 
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
+      </div>
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
 
 
 
 <div class="col py-1 d-flex header-article-main">
     <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
+        <label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" data-toggle="tooltip" data-placement="right" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars"></span>
+        </label>
     </div>
     <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/jejjohnson/research_notebook/main?urlpath=tree/research_notebook/content/notes/egps/notebooks/dl_loading.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
-  
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../../../../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://colab.research.google.com/github/jejjohnson/research_notebook/blob/main/research_notebook/content/notes/egps/notebooks/dl_loading.ipynb"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="https://colab.research.google.com/github/jejjohnson/research_notebook/blob/main/research_notebook/content/notes/egps/notebooks/dl_loading.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Launch on Colab"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   
     <img src="../../../../_static/images/logo_colab.png">
   </span>
-<span class="headerbtn__text-container">Colab</span>
+<span class="btn__text-container">Colab</span>
 </a>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
+  class="btn btn-sm"
   data-toggle="tooltip"
 data-placement="bottom"
 title="Fullscreen mode"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<div class="dropdown dropdown-repository-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/jejjohnson/research_notebook"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="https://github.com/jejjohnson/research_notebook" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Source repository"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-<span class="headerbtn__text-container">repository</span>
+<span class="btn__text-container">repository</span>
 </a>
-
-      </li>
+</a>
       
-      <li>
-        <a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/egps/notebooks/dl_loading.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
+      <li><a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/egps/notebooks/dl_loading.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Open an issue"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-lightbulb"></i>
   </span>
-<span class="headerbtn__text-container">open issue</span>
+<span class="btn__text-container">open issue</span>
 </a>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../../../../_sources/content/notes/egps/notebooks/dl_loading.ipynb"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="../../../../_sources/content/notes/egps/notebooks/dl_loading.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Download source file"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.ipynb</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
-
-      </li>
+</a>
       
       <li>
-        
 <button onclick="printPdf(this)"
-  class="headerbtn"
+  class="btn btn-sm dropdown-item"
   data-toggle="tooltip"
 data-placement="left"
 title="Print to PDF"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
   </span>
-<span class="headerbtn__text-container">.pdf</span>
+<span class="btn__text-container">.pdf</span>
 </button>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
     </div>
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#get-all-orbits">
-   Get All Orbits
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#get-orbits-for-a-specific-data">
-   Get Orbits for a specific Data
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#reflectance-errors">
-   Reflectance Errors
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#preprocessing">
-   PreProcessing
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#labels-standardization">
-     Labels - Standardization
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#inputs-pca-transformation">
-     Inputs - PCA Transformation
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#transform-input-covariance">
-       Transform Input Covariance
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#model">
-   Model
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#inference">
-     Inference
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#training">
-     Training
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#loss">
-       Loss
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#predictions">
-   Predictions
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#uncertain-predictions">
-     Uncertain Predictions
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#visualization">
-     Visualization
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#standard-gp">
-       Standard GP
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#mc-sampling">
-       MC Sampling
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#unscented-transform">
-       Unscented Transform
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#taylor-expansion-1st-order">
-       Taylor Expansion (1st Order)
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#taylor-expansion-2nd-order">
-       Taylor Expansion (2nd Order)
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#test-data">
-   Test Data
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mae-maps">
-     MAE Maps
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#standard-deviation">
-     Standard Deviation
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#calibration">
-     Calibration
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-    </nav>
-</div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Utils</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#get-all-orbits">
-   Get All Orbits
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#get-orbits-for-a-specific-data">
-   Get Orbits for a specific Data
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#reflectance-errors">
-   Reflectance Errors
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#preprocessing">
-   PreProcessing
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#labels-standardization">
-     Labels - Standardization
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#inputs-pca-transformation">
-     Inputs - PCA Transformation
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#transform-input-covariance">
-       Transform Input Covariance
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#model">
-   Model
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#inference">
-     Inference
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#training">
-     Training
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#loss">
-       Loss
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#predictions">
-   Predictions
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#uncertain-predictions">
-     Uncertain Predictions
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#visualization">
-     Visualization
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#standard-gp">
-       Standard GP
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#mc-sampling">
-       MC Sampling
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#unscented-transform">
-       Unscented Transform
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#taylor-expansion-1st-order">
-       Taylor Expansion (1st Order)
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#taylor-expansion-2nd-order">
-       Taylor Expansion (2nd Order)
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#test-data">
-   Test Data
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#mae-maps">
-     MAE Maps
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#standard-deviation">
-     Standard Deviation
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#calibration">
-     Calibration
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-                        </nav>
-                    </div>
-                </div>
             </div>
-            <main id="main-content" role="main">
-                
-              <div>
-                
+            
+            
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Utils</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-all-orbits">
+   Get All Orbits
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-orbits-for-a-specific-data">
+   Get Orbits for a specific Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#reflectance-errors">
+   Reflectance Errors
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preprocessing">
+   PreProcessing
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#labels-standardization">
+     Labels - Standardization
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#inputs-pca-transformation">
+     Inputs - PCA Transformation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#transform-input-covariance">
+       Transform Input Covariance
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model">
+   Model
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#inference">
+     Inference
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#training">
+     Training
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#loss">
+       Loss
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#predictions">
+   Predictions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#uncertain-predictions">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#visualization">
+     Visualization
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#standard-gp">
+       Standard GP
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mc-sampling">
+       MC Sampling
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#unscented-transform">
+       Unscented Transform
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#taylor-expansion-1st-order">
+       Taylor Expansion (1st Order)
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#taylor-expansion-2nd-order">
+       Taylor Expansion (2nd Order)
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#test-data">
+   Test Data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mae-maps">
+     MAE Maps
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#standard-deviation">
+     Standard Deviation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calibration">
+     Calibration
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+            <article class="bd-article" role="main">
+              
   <section class="tex2jax_ignore mathjax_ignore" id="utils">
-<h1>Utils<a class="headerlink" href="#utils" title="Permalink to this headline">#</a></h1>
+<h1>Utils<a class="headerlink" href="#utils" title="Permalink to this heading">#</a></h1>
 <p>Some helpful utilities when dealing with the IASI data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1371,7 +1092,7 @@ title="Print to PDF"
 </div>
 </div>
 <section id="get-all-orbits">
-<h2>Get All Orbits<a class="headerlink" href="#get-all-orbits" title="Permalink to this headline">#</a></h2>
+<h2>Get All Orbits<a class="headerlink" href="#get-all-orbits" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ==========================</span>
@@ -1391,12 +1112,12 @@ title="Print to PDF"
 </pre></div>
 </div>
 <div class="output text_html">
-Tracking run with wandb version 0.10.30<br/>
-Syncing run <strong style="color:#cdcd00">electric-serenity-23</strong> to <a href="https://wandb.ai" target="_blank">Weights & Biases</a> <a href="https://docs.wandb.com/integrations/jupyter.html" target="_blank">(Documentation)</a>.<br/>
-Project page: <a href="https://wandb.ai/ipl_uv/egp_1_1" target="_blank">https://wandb.ai/ipl_uv/egp_1_1</a><br/>
-Run page: <a href="https://wandb.ai/ipl_uv/egp_1_1/runs/5webp9li" target="_blank">https://wandb.ai/ipl_uv/egp_1_1/runs/5webp9li</a><br/>
-Run data is saved locally in <code>/home/emmanuel/documents/research_notebook/research_notebook/content/notes/egps/notebooks/wandb/run-20210625_202751-5webp9li</code><br/><br/>
-</div></div>
+                Tracking run with wandb version 0.10.30<br/>
+                Syncing run <strong style="color:#cdcd00">electric-serenity-23</strong> to <a href="https://wandb.ai" target="_blank">Weights & Biases</a> <a href="https://docs.wandb.com/integrations/jupyter.html" target="_blank">(Documentation)</a>.<br/>
+                Project page: <a href="https://wandb.ai/ipl_uv/egp_1_1" target="_blank">https://wandb.ai/ipl_uv/egp_1_1</a><br/>
+                Run page: <a href="https://wandb.ai/ipl_uv/egp_1_1/runs/5webp9li" target="_blank">https://wandb.ai/ipl_uv/egp_1_1/runs/5webp9li</a><br/>
+                Run data is saved locally in <code>/home/emmanuel/documents/research_notebook/research_notebook/content/notes/egps/notebooks/wandb/run-20210625_202751-5webp9li</code><br/><br/>
+            </div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1484,7 +1205,7 @@ Run data is saved locally in <code>/home/emmanuel/documents/research_notebook/re
 </div>
 </section>
 <section id="get-orbits-for-a-specific-data">
-<h2>Get Orbits for a specific Data<a class="headerlink" href="#get-orbits-for-a-specific-data" title="Permalink to this headline">#</a></h2>
+<h2>Get Orbits for a specific Data<a class="headerlink" href="#get-orbits-for-a-specific-data" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">day</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;20131001&#39;</span><span class="p">]</span> <span class="c1"># &quot;20140117&quot;, &quot;20140101&quot;, &quot;20131001&quot;</span>
@@ -1575,7 +1296,7 @@ Run data is saved locally in <code>/home/emmanuel/documents/research_notebook/re
 </div>
 </section>
 <section id="reflectance-errors">
-<h2>Reflectance Errors<a class="headerlink" href="#reflectance-errors" title="Permalink to this headline">#</a></h2>
+<h2>Reflectance Errors<a class="headerlink" href="#reflectance-errors" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">err</span> <span class="o">=</span> <span class="n">get_radiance_covariance</span><span class="p">(</span><span class="n">clean_features</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1588,7 +1309,7 @@ Run data is saved locally in <code>/home/emmanuel/documents/research_notebook/re
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_9_0.png" src="../../../../_images/dl_loading_9_0.png" />
+<img alt="../../../../_images/4e475391740cc517423dce1bc99d03219bdcf424abd4a36dd06993e6df27f011.png" src="../../../../_images/4e475391740cc517423dce1bc99d03219bdcf424abd4a36dd06993e6df27f011.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1603,7 +1324,7 @@ Run data is saved locally in <code>/home/emmanuel/documents/research_notebook/re
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_10_0.png" src="../../../../_images/dl_loading_10_0.png" />
+<img alt="../../../../_images/2647c2d5db5d385473e7e853438acc45bb3998a30ae1af71bc3cde52be211c15.png" src="../../../../_images/2647c2d5db5d385473e7e853438acc45bb3998a30ae1af71bc3cde52be211c15.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1723,7 +1444,7 @@ Wall time: 29 s
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x7f1f098c7eb0&gt;
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_16_1.png" src="../../../../_images/dl_loading_16_1.png" />
+<img alt="../../../../_images/cab10f2a4cc4d1de19a517573568c6a864643111597d3c46a55d34a79b2c64c4.png" src="../../../../_images/cab10f2a4cc4d1de19a517573568c6a864643111597d3c46a55d34a79b2c64c4.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1753,14 +1474,14 @@ WARNING:root:Too few points to create valid contours
 WARNING:root:Too few points to create valid contours
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_18_1.png" src="../../../../_images/dl_loading_18_1.png" />
+<img alt="../../../../_images/d8fc75e7017ee4136cd7dde4fd516b4c649306a79afa17af0b866fa75c893473.png" src="../../../../_images/d8fc75e7017ee4136cd7dde4fd516b4c649306a79afa17af0b866fa75c893473.png" />
 </div>
 </div>
 </section>
 <section id="preprocessing">
-<h2>PreProcessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">#</a></h2>
+<h2>PreProcessing<a class="headerlink" href="#preprocessing" title="Permalink to this heading">#</a></h2>
 <section id="labels-standardization">
-<h3>Labels - Standardization<a class="headerlink" href="#labels-standardization" title="Permalink to this headline">#</a></h3>
+<h3>Labels - Standardization<a class="headerlink" href="#labels-standardization" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
@@ -1784,7 +1505,7 @@ WARNING:root:Too few points to create valid contours
 </div>
 </section>
 <section id="inputs-pca-transformation">
-<h3>Inputs - PCA Transformation<a class="headerlink" href="#inputs-pca-transformation" title="Permalink to this headline">#</a></h3>
+<h3>Inputs - PCA Transformation<a class="headerlink" href="#inputs-pca-transformation" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
@@ -1819,7 +1540,7 @@ Wall time: 1.24 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_26_0.png" src="../../../../_images/dl_loading_26_0.png" />
+<img alt="../../../../_images/410741ad3f505a8dd65ef26aa0534e54c2d2498cc5b7fbf603a7146962b9162c.png" src="../../../../_images/410741ad3f505a8dd65ef26aa0534e54c2d2498cc5b7fbf603a7146962b9162c.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1831,11 +1552,11 @@ Wall time: 1.24 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_27_0.png" src="../../../../_images/dl_loading_27_0.png" />
+<img alt="../../../../_images/f49ec691db52ca52b68e9d005ee55b9746a5e669656090c834f9eefb8b3b0944.png" src="../../../../_images/f49ec691db52ca52b68e9d005ee55b9746a5e669656090c834f9eefb8b3b0944.png" />
 </div>
 </div>
 <section id="transform-input-covariance">
-<h4>Transform Input Covariance<a class="headerlink" href="#transform-input-covariance" title="Permalink to this headline">#</a></h4>
+<h4>Transform Input Covariance<a class="headerlink" href="#transform-input-covariance" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
@@ -1850,7 +1571,7 @@ Wall time: 1.24 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_29_0.png" src="../../../../_images/dl_loading_29_0.png" />
+<img alt="../../../../_images/9becdccf44d8ba99649c845439666cd59c870783e1e48a37d5211487012bb4d6.png" src="../../../../_images/9becdccf44d8ba99649c845439666cd59c870783e1e48a37d5211487012bb4d6.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1889,7 +1610,7 @@ Wall time: 1.24 s
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_31_1.png" src="../../../../_images/dl_loading_31_1.png" />
+<img alt="../../../../_images/5243912b5b1fb3667d6af92667e8c536a36078e53e6da32be37cb350fef2359f.png" src="../../../../_images/5243912b5b1fb3667d6af92667e8c536a36078e53e6da32be37cb350fef2359f.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1915,7 +1636,7 @@ Wall time: 1.24 s
 </section>
 </section>
 <section id="model">
-<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">#</a></h2>
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">chex</span>
@@ -2008,7 +1729,7 @@ Wall time: 1.24 s
 </div>
 </div>
 <section id="inference">
-<h3>Inference<a class="headerlink" href="#inference" title="Permalink to this headline">#</a></h3>
+<h3>Inference<a class="headerlink" href="#inference" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpyro.infer.autoguide</span> <span class="kn">import</span> <span class="p">(</span>
@@ -2045,7 +1766,7 @@ Wall time: 1.24 s
 </div>
 </section>
 <section id="training">
-<h3>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h3>
+<h3>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reproducibility</span>
@@ -2073,7 +1794,7 @@ Wall time: 1.24 s
 </div>
 </div>
 <section id="loss">
-<h4>Loss<a class="headerlink" href="#loss" title="Permalink to this headline">#</a></h4>
+<h4>Loss<a class="headerlink" href="#loss" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -2087,7 +1808,7 @@ Wall time: 1.24 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_43_0.png" src="../../../../_images/dl_loading_43_0.png" />
+<img alt="../../../../_images/1f1c8cd523d2bf59df0d2cbebcd8b7f842f1acd3e0c1500407442615d02704e5.png" src="../../../../_images/1f1c8cd523d2bf59df0d2cbebcd8b7f842f1acd3e0c1500407442615d02704e5.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2134,7 +1855,7 @@ Wall time: 1.24 s
 </section>
 </section>
 <section id="predictions">
-<h2>Predictions<a class="headerlink" href="#predictions" title="Permalink to this headline">#</a></h2>
+<h2>Predictions<a class="headerlink" href="#predictions" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s2">&quot;sparse&quot;</span><span class="p">:</span>
@@ -2155,7 +1876,7 @@ Wall time: 1.24 s
 </div>
 </div>
 <section id="uncertain-predictions">
-<h3>Uncertain Predictions<a class="headerlink" href="#uncertain-predictions" title="Permalink to this headline">#</a></h3>
+<h3>Uncertain Predictions<a class="headerlink" href="#uncertain-predictions" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.uncertain.monte_carlo</span> <span class="kn">import</span> <span class="n">MCTransform</span>
@@ -2309,7 +2030,7 @@ Wall time: 1.24 s
 </div>
 </section>
 <section id="visualization">
-<h3>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">#</a></h3>
+<h3>Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">predict_in_batches</span>
@@ -2319,7 +2040,7 @@ Wall time: 1.24 s
 </div>
 </div>
 <section id="standard-gp">
-<h4>Standard GP<a class="headerlink" href="#standard-gp" title="Permalink to this headline">#</a></h4>
+<h4>Standard GP<a class="headerlink" href="#standard-gp" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="n">predict_in_batches</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">gp_pred</span><span class="o">.</span><span class="n">predict_y</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">notebook</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2338,9 +2059,7 @@ Wall time: 1.24 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><img alt="../../../../_images/dl_loading_55_1.png" src="../../../../_images/dl_loading_55_1.png" />
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><img alt="../../../../_images/519058ec9ef05b52a19f5e094d5f6c187ea38461e24175ca4d89b16247190522.png" src="../../../../_images/519058ec9ef05b52a19f5e094d5f6c187ea38461e24175ca4d89b16247190522.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lims is None. Setting lims now:
 min_max_true: (-3.513445228178408, 1.5504420120619948)
 min_max_pred: (-3.343474, 1.55882)
@@ -2352,18 +2071,18 @@ lims_ext: (-4.020671751919406, 2.066046532972565)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_55_4.png" src="../../../../_images/dl_loading_55_4.png" />
-<img alt="../../../../_images/dl_loading_55_5.png" src="../../../../_images/dl_loading_55_5.png" />
+<img alt="../../../../_images/b20e2ee816ba8e81b7892242bcb1595557a69333546f52941922c70e93267e43.png" src="../../../../_images/b20e2ee816ba8e81b7892242bcb1595557a69333546f52941922c70e93267e43.png" />
+<img alt="../../../../_images/8a408ac14c1756b55d6e4e141e4b2e586e79409ebc14728ef08236879e5377be.png" src="../../../../_images/8a408ac14c1756b55d6e4e141e4b2e586e79409ebc14728ef08236879e5377be.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_55_7.png" src="../../../../_images/dl_loading_55_7.png" />
+<img alt="../../../../_images/25a696bbcc218d7df153ae67ef39346d34ad8ea08adb0ec6819dc3ff20388dc5.png" src="../../../../_images/25a696bbcc218d7df153ae67ef39346d34ad8ea08adb0ec6819dc3ff20388dc5.png" />
 </div>
 </div>
 </section>
 <section id="mc-sampling">
-<h4>MC Sampling<a class="headerlink" href="#mc-sampling" title="Permalink to this headline">#</a></h4>
+<h4>MC Sampling<a class="headerlink" href="#mc-sampling" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="n">predict_in_batches</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">egp_pred_f_mc</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">notebook</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2381,9 +2100,7 @@ lims_ext: (-4.020671751919406, 2.066046532972565)
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><img alt="../../../../_images/dl_loading_57_1.png" src="../../../../_images/dl_loading_57_1.png" />
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><img alt="../../../../_images/16db450b5aa0284dae6ee83a9445df0bc0c58ae81fe42a3d08836da3730c066d.png" src="../../../../_images/16db450b5aa0284dae6ee83a9445df0bc0c58ae81fe42a3d08836da3730c066d.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lims is None. Setting lims now:
 min_max_true: (-3.513445228178408, 1.5504420120619948)
 min_max_pred: (-3.2986484, 1.53116)
@@ -2395,18 +2112,18 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_57_4.png" src="../../../../_images/dl_loading_57_4.png" />
-<img alt="../../../../_images/dl_loading_57_5.png" src="../../../../_images/dl_loading_57_5.png" />
+<img alt="../../../../_images/8ab414df73d1c14500361d4cc1678cfa42ba5486089650d21e0a385cb81ddb0a.png" src="../../../../_images/8ab414df73d1c14500361d4cc1678cfa42ba5486089650d21e0a385cb81ddb0a.png" />
+<img alt="../../../../_images/6a67d11f07bb1b38b50b511caead5be0352c538d6d6f51cff8d5bf71d5419d56.png" src="../../../../_images/6a67d11f07bb1b38b50b511caead5be0352c538d6d6f51cff8d5bf71d5419d56.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_57_7.png" src="../../../../_images/dl_loading_57_7.png" />
+<img alt="../../../../_images/6ba8e5f80a85c9ed140d2dd155196048b089f20b2da18759cb6c7dabe5f2a7df.png" src="../../../../_images/6ba8e5f80a85c9ed140d2dd155196048b089f20b2da18759cb6c7dabe5f2a7df.png" />
 </div>
 </div>
 </section>
 <section id="unscented-transform">
-<h4>Unscented Transform<a class="headerlink" href="#unscented-transform" title="Permalink to this headline">#</a></h4>
+<h4>Unscented Transform<a class="headerlink" href="#unscented-transform" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="n">predict_in_batches</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">egp_pred_f_unc</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">notebook</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2423,9 +2140,7 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><img alt="../../../../_images/dl_loading_59_1.png" src="../../../../_images/dl_loading_59_1.png" />
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><img alt="../../../../_images/8f1ae74e92950271c409fa5392277362f0c7cbeed55ffd0979eca7ae61fac5f0.png" src="../../../../_images/8f1ae74e92950271c409fa5392277362f0c7cbeed55ffd0979eca7ae61fac5f0.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lims is None. Setting lims now:
 min_max_true: (-3.513445228178408, 1.5504420120619948)
 min_max_pred: (-3.2918162, 1.5429592)
@@ -2437,18 +2152,18 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_59_4.png" src="../../../../_images/dl_loading_59_4.png" />
-<img alt="../../../../_images/dl_loading_59_5.png" src="../../../../_images/dl_loading_59_5.png" />
+<img alt="../../../../_images/8968669be95accf6fa9a624295321007cd8f2474d49a02fce884dfbea978ea70.png" src="../../../../_images/8968669be95accf6fa9a624295321007cd8f2474d49a02fce884dfbea978ea70.png" />
+<img alt="../../../../_images/9d9cf3fde105a213481a19522e0dcb5b50c13f2a5a6fa58e7f87f26751b457a0.png" src="../../../../_images/9d9cf3fde105a213481a19522e0dcb5b50c13f2a5a6fa58e7f87f26751b457a0.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_59_7.png" src="../../../../_images/dl_loading_59_7.png" />
+<img alt="../../../../_images/65f3b6cafe39941d2aa14d00012375f804e27ec51c53ff5eb1eb0683f20bb724.png" src="../../../../_images/65f3b6cafe39941d2aa14d00012375f804e27ec51c53ff5eb1eb0683f20bb724.png" />
 </div>
 </div>
 </section>
 <section id="taylor-expansion-1st-order">
-<h4>Taylor Expansion (1st Order)<a class="headerlink" href="#taylor-expansion-1st-order" title="Permalink to this headline">#</a></h4>
+<h4>Taylor Expansion (1st Order)<a class="headerlink" href="#taylor-expansion-1st-order" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="n">predict_in_batches</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">egp_pred_f_to1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">notebook</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2465,9 +2180,7 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><img alt="../../../../_images/dl_loading_61_1.png" src="../../../../_images/dl_loading_61_1.png" />
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><img alt="../../../../_images/35a3463e25ff381307165b0f9355a946201b9084d29ae50611babcb0374b7ccb.png" src="../../../../_images/35a3463e25ff381307165b0f9355a946201b9084d29ae50611babcb0374b7ccb.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lims is None. Setting lims now:
 min_max_true: (-3.513445228178408, 1.5504420120619948)
 min_max_pred: (-3.3434722, 1.5588082)
@@ -2479,18 +2192,18 @@ lims_ext: (-4.02067057174744, 2.066033551080933)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_61_4.png" src="../../../../_images/dl_loading_61_4.png" />
-<img alt="../../../../_images/dl_loading_61_5.png" src="../../../../_images/dl_loading_61_5.png" />
+<img alt="../../../../_images/e25273450476d2d6afe3b05e724f9cc64170b7f9ed57b705cc462a909b1c2d42.png" src="../../../../_images/e25273450476d2d6afe3b05e724f9cc64170b7f9ed57b705cc462a909b1c2d42.png" />
+<img alt="../../../../_images/4283701fb1ebaa26af84245efe7b419896cfffeae5b1229592bca6dcae25abdd.png" src="../../../../_images/4283701fb1ebaa26af84245efe7b419896cfffeae5b1229592bca6dcae25abdd.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_61_7.png" src="../../../../_images/dl_loading_61_7.png" />
+<img alt="../../../../_images/4cad6d9e41609afed26c32db1f721f4b4d8019a614d14fc24fb3d27054b945c7.png" src="../../../../_images/4cad6d9e41609afed26c32db1f721f4b4d8019a614d14fc24fb3d27054b945c7.png" />
 </div>
 </div>
 </section>
 <section id="taylor-expansion-2nd-order">
-<h4>Taylor Expansion (2nd Order)<a class="headerlink" href="#taylor-expansion-2nd-order" title="Permalink to this headline">#</a></h4>
+<h4>Taylor Expansion (2nd Order)<a class="headerlink" href="#taylor-expansion-2nd-order" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">egp_pred_f_to2</span> <span class="o">=</span> <span class="n">init_egp_predictors</span><span class="p">(</span><span class="n">input_cov_scaled</span><span class="p">,</span> <span class="n">gp_pred</span><span class="p">,</span> <span class="s2">&quot;to2&quot;</span><span class="p">,)</span>
@@ -2510,9 +2223,7 @@ lims_ext: (-4.02067057174744, 2.066033551080933)
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><img alt="../../../../_images/dl_loading_63_1.png" src="../../../../_images/dl_loading_63_1.png" />
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><img alt="../../../../_images/aa3285e9596a8bd66399c6217fed4b4afd8f79bd0242a42136848297cbe82214.png" src="../../../../_images/aa3285e9596a8bd66399c6217fed4b4afd8f79bd0242a42136848297cbe82214.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lims is None. Setting lims now:
 min_max_true: (-3.513445228178408, 1.5504420120619948)
 min_max_pred: (-3.2908297, 1.5427144)
@@ -2524,13 +2235,13 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_63_4.png" src="../../../../_images/dl_loading_63_4.png" />
-<img alt="../../../../_images/dl_loading_63_5.png" src="../../../../_images/dl_loading_63_5.png" />
+<img alt="../../../../_images/5a447cc59e09ba546c043c3551ff20fb126f35f0c1ef4c37ecae3e1b66503c82.png" src="../../../../_images/5a447cc59e09ba546c043c3551ff20fb126f35f0c1ef4c37ecae3e1b66503c82.png" />
+<img alt="../../../../_images/9d76dd5edc5e52431911e747b68e01ec0d2a58f35d837dc95629b697f84e76f0.png" src="../../../../_images/9d76dd5edc5e52431911e747b68e01ec0d2a58f35d837dc95629b697f84e76f0.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_63_7.png" src="../../../../_images/dl_loading_63_7.png" />
+<img alt="../../../../_images/cb80293d0710a6fc93d824289b647a2bad92c159264f899dd2535edcef5dd011.png" src="../../../../_images/cb80293d0710a6fc93d824289b647a2bad92c159264f899dd2535edcef5dd011.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2583,7 +2294,7 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
 </section>
 </section>
 <section id="test-data">
-<h2>Test Data<a class="headerlink" href="#test-data" title="Permalink to this headline">#</a></h2>
+<h2>Test Data<a class="headerlink" href="#test-data" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
@@ -2710,139 +2421,7 @@ lims_ext: (-4.019833952202449, 2.0568307360860354)
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "d7f2b25b5cac4adb86297d2d77f1d490", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 5h 53min 20s, sys: 14h 6min 23s, total: 19h 59min 43s
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d7f2b25b5cac4adb86297d2d77f1d490", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 5h 53min 20s, sys: 14h 6min 23s, total: 19h 59min 43s
 Wall time: 53min 8s
 </pre></div>
 </div>
@@ -3365,7 +2944,7 @@ Data variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_73_0.png" src="../../../../_images/dl_loading_73_0.png" />
+<img alt="../../../../_images/bed890b85ea54cf797261c9814bf4c659ef4b0ebf1e6e478fb4fc0c10ba52cf5.png" src="../../../../_images/bed890b85ea54cf797261c9814bf4c659ef4b0ebf1e6e478fb4fc0c10ba52cf5.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -3448,15 +3027,15 @@ Data variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_78_0.png" src="../../../../_images/dl_loading_78_0.png" />
-<img alt="../../../../_images/dl_loading_78_1.png" src="../../../../_images/dl_loading_78_1.png" />
-<img alt="../../../../_images/dl_loading_78_2.png" src="../../../../_images/dl_loading_78_2.png" />
-<img alt="../../../../_images/dl_loading_78_3.png" src="../../../../_images/dl_loading_78_3.png" />
-<img alt="../../../../_images/dl_loading_78_4.png" src="../../../../_images/dl_loading_78_4.png" />
+<img alt="../../../../_images/392316fab96d4c2e56d2bda7a71231262f126f10816dcc6c5dffda86338c5976.png" src="../../../../_images/392316fab96d4c2e56d2bda7a71231262f126f10816dcc6c5dffda86338c5976.png" />
+<img alt="../../../../_images/392316fab96d4c2e56d2bda7a71231262f126f10816dcc6c5dffda86338c5976.png" src="../../../../_images/392316fab96d4c2e56d2bda7a71231262f126f10816dcc6c5dffda86338c5976.png" />
+<img alt="../../../../_images/171feaa5c89c24b4f75647d7000e30b13caaccafdd3a1b567c47503775cf6501.png" src="../../../../_images/171feaa5c89c24b4f75647d7000e30b13caaccafdd3a1b567c47503775cf6501.png" />
+<img alt="../../../../_images/1abe4c002b264e8126410e32ad24f903c2aaa770b5eb3fdbadc30f1a6f08069a.png" src="../../../../_images/1abe4c002b264e8126410e32ad24f903c2aaa770b5eb3fdbadc30f1a6f08069a.png" />
+<img alt="../../../../_images/18f3bc1f272391b1f6272956622f27d6b92756719367fda7e63e736ae559e348.png" src="../../../../_images/18f3bc1f272391b1f6272956622f27d6b92756719367fda7e63e736ae559e348.png" />
 </div>
 </div>
 <section id="mae-maps">
-<h3>MAE Maps<a class="headerlink" href="#mae-maps" title="Permalink to this headline">#</a></h3>
+<h3>MAE Maps<a class="headerlink" href="#mae-maps" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
@@ -3508,16 +3087,16 @@ Data variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_82_0.png" src="../../../../_images/dl_loading_82_0.png" />
-<img alt="../../../../_images/dl_loading_82_1.png" src="../../../../_images/dl_loading_82_1.png" />
-<img alt="../../../../_images/dl_loading_82_2.png" src="../../../../_images/dl_loading_82_2.png" />
-<img alt="../../../../_images/dl_loading_82_3.png" src="../../../../_images/dl_loading_82_3.png" />
-<img alt="../../../../_images/dl_loading_82_4.png" src="../../../../_images/dl_loading_82_4.png" />
+<img alt="../../../../_images/27b6c10330cf27d3410c9c402b5b1df42fea4065957943857971ccb28998e37a.png" src="../../../../_images/27b6c10330cf27d3410c9c402b5b1df42fea4065957943857971ccb28998e37a.png" />
+<img alt="../../../../_images/e11fcba1c4f4110c1c7a2c6da54bef524c63219876faf3aaed85df7d0f03c277.png" src="../../../../_images/e11fcba1c4f4110c1c7a2c6da54bef524c63219876faf3aaed85df7d0f03c277.png" />
+<img alt="../../../../_images/4df2233ad831f933a98ad2cc588aa6322ae5e4811f4968e052895205f17b305a.png" src="../../../../_images/4df2233ad831f933a98ad2cc588aa6322ae5e4811f4968e052895205f17b305a.png" />
+<img alt="../../../../_images/c08b731a4bd9a6d9ec1bea44535f7704212a975070a96f14c2b16b1c50698920.png" src="../../../../_images/c08b731a4bd9a6d9ec1bea44535f7704212a975070a96f14c2b16b1c50698920.png" />
+<img alt="../../../../_images/8b674c23f6d81b39d92bf503be388c4cffb6f5dfca4b9ab75e6ce5bcb572a805.png" src="../../../../_images/8b674c23f6d81b39d92bf503be388c4cffb6f5dfca4b9ab75e6ce5bcb572a805.png" />
 </div>
 </div>
 </section>
 <section id="standard-deviation">
-<h3>Standard Deviation<a class="headerlink" href="#standard-deviation" title="Permalink to this headline">#</a></h3>
+<h3>Standard Deviation<a class="headerlink" href="#standard-deviation" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">rescale_xr_labels_std</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">scaler</span><span class="p">):</span>
@@ -3541,16 +3120,16 @@ Data variables:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../../_images/dl_loading_85_0.png" src="../../../../_images/dl_loading_85_0.png" />
-<img alt="../../../../_images/dl_loading_85_1.png" src="../../../../_images/dl_loading_85_1.png" />
-<img alt="../../../../_images/dl_loading_85_2.png" src="../../../../_images/dl_loading_85_2.png" />
-<img alt="../../../../_images/dl_loading_85_3.png" src="../../../../_images/dl_loading_85_3.png" />
-<img alt="../../../../_images/dl_loading_85_4.png" src="../../../../_images/dl_loading_85_4.png" />
+<img alt="../../../../_images/43fc49641ec2e420bd3694ab39c80215c77b560b1549909506eb6ca7f2d98eb5.png" src="../../../../_images/43fc49641ec2e420bd3694ab39c80215c77b560b1549909506eb6ca7f2d98eb5.png" />
+<img alt="../../../../_images/c85097ec2a56c2e7975e0e95ce933147f78ae71a5b04904aaf6207e8a88ee7d0.png" src="../../../../_images/c85097ec2a56c2e7975e0e95ce933147f78ae71a5b04904aaf6207e8a88ee7d0.png" />
+<img alt="../../../../_images/a56714fffd2d547f5775df9cf7790ba09418d567b5336373962a9aeb896bc35d.png" src="../../../../_images/a56714fffd2d547f5775df9cf7790ba09418d567b5336373962a9aeb896bc35d.png" />
+<img alt="../../../../_images/4f7cdcd3f757c0d3a5cf18d27aa56eb631d8e01c7690d6bfc0d56b4e1fe5966d.png" src="../../../../_images/4f7cdcd3f757c0d3a5cf18d27aa56eb631d8e01c7690d6bfc0d56b4e1fe5966d.png" />
+<img alt="../../../../_images/82bcdc57a40820008075c67a4d6569fa44eec3becf9bcbb9b1308cfd4ef80d68.png" src="../../../../_images/82bcdc57a40820008075c67a4d6569fa44eec3becf9bcbb9b1308cfd4ef80d68.png" />
 </div>
 </div>
 </section>
 <section id="calibration">
-<h3>Calibration<a class="headerlink" href="#calibration" title="Permalink to this headline">#</a></h3>
+<h3>Calibration<a class="headerlink" href="#calibration" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="s2">&quot;standard&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -3651,13 +3230,13 @@ lims_ext: (-4.047986673572434, 2.1928492176947065)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_2.png" src="../../../../_images/dl_loading_88_2.png" />
-<img alt="../../../../_images/dl_loading_88_3.png" src="../../../../_images/dl_loading_88_3.png" />
+<img alt="../../../../_images/8a90c5227796b811eed9caf9318779f54f660474a662f4fc64f26f7b9433fccd.png" src="../../../../_images/8a90c5227796b811eed9caf9318779f54f660474a662f4fc64f26f7b9433fccd.png" />
+<img alt="../../../../_images/178e4effa13f6f6d8e6df50f4ff50a0d147f1502f65fee438b0f9fac5a648508.png" src="../../../../_images/178e4effa13f6f6d8e6df50f4ff50a0d147f1502f65fee438b0f9fac5a648508.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_5.png" src="../../../../_images/dl_loading_88_5.png" />
+<img alt="../../../../_images/a70a75d4ee59171d8787539d6864bad7063960fd01c421245fdd99a56d232dce.png" src="../../../../_images/a70a75d4ee59171d8787539d6864bad7063960fd01c421245fdd99a56d232dce.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lims is None. Setting lims now:
 min_max_true: (-3.527917015966839, 1.5959772113671293)
 min_max_pred: (-3.1827378, 1.661654)
@@ -3669,13 +3248,13 @@ lims_ext: (-4.046874117114914, 2.1806110966619916)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_8.png" src="../../../../_images/dl_loading_88_8.png" />
-<img alt="../../../../_images/dl_loading_88_9.png" src="../../../../_images/dl_loading_88_9.png" />
+<img alt="../../../../_images/2257020b893715687d9c912fafa71b0ec02afd92d47008eeeea00898ef4d29b7.png" src="../../../../_images/2257020b893715687d9c912fafa71b0ec02afd92d47008eeeea00898ef4d29b7.png" />
+<img alt="../../../../_images/2187fce4d18b310368165c15b660edf1563ed7fc417e2869d24106c702b167fa.png" src="../../../../_images/2187fce4d18b310368165c15b660edf1563ed7fc417e2869d24106c702b167fa.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_11.png" src="../../../../_images/dl_loading_88_11.png" />
+<img alt="../../../../_images/a59270c104792220b7a00fbd5fe4b0e1392652c37740528b81b5e9486e3a980e.png" src="../../../../_images/a59270c104792220b7a00fbd5fe4b0e1392652c37740528b81b5e9486e3a980e.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lims is None. Setting lims now:
 min_max_true: (-3.527917015966839, 1.5959772113671293)
 min_max_pred: (-3.1783006, 1.6412063)
@@ -3687,13 +3266,13 @@ lims_ext: (-4.044829344013108, 2.1581185925421185)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_14.png" src="../../../../_images/dl_loading_88_14.png" />
-<img alt="../../../../_images/dl_loading_88_15.png" src="../../../../_images/dl_loading_88_15.png" />
+<img alt="../../../../_images/71e9b031ab3ce3aed70b1f957e4520474ca46a628fb03059e28aa25a1c9cf050.png" src="../../../../_images/71e9b031ab3ce3aed70b1f957e4520474ca46a628fb03059e28aa25a1c9cf050.png" />
+<img alt="../../../../_images/fe54844b745f09bcb46b22e5beed8b5dd101a2646c1676816ef1e20fd856c6fb.png" src="../../../../_images/fe54844b745f09bcb46b22e5beed8b5dd101a2646c1676816ef1e20fd856c6fb.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_17.png" src="../../../../_images/dl_loading_88_17.png" />
+<img alt="../../../../_images/822f6203c01991328f6a4d802d1fc8d376f7b958de06f12b9e473417549df769.png" src="../../../../_images/822f6203c01991328f6a4d802d1fc8d376f7b958de06f12b9e473417549df769.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lims is None. Setting lims now:
 min_max_true: (-3.527917015966839, 1.5959772113671293)
 min_max_pred: (-3.2288182, 1.672778)
@@ -3705,13 +3284,13 @@ lims_ext: (-4.047986518600357, 2.192847513001866)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_20.png" src="../../../../_images/dl_loading_88_20.png" />
-<img alt="../../../../_images/dl_loading_88_21.png" src="../../../../_images/dl_loading_88_21.png" />
+<img alt="../../../../_images/4298bce1d1dae4a972bf3ff84afa40cbf0b1d5fc59e9f1013fb67351b735622d.png" src="../../../../_images/4298bce1d1dae4a972bf3ff84afa40cbf0b1d5fc59e9f1013fb67351b735622d.png" />
+<img alt="../../../../_images/62093cf5228145a7684fc5023b7dac7d0e365575f22e9cf8c82bbb9ced73b856.png" src="../../../../_images/62093cf5228145a7684fc5023b7dac7d0e365575f22e9cf8c82bbb9ced73b856.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_23.png" src="../../../../_images/dl_loading_88_23.png" />
+<img alt="../../../../_images/6e5fbcdad22f67e9cd932758c669dd7f9f0ac18f7aa5586db14ba006af646eae.png" src="../../../../_images/6e5fbcdad22f67e9cd932758c669dd7f9f0ac18f7aa5586db14ba006af646eae.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Lims is None. Setting lims now:
 min_max_true: (-3.527917015966839, 1.5959772113671293)
 min_max_pred: (-3.1772356, 1.6397251)
@@ -3723,13 +3302,13 @@ lims_ext: (-4.044681226470841, 2.156489299577183)
   warnings.warn(
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_26.png" src="../../../../_images/dl_loading_88_26.png" />
-<img alt="../../../../_images/dl_loading_88_27.png" src="../../../../_images/dl_loading_88_27.png" />
+<img alt="../../../../_images/1e5f8d4bd37e9122e49faa240df51cb6772bb360e66c97bb6eb15f4a242f2a85.png" src="../../../../_images/1e5f8d4bd37e9122e49faa240df51cb6772bb360e66c97bb6eb15f4a242f2a85.png" />
+<img alt="../../../../_images/dc2bae43008b95c5e2058b13cc2947c73380c48245158256dc84eeb874d3462d.png" src="../../../../_images/dc2bae43008b95c5e2058b13cc2947c73380c48245158256dc84eeb874d3462d.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/emmanuel/.conda/envs/jax_py38/lib/python3.8/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
   warnings.warn(msg, FutureWarning)
 </pre></div>
 </div>
-<img alt="../../../../_images/dl_loading_88_29.png" src="../../../../_images/dl_loading_88_29.png" />
+<img alt="../../../../_images/13e4fa857ac5464a24e3ab6c0dbadaa8c9f62fbb94339763c574d9b0caabfbe2.png" src="../../../../_images/13e4fa857ac5464a24e3ab6c0dbadaa8c9f62fbb94339763c574d9b0caabfbe2.png" />
 </div>
 </div>
 </section>
@@ -3748,7 +3327,7 @@ lims_ext: (-4.044681226470841, 2.156489299577183)
             mode: "conda-env-.conda-jax_py38-py"
         },
         kernelOptions: {
-            kernelName: "conda-env-.conda-jax_py38-py",
+            name: "conda-env-.conda-jax_py38-py",
             path: "./content/notes/egps/notebooks"
         },
         predefinedOutput: true
@@ -3756,36 +3335,215 @@ lims_ext: (-4.044681226470841, 2.156489299577183)
     </script>
     <script>kernelName = 'conda-env-.conda-jax_py38-py'</script>
 
-              </div>
-              
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
+            </article>
+            
+
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
 <div class='prev-next-area'>
 </div>
             </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
   
-    By J. Emmanuel Johnson<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
-    
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-all-orbits">
+   Get All Orbits
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#get-orbits-for-a-specific-data">
+   Get Orbits for a specific Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#reflectance-errors">
+   Reflectance Errors
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preprocessing">
+   PreProcessing
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#labels-standardization">
+     Labels - Standardization
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#inputs-pca-transformation">
+     Inputs - PCA Transformation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#transform-input-covariance">
+       Transform Input Covariance
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#model">
+   Model
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#inference">
+     Inference
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#training">
+     Training
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#loss">
+       Loss
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#predictions">
+   Predictions
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#uncertain-predictions">
+     Uncertain Predictions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#visualization">
+     Visualization
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#standard-gp">
+       Standard GP
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mc-sampling">
+       MC Sampling
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#unscented-transform">
+       Unscented Transform
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#taylor-expansion-1st-order">
+       Taylor Expansion (1st Order)
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#taylor-expansion-2nd-order">
+       Taylor Expansion (2nd Order)
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#test-data">
+   Test Data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mae-maps">
+     MAE Maps
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#standard-deviation">
+     Standard Deviation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calibration">
+     Calibration
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
 </div>
 
-
-      </div>
-    </div>
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+<div class="bd-footer-content__inner container">
   
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <div class="footer-item">
+    
+<p class="component-author">
+By J. Emmanuel Johnson
+</p>
 
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2023.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+Last updated on None.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </div>
+        </footer>
+        
+
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
 
   </body>
 </html>

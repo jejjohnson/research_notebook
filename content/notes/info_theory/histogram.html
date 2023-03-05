@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/info_theory/histogram';</script>
@@ -1006,7 +1008,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="entropy-estimator-histogram">
+  <section class="tex2jax_ignore mathjax_ignore" id="entropy-estimator-histogram">
 <h1>Entropy Estimator - Histogram<a class="headerlink" href="#entropy-estimator-histogram" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1103,10 +1105,11 @@ title="Print to PDF"
 </div>
 </div>
 <p>Many times we call for an empirical estimator:</p>
-<p>$$
-\hat{H}<em>{MLE}(p_N) = - \sum</em>{i}^{m}p_{N,i} \log p_{N,i}
-$$</p>
-<p>where $\hat{p}<em>k=\frac{h_k}{n}$ are the maximum likelihood estimates of each probability $p_k$ and $h_k=\sum</em>{i}^n\boldsymbol{1}_{{X_i=k}}$</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{H}_{MLE}(p_N) = - \sum_{i}^{m}p_{N,i} \log p_{N,i}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{p}_k=\frac{h_k}{n}\)</span> are the maximum likelihood estimates of each probability <span class="math notranslate nohighlight">\(p_k\)</span> and <span class="math notranslate nohighlight">\(h_k=\sum_{i}^n\boldsymbol{1}_{\{X_i=k\}}\)</span></p>
 <p><strong>Resources</strong>:</p>
 <ul class="simple">
 <li><p>Antos &amp; Kontoyiannis (2001) - “plug-in” estimator</p></li>
@@ -1277,10 +1280,11 @@ True Estimator: 1.5448 nats
 <h3>Corrections<a class="headerlink" href="#corrections" title="Permalink to this heading">#</a></h3>
 <section id="miller-maddow">
 <h4>Miller-Maddow<a class="headerlink" href="#miller-maddow" title="Permalink to this heading">#</a></h4>
-<p>$$
-\hat{H}<em>{MM}(p_N) = \hat{H}</em>{MLE}(p_N) + \frac{\hat{m}-1}{2N}
-$$</p>
-<p>where $\hat{m}$ are the number of bins with non-zero $p_N$ probability.</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{H}_{MM}(p_N) = \hat{H}_{MLE}(p_N) + \frac{\hat{m}-1}{2N}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{m}\)</span> are the number of bins with non-zero <span class="math notranslate nohighlight">\(p_N\)</span> probability.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get histogram counts</span>
@@ -1776,10 +1780,11 @@ True Estimator:
 </div>
 <section id="scotts">
 <h3>Scotts<a class="headerlink" href="#scotts" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \Delta_b = 3.5\sigma n^{-\frac{1}{3}}
-$$</p>
-<p>where $\sigma$ is the standard deviation and $n$ is the number of samples.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standard deviation and <span class="math notranslate nohighlight">\(n\)</span> is the number of samples.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chex</span> <span class="kn">import</span> <span class="n">Array</span>

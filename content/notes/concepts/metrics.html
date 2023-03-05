@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/concepts/metrics';</script>
@@ -918,34 +920,38 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="metrics">
+  <section class="tex2jax_ignore mathjax_ignore" id="metrics">
 <h1>Metrics<a class="headerlink" href="#metrics" title="Permalink to this heading">#</a></h1>
 <section id="mae">
 <h2>MAE<a class="headerlink" href="#mae" title="Permalink to this heading">#</a></h2>
 <p>Mean Absolute Error</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \text{MAE}(Y, \hat{Y}) = \frac{1}{N} \sum_{i=1}^N |\hat{y}_i - y_i|
-$$</p>
+\]</div>
 </section>
 <section id="mse">
 <h2>MSE<a class="headerlink" href="#mse" title="Permalink to this heading">#</a></h2>
 <p>Mean Squared Error</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \text{MSE}(Y, \hat{Y}) = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2
-$$</p>
+\]</div>
 </section>
 <section id="rmse">
 <h2>RMSE<a class="headerlink" href="#rmse" title="Permalink to this heading">#</a></h2>
 <p>Root Mean Squared Error</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \text{RMSE}(Y, \hat{Y}) = \sqrt{\frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2}
-$$</p>
+\]</div>
 </section>
 <section id="r-squared">
 <h2>R-Squared<a class="headerlink" href="#r-squared" title="Permalink to this heading">#</a></h2>
-<p>$$
-\text{R}^2(Y, \hat{Y}) = 1 - \frac{\sum_{i=1}^N (\hat{y}<em>i - y_i)^2}{\sum</em>{i=1}^N (\hat{y}_i - \bar{y})^2}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\text{R}^2(Y, \hat{Y}) = 1 - \frac{\sum_{i=1}^N (\hat{y}_i - y_i)^2}{\sum_{i=1}^N (\hat{y}_i - \bar{y})^2}
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="percentage-metrics">
@@ -953,16 +959,18 @@ $$</p>
 <section id="mape">
 <h3>MAPE<a class="headerlink" href="#mape" title="Permalink to this heading">#</a></h3>
 <p><strong>Mean Absolute Percent Error</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \text{MAPE}(Y, \hat{Y}) = \frac{1}{N} \sum_{i=1}^N \left|\frac{  \hat{y}_i - y_i}{y_i} \right|
-$$</p>
+\]</div>
 </section>
 <section id="smape">
 <h3>SMAPE<a class="headerlink" href="#smape" title="Permalink to this heading">#</a></h3>
 <p><strong>Symmetric Mean Absolute Percent Error</strong></p>
-<p>$$
-\text{SMAPE}(Y, \hat{Y}) = \frac{100%}{N} \sum_{i=1}^N \left|\frac{  \hat{y}_i - y_i}{\frac{|\hat{y}_i|+|y_i|}{2}} \right|
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\text{SMAPE}(Y, \hat{Y}) = \frac{100\%}{N} \sum_{i=1}^N \left|\frac{  \hat{y}_i - y_i}{\frac{|\hat{y}_i|+|y_i|}{2}} \right|
+\]</div>
 </section>
 </section>
 </section>

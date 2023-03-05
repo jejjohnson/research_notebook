@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data_assimilation/oi';</script>
@@ -966,30 +968,33 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="optimal-interpolation">
+  <section class="tex2jax_ignore mathjax_ignore" id="optimal-interpolation">
 <h1>Optimal Interpolation<a class="headerlink" href="#optimal-interpolation" title="Permalink to this heading">#</a></h1>
 <p>This aims at finding the Best Linear Unbiased Estimator (BLUE).</p>
 <section id="problem-setting">
 <h2>Problem Setting<a class="headerlink" href="#problem-setting" title="Permalink to this heading">#</a></h2>
-<p>$$
-\mathbf{x} = \left[\text{lon}<em>1, \ldots, \text{lon}</em>{D_\text{lat}}, \text{lat}<em>1, \ldots, \text{lat}</em>{D_\text{lon}},, \text{time}<em>1, \ldots, \text{time}</em>{D_\text{time}} \right] \in \mathbb{R}^{D_\text{lat} \times D_\text{lon} \times D_\text{time}}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x} = \left[\text{lon}_1, \ldots, \text{lon}_{D_\text{lat}}, \text{lat}_1, \ldots, \text{lat}_{D_\text{lon}},, \text{time}_1, \ldots, \text{time}_{D_\text{time}} \right] \in \mathbb{R}^{D_\text{lat} \times D_\text{lon} \times D_\text{time}}
+\]</div>
 <p>For example, if we have a spatial lat-lon grid of <code class="docutils literal notranslate"><span class="pre">30x30</span></code> points and <code class="docutils literal notranslate"><span class="pre">30</span></code> time steps, then the vector is <code class="docutils literal notranslate"><span class="pre">30x30x30</span></code> which is <code class="docutils literal notranslate"><span class="pre">27,000</span></code>-dimensional vector!</p>
 <hr class="docutils" />
 <p>Optimal Interpolation (OI) seems to be the golden standard for gap-filling SSH fields with missing data. Something that is very prevalent for Satellite sensors. However, the standard OI method</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\tilde{\boldsymbol{\mu}}<em>{\mathbf{x}</em>{t}} &amp;= \mathbf{x}<em>t + \mathbf{K}(\mathbf{y}<em>t - \mathbf{H}\mathbf{x}<em>t) \
-\tilde{\boldsymbol{\Sigma}}</em>{\mathbf{x}</em>{t}} &amp;= (\mathbf{I} - \mathbf{KH})\boldsymbol{\Sigma}</em>\mathbf{x}  \
-\mathbf{K} &amp;= \mathbf{P} \mathbf{H}\left(\mathbf{H} \mathbf{P} \mathbf{H}^\top  + \mathbf{R} \right)^{-1} \
+\tilde{\boldsymbol{\mu}}_{\mathbf{x}_{t}} &amp;= \mathbf{x}_t + \mathbf{K}(\mathbf{y}_t - \mathbf{H}\mathbf{x}_t) \\
+\tilde{\boldsymbol{\Sigma}}_{\mathbf{x}_{t}} &amp;= (\mathbf{I} - \mathbf{KH})\boldsymbol{\Sigma}_\mathbf{x}  \\
+\mathbf{K} &amp;= \mathbf{P} \mathbf{H}\left(\mathbf{H} \mathbf{P} \mathbf{H}^\top  + \mathbf{R} \right)^{-1} \\
 \end{aligned}
-$$</p>
-<p>The $\mathbf{K}$ is known as the Kalman gain. The <em>optimal</em> $\mathbf{K}$ is given by:</p>
-<p>$$
-\mathbf{K} = \boldsymbol{\Sigma}<em>{\mathbf{xy}} \boldsymbol{\Sigma}</em>{\mathbf{yy}}^{-1}
-$$</p>
-<p>where $\boldsymbol{\Sigma}<em>{\mathbf{yy}}$ is the covariance between the observations and $\boldsymbol{\Sigma}</em>{\mathbf{xy}}$ is the cross-covariance between the state and the observations.</p>
-<p>Notice how this assumes that interpolation can be done via a linear operator, $\mathbf{H}$. The Kalman gain, $\mathbf{K}$, represents the best interpolation via this linear problem. However, this is often insufficient in many scenarios where the data does not exhibit linear dynamics.</p>
+\end{split}\]</div>
+<p>The <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> is known as the Kalman gain. The <em>optimal</em> <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> is given by:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{K} = \boldsymbol{\Sigma}_{\mathbf{xy}} \boldsymbol{\Sigma}_{\mathbf{yy}}^{-1}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_{\mathbf{yy}}\)</span> is the covariance between the observations and <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_{\mathbf{xy}}\)</span> is the cross-covariance between the state and the observations.</p>
+<p>Notice how this assumes that interpolation can be done via a linear operator, <span class="math notranslate nohighlight">\(\mathbf{H}\)</span>. The Kalman gain, <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>, represents the best interpolation via this linear problem. However, this is often insufficient in many scenarios where the data does not exhibit linear dynamics.</p>
 </section>
 <section id="data-driven-oi">
 <h2>Data-Driven OI<a class="headerlink" href="#data-driven-oi" title="Permalink to this heading">#</a></h2>
@@ -1003,22 +1008,22 @@ $$</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-center"><p>$x \in \mathbb{R}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(x \in \mathbb{R}\)</span></p></td>
 <td class="text-left"><p>scalar</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\mathbf{x} \in \mathbb{R}^{D}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D}\)</span></p></td>
 <td class="text-left"><p>vector</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\mathbf{x} \in \mathbb{R}^{N \times D}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{N \times D}\)</span></p></td>
 <td class="text-left"><p>a matrix</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\mathbf{K}_{\mathbf{XX}} := \mathbf{K} \in \mathbb{R}^{D}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{K}_{\mathbf{XX}} := \mathbf{K} \in \mathbb{R}^{D}\)</span></p></td>
 <td class="text-left"><p>the kernel matrix</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\boldsymbol{k}(\mathbf{X}, \mathbf{x}) = \boldsymbol{k}_{\mathbf{X}}(\mathbf{x}) \in \mathbb{R}^{D}$</p></td>
-<td class="text-left"><p>the cross kernel matrix for some data, $\mathbf{X} \in \mathbf{R}^{N \times D}$, and some new vector, $\mathbf{x}$.</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{k}(\mathbf{X}, \mathbf{x}) = \boldsymbol{k}_{\mathbf{X}}(\mathbf{x}) \in \mathbb{R}^{D}\)</span></p></td>
+<td class="text-left"><p>the cross kernel matrix for some data, <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbf{R}^{N \times D}\)</span>, and some new vector, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\mathbf{x} \in \mathbb{R}^{D}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D}\)</span></p></td>
 <td class="text-left"><p>vector</p></td>
 </tr>
 </tbody>
@@ -1026,58 +1031,62 @@ $$</p>
 </section>
 <section id="setting">
 <h3>Setting<a class="headerlink" href="#setting" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\boldsymbol{x}(t) &amp;= \mathcal{M}\left( \boldsymbol{x}(t-1)  \right) + \eta(t) \
+\boldsymbol{x}(t) &amp;= \mathcal{M}\left( \boldsymbol{x}(t-1)  \right) + \eta(t) \\
 \boldsymbol{y}(t) &amp;= \mathcal{H}(\boldsymbol{x}(t)) + \boldsymbol{\epsilon}(t)
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p><strong>Discrete Setting</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{x}<em>{k} &amp;= \mathbf{x}</em>{k-1} + \boldsymbol{\epsilon}<em>{\mathbf{x}}\
-\mathbf{y}</em>{k} &amp;= \mathbf{Hx}<em>{k} + \boldsymbol{\epsilon}</em>{\mathbf{y}}
+\mathbf{x}_{k} &amp;= \mathbf{x}_{k-1} + \boldsymbol{\epsilon}_{\mathbf{x}}\\
+\mathbf{y}_{k} &amp;= \mathbf{Hx}_{k} + \boldsymbol{\epsilon}_{\mathbf{y}} 
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\boldsymbol{\epsilon}_{\mathbf{x}} \sim \mathcal{N}(\mathbf{0}, \mathbf{P})$</p></li>
-<li><p>$\boldsymbol{\epsilon}_{\mathbf{y}} \sim \mathcal{N}(\mathbf{0}, \mathbf{R})$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\epsilon}_{\mathbf{x}} \sim \mathcal{N}(\mathbf{0}, \mathbf{P})\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\epsilon}_{\mathbf{y}} \sim \mathcal{N}(\mathbf{0}, \mathbf{R})\)</span></p></li>
 </ul>
 </section>
 <hr class="docutils" />
 <section id="o-i-equations">
 <h3>O.I. Equations<a class="headerlink" href="#o-i-equations" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{K} &amp;= \mathbf{P} \mathbf{H}\left(\mathbf{H} \mathbf{P} \mathbf{H}^\top  + \mathbf{R} \right)^{-1} \
-\tilde{\boldsymbol{\mu}}<em>{\mathbf{x}</em>{t}} &amp;= \mathbf{x}<em>t + \mathbf{K}(\mathbf{y}<em>t - \mathbf{H}\mathbf{x}<em>t) \
-\tilde{\boldsymbol{\Sigma}}</em>{\mathbf{x}</em>{t}} &amp;= (\mathbf{I} - \mathbf{KH})\boldsymbol{\Sigma}</em>\mathbf{x}<br />
+\mathbf{K} &amp;= \mathbf{P} \mathbf{H}\left(\mathbf{H} \mathbf{P} \mathbf{H}^\top  + \mathbf{R} \right)^{-1} \\
+\tilde{\boldsymbol{\mu}}_{\mathbf{x}_{t}} &amp;= \mathbf{x}_t + \mathbf{K}(\mathbf{y}_t - \mathbf{H}\mathbf{x}_t) \\
+\tilde{\boldsymbol{\Sigma}}_{\mathbf{x}_{t}} &amp;= (\mathbf{I} - \mathbf{KH})\boldsymbol{\Sigma}_\mathbf{x}  
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf{y}$ - observations</p></li>
-<li><p>$\mathbf{x}$ - prior input</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y}\)</span> - observations</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x}\)</span> - prior input</p></li>
 <li></li>
-<li><p>$\mathbf{K}$ - Kalman gain</p></li>
-<li><p>$\mathbf{B}$ - noise covariance matrix from the</p></li>
-<li><p>$\mathbf{R}$ - noise covariance matrix from the observations.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{K}\)</span> - Kalman gain</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{B}\)</span> - noise covariance matrix from the</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{R}\)</span> - noise covariance matrix from the observations.</p></li>
 </ul>
 </section>
 <section id="cost-function">
 <h3>Cost Function<a class="headerlink" href="#cost-function" title="Permalink to this heading">#</a></h3>
 <p>Lorenc (1986) showed that OI is closely related to the 3D-Var variational data assimilation</p>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-oi-loss">
+<span class="eqno">(28)<a class="headerlink" href="#equation-oi-loss" title="Permalink to this equation">#</a></span>\[
 \mathcal{L}(\boldsymbol{\theta}) = (\mathbf{x} - \mathbf{x}^b)^\top \mathbf{B}^{-1} (\mathbf{x} - \mathbf{x}^b) + (\mathbf{y} - \mathbf{Hx})^\top \mathbf{R}^{-1} (\mathbf{y} - \mathbf{Hx})
-$$(oi_loss)</p>
-<p>where $\boldsymbol{\theta} = { \mathbf{B}, \mathbf{R}}$</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\theta} = \{ \mathbf{B}, \mathbf{R}\}\)</span></p>
 </section>
 </section>
 <hr class="docutils" />
 <section id="in-practice">
 <h2>In Practice<a class="headerlink" href="#in-practice" title="Permalink to this heading">#</a></h2>
-<p>It doesn’t make sense to assume that we have an affine linear transformation if indeed our model cannot be described by a linear transformation. Instead, we can try to directly learn this from data. We could also directly estimate this from the data. Let’s take some coordinates, ${\mathbf{X}<em>{obs}, \mathbf{Y}</em>{obs} } = {\mathbf{x}<em>{obs}, \mathbf{y}</em>{obs} }_{i=1}^N$ which are observed. We will learn a model that best fits the observations. And then we will find some interpolation method to fill in the gaps.</p>
+<p>It doesn’t make sense to assume that we have an affine linear transformation if indeed our model cannot be described by a linear transformation. Instead, we can try to directly learn this from data. We could also directly estimate this from the data. Let’s take some coordinates, <span class="math notranslate nohighlight">\(\{\mathbf{X}_{obs}, \mathbf{Y}_{obs} \} = \{\mathbf{x}_{obs}, \mathbf{y}_{obs} \}_{i=1}^N\)</span> which are observed. We will learn a model that best fits the observations. And then we will find some interpolation method to fill in the gaps.</p>
 <p><strong>Historical Literature</strong>:</p>
 <ul class="simple">
 <li><p>Bretherton et al. 1976</p></li>
@@ -1090,130 +1099,150 @@ $$(oi_loss)</p>
 <li><p>Kernel Interpolation</p></li>
 </ul>
 <hr class="docutils" />
-<p>We can write an exact equation for the best least squares linear estimator, $\boldsymbol{f}(\mathbf{x})$:</p>
-<p>$$
-\boldsymbol{f}(\mathbf{x}^*)= \boldsymbol{\mu}<em>\mathbf{x} + \sum</em>{i=1}^{D_\mathbf{x}} \sum_{j=1}^{D_\mathbf{y}} \mathbf{A}<em>{ij}^{-1}\mathbf{C}</em>{\mathbf{x}j}(\mathbf{y}<em>i - \boldsymbol{\mu}</em>{\mathbf{x}j})
-$$</p>
-<p>where $\mathbf{A}_{ij}$ is the covariance between the observation locations:</p>
-<p>$$
-\mathbf{A}<em>{ij}= \langle \mathbf{x}</em>{obs}, \mathbf{x’}_{obs} \rangle + \langle \boldsymbol{\epsilon}, \boldsymbol{\epsilon}’ \rangle
-$$</p>
-<p>and $\mathbf{C}_{\mathbf{x}j}$ is the cross covariance for the locations to be estimated and the observation locations:</p>
-<p>$$
-\mathbf{C}<em>{\mathbf{x}j} = \langle \mathbf{x}^*, \mathbf{x}</em>{obs} \rangle
-$$</p>
+<p>We can write an exact equation for the best least squares linear estimator, <span class="math notranslate nohighlight">\(\boldsymbol{f}(\mathbf{x})\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f}(\mathbf{x}^*)= \boldsymbol{\mu}_\mathbf{x} + \sum_{i=1}^{D_\mathbf{x}} \sum_{j=1}^{D_\mathbf{y}} \mathbf{A}_{ij}^{-1}\mathbf{C}_{\mathbf{x}j}(\mathbf{y}_i - \boldsymbol{\mu}_{\mathbf{x}j})
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{A}_{ij}\)</span> is the covariance between the observation locations:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{A}_{ij}= \langle \mathbf{x}_{obs}, \mathbf{x'}_{obs} \rangle + \langle \boldsymbol{\epsilon}, \boldsymbol{\epsilon}' \rangle
+\]</div>
+<p>and <span class="math notranslate nohighlight">\(\mathbf{C}_{\mathbf{x}j}\)</span> is the cross covariance for the locations to be estimated and the observation locations:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{C}_{\mathbf{x}j} = \langle \mathbf{x}^*, \mathbf{x}_{obs} \rangle
+\]</div>
 <hr class="docutils" />
 <section id="reformulation">
 <h3>Reformulation<a class="headerlink" href="#reformulation" title="Permalink to this heading">#</a></h3>
 <p>We can write the full equation (in vector form) as follows:</p>
-<p>$$
-\boldsymbol{f}(\mathbf{x}^<em>) = \mathbf{k_{X}}(\mathbf{x}^</em>) (\mathbf{K_{XX}} + \sigma^2\mathbf{I})^{-1}\mathbf{Y}_{obs}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f}(\mathbf{x}^*) = \mathbf{k_{X}}(\mathbf{x}^*) (\mathbf{K_{XX}} + \sigma^2\mathbf{I})^{-1}\mathbf{Y}_{obs}
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf{K_{XX}}$ - the coordinates for where we have observations, $\mathbf{Y}_{obs} \in \mathbb{R}^{N \times D}$.</p></li>
-<li><p>$\mathbf{k_{X}}(\cdot)$  -  the cross-kernel for the new coordinates, $\mathbf{x}^* \in \mathbb{R}^{D}$, and the old coordinates, $\mathbf{X} \in \mathbb{R}^{N\times D}$.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{K_{XX}}\)</span> - the coordinates for where we have observations, <span class="math notranslate nohighlight">\(\mathbf{Y}_{obs} \in \mathbb{R}^{N \times D}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{k_{X}}(\cdot)\)</span>  -  the cross-kernel for the new coordinates, <span class="math notranslate nohighlight">\(\mathbf{x}^* \in \mathbb{R}^{D}\)</span>, and the old coordinates, <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{N\times D}\)</span>.</p></li>
 </ul>
-<p>We have a kernel function which is the correlation between the observation locations, $\mathbf{x}$.</p>
-<p>$$
-\mathbf{K}<em>{ij}= \langle \mathbf{x}</em>{obs}, \mathbf{x’}_{obs} \rangle
-$$</p>
-<p>where $\mathbf{X}_{obs} \in \mathbb{R}^{N \times D}$.</p>
-<p>If we only look at the elements dependent upon the observations, $\mathbf{Y}_{obs}$, we can call this, $\boldsymbol{\alpha}$.</p>
-<p>$$
+<p>We have a kernel function which is the correlation between the observation locations, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{K}_{ij}= \langle \mathbf{x}_{obs}, \mathbf{x'}_{obs} \rangle
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{X}_{obs} \in \mathbb{R}^{N \times D}\)</span>.</p>
+<p>If we only look at the elements dependent upon the observations, <span class="math notranslate nohighlight">\(\mathbf{Y}_{obs}\)</span>, we can call this, <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{\alpha} = (\mathbf{K_{xx}} + \sigma^2\mathbf{I})^{-1}\mathbf{Y}_{obs}
-$$</p>
-<p>where $\boldsymbol{\alpha} \in \mathbb{R}^{N \times D}$. We can solve for $\boldsymbol{\alpha}$ exactly. To find the best free parameters, $\boldsymbol{\theta} = { \sigma^2, \boldsymbol{\alpha} }$, we can use cross-validation.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\alpha} \in \mathbb{R}^{N \times D}\)</span>. We can solve for <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}\)</span> exactly. To find the best free parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta} = \{ \sigma^2, \boldsymbol{\alpha} \}\)</span>, we can use cross-validation.</p>
 <p><strong>Note</strong>: This comes from kernel methods!</p>
 <hr class="docutils" />
 <p>And now we can make predictions</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\boldsymbol{m}(\mathbf{x}^<em>) &amp;= \boldsymbol{k}_{\mathbf{X}}(\mathbf{x}^</em>) \boldsymbol{\alpha} \
+\boldsymbol{m}(\mathbf{x}^*) &amp;= \boldsymbol{k}_{\mathbf{X}}(\mathbf{x}^*) \boldsymbol{\alpha} \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>and we can also estimate the covariance.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \begin{aligned}
-\boldsymbol{\Sigma}^2(\mathbf{x}^<em>, \mathbf{x’}^</em>) &amp;= \sigma^2 + \boldsymbol{k}(\mathbf{x}^<em>, \mathbf{x}^</em>) + \boldsymbol{k}<em>{\mathbf{X}}(\mathbf{x}^*) (\mathbf{K</em>{XX}} + \sigma^2\mathbf{I}) \boldsymbol{k}_{\mathbf{X}}(\mathbf{x}^*)^\top
+\boldsymbol{\Sigma}^2(\mathbf{x}^*, \mathbf{x'}^*) &amp;= \sigma^2 + \boldsymbol{k}(\mathbf{x}^*, \mathbf{x}^*) + \boldsymbol{k}_{\mathbf{X}}(\mathbf{x}^*) (\mathbf{K_{XX}} + \sigma^2\mathbf{I}) \boldsymbol{k}_{\mathbf{X}}(\mathbf{x}^*)^\top
 \end{aligned}
-$$</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />
 <section id="id1">
 <h2>Notation<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>$\boldsymbol{k}(\mathbf{x}, \mathbf{y}): \mathcal{X}\times \mathcal{Y} \rightarrow \mathbb{R}$ - kernel function that takes in two vectors and returns a scalar value.</p></li>
-<li><p>$\mathbf{k}(\mathbf{x}_*): \mathcal{X} \times : \rightarrow \mathbb{R}^{D}$</p></li>
-<li><p>$\mathbf{K_{XX}} \in \mathbb{R}^{D_{\mathbf{x}} \times D_\mathbf{x}}$ - kernel matrix (gram matrix) which is the result of</p></li>
-<li><p>$\mathbf{K_{XY}} \in \mathbb{R}^{D_{\mathbf{x}} \times D_\mathbf{y}}$ - cross kernel matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{k}(\mathbf{x}, \mathbf{y}): \mathcal{X}\times \mathcal{Y} \rightarrow \mathbb{R}\)</span> - kernel function that takes in two vectors and returns a scalar value.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{k}(\mathbf{x}_*): \mathcal{X} \times : \rightarrow \mathbb{R}^{D}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{K_{XX}} \in \mathbb{R}^{D_{\mathbf{x}} \times D_\mathbf{x}}\)</span> - kernel matrix (gram matrix) which is the result of</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{K_{XY}} \in \mathbb{R}^{D_{\mathbf{x}} \times D_\mathbf{y}}\)</span> - cross kernel matrix</p></li>
 </ul>
 <hr class="docutils" />
 <section id="kernel-functions">
 <h3>Kernel Functions<a class="headerlink" href="#kernel-functions" title="Permalink to this heading">#</a></h3>
 <p><strong>Linear Kernel</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{k}(\mathbf{x},\mathbf{y}) = \mathbf{x}^\top \mathbf{y}
-$$</p>
+\]</div>
 <p><strong>Gaussian Kernel</strong> (aka Radial Basis Function, Matern 32)</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{k}(\mathbf{x},\mathbf{y}) = \exp \left( - \gamma||\mathbf{x} - \mathbf{y}||_2^2 \right)
-$$</p>
-<p><strong>Note</strong>: This is known as the Gaussian kernel if $\gamma = \frac{1}{\sigma^2}$.</p>
+\]</div>
+<p><strong>Note</strong>: This is known as the Gaussian kernel if <span class="math notranslate nohighlight">\(\gamma = \frac{1}{\sigma^2}\)</span>.</p>
 <p><strong>Laplacian Kernel</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{k}(\mathbf{x},\mathbf{y}) = \exp \left( - \gamma||\mathbf{x} - \mathbf{y}||_1 \right)
-$$</p>
+\]</div>
 <p><strong>Polynomial Kernel</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{k}(\mathbf{x},\mathbf{y}) = \left( \gamma\mathbf{x}^\top \mathbf{y} + c_0 \right)^d
-$$</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />
 <section id="scaling">
 <h2>Scaling<a class="headerlink" href="#scaling" title="Permalink to this heading">#</a></h2>
-<p>The bottleneck in the above methods is the inversion of the $\mathbf{K_{XX}}^{-1}$ matrix which is order $\mathcal{O}(N^3)$.</p>
-<p>We can assume that our kernel matrix $\mathbf{K_{XX}}$ can be approximated via a low-rank matrix:</p>
-<p>$$
+<p>The bottleneck in the above methods is the inversion of the <span class="math notranslate nohighlight">\(\mathbf{K_{XX}}^{-1}\)</span> matrix which is order <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span>.</p>
+<p>We can assume that our kernel matrix <span class="math notranslate nohighlight">\(\mathbf{K_{XX}}\)</span> can be approximated via a low-rank matrix:</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{K_{XX}} \approx \mathbf{K_{XZ}}\mathbf{K_{XZ}}^\top
-$$</p>
-<p>where $\mathbf{K_{XZ}} \in \mathbb{R}^{N \times r}$</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{K_{XZ}} \in \mathbb{R}^{N \times r}\)</span></p>
 <p>Similarly, we can also write:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{K_{XX}} \approx \mathbf{K_{XZ}}\mathbf{K_{ZZ}}^{-1}\mathbf{K_{XZ}}^\top
-$$</p>
-<p>$$
-\mathbf{k}_r (\mathbf{X}) =
-$$</p>
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{k}_r (\mathbf{X}) = 
+\]</div>
 <p>So then we can rewrite our solution to be:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{\alpha} = \left( \mathbf{K_{XZ}}^\top \mathbf{K_{XZ}} + \sigma^2 \mathbf{K_{ZZ}} \right)^{\dagger} \mathbf{K_{XZ}}^\top \mathbf{Y}_{obs}
-$$</p>
+\]</div>
 <p>Now to make predictions, we can simply write:</p>
-<p>$$
-\boldsymbol{m}(\mathbf{x}^<em>) = \boldsymbol{k}_{r}(\mathbf{x}^</em>)\boldsymbol{\alpha}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{m}(\mathbf{x}^*) = \boldsymbol{k}_{r}(\mathbf{x}^*)\boldsymbol{\alpha}
+\]</div>
 <p>This is <strong>much</strong> cheaper:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{O}(nm^3 + m^3) &lt; \mathcal{O}(n^3)
-$$</p>
+\]</div>
 <p><strong>Predictive Mean</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{m}(\mathbf{x}^*) = \boldsymbol{k}_{\mathbf{z}}\boldsymbol{\alpha}
-$$</p>
+\]</div>
 <p><strong>Predictive Covariance</strong></p>
-<p>$$
-\boldsymbol{\Sigma}^2(\mathbf{x}^<em>, \mathbf{x’}^</em>) = \boldsymbol{k}(\mathbf{x}^<em>, \mathbf{x’}^</em>) - \boldsymbol{k}<em>{\mathbf{z}}(\mathbf{x}^*)^\top \mathbf{K</em>{ZZ}}^{-1}\boldsymbol{k}<em>{\mathbf{z}}(\mathbf{x}^*)^\top + \boldsymbol{k}</em>{\mathbf{z}}(\mathbf{x}^<em>) \left( \mathbf{K_{ZZ}} + \sigma^{-2} \mathbf{K_{ZX}K_{XZ}} \right) \boldsymbol{k}_{\mathbf{z}}(\mathbf{x}^</em>)^\top
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\Sigma}^2(\mathbf{x}^*, \mathbf{x'}^*) = \boldsymbol{k}(\mathbf{x}^*, \mathbf{x'}^*) - \boldsymbol{k}_{\mathbf{z}}(\mathbf{x}^*)^\top \mathbf{K_{ZZ}}^{-1}\boldsymbol{k}_{\mathbf{z}}(\mathbf{x}^*)^\top + \boldsymbol{k}_{\mathbf{z}}(\mathbf{x}^*) \left( \mathbf{K_{ZZ}} + \sigma^{-2} \mathbf{K_{ZX}K_{XZ}} \right) \boldsymbol{k}_{\mathbf{z}}(\mathbf{x}^*)^\top
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf{K_{\mathbf{XX}}} \in \mathbb{R}^{N \times N}$</p></li>
-<li><p>$\mathbf{K_{\mathbf{ZZ}}} \in \mathbb{R}^{r \times r}$</p></li>
-<li><p>$\mathbf{K_{\mathbf{ZX}}} \in \mathbb{R}^{r \times N}$</p></li>
-<li><p>$\mathbf{K_{\mathbf{XZ}}} \in \mathbb{R}^{N \times r}$</p></li>
-<li><p>$\boldsymbol{k}_{\mathbf{Z}}(\mathbf{x}) \in \mathbb{R}^{r}$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{K_{\mathbf{XX}}} \in \mathbb{R}^{N \times N}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{K_{\mathbf{ZZ}}} \in \mathbb{R}^{r \times r}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{K_{\mathbf{ZX}}} \in \mathbb{R}^{r \times N}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{K_{\mathbf{XZ}}} \in \mathbb{R}^{N \times r}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{k}_{\mathbf{Z}}(\mathbf{x}) \in \mathbb{R}^{r}\)</span></p></li>
 </ul>
 <p><strong>Resources</strong>:</p>
 <ul class="simple">
@@ -1242,15 +1271,16 @@ $$</p>
 <section id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this heading">#</a></h2>
 <p>We have a data model that is non-parametric. It means that we fit a model that has many local fits where the number of parameters may exceed the number of data points.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y}_i = \boldsymbol{f}(\mathbf{x}_i) + \boldsymbol{\epsilon}_i, \hspace{10mm} i=1,2, \ldots, N
-$$</p>
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\boldsymbol{f}(\cdot) $ - the regression function</p></li>
-<li><p>$\mathbf{x}_i$ - the sampling position, e.g. latitude, longitude, and/or time</p></li>
-<li><p>$\mathbf{y}_i$ - the sample</p></li>
-<li><p>$\boldsymbol{\epsilon}_i$ - zero mean, iid noise</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{f}(\cdot) \)</span> - the regression function</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span> - the sampling position, e.g. latitude, longitude, and/or time</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y}_i\)</span> - the sample</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\epsilon}_i\)</span> - zero mean, iid noise</p></li>
 </ul>
 <hr class="docutils" />
 <section id="kernel-methods">

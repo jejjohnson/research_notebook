@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data_assimilation/inv_problems';</script>
@@ -964,52 +966,56 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="inverse-problems">
+  <section class="tex2jax_ignore mathjax_ignore" id="inverse-problems">
 <h1>Inverse Problems<a class="headerlink" href="#inverse-problems" title="Permalink to this heading">#</a></h1>
 <section id="problem-formulation">
 <h2>Problem Formulation<a class="headerlink" href="#problem-formulation" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = \boldsymbol{h}(\mathbf{x};\boldsymbol{\theta}) + \boldsymbol{\eta}
-$$</p>
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf{y} \in \mathbb{R}^{D_\mathbf{y}}$ is a noisy measurement</p></li>
-<li><p>$\mathbf{x} \in \mathbb{R}^{D_\mathbf{x}}$ is the original signal</p></li>
-<li><p>$\boldsymbol{h}(:\cdot :;\boldsymbol{\theta}): \mathbb{R}^{D_\mathbf{x}} \rightarrow  \in \mathbb{R}^{D_\mathbf{y}}$ is a measurement function, parameterized by $\boldsymbol{\theta}$.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{D_\mathbf{y}}\)</span> is a noisy measurement</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_\mathbf{x}}\)</span> is the original signal</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{h}(\:\cdot \:;\boldsymbol{\theta}): \mathbb{R}^{D_\mathbf{x}} \rightarrow  \in \mathbb{R}^{D_\mathbf{y}}\)</span> is a measurement function, parameterized by <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>.</p></li>
 </ul>
 <hr class="docutils" />
 <section id="data">
 <h3>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} \in \mathbb{R}^{D_{\mathbf{x}}}
-$$</p>
+\]</div>
 <ul class="simple">
-<li><p><strong>1D Signal</strong>: $\mathbf{x} \in \mathbb{R}^{D}$, $\mathbf{x} \in \mathbb{R}^{T}$</p></li>
-<li><p><strong>2D Image</strong>: $\mathbf{x} \in \mathbb{R}^{H\times W}$, $\mathbf{x} \in \mathbb{R}^{u\times v}$</p></li>
-<li><p><strong>3D Volume</strong>: $\mathbf{x} \in \mathbb{R}^{H \times W \times C}$, $\mathbf{x} \in \mathbb{R}^{u \times v \times depth}$, $\mathbf{x} \in \mathbb{R}^{u \times v \times time}$</p></li>
-<li><p><strong>2D Volume Sequence</strong>: $\mathbf{x} \in \mathbb{R}^{H \times W \times C \times time}$, $\mathbf{x} \in \mathbb{R}^{u \times v \times depth \times time}$</p></li>
+<li><p><strong>1D Signal</strong>: <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{T}\)</span></p></li>
+<li><p><strong>2D Image</strong>: <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{H\times W}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{u\times v}\)</span></p></li>
+<li><p><strong>3D Volume</strong>: <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{H \times W \times C}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{u \times v \times depth}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{u \times v \times time}\)</span></p></li>
+<li><p><strong>2D Volume Sequence</strong>: <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{H \times W \times C \times time}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{u \times v \times depth \times time}\)</span></p></li>
 </ul>
 </section>
 <hr class="docutils" />
 <section id="forward-direction">
 <h3>Forward Direction<a class="headerlink" href="#forward-direction" title="Permalink to this heading">#</a></h3>
 <p>The first direction is the forward direction.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = \boldsymbol{h}(\mathbf{x};\boldsymbol{\theta})
-$$</p>
-<p>We can try to find a solution for the forward problem which is to use the state, $\mathbf{x}$, to help predict the observations, $\mathbf{y}$. This is typically the easier of the two directions. Many times we simply need to approximate $\mathbf{y}$ with some function $\boldsymbol{f}<em>{\boldsymbol{\theta}}(\mathbf{x})$. We can use point estimates, i.e. $\hat{\mathbf{y}}\approx \mathbf{y}^* = \operatorname*{argmax} p(\mathbf{y|x})$, or we can try to obtain posterior distributions, i.e. $\hat{p}</em>{\boldsymbol{\theta}}(\mathbf{y|x}) \approx p(\mathbf{y|x})$. We often call this <strong>discriminative</strong> or <strong>transductive</strong> machine learning. However, discriminative models are hard to interpret, explain and validate.</p>
+\]</div>
+<p>We can try to find a solution for the forward problem which is to use the state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, to help predict the observations, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>. This is typically the easier of the two directions. Many times we simply need to approximate <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> with some function <span class="math notranslate nohighlight">\(\boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x})\)</span>. We can use point estimates, i.e. <span class="math notranslate nohighlight">\(\hat{\mathbf{y}}\approx \mathbf{y}^* = \operatorname*{argmax} p(\mathbf{y|x})\)</span>, or we can try to obtain posterior distributions, i.e. <span class="math notranslate nohighlight">\(\hat{p}_{\boldsymbol{\theta}}(\mathbf{y|x}) \approx p(\mathbf{y|x})\)</span>. We often call this <strong>discriminative</strong> or <strong>transductive</strong> machine learning. However, discriminative models are hard to interpret, explain and validate.</p>
 <p><strong>Note</strong>: This is quite different than traditional sciences because we don’t “model the real world”.</p>
 </section>
 <hr class="docutils" />
 <section id="inverse-direction">
 <h3>Inverse Direction<a class="headerlink" href="#inverse-direction" title="Permalink to this heading">#</a></h3>
 <p>The other direction is the inverse direction.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} = \boldsymbol{h}^{-1}(\mathbf{y};\boldsymbol{\theta})
-$$</p>
-<p>We can also try to find a solution to the <strong>inverse problem</strong> whereby we have some observations, $\mathbf{y}$, and we want to them help us predict some state, $\mathbf{x}$. So we are more interested in the data generation likelihood process, $p(\mathbf{x}|\mathbf{y})$. It is a more difficult problem because we need to make assumptions about our system in order to formulate a problem. Fortunately, once the problem has been formulated, we can use Bayes theorem and the standard tricks within to solve the problem. This is often called <strong>generative</strong> modeling.</p>
+\]</div>
+<p>We can also try to find a solution to the <strong>inverse problem</strong> whereby we have some observations, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>, and we want to them help us predict some state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>. So we are more interested in the data generation likelihood process, <span class="math notranslate nohighlight">\(p(\mathbf{x}|\mathbf{y})\)</span>. It is a more difficult problem because we need to make assumptions about our system in order to formulate a problem. Fortunately, once the problem has been formulated, we can use Bayes theorem and the standard tricks within to solve the problem. This is often called <strong>generative</strong> modeling.</p>
 <p><strong>Example Problem</strong>:</p>
-<p>Let’s take some hidden system parameters, $\mathbf{x}$, and let’s take some observations of the system behaviour, $\mathbf{y}$. Our objective is the determine the posterior $p(\mathbf{x}|\mathbf{y=\hat{y}})$ to estimate the parameters, $\mathbf{x}$, from some measured $\hat{\mathbf{y}}$. We could learn a $p(\mathbf{x|y})$ using synthetic data from a simulation $\mathbf{y}=\boldsymbol{g}(\mathbf{x}; \boldsymbol{\epsilon})$ of the forward process.</p>
+<p>Let’s take some hidden system parameters, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, and let’s take some observations of the system behaviour, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>. Our objective is the determine the posterior <span class="math notranslate nohighlight">\(p(\mathbf{x}|\mathbf{y=\hat{y}})\)</span> to estimate the parameters, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, from some measured <span class="math notranslate nohighlight">\(\hat{\mathbf{y}}\)</span>. We could learn a <span class="math notranslate nohighlight">\(p(\mathbf{x|y})\)</span> using synthetic data from a simulation <span class="math notranslate nohighlight">\(\mathbf{y}=\boldsymbol{g}(\mathbf{x}; \boldsymbol{\epsilon})\)</span> of the forward process.</p>
 </section>
 <hr class="docutils" />
 <section id="noise">
@@ -1019,84 +1025,98 @@ $$</p>
 <hr class="docutils" />
 <section id="ill-posed">
 <h2>Ill-Posed<a class="headerlink" href="#ill-posed" title="Permalink to this heading">#</a></h2>
-<p>Our problem is ill-posed. This means that the space of possible solutions is very large, many of which are nonsensical. So we need to constrain our model such that the space is manageable. If we think about our unknowns, first we have an unknown input, $\mathbf{x}$.</p>
-<p>$$
+<p>Our problem is ill-posed. This means that the space of possible solutions is very large, many of which are nonsensical. So we need to constrain our model such that the space is manageable. If we think about our unknowns, first we have an unknown input, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\theta,\mathbf{x}) = \argmin_{\mathbf{x},\theta} ||\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta)||_2^2 + \lambda \mathcal{R}(\mathbf{x})
-$$</p>
-<p>In the case of $\boldsymbol{f}$, we also have unknown parameters, $\theta$.</p>
-<p>$$
+\]</div>
+<p>In the case of <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, we also have unknown parameters, <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\theta,\mathbf{x}) = \argmin_{\mathbf{x},\theta} ||\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta)||_2^2 + \lambda_1 \mathcal{R}(\mathbf{x}) + \lambda_2 \mathcal{R}(\theta)
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="solutions">
 <h2>Solutions<a class="headerlink" href="#solutions" title="Permalink to this heading">#</a></h2>
 <section id="empirical-minimization">
 <h3>Empirical Minimization<a class="headerlink" href="#empirical-minimization" title="Permalink to this heading">#</a></h3>
-<p>This is the case when we want to learn a solver for deterministic inverse problems. Given a set of inputs, $\mathcal{D}={ \mathbf{y}_i, \mathbf{x}<em>i }</em>{i=1}^N$. We also choose the functional form of our model, $\boldsymbol{f}$, e.g. a neural network. In this case, our function is parameterized by $\theta$.</p>
-<p>$$
+<p>This is the case when we want to learn a solver for deterministic inverse problems. Given a set of inputs, <span class="math notranslate nohighlight">\(\mathcal{D}=\{ \mathbf{y}_i, \mathbf{x}_i \}_{i=1}^N\)</span>. We also choose the functional form of our model, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, e.g. a neural network. In this case, our function is parameterized by <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}_{\text{MSE}}(\theta) = \frac{1}{2}||y - f(x;\theta)||_2^2
-$$</p>
-<p>In order to restrict the space of solutions, we penalize the parameters, $\theta$, of our function, $\boldsymbol{f}$.</p>
-<p>$$
-\mathcal{L}<em>{\text{MSE}}(\theta) = \frac{1}{N}\sum</em>{i=1}^N||\mathbf{y}_i - f(\mathbf{x}_i;\theta)||_2^2 + \lambda \mathcal{R}(\theta)
-$$</p>
-<p>We can do an offline training regime for the best parameters, $\theta$, given our training data, $\mathcal{D}$. Then</p>
+\]</div>
+<p>In order to restrict the space of solutions, we penalize the parameters, <span class="math notranslate nohighlight">\(\theta\)</span>, of our function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{\text{MSE}}(\theta) = \frac{1}{N}\sum_{i=1}^N||\mathbf{y}_i - f(\mathbf{x}_i;\theta)||_2^2 + \lambda \mathcal{R}(\theta)
+\]</div>
+<p>We can do an offline training regime for the best parameters, <span class="math notranslate nohighlight">\(\theta\)</span>, given our training data, <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>. Then</p>
 </section>
 <hr class="docutils" />
 <section id="bayesian-inversion">
 <h3>Bayesian Inversion<a class="headerlink" href="#bayesian-inversion" title="Permalink to this heading">#</a></h3>
 <p>We take the posterior density</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(\theta|x, y) \propto p(y|x,\theta)p(\theta)
-$$</p>
+\]</div>
 <p><strong>Minimization (MLE)</strong></p>
-<p>$$
-\boldsymbol{\theta}^* = \argmax_{\mathbf{x}} p(\mathbf{y}|\mathbf{x})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\theta}^* = \argmax_{\mathbf{x}} p(\mathbf{y}|\mathbf{x}) 
+\]</div>
 <p><strong>MAP</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\boldsymbol{\theta}) = \argmax_{\mathbf{x}} p(\mathbf{x}|\mathbf{y}) \propto \argmax_{\mathbf{x}} p(\mathbf{y}|\mathbf{x})p(\mathbf{x};\boldsymbol{\theta})
-$$</p>
+\]</div>
 <p>We assume a Gaussian measurement model</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(\mathbf{y}|\mathbf{x}) \sim \mathcal{N}(\mathbf{y};\boldsymbol{h}(\mathbf{x};\boldsymbol{\theta}), \sigma^2)
-$$</p>
+\]</div>
 <p><strong>Loss Function (Explicit)</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\boldsymbol{\theta},\mathbf{x}) = \argmin_{\boldsymbol{\theta}, \mathbf{x}} \frac{1}{2\sigma^2}||\mathbf{y} - \boldsymbol{h}(\mathbf{x};\boldsymbol{\theta})||_2^2 - \log p(\mathbf{x};\boldsymbol{\theta})
-$$</p>
+\]</div>
 <p><strong>Energy-Based Representation</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 U() \propto \exp(-\mathcal{L}_{\text{MSE}}(\theta))
-$$</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />
 <section id="generic-formulation">
 <h2>Generic Formulation<a class="headerlink" href="#generic-formulation" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} = \argmin_{\mathbf{x}} \lambda_1||\mathbf{y} - \boldsymbol{h}(\mathbf{x})||_2^2 + \lambda_2 \boldsymbol{R}(\mathbf{x})
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="example-denoising">
 <h2>Example: Denoising<a class="headerlink" href="#example-denoising" title="Permalink to this heading">#</a></h2>
-<p>$$
-\mathbf{y} = \mathbf{x} + \epsilon, ;; \epsilon \sim \mathcal{N}(0, \sigma^2)
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{y} = \mathbf{x} + \epsilon, \;\; \epsilon \sim \mathcal{N}(0, \sigma^2)
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="probabilistic-priors">
 <h2>Probabilistic Priors<a class="headerlink" href="#probabilistic-priors" title="Permalink to this heading">#</a></h2>
 <p>In this case, we assume some probabilistic prior</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} \sim P_X
-$$</p>
+\]</div>
 <p>Now, we can formulate this as a</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} = \argmin_\mathbf{x} \lambda ||\mathbf{y} - \mathbf{x}||_2^2 - \log p_X(\mathbf{x})
-$$</p>
+\]</div>
 <p>Examples: Variational AutoEncoders, AutoRegressive Models, Normalizing Flows</p>
 <ul class="simple">
 <li><p>Deep Unfolding with Normalizing Flow Priors for Inverse Problems - Wei et al (2021)</p></li>
@@ -1105,58 +1125,66 @@ $$</p>
 <section id="normalizing-flow-prior">
 <h3>Normalizing Flow Prior<a class="headerlink" href="#normalizing-flow-prior" title="Permalink to this heading">#</a></h3>
 <p><strong>Normalizing Direction</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{z} &amp;= \boldsymbol{f}(\mathbf{x};\boldsymbol{\theta}) \
-&amp;= \boldsymbol{f}<em>L\circ \boldsymbol{f}</em>{L-1} \circ \cdots \circ \boldsymbol{f}_1 (\mathbf{x})\
+\mathbf{z} &amp;= \boldsymbol{f}(\mathbf{x};\boldsymbol{\theta}) \\
+&amp;= \boldsymbol{f}_L\circ \boldsymbol{f}_{L-1} \circ \cdots \circ \boldsymbol{f}_1 (\mathbf{x})\\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p><strong>Generative Direction</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{x} &amp;= \boldsymbol{g}(\mathbf{z};\boldsymbol{\theta}) \
-&amp;= \boldsymbol{f}^{-1}(\mathbf{z};\boldsymbol{\theta}) \
-&amp;= \boldsymbol{f}<em>1^{-1}\circ \boldsymbol{f}</em>{2}^{-1} \circ \cdots \circ \boldsymbol{f}_L^{-1} (\mathbf{x})\
+\mathbf{x} &amp;= \boldsymbol{g}(\mathbf{z};\boldsymbol{\theta}) \\
+&amp;= \boldsymbol{f}^{-1}(\mathbf{z};\boldsymbol{\theta}) \\
+&amp;= \boldsymbol{f}_1^{-1}\circ \boldsymbol{f}_{2}^{-1} \circ \cdots \circ \boldsymbol{f}_L^{-1} (\mathbf{x})\\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p><strong>Density Evaluation</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \log p(\mathbf{x};\boldsymbol{\theta}) = \log p(\mathbf{z}) + \log \left| \det \boldsymbol{\nabla}_\mathbf{x} \boldsymbol{f}(\mathbf{x};\boldsymbol{\theta})  \right|
-$$</p>
+\]</div>
 <p><strong>Cost Function (Explicit)</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathcal{L}(\mathbf{x}, \mathbf{z}, \boldsymbol{\theta})
-&amp;= \argmin_{\mathbf{\theta},\mathbf{z}} \frac{1}{2\sigma^2} ||\mathbf{y} - \mathbf{A}\boldsymbol{g}(\mathbf{z}; \boldsymbol{\theta})||<em>2^2 - \log p(\mathbf{z}) \
-&amp;= \argmin</em>{\mathbf{\theta},\mathbf{z}}  ||\mathbf{y} - \mathbf{A}\boldsymbol{g}(\mathbf{z}; \boldsymbol{\theta})||_2^2 - \lambda ||\mathbf{z}||_2^2 \
+\mathcal{L}(\mathbf{x}, \mathbf{z}, \boldsymbol{\theta}) 
+&amp;= \argmin_{\mathbf{\theta},\mathbf{z}} \frac{1}{2\sigma^2} ||\mathbf{y} - \mathbf{A}\boldsymbol{g}(\mathbf{z}; \boldsymbol{\theta})||_2^2 - \log p(\mathbf{z}) \\
+&amp;= \argmin_{\mathbf{\theta},\mathbf{z}}  ||\mathbf{y} - \mathbf{A}\boldsymbol{g}(\mathbf{z}; \boldsymbol{\theta})||_2^2 - \lambda ||\mathbf{z}||_2^2 \\
 \end{aligned}
-$$</p>
-<p>where $\lambda$ is a regularization term to trade-off the prior versus the measurement.</p>
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\lambda\)</span> is a regularization term to trade-off the prior versus the measurement.</p>
 <p><strong>Cost Function (Implicit)</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\hat{\mathbf{z}}
-&amp;= \argmin_{\mathbf{z}} ||\mathbf{y} - \mathbf{A}\boldsymbol{g}(\mathbf{z};\boldsymbol{\theta})||<em>2^2 - \log p(\mathbf{z}) \
-&amp;= \argmin</em>{\mathbf{\theta},\mathbf{z}}  ||\mathbf{y} - \mathbf{A}\boldsymbol{g}(\mathbf{z}; \boldsymbol{\theta})||_2^2 - \lambda ||\mathbf{z}||_2^2 \
+\hat{\mathbf{z}} 
+&amp;= \argmin_{\mathbf{z}} ||\mathbf{y} - \mathbf{A}\boldsymbol{g}(\mathbf{z};\boldsymbol{\theta})||_2^2 - \log p(\mathbf{z}) \\
+&amp;= \argmin_{\mathbf{\theta},\mathbf{z}}  ||\mathbf{y} - \mathbf{A}\boldsymbol{g}(\mathbf{z}; \boldsymbol{\theta})||_2^2 - \lambda ||\mathbf{z}||_2^2 \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 <hr class="docutils" />
 <section id="dictionary-prior">
 <h3>Dictionary Prior<a class="headerlink" href="#dictionary-prior" title="Permalink to this heading">#</a></h3>
 <p>Examples: PCA (aka EOF, POD, SVD)</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} = \mathbf{D}\boldsymbol{\alpha}
-$$</p>
-<p>$$
+\]</div>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} = \argmin_{\boldsymbol{\alpha}}||\mathbf{y} - \mathbf{D}\boldsymbol{\alpha}||_2^2
-$$</p>
+\]</div>
 </section>
 <section id="norm-based-prior">
 <h3>Norm-Based Prior<a class="headerlink" href="#norm-based-prior" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} = \argmin_\mathbf{x} \lambda ||\mathbf{y} - \mathbf{x}||_2^2 - \lambda_2 ||\nabla \mathbf{x}||_2^2
-$$</p>
+\]</div>
 </section>
 </section>
 </section>

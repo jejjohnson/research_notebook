@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gps/lit_egp';</script>
@@ -1014,44 +1016,47 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="input-uncertainty">
+  <section class="tex2jax_ignore mathjax_ignore" id="input-uncertainty">
 <h1>Input Uncertainty<a class="headerlink" href="#input-uncertainty" title="Permalink to this heading">#</a></h1>
-<p>We’re in the setting where we have some inputs that come from a distribution $\mathbf{x} \sim \mathcal{N}(\mathbf{\mu_x}, \Sigma_\mathbf{x})$ and we have some outputs $y\in\mathbb{R}$. Typically we have some function $f(\mathbf)$ that maps the points $f:\mathbb{R}^D \rightarrow \mathbb{R}$. So like we do with GPs, we have the following function”</p>
-<p>$$
+<p>We’re in the setting where we have some inputs that come from a distribution <span class="math notranslate nohighlight">\(\mathbf{x} \sim \mathcal{N}(\mathbf{\mu_x}, \Sigma_\mathbf{x})\)</span> and we have some outputs <span class="math notranslate nohighlight">\(y\in\mathbb{R}\)</span>. Typically we have some function <span class="math notranslate nohighlight">\(f(\mathbf)\)</span> that maps the points <span class="math notranslate nohighlight">\(f:\mathbb{R}^D \rightarrow \mathbb{R}\)</span>. So like we do with GPs, we have the following function”</p>
+<div class="math notranslate nohighlight">
+\[
 y=f(\mathbf{x})
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="change-of-variables">
 <h2>Change of Variables<a class="headerlink" href="#change-of-variables" title="Permalink to this heading">#</a></h2>
 <p>To have this full mapping, we would need to use the change of variables method because we are doing a transformation between of probability distributions.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-p(y) &amp;= p(x)\left| \frac{dy}{dx} \right|^{-1} \
+p(y) &amp;= p(x)\left| \frac{dy}{dx} \right|^{-1} \\
 &amp;= p(f^{-1}(y)|\mu_x,\Sigma_x)|\nabla f(y)|
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>This is very expensive and can be very difficult depending upon the function.</p>
 <hr class="docutils" />
 </section>
 <section id="conditional-gaussian-distribution">
 <h2>Conditional Gaussian Distribution<a class="headerlink" href="#conditional-gaussian-distribution" title="Permalink to this heading">#</a></h2>
-<p>Alternatively, if we know that $f()$ is described by a Gaussian distribution, then we can find the joint distribution between $\mathbf{x},y$. This can be described as:</p>
-<p>$$
+<p>Alternatively, if we know that <span class="math notranslate nohighlight">\(f()\)</span> is described by a Gaussian distribution, then we can find the joint distribution between <span class="math notranslate nohighlight">\(\mathbf{x},y\)</span>. This can be described as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{bmatrix}
-\mathbf{x} \
-y
-\end{bmatrix}
-\sim \mathcal{N} \left(
-\begin{bmatrix}
-\mu_\mathbf{x} \
-f(\mathbf{x})
-\end{bmatrix},
-\begin{bmatrix}
-\Sigma_\mathbf{x} &amp; C \
-C^\top &amp; \Pi
-\end{bmatrix}
-\right)
-$$</p>
+    \mathbf{x} \\
+    y
+    \end{bmatrix}
+    \sim \mathcal{N} \left( 
+    \begin{bmatrix}
+    \mu_\mathbf{x} \\ 
+    f(\mathbf{x})
+    \end{bmatrix}, 
+    \begin{bmatrix}
+    \Sigma_\mathbf{x} &amp; C \\
+    C^\top &amp; \Pi
+    \end{bmatrix}
+    \right)
+\end{split}\]</div>
 <details>
 ---
 title: Literature
@@ -1198,7 +1203,7 @@ $$
 </li>
 <li><p><span class="xref myst">Expectation Propagation in Gaussian Process Dynamical Systems</span> - Deisenroth &amp; Mohamed (2012)</p>
 <blockquote>
-<div><p>The authors use expectation propagation as a way to propagate the noise through the test points. They mention the two ways to account for the input uncertainty referencing the GP-BayesFilters paper above: explicit moment-matching and the linearized (unscented) version. They also give the interpretation that the Moment-Matching approach with the kernel expectations is analogous to doing the KL-Divergence between prior distribution with the uncertain inputs $p(x)$ and the approximate distribution $q(x)$.</p>
+<div><p>The authors use expectation propagation as a way to propagate the noise through the test points. They mention the two ways to account for the input uncertainty referencing the GP-BayesFilters paper above: explicit moment-matching and the linearized (unscented) version. They also give the interpretation that the Moment-Matching approach with the kernel expectations is analogous to doing the KL-Divergence between prior distribution with the uncertain inputs <span class="math notranslate nohighlight">\(p(x)\)</span> and the approximate distribution <span class="math notranslate nohighlight">\(q(x)\)</span>.</p>
 </div></blockquote>
 </li>
 <li><p><span class="xref myst">Accounting for Input Noise in Gaussian Process Parameter Retrieval</span> - Johnson et. al. (2019)</p>
@@ -1279,7 +1284,7 @@ $$
 <hr class="docutils" />
 <section id="kernel-expectations">
 <h3>Kernel Expectations<a class="headerlink" href="#kernel-expectations" title="Permalink to this heading">#</a></h3>
-<p>So [Girard 2003] came up with a name of something we call kernel expectations ${\mathbf{\xi, \Omega, \Phi}}$-statistics. These are basically calculated by taking the expectation of a kernel or product of two kernels w.r.t. some distribution. Typically this distribution is normal but in the variational literature it is a variational distribution.</p>
+<p>So [Girard 2003] came up with a name of something we call kernel expectations <span class="math notranslate nohighlight">\(\{\mathbf{\xi, \Omega, \Phi}\}\)</span>-statistics. These are basically calculated by taking the expectation of a kernel or product of two kernels w.r.t. some distribution. Typically this distribution is normal but in the variational literature it is a variational distribution.</p>
 <p>??? info “Details”</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>The three kernel expectations that surface are:
 

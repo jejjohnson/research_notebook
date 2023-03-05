@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/inr/qg';</script>
@@ -1007,7 +1009,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="qg-pde">
+  <section class="tex2jax_ignore mathjax_ignore" id="qg-pde">
 <h1>QG PDE<a class="headerlink" href="#qg-pde" title="Permalink to this heading">#</a></h1>
 <p align="center">
 <img src="https://ggos.org/wp-content/uploads/2021/04/satellite_altimetry_ggos-web-2020-1024x893.png" alt="drawing" width="400"/>
@@ -1019,32 +1021,36 @@ title="Print to PDF"
 </p>
 <section id="assumptions">
 <h2>Assumptions<a class="headerlink" href="#assumptions" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \text{Pressure} \propto \text{Sea Surface Height (SSH)}
-$$</p>
-<p>$$
+\]</div>
+<div class="math notranslate nohighlight">
+\[
 \text{Coriolis Force} \propto \text{Velocity}
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="representation">
 <h2>Representation<a class="headerlink" href="#representation" title="Permalink to this heading">#</a></h2>
-<p>We have a coordinate vector, $\mathbf{x} \in \mathbb{R}^D$, which describe the state 2D space $(x,y)$. We also have a time component, $t$, which describes the 2D space at a specific point in time. We also have a two functions which describe the flow state: the potential function, $\boldsymbol{q}$, is the … and the $\boldsymbol{\psi}$ is an auxilary function which …. Both functions take in the coordinate vector and time and output a scalar value.</p>
-<p>$$
+<p>We have a coordinate vector, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^D\)</span>, which describe the state 2D space <span class="math notranslate nohighlight">\((x,y)\)</span>. We also have a time component, <span class="math notranslate nohighlight">\(t\)</span>, which describes the 2D space at a specific point in time. We also have a two functions which describe the flow state: the potential function, <span class="math notranslate nohighlight">\(\boldsymbol{q}\)</span>, is the … and the <span class="math notranslate nohighlight">\(\boldsymbol{\psi}\)</span> is an auxilary function which …. Both functions take in the coordinate vector and time and output a scalar value.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-q &amp;= \boldsymbol{q}(\mathbf{x},t) \
+q &amp;= \boldsymbol{q}(\mathbf{x},t) \\
 \psi &amp;= \boldsymbol{\psi}(\mathbf{x},t)
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 <hr class="docutils" />
 <section id="pde">
 <h2>PDE<a class="headerlink" href="#pde" title="Permalink to this heading">#</a></h2>
 <p>We have the following PDE for the QG dynamics:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \partial_t q + \det J(\psi, q) = 0
-$$</p>
-<p>where $q(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}$ is the potential vorticity (PV), $\psi(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}$ is the stream function, $\partial_t$ is the partial derivative wrt $t$, $\boldsymbol{J}$, is the Jacobian operator and $\det \boldsymbol{J}(\cdot,\cdot)$ is the <em>determinant</em> of the Jacobian.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(q(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the potential vorticity (PV), <span class="math notranslate nohighlight">\(\psi(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the stream function, <span class="math notranslate nohighlight">\(\partial_t\)</span> is the partial derivative wrt <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(\boldsymbol{J}\)</span>, is the Jacobian operator and <span class="math notranslate nohighlight">\(\det \boldsymbol{J}(\cdot,\cdot)\)</span> is the <em>determinant</em> of the Jacobian.</p>
 <p><strong>Objective</strong>: We want to convert this PDE in terms of sea surface height (SSH) instead of PV and the stream function.</p>
 </section>
 <hr class="docutils" />
@@ -1052,29 +1058,33 @@ $$</p>
 <h2>PINNs Loss Derivation<a class="headerlink" href="#pinns-loss-derivation" title="Permalink to this heading">#</a></h2>
 <section id="stream-function">
 <h3>Stream Function<a class="headerlink" href="#stream-function" title="Permalink to this heading">#</a></h3>
-<p>Let’s define the relationship between the SSH, $u$, and the stream function $\psi$.</p>
-<p>$$
+<p>Let’s define the relationship between the SSH, <span class="math notranslate nohighlight">\(u\)</span>, and the stream function <span class="math notranslate nohighlight">\(\psi\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \psi = \frac{f}{g}u = c_1 u
-$$</p>
-<p>where $c_1 = \frac{f}{g}$. If we plug in the SSH into the PDE, we get:</p>
-<p>$$
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_1 = \frac{f}{g}\)</span>. If we plug in the SSH into the PDE, we get:</p>
+<div class="math notranslate nohighlight">
+\[
 \partial_t q + \det J(c_1 u, q) = 0
-$$</p>
-<p>To simplify the notation, we will factor out the constant, $c_1$, from the determinant Jacobian term.</p>
-<p>$$
+\]</div>
+<p>To simplify the notation, we will factor out the constant, <span class="math notranslate nohighlight">\(c_1\)</span>, from the determinant Jacobian term.</p>
+<div class="math notranslate nohighlight">
+\[
 \partial_t q + c_1\det J(u, q) = 0
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="span-style-color-red-proof-span-constants-and-determinant-jacobians">
 <h4><span style="color:red"><strong>Proof</strong></span>: Constants and determinant Jacobians<a class="headerlink" href="#span-style-color-red-proof-span-constants-and-determinant-jacobians" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\det J(c_1 u, q) &amp;= \partial_x c_1 u \partial_y q - \partial_y c_1 u \partial_x q \
-\det J(c_1 u, q) &amp;= c_1 \partial_x u \partial_y q - c_1 \partial_y u \partial_x q  \
-c_1\det J(u, q) &amp;= c_1 \left(\partial_x u \partial_y q - \partial_y u \partial_x q\right) \
+\det J(c_1 u, q) &amp;= \partial_x c_1 u \partial_y q - \partial_y c_1 u \partial_x q \\
+\det J(c_1 u, q) &amp;= c_1 \partial_x u \partial_y q - c_1 \partial_y u \partial_x q  \\
+c_1\det J(u, q) &amp;= c_1 \left(\partial_x u \partial_y q - \partial_y u \partial_x q\right) \\
 \end{aligned}
-$$</p>
-<p><strong>Note</strong>: we used the property that $\partial (c f) = c \partial f$.</p>
+\end{split}\]</div>
+<p><strong>Note</strong>: we used the property that <span class="math notranslate nohighlight">\(\partial (c f) = c \partial f\)</span>.</p>
 <p><span style="color:red"><strong>QED</strong></span>.</p>
 </section>
 </section>
@@ -1082,113 +1092,134 @@ $$</p>
 <section id="potential-vorticity">
 <h3>Potential Vorticity<a class="headerlink" href="#potential-vorticity" title="Permalink to this heading">#</a></h3>
 <p>Now, let’s define the relationship between the stream function and the PV. This is given by:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-q &amp;= \nabla^2 \psi + \frac{1}{L_R^2} \psi \
+q &amp;= \nabla^2 \psi + \frac{1}{L_R^2} \psi \\
 &amp;= \nabla^2 \psi + c_2 \psi
 \end{aligned}
-$$</p>
-<p>where $\nabla^2$ is the Laplacian operator and $c_2 = \frac{1}{L_R^2}$. If we plug in SSH, $u$, into the stream function, as defined above, we get:</p>
-<p>$$
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nabla^2\)</span> is the Laplacian operator and <span class="math notranslate nohighlight">\(c_2 = \frac{1}{L_R^2}\)</span>. If we plug in SSH, <span class="math notranslate nohighlight">\(u\)</span>, into the stream function, as defined above, we get:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-q &amp;= \nabla^2 (c_1 u) + c_2 (c_1 u) \
-&amp;= c_1 \nabla^2 u + c_3 u
+q &amp;= \nabla^2 (c_1 u) + c_2 (c_1 u) \\
+ &amp;= c_1 \nabla^2 u + c_3 u
 \end{aligned}
-$$</p>
-<p>where $c_3 = c_1 c_2 = \frac{f}{g L_R^2}$. We can plug in the PV, $q$, into the PDE in terms of SSH, $u$.</p>
-<p>$$
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_3 = c_1 c_2 = \frac{f}{g L_R^2}\)</span>. We can plug in the PV, <span class="math notranslate nohighlight">\(q\)</span>, into the PDE in terms of SSH, <span class="math notranslate nohighlight">\(u\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \partial_t \left(c_1 \nabla^2 u + c_3 u \right) + c_1\det J \left(u, c_1 \nabla^2 u + c_3 u \right) = 0
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p>Now, we can expand this equation but first let’s break this up into two terms:</p>
-<p>$$
-\underbrace{\partial_t \left(c_1 \nabla^2 u + c_3 u \right)}<em>{\text{Term I}} + c_1\underbrace{\det J \left( u, c_1 \nabla^2 u + c_3 u \right)}</em>{\text{Term II}} = 0
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\underbrace{\partial_t \left(c_1 \nabla^2 u + c_3 u \right)}_{\text{Term I}} + c_1\underbrace{\det J \left( u, c_1 \nabla^2 u + c_3 u \right)}_{\text{Term II}} = 0
+\]</div>
 <p>Now we will tackle both of these terms one at a time.</p>
 <hr class="docutils" />
 <p><strong>Term I</strong></p>
 <p>So term I is:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 f_1 := \partial_t \left(c_1 \nabla^2 u + c_3 u \right)
-$$</p>
-<p>We can expand this via the partial derivative, $\partial_t$.</p>
-<p>$$
+\]</div>
+<p>We can expand this via the partial derivative, <span class="math notranslate nohighlight">\(\partial_t\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 f_1 := c_1 \partial_t \nabla^2 u + c_3 \partial_t u
-$$</p>
+\]</div>
 <p>So plugging this back into the PDE gives us:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 c_1 \partial_t \nabla^2 u + c_3 \partial_t u +c_1 \underbrace{\det J \left(u, c_1 \nabla^2 u + c_3 u \right)}_{\text{Term II}} = 0
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><strong>Term II</strong></p>
 <p>We can factorize this determinant Jacobian term.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 c_1\det J \left(u, c_1 \nabla^2 u + c_3 u \right) = c_1\det \boldsymbol{J}(u, c_1 \nabla^2 u) +  \det \boldsymbol{J}(c_1 u, c_3 u)
-$$</p>
+\]</div>
 <p>And furthermore, we can factor out the constants</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 c_1\det J \left( u, c_1 \nabla^2 u + c_3 u \right) = c_1^2\det \boldsymbol{J}(u, \nabla^2 u) +  c_1c_3 \det \boldsymbol{J}(u, u)
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="span-style-color-red-proof-span-determinant-jacobian-expansion">
 <h4><span style="color:red"><strong>Proof</strong></span>: Determinant Jacobian Expansion<a class="headerlink" href="#span-style-color-red-proof-span-determinant-jacobian-expansion" title="Permalink to this heading">#</a></h4>
 <p>So term II is:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 f_2 := \det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right)
-$$</p>
-<p>We know the definition of the determinant of the Jacobian for a vector-valued function, $\boldsymbol{f} = [f_1(x,y), f_2(x,y)]^\top: \mathbb{R}^2 \rightarrow \mathbb{R}^2$, as there is an identity.</p>
-<p>$$
+\]</div>
+<p>We know the definition of the determinant of the Jacobian for a vector-valued function, <span class="math notranslate nohighlight">\(\boldsymbol{f} = [f_1(x,y), f_2(x,y)]^\top: \mathbb{R}^2 \rightarrow \mathbb{R}^2\)</span>, as there is an identity.</p>
+<div class="math notranslate nohighlight">
+\[
 \det J \left( f_1(x,y), f_2(x,y)\right) =
 \partial_x f_1 \partial_y f_2 - \partial_y f_1 \partial_x f_2
-$$</p>
+\]</div>
 <p>If use this identity with term II, we get:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \partial_x (c_1 u) \partial_y (c_1 \nabla^2u + c_3 u) - \partial_y (c_1 u) \partial_x (c_1 \nabla^2u + c_3 u)
-$$</p>
+\]</div>
 <p>Again, let’s split this up into two subterms and tackle them one-by-one.</p>
-<p>$$
-\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \underbrace{\partial_x (c_1 u) \partial_y (c_1 \nabla^2u + c_3 u)}<em>{\text{Term IIa}} - \underbrace{\partial_y (c_1 u) \partial_x (c_1 \nabla^2u + c_3 u)}</em>{\text{Term IIa}}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \underbrace{\partial_x (c_1 u) \partial_y (c_1 \nabla^2u + c_3 u)}_{\text{Term IIa}} - \underbrace{\partial_y (c_1 u) \partial_x (c_1 \nabla^2u + c_3 u)}_{\text{Term IIa}}
+\]</div>
 <hr class="docutils" />
 <p><strong>Term IIa</strong></p>
 <p>We have the following term for Term IIa:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 f_{2a} := \partial_x (c_1 u) \partial_y (c_1 \nabla^2u + c_3 u)
-$$</p>
+\]</div>
 <p>We can expand the terms to get the following:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 f_{2a} := \partial_x (c_1 u) \partial_y \nabla^2 (c_1 u) + \partial_x (c_1 u) \partial_y (c_3 u)
-$$</p>
+\]</div>
 <p>And we can simplify, by factoring out constants, to get:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 f_{2a} := c_1^2 \partial_x u \partial_y \nabla^2 u + c_1c_3 \partial_x u \partial_y u
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><strong>Term IIb</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 f_{2b} := \partial_y (c_1 u) \partial_x (c_1 \nabla^2u + c_3 u)
-$$</p>
+\]</div>
 <p>We can expand the terms to get the following:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 f_{2b} := c_1^2 \partial_y u \partial_x \nabla^2u + c_1 c_3 \partial_y u \partial_x u
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><strong>Combined</strong> (Term IIa, IIb)</p>
 <p>We can substitute all of these two terms into our original expression</p>
-<p>$$
-\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \
-c_1^2 \partial_x u \partial_y \nabla^2 u + c_1c_3 \partial_x u \partial_y u \ - c_1^2 \partial_y u \partial_x \nabla^2u - c_1 c_3 \partial_y u \partial_x u
-$$</p>
-<p>If we group the terms by operators, $\partial, \nabla^2$, then we get:</p>
-<p>$$
-\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \
-\underbrace{c_1^2 \partial_x u \partial_y \nabla^2 u -  c_1^2 \partial_y u \partial_x \nabla^2u}<em>{\nabla^2} +  \underbrace{c_1c_3 \partial_x u \partial_y u - c_1c_3\partial_y u \partial_x u}</em>{\partial}
-$$</p>
-<p>So each of these terms are determinant Jacobian terms, $\det \boldsymbol J$.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \\
+c_1^2 \partial_x u \partial_y \nabla^2 u + c_1c_3 \partial_x u \partial_y u \\ - c_1^2 \partial_y u \partial_x \nabla^2u - c_1 c_3 \partial_y u \partial_x u
+\end{split}\]</div>
+<p>If we group the terms by operators, <span class="math notranslate nohighlight">\(\partial, \nabla^2\)</span>, then we get:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = \\
+\underbrace{c_1^2 \partial_x u \partial_y \nabla^2 u -  c_1^2 \partial_y u \partial_x \nabla^2u}_{\nabla^2} +  \underbrace{c_1c_3 \partial_x u \partial_y u - c_1c_3\partial_y u \partial_x u}_{\partial}
+\end{split}\]</div>
+<p>So each of these terms are determinant Jacobian terms, <span class="math notranslate nohighlight">\(\det \boldsymbol J\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \det J \left(c_1 u, c_1 \nabla^2 u + c_3 u \right) = c_1^2\det \boldsymbol{J}(u, \nabla^2 u) +  c_1c_3 \det \boldsymbol{J}(u, u)
-$$</p>
-<p>We have the final form for our PDE in terms of SSH, $u$, which combines terms I and II.</p>
+\]</div>
+<p>We have the final form for our PDE in terms of SSH, <span class="math notranslate nohighlight">\(u\)</span>, which combines terms I and II.</p>
 <p><span style="color:red"><strong>QED</strong></span>.</p>
 </section>
 </section>
@@ -1196,29 +1227,34 @@ $$</p>
 <section id="final-form">
 <h3>Final Form<a class="headerlink" href="#final-form" title="Permalink to this heading">#</a></h3>
 <p>So we have the final form for our PDE in terms of SSH.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 c_1 \partial_t \nabla^2 u + c_3 \partial_t u + c_1^2\det \boldsymbol{J}(u, \nabla^2 u) +  c_1c_3 \det \boldsymbol{J}(u, u) = 0
-$$</p>
+\]</div>
 <p>We will factor out a constant term</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \partial_t \nabla^2 u + c_2 \partial_t u + c_1\det \boldsymbol{J}(u, \nabla^2 u) +  c_3 \det \boldsymbol{J}(u, u) = 0
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="expanded-form">
 <h3>Expanded Form<a class="headerlink" href="#expanded-form" title="Permalink to this heading">#</a></h3>
 <p>It is also good to do the expanded form with all of the partial derivatives because then we can see the computational portions with the gradient operations.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \partial_t \nabla^2 u + c_2 \partial_t u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u = 0
-$$</p>
-<p>Again, we will group the terms together in terms of the order of their derivatives, $(\nabla^2, \partial)$.</p>
-<p>$$
+\]</div>
+<p>Again, we will group the terms together in terms of the order of their derivatives, <span class="math notranslate nohighlight">\((\nabla^2, \partial)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u +  c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u = 0
-$$</p>
+\]</div>
 <p>Now, another grouping:</p>
-<p>$$
-\underbrace{\partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u}<em>{\nabla^2} +  \underbrace{c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u}</em>{\partial} = 0
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\underbrace{\partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u}_{\nabla^2} +  \underbrace{c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u}_{\partial} = 0
+\]</div>
 <!-- ---
 **Gradient** (order 1)
 
@@ -1261,44 +1297,50 @@ $$
 <hr class="docutils" />
 <section id="qg-equation-ssh">
 <h2>QG Equation (SSH)<a class="headerlink" href="#qg-equation-ssh" title="Permalink to this heading">#</a></h2>
-<p><strong>Note</strong>: For the ease of notation, let’s denote $u$ as the SSH. The above PDE can be written in terms of $u$</p>
-<p>$$
+<p><strong>Note</strong>: For the ease of notation, let’s denote <span class="math notranslate nohighlight">\(u\)</span> as the SSH. The above PDE can be written in terms of <span class="math notranslate nohighlight">\(u\)</span></p>
+<div class="math notranslate nohighlight">
+\[
 \partial_t \nabla^2 u + c_2 \partial_t u + c_1\det \boldsymbol{J}(u, \nabla^2 u) +  c_3 \det \boldsymbol{J}(u, u) = 0
-$$</p>
+\]</div>
 <p><strong>Note</strong>: See <a class="reference external" href="https://hackmd.io/&#64;jejjohnson/r1ITccw69">derivation</a> for how I came up with this term.</p>
 </section>
 <hr class="docutils" />
 <section id="id1">
 <h2>Expanded Form<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <p>We will do the expanded form with all of the partial derivatives so that we can see the gradient operations which we will need for the computational portions.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \partial_t \nabla^2 u + c_2 \partial_t u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u = 0
-$$</p>
-<p>Again, we will group the terms together in terms of the order of their derivatives, $(\nabla^2, \partial)$.</p>
-<p>$$
+\]</div>
+<p>Again, we will group the terms together in terms of the order of their derivatives, <span class="math notranslate nohighlight">\((\nabla^2, \partial)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u +  c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u = 0
-$$</p>
+\]</div>
 <p>Now, another grouping:</p>
-<p>$$
-\underbrace{\partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u}<em>{\nabla^2} +  \underbrace{c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u}</em>{\nabla} = 0
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\underbrace{\partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u}_{\nabla^2} +  \underbrace{c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u}_{\nabla} = 0
+\]</div>
 <hr class="docutils" />
 <p>Now, we will use the expanded forms to do the code. I have snippets using PyTorch and Jax (<strong>TODO</strong>). They use the DAG/OOP and Functional approach (respectively) so the notation is slightly different.</p>
 <hr class="docutils" />
 <section id="gradient-1st-order">
 <h3>Gradient (1st Order)<a class="headerlink" href="#gradient-1st-order" title="Permalink to this heading">#</a></h3>
 <p>Let’s look at the first-order gradients.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}_\partial := c_2 \partial_t u + c_3 \partial_x u \partial_y u - c_3\partial_y u \partial_x u
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="code">
 <h4>Code<a class="headerlink" href="#code" title="Permalink to this heading">#</a></h4>
 <p>Let’s use the following notation:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 u = \boldsymbol{f_\theta}(\mathbf{x})
-$$</p>
-<p>where $\mathbf{x} \in \mathbb{R}^D$, $\mathbf{u} \in \mathbb{R}$, and $D = [N_x, N_y, N_t]$.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^D\)</span>, <span class="math notranslate nohighlight">\(\mathbf{u} \in \mathbb{R}\)</span>, and <span class="math notranslate nohighlight">\(D = [N_x, N_y, N_t]\)</span>.</p>
 <p><strong>Note</strong>: This is the PyTorch notation.</p>
 <div class="highlight-python= notranslate"><div class="highlight"><pre><span></span># coords variable, (B, D)
 x = torch.Variable(x, requires_grad=True)
@@ -1322,9 +1364,10 @@ term2 = c2 * u_t + c3 * u_x * u_y - c3 * u_y * u_x
 <section id="laplacian-gradient">
 <h3>Laplacian + Gradient<a class="headerlink" href="#laplacian-gradient" title="Permalink to this heading">#</a></h3>
 <p>Now we can look at the second order gradients.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}_{\nabla^2} := \partial_t \nabla^2 u + c_1 \partial_x u \partial_y \nabla^2 u -  c_1 \partial_y u \partial_x \nabla^2u
-$$</p>
+\]</div>
 <p><strong>Note</strong>: This is where all of the computational expense will come from.</p>
 <hr class="docutils" />
 <section id="id2">
@@ -1382,9 +1425,10 @@ term1 = u_lap_t + c1 * u_x * u_lap_y - c1 * u_y * u_lap_x
 <section id="loss">
 <h3>Loss<a class="headerlink" href="#loss" title="Permalink to this heading">#</a></h3>
 <p>So now we combine both losses to get the full loss.</p>
-<p>$$
-\mathcal{L}<em>{phy} := (\mathcal{L}</em>{\partial} + \mathcal{L}_{\nabla^2})^2 = 0
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{phy} := (\mathcal{L}_{\partial} + \mathcal{L}_{\nabla^2})^2 = 0
+\]</div>
 <p><strong>Note</strong>: We typically square this term. It helps during the minimization process to always have a positive value. Otherwise, it will try to minimize a negative value. Instead of the squared term, we can also do the absolute value or perhaos the square root of the squared term.</p>
 <div class="highlight-python=! notranslate"><div class="highlight"><pre><span></span>
 # (B,)

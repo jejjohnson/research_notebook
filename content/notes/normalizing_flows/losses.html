@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/normalizing_flows/losses';</script>
@@ -893,113 +895,128 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="losses">
+  <section class="tex2jax_ignore mathjax_ignore" id="losses">
 <h1>Losses<a class="headerlink" href="#losses" title="Permalink to this heading">#</a></h1>
 <section id="kl-divergence-vs-negative-log-likelihood">
 <h2>KL-Divergence vs Negative Log-Likelihood<a class="headerlink" href="#kl-divergence-vs-negative-log-likelihood" title="Permalink to this heading">#</a></h2>
-<p>Here we want to show that the KL-Divergence between the true distribution $p_\text{data}(\mathbf{x})$ and the estimated distribution
-$p_\theta(\mathbf{x})$ is the same as maximizing the likelihood of our estimated distribution $p_\theta(\mathbf{x})$.</p>
-<p>$$
+<p>Here we want to show that the KL-Divergence between the true distribution <span class="math notranslate nohighlight">\(p_\text{data}(\mathbf{x})\)</span> and the estimated distribution
+<span class="math notranslate nohighlight">\(p_\theta(\mathbf{x})\)</span> is the same as maximizing the likelihood of our estimated distribution <span class="math notranslate nohighlight">\(p_\theta(\mathbf{x})\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-\text{D}<em>\text{KL}\left[p</em>\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] = \mathbb{E}<em>{p</em>\text{data}(\mathbf{x})} \left[ \log p_\theta(\mathbf{x}) \right] + \text{constant}
+    \text{D}_\text{KL}\left[p_\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] = \mathbb{E}_{p_\text{data}(\mathbf{x})} \left[ \log p_\theta(\mathbf{x}) \right] + \text{constant}
 \end{equation}
-$$</p>
+\]</div>
 <div class="dropdown info admonition">
 <p class="admonition-title">Proof</p>
 <p>First we decompose the KL-Divergence into its log terms.</p>
-<p>$$
-\begin{align}\text{D}<em>\text{KL}\left[p</em>\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] &amp;=\mathbb{E}<em>{p</em>\text{data}(\mathbf{x})} \left[ \log \frac{p_\text{data}(\mathbf{x})}{p_\theta(\mathbf{x})} \right] \
-&amp;=\mathbb{E}<em>{p</em>\text{data}(\mathbf{x})}\left[ \log p_\text{data}(\mathbf{x}) - \log p_\theta(\mathbf{x}) \right] \
-&amp;=\mathbb{E}<em>{p</em>\text{data}(\mathbf{x})}\left[ \log p_\text{data}(\mathbf{x})\right] - \mathbb{E}<em>{ p</em>\text{data}(\mathbf{x})} \left[ \log p_\theta(\mathbf{x}) \right]
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}\text{D}_\text{KL}\left[p_\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] &amp;=\mathbb{E}_{p_\text{data}(\mathbf{x})} \left[ \log \frac{p_\text{data}(\mathbf{x})}{p_\theta(\mathbf{x})} \right] \\
+&amp;=\mathbb{E}_{p_\text{data}(\mathbf{x})}\left[ \log p_\text{data}(\mathbf{x}) - \log p_\theta(\mathbf{x}) \right] \\
+&amp;=\mathbb{E}_{p_\text{data}(\mathbf{x})}\left[ \log p_\text{data}(\mathbf{x})\right] - \mathbb{E}_{ p_\text{data}(\mathbf{x})} \left[ \log p_\theta(\mathbf{x}) \right]
 \end{align}
-$$</p>
-<p>The first term is the entropy of our data, $H\left(p_\text{data}(\mathbf{x}) \right)$. This term doesn’t depend on our parameters $\theta$ which means it will be constant irregardless of how well we estimate $p_\theta(\mathbf{x})$. So we can simplify this function.</p>
-<p>$$
+\end{split}\]</div>
+<p>The first term is the entropy of our data, <span class="math notranslate nohighlight">\(H\left(p_\text{data}(\mathbf{x}) \right)\)</span>. This term doesn’t depend on our parameters <span class="math notranslate nohighlight">\(\theta\)</span> which means it will be constant irregardless of how well we estimate <span class="math notranslate nohighlight">\(p_\theta(\mathbf{x})\)</span>. So we can simplify this function.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{align}
-\text{D}<em>\text{KL}\left[p</em>\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] &amp;=- \mathbb{E}<em>{p</em>\text{data}(\mathbf{x})} \left[ \log p_\theta(\mathbf{x}) \right] + \text{constant} \&amp;=- \int p_\text{data}(\mathbf{x}) \log p_\theta(\mathbf{x}) d\mathbf{x} + C
+\text{D}_\text{KL}\left[p_\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] &amp;=- \mathbb{E}_{p_\text{data}(\mathbf{x})} \left[ \log p_\theta(\mathbf{x}) \right] + \text{constant} \\&amp;=- \int p_\text{data}(\mathbf{x}) \log p_\theta(\mathbf{x}) d\mathbf{x} + C
 \end{align}
-$$</p>
-<p>The remaining term is the cross-entropy; the expected amount of bits need to compress. This is optimal when $p_\text{data}(\mathbf{x}) = p_\theta(\mathbf{x})$ (cite: Shannon Source Coding Theorem). Let $p_\text{data}(\mathbf{x})$ be an empirical distribution described by a delta.</p>
-<p>$$
+\end{split}\]</div>
+<p>The remaining term is the cross-entropy; the expected amount of bits need to compress. This is optimal when <span class="math notranslate nohighlight">\(p_\text{data}(\mathbf{x}) = p_\theta(\mathbf{x})\)</span> (cite: Shannon Source Coding Theorem). Let <span class="math notranslate nohighlight">\(p_\text{data}(\mathbf{x})\)</span> be an empirical distribution described by a delta.</p>
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-p_\text{data}(\mathbf{x}) = \frac{1}{N} \sum_{n=1}^N \delta (\mathbf{x} - \mathbf{x}_n)
+    p_\text{data}(\mathbf{x}) = \frac{1}{N} \sum_{n=1}^N \delta (\mathbf{x} - \mathbf{x}_n)
 \end{equation}
-$$</p>
+\]</div>
 <p>We assume that it puts a probability on the observed data and zero everywhere else. Plugging this into our KL-Divergence function, we get:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-\text{D}<em>\text{KL}\left[p</em>\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] = -  \int \left[ \frac{1}{N} \sum_{n=1}^N \delta (\mathbf{x} - \mathbf{x}<em>n) \right] \log p</em>\theta(\mathbf{x}) d\mathbf{x} + C
+\text{D}_\text{KL}\left[p_\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] = -  \int \left[ \frac{1}{N} \sum_{n=1}^N \delta (\mathbf{x} - \mathbf{x}_n) \right] \log p_\theta(\mathbf{x}) d\mathbf{x} + C
 \end{equation}
-$$</p>
+\]</div>
 <p>Then using the law of large numbers where given enough samples we can empirically estimate this integral, we can simplify this even further:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-\text{D}<em>\text{KL}\left[p</em>\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] = -  \frac{1}{N} \sum_{n=1}^N \log p_\theta(\mathbf{x}) + C
+\text{D}_\text{KL}\left[p_\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right] = -  \frac{1}{N} \sum_{n=1}^N \log p_\theta(\mathbf{x}) + C
 \end{equation}
-$$</p>
-<p>We are left with the log-likelihood term. So maximizing the likelihood of our estimated distribution $p_\theta(\mathbf{x})$ is equivalent to minimizing the difference between the estimated distribution $p_\theta(\mathbf{x})$ and the real distribution $p_\text{data}(\mathbf{x})$. This is a proxy method allowing us to find the parameters $\theta$ without explicitly knowing the real distribution.</p>
+\]</div>
+<p>We are left with the log-likelihood term. So maximizing the likelihood of our estimated distribution <span class="math notranslate nohighlight">\(p_\theta(\mathbf{x})\)</span> is equivalent to minimizing the difference between the estimated distribution <span class="math notranslate nohighlight">\(p_\theta(\mathbf{x})\)</span> and the real distribution <span class="math notranslate nohighlight">\(p_\text{data}(\mathbf{x})\)</span>. This is a proxy method allowing us to find the parameters <span class="math notranslate nohighlight">\(\theta\)</span> without explicitly knowing the real distribution.</p>
 </div>
 </section>
 <section id="constructive-destructive-kl-divergence">
 <h2>Constructive-Destructive KL-Divergence<a class="headerlink" href="#constructive-destructive-kl-divergence" title="Permalink to this heading">#</a></h2>
-<p>Let $\boldsymbol{f}<em>\theta$ be the invertible, bijective normalizing function which maps $\mathbf{x}$ to $\mathbf{z}$, i.e. $\boldsymbol{f}</em>\theta:\mathbf{x} \in \mathbb{R}^D \rightarrow \mathbf{z} \in \mathbb{R}^D$. Let $g_\theta$ be the inverse of $\boldsymbol{f}<em>\theta$ which is the generating function mapping $\mathbf{z}$ to $\mathbf{x}$, i.e. $\boldsymbol{g}</em>\theta := \boldsymbol{f}<em>\theta^{-1} :\mathbf{z} \in \mathbb{R}^D \rightarrow \mathbf{x} \in \mathbb{R}^D$. We can view $\boldsymbol{f}</em>\theta$ as a destructive density whereby we “destroy” the density of the original dataset $p_\text{data}(\mathbf{x})$ into a common base density $p_\mathbf{z}$. Conversely, we can view $g_\theta$ as a constructive density whereby we “construct” the density of the original dataset $p_\text{data}(\mathbf{x})$ from a base density $p_\mathbf{z}$.</p>
-<p>$$
+<p>Let <span class="math notranslate nohighlight">\(\boldsymbol{f}_\theta\)</span> be the invertible, bijective normalizing function which maps <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> to <span class="math notranslate nohighlight">\(\mathbf{z}\)</span>, i.e. <span class="math notranslate nohighlight">\(\boldsymbol{f}_\theta:\mathbf{x} \in \mathbb{R}^D \rightarrow \mathbf{z} \in \mathbb{R}^D\)</span>. Let <span class="math notranslate nohighlight">\(g_\theta\)</span> be the inverse of <span class="math notranslate nohighlight">\(\boldsymbol{f}_\theta\)</span> which is the generating function mapping <span class="math notranslate nohighlight">\(\mathbf{z}\)</span> to <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, i.e. <span class="math notranslate nohighlight">\(\boldsymbol{g}_\theta := \boldsymbol{f}_\theta^{-1} :\mathbf{z} \in \mathbb{R}^D \rightarrow \mathbf{x} \in \mathbb{R}^D\)</span>. We can view <span class="math notranslate nohighlight">\(\boldsymbol{f}_\theta\)</span> as a destructive density whereby we “destroy” the density of the original dataset <span class="math notranslate nohighlight">\(p_\text{data}(\mathbf{x})\)</span> into a common base density <span class="math notranslate nohighlight">\(p_\mathbf{z}\)</span>. Conversely, we can view <span class="math notranslate nohighlight">\(g_\theta\)</span> as a constructive density whereby we “construct” the density of the original dataset <span class="math notranslate nohighlight">\(p_\text{data}(\mathbf{x})\)</span> from a base density <span class="math notranslate nohighlight">\(p_\mathbf{z}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-\mathbf{z} = \boldsymbol{f}<em>\theta(\mathbf{x}), \qquad \mathbf{x} = g</em>\theta(\mathbf{z})
+\mathbf{z} = \boldsymbol{f}_\theta(\mathbf{x}), \qquad \mathbf{x} = g_\theta(\mathbf{z})
 \end{equation}
-$$</p>
-<p>We’re assuming $\mathbf{z}\sim p_\mathbf{z}(\mathbf{z})$. Using the change of variables formula, we can express the probability of $p_\theta(\mathbf{x})$ in terms of $\mathbf{z}$ and the transform $\boldsymbol{f}_\theta$.</p>
-<p>$$
+\]</div>
+<p>We’re assuming <span class="math notranslate nohighlight">\(\mathbf{z}\sim p_\mathbf{z}(\mathbf{z})\)</span>. Using the change of variables formula, we can express the probability of <span class="math notranslate nohighlight">\(p_\theta(\mathbf{x})\)</span> in terms of <span class="math notranslate nohighlight">\(\mathbf{z}\)</span> and the transform <span class="math notranslate nohighlight">\(\boldsymbol{f}_\theta\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-p_\theta(\mathbf{x}) = p_\mathbf{z}(\boldsymbol{f}<em>\theta(\mathbf{x})) \left| \nabla</em>\mathbf{x} \boldsymbol{f}_\theta(\mathbf{x})\right|
+p_\theta(\mathbf{x}) = p_\mathbf{z}(\boldsymbol{f}_\theta(\mathbf{x})) \left| \nabla_\mathbf{x} \boldsymbol{f}_\theta(\mathbf{x})\right|
 \end{equation}
-$$</p>
-<p>This function $\boldsymbol{f}<em>\theta$ “normalizes” the complex density $\mathbf{x}$ into a simpler base distribution $\mathbf{z}$. We can also express this equation in terms of $g</em>\theta$ which is the standard found in the normalizing flow literature.</p>
-<p>$$
+\]</div>
+<p>This function <span class="math notranslate nohighlight">\(\boldsymbol{f}_\theta\)</span> “normalizes” the complex density <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> into a simpler base distribution <span class="math notranslate nohighlight">\(\mathbf{z}\)</span>. We can also express this equation in terms of <span class="math notranslate nohighlight">\(g_\theta\)</span> which is the standard found in the normalizing flow literature.</p>
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
 p_\theta(\mathbf{x}) = p_\mathbf{z}(\mathbf{z}) \left| \nabla_\mathbf{z} g_\theta(\mathbf{z})\right|^{-1}
 \end{equation}
-$$</p>
-<p>The function $g_\theta$ pushes forward the base density $\mathbf{z}$ to a more complex density $\mathbf{x}$.</p>
+\]</div>
+<p>The function <span class="math notranslate nohighlight">\(g_\theta\)</span> pushes forward the base density <span class="math notranslate nohighlight">\(\mathbf{z}\)</span> to a more complex density <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
 <p>In this demonstration, we want to show that the following is equivalent.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-\text{D}<em>\text{KL}\left[p</em>\text{data}(\mathbf{x}) || p_\mathbf{x}(\mathbf{x}; \theta) \right] = \text{D}<em>\text{KL} \left[ p</em>\text{target}(\mathbf{z}; \theta) || p_\mathbf{z}(\mathbf{z}) \right]
+\text{D}_\text{KL}\left[p_\text{data}(\mathbf{x}) || p_\mathbf{x}(\mathbf{x}; \theta) \right] = \text{D}_\text{KL} \left[ p_\text{target}(\mathbf{z}; \theta) || p_\mathbf{z}(\mathbf{z}) \right]
 \end{equation}
-$$</p>
-<p>This says that the KL-Divergence between the data distribution $p_\text{data}(\mathbf{x})$ and the model $p_\mathbf{x}(\mathbf{x};\theta)$ is equivalent to the KL-Divergence between \textit{induced} distribution $p_\text{target}(\mathbf{z};\theta)$ from the transformation $\boldsymbol{f}<em>\theta(\mathbf{x})$ and the chosen base distribution $p</em>\mathbf{z}(\mathbf{z})$.</p>
+\]</div>
+<p>This says that the KL-Divergence between the data distribution <span class="math notranslate nohighlight">\(p_\text{data}(\mathbf{x})\)</span> and the model <span class="math notranslate nohighlight">\(p_\mathbf{x}(\mathbf{x};\theta)\)</span> is equivalent to the KL-Divergence between \textit{induced} distribution <span class="math notranslate nohighlight">\(p_\text{target}(\mathbf{z};\theta)\)</span> from the transformation <span class="math notranslate nohighlight">\(\boldsymbol{f}_\theta(\mathbf{x})\)</span> and the chosen base distribution <span class="math notranslate nohighlight">\(p_\mathbf{z}(\mathbf{z})\)</span>.</p>
 <div class="dropdown info admonition">
 <p class="admonition-title">Proof</p>
 <p>First we deconstruct the KL-Divergence term into its log components.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-\text{D}<em>\text{KL} \left[ p</em>\text{data}(\mathbf{x}) || p_\mathbf{x}(\mathbf{x};\theta) \right]= \mathbb{E}<em>{p</em>\text{data}(\mathbf{x})} \left[ \log p_\text{data}(\mathbf{x}) - \log p_\mathbf{x}(\mathbf{x};\theta) \right]
+\text{D}_\text{KL} \left[ p_\text{data}(\mathbf{x}) || p_\mathbf{x}(\mathbf{x};\theta) \right]= \mathbb{E}_{p_\text{data}(\mathbf{x})} \left[ \log p_\text{data}(\mathbf{x}) - \log p_\mathbf{x}(\mathbf{x};\theta) \right]
 \end{equation}
-$$</p>
-<p>If we expand $p_\mathbf{x}(\mathbf{x};\theta)$ with the change of variables formula.</p>
-<p>$$
+\]</div>
+<p>If we expand <span class="math notranslate nohighlight">\(p_\mathbf{x}(\mathbf{x};\theta)\)</span> with the change of variables formula.</p>
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-\text{D}<em>\text{KL} \left[ p</em>\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right]= \mathbb{E}<em>{p</em>\text{data}(\mathbf{x})} \left[ \log p_\text{data}(\mathbf{x}) - \log p_\mathbf{z}(\boldsymbol{f}<em>\theta(\mathbf{x})) - \log |\nabla</em>\mathbf{x} \boldsymbol{f}_\theta(\mathbf{x})| \right]
+\text{D}_\text{KL} \left[ p_\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right]= \mathbb{E}_{p_\text{data}(\mathbf{x})} \left[ \log p_\text{data}(\mathbf{x}) - \log p_\mathbf{z}(\boldsymbol{f}_\theta(\mathbf{x})) - \log |\nabla_\mathbf{x} \boldsymbol{f}_\theta(\mathbf{x})| \right]
 \end{equation}
-$$</p>
-<p>Now we do a change of variables from the data distribution $\mathbf{x}$ to the base distribution $\mathbf{z}$.</p>
-<p>$$
-\begin{equation}\text{D}<em>\text{KL} \left[ p</em>\text{data}(\mathbf{z}) || p_\mathbf{x}(\mathbf{x};\theta) \right]= \mathbb{E}<em>{p</em>\text{target}(\mathbf{z})} \left[ \log p_\text{data}(g_\theta(\mathbf{z})) - \log p_\mathbf{z}(\mathbf{z}) + \log |\nabla_\mathbf{z} g_\theta(\mathbf{z})| \right]
+\]</div>
+<p>Now we do a change of variables from the data distribution <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> to the base distribution <span class="math notranslate nohighlight">\(\mathbf{z}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{equation}\text{D}_\text{KL} \left[ p_\text{data}(\mathbf{z}) || p_\mathbf{x}(\mathbf{x};\theta) \right]= \mathbb{E}_{p_\text{target}(\mathbf{z})} \left[ \log p_\text{data}(g_\theta(\mathbf{z})) - \log p_\mathbf{z}(\mathbf{z}) + \log |\nabla_\mathbf{z} g_\theta(\mathbf{z})| \right]
 \end{equation}
-$$</p>
-<p>Recognize that we have changed the expectations from the data to the induced distribution and all terms are wrt to $\mathbf{z}$. So we can reduce this to:</p>
-<p>$$
+\]</div>
+<p>Recognize that we have changed the expectations from the data to the induced distribution and all terms are wrt to <span class="math notranslate nohighlight">\(\mathbf{z}\)</span>. So we can reduce this to:</p>
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-\text{D}<em>\text{KL} \left[ p</em>\text{data}(\mathbf{x}) || p_\mathbf{x}(\mathbf{x};\theta) \right]=
-\mathbb{E}<em>{p</em>{\text{target}}(\mathbf{z})} \left[ \log p_{\text{target}}(\mathbf{z}) - \log p_\mathbf{z}(\mathbf{z}) \right]
+\text{D}_\text{KL} \left[ p_\text{data}(\mathbf{x}) || p_\mathbf{x}(\mathbf{x};\theta) \right]=
+\mathbb{E}_{p_{\text{target}}(\mathbf{z})} \left[ \log p_{\text{target}}(\mathbf{z}) - \log p_\mathbf{z}(\mathbf{z}) \right]
 \end{equation}
-$$</p>
-<p>where $p_{\text{target}}(\mathbf{x})$ is the distribution of $\mathbf{z}=\boldsymbol{f}<em>\theta(\mathbf{x})$ when $\mathbf{x}$ is sampled from $p</em>\text{data}(\mathbf{x})$. So this is simply the KL-Divergence between the transformed data in the latent space and the base distribution we choose:</p>
-<p>$$
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_{\text{target}}(\mathbf{x})\)</span> is the distribution of <span class="math notranslate nohighlight">\(\mathbf{z}=\boldsymbol{f}_\theta(\mathbf{x})\)</span> when <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> is sampled from <span class="math notranslate nohighlight">\(p_\text{data}(\mathbf{x})\)</span>. So this is simply the KL-Divergence between the transformed data in the latent space and the base distribution we choose:</p>
+<div class="math notranslate nohighlight">
+\[
 \begin{equation}
-\text{D}<em>\text{KL} \left[ p</em>\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right]=\text{D}<em>\text{KL} \left[ p</em>{\boldsymbol{f}<em>\theta}(\mathbf{z}) || p</em>\mathbf{z}(\mathbf{z}) \right]
+\text{D}_\text{KL} \left[ p_\text{data}(\mathbf{x}) || p_\theta(\mathbf{x}) \right]=\text{D}_\text{KL} \left[ p_{\boldsymbol{f}_\theta}(\mathbf{z}) || p_\mathbf{z}(\mathbf{z}) \right]
 \end{equation}
-$$</p>
+\]</div>
 <p>which completes the proof.</p>
 </div>
 </section>

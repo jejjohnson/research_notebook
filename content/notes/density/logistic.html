@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/density/logistic';</script>
@@ -886,47 +888,55 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="logistic-distribution">
+  <section class="tex2jax_ignore mathjax_ignore" id="logistic-distribution">
 <h1>Logistic Distribution<a class="headerlink" href="#logistic-distribution" title="Permalink to this heading">#</a></h1>
 <section id="cheat-sheet">
 <h2>Cheat Sheet<a class="headerlink" href="#cheat-sheet" title="Permalink to this heading">#</a></h2>
 <p><strong>PDF Logistic Distribution</strong></p>
-<p>$$f(x) = \frac{\exp(-x)}{(1 + \exp(-x))^2} = \frac{\exp(-z)}{\sigma(1 + \exp(-z))^2}$$</p>
-<p>where $z = \frac{(x-\mu)}{\sigma}$.</p>
+<div class="math notranslate nohighlight">
+\[f(x) = \frac{\exp(-x)}{(1 + \exp(-x))^2} = \frac{\exp(-z)}{\sigma(1 + \exp(-z))^2}\]</div>
+<p>where <span class="math notranslate nohighlight">\(z = \frac{(x-\mu)}{\sigma}\)</span>.</p>
 <ul class="simple">
-<li><p>Support: $(-\infty, \infty)$</p></li>
+<li><p>Support: <span class="math notranslate nohighlight">\((-\infty, \infty)\)</span></p></li>
 </ul>
 <hr class="docutils" />
 <p><strong>CDF Logistic Distribution</strong></p>
-<p>$$F(x) = \frac{1}{1 + \exp(-x)} = \frac{1}{1 + \exp(-z)}$$</p>
-<p>where $z = \frac{(x-\mu)}{\sigma}$.</p>
+<div class="math notranslate nohighlight">
+\[F(x) = \frac{1}{1 + \exp(-x)} = \frac{1}{1 + \exp(-z)}\]</div>
+<p>where <span class="math notranslate nohighlight">\(z = \frac{(x-\mu)}{\sigma}\)</span>.</p>
 <ul class="simple">
-<li><p>Support: $(-\infty, \infty) \rightarrow [0, 1]$</p></li>
+<li><p>Support: <span class="math notranslate nohighlight">\((-\infty, \infty) \rightarrow [0, 1]\)</span></p></li>
 </ul>
 <hr class="docutils" />
 <p><strong>Quantile Function Logistic Distribution</strong></p>
-<p>$$F^{-1}(x) = \log\left(\frac{p}{1-p}\right) = \mu + \sigma_{\log} \log \left( \frac{p}{1-p} \right)$$</p>
-<p>where $p \sim \mathcal{U}([0,1])$.</p>
+<div class="math notranslate nohighlight">
+\[F^{-1}(x) = \log\left(\frac{p}{1-p}\right) = \mu + \sigma_{\log} \log \left( \frac{p}{1-p} \right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(p \sim \mathcal{U}([0,1])\)</span>.</p>
 <p>Inverse sampling</p>
 <hr class="docutils" />
 <p><strong>Log SoftMax</strong></p>
-<p>$$\text{LogSoftmax}(x_i) = \log \left( \frac{\exp(x_i)}{\sum_j \exp(x_i)} \right)$$</p>
+<div class="math notranslate nohighlight">
+\[\text{LogSoftmax}(x_i) = \log \left( \frac{\exp(x_i)}{\sum_j \exp(x_i)} \right)\]</div>
 <p>PyTorch Function - <code class="docutils literal notranslate"><span class="pre">Functional.log_softmax</span></code></p>
 <hr class="docutils" />
 <p><strong>Sigmoid</strong></p>
-<p>$$\text{Sigmoid}(x) = \frac{1}{1 +\exp(-x)} $$</p>
+<div class="math notranslate nohighlight">
+\[\text{Sigmoid}(x) = \frac{1}{1 +\exp(-x)} \]</div>
 <p>PyTorch Function - <code class="docutils literal notranslate"><span class="pre">Functional.sigmoid</span></code></p>
 <hr class="docutils" />
 <p><strong>Log Sigmoid</strong></p>
-<p>$$\text{LogSigmoid}(x) = \log \left( \frac{1}{1 +\exp(-x)} \right)$$</p>
+<div class="math notranslate nohighlight">
+\[\text{LogSigmoid}(x) = \log \left( \frac{1}{1 +\exp(-x)} \right)\]</div>
 <p>PyTorch Function - <code class="docutils literal notranslate"><span class="pre">Functional.logsigmoid</span></code></p>
 <hr class="docutils" />
 <p><strong>Log Sum Exponential</strong></p>
-<p>$$\text{LogSumExp}(x)<em>i = \log \sum_j \exp(x</em>{ij})$$</p>
+<div class="math notranslate nohighlight">
+\[\text{LogSumExp}(x)_i = \log \sum_j \exp(x_{ij})\]</div>
 <p>PyTorch Function - <code class="docutils literal notranslate"><span class="pre">torch.logsumexp</span></code></p>
 <hr class="docutils" />
 <p><strong>SoftPlus</strong></p>
-<p>$$\text{SoftPlus}(x) = \frac{1}{\beta}\log \left(1 + \exp(\beta x) \right)$$</p>
+<div class="math notranslate nohighlight">
+\[\text{SoftPlus}(x) = \frac{1}{\beta}\log \left(1 + \exp(\beta x) \right)\]</div>
 <ul class="simple">
 <li><p>PyTorch Function - <code class="docutils literal notranslate"><span class="pre">Function.softplus</span></code></p></li>
 </ul>

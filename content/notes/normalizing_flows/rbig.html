@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/normalizing_flows/rbig';</script>
@@ -923,16 +925,17 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="rotation-based-iterative-gaussianization-rbig">
+  <section class="tex2jax_ignore mathjax_ignore" id="rotation-based-iterative-gaussianization-rbig">
 <h1>Rotation-Based Iterative Gaussianization (RBIG)<a class="headerlink" href="#rotation-based-iterative-gaussianization-rbig" title="Permalink to this heading">#</a></h1>
 <blockquote>
-<div><p>Gaussianization - Given a random variance $\mathbf x \in \mathbb R^d$, a Gaussianization transform is an invertible and differentiable transform $\mathcal \Psi(\mathbf)$ s.t. $\mathcal \Psi( \mathbf x) \sim \mathcal N(0, \mathbf I)$.</p>
+<div><p>Gaussianization - Given a random variance <span class="math notranslate nohighlight">\(\mathbf x \in \mathbb R^d\)</span>, a Gaussianization transform is an invertible and differentiable transform <span class="math notranslate nohighlight">\(\mathcal \Psi(\mathbf)\)</span> s.t. <span class="math notranslate nohighlight">\(\mathcal \Psi( \mathbf x) \sim \mathcal N(0, \mathbf I)\)</span>.</p>
 </div></blockquote>
-<p>$$\mathcal G:\mathbf x^{(k+1)}=\mathbf R_{(k)}\cdot \mathbf \Psi_{(k)}\left( \mathbf x^{(k)} \right)$$</p>
+<div class="math notranslate nohighlight">
+\[\mathcal G:\mathbf x^{(k+1)}=\mathbf R_{(k)}\cdot \mathbf \Psi_{(k)}\left( \mathbf x^{(k)} \right)\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf \Psi_{(k)}$ is the marginal Gaussianization of each dimension of $\mathbf x_{(k)}$ for the corresponding iteration.</p></li>
-<li><p>$\mathbf R_{(k)}$ is the rotation matrix for the marginally Gaussianized variable $\mathbf \Psi_{(k)}\left( \mathbf x_{(k)} \right)$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf \Psi_{(k)}\)</span> is the marginal Gaussianization of each dimension of <span class="math notranslate nohighlight">\(\mathbf x_{(k)}\)</span> for the corresponding iteration.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf R_{(k)}\)</span> is the rotation matrix for the marginally Gaussianized variable <span class="math notranslate nohighlight">\(\mathbf \Psi_{(k)}\left( \mathbf x_{(k)} \right)\)</span></p></li>
 </ul>
 <hr class="docutils" />
 <section id="iterative-pros-and-cons">

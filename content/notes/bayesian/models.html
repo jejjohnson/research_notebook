@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/bayesian/models';</script>
@@ -937,73 +939,86 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="models">
+  <section class="tex2jax_ignore mathjax_ignore" id="models">
 <h1>Models<a class="headerlink" href="#models" title="Permalink to this heading">#</a></h1>
 <p><strong>Model</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = f(\mathbf{x}; \boldsymbol{\theta}) + \boldsymbol{\epsilon}
-$$</p>
+\]</div>
 <p><strong>Measurement Model</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(\mathbf{y}|\mathbf{x}; \boldsymbol{\theta}) \sim \mathcal{N}(\mathbf{y}|\boldsymbol{f}(\mathbf{x};\boldsymbol{\theta}), \sigma^2)
-$$</p>
+\]</div>
 <p><strong>Likelihood Loss Function</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \log p(\mathbf{y}|\mathbf{x}; \boldsymbol{\theta})
-$$</p>
+\]</div>
 <p><strong>Loss Function</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\boldsymbol{\theta}) = - \frac{1}{2\sigma^2}||\mathbf{y} - f(\mathbf{x};\boldsymbol{\theta})||_2^2 - \log p(\mathbf{x};\boldsymbol{\theta})
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="error-minimization">
 <h2>Error Minimization<a class="headerlink" href="#error-minimization" title="Permalink to this heading">#</a></h2>
-<p>We choose an error measure or loss function, $\mathcal{L}$, to minimize wrt the parameters, $\theta$.</p>
-<p>$$
+<p>We choose an error measure or loss function, <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>, to minimize wrt the parameters, <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\theta) = \sum_{i=1}^N \left[ f(x_i;\theta) - y   \right]^2
-$$</p>
+\]</div>
 <p>We typically add some sort of regularization in order to constrain the solution</p>
-<p>$$
-\mathcal{L}(\theta) = \sum_{i=1}^N \left[ f(x_i;\theta) - y   \right]^2 + \lambda \mathcal{R}(\theta)
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\theta) = \sum_{i=1}^N \left[ f(x_i;\theta) - y   \right]^2 + \lambda \mathcal{R}(\theta) 
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="probabilistic-approach">
 <h2>Probabilistic Approach<a class="headerlink" href="#probabilistic-approach" title="Permalink to this heading">#</a></h2>
 <p>We explicitly account for noise in our model.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 y = f(x;\theta) + \epsilon(x)
-$$</p>
-<p>where $\epsilon$ is the noise. The simplest noise assumption we see in many approaches is the iid Gaussian noise.</p>
-<p>$$
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon\)</span> is the noise. The simplest noise assumption we see in many approaches is the iid Gaussian noise.</p>
+<div class="math notranslate nohighlight">
+\[
 \epsilon(x) \sim \mathcal{N}(0, \sigma^2)
-$$</p>
+\]</div>
 <p>So given our standard Bayesian formulation for the posterior</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(\theta|\mathcal{D}) \propto p(y|x,\theta)p(\theta)
-$$</p>
+\]</div>
 <p>we assume a Gaussian observation model</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(y|x,\theta) = \mathcal{N}(y;f(x;\theta), \sigma^2)
-$$</p>
+\]</div>
 <p>and in turn a likelihood model</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(y|x;\theta) = \prod_{i=1}^N \mathcal{N}(y_i; f(x_i; \theta), \sigma^2)
-$$</p>
-<p><strong>Objective</strong>: maximize the likelihood of the data, $\mathcal{D}$ wrt the parameters, $\theta$.</p>
+\]</div>
+<p><strong>Objective</strong>: maximize the likelihood of the data, <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> wrt the parameters, <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
 <p><strong>Note</strong>: For a Gaussian noise model (what we have assumed above), this approach will use the same predictions as the MSE loss function (that we saw above).</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \log p(y|x,\theta) \propto - \frac{1}{2\sigma^2}\sum_{i=1}^N \left[ y_i - f(x_i;\theta)\right]
-$$</p>
-<p>We can simplify the notion a bit to make it more compact. This essentially puts all of the observations together so that we can use vectorized representations, i.e. $\mathcal{D} = { x_i, y_i}_{i=1}^N$</p>
-<p>$$
+\]</div>
+<p>We can simplify the notion a bit to make it more compact. This essentially puts all of the observations together so that we can use vectorized representations, i.e. <span class="math notranslate nohighlight">\(\mathcal{D} = \{ x_i, y_i\}_{i=1}^N\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\log p(\mathbf{y}|\mathbf{x},\theta)
-&amp;= - \frac{1}{2\sigma^2} \left(\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta)\right)^\top\left(\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta) \right) \
+\log p(\mathbf{y}|\mathbf{x},\theta) 
+&amp;= - \frac{1}{2\sigma^2} \left(\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta)\right)^\top\left(\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta) \right) \\
 &amp;= - \frac{1}{2\sigma^2} ||\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta)||_2^2
 \end{aligned}
-$$</p>
-<p>where $||\cdot ||_2^2$ is the Maholanobis Distance.</p>
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(||\cdot ||_2^2\)</span> is the Maholanobis Distance.</p>
 <p><strong>Note</strong>: we often see this notation in many papers and books.</p>
 <section id="priors">
 <h3>Priors<a class="headerlink" href="#priors" title="Permalink to this heading">#</a></h3>
@@ -1020,79 +1035,89 @@ $$</p>
 </thead>
 <tbody>
 <tr class="row-even"><td class="text-center"><p>Identity</p></td>
-<td class="text-center"><p>$ \mathbf{x}$</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\( \mathbf{x}\)</span></p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p>Linear</p></td>
-<td class="text-center"><p>$\mathbf{wx}+\mathbf{b}$</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{wx}+\mathbf{b}\)</span></p></td>
 </tr>
 <tr class="row-even"><td class="text-center"><p>Basis</p></td>
-<td class="text-center"><p>$\mathbf{w}\boldsymbol{\phi}(\mathbf{x}) + \mathbf{b}$</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{w}\boldsymbol{\phi}(\mathbf{x}) + \mathbf{b}\)</span></p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p>Non-Linear</p></td>
-<td class="text-center"><p>$\sigma\left( \mathbf{wx} + \mathbf{b}\right)$</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\sigma\left( \mathbf{wx} + \mathbf{b}\right)\)</span></p></td>
 </tr>
 <tr class="row-even"><td class="text-center"><p>Functional</p></td>
-<td class="text-center"><p>$\boldsymbol{f} \sim \mathcal{GP}\left(\boldsymbol{\mu}<em>{\boldsymbol \alpha}(\mathbf{x}),\boldsymbol{\sigma}^2</em>{\boldsymbol \alpha}(\mathbf{x})\right)$</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{f} \sim \mathcal{GP}\left(\boldsymbol{\mu}_{\boldsymbol \alpha}(\mathbf{x}),\boldsymbol{\sigma}^2_{\boldsymbol \alpha}(\mathbf{x})\right)\)</span></p></td>
 </tr>
 </tbody>
 </table>
 <hr class="docutils" />
 <section id="identity">
 <h3>Identity<a class="headerlink" href="#identity" title="Permalink to this heading">#</a></h3>
-<p>$$
-f(x;\theta) = x
-$$</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
+f(x;\theta) = x 
+\]</div>
+<div class="math notranslate nohighlight">
+\[
 p(y|x,\theta) \sim \mathcal{N}(y|x, \sigma^2)
-$$</p>
-<p>$$
+\]</div>
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\theta) = - \frac{1}{2\sigma^2}||y - x||_2^2
-$$</p>
+\]</div>
 <hr class="docutils" />
 </section>
 <section id="linear">
 <h3>Linear<a class="headerlink" href="#linear" title="Permalink to this heading">#</a></h3>
-<p>A linear function of $\mathbf{w}$ wrt $\mathbf{x}$.</p>
-<p>$$
+<p>A linear function of <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> wrt <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 f(x;\theta) = w^\top x
-$$</p>
-<p>$$
+\]</div>
+<div class="math notranslate nohighlight">
+\[
 p(y|x,\theta) \sim \mathcal{N}(y|w^\top x, \sigma^2)
-$$</p>
-<p>$$
+\]</div>
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\theta) = - \frac{1}{2\sigma^2}|| y - w^\top x||_2^2
-$$</p>
+\]</div>
 <hr class="docutils" />
 </section>
 <section id="basis-function">
 <h3>Basis Function<a class="headerlink" href="#basis-function" title="Permalink to this heading">#</a></h3>
-<p>A linear function of $\mathbf{w}$ wrt to the basis function $\phi(x)$.</p>
-<p>$$
+<p>A linear function of <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> wrt to the basis function <span class="math notranslate nohighlight">\(\phi(x)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 f(x;\theta) = w^\top \phi(x;\theta)
-$$</p>
+\]</div>
 <p><strong>Examples</strong></p>
 <ul class="simple">
-<li><p>$\phi(x) = (1, x, x^2, \ldots)$</p></li>
-<li><p>$\phi(x) = \tanh(x + \gamma)^\alpha$</p></li>
-<li><p>$\phi(x) = \exp(- \gamma||x-y||_2^2)$</p></li>
-<li><p>$\phi(x) = \left[\sin(2\pi\boldsymbol{\omega}\mathbf{x}),\cos(2\pi\boldsymbol{\omega}\mathbf{x}) \right]^\top$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\phi(x) = (1, x, x^2, \ldots)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\phi(x) = \tanh(x + \gamma)^\alpha\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\phi(x) = \exp(- \gamma||x-y||_2^2)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\phi(x) = \left[\sin(2\pi\boldsymbol{\omega}\mathbf{x}),\cos(2\pi\boldsymbol{\omega}\mathbf{x}) \right]^\top\)</span></p></li>
 </ul>
 <p><strong>Prob Formulation</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(y|x,\theta) \sim \mathcal{N}(y|w^\top \phi(x), \sigma^2)
-$$</p>
+\]</div>
 <p><strong>Likelihood Loss</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\theta) = - \frac{1}{2 \sigma^2} ||y - w^\top \phi(x; \theta) ||_2^2
-$$</p>
+\]</div>
 <hr class="docutils" />
 </section>
 <section id="non-linear-function">
 <h3>Non-Linear Function<a class="headerlink" href="#non-linear-function" title="Permalink to this heading">#</a></h3>
-<p>A non-linear function in $\mathbf{x}$ and $\mathbf{w}$.</p>
-<p>$$
+<p>A non-linear function in <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 f(x; \theta) = g (w^\top \phi (x; \theta_{\phi}))
-$$</p>
+\]</div>
 <p><strong>Examples</strong></p>
 <ul class="simple">
 <li><p>Random Forests</p></li>
@@ -1100,21 +1125,24 @@ $$</p>
 <li><p>Gradient Boosting</p></li>
 </ul>
 <p><strong>Prob Formulation</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(y|x,\theta) \sim \mathcal{N}(y|w^\top \phi(x), \sigma^2)
-$$</p>
+\]</div>
 <p><strong>Likelihood Loss</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\theta) = - \frac{1}{2\sigma^2}||y - g(w^\top \phi(x))||_2^2
-$$</p>
+\]</div>
 <hr class="docutils" />
 </section>
 <section id="generic">
 <h3>Generic<a class="headerlink" href="#generic" title="Permalink to this heading">#</a></h3>
-<p>A non-linear function in $\mathbf{x}$ and $\mathbf{w}$.</p>
-<p>$$
+<p>A non-linear function in <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 y = f(x; \theta)
-$$</p>
+\]</div>
 <p><strong>Examples</strong></p>
 <ul class="simple">
 <li><p>Random Forests</p></li>
@@ -1122,21 +1150,24 @@ $$</p>
 <li><p>Gradient Boosting</p></li>
 </ul>
 <p><strong>Prob Formulation</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(y|x,\theta) \sim \mathcal{N}(y|f(x; \theta), \sigma^2)
-$$</p>
+\]</div>
 <p><strong>Likelihood Loss</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\theta) = - \frac{1}{2\sigma^2}||y - f(x; \theta)||_2^2
-$$</p>
+\]</div>
 <hr class="docutils" />
 </section>
 <section id="generic-heteroscedastic">
 <h3>Generic (Heteroscedastic)<a class="headerlink" href="#generic-heteroscedastic" title="Permalink to this heading">#</a></h3>
-<p>A non-linear function in $\mathbf{x}$ and $\mathbf{w}$.</p>
-<p>$$
+<p>A non-linear function in <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 y = \boldsymbol{\mu}(x; \theta) + \boldsymbol{\sigma}^2(x;\theta)
-$$</p>
+\]</div>
 <p><strong>Examples</strong></p>
 <ul class="simple">
 <li><p>Random Forests</p></li>
@@ -1144,13 +1175,15 @@ $$</p>
 <li><p>Gradient Boosting</p></li>
 </ul>
 <p><strong>Prob Formulation</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(y|x,\theta) \sim \mathcal{N}(y|\boldsymbol{\mu}(x; \theta), \boldsymbol{\sigma}^2(x; \theta))
-$$</p>
+\]</div>
 <p><strong>Likelihood Loss</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 -\log p(y|x,\theta) = \frac{1}{2}\log \boldsymbol{\sigma}^2(\mathbf{x};\boldsymbol{\theta}) + \frac{1}{2}||\mathbf{y} - \boldsymbol{\mu}(\mathbf{x};\boldsymbol{\theta})||^2_{\boldsymbol{\sigma}^2(\mathbf{x};\boldsymbol{\theta})} + \text{C}
-$$</p>
+\]</div>
 </section>
 </section>
 </section>

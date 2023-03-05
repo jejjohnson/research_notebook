@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/concepts/gaussian';</script>
@@ -966,12 +968,18 @@ title="Print to PDF"
      </li>
      <li class="toc-h3 nav-item toc-entry">
       <a class="reference internal nav-link" href="#marginal-distribution-mathcal-p-cdot">
-       Marginal Distribution $\mathcal{P}(\cdot)$
+       Marginal Distribution
+       <span class="math notranslate nohighlight">
+        \(\mathcal{P}(\cdot)\)
+       </span>
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
       <a class="reference internal nav-link" href="#conditional-distribution-mathcal-p-cdot-cdot">
-       Conditional Distribution $\mathcal{P}(\cdot | \cdot)$
+       Conditional Distribution
+       <span class="math notranslate nohighlight">
+        \(\mathcal{P}(\cdot | \cdot)\)
+       </span>
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
@@ -1039,130 +1047,147 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="gaussian-distributions">
+  <section class="tex2jax_ignore mathjax_ignore" id="gaussian-distributions">
 <h1>Gaussian Distributions<a class="headerlink" href="#gaussian-distributions" title="Permalink to this heading">#</a></h1>
 <section id="univariate-gaussian">
 <h2>Univariate Gaussian<a class="headerlink" href="#univariate-gaussian" title="Permalink to this heading">#</a></h2>
-<p>$$\mathcal{P}(x|\mu, \sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}}\text{exp}\left( -\frac{1}{2\sigma^2}(x - \mu)^2 \right)$$</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(x|\mu, \sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}}\text{exp}\left( -\frac{1}{2\sigma^2}(x - \mu)^2 \right)\]</div>
 </section>
 <section id="multivariate-gaussian">
 <h2>Multivariate Gaussian<a class="headerlink" href="#multivariate-gaussian" title="Permalink to this heading">#</a></h2>
-<p>$$\begin{aligned}
-\mathcal{P}(x | \mu, \Sigma) &amp;= \mathcal{N}(\mu, \Sigma) \
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mathcal{P}(x | \mu, \Sigma) &amp;= \mathcal{N}(\mu, \Sigma) \\
 &amp;= \frac{1}{(2\pi)^{\frac{D}{2}}}\frac{1}{\sqrt{\text{det}|\Sigma|}}\text{exp}\left( -\frac{1}{2}(x-\mu)^{\top}\Sigma^{-1}(x-\mu) \right)
-\end{aligned}$$</p>
+\end{aligned}\end{split}\]</div>
 </section>
 <section id="joint-gaussian-distribution">
 <h2>Joint Gaussian Distribution<a class="headerlink" href="#joint-gaussian-distribution" title="Permalink to this heading">#</a></h2>
-<p>$$\begin{bmatrix}
-\mathbf{x} \ \mathbf{y}
-\end{bmatrix}
-\sim
-\mathcal{N}
-\left(
-\begin{bmatrix}
-\boldsymbol{\mu}<em>\mathbf{x} \ \boldsymbol{\mu}</em>\mathbf{y}
-\end{bmatrix},
-\begin{bmatrix}
-\boldsymbol{\Sigma}<em>\mathbf{x} &amp;
-\boldsymbol{\Sigma}</em>\mathbf{xy}\
-\boldsymbol{\Sigma}<em>\mathbf{xy}^\top &amp;
-\boldsymbol{\Sigma}</em>\mathbf{y}
-\end{bmatrix}
-\right)
-$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+    \mathbf{x} \\ \mathbf{y}
+    \end{bmatrix}
+    \sim
+    \mathcal{N}
+    \left(
+    \begin{bmatrix}
+    \boldsymbol{\mu}_\mathbf{x} \\ \boldsymbol{\mu}_\mathbf{y}
+    \end{bmatrix},
+    \begin{bmatrix}
+    \boldsymbol{\Sigma}_\mathbf{x} &amp;
+    \boldsymbol{\Sigma}_\mathbf{xy}\\ 
+    \boldsymbol{\Sigma}_\mathbf{xy}^\top &amp;
+    \boldsymbol{\Sigma}_\mathbf{y}
+    \end{bmatrix}
+    \right)
+\end{split}\]</div>
 <section id="lemma-i-conditional-distribution-of-a-gaussian-rv">
 <h3>Lemma I - Conditional distribution of a Gaussian rv.<a class="headerlink" href="#lemma-i-conditional-distribution-of-a-gaussian-rv" title="Permalink to this heading">#</a></h3>
-<p>Let’s define a joint Gaussian distribution for $\mathbf{x,y}$.</p>
-<p>$$\begin{bmatrix}
-\mathbf{x} \ \mathbf{y}
+<p>Let’s define a joint Gaussian distribution for <span class="math notranslate nohighlight">\(\mathbf{x,y}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+\mathbf{x} \\ \mathbf{y}
 \end{bmatrix}
 \sim
 \mathcal{N}
 \left(
 \begin{bmatrix}
-\boldsymbol{\mu}<em>\mathbf{x} \ \boldsymbol{\mu}</em>\mathbf{y}
+\boldsymbol{\mu}_\mathbf{x} \\ \boldsymbol{\mu}_\mathbf{y}
 \end{bmatrix},
 \begin{bmatrix}
-\boldsymbol{\Sigma}<em>\mathbf{x} &amp;
-\boldsymbol{\Sigma}</em>\mathbf{xy}\
-\boldsymbol{\Sigma}<em>\mathbf{xy}^\top &amp;
-\boldsymbol{\Sigma}</em>\mathbf{y}
+\boldsymbol{\Sigma}_\mathbf{x} &amp;
+\boldsymbol{\Sigma}_\mathbf{xy}\\ 
+\boldsymbol{\Sigma}_\mathbf{xy}^\top &amp;
+\boldsymbol{\Sigma}_\mathbf{y}
 \end{bmatrix}
-\right)$$</p>
+\right)\end{split}\]</div>
 <p>We can write each of the marginal and conditional distributions just based on this joint distribution.</p>
 <hr class="docutils" />
-<p>$$
-p(\mathbf{x})	= \mathcal{N}(\mathbf{x}|\boldsymbol{\mu}<em>\mathbf{x}, \boldsymbol{\Sigma}</em>\mathbf{x})
-$$</p>
-<p>$$
-p(\mathbf{y})	= \mathcal{N}(\mathbf{y}|\boldsymbol{\mu}<em>\mathbf{y}, \boldsymbol{\Sigma}</em>\mathbf{y})
-$$</p>
-<p>$$
-p(\mathbf{x}|\mathbf{y})= \mathcal{N}\left(\mathbf{x}|\boldsymbol{\mu}<em>\mathbf{x}+\boldsymbol{\Sigma}</em>\mathbf{xy}\boldsymbol{\Sigma}^{-1}<em>\mathbf{y}(\mathbf{y}-\boldsymbol{\mu}</em>\mathbf{y}), \boldsymbol{\Sigma}<em>\mathbf{x} - \boldsymbol{\Sigma}</em>\mathbf{xy}\boldsymbol{\Sigma}<em>\mathbf{y}^{-1}\boldsymbol{\Sigma}</em>\mathbf{xy}^\top \right)
-$$</p>
-<p>$$
-p(\mathbf{y}|\mathbf{x})	=\mathcal{N}\left(\mathbf{y}|\boldsymbol{\mu}<em>\mathbf{y}+\boldsymbol{\Sigma}</em>\mathbf{xy}^\top\boldsymbol{\Sigma}^{-1}<em>\mathbf{x}(\mathbf{x}-\boldsymbol{\mu}</em>\mathbf{x}), \boldsymbol{\Sigma}<em>\mathbf{y} - \boldsymbol{\Sigma}</em>\mathbf{xy}^\top\boldsymbol{\Sigma}<em>\mathbf{x}^{-1}\boldsymbol{\Sigma}</em>\mathbf{xy}\right)
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{x})	= \mathcal{N}(\mathbf{x}|\boldsymbol{\mu}_\mathbf{x}, \boldsymbol{\Sigma}_\mathbf{x})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{y})	= \mathcal{N}(\mathbf{y}|\boldsymbol{\mu}_\mathbf{y}, \boldsymbol{\Sigma}_\mathbf{y})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{x}|\mathbf{y})= \mathcal{N}\left(\mathbf{x}|\boldsymbol{\mu}_\mathbf{x}+\boldsymbol{\Sigma}_\mathbf{xy}\boldsymbol{\Sigma}^{-1}_\mathbf{y}(\mathbf{y}-\boldsymbol{\mu}_\mathbf{y}), \boldsymbol{\Sigma}_\mathbf{x} - \boldsymbol{\Sigma}_\mathbf{xy}\boldsymbol{\Sigma}_\mathbf{y}^{-1}\boldsymbol{\Sigma}_\mathbf{xy}^\top \right)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{y}|\mathbf{x})	=\mathcal{N}\left(\mathbf{y}|\boldsymbol{\mu}_\mathbf{y}+\boldsymbol{\Sigma}_\mathbf{xy}^\top\boldsymbol{\Sigma}^{-1}_\mathbf{x}(\mathbf{x}-\boldsymbol{\mu}_\mathbf{x}), \boldsymbol{\Sigma}_\mathbf{y} - \boldsymbol{\Sigma}_\mathbf{xy}^\top\boldsymbol{\Sigma}_\mathbf{x}^{-1}\boldsymbol{\Sigma}_\mathbf{xy}\right)
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="lemma-ii-linear-conditional-gaussian-model">
 <h3>Lemma II - Linear Conditional Gaussian model.<a class="headerlink" href="#lemma-ii-linear-conditional-gaussian-model" title="Permalink to this heading">#</a></h3>
-<p>Take a rv $\mathbf{x}$ which is Gaussian distributed</p>
-<p>$$p(\mathbf{x}) = \mathcal{N}(\boldsymbol{\mu}<em>\mathbf{x},\boldsymbol{\Sigma}</em>\mathbf{x})$$</p>
-<p>and take a rv $\mathbf{y}$ which is a linear transformation of $\mathbf{x}$ and is also Gaussian distributed. So we have</p>
-<p>$$p(\mathbf{y}|\mathbf{x}) = \mathcal{N}(\mathbf{y}|\mathbf{Ax}+b, \mathbf{R})$$</p>
-<p>Since both distributions are Gaussian, we can write the joint distribution of $p(\mathbf{x,y})$ which is also Gaussian.</p>
-<p>$$
+<p>Take a rv <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> which is Gaussian distributed</p>
+<div class="math notranslate nohighlight">
+\[p(\mathbf{x}) = \mathcal{N}(\boldsymbol{\mu}_\mathbf{x},\boldsymbol{\Sigma}_\mathbf{x})\]</div>
+<p>and take a rv <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> which is a linear transformation of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and is also Gaussian distributed. So we have</p>
+<div class="math notranslate nohighlight">
+\[p(\mathbf{y}|\mathbf{x}) = \mathcal{N}(\mathbf{y}|\mathbf{Ax}+b, \mathbf{R})\]</div>
+<p>Since both distributions are Gaussian, we can write the joint distribution of <span class="math notranslate nohighlight">\(p(\mathbf{x,y})\)</span> which is also Gaussian.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{bmatrix}
-\mathbf{x} \ \mathbf{y}
+\mathbf{x} \\ \mathbf{y}
 \end{bmatrix}
 \sim \mathcal{N}
 \left(
 \begin{bmatrix}
-\boldsymbol{\mu}<em>\mathbf{x} \ \mathbf{A}\boldsymbol{\mu}</em>\mathbf{x}+\mathbf{b}
+\boldsymbol{\mu}_\mathbf{x} \\ \mathbf{A}\boldsymbol{\mu}_\mathbf{x}+\mathbf{b}
 \end{bmatrix},
 \begin{bmatrix}
-\boldsymbol{\Sigma}<em>\mathbf{x} &amp; \boldsymbol{\Sigma}</em>\mathbf{x}\mathbf{A}^\top
-\
-\mathbf{A}\boldsymbol{\Sigma}<em>\mathbf{x} &amp;
-\mathbf{A}\boldsymbol{\Sigma}</em>\mathbf{x}\mathbf{A}^\top + \mathbf{R}
+\boldsymbol{\Sigma}_\mathbf{x} &amp; \boldsymbol{\Sigma}_\mathbf{x}\mathbf{A}^\top 
+\\ 
+\mathbf{A}\boldsymbol{\Sigma}_\mathbf{x} &amp;
+\mathbf{A}\boldsymbol{\Sigma}_\mathbf{x}\mathbf{A}^\top + \mathbf{R}
 \end{bmatrix}
 \right)
-$$</p>
+\end{split}\]</div>
 <p>This is Gaussian distributed, so we can write down the same equations using the above lemma. Let:</p>
 <ul class="simple">
-<li><p>$\boldsymbol{\Sigma}<em>\mathbf{x}=\boldsymbol{\Sigma}</em>\mathbf{x}$</p></li>
-<li><p>$\boldsymbol{\Sigma}<em>\mathbf{xy}=\boldsymbol{\Sigma}</em>\mathbf{x}\mathbf{A}^\top$</p></li>
-<li><p>$\boldsymbol{\Sigma}<em>\mathbf{y}=\mathbf{A}\boldsymbol{\Sigma}</em>\mathbf{x}\mathbf{A}^\top + \mathbf{R}$</p></li>
-<li><p>$\boldsymbol{\Sigma}<em>\mathbf{xy}=\mathbf{A}\boldsymbol{\Sigma}</em>\mathbf{x}$</p></li>
-<li><p>$\boldsymbol{\mu}<em>\mathbf{y}=\mathbf{A}\boldsymbol{\mu}</em>\mathbf{x}+\mathbf{b}$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_\mathbf{x}=\boldsymbol{\Sigma}_\mathbf{x}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_\mathbf{xy}=\boldsymbol{\Sigma}_\mathbf{x}\mathbf{A}^\top\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_\mathbf{y}=\mathbf{A}\boldsymbol{\Sigma}_\mathbf{x}\mathbf{A}^\top + \mathbf{R}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_\mathbf{xy}=\mathbf{A}\boldsymbol{\Sigma}_\mathbf{x}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}_\mathbf{y}=\mathbf{A}\boldsymbol{\mu}_\mathbf{x}+\mathbf{b}\)</span></p></li>
 </ul>
 <hr class="docutils" />
-<p>$$
-p(\mathbf{x})=\mathcal{N}(\mathbf{x}|\boldsymbol{\mu}<em>\mathbf{x}, \boldsymbol{\Sigma}</em>\mathbf{x})
-$$</p>
-<p>$$
-p(\mathbf{y})	= \mathcal{N}(\mathbf{y}|\mathbf{A}\boldsymbol{\mu}<em>\mathbf{x}+\mathbf{b}, \mathbf{A}\boldsymbol{\Sigma}</em>\mathbf{x}\mathbf{A}^\top + \mathbf{R})
-$$</p>
-<p>$$
-p(\mathbf{x}|\mathbf{y}) = \mathcal{N}\left(\mathbf{x}|\boldsymbol{\mu}<em>\mathbf{x}+\boldsymbol{\Sigma}</em>\mathbf{x}\mathbf{A}^\top(\mathbf{A}\boldsymbol{\Sigma}<em>\mathbf{x}\mathbf{A}^\top + \mathbf{R})^{-1}(\mathbf{y}-\boldsymbol{\mu}</em>\mathbf{y}), \boldsymbol{\Sigma}<em>\mathbf{x} - \boldsymbol{\Sigma}</em>\mathbf{x}\mathbf{A}^\top(\mathbf{A}\boldsymbol{\Sigma}<em>\mathbf{x}\mathbf{A}^\top + \mathbf{R})^{-1}\mathbf{A}\boldsymbol{\Sigma}</em>\mathbf{x} \right)
-$$</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{x})=\mathcal{N}(\mathbf{x}|\boldsymbol{\mu}_\mathbf{x}, \boldsymbol{\Sigma}_\mathbf{x})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{y})	= \mathcal{N}(\mathbf{y}|\mathbf{A}\boldsymbol{\mu}_\mathbf{x}+\mathbf{b}, \mathbf{A}\boldsymbol{\Sigma}_\mathbf{x}\mathbf{A}^\top + \mathbf{R})
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{x}|\mathbf{y}) = \mathcal{N}\left(\mathbf{x}|\boldsymbol{\mu}_\mathbf{x}+\boldsymbol{\Sigma}_\mathbf{x}\mathbf{A}^\top(\mathbf{A}\boldsymbol{\Sigma}_\mathbf{x}\mathbf{A}^\top + \mathbf{R})^{-1}(\mathbf{y}-\boldsymbol{\mu}_\mathbf{y}), \boldsymbol{\Sigma}_\mathbf{x} - \boldsymbol{\Sigma}_\mathbf{x}\mathbf{A}^\top(\mathbf{A}\boldsymbol{\Sigma}_\mathbf{x}\mathbf{A}^\top + \mathbf{R})^{-1}\mathbf{A}\boldsymbol{\Sigma}_\mathbf{x} \right)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
 p(\mathbf{y}|\mathbf{x}) = \mathcal{N}(\mathbf{y}|\mathbf{Ax}+b, \mathbf{R})
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="marginal">
 <h4>Marginal<a class="headerlink" href="#marginal" title="Permalink to this heading">#</a></h4>
 <p>From the lemma we have:</p>
-<p>$$p(\mathbf{x}) = \mathcal{N}(\mathbf{x}|\boldsymbol{\mu}_\mathbf{x})v, A)$$</p>
+<div class="math notranslate nohighlight">
+\[p(\mathbf{x}) = \mathcal{N}(\mathbf{x}|\boldsymbol{\mu}_\mathbf{x})v, A)\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$a = \boldsymbol{\mu}_\mathbf{x}$</p></li>
-<li><p>$\mathbf{A}=\boldsymbol{\Sigma}_\mathbf{x}$</p></li>
+<li><p><span class="math notranslate nohighlight">\(a = \boldsymbol{\mu}_\mathbf{x}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{A}=\boldsymbol{\Sigma}_\mathbf{x}\)</span></p></li>
 </ul>
 <p>Fortunately, this is a simple plug-in-play with no reductions.</p>
-<p>$$p(\mathbf{x})=\mathcal{N}(\mathbf{x}|\boldsymbol{\mu}<em>\mathbf{x},\boldsymbol{\Sigma}</em>\mathbf{x})$$</p>
+<div class="math notranslate nohighlight">
+\[p(\mathbf{x})=\mathcal{N}(\mathbf{x}|\boldsymbol{\mu}_\mathbf{x},\boldsymbol{\Sigma}_\mathbf{x})\]</div>
 </section>
 </section>
 </section>
@@ -1170,40 +1195,46 @@ $$</p>
 <section id="likelihood">
 <h2>Likelihood<a class="headerlink" href="#likelihood" title="Permalink to this heading">#</a></h2>
 <p>Take a Gaussian distribution with a full covariance matrix:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{N}(\mathbf{x};\boldsymbol{\mu}, \boldsymbol{\Sigma}) = \frac{1}{(2\pi)^{d/2}|\boldsymbol{\Sigma}|^{1/2}}\exp \left[ - \frac{1}{2} (\mathbf{x} - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1}(\mathbf{x} - \boldsymbol{\mu}) \right]
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="mahalanobis-distance">
 <h3>Mahalanobis Distance<a class="headerlink" href="#mahalanobis-distance" title="Permalink to this heading">#</a></h3>
 <p>The Maholanobis Distance is given by:</p>
-<p>$$
-\Delta^2 = (\mathbf{x}-\boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta^2 = (\mathbf{x}-\boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu}) 
+\]</div>
 <p>We can write a simplified version in terms of the Euclidean norm.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 (\mathbf{x}-\boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu})  = ||\mathbf{x}-\boldsymbol{\mu}||^2_{\boldsymbol{\Sigma}^{-1}} = ||\boldsymbol{\Sigma}^{-1/2}(\mathbf{x} - \boldsymbol{\mu})||_2^2
-$$</p>
+\]</div>
 <p><strong>Note</strong>: We often see this as a simplified representation of the covariance metric in the Gaussian likelihood function. This is even more apparent within the mean-squared loss functions as a simplified representation.</p>
 </section>
 </section>
 <hr class="docutils" />
 <section id="log-likelihood">
 <h2>Log likelihood<a class="headerlink" href="#log-likelihood" title="Permalink to this heading">#</a></h2>
-<p>We can also write the log-likliehood of the Gaussian distribution. We simply take the $\log$ of the RHS.</p>
-<p>$$
+<p>We can also write the log-likliehood of the Gaussian distribution. We simply take the <span class="math notranslate nohighlight">\(\log\)</span> of the RHS.</p>
+<div class="math notranslate nohighlight">
+\[
 \log \mathcal{N}(\mathbf{x};\boldsymbol{\mu}, \boldsymbol{\Sigma}) = - \frac{d}{2} \log 2\pi - \frac{1}{2} \log |\boldsymbol{\Sigma}| - \frac{1}{2}(\mathbf{x} - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1}(\mathbf{x}-\boldsymbol{\mu})
-$$</p>
-<p>If we assume that $\mathbf{x}$ is iid, we can rewrite this as a summation</p>
-<p>$$
+\]</div>
+<p>If we assume that <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> is iid, we can rewrite this as a summation</p>
+<div class="math notranslate nohighlight">
+\[
 \log \mathcal{N}(\mathbf{x};\boldsymbol{\mu}, \boldsymbol{\Sigma}) = - \frac{d}{2} \log 2\pi - \frac{N}{2} \log |\boldsymbol{\Sigma}| - \frac{1}{2} \sum_{i=1}^N(\mathbf{x}_i - \boldsymbol{\mu})^\top \boldsymbol{\Sigma}^{-1}(\mathbf{x}_i-\boldsymbol{\mu})
-$$</p>
+\]</div>
 <section id="trace-trick">
 <h3>Trace-Trick<a class="headerlink" href="#trace-trick" title="Permalink to this heading">#</a></h3>
 <p>We can rewrite the distance function using the trace-trick.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \log \mathcal{N}(\mathbf{x};\boldsymbol{\mu}, \boldsymbol{\Sigma}) = - \frac{d}{2} \log 2\pi - \frac{N}{2} \log |\boldsymbol{\Sigma}| - \frac{1}{2} \text{trace} \left[ \boldsymbol{\Sigma}^{-1} \sum_{i=1}^N(\mathbf{x}_i - \boldsymbol{\mu})^\top (\mathbf{x}_i-\boldsymbol{\mu}) \right]
-$$</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />
@@ -1214,9 +1245,10 @@ $$</p>
 <section id="softplus">
 <h4>Softplus<a class="headerlink" href="#softplus" title="Permalink to this heading">#</a></h4>
 <p>Source: <a class="reference external" href="https://proceedings.neurips.cc/paper/2017/file/9ef2ed4b7fd2c810847ffa5fa85bce38-Paper.pdf">Ensembles</a></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \text{Softplus}(x) = \log ( 1 + \exp(x))
-$$</p>
+\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">var_scaled</span> <span class="o">=</span> <span class="n">softplus</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="o">+</span> <span class="mf">10e-6</span>
 </pre></div>
 </div>
@@ -1237,29 +1269,33 @@ $$</p>
 </ul>
 </section>
 <section id="marginal-distribution-mathcal-p-cdot">
-<h3>Marginal Distribution $\mathcal{P}(\cdot)$<a class="headerlink" href="#marginal-distribution-mathcal-p-cdot" title="Permalink to this heading">#</a></h3>
-<p>We have the marginal distribution of $x$</p>
-<p>$$\mathcal{P}(x) \sim \mathcal{N}(a, A)$$</p>
+<h3>Marginal Distribution <span class="math notranslate nohighlight">\(\mathcal{P}(\cdot)\)</span><a class="headerlink" href="#marginal-distribution-mathcal-p-cdot" title="Permalink to this heading">#</a></h3>
+<p>We have the marginal distribution of <span class="math notranslate nohighlight">\(x\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(x) \sim \mathcal{N}(a, A)\]</div>
 <p>and in integral form:</p>
-<p>$\mathcal{P}(x) = \int_y \mathcal{P}(x,y)dy$</p>
-<p>and we have the marginal distribution of $y$</p>
-<p>$$\mathcal{P}(y) \sim \mathcal{N}(b, B)$$</p>
+<p><span class="math notranslate nohighlight">\(\mathcal{P}(x) = \int_y \mathcal{P}(x,y)dy\)</span></p>
+<p>and we have the marginal distribution of <span class="math notranslate nohighlight">\(y\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y) \sim \mathcal{N}(b, B)\]</div>
 </section>
 <section id="conditional-distribution-mathcal-p-cdot-cdot">
-<h3>Conditional Distribution $\mathcal{P}(\cdot | \cdot)$<a class="headerlink" href="#conditional-distribution-mathcal-p-cdot-cdot" title="Permalink to this heading">#</a></h3>
-<p>We have the conditional distribution of $x$  given $y$.</p>
-<p>$$\mathcal{P}(x|y) \sim \mathcal{N}(\mu_{a|b}, \Sigma_{a|b})$$</p>
+<h3>Conditional Distribution <span class="math notranslate nohighlight">\(\mathcal{P}(\cdot | \cdot)\)</span><a class="headerlink" href="#conditional-distribution-mathcal-p-cdot-cdot" title="Permalink to this heading">#</a></h3>
+<p>We have the conditional distribution of <span class="math notranslate nohighlight">\(x\)</span>  given <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(x|y) \sim \mathcal{N}(\mu_{a|b}, \Sigma_{a|b})\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mu_{a|b} = a + BC^{-1}(y-b)$</p></li>
-<li><p>$\Sigma_{a|b} = A - BC^{-1}B^T$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_{a|b} = a + BC^{-1}(y-b)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma_{a|b} = A - BC^{-1}B^T\)</span></p></li>
 </ul>
-<p>and we have the marginal distribution of $y$ given $x$</p>
-<p>$$\mathcal{P}(y|x) \sim \mathcal{N}(\mu_{b|a}, \Sigma_{b|a})$$</p>
+<p>and we have the marginal distribution of <span class="math notranslate nohighlight">\(y\)</span> given <span class="math notranslate nohighlight">\(x\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y|x) \sim \mathcal{N}(\mu_{b|a}, \Sigma_{b|a})\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mu_{b|a} = b + AC^{-1}(x-a)$</p></li>
-<li><p>$\Sigma_{b|a} = B - AC^{-1}A^T$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_{b|a} = b + AC^{-1}(x-a)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma_{b|a} = B - AC^{-1}A^T\)</span></p></li>
 </ul>
 <p>basically mirror opposites of each other. But this might be useful to know later when we deal with trying to find the marginal distributions of Gaussian process functions.</p>
 <p><strong>Source</strong>:</p>
@@ -1288,51 +1324,58 @@ $$</p>
 </section>
 </section>
 </section>
-<section id="gaussian-distribution">
+<section class="tex2jax_ignore mathjax_ignore" id="gaussian-distribution">
 <h1>Gaussian Distribution<a class="headerlink" href="#gaussian-distribution" title="Permalink to this heading">#</a></h1>
 <section id="pdf">
 <h2><strong>PDF</strong><a class="headerlink" href="#pdf" title="Permalink to this heading">#</a></h2>
-<p>$$f(X)=
+<div class="math notranslate nohighlight">
+\[f(X)=
 \frac{1}{\sqrt{(2\pi)^D|\Sigma|}}
-\text{exp}\left( -\frac{1}{2} (x-\mu)^\top \Sigma^{-1} (x-\mu)\right)$$</p>
+\text{exp}\left( -\frac{1}{2} (x-\mu)^\top \Sigma^{-1} (x-\mu)\right)\]</div>
 </section>
 <section id="id1">
 <h2><strong>Likelihood</strong><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
-<p>$$- \ln L = \frac{1}{2}\ln|\Sigma| + \frac{1}{2}(x-\mu)^\top \Sigma^{-1} (x - \mu) + \frac{D}{2}\ln 2\pi $$</p>
+<div class="math notranslate nohighlight">
+\[- \ln L = \frac{1}{2}\ln|\Sigma| + \frac{1}{2}(x-\mu)^\top \Sigma^{-1} (x - \mu) + \frac{D}{2}\ln 2\pi \]</div>
 </section>
 <section id="alternative-representation">
 <h2>Alternative Representation<a class="headerlink" href="#alternative-representation" title="Permalink to this heading">#</a></h2>
-<p>$$X \sim \mathcal{N}(\mu, \Sigma)$$</p>
-<p>where $\mu$ is the mean function and $\Sigma$ is the covariance. Let’s decompose $\Sigma$ as with an eigendecomposition like so</p>
-<p>$$\Sigma = U\Lambda U^\top = U \Lambda^{1/2}(U\Lambda^{-1/2})^\top$$</p>
+<div class="math notranslate nohighlight">
+\[X \sim \mathcal{N}(\mu, \Sigma)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> is the mean function and <span class="math notranslate nohighlight">\(\Sigma\)</span> is the covariance. Let’s decompose <span class="math notranslate nohighlight">\(\Sigma\)</span> as with an eigendecomposition like so</p>
+<div class="math notranslate nohighlight">
+\[\Sigma = U\Lambda U^\top = U \Lambda^{1/2}(U\Lambda^{-1/2})^\top\]</div>
 <p>Now we can represent our Normal distribution as:</p>
-<p>$$X \sim \mu + U\Lambda^{1/2}Z$$</p>
+<div class="math notranslate nohighlight">
+\[X \sim \mu + U\Lambda^{1/2}Z\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$U$ is a rotation matrix</p></li>
-<li><p>$\Lambda^{-1/2}$ is a scale matrix</p></li>
-<li><p>$\mu$ is a translation matrix</p></li>
-<li><p>$Z \sim \mathcal{N}(0,I)$</p></li>
+<li><p><span class="math notranslate nohighlight">\(U\)</span> is a rotation matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Lambda^{-1/2}\)</span> is a scale matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu\)</span> is a translation matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z \sim \mathcal{N}(0,I)\)</span></p></li>
 </ul>
 <p>or also</p>
-<p>$$X \sim \mu + UZ$$</p>
+<div class="math notranslate nohighlight">
+\[X \sim \mu + UZ\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$U$ is a rotation matrix</p></li>
-<li><p>$\Lambda$ is a scale matrix</p></li>
-<li><p>$\mu$ is a translation matrix</p></li>
-<li><p>$Z_n \sim \mathcal{N}(0,\Lambda)$</p></li>
+<li><p><span class="math notranslate nohighlight">\(U\)</span> is a rotation matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Lambda\)</span> is a scale matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu\)</span> is a translation matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z_n \sim \mathcal{N}(0,\Lambda)\)</span></p></li>
 </ul>
 <section id="reparameterization">
 <h3>Reparameterization<a class="headerlink" href="#reparameterization" title="Permalink to this heading">#</a></h3>
 <p>So often in deep learning we will learn this distribution by a reparameterization like so:</p>
-<p>$$X = \mu + AZ $$</p>
+<div class="math notranslate nohighlight">
+\[X = \mu + AZ \]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mu \in \mathbb{R}^{d}$</p></li>
-<li><p>$A \in \mathbb{R}^{d\times l}$</p></li>
-<li><p>$Z_n \sim \mathcal{N}(0, I)$</p></li>
-<li><p>$\Sigma=AA^\top$ - the cholesky decomposition</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu \in \mathbb{R}^{d}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(A \in \mathbb{R}^{d\times l}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Z_n \sim \mathcal{N}(0, I)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma=AA^\top\)</span> - the cholesky decomposition</p></li>
 </ul>
 <hr class="docutils" />
 </section>
@@ -1340,29 +1383,34 @@ $$</p>
 <section id="entropy">
 <h2><strong>Entropy</strong><a class="headerlink" href="#entropy" title="Permalink to this heading">#</a></h2>
 <p><strong>1 dimensional</strong></p>
-<p>$$H(X) = \frac{1}{2} \log(2\pi e \sigma^2)$$</p>
+<div class="math notranslate nohighlight">
+\[H(X) = \frac{1}{2} \log(2\pi e \sigma^2)\]</div>
 <p><strong>D dimensional</strong>
-$$H(X) = \frac{D}{2} + \frac{D}{2} \ln(2\pi) + \frac{1}{2}\ln|\Sigma|$$</p>
+$<span class="math notranslate nohighlight">\(H(X) = \frac{D}{2} + \frac{D}{2} \ln(2\pi) + \frac{1}{2}\ln|\Sigma|\)</span>$</p>
 </section>
 <section id="kl-divergence-relative-entropy">
 <h2><strong>KL-Divergence (Relative Entropy)</strong><a class="headerlink" href="#kl-divergence-relative-entropy" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 KLD(\mathcal{N}_0||\mathcal{N}_1) = \frac{1}{2}
-\left[
-\text{tr}(\Sigma_1^{-1}\Sigma_0) +
-(\mu_1 - \mu_0)^\top \Sigma_1^{-1} (\mu_1 - \mu_0) -
+ \left[ 
+ \text{tr}(\Sigma_1^{-1}\Sigma_0) + 
+ (\mu_1 - \mu_0)^\top \Sigma_1^{-1} (\mu_1 - \mu_0) -
 D + \ln \frac{|\Sigma_1|}{\Sigma_0|}
 \right]
-$$</p>
-<p>if $\mu_1=\mu_0$ then:</p>
-<p>$$
-KLD(\Sigma_0||\Sigma_1) = \frac{1}{2} \left[
+\]</div>
+<p>if <span class="math notranslate nohighlight">\(\mu_1=\mu_0\)</span> then:</p>
+<div class="math notranslate nohighlight">
+\[
+KLD(\Sigma_0||\Sigma_1) = \frac{1}{2} \left[ 
 \text{tr}(\Sigma_1^{-1} \Sigma_0)  - D  + \ln \frac{|\Sigma_1|}{|\Sigma_0|} \right]
-$$</p>
+\]</div>
 <p><strong>Mutual Information</strong></p>
-<p>$$I(X)= - \frac{1}{2} \ln | \rho_0 |$$</p>
-<p>where $\rho_0$ is the correlation matrix from $\Sigma_0$.</p>
-<p>$$I(X)$$</p>
+<div class="math notranslate nohighlight">
+\[I(X)= - \frac{1}{2} \ln | \rho_0 |\]</div>
+<p>where <span class="math notranslate nohighlight">\(\rho_0\)</span> is the correlation matrix from <span class="math notranslate nohighlight">\(\Sigma_0\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[I(X)\]</div>
 </section>
 </section>
 
@@ -1516,12 +1564,18 @@ $$</p>
      </li>
      <li class="toc-h3 nav-item toc-entry">
       <a class="reference internal nav-link" href="#marginal-distribution-mathcal-p-cdot">
-       Marginal Distribution $\mathcal{P}(\cdot)$
+       Marginal Distribution
+       <span class="math notranslate nohighlight">
+        \(\mathcal{P}(\cdot)\)
+       </span>
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">
       <a class="reference internal nav-link" href="#conditional-distribution-mathcal-p-cdot-cdot">
-       Conditional Distribution $\mathcal{P}(\cdot | \cdot)$
+       Conditional Distribution
+       <span class="math notranslate nohighlight">
+        \(\mathcal{P}(\cdot | \cdot)\)
+       </span>
       </a>
      </li>
      <li class="toc-h3 nav-item toc-entry">

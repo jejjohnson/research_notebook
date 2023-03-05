@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/egps/taylor';</script>
@@ -915,7 +917,11 @@ title="Print to PDF"
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#i-additive-noise-model-x-f">
-     I: Additive Noise Model ($x,f$)
+     I: Additive Noise Model (
+     <span class="math notranslate nohighlight">
+      \(x,f\)
+     </span>
+     )
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
@@ -1009,126 +1015,129 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="linearization-taylor-expansions">
+  <section class="tex2jax_ignore mathjax_ignore" id="linearization-taylor-expansions">
 <h1>Linearization (Taylor Expansions)<a class="headerlink" href="#linearization-taylor-expansions" title="Permalink to this heading">#</a></h1>
 <section id="tldr">
 <h2>TLDR<a class="headerlink" href="#tldr" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\tilde{\mathbf{\mu}}<em>\text{LinGP}(\mathbf{x</em><em>}) &amp;= \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_</em>}) +
-\underbrace{\frac{1}{2} \text{Tr}\left{ \frac{\partial^2 \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_<em>})}{\partial \mathbf{x_</em>} \partial \mathbf{x_<em>}^\top}  \mathbf{\Sigma}<em>\mathbf{x</em></em>}\right}}<em>\text{second Order}\
-\tilde{\mathbf{\sigma}}^2</em>\text{LinGP} (\mathbf{x_<em>}) &amp;=
-\mathbf{\sigma}^2_\text{GP}(\mathbf{\mu}<em>\mathbf{x</em></em>}) +
-\underbrace{\frac{\partial \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_<em>})}{\partial \mathbf{x_</em>}}^\top
-\mathbf{\Sigma}<em>\mathbf{x</em><em>}
-\frac{\partial \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_</em>})}{\partial \mathbf{x_<em>}}}<em>\text{1st Order} +
-\underbrace{\frac{1}{2} \text{Tr}\left{ \frac{\partial^2 \mathbf{\Sigma}^2</em>\text{GP}(\mathbf{\mu}<em>\mathbf{x</em></em>})}{\partial \mathbf{x_<em>} \partial \mathbf{x_</em>}^\top}  \mathbf{\Sigma}<em>\mathbf{x</em>*}\right}}_\text{2nd Order}
+\tilde{\mathbf{\mu}}_\text{LinGP}(\mathbf{x_*}) &amp;= \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*}) +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{second Order}\\
+\tilde{\mathbf{\sigma}}^2_\text{LinGP} (\mathbf{x_*}) &amp;= 
+\mathbf{\sigma}^2_\text{GP}(\mathbf{\mu}_\mathbf{x_*}) + 
+\underbrace{\frac{\partial \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}^\top
+\mathbf{\Sigma}_\mathbf{x_*}
+\frac{\partial \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}}_\text{1st Order} +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \mathbf{\Sigma}^2_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{2nd Order}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <hr class="docutils" />
 <section id="analytical-moments">
 <h3>Analytical Moments<a class="headerlink" href="#analytical-moments" title="Permalink to this heading">#</a></h3>
 <p>The posterior of this distribution is non-Gaussian because we have to propagate a probability distribution through a non-linear kernel function. So this integral becomes intractable. We can compute the analytical Gaussian approximation by only computing the mean and the variance of the</p>
 <section id="mean-function">
 <h4>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 m(\mu_\mathbf{x}, \Sigma_\mathbf{x})
 &amp;=
-\mathbb{E}<em>\mathbf{f</em><em>}
-\left[ f_</em> , \mathbb{E}<em>\mathbf{x</em><em>} \left[ p(f_</em>|\mathbf{x}<em>*) \right] \right] \
+\mathbb{E}_\mathbf{f_*}
+\left[ f_* \, \mathbb{E}_\mathbf{x_*} \left[ p(f_*|\mathbf{x}_*) \right] \right] \\
 &amp;=
-\mathbb{E}</em>\mathbf{x_<em>}
-\left[ \mathbb{E}<em>{f</em></em>} \left[ f_* ,p(f_* | \mathbf{x_<em>}) \right]\right]\
+\mathbb{E}_\mathbf{x_*}
+\left[ \mathbb{E}_{f_*} \left[ f_* \,p(f_* | \mathbf{x_*}) \right]\right]\\
 &amp;=
-\mathbb{E}<em>{x</em></em>}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]
+\mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 <section id="variance-function">
 <h4>Variance Function<a class="headerlink" href="#variance-function" title="Permalink to this heading">#</a></h4>
 <p>The variance term is a bit more complex.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 v(\mu_\mathbf{x}, \Sigma_\mathbf{x})
 &amp;=
-\mathbb{E}<em>\mathbf{f</em><em>}
-\left[ f_</em>^2 , \mathbb{E}<em>\mathbf{x</em><em>} \left[ p(f_</em>|\mathbf{x}<em>*) \right] \right] -
-\left(\mathbb{E}</em>\mathbf{f_<em>}
-\left[ f_</em> , \mathbb{E}<em>\mathbf{x</em><em>} \left[ p(f_</em>|\mathbf{x}<em>*) \right] \right]\right)^2\
+\mathbb{E}_\mathbf{f_*}
+\left[ f_*^2 \, \mathbb{E}_\mathbf{x_*} \left[ p(f_*|\mathbf{x}_*) \right] \right] -
+\left(\mathbb{E}_\mathbf{f_*}
+\left[ f_* \, \mathbb{E}_\mathbf{x_*} \left[ p(f_*|\mathbf{x}_*) \right] \right]\right)^2\\
 &amp;=
-\mathbb{E}</em>\mathbf{x_<em>}
-\left[ \mathbb{E}<em>\mathbf{x</em></em>} \left[ f_<em>^2 , p(f_</em>|\mathbf{x}<em>*) \right] \right] -
-\left(\mathbb{E}</em>\mathbf{x_<em>}
-\left[ \mathbb{E}<em>\mathbf{x</em></em>} \left[ f_* , p(f_<em>|\mathbf{x}_</em>) \right] \right]\right)^2\
+\mathbb{E}_\mathbf{x_*}
+\left[ \mathbb{E}_\mathbf{x_*} \left[ f_*^2 \, p(f_*|\mathbf{x}_*) \right] \right] -
+\left(\mathbb{E}_\mathbf{x_*}
+\left[ \mathbb{E}_\mathbf{x_*} \left[ f_* \, p(f_*|\mathbf{x}_*) \right] \right]\right)^2\\
 &amp;=
-\mathbb{E}<em>\mathbf{x</em><em>}
-\left[  \sigma_\text{GP}^2(\mathbf{x}_</em>) + \mu_\text{GP}^2(\mathbf{x}<em>*) \right] -
-\mathbb{E}</em>{x_<em>}\left[ \mu_\text{GP}(\mathbf{x_</em>}) \right]^2 \
+\mathbb{E}_\mathbf{x_*}
+\left[  \sigma_\text{GP}^2(\mathbf{x}_*) + \mu_\text{GP}^2(\mathbf{x}_*) \right] -
+\mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]^2 \\
 &amp;=
-\mathbb{E}<em>\mathbf{x</em><em>}
-\left[  \sigma_\text{GP}^2(\mathbf{x}_</em>) \right] + \mathbb{E}<em>\mathbf{x</em><em>} \left[ \mu_\text{GP}^2(\mathbf{x}_</em>) \right] -
-\mathbb{E}<em>{x</em><em>}\left[ \mu_\text{GP}(\mathbf{x_</em>}) \right]^2\
+\mathbb{E}_\mathbf{x_*}
+\left[  \sigma_\text{GP}^2(\mathbf{x}_*) \right] + \mathbb{E}_\mathbf{x_*} \left[ \mu_\text{GP}^2(\mathbf{x}_*) \right] -
+\mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]^2\\
 &amp;=
-\mathbb{E}<em>\mathbf{x</em><em>} \left[  \sigma_\text{GP}^2(\mathbf{x}_</em>) \right] +
-\mathbb{V}<em>\mathbf{x</em><em>} \left[\mu_\text{GP}(\mathbf{x}_</em>) \right]
+\mathbb{E}_\mathbf{x_*} \left[  \sigma_\text{GP}^2(\mathbf{x}_*) \right] +
+\mathbb{V}_\mathbf{x_*} \left[\mu_\text{GP}(\mathbf{x}_*) \right]
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 </section>
 <hr class="docutils" />
 <section id="taylor-approximation">
 <h3>Taylor Approximation<a class="headerlink" href="#taylor-approximation" title="Permalink to this heading">#</a></h3>
 <p>We will approximate our mean and variance function via a Taylor Expansion. First the mean function:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \begin{aligned}
-\mathbf{z}<em>\mu =
-\mu</em>\text{GP}(\mathbf{x_<em>})=
-\mu_\text{GP}(\mu_\mathbf{x_</em>}) +
-\nabla \mu_\text{GP}\bigg\vert_{\mathbf{x}<em>* = \mu</em>\mathbf{x}}
-(\mathbf{x}<em>* - \mu</em>\mathbf{x_*})</p>
-<ul class="simple">
-<li><p>\mathcal{O} (\mathbf{x_*}^2)
+\mathbf{z}_\mu =
+\mu_\text{GP}(\mathbf{x_*})=
+\mu_\text{GP}(\mu_\mathbf{x_*}) +
+\nabla \mu_\text{GP}\bigg\vert_{\mathbf{x}_* = \mu_\mathbf{x}}
+(\mathbf{x}_* - \mu_\mathbf{x_*})
++ \mathcal{O} (\mathbf{x_*}^2)
 \end{aligned}
-$$</p></li>
-</ul>
+\]</div>
 <p>and then the variance function:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \begin{aligned}
-\mathbf{z}<em>\sigma =
-\nu^2</em>\text{GP}(\mathbf{x_<em>})=
-\nu^2_\text{GP}(\mu_\mathbf{x_</em>}) +
-\nabla \nu^2_\text{GP}\bigg\vert_{\mathbf{x}<em>* = \mu</em>\mathbf{x}}
-(\mathbf{x}<em>* - \mu</em>\mathbf{x_*})</p>
-<ul class="simple">
-<li><p>\mathcal{O} (\mathbf{x_*}^2)
+\mathbf{z}_\sigma =
+\nu^2_\text{GP}(\mathbf{x_*})=
+\nu^2_\text{GP}(\mu_\mathbf{x_*}) +
+\nabla \nu^2_\text{GP}\bigg\vert_{\mathbf{x}_* = \mu_\mathbf{x}}
+(\mathbf{x}_* - \mu_\mathbf{x_*})
++ \mathcal{O} (\mathbf{x_*}^2)
 \end{aligned}
-$$</p></li>
-</ul>
+\]</div>
 <hr class="docutils" />
 <section id="linearized-predictive-mean-and-variance">
 <h4>Linearized Predictive Mean and Variance<a class="headerlink" href="#linearized-predictive-mean-and-variance" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-m(\mu_\mathbf{x_<em>}, \Sigma_\mathbf{x_</em>})
+m(\mu_\mathbf{x_*}, \Sigma_\mathbf{x_*})
 &amp;=
-\mu_\text{GP}(\mu_\mathbf{x_<em>})\
-v(\mu_\mathbf{x_</em>}, \Sigma_\mathbf{x_<em>})
-&amp;= \nu^2_\text{GP}(\mu_{x_</em>}) +
-\nabla_\mathbf{x_<em>} \mu_\text{GP}(\mu_{x_</em>})^\top
-\Sigma_{x_<em>}
-\nabla_\mathbf{x_</em>} \mu_\text{GP}(\mu_{x_<em>}) +
-\frac{1}{2} \text{Tr}\left{ \frac{\partial^2 \nu^2(\mu_{x_</em>})}{\partial x_* \partial x_<em>^\top}  \Sigma_{x_</em>}\right}
+\mu_\text{GP}(\mu_\mathbf{x_*})\\
+v(\mu_\mathbf{x_*}, \Sigma_\mathbf{x_*})
+&amp;= \nu^2_\text{GP}(\mu_{x_*}) +
+\nabla_\mathbf{x_*} \mu_\text{GP}(\mu_{x_*})^\top
+\Sigma_{x_*}
+\nabla_\mathbf{x_*} \mu_\text{GP}(\mu_{x_*}) +
+\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \nu^2(\mu_{x_*})}{\partial x_* \partial x_*^\top}  \Sigma_{x_*}\right\}
 \end{aligned}
-$$</p>
-<p>where $\nabla_x$ is the gradient of the function $f(\mu_x)$ w.r.t. $x$ and $\nabla_x^2 f(\mu_x)$ is the second derivative (the Hessian) of the function $f(\mu_x)$ w.r.t. $x$. This is a second-order approximation which has that expensive Hessian term. There have have been studies that have shown that that term tends to be neglible in practice and a first-order approximation is typically enough.</p>
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nabla_x\)</span> is the gradient of the function <span class="math notranslate nohighlight">\(f(\mu_x)\)</span> w.r.t. <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(\nabla_x^2 f(\mu_x)\)</span> is the second derivative (the Hessian) of the function <span class="math notranslate nohighlight">\(f(\mu_x)\)</span> w.r.t. <span class="math notranslate nohighlight">\(x\)</span>. This is a second-order approximation which has that expensive Hessian term. There have have been studies that have shown that that term tends to be neglible in practice and a first-order approximation is typically enough.</p>
 <p>Practically speaking, this leaves us with the following predictive mean and variance functions:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mu_\text{GP}(\mathbf{x_<em>}) &amp;= k(\mathbf{x_</em>}) , \mathbf{K}<em>{GP}^{-1}y=k(\mathbf{x</em><em>}) , \alpha  \
-\nu_{GP}^2(\mathbf{x_</em>}) &amp;= \sigma_y^2 + {\color{red}{\nabla_{\mu_\text{GP}},\Sigma_\mathbf{x_<em>} ,\nabla_{\mu_\text{GP}}^\top} }+ k_{**}- {\bf k}_</em> ({\bf K}+\sigma_y^2 \mathbf{I}<em>N )^{-1} {\bf k}</em>{*}^{\top}
+\mu_\text{GP}(\mathbf{x_*}) &amp;= k(\mathbf{x_*}) \, \mathbf{K}_{GP}^{-1}y=k(\mathbf{x_*}) \, \alpha  \\
+\nu_{GP}^2(\mathbf{x_*}) &amp;= \sigma_y^2 + {\color{red}{\nabla_{\mu_\text{GP}}\,\Sigma_\mathbf{x_*} \,\nabla_{\mu_\text{GP}}^\top} }+ k_{**}- {\bf k}_* ({\bf K}+\sigma_y^2 \mathbf{I}_N )^{-1} {\bf k}_{*}^{\top}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>As seen above, the only extra term we need to include is the derivative of the mean function that is present in the predictive variance term.</p>
 </section>
 </section>
@@ -1136,60 +1145,60 @@ $$</p>
 <section id="conditional-gaussian-distributions">
 <h2>Conditional Gaussian Distributions<a class="headerlink" href="#conditional-gaussian-distributions" title="Permalink to this heading">#</a></h2>
 <section id="i-additive-noise-model-x-f">
-<h3>I: Additive Noise Model ($x,f$)<a class="headerlink" href="#i-additive-noise-model-x-f" title="Permalink to this heading">#</a></h3>
+<h3>I: Additive Noise Model (<span class="math notranslate nohighlight">\(x,f\)</span>)<a class="headerlink" href="#i-additive-noise-model-x-f" title="Permalink to this heading">#</a></h3>
 <p>This is the noise
-$$
+$<span class="math notranslate nohighlight">\(
 \begin{bmatrix}
-x \
-y
-\end{bmatrix}
-\sim \mathcal{N} \left(
-\begin{bmatrix}
-\mu_{x} \
-\mu_{y}
-\end{bmatrix},
-\begin{bmatrix}
-\Sigma_x &amp; C \
-C^\top &amp; \Pi
-\end{bmatrix}
-\right)
-$$
+    x \\
+    y
+    \end{bmatrix}
+    \sim \mathcal{N} \left( 
+    \begin{bmatrix}
+    \mu_{x} \\ 
+    \mu_{y} 
+    \end{bmatrix}, 
+    \begin{bmatrix}
+    \Sigma_x &amp; C \\
+    C^\top &amp; \Pi
+    \end{bmatrix}
+    \right)
+\)</span><span class="math notranslate nohighlight">\(
 where
-$$
+\)</span><span class="math notranslate nohighlight">\(
 \begin{aligned}
-\mu_y &amp;= f(\mu_x) \
-\Pi &amp;= \nabla_x f(\mu_x) : \Sigma_x : \nabla_x f(\mu_x)^\top + \nu^2(x) \
-C &amp;= \Sigma_x : \nabla_x^\top f(\mu_x)
+\mu_y &amp;= f(\mu_x) \\
+\Pi &amp;= \nabla_x f(\mu_x) \: \Sigma_x \: \nabla_x f(\mu_x)^\top + \nu^2(x) \\
+C &amp;= \Sigma_x \: \nabla_x^\top f(\mu_x)
 \end{aligned}
-$$
+\)</span><span class="math notranslate nohighlight">\(
 So if we want to make predictions with our new model, we will have the final equation as:
-$$
+\)</span><span class="math notranslate nohighlight">\(
 \begin{aligned}
-f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \
-\mu_{GP} &amp;= K_{<em>} K_{GP}^{-1}y=K_{</em>} \alpha \
-\nu^2_{GP} &amp;= K_{**} - K_{<em>} K_{GP}^{-1}K_{</em>}^{\top} + \tilde{\Sigma}<em>x
+f &amp;\sim \mathcal{N}(f|\mu_{GP}, \nu^2_{GP}) \\
+    \mu_{GP} &amp;= K_{*} K_{GP}^{-1}y=K_{*} \alpha \\
+    \nu^2_{GP} &amp;= K_{**} - K_{*} K_{GP}^{-1}K_{*}^{\top} + \tilde{\Sigma}_x
 \end{aligned}
-$$
-where $\tilde{\Sigma}<em>x = \nabla_x \mu</em>{GP} \Sigma_x \nabla \mu</em>{GP}^\top$.</p>
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>\tilde{\Sigma}<em>x = \nabla_x \mu</em>{GP} \Sigma_x \nabla \mu_{GP}^\top$.</p>
 <section id="other-gp-methods">
 <h4>Other GP Methods<a class="headerlink" href="#other-gp-methods" title="Permalink to this heading">#</a></h4>
-<p>We can extend this method to other GP algorithms including sparse GP models. The only thing that changes are the original $\mu_{GP}$ and $\nu^2_{GP}$ equations. In a sparse GP we have the following predictive functions
-$$
+<p>We can extend this method to other GP algorithms including sparse GP models. The only thing that changes are the original <span class="math notranslate nohighlight">\(\mu_{GP}\)</span> and <span class="math notranslate nohighlight">\(\nu^2_{GP}\)</span> equations. In a sparse GP we have the following predictive functions
+$<span class="math notranslate nohighlight">\(
 \begin{aligned}
-\mu_{SGP} &amp;= K_{*z}K_{zz}^{-1}m \
-\nu^2_{SGP} &amp;= K_{<strong>}
-- K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top}
+    \mu_{SGP} &amp;= K_{*z}K_{zz}^{-1}m \\
+    \nu^2_{SGP} &amp;= K_{**} 
+    - K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top}
 \end{aligned}
-$$
+\)</span><span class="math notranslate nohighlight">\(
 So the new predictive functions will be:
-$$
+\)</span><span class="math notranslate nohighlight">\(
 \begin{aligned}
-\mu_{SGP} &amp;= K_{*z}K_{zz}^{-1}m \
-\nu^2_{SGP} &amp;= K_{</strong>}
-- K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top}
-+ \tilde{\Sigma}_x
+    \mu_{SGP} &amp;= K_{*z}K_{zz}^{-1}m \\
+    \nu^2_{SGP} &amp;= K_{**} 
+    - K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top} 
+    + \tilde{\Sigma}_x
 \end{aligned}
-$$
+\)</span>$
 As shown above, this is a fairly extensible method that offers a cheap improved predictive variance estimates on an already trained GP model. Some future work could be evaluating how other GP models, e.g. Sparse Spectrum GP, Multi-Output GPs, e.t.c.</p>
 </section>
 </section>
@@ -1233,136 +1242,154 @@ As shown above, this is a fairly extensible method that offers a cheap improved 
 <hr class="docutils" />
 <section id="proof">
 <h2>Proof<a class="headerlink" href="#proof" title="Permalink to this heading">#</a></h2>
-<p>We will approximate our mean and variance function via a Taylor Expansion. First let’s take a step back and look at the taylor expansion of a single function $f$ w.r.t. to $\mathbf{x}<em>*$ which is characterized by its mean $\mu</em>\mathbf{x_<em>}$ and variance function $\Sigma_\mathbf{x_</em>}$. Taking the first two orders, we get</p>
-<p>$$\begin{aligned}
-\mathbf{z}<em>\mu = f(\mathbf{x</em><em>}) &amp;\approx
-\underbrace{f(\mu_\mathbf{x_</em>})}<em>\text{Zeroth Order} +
-\underbrace{\nabla</em>\mathbf{x_<em>} f\bigg\vert_{\mathbf{x}_</em> = \mu_\mathbf{x}}
-(\mathbf{x}<em>* - \mu</em>\mathbf{x_<em>})}<em>\text{1st Order} \
-&amp;+ \underbrace{\nabla^2</em>\mathbf{x_</em>} f \bigg\vert_{\mathbf{x}<em>* = \mu</em>\mathbf{x}}
-(\mathbf{x}<em>* - \mu</em>\mathbf{x_<em>})^\top (\mathbf{x}_</em> - \mu_\mathbf{x_<em>})}<em>\text{2nd Order} +
-\underbrace{\mathcal{O} (\mathbf{x</em></em>}^3)}_\text{Higher Order}
-\end{aligned}$$</p>
+<p>We will approximate our mean and variance function via a Taylor Expansion. First let’s take a step back and look at the taylor expansion of a single function <span class="math notranslate nohighlight">\(f\)</span> w.r.t. to <span class="math notranslate nohighlight">\(\mathbf{x}_*\)</span> which is characterized by its mean <span class="math notranslate nohighlight">\(\mu_\mathbf{x_*}\)</span> and variance function <span class="math notranslate nohighlight">\(\Sigma_\mathbf{x_*}\)</span>. Taking the first two orders, we get</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mathbf{z}_\mu = f(\mathbf{x_*}) &amp;\approx
+\underbrace{f(\mu_\mathbf{x_*})}_\text{Zeroth Order} +
+\underbrace{\nabla_\mathbf{x_*} f\bigg\vert_{\mathbf{x}_* = \mu_\mathbf{x}}
+(\mathbf{x}_* - \mu_\mathbf{x_*})}_\text{1st Order} \\
+&amp;+ \underbrace{\nabla^2_\mathbf{x_*} f \bigg\vert_{\mathbf{x}_* = \mu_\mathbf{x}}
+(\mathbf{x}_* - \mu_\mathbf{x_*})^\top (\mathbf{x}_* - \mu_\mathbf{x_*})}_\text{2nd Order} +
+\underbrace{\mathcal{O} (\mathbf{x_*}^3)}_\text{Higher Order}
+\end{aligned}\end{split}\]</div>
 <section id="id1">
 <h3>Mean Function<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
-<p>Now we need to take the expectation of our approximation, $\mathbb{E}[\mathbf{z}_\mu]$. We tackle each of the terms individually below.</p>
+<p>Now we need to take the expectation of our approximation, <span class="math notranslate nohighlight">\(\mathbb{E}[\mathbf{z}_\mu]\)</span>. We tackle each of the terms individually below.</p>
 <section id="zeroth-term">
 <h4>Zeroth Term<a class="headerlink" href="#zeroth-term" title="Permalink to this heading">#</a></h4>
 <p>For the first term, we take the expectation.</p>
-<p>$$
-\mathbb{E}<em>\mathbf{x</em><em>}\left[ f(\mu_\mathbf{x_</em>})\right] =  f(\mu_\mathbf{x_*})
-$$</p>
-<p>This is the same because the expectation of the mean of a function $f$ is simply the function $f$ evaluated at the mean.</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathbb{E}_\mathbf{x_*}\left[ f(\mu_\mathbf{x_*})\right] =  f(\mu_\mathbf{x_*}) 
+\]</div>
+<p>This is the same because the expectation of the mean of a function <span class="math notranslate nohighlight">\(f\)</span> is simply the function <span class="math notranslate nohighlight">\(f\)</span> evaluated at the mean.</p>
 </section>
 <section id="st-order-term">
 <h4>1st Order Term<a class="headerlink" href="#st-order-term" title="Permalink to this heading">#</a></h4>
 <p>The 1st order term is given by:</p>
-<p>$$\begin{aligned}
-\mathbb{E}<em>\mathbf{x</em><em>}\left[ \nabla_\mathbf{x_</em>} f \bigg\vert_{\mathbf{x}<em>* = \mu</em>\mathbf{x}}
-(\mathbf{x}<em>* - \mu</em>\mathbf{x_<em>})\right]
-&amp;=  \nabla_\mathbf{x_</em>} f(\mu_\mathbf{x_<em>}) \mathbb{E}<em>\mathbf{x</em></em>}\left[ (\mathbf{x}<em>* - \mu</em>\mathbf{x_*}) \right] = 0
-\end{aligned}$$</p>
-<p>$\mathbb{E}[(\mathbf{x}<em>* - \mu</em>\mathbf{x_*})]=0$ because the terms cancel each other out.</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+ \mathbb{E}_\mathbf{x_*}\left[ \nabla_\mathbf{x_*} f \bigg\vert_{\mathbf{x}_* = \mu_\mathbf{x}}
+(\mathbf{x}_* - \mu_\mathbf{x_*})\right] 
+&amp;=  \nabla_\mathbf{x_*} f(\mu_\mathbf{x_*}) \mathbb{E}_\mathbf{x_*}\left[ (\mathbf{x}_* - \mu_\mathbf{x_*}) \right] = 0
+\end{aligned}\]</div>
+<p><span class="math notranslate nohighlight">\(\mathbb{E}[(\mathbf{x}_* - \mu_\mathbf{x_*})]=0\)</span> because the terms cancel each other out.</p>
 </section>
 <section id="nd-order-term">
 <h4>2nd Order Term<a class="headerlink" href="#nd-order-term" title="Permalink to this heading">#</a></h4>
 <p>The 2nd order term is given by:</p>
-<p>$$\begin{aligned}
-\mathbb{E}<em>\mathbf{x</em><em>} \left[ \nabla^2_\mathbf{x_</em>} f \bigg\vert_{\mathbf{x}<em>* = \mu</em>\mathbf{x}}
-(\mathbf{x}<em>* - \mu</em>\mathbf{x_<em>})^\top (\mathbf{x}_</em> - \mu_\mathbf{x_<em>}) \right] &amp;= \nabla_\mathbf{x_</em>}^2 f(\mu_\mathbf{x_<em>})  \mathbb{E}<em>\mathbf{x</em></em>}\left[ (\mathbf{x}<em>* - \mu</em>\mathbf{x_<em>})^\top (\mathbf{x}_</em> - \mu_\mathbf{x_*}) \right]
-\end{aligned}$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\mathbb{E}_\mathbf{x_*} \left[ \nabla^2_\mathbf{x_*} f \bigg\vert_{\mathbf{x}_* = \mu_\mathbf{x}}
+(\mathbf{x}_* - \mu_\mathbf{x_*})^\top (\mathbf{x}_* - \mu_\mathbf{x_*}) \right] &amp;= \nabla_\mathbf{x_*}^2 f(\mu_\mathbf{x_*})  \mathbb{E}_\mathbf{x_*}\left[ (\mathbf{x}_* - \mu_\mathbf{x_*})^\top (\mathbf{x}_* - \mu_\mathbf{x_*}) \right]
+\end{aligned}\]</div>
 <p>We have the covariance term so we can simplify this:</p>
-<p>$$
-\mathbb{E}<em>\mathbf{x</em><em>} \left[ \nabla^2_\mathbf{x_</em>} f \bigg\vert_{\mathbf{x}<em>* = \mu</em>\mathbf{x}}
-(\mathbf{x}<em>* - \mu</em>\mathbf{x_<em>})^\top (\mathbf{x}_</em> - \mu_\mathbf{x_<em>}) \right] = \nabla_\mathbf{x_</em>}^2 f(\mu_\mathbf{x_<em>}) \Sigma_\mathbf{x_</em>}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_\mathbf{x_*} \left[ \nabla^2_\mathbf{x_*} f \bigg\vert_{\mathbf{x}_* = \mu_\mathbf{x}}
+(\mathbf{x}_* - \mu_\mathbf{x_*})^\top (\mathbf{x}_* - \mu_\mathbf{x_*}) \right] = \nabla_\mathbf{x_*}^2 f(\mu_\mathbf{x_*}) \Sigma_\mathbf{x_*}
+\]</div>
 <p>So we’re left with:</p>
-<p>$$
-\mathbb{E}<em>\mathbf{x</em><em>}\left[ f(\mathbf{x_</em>})\right]  \approx  f(\mu_\mathbf{x_<em>}) + \nabla^2_\mathbf{x_</em>} f(\mu_\mathbf{x})^\top;\Sigma_{\mathbf{x_<em>}} + \mathcal{O} (\mathbf{x_</em>}^3)
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathbb{E}_\mathbf{x_*}\left[ f(\mathbf{x_*})\right]  \approx  f(\mu_\mathbf{x_*}) + \nabla^2_\mathbf{x_*} f(\mu_\mathbf{x})^\top\;\Sigma_{\mathbf{x_*}} + \mathcal{O} (\mathbf{x_*}^3) 
+\]</div>
 <p>which we can simplify to:</p>
-<p>$$
-f(\mathbf{x_<em>}) \approx f(\mu_\mathbf{x_</em>}) +
-\underbrace{\frac{1}{2} \text{Tr}\left{ \nabla^2_\mathbf{x_<em>} f(\mu_\mathbf{x_</em>})^\top;\Sigma_\mathbf{x_*}\right}}_\text{2nd Order}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+f(\mathbf{x_*}) \approx f(\mu_\mathbf{x_*}) +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} f(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\}}_\text{2nd Order}
+\]</div>
 </section>
 <section id="linearized-gp-mean">
 <h4>Linearized GP Mean<a class="headerlink" href="#linearized-gp-mean" title="Permalink to this heading">#</a></h4>
-<p>So now instead of a simple function $f$, we have our GP predictive mean equation $\mu_\text{GP}$ which we can simply plug into the approximation.</p>
-<p>$$
-\tilde{\mu}<em>\text{LinGP}(\mathbf{x</em><em>}) = \mu_\text{GP}(\mu_\mathbf{x_</em>}) +
-\underbrace{\frac{1}{2} \text{Tr}\left{ \nabla^2_\mathbf{x_<em>} \mu_\text{GP}(\mu_\mathbf{x_</em>})^\top;\Sigma_\mathbf{x_*}\right}}_\text{2nd Order}
-$$</p>
+<p>So now instead of a simple function <span class="math notranslate nohighlight">\(f\)</span>, we have our GP predictive mean equation <span class="math notranslate nohighlight">\(\mu_\text{GP}\)</span> which we can simply plug into the approximation.</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\mu}_\text{LinGP}(\mathbf{x_*}) = \mu_\text{GP}(\mu_\mathbf{x_*}) +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} \mu_\text{GP}(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\}}_\text{2nd Order}
+\]</div>
 </section>
 </section>
 <section id="id2">
 <h3>Variance Function<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
-<p>So the variance term is a bit more difficult to calculate due to the $\mathbb{V}[\cdot]$ operator.</p>
-<p>$$
-\tilde{\sigma}^2_\text{LinGP}(\mathbf{x_<em>}) =\mathbb{E}<em>\mathbf{x</em></em>} \left[  \sigma_\text{GP}^2(\mathbf{x}<em>*) \right] +
-\mathbb{V}</em>\mathbf{x_<em>} \left[\mu_\text{GP}(\mathbf{x}_</em>) \right]
-$$</p>
-<p><strong>Term I</strong>: The formulation for the expectation of the Taylor expanded predictive variance function is similar to the equation above. So we can replace $\mu_\text{GP}$ with $\sigma^2_\text{GP}$.</p>
-<p>$$
-\mathbb{E}<em>\mathbf{x</em><em>} \left[  \sigma_\text{GP}^2(\mathbf{x}_</em>) \right] = \sigma^2_\text{GP}(\mu_\mathbf{x_<em>}) +
-\underbrace{\frac{1}{2} \text{Tr}\left{ \nabla^2_\mathbf{x_</em>} \sigma^2_\text{GP}(\mu_\mathbf{x_<em>})^\top;\Sigma_\mathbf{x_</em>}\right}}_\text{2nd Order}
-$$</p>
-<p><strong>Term II</strong>: This term is more difficult to calculate. Again, we’ll take a step back and see how this is for a function $f$. If we want a first order approximation, we will have the following:</p>
-<p>$$
-\mathbb{V}<em>\mathbf{x</em><em>}\left[f(\mathbf{x_</em>}) \right] = \nabla_\mathbf{x_<em>}f(\mu_\mathbf{x_</em>})^\top \Sigma_\mathbf{x_<em>}\nabla_\mathbf{x_</em>}f(\mu_\mathbf{x_*})
-$$</p>
-<p>This is a sufficient approximation when $f(\mathbf{x})$ is approximately linear and/or when $\Sigma_\mathbf{x_<em>}$ is relatively small compared to $f(\mu_\mathbf{x_</em>})$. Alternatively, we can add a second order approximation which would add the following terms:</p>
-<p>$$\begin{aligned}
-\mathbb{V}<em>\mathbf{x</em><em>}\left[f(\mathbf{x_</em>}) \right] &amp;\approx
-\underbrace{\left(\nabla_\mathbf{x_<em>}f(\mu_\mathbf{x_</em>})\right)^2 \Sigma_\mathbf{x_<em>}}<em>\text{1st Order} \
-&amp;- \underbrace{\frac{1}{4}\left(\nabla^2</em>\mathbf{x_</em>}f(\mu_\mathbf{x_<em>})\right)^2\Sigma_\mathbf{x_</em>} + \mathbb{E}<em>\mathbf{x</em><em>}\left[ \mathbf{x_</em>}-\mu_\mathbf{x_<em>} \right]\nabla^3_\mathbf{x_</em>}f(\mu_\mathbf{x_<em>}) + \frac{1}{4}\mathbb{E}<em>\mathbf{x</em></em>}\left<span class="xref myst">\mathbf{x_<em>}-\mu_\mathbf{x_</em>} \right</span>^2}_\text{2nd Order}
-\end{aligned}$$</p>
+<p>So the variance term is a bit more difficult to calculate due to the <span class="math notranslate nohighlight">\(\mathbb{V}[\cdot]\)</span> operator.</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\sigma}^2_\text{LinGP}(\mathbf{x_*}) =\mathbb{E}_\mathbf{x_*} \left[  \sigma_\text{GP}^2(\mathbf{x}_*) \right] +
+\mathbb{V}_\mathbf{x_*} \left[\mu_\text{GP}(\mathbf{x}_*) \right]
+\]</div>
+<p><strong>Term I</strong>: The formulation for the expectation of the Taylor expanded predictive variance function is similar to the equation above. So we can replace <span class="math notranslate nohighlight">\(\mu_\text{GP}\)</span> with <span class="math notranslate nohighlight">\(\sigma^2_\text{GP}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_\mathbf{x_*} \left[  \sigma_\text{GP}^2(\mathbf{x}_*) \right] = \sigma^2_\text{GP}(\mu_\mathbf{x_*}) +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} \sigma^2_\text{GP}(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\}}_\text{2nd Order}
+\]</div>
+<p><strong>Term II</strong>: This term is more difficult to calculate. Again, we’ll take a step back and see how this is for a function <span class="math notranslate nohighlight">\(f\)</span>. If we want a first order approximation, we will have the following:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{V}_\mathbf{x_*}\left[f(\mathbf{x_*}) \right] = \nabla_\mathbf{x_*}f(\mu_\mathbf{x_*})^\top \Sigma_\mathbf{x_*}\nabla_\mathbf{x_*}f(\mu_\mathbf{x_*})
+\]</div>
+<p>This is a sufficient approximation when <span class="math notranslate nohighlight">\(f(\mathbf{x})\)</span> is approximately linear and/or when <span class="math notranslate nohighlight">\(\Sigma_\mathbf{x_*}\)</span> is relatively small compared to <span class="math notranslate nohighlight">\(f(\mu_\mathbf{x_*})\)</span>. Alternatively, we can add a second order approximation which would add the following terms:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mathbb{V}_\mathbf{x_*}\left[f(\mathbf{x_*}) \right] &amp;\approx
+\underbrace{\left(\nabla_\mathbf{x_*}f(\mu_\mathbf{x_*})\right)^2 \Sigma_\mathbf{x_*}}_\text{1st Order} \\
+&amp;- \underbrace{\frac{1}{4}\left(\nabla^2_\mathbf{x_*}f(\mu_\mathbf{x_*})\right)^2\Sigma_\mathbf{x_*} + \mathbb{E}_\mathbf{x_*}\left[ \mathbf{x_*}-\mu_\mathbf{x_*} \right]\nabla^3_\mathbf{x_*}f(\mu_\mathbf{x_*}) + \frac{1}{4}\mathbb{E}_\mathbf{x_*}\left[\mathbf{x_*}-\mu_\mathbf{x_*} \right](\nabla^2_\mathbf{x_*}f(\mu_\mathbf{x_*}))^2}_\text{2nd Order}
+\end{aligned}\end{split}\]</div>
 <p>This expression has 3rd and 4th central moments with respect to the mean. These terms are often negligible according to the conditions mentioned above. In addition, it is a very expensive calculation for some functions. So a practical compromise is to use the 2nd order approximation for the mean and the first order approximation for the variance. This is the approach given here as 3rd and 4th central moments of kernel functions is very expensive. So combining the terms together, we get:</p>
-<p>$$\begin{aligned}
-\mathbb{V}<em>\mathbf{x</em><em>}\left[f(\mathbf{x_</em>}) \right] &amp;\approx f(\mu_\mathbf{x_<em>}) + \frac{1}{2} \text{Tr}\left{ \nabla^2_\mathbf{x_</em>} f(\mu_\mathbf{x_<em>})^\top;\Sigma_\mathbf{x_</em>}\right} +
-\left(\nabla_\mathbf{x_<em>}f(\mu_\mathbf{x_</em>})\right)^2 \Sigma_\mathbf{x_*}
-\end{aligned}$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\mathbb{V}_\mathbf{x_*}\left[f(\mathbf{x_*}) \right] &amp;\approx f(\mu_\mathbf{x_*}) + \frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} f(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\} +
+\left(\nabla_\mathbf{x_*}f(\mu_\mathbf{x_*})\right)^2 \Sigma_\mathbf{x_*}
+\end{aligned}\]</div>
 <p>So then subsituting all of the portions for the appropriate GP function, we get the following:</p>
-<p>$$\begin{aligned}
-\tilde{\sigma}^2_\text{LinGP}(\mathbf{x_<em>}) = \sigma^2_\text{GP}(\mu_\mathbf{x_</em>})+
-\left(\nabla_\mathbf{x_<em>}\mu_\text{GP}(\mu_\mathbf{x_</em>})\right)^2 \Sigma_\mathbf{x_<em>}+
-\frac{1}{2} \text{Tr}\left{ \nabla^2_\mathbf{x_</em>} \sigma^2_\text{GP}(\mu_\mathbf{x_<em>})^\top;\Sigma_\mathbf{x_</em>}\right}
-\end{aligned}$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\tilde{\sigma}^2_\text{LinGP}(\mathbf{x_*}) = \sigma^2_\text{GP}(\mu_\mathbf{x_*})+
+\left(\nabla_\mathbf{x_*}\mu_\text{GP}(\mu_\mathbf{x_*})\right)^2 \Sigma_\mathbf{x_*}+
+\frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} \sigma^2_\text{GP}(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\} 
+\end{aligned}\]</div>
 </section>
 <section id="id3">
 <h3>Linearized Predictive Mean and Variance<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
-<p>$$\begin{aligned}
-\tilde{\mu}<em>\text{LinGP}(\mathbf{x</em><em>}) &amp;= \underbrace{\mu_\text{GP}(\mu_\mathbf{x_</em>})}<em>\text{1st Order} +
-\underbrace{\frac{1}{2} \text{Tr}\left{ \nabla^2</em>\mathbf{x_<em>} \mu_\text{GP}(\mu_\mathbf{x_</em>})^\top;\Sigma_\mathbf{x_<em>}\right}}<em>\text{2nd Order}\
-\tilde{\sigma}^2</em>\text{LinGP}(\mathbf{x_</em>}) &amp;= \underbrace{\sigma^2_\text{GP}(\mu_\mathbf{x_<em>})+
-\nabla_\mathbf{x_</em>}\mu_\text{GP}(\mu_\mathbf{x_<em>})^\top \Sigma_\mathbf{x_</em>} \nabla_\mathbf{x_<em>}\mu_\text{GP}(\mu_\mathbf{x_</em>})}<em>\text{1st Order} \
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\tilde{\mu}_\text{LinGP}(\mathbf{x_*}) &amp;= \underbrace{\mu_\text{GP}(\mu_\mathbf{x_*})}_\text{1st Order} +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} \mu_\text{GP}(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\}}_\text{2nd Order}\\
+\tilde{\sigma}^2_\text{LinGP}(\mathbf{x_*}) &amp;= \underbrace{\sigma^2_\text{GP}(\mu_\mathbf{x_*})+
+\nabla_\mathbf{x_*}\mu_\text{GP}(\mu_\mathbf{x_*})^\top \Sigma_\mathbf{x_*} \nabla_\mathbf{x_*}\mu_\text{GP}(\mu_\mathbf{x_*})}_\text{1st Order} \\
 &amp;+
-\underbrace{\frac{1}{2} \text{Tr}\left{ \nabla^2</em>\mathbf{x_<em>} \sigma^2_\text{GP}(\mu_\mathbf{x_</em>})^\top;\Sigma_\mathbf{x_*}\right}}_\text{2nd Order}
-\end{aligned}$$</p>
-<p>where $\nabla_\mathbf{x_<em>}$ is the gradient of the function w.r.t. $\mathbf{x}$ and $\nabla_\mathbf{x_</em>}^2 $ is the second derivative (the Hessian) of the function w.r.t. $\mathbf{x_*}$. This is a second-order approximation which has that expensive Hessian term. There have have been studies that have shown that that term tends to be neglible in practice and a first-order approximation is typically enough.</p>
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \nabla^2_\mathbf{x_*} \sigma^2_\text{GP}(\mu_\mathbf{x_*})^\top\;\Sigma_\mathbf{x_*}\right\}}_\text{2nd Order}
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nabla_\mathbf{x_*}\)</span> is the gradient of the function w.r.t. <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\nabla_\mathbf{x_*}^2 \)</span> is the second derivative (the Hessian) of the function w.r.t. <span class="math notranslate nohighlight">\(\mathbf{x_*}\)</span>. This is a second-order approximation which has that expensive Hessian term. There have have been studies that have shown that that term tends to be neglible in practice and a first-order approximation is typically enough.</p>
 <p>Practically speaking, this leaves us with the following predictive mean and variance functions:</p>
-<p>$$\begin{aligned}
-\mu_\text{GP}(\mathbf{x_<em>}) &amp;= k(\mathbf{x_</em>}) , \mathbf{K}<em>{GP}^{-1}y=k(\mathbf{x</em><em>}) , \alpha  \
-\nu_{GP}^2(\mathbf{x_</em>}) &amp;= \sigma_y^2 + {\color{red}{\nabla_{\mu_\text{GP}},\Sigma_\mathbf{x_<em>} ,\nabla_{\mu_\text{GP}}^\top} }+ k_{**}- {\mathbf k}_</em> ({\mathbf K}+\sigma_y^2 \mathbf{I}<em>N )^{-1} {\mathbf k}</em>{*}^{\top}
-\end{aligned}$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mu_\text{GP}(\mathbf{x_*}) &amp;= k(\mathbf{x_*}) \, \mathbf{K}_{GP}^{-1}y=k(\mathbf{x_*}) \, \alpha  \\
+\nu_{GP}^2(\mathbf{x_*}) &amp;= \sigma_y^2 + {\color{red}{\nabla_{\mu_\text{GP}}\,\Sigma_\mathbf{x_*} \,\nabla_{\mu_\text{GP}}^\top} }+ k_{**}- {\mathbf k}_* ({\mathbf K}+\sigma_y^2 \mathbf{I}_N )^{-1} {\mathbf k}_{*}^{\top}
+\end{aligned}\end{split}\]</div>
 <p>As seen above, the only extra term we need to include is the derivative of the mean function that is present in the predictive variance term.</p>
 </section>
 </section>
 <section id="sparse-gps">
 <h2>Sparse GPs<a class="headerlink" href="#sparse-gps" title="Permalink to this heading">#</a></h2>
-<p>We can extend this method to other GP algorithms including sparse GP models. The only thing that changes are the original $\mu_{GP}$ and $\nu^2_{GP}$ equations. In a sparse GP we have the following predictive functions</p>
-<p>$$\begin{aligned}
-\mu_{SGP} &amp;= K_{*z}K_{zz}^{-1}m \
-\nu^2_{SGP} &amp;= K_{**}
-- K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top}
-\end{aligned}$$</p>
+<p>We can extend this method to other GP algorithms including sparse GP models. The only thing that changes are the original <span class="math notranslate nohighlight">\(\mu_{GP}\)</span> and <span class="math notranslate nohighlight">\(\nu^2_{GP}\)</span> equations. In a sparse GP we have the following predictive functions</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+    \mu_{SGP} &amp;= K_{*z}K_{zz}^{-1}m \\
+    \nu^2_{SGP} &amp;= K_{**} 
+    - K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top}
+\end{aligned}\end{split}\]</div>
 <p>So the new predictive functions will be:</p>
-<p>$$\begin{aligned}
-\mu_{SGP} &amp;= k_{*z}K_{zz}^{-1}m \
-\nu^2_{SGP} &amp;= K_{**}
-- K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top}
-+ \tilde{\Sigma}_x
-\end{aligned}$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+    \mu_{SGP} &amp;= k_{*z}K_{zz}^{-1}m \\
+    \nu^2_{SGP} &amp;= K_{**} 
+    - K_{*z}\left[ K_{zz}^{-1} - K_{zz}^{-1}SK_{zz}^{-1} \right]K_{*z}^{\top} 
+    + \tilde{\Sigma}_x
+\end{aligned}\end{split}\]</div>
 <p>As shown above, this is a fairly extensible method that offers a cheap improved predictive variance estimates on an already trained GP model. Some future work could be evaluating how other GP models, e.g. Sparse Spectrum GP, Multi-Output GPs, e.t.c.</p>
 <hr class="docutils" />
 <section id="error-propagation">
@@ -1373,8 +1400,9 @@ $$</p>
 <div><p>A Taylor series is representation of a function as an infinite sum of terms that are calculated from the values of the functions derivatives at a single point - Wiki</p>
 </div></blockquote>
 <p>Often times we come across functions that are very difficult to compute analytically. Below we have the simple first-order Taylor series approximation.</p>
-<p>Let’s take some function $f(\mathbf x)$ where $\mathbf{x} \sim \mathcal{N}(\mu_\mathbf{x}, \Sigma_\mathbf{x})$ described by a mean $\mu_\mathbf{x}$ and covariance $\Sigma_\mathbf{x}$. The Taylor series expansion around the function $f(\mathbf x)$ is:</p>
-<p>$$\mathbf z = f(\mathbf x) \approx f(\mu_{\mathbf x}) +   \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) $$</p>
+<p>Let’s take some function <span class="math notranslate nohighlight">\(f(\mathbf x)\)</span> where <span class="math notranslate nohighlight">\(\mathbf{x} \sim \mathcal{N}(\mu_\mathbf{x}, \Sigma_\mathbf{x})\)</span> described by a mean <span class="math notranslate nohighlight">\(\mu_\mathbf{x}\)</span> and covariance <span class="math notranslate nohighlight">\(\Sigma_\mathbf{x}\)</span>. The Taylor series expansion around the function <span class="math notranslate nohighlight">\(f(\mathbf x)\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf z = f(\mathbf x) \approx f(\mu_{\mathbf x}) +   \frac{\partial f}{\partial \mathbf x} \bigg\vert_{\mathbf{x} = \mu_\mathbf{x}}\left(  \mathbf x - \mu_{\mathbf x} \right) \]</div>
 </section>
 </section>
 </section>
@@ -1467,7 +1495,11 @@ $$</p>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#i-additive-noise-model-x-f">
-     I: Additive Noise Model ($x,f$)
+     I: Additive Noise Model (
+     <span class="math notranslate nohighlight">
+      \(x,f\)
+     </span>
+     )
     </a>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">

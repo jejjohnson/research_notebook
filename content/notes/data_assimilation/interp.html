@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data_assimilation/interp';</script>
@@ -967,7 +969,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="interpolation-problem">
+  <section class="tex2jax_ignore mathjax_ignore" id="interpolation-problem">
 <h1>Interpolation Problem<a class="headerlink" href="#interpolation-problem" title="Permalink to this heading">#</a></h1>
 <figure class="align-default" id="nkf-page">
 <a class="reference internal image-reference" href="../../../_images/oi_grid.png"><img alt="../../../_images/oi_grid.png" src="../../../_images/oi_grid.png" style="height: 500px;" /></a>
@@ -986,39 +988,44 @@ title="Print to PDF"
 <section id="optimal-interpolation">
 <h3>Optimal Interpolation<a class="headerlink" href="#optimal-interpolation" title="Permalink to this heading">#</a></h3>
 <p>Optimal Interpolation (OI) seems to be the golden standard for gap-filling SSH fields with missing data. Something that is very prevalent for Satellite sensors. However, the standard OI method</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\tilde{\boldsymbol{\mu}}<em>{\mathbf{x}</em>{t}} &amp;= \mathbf{x}<em>t + \mathbf{K}(\mathbf{y}<em>t - \mathbf{H}\mathbf{x}<em>t) \
-\tilde{\boldsymbol{\Sigma}}</em>{\mathbf{x}</em>{t}} &amp;= (\mathbf{I} - \mathbf{KH})\boldsymbol{\Sigma}</em>\mathbf{x}  \
-\mathbf{K} &amp;= \mathbf{P} \mathbf{H}\left(\mathbf{H} \mathbf{P} \mathbf{H}^\top  + \mathbf{R} \right)^{-1} \
+\tilde{\boldsymbol{\mu}}_{\mathbf{x}_{t}} &amp;= \mathbf{x}_t + \mathbf{K}(\mathbf{y}_t - \mathbf{H}\mathbf{x}_t) \\
+\tilde{\boldsymbol{\Sigma}}_{\mathbf{x}_{t}} &amp;= (\mathbf{I} - \mathbf{KH})\boldsymbol{\Sigma}_\mathbf{x}  \\
+\mathbf{K} &amp;= \mathbf{P} \mathbf{H}\left(\mathbf{H} \mathbf{P} \mathbf{H}^\top  + \mathbf{R} \right)^{-1} \\
 \end{aligned}
-$$</p>
-<p>The $\mathbf{K}$ is known as the Kalman gain. The <em>optimal</em> $\mathbf{K}$ is given by:</p>
-<p>$$
-\mathbf{K} = \boldsymbol{\Sigma}<em>{\mathbf{xy}} \boldsymbol{\Sigma}</em>{\mathbf{yy}}^{-1}
-$$</p>
-<p>where $\boldsymbol{\Sigma}<em>{\mathbf{yy}}$ is the covariance between the observations and $\boldsymbol{\Sigma}</em>{\mathbf{xy}}$ is the cross-covariance between the state and the observations.</p>
-<p>Notice how this assumes that interpolation can be done via a linear operator, $\mathbf{H}$. The Kalman gain, $\mathbf{K}$, represents the best interpolation via this linear problem. However, this is often insufficient in many scenarios where the data does not exhibit linear dynamics.</p>
+\end{split}\]</div>
+<p>The <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> is known as the Kalman gain. The <em>optimal</em> <span class="math notranslate nohighlight">\(\mathbf{K}\)</span> is given by:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{K} = \boldsymbol{\Sigma}_{\mathbf{xy}} \boldsymbol{\Sigma}_{\mathbf{yy}}^{-1}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_{\mathbf{yy}}\)</span> is the covariance between the observations and <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_{\mathbf{xy}}\)</span> is the cross-covariance between the state and the observations.</p>
+<p>Notice how this assumes that interpolation can be done via a linear operator, <span class="math notranslate nohighlight">\(\mathbf{H}\)</span>. The Kalman gain, <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>, represents the best interpolation via this linear problem. However, this is often insufficient in many scenarios where the data does not exhibit linear dynamics.</p>
 </section>
 <section id="kernel-methods">
 <h3>Kernel Methods<a class="headerlink" href="#kernel-methods" title="Permalink to this heading">#</a></h3>
 <p>This is similar to the kernel ridge regression (KRR) and Gaussian process (GP) formulation.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\boldsymbol{\mu}(\mathbf{x}^<em>) &amp;= \boldsymbol{k}_{\mathbf{x}}(\mathbf{x}^</em>) \boldsymbol{\alpha} \
-\boldsymbol{\Sigma}(\mathbf{x}^<em>, \mathbf{x’}^</em>) &amp;= \boldsymbol{k}(\mathbf{x}^<em>, \mathbf{x}^</em>) - \boldsymbol{k}<em>{\mathbf{x}}(\mathbf{x}^*)(\mathbf{K</em>{XX}} + \sigma^2\mathbf{I})^{-1} \boldsymbol{k}<em>{\mathbf{x}}(\mathbf{x}^*)^\top \
-\boldsymbol{\alpha} &amp;= (\mathbf{K</em>{XX}} + \sigma^2\mathbf{I})^{-1}\mathbf{y}
+\boldsymbol{\mu}(\mathbf{x}^*) &amp;= \boldsymbol{k}_{\mathbf{x}}(\mathbf{x}^*) \boldsymbol{\alpha} \\
+\boldsymbol{\Sigma}(\mathbf{x}^*, \mathbf{x'}^*) &amp;= \boldsymbol{k}(\mathbf{x}^*, \mathbf{x}^*) - \boldsymbol{k}_{\mathbf{x}}(\mathbf{x}^*)(\mathbf{K_{XX}} + \sigma^2\mathbf{I})^{-1} \boldsymbol{k}_{\mathbf{x}}(\mathbf{x}^*)^\top \\
+\boldsymbol{\alpha} &amp;= (\mathbf{K_{XX}} + \sigma^2\mathbf{I})^{-1}\mathbf{y} 
 \end{aligned}
-$$</p>
-<p>Notice how $\boldsymbol{\alpha} \in \mathbb{R}^{N}$ is simply a weight that gets multiplied by the cross-covariance, $\boldsymbol{k}(\mathbf{x}^*)$ for the new observations. The advantage of this is that it allows for mean predictions and variance predictions. The big bottleneck of this method is that we have to invert the $\mathbf{K_{XX}}^{-1}$ which is of order, $\mathcal{O}(N^3)$. Often times we don’t need so many observations to be able to efficient capture the essence of the data. For example, we can approximate this method by assuming we can decompose this kernel matrix into a lower dimensional matrix, $\mathbf{L} \in \mathbb{R}^{D \times d}$ s.t.</p>
-<p>$$
+\end{split}\]</div>
+<p>Notice how <span class="math notranslate nohighlight">\(\boldsymbol{\alpha} \in \mathbb{R}^{N}\)</span> is simply a weight that gets multiplied by the cross-covariance, <span class="math notranslate nohighlight">\(\boldsymbol{k}(\mathbf{x}^*)\)</span> for the new observations. The advantage of this is that it allows for mean predictions and variance predictions. The big bottleneck of this method is that we have to invert the <span class="math notranslate nohighlight">\(\mathbf{K_{XX}}^{-1}\)</span> which is of order, <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span>. Often times we don’t need so many observations to be able to efficient capture the essence of the data. For example, we can approximate this method by assuming we can decompose this kernel matrix into a lower dimensional matrix, <span class="math notranslate nohighlight">\(\mathbf{L} \in \mathbb{R}^{D \times d}\)</span> s.t.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{K} = \mathbf{LL}^\top
-$$</p>
+\]</div>
 <p>Methods like this are data independent like random Fourier features or random projection methods. Another methods assume we can decompose the matrix into a low-rank matrix like so:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{K} = \mathbf{K_r}\mathbf{K_{rr}}^{-1}\mathbf{K_r}
-$$</p>
-<p>This is a data-dependent method, eg. the Nystrom approximation. With a big of math magic, it is relatively straightforward to modify the above predictive mean and variance equations based on sparse matrix approximations listed above. This results in scalable of order $\mathcal{O}(NM^2)$ which can drastically speed up learning as well as predictions.</p>
+\]</div>
+<p>This is a data-dependent method, eg. the Nystrom approximation. With a big of math magic, it is relatively straightforward to modify the above predictive mean and variance equations based on sparse matrix approximations listed above. This results in scalable of order <span class="math notranslate nohighlight">\(\mathcal{O}(NM^2)\)</span> which can drastically speed up learning as well as predictions.</p>
 </section>
 <section id="kriging">
 <h3>Kriging<a class="headerlink" href="#kriging" title="Permalink to this heading">#</a></h3>
@@ -1031,12 +1038,13 @@ $$</p>
 <h3>Kernel Functions<a class="headerlink" href="#kernel-functions" title="Permalink to this heading">#</a></h3>
 <p>This is the most important aspect of the . In the code I inherited, I saw that they use the Gaussian kernel (aka RBF, Squared Exponential) which gives us smooth solutions. This is the most widely used kernel function in the literature because it is a universal approximator and serves as a good baseline because it exhibits desireable properties, e.g. smoothness, differentiable, etc. However, in the case of ocean data, smoothness might be detrimental to our application if we don’t expect smooth solutions.</p>
 <p>Another powerful aspect is the <em>combination</em> of <a class="reference external" href="https://en.wikipedia.org/wiki/Positive-definite_kernel">kernel functions</a>. For example, the following kernel operations are valid kernels:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-K &amp;= K + K \
-K &amp;= K * K \
+K &amp;= K + K \\
+K &amp;= K * K \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>This gives rise to potentially more expressive kernel functions as combinations. For example, in the <a class="reference external" href="https://tinygp.readthedocs.io/en/stable/tutorials/quickstart.html">classic Moana Loana</a> example, we find that thinking about the potential dynamics at play help us to design good kernel functions that can describe the dynamics of the data. In other applications, kernel functions that exhibit stronger periodicity might be better suited to the problem, e.g. <a class="reference external" href="https://tinygp.readthedocs.io/en/stable/tutorials/kernels.html">spectral mixture kernel</a>.</p>
 <p>In extra step is to do deep kernel learning (DKL) whereby we use a neural network as a flexible, non-linear feature extractor before inputing this into a kernel function itself (<a class="reference external" href="https://tinygp.readthedocs.io/en/stable/tutorials/transforms.html">example</a>). We lose the interpretation aspect because we offload all non-linearities into the neural network, however this allows for us to capture dynamics that cannot be approximated via clever combinations of kernel functions.</p>
 </section>
@@ -1053,7 +1061,7 @@ $$</p>
 </section>
 <section id="hypothesis">
 <h3>Hypothesis<a class="headerlink" href="#hypothesis" title="Permalink to this heading">#</a></h3>
-<p>I believe there is a lot to be explored regarding the family of kernel methods. For example, we have the freedom to choose the kernel function, $\boldsymbol{k}$, which can encode certain properties that we expect the data to exhibit. Furthermore, we can operate these parameters based upon the data. In addition, one can solve for the best parameters, $\boldsymbol{\theta}$, once and then simply apply this on new datasets. The kernel method literature vast and . Lastly, the use of kernel methods in oceanography has not been studied in great detail and this provides us with an opportunity to lead the community in this perspective.</p>
+<p>I believe there is a lot to be explored regarding the family of kernel methods. For example, we have the freedom to choose the kernel function, <span class="math notranslate nohighlight">\(\boldsymbol{k}\)</span>, which can encode certain properties that we expect the data to exhibit. Furthermore, we can operate these parameters based upon the data. In addition, one can solve for the best parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>, once and then simply apply this on new datasets. The kernel method literature vast and . Lastly, the use of kernel methods in oceanography has not been studied in great detail and this provides us with an opportunity to lead the community in this perspective.</p>
 </section>
 <section id="connections-to-other-methods">
 <h3>Connections to Other Methods<a class="headerlink" href="#connections-to-other-methods" title="Permalink to this heading">#</a></h3>
@@ -1061,12 +1069,13 @@ $$</p>
 <p>There are notes from the original paper and the original formulation. They mention how the BLUE estimator is limited if there is no prior knowledge and that one can estimate the covariances directly from the data. However, the connection has not been explored in great detail. For example, nothing is said about the chosen kernel functions nor the training strategies.</p>
 <p><strong>4DVarNet</strong></p>
 <p>This algorithm requires a good initial condition for solving the minimization problem:</p>
-<p>$$
-\mathbf{x}^* = \argmin_{\mathbf{x}} \boldsymbol{U}(\mathbf{x}<em>{\text{init}}, \mathbf{y}</em>{\text{obs}}, \boldsymbol{\theta})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}^* = \argmin_{\mathbf{x}} \boldsymbol{U}(\mathbf{x}_{\text{init}}, \mathbf{y}_{\text{obs}}, \boldsymbol{\theta})
+\]</div>
 <p>There are quite a few cases where a bad initial condition will result in local minimum or poor solutions. A great initialization can alleviate some of the difficulties of the 4DVarNet.</p>
 <p><strong>Kalman Filters</strong></p>
-<p>The Gaussian process method with a linear kernel function, $\boldsymbol{k}$, is equivalent to the Kalman filter. They produce the exact same solution, however, the KF solves the problem sequentially whereas the GP solves the problem with all of the data. In the above proposal, we go beyond linear kernels which gives us extra flexibility. However, later, scalability might still be an issue as well as longer time scales. In this case, Markovian GPs have found a lot of recent success in sequential data. They are approximate continuous counterparts to the Kalman filter and generalize it to more non-linear transition and emission functions. This has been demonstrated in a recent paper (<span class="xref myst">Spatio-Temporal Variational Markovian Gaussian Processes</span>).</p>
+<p>The Gaussian process method with a linear kernel function, <span class="math notranslate nohighlight">\(\boldsymbol{k}\)</span>, is equivalent to the Kalman filter. They produce the exact same solution, however, the KF solves the problem sequentially whereas the GP solves the problem with all of the data. In the above proposal, we go beyond linear kernels which gives us extra flexibility. However, later, scalability might still be an issue as well as longer time scales. In this case, Markovian GPs have found a lot of recent success in sequential data. They are approximate continuous counterparts to the Kalman filter and generalize it to more non-linear transition and emission functions. This has been demonstrated in a recent paper (<span class="xref myst">Spatio-Temporal Variational Markovian Gaussian Processes</span>).</p>
 </section>
 </section>
 <hr class="docutils" />

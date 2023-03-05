@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data_assimilation/emu';</script>
@@ -920,102 +922,116 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="emulation">
+  <section class="tex2jax_ignore mathjax_ignore" id="emulation">
 <h1>Emulation<a class="headerlink" href="#emulation" title="Permalink to this heading">#</a></h1>
 <section id="linear-gaussian-state-space-model">
 <h2>Linear Gaussian State Space Model<a class="headerlink" href="#linear-gaussian-state-space-model" title="Permalink to this heading">#</a></h2>
 <p>LGSSM</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{z}_0 &amp;\sim \mathcal{N}( \boldsymbol{\mu}<em>0, \boldsymbol{\Sigma}<em>0) \
-\mathbf{z}<em>t &amp;= \mathbf{Fz}</em>{t-1} + \boldsymbol{\epsilon}</em>{\mathbf z} \
-\mathbf{x}<em>t &amp;= \mathbf{Hz}</em>{t} + \boldsymbol{\epsilon}</em>{\mathbf x} \
+\mathbf{z}_0 &amp;\sim \mathcal{N}( \boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0) \\
+\mathbf{z}_t &amp;= \mathbf{Fz}_{t-1} + \boldsymbol{\epsilon}_{\mathbf z} \\
+\mathbf{x}_t &amp;= \mathbf{Hz}_{t} + \boldsymbol{\epsilon}_{\mathbf x} \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p><strong>Loss Function</strong></p>
 <p>We can train this using maximum likelihood estimation (MLE) like so: c</p>
-<p>$$
-\mathcal{L}(\boldsymbol{\theta};\mathbf{x}<em>{1:T}) = p(\mathbf{x}</em>{1:T}) = \sum_{t=1}^T p(\mathbf{x}<em>{t}|\mathbf{x}</em>{1:t-1})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\boldsymbol{\theta};\mathbf{x}_{1:T}) = p(\mathbf{x}_{1:T}) = \sum_{t=1}^T p(\mathbf{x}_{t}|\mathbf{x}_{1:t-1})
+\]</div>
 <p>Because we have linear operations, we can minimize this exactly</p>
-<p>$$
-p(\mathbf{x}<em>{t}|\mathbf{x}</em>{1:t-1}) = \mathcal{N}(\mathbf{x}_t|\mathbf{Hz}_t, \mathbf{R}_t)
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{x}_{t}|\mathbf{x}_{1:t-1}) = \mathcal{N}(\mathbf{x}_t|\mathbf{Hz}_t, \mathbf{R}_t)
+\]</div>
 <hr class="docutils" />
 </section>
 <section id="transformed-lgssm">
 <h2>Transformed LGSSM<a class="headerlink" href="#transformed-lgssm" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{z}<em>t &amp;= \mathbf{Fz}</em>{t-1} + \boldsymbol{\epsilon}<em>{\mathbf z} \
-\tilde{\mathbf{x}}<em>t &amp;= \mathbf{Hz}</em>{t} + \boldsymbol{\epsilon}</em>{\mathbf x} \
-\mathbf{x}<em>t &amp;= \boldsymbol{T}</em>{\boldsymbol{\theta}}(\tilde{\mathbf{x}}_t)
+\mathbf{z}_t &amp;= \mathbf{Fz}_{t-1} + \boldsymbol{\epsilon}_{\mathbf z} \\
+\tilde{\mathbf{x}}_t &amp;= \mathbf{Hz}_{t} + \boldsymbol{\epsilon}_{\mathbf x} \\
+\mathbf{x}_t &amp;= \boldsymbol{T}_{\boldsymbol{\theta}}(\tilde{\mathbf{x}}_t)
 \end{aligned}
-$$</p>
-<p>$$
-\mathcal{L} =
-$$</p>
-<p>Again, we can solve for this exactly because we have a simple transformation function, $\boldsymbol{T}$:</p>
-<p>$$
-\mathcal{L}(\boldsymbol{\theta};\mathbf{x}<em>{1:T}) = p(\mathbf{x}</em>{1:T}) = \sum_{t=1}^T \log p(\tilde{\mathbf{x}}<em>{t}|\tilde{\mathbf{x}}</em>{1:t-1}) ; + \log \left|\det \nabla_{\mathbf{x}_t} \boldsymbol{T}^{-1}(\mathbf{x}_t) \right|
-$$</p>
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L} = 
+\]</div>
+<p>Again, we can solve for this exactly because we have a simple transformation function, <span class="math notranslate nohighlight">\(\boldsymbol{T}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\boldsymbol{\theta};\mathbf{x}_{1:T}) = p(\mathbf{x}_{1:T}) = \sum_{t=1}^T \log p(\tilde{\mathbf{x}}_{t}|\tilde{\mathbf{x}}_{1:t-1}) \; + \log \left|\det \nabla_{\mathbf{x}_t} \boldsymbol{T}^{-1}(\mathbf{x}_t) \right|
+\]</div>
 <p>Note that this is the same loss function as above, however, we see that</p>
 <p><strong>Motivation</strong></p>
-<p>We take our inspiration from <span class="xref myst">Koopman theory</span>. We assume that the perfect dynamics to describe the transition of our state from $\mathbf{x}<em>t$ to $\mathbf{x}</em>{t+1}$ can be described by a non-linear function, $\boldsymbol{f}$.</p>
-<p>$$
+<p>We take our inspiration from <span class="xref myst">Koopman theory</span>. We assume that the perfect dynamics to describe the transition of our state from <span class="math notranslate nohighlight">\(\mathbf{x}_t\)</span> to <span class="math notranslate nohighlight">\(\mathbf{x}_{t+1}\)</span> can be described by a non-linear function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \frac{d}{dt}\mathbf{x}(t) = \boldsymbol{f}(\mathbf{x}(t), \boldsymbol{\theta})
-$$</p>
+\]</div>
 <p>However, this is often unknown and we have no way to solve this. One way to think However, we postulate that there exists some transformation (possibly invertible) that allows us to</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{z} = \boldsymbol{T}(\mathbf{x}; \boldsymbol{\theta}) \
+\mathbf{z} = \boldsymbol{T}(\mathbf{x}; \boldsymbol{\theta}) \\
 \mathbf{x} = \boldsymbol{T}^{-1} (\mathbf{z}; \boldsymbol{\theta})
 \end{aligned}
-$$</p>
-<p>$$
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[
 \frac{d}{dt}\mathbf{z}(t) = \mathbf{Lz}(t)
-$$</p>
+\]</div>
 <p>A practical example is the case of the coordinate system for the planetary motion without our solar system. An Earth-centric coordinate system shows very non-linear structure when describing the motion for other planets and the sun. However, a sun-centric coordinate system showcase very simple dynamics that can be described using simpler equations.</p>
-<p>We are free to choose this transformation and we get some very interesting properties depending upon the restrictions we choose. Some examples of transformations, $\mathbf{T}$, include FFT, Wavelets, PCA, AE, and NFs.</p>
+<p>We are free to choose this transformation and we get some very interesting properties depending upon the restrictions we choose. Some examples of transformations, <span class="math notranslate nohighlight">\(\mathbf{T}\)</span>, include FFT, Wavelets, PCA, AE, and NFs.</p>
 <p><strong>Transformations</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \log p(\mathbf{x}) \approxeq \log p(\mathbf{z}) + \mathcal{V}(\mathbf{x}, \mathbf{z}) + \mathcal{E}(\mathbf{x}, \mathbf{z})
-$$</p>
-<p>where $\mathcal{V}(\mathbf{x}, \mathbf{z})$ is the <em>likelihood contribution</em> and $\mathcal{E}(\mathbf{x}, \mathbf{z})$ is the bound looseness.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{V}(\mathbf{x}, \mathbf{z})\)</span> is the <em>likelihood contribution</em> and <span class="math notranslate nohighlight">\(\mathcal{E}(\mathbf{x}, \mathbf{z})\)</span> is the bound looseness.</p>
 <section id="bijective">
 <h3>Bijective<a class="headerlink" href="#bijective" title="Permalink to this heading">#</a></h3>
 <p>These are known as <strong>Normalizing Flows</strong> or <strong>Invertible Neural Networks</strong>.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{z} &amp;= \boldsymbol{T}(\mathbf{x}) \
+\mathbf{z} &amp;= \boldsymbol{T}(\mathbf{x}) \\
 \mathbf{x} &amp;= \boldsymbol{T}^{-1}(\mathbf{z})
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>The good thing is that these transformations give you <em>exact</em> likelihoods. However, they are limited because you have <em>limited expressivity</em> due to the diffeomorphic constraint. In addition, it requires this to be</p>
 <p>In terms of the log-likelihood function, these are:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathcal{V}(\mathbf{x},\mathbf{z}) &amp;= \log |\det \nabla_{\mathbf x} \boldsymbol{T}(\mathbf{x})| \
+\mathcal{V}(\mathbf{x},\mathbf{z}) &amp;= \log |\det \nabla_{\mathbf x} \boldsymbol{T}(\mathbf{x})| \\
 \mathcal{E}(\mathbf{x}, \mathbf{z}) &amp;= 0
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 <section id="stochastic">
 <h3>Stochastic<a class="headerlink" href="#stochastic" title="Permalink to this heading">#</a></h3>
 <p>These are known as <strong>Variational AutoEncoders</strong>.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{z} &amp;= \boldsymbol{T}_e(\mathbf{x}) \
+\mathbf{z} &amp;= \boldsymbol{T}_e(\mathbf{x}) \\
 \mathbf{x} &amp;= \boldsymbol{T}_d(\mathbf{z})
 \end{aligned}
-$$</p>
-<p>where $\mathbf{x} = \boldsymbol{T}_d \circ \boldsymbol{T}_e(\mathbf{x})$.</p>
-<p>$$
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{x} = \boldsymbol{T}_d \circ \boldsymbol{T}_e(\mathbf{x})\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathcal{V}(\mathbf{x},\mathbf{z}) &amp;= \frac{p(\mathbf{x}|\mathbf{z})}{q(\mathbf{z}|\mathbf{x})} = \frac{\text{encoder}}{\text{decoder}} \
+\mathcal{V}(\mathbf{x},\mathbf{z}) &amp;= \frac{p(\mathbf{x}|\mathbf{z})}{q(\mathbf{z}|\mathbf{x})} = \frac{\text{encoder}}{\text{decoder}} \\
 \mathcal{E}(\mathbf{x}, \mathbf{z}) &amp;= \frac{p(\mathbf{z}|\mathbf{x})}{q(\mathbf{z}|\mathbf{x})}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p><strong>Cons</strong>:</p>
 <p><strong>Approximate Inference</strong>:</p>
 <p><strong>Pros</strong>:</p>
@@ -1026,45 +1042,50 @@ $$</p>
 </section>
 <section id="ensemble-state-space-model">
 <h2>Ensemble State Space Model<a class="headerlink" href="#ensemble-state-space-model" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{z}<em>t &amp;= \boldsymbol{f}(\mathbf{z}</em>{t-1}) + \boldsymbol{\epsilon}<em>{\mathbf z} \
-\mathbf{x}<em>t &amp;= \boldsymbol{h}(\mathbf{z}</em>{t}) + \boldsymbol{\epsilon}</em>{\mathbf x} \
+\mathbf{z}_t &amp;= \boldsymbol{f}(\mathbf{z}_{t-1}) + \boldsymbol{\epsilon}_{\mathbf z} \\
+\mathbf{x}_t &amp;= \boldsymbol{h}(\mathbf{z}_{t}) + \boldsymbol{\epsilon}_{\mathbf x} \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>This is difficult. However, if we restrict ourselves to Gaussian distributions, this allows us to have</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-p(\mathbf{z}<em>t|\mathbf{z}</em>{t-1}) &amp;= \mathcal{N}(\boldsymbol{f}(\mathbf{z}_{t-1}), \mathbf{Q}) \
-p(\mathbf{x}_t|\mathbf{z}<em>t) &amp;= \mathcal{N}(\boldsymbol{h}(\mathbf{z}</em>{t}), \mathbf{R}) \
+p(\mathbf{z}_t|\mathbf{z}_{t-1}) &amp;= \mathcal{N}(\boldsymbol{f}(\mathbf{z}_{t-1}), \mathbf{Q}) \\
+p(\mathbf{x}_t|\mathbf{z}_t) &amp;= \mathcal{N}(\boldsymbol{h}(\mathbf{z}_{t}), \mathbf{R}) \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p><strong>Log-Likelihood</strong></p>
 <p>Given we have samples, we will need to
-$$
+$<span class="math notranslate nohighlight">\(
 \begin{aligned}
-\bar{\mathbf{x}}<em>t &amp;= \frac{1}{N_e} \sum</em>{i=1}^{N_e} \mathbf{x}<em>{(i),t} \
-\bar{\mathbf{P}}<em>t &amp;= \frac{1}{N_e - 1} \sum</em>{i=1}^{N_e} (\mathbf{x}</em>{(i),t} - \bar{\mathbf{x}}<em>t)(\mathbf{x}</em>{(i),t} - \bar{\mathbf{x}}_t)
+\bar{\mathbf{x}}_t &amp;= \frac{1}{N_e} \sum_{i=1}^{N_e} \mathbf{x}_{(i),t} \\
+\bar{\mathbf{P}}_t &amp;= \frac{1}{N_e - 1} \sum_{i=1}^{N_e} (\mathbf{x}_{(i),t} - \bar{\mathbf{x}}_t)(\mathbf{x}_{(i),t} - \bar{\mathbf{x}}_t) 
 \end{aligned}
-$$</p>
-<p>$$
+\)</span>$</p>
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}(\boldsymbol{\theta}) = \sum_{t=1}^T \log \mathcal{N}(\mathbf{H}\bar{\mathbf{x}}_t, \mathbf{H}\bar{\mathbf{P}}\mathbf{H}^\top + \mathbf{R})
-$$</p>
+\]</div>
 <hr class="docutils" />
 </section>
 <section id="deep-state-space-model-dssm">
 <h2>Deep State Space Model (DSSM)<a class="headerlink" href="#deep-state-space-model-dssm" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-p(\mathbf{z}_0) &amp;= \mathcal{N}(\boldsymbol{\mu}<em>0, \boldsymbol{\Sigma}<em>0)\
-p(\mathbf{z}<em>t|\mathbf{z}</em>{t-1}) &amp;= \mathcal{N}(\text{NN}</em>{\boldsymbol{\mu}<em>t}(\mathbf{z}</em>{t-1}); \text{NN}</em>{\boldsymbol{\nu}<em>t}(\mathbf{z}</em>{t-1})) \
-p(\mathbf{x}<em>t|\mathbf{z}<em>t) &amp;= \mathcal{N}(\text{NN}</em>{\boldsymbol{\mu}<em>e}(\mathbf{z}</em>{t}), \text{NN}</em>{\boldsymbol{\nu}<em>e}(\mathbf{z}</em>{t})) \
+p(\mathbf{z}_0) &amp;= \mathcal{N}(\boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0)\\
+p(\mathbf{z}_t|\mathbf{z}_{t-1}) &amp;= \mathcal{N}(\text{NN}_{\boldsymbol{\mu}_t}(\mathbf{z}_{t-1}); \text{NN}_{\boldsymbol{\nu}_t}(\mathbf{z}_{t-1})) \\
+p(\mathbf{x}_t|\mathbf{z}_t) &amp;= \mathcal{N}(\text{NN}_{\boldsymbol{\mu}_e}(\mathbf{z}_{t}), \text{NN}_{\boldsymbol{\nu}_e}(\mathbf{z}_{t})) \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p><strong>Loss Function</strong></p>
-<p>$$
-\mathcal{L}(\boldsymbol{\theta}, \boldsymbol{\phi}; \mathbf{x}<em>{1:T}) = \sum</em>{t=1}^T \mathbb{E}<em>{q</em>{\boldsymbol \phi}}\left[ \log p (\mathbf{z}<em>t | \mathbf{z}</em>{t-1}) + \log p(\mathbf{x}_t | \mathbf{z}<em>t) - \log q</em>{\boldsymbol \phi}(\mathbf{z}<em>t | \mathbf{z}</em>{t-1})\right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\boldsymbol{\theta}, \boldsymbol{\phi}; \mathbf{x}_{1:T}) = \sum_{t=1}^T \mathbb{E}_{q_{\boldsymbol \phi}}\left[ \log p (\mathbf{z}_t | \mathbf{z}_{t-1}) + \log p(\mathbf{x}_t | \mathbf{z}_t) - \log q_{\boldsymbol \phi}(\mathbf{z}_t | \mathbf{z}_{t-1})\right] 
+\]</div>
 <p><strong>Pros</strong></p>
 <ul class="simple">
 <li><p>More Flexible</p></li>

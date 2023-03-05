@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/tutorials/regression_masterclass/regression_master_class';</script>
@@ -1016,7 +1018,7 @@ title="Print to PDF"
             <article class="bd-article" role="main">
               
   <p><a href="https://colab.research.google.com/github/jejjohnson/research_notebook/blob/develop/content/tutorials/regression_masterclass/regression_master_class.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
-<section id="master-class-in-regression-and-uncertainty-with-tensorflow-probability">
+<section class="tex2jax_ignore mathjax_ignore" id="master-class-in-regression-and-uncertainty-with-tensorflow-probability">
 <h1>Master Class in Regression and Uncertainty with Tensorflow Probability<a class="headerlink" href="#master-class-in-regression-and-uncertainty-with-tensorflow-probability" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, I will exploring the new <span class="xref myst">tensorflow 2.0</span>, <span class="xref myst">tensorflow probability</span> and <span class="xref myst">edward2</span>. We have come a long way</p>
 <section id="resources">
@@ -1218,23 +1220,25 @@ def plot_loss(history):
 </section>
 <section id="linear-regression">
 <h3>Linear Regression<a class="headerlink" href="#linear-regression" title="Permalink to this heading">#</a></h3>
-<p>This first case, we assume that there is no uncertainty in our model. We are just trying to function that maps our data from $\mathcal{X}$ to $\mathcal{Y}$.</p>
-<p>$$f=wx+b$$</p>
+<p>This first case, we assume that there is no uncertainty in our model. We are just trying to function that maps our data from <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> to <span class="math notranslate nohighlight">\(\mathcal{Y}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[f=wx+b\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$w$ - regression weights</p></li>
-<li><p>$b$ - bias</p></li>
+<li><p><span class="math notranslate nohighlight">\(w\)</span> - regression weights</p></li>
+<li><p><span class="math notranslate nohighlight">\(b\)</span> - bias</p></li>
 </ul>
-<p>$$\underset{w,b}{\text{min}} \frac{1}{2N}\sum_{i=1}^{N}
-|| wx_i + b - y_i||_2^2 +
+<div class="math notranslate nohighlight">
+\[\underset{w,b}{\text{min}} \frac{1}{2N}\sum_{i=1}^{N}
+|| wx_i + b - y_i||_2^2 + 
 \frac{\lambda}{2} \left( ||w||_2^2 + ||b||_2^2 \right)
-$$</p>
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\lambda$ - regularization coefficient to penalize large valued weights</p></li>
-<li><p>$l_2$ - reconstruction error (MSE)</p></li>
-<li><p>$l_2$ - regularization for the weights and bias</p></li>
-<li><p>$l_1$ - kernel regularization</p></li>
+<li><p><span class="math notranslate nohighlight">\(\lambda\)</span> - regularization coefficient to penalize large valued weights</p></li>
+<li><p><span class="math notranslate nohighlight">\(l_2\)</span> - reconstruction error (MSE)</p></li>
+<li><p><span class="math notranslate nohighlight">\(l_2\)</span> - regularization for the weights and bias</p></li>
+<li><p><span class="math notranslate nohighlight">\(l_1\)</span> - kernel regularization</p></li>
 </ul>
 <p>In terms of the tensorflow 2.0 library, we have everything that we need to satisfy this objective function with the <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.Dense</span></code> layer. It has all of the options to add the additional regularizations that we need for our objective functions.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
@@ -1377,9 +1381,12 @@ plot_results(yhat)
 <section id="bayesian-linear-regression-maximum-likelihood">
 <h2>Bayesian Linear Regression (Maximum Likelihood)<a class="headerlink" href="#bayesian-linear-regression-maximum-likelihood" title="Permalink to this heading">#</a></h2>
 <p>This will be very similar to the above linear regression formulation.</p>
-<p>$$y_i \sim \mathcal{N}(wx_i, \sigma^2)$$
-$$w \sim \mathcal{N}(0, \lambda^{-1})$$</p>
-<p>$$w \sim \mathcal{N}(m, v)$$</p>
+<div class="math notranslate nohighlight">
+\[y_i \sim \mathcal{N}(wx_i, \sigma^2)\]</div>
+<div class="math notranslate nohighlight">
+\[w \sim \mathcal{N}(0, \lambda^{-1})\]</div>
+<div class="math notranslate nohighlight">
+\[w \sim \mathcal{N}(m, v)\]</div>
 <p>First we need a log likelihood function.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1852,16 +1859,20 @@ plot_results(yhat.mean().numpy(), yhat.stddev().numpy())
 <h3>Bayesian Linear Regression (Variational)<a class="headerlink" href="#bayesian-linear-regression-variational" title="Permalink to this heading">#</a></h3>
 <p>In this example, we will be looking at how we can extend the Bayesian LR method with variational features. From an uncvertainty perspective, we are looking at</p>
 <p>Again, this will be very similar to the above linear regression formulation.</p>
-<p>$$y_i \sim \mathcal{N}(wx_i, \sigma^2)$$
-$$w \sim \mathcal{N}(0, \lambda^{-1})$$</p>
+<div class="math notranslate nohighlight">
+\[y_i \sim \mathcal{N}(wx_i, \sigma^2)\]</div>
+<div class="math notranslate nohighlight">
+\[w \sim \mathcal{N}(0, \lambda^{-1})\]</div>
 <p>We want to estimate the parameters of the posterior distribution over the weights.</p>
-<p>$$w \sim \mathcal{N}(m, v)$$</p>
+<div class="math notranslate nohighlight">
+\[w \sim \mathcal{N}(m, v)\]</div>
 <p>We can use the evidence lower bound (ELBO) which we can easily use with stochastic gradient descent (SGD) methods which also allows us to train in batches. For Bayesian linear regression, we have it of the form:</p>
-<p>$$\underset{m,\nu, \sigma}{\text{min}}-\sigma_{i=1}^N
+<div class="math notranslate nohighlight">
+\[\underset{m,\nu, \sigma}{\text{min}}-\sigma_{i=1}^N
 \mathbb{E}_{\mathcal{N}(w|m,\nu)}
-\left[\log \mathcal{N}(y_i | wx_i, \sigma^2) \right] +
+\left[\log \mathcal{N}(y_i | wx_i, \sigma^2) \right] + 
 \text{KL}\left[ \mathcal{N}(w|m, \nu) || \mathcal{N}(w| 0, \lambda^{-1}) \right]
-$$</p>
+\]</div>
 <p>We can use the <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.DenseVariational</span></code> in order to define our distribution.</p>
 <p>In addition, we can define some prior distributions for our variational parameters.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dtype</span> <span class="o">=</span> <span class="o">...</span>
@@ -2246,18 +2257,20 @@ To change all layers to have dtype float64 by default, call `tf.keras.backend.se
 <section id="neural-network">
 <h2>Neural Network<a class="headerlink" href="#neural-network" title="Permalink to this heading">#</a></h2>
 <p>We will do a classic neural network scenario.</p>
-<p>$$f=\text{NN}(x)$$</p>
+<div class="math notranslate nohighlight">
+\[f=\text{NN}(x)\]</div>
 <p>The NN refers to as a composition of functions.</p>
-<p>$$\underset{w,b}{\text{min}} \frac{1}{2N}\sum_{i=1}^{N}
-|| \text{NN}(x_i) + b - y_i||<em>2^2 +
-\sum</em>{l=1}^{L}\frac{\lambda_l}{2} \left( ||w_l||_2^2 + ||b_l||_2^2 \right)
-$$</p>
+<div class="math notranslate nohighlight">
+\[\underset{w,b}{\text{min}} \frac{1}{2N}\sum_{i=1}^{N}
+|| \text{NN}(x_i) + b - y_i||_2^2 + 
+\sum_{l=1}^{L}\frac{\lambda_l}{2} \left( ||w_l||_2^2 + ||b_l||_2^2 \right)
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\lambda$ - regularization coefficient to penalize large valued weights</p></li>
-<li><p>$l_2$ - reconstruction error (MSE)</p></li>
-<li><p>$l_2$ - regularization for the weights and bias</p></li>
-<li><p>$l_1$ - kernel regularization</p></li>
+<li><p><span class="math notranslate nohighlight">\(\lambda\)</span> - regularization coefficient to penalize large valued weights</p></li>
+<li><p><span class="math notranslate nohighlight">\(l_2\)</span> - reconstruction error (MSE)</p></li>
+<li><p><span class="math notranslate nohighlight">\(l_2\)</span> - regularization for the weights and bias</p></li>
+<li><p><span class="math notranslate nohighlight">\(l_1\)</span> - kernel regularization</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

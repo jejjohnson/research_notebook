@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/tutorials/jax_journey/vmap';</script>
@@ -973,7 +975,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="vmap">
+  <section class="tex2jax_ignore mathjax_ignore" id="vmap">
 <h1>vmap<a class="headerlink" href="#vmap" title="Permalink to this heading">#</a></h1>
 <p>This is a really nifty function that allows you to automatically handle batch dimensions without any cost! It allows you to write your code in a vectorized format and then just use this transformation to handle the batching.</p>
 <p>On the website, they have an example if you have a linear function written in vector format, and you want to make predictions for multiple samples. So an example function is:</p>
@@ -985,17 +987,19 @@ title="Print to PDF"
 </pre></div>
 </div>
 <p>The thing to notice is that the input vector is on the <strong>right-hand side</strong> of the matrix multiplication. Normally, when we want to handle samples, we do <code class="docutils literal notranslate"><span class="pre">np.dot(inputs,</span> <span class="pre">W)</span></code> because we are using matrix multiplication to handle the samples. So mathematically, a vector would be:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 y = \mathbf{w}\mathbf{x} + b
-$$</p>
-<p>where $\mathbf{x,w} \in \mathbb{R}^{D}$ are vectors and $y,b \in \mathbb{R}$ are scalars. In almost <strong>every machine learning tutorial <a class="reference external" href="https://pytorch.org/tutorials/beginner/nn_tutorial.html#neural-net-from-scratch-no-torch-nn">ever</a></strong>, they teach you to do change that for the following:</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{x,w} \in \mathbb{R}^{D}\)</span> are vectors and <span class="math notranslate nohighlight">\(y,b \in \mathbb{R}\)</span> are scalars. In almost <strong>every machine learning tutorial <a class="reference external" href="https://pytorch.org/tutorials/beginner/nn_tutorial.html#neural-net-from-scratch-no-torch-nn">ever</a></strong>, they teach you to do change that for the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">input_vector</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
 </pre></div>
 </div>
-<p>because it is basically implied that we’ve collected all of our data points into a matrix $\mathbf{X} \in \mathbb{R}^{N \times D}$ where every row is a sample and every column is a feature. It is equivalent to the notation:</p>
-<p>$$
+<p>because it is basically implied that we’ve collected all of our data points into a matrix <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{N \times D}\)</span> where every row is a sample and every column is a feature. It is equivalent to the notation:</p>
+<div class="math notranslate nohighlight">
+\[
 y = \mathbf{Xw} + b
-$$</p>
+\]</div>
 <p>So we don’t have to worry about this step. Well, pivoting off of the vector notation, if we wanted to actually account for samples, then we would need to run our <code class="docutils literal notranslate"><span class="pre">predict</span></code> function multiple times which (in python) is inefficient and it would take ages. They provide an example of how one could do it using pure functional python.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">predict</span><span class="p">,</span> <span class="n">params</span><span class="p">),</span> <span class="n">input_batch</span><span class="p">)))</span>
@@ -1069,19 +1073,21 @@ $$</p>
 </section>
 <section id="practical-example-kernel-matrices">
 <h2>Practical Example: Kernel Matrices<a class="headerlink" href="#practical-example-kernel-matrices" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 k(x,y) = \exp(-\gamma ||x-y||_2^2)
-$$</p>
+\]</div>
 <ol class="arabic simple">
-<li><p>Distance Matrix, $d(\mathbf{x,y})=||\mathbf{x} - \mathbf{x}||_2^2$</p></li>
-<li><p>Kernel Function, $\exp(-\gamma d(\mathbf{x,y}))$</p></li>
-<li><p>Gram Matrix, $\mathbf{K}$</p></li>
+<li><p>Distance Matrix, <span class="math notranslate nohighlight">\(d(\mathbf{x,y})=||\mathbf{x} - \mathbf{x}||_2^2\)</span></p></li>
+<li><p>Kernel Function, <span class="math notranslate nohighlight">\(\exp(-\gamma d(\mathbf{x,y}))\)</span></p></li>
+<li><p>Gram Matrix, <span class="math notranslate nohighlight">\(\mathbf{K}\)</span></p></li>
 </ol>
 <section id="distance-matrices">
 <h3>1. Distance Matrices<a class="headerlink" href="#distance-matrices" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 d(x,y) = \sum_{i=1}^N (x_i - y_i)^2
-$$</p>
+\]</div>
 <section id="vector-representation">
 <h4>Vector Representation<a class="headerlink" href="#vector-representation" title="Permalink to this heading">#</a></h4>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sqeuclidean_distances</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -1139,9 +1145,10 @@ $$</p>
 </section>
 <section id="rbf-kernel">
 <h3>2. RBF Kernel<a class="headerlink" href="#rbf-kernel" title="Permalink to this heading">#</a></h3>
-<p>$$
-k(\mathbf{x,y}) = \exp\left[-\gamma ;d(\mathbf{x,y}) \right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+k(\mathbf{x,y}) = \exp\left[-\gamma \;d(\mathbf{x,y}) \right]
+\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">rbf_kernel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The RBF Kernel&quot;&quot;&quot;</span>
     <span class="c1"># calculate the kernel</span>

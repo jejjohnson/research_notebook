@@ -949,7 +949,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="conda-4-remote-servers">
+  <section class="tex2jax_ignore mathjax_ignore" id="conda-4-remote-servers">
 <h1>Conda 4 Remote Servers<a class="headerlink" href="#conda-4-remote-servers" title="Permalink to this heading">#</a></h1>
 <p>It’s advisable to create personal conda environments in your <code class="docutils literal notranslate"><span class="pre">/path/to/workdir</span></code> directory. Preconfigured environments are great for quickly prototyping. But, inevitably, you always end up needing more fine-tune control over your environments whenever you are prototyping. In addition, too many people using the same environment results in massive environments with unnecessary packages. Having control over your environment will lead to more reproducible settings especially if you keep track.</p>
 <p>Look at the table of contents to see what could be of interest. If it’s your first time, I would suggest going through all of it first before you start tinkering.</p>
@@ -989,22 +989,25 @@ chmod<span class="w"> </span>+x<span class="w"> </span>path/to/file.sh
 bash<span class="w"> </span>.path/to/file.sh
 </pre></div>
 </div>
-<p>:::{warning}
-Make sure you install it in the correct directory. Typically we all have a <code class="docutils literal notranslate"><span class="pre">homedir</span></code>, a <code class="docutils literal notranslate"><span class="pre">workdir</span></code> and a <code class="docutils literal notranslate"><span class="pre">scratchdir</span></code>. The first option should always be the <code class="docutils literal notranslate"><span class="pre">homedir</span></code>. However, many times the <code class="docutils literal notranslate"><span class="pre">homedir</span></code> on servers are extremely small. This is a problem because some conda environments can be kind of heavy. So the second option should be the <code class="docutils literal notranslate"><span class="pre">workdir</span></code>. You need to change this when doing the installation; there will be an option which allows one choose which directory to install the conda package. The last option would be the <code class="docutils literal notranslate"><span class="pre">scratchdir</span></code> of course but these are typically erased more frequently. So it makes sense to avoid this if possible.
-:::</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Make sure you install it in the correct directory. Typically we all have a <code class="docutils literal notranslate"><span class="pre">homedir</span></code>, a <code class="docutils literal notranslate"><span class="pre">workdir</span></code> and a <code class="docutils literal notranslate"><span class="pre">scratchdir</span></code>. The first option should always be the <code class="docutils literal notranslate"><span class="pre">homedir</span></code>. However, many times the <code class="docutils literal notranslate"><span class="pre">homedir</span></code> on servers are extremely small. This is a problem because some conda environments can be kind of heavy. So the second option should be the <code class="docutils literal notranslate"><span class="pre">workdir</span></code>. You need to change this when doing the installation; there will be an option which allows one choose which directory to install the conda package. The last option would be the <code class="docutils literal notranslate"><span class="pre">scratchdir</span></code> of course but these are typically erased more frequently. So it makes sense to avoid this if possible.</p>
+</div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># some prompt should appear in the installation</span>
 /path/to/workdir
 </pre></div>
 </div>
 <p>Now you should have the conda directory. Continue to do the installation by following the steps given by the prompt and then you should be done.</p>
-<p>:::{note}
-Make sure you initialize your miniconda installation so that it adds the appropriate stuff to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make sure you initialize your miniconda installation so that it adds the appropriate stuff to your <code class="docutils literal notranslate"><span class="pre">.profile</span></code> or <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>init
 </pre></div>
 </div>
-<p>:::</p>
-<p>:::{note}
-Be sure to restart the terminal (e.g. log out and log back in, rerun the <code class="docutils literal notranslate"><span class="pre">.profile</span></code> and/or <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>). And your prompt should have an indicator like so:</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be sure to restart the terminal (e.g. log out and log back in, rerun the <code class="docutils literal notranslate"><span class="pre">.profile</span></code> and/or <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>). And your prompt should have an indicator like so:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>base<span class="o">)</span><span class="w"> </span>user@server:prompt$
 </pre></div>
 </div>
@@ -1012,7 +1015,7 @@ Be sure to restart the terminal (e.g. log out and log back in, rerun the <code c
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>list
 </pre></div>
 </div>
-<p>:::</p>
+</div>
 <section id="testing">
 <h3>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">#</a></h3>
 <p>If done correctly, you should be able to see the following:</p>
@@ -1185,14 +1188,6 @@ conda<span class="w"> </span>activate<span class="w"> </span>env_name
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">joblib</span><span class="w">  </span><span class="c1"># Embarssingly parallel</span>
 </pre></div>
 </div>
-<p>:::{adomination} Other Example <code class="docutils literal notranslate"><span class="pre">environment.yaml</span></code>
-:class: tip
-If you want to see more examples of conda <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> files, you can check out my <a class="reference external" href="https://github.com/jejjohnson/dot_files"><code class="docutils literal notranslate"><span class="pre">dot_files</span></code> repo</a>. I have plenty of examples and I even distinguish between operating systems like Linux and MacOS.
-:::</p>
-<p>:::{adomination} Visible Python Kernels
-:class: tip
-If you use jupyter-lab a lot, then it is best to try and have all of your conda kernels be visible. This can be done by installing <code class="docutils literal notranslate"><span class="pre">nb_conda_kernel</span></code> and <code class="docutils literal notranslate"><span class="pre">ipykernels</span></code>. So if you run a different environment with jupyter-lab, you should be able to select python kernels from other conda environments.
-:::</p>
 </section>
 <hr class="docutils" />
 <section id="multiple-conda-directories">

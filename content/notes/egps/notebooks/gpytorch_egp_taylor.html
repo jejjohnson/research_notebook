@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/egps/notebooks/gpytorch_egp_taylor';</script>
@@ -1037,7 +1039,7 @@ title="Print to PDF"
             <article class="bd-article" role="main">
               
   <p><a href="https://colab.research.google.com/github/jejjohnson/research_notebook/blob/develop/content/notes/egps/notebooks/gpytorch_egp_taylor.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
-<section id="gaussian-process-gradients-with-gpytorch">
+<section class="tex2jax_ignore mathjax_ignore" id="gaussian-process-gradients-with-gpytorch">
 <h1>Gaussian Process Gradients with GPyTorch<a class="headerlink" href="#gaussian-process-gradients-with-gpytorch" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, I will be looking at how one can compute the gradients of different</p>
 <p><strong>Sources</strong></p>
@@ -1581,16 +1583,17 @@ plt.show()
 <p>A quick demo showing how we can use the Taylor Series Expansion to propagate the error within our inputs.</p>
 <section id="st-order">
 <h3>1st Order<a class="headerlink" href="#st-order" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\tilde{\mathbf{\mu}}<em>\text{LinGP}(\mathbf{x</em><em>}) &amp;= \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_</em>}) \
-\tilde{\mathbf{\sigma}}^2_\text{LinGP} (\mathbf{x_<em>}) &amp;=
-\mathbf{\sigma}^2_\text{GP}(\mathbf{\mu}<em>\mathbf{x</em></em>}) +
-\underbrace{\frac{\partial \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_<em>})}{\partial \mathbf{x_</em>}}^\top
-\mathbf{\Sigma}<em>\mathbf{x</em><em>}
-\frac{\partial \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_</em>})}{\partial \mathbf{x_*}}}_\text{1st Order}
+\tilde{\mathbf{\mu}}_\text{LinGP}(\mathbf{x_*}) &amp;= \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*}) \\
+\tilde{\mathbf{\sigma}}^2_\text{LinGP} (\mathbf{x_*}) &amp;= 
+\mathbf{\sigma}^2_\text{GP}(\mathbf{\mu}_\mathbf{x_*}) + 
+\underbrace{\frac{\partial \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}^\top
+\mathbf{\Sigma}_\mathbf{x_*}
+\frac{\partial \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}}_\text{1st Order}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Get into evaluation (predictive posterior) mode
@@ -1664,18 +1667,19 @@ egp_upper = mu + 1.96 * egp_std
 </section>
 <section id="nd-order">
 <h3>2nd Order<a class="headerlink" href="#nd-order" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\tilde{\mathbf{\mu}}<em>\text{LinGP}(\mathbf{x</em><em>}) &amp;= \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_</em>}) +
-\underbrace{\frac{1}{2} \text{Tr}\left{ \frac{\partial^2 \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_<em>})}{\partial \mathbf{x_</em>} \partial \mathbf{x_<em>}^\top}  \mathbf{\Sigma}<em>\mathbf{x</em></em>}\right}}<em>\text{second Order}\
-\tilde{\mathbf{\sigma}}^2</em>\text{LinGP} (\mathbf{x_<em>}) &amp;=
-\mathbf{\sigma}^2_\text{GP}(\mathbf{\mu}<em>\mathbf{x</em></em>}) +
-\underbrace{\frac{\partial \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_<em>})}{\partial \mathbf{x_</em>}}^\top
-\mathbf{\Sigma}<em>\mathbf{x</em><em>}
-\frac{\partial \mathbf{\mu}<em>\text{GP}(\mathbf{\mu}</em>\mathbf{x_</em>})}{\partial \mathbf{x_<em>}}}<em>\text{1st Order} +
-\underbrace{\frac{1}{2} \text{Tr}\left{ \frac{\partial^2 \mathbf{\Sigma}^2</em>\text{GP}(\mathbf{\mu}<em>\mathbf{x</em></em>})}{\partial \mathbf{x_<em>} \partial \mathbf{x_</em>}^\top}  \mathbf{\Sigma}<em>\mathbf{x</em>*}\right}}_\text{2nd Order}
+\tilde{\mathbf{\mu}}_\text{LinGP}(\mathbf{x_*}) &amp;= \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*}) +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{second Order}\\
+\tilde{\mathbf{\sigma}}^2_\text{LinGP} (\mathbf{x_*}) &amp;= 
+\mathbf{\sigma}^2_\text{GP}(\mathbf{\mu}_\mathbf{x_*}) + 
+\underbrace{\frac{\partial \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}^\top
+\mathbf{\Sigma}_\mathbf{x_*}
+\frac{\partial \mathbf{\mu}_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*}}}_\text{1st Order} +
+\underbrace{\frac{1}{2} \text{Tr}\left\{ \frac{\partial^2 \mathbf{\Sigma}^2_\text{GP}(\mathbf{\mu}_\mathbf{x_*})}{\partial \mathbf{x_*} \partial \mathbf{x_*}^\top}  \mathbf{\Sigma}_\mathbf{x_*}\right\}}_\text{2nd Order}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Get into evaluation (predictive posterior) mode

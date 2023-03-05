@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gps/literature';</script>
@@ -925,7 +927,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="literature-review">
+  <section class="tex2jax_ignore mathjax_ignore" id="literature-review">
 <h1>Literature Review<a class="headerlink" href="#literature-review" title="Permalink to this heading">#</a></h1>
 <section id="tags-interpolation">
 <h2>tags: <code class="docutils literal notranslate"><span class="pre">interpolation</span></code><a class="headerlink" href="#tags-interpolation" title="Permalink to this heading">#</a></h2>
@@ -1010,7 +1012,7 @@ The same as the above two papers exact this method allows for online learning, i
 <p><strong>Sparse Gaussian Processes</strong></p>
 <blockquote>
 <div><p><strong>A Tutorial on Sparse Gaussian Processes and Variational Inference</strong> - Leibfried et al (2021)
-The most up-to-date review of the methods for Sparse Variational Gaussian Processes. <strong>Note</strong>: We won’t be using this in the paper because I feel like it is out of scope. But it is probably the most scalable method available to date. $\mathcal{O}(M^3)$</p>
+The most up-to-date review of the methods for Sparse Variational Gaussian Processes. <strong>Note</strong>: We won’t be using this in the paper because I feel like it is out of scope. But it is probably the most scalable method available to date. <span class="math notranslate nohighlight">\(\mathcal{O}(M^3)\)</span></p>
 </div></blockquote>
 <blockquote>
 <div><p><strong>When Gaussian Process Meets Big Data: A Review of Scalable GPs</strong> - Lui et al (2019)

@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/tutorials/jax_journey/gfs_with_jax';</script>
@@ -1019,7 +1021,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="gaussianization-flows">
+  <section class="tex2jax_ignore mathjax_ignore" id="gaussianization-flows">
 <h1>Gaussianization Flows<a class="headerlink" href="#gaussianization-flows" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1132,9 +1134,10 @@ title="Print to PDF"
 <section id="pdf">
 <h3>PDF<a class="headerlink" href="#pdf" title="Permalink to this heading">#</a></h3>
 <p>We are going to use the same function as before. The only difference is the we will use the PDF instead of the CDF of a Gaussian.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \log \nabla U(x) = \sum_k^K \log \pi_k + \log \sum_k^K \mathcal{N}_{PDF}(x|\mu_k, \sigma_k)
-$$</p>
+\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># num_mixtures = 4</span>
@@ -1528,10 +1531,10 @@ $$</p>
 <h3>Composite Transformation<a class="headerlink" href="#composite-transformation" title="Permalink to this heading">#</a></h3>
 <p>So to have a flow model, we need two components:</p>
 <hr class="docutils" />
-<p><strong>Base Distribution</strong>: $p_Z = \mathbb{P}_Z$</p>
+<p><strong>Base Distribution</strong>: <span class="math notranslate nohighlight">\(p_Z = \mathbb{P}_Z\)</span></p>
 <p>This will describe the distribution we want in the transform domain. In this case, we will choose the uniform distribution because we are trying to uniformize our data.</p>
 <hr class="docutils" />
-<p><strong>Bijections</strong>: $f = f_L \circ f_{L-1} \circ \ldots \circ f_1$</p>
+<p><strong>Bijections</strong>: <span class="math notranslate nohighlight">\(f = f_L \circ f_{L-1} \circ \ldots \circ f_1\)</span></p>
 <p>The list of bijections. These are our functions which we would like to compose together to get our dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

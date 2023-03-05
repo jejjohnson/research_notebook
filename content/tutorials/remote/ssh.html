@@ -1019,7 +1019,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="ssh-configuration">
+  <section class="tex2jax_ignore mathjax_ignore" id="ssh-configuration">
 <h1>SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <p>We will go over 2 cases:</p>
@@ -1326,42 +1326,6 @@ Host<span class="w"> </span>dahu_gricad
 </div>
 <p>This is <strong>much simpler</strong> than having to do the proxy jumps.</p>
 <p>On the <a class="reference external" href="https://gricad-doc.univ-grenoble-alpes.fr/en/hpc/connexion/#4-transparent-ssh-connexion-configuration"><code class="docutils literal notranslate"><span class="pre">gricad</span></code> docs</a> they have a similar command which uses your <code class="docutils literal notranslate"><span class="pre">&lt;pereseus-login&gt;</span></code>. I have included it below for a side-by-side comparison with my version.</p>
-<p>:::{tabbed} gricad Docs</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host<span class="w"> </span>*
-<span class="w">  </span>ServerAliveInterval<span class="w"> </span><span class="m">30</span>
-
-Host<span class="w"> </span>*.ciment
-<span class="w">  </span>ProxyCommand<span class="w"> </span>ssh<span class="w"> </span>-q<span class="w"> </span>username@access-gricad.univ-grenoble-alpes.fr<span class="w"> </span><span class="s2">&quot;nc -w 60 `basename %h .ciment` %p&quot;</span>
-
-Host<span class="w"> </span>dahu<span class="w"> </span>luke<span class="w"> </span>froggy<span class="w"> </span>bigfoot
-<span class="w">  </span>User<span class="w"> </span>username
-<span class="w">  </span>ProxyJump<span class="w"> </span>username@access-gricad.univ-grenoble-alpes.fr:22
-</pre></div>
-</div>
-<p><strong>Example Usage</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>dahu
-</pre></div>
-</div>
-<p>:::</p>
-<p>:::{tabbed} My Version</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Host<span class="w"> </span>gricad
-<span class="w">	</span>User<span class="w"> </span>username
-<span class="w">	</span>HostName<span class="w"> </span>access-gricad.univ-grenoble-alpes.fr
-<span class="w">	</span>IdentityFile<span class="w"> </span>~/.ssh/id_rsa_gricad
-
-<span class="c1"># DAHU </span>
-Host<span class="w"> </span>dahu
-<span class="w">	</span>User<span class="w"> </span>username
-<span class="w">	</span>HostName<span class="w"> </span>dahu
-<span class="w">	</span>ProxyJump<span class="w"> </span>gricad
-<span class="w">	</span>IdentityFile<span class="w"> </span>~/.ssh/id_rsa_gricad
-</pre></div>
-</div>
-<p><strong>Example Usage</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>dahu
-</pre></div>
-</div>
-<p>:::</p>
 <p>It’s apparently <em>transparent</em> but I really don’t understand the <code class="docutils literal notranslate"><span class="pre">ProxyCommand</span></code> they put in place. I think it is much harder to understand compared to my version. I have yet to see any differences in performance from their command and my own.</p>
 </section>
 <hr class="docutils" />

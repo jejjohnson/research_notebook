@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/normalizing_flows/lecture_3_gfs_pt2_rot';</script>
@@ -987,7 +989,7 @@ title="Print to PDF"
             <article class="bd-article" role="main">
               
   <!-- #region id="QMV_fJikDPKT" -->
-<section id="parameterized-rotations">
+<section class="tex2jax_ignore mathjax_ignore" id="parameterized-rotations">
 <h1>Parameterized Rotations<a class="headerlink" href="#parameterized-rotations" title="Permalink to this heading">#</a></h1>
 <p>This is my notebook where I play around with all things normalizing flow with pyro. I use the following packages:</p>
 <ul class="simple">
@@ -1237,11 +1239,12 @@ title="Print to PDF"
 <!-- #endregion -->
 <!-- #region id="V3PS9SAfg2Nt" -->
 <p><strong>Algorithm</strong></p>
-<p>$\mathbf{H}_k$ is reflection matrix and is defined by.</p>
-<p>$$
+<p><span class="math notranslate nohighlight">\(\mathbf{H}_k\)</span> is reflection matrix and is defined by.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{H}_K = \mathbf{I} - 2 \frac{\mathbf{v}_k\mathbf{v}_k^\top}{||\mathbf{v}||_2^2}
-$$</p>
-<p>where $\mathbf{v}_k \in \mathbb{R}^{D}$.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{v}_k \in \mathbb{R}^{D}\)</span>.</p>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">num_reflections</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">num_dimensions</span> <span class="o">=</span> <span class="mi">2</span>
@@ -1258,10 +1261,11 @@ $$</p>
 </div>
 <!-- #region id="RHTwenN6jvfP" -->
 <p>Multiply all matrices together.</p>
-<p>$$
-\mathbf{R} = \mathbf{H}<em>K \mathbf{H}</em>{K-1}\ldots \mathbf{H}_{1}
-$$</p>
-<p>where $\mathbf{R},\mathbf{H}_k \in \mathbb{R}^{D \times D}$ are orthogonal matrices.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{R} = \mathbf{H}_K \mathbf{H}_{K-1}\ldots \mathbf{H}_{1}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{R},\mathbf{H}_k \in \mathbb{R}^{D \times D}\)</span> are orthogonal matrices.</p>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># loop through all vectors</span>
 <span class="k">for</span> <span class="n">v_vector</span><span class="p">,</span> <span class="n">squared_norm</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">v_vectors</span><span class="p">,</span> <span class="n">squared_norms</span><span class="p">):</span>
@@ -1405,10 +1409,10 @@ $$</p>
 <h2>Flow Model<a class="headerlink" href="#flow-model" title="Permalink to this heading">#</a></h2>
 <p>So to have a flow model, we need two components:</p>
 <hr class="docutils" />
-<p><strong>Base Distribution</strong>: $p_Z = \mathbb{P}_Z$</p>
+<p><strong>Base Distribution</strong>: <span class="math notranslate nohighlight">\(p_Z = \mathbb{P}_Z\)</span></p>
 <p>This will describe the distribution we want in the transform domain. In this case, we will choose the uniform distribution because we are trying to uniformize our data.</p>
 <hr class="docutils" />
-<p><strong>Bijections</strong>: $f = f_L \circ f_{L-1} \circ \ldots \circ f_1$</p>
+<p><strong>Bijections</strong>: <span class="math notranslate nohighlight">\(f = f_L \circ f_{L-1} \circ \ldots \circ f_1\)</span></p>
 <p>The list of bijections. These are our functions which we would like to compose together to get our dataset.</p>
 <!-- #endregion -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">survae.distributions</span> <span class="kn">import</span> <span class="n">StandardUniform</span><span class="p">,</span> <span class="n">StandardNormal</span>

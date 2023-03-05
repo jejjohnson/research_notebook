@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/info_theory/information';</script>
@@ -922,14 +924,15 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="information-theory">
+  <section class="tex2jax_ignore mathjax_ignore" id="information-theory">
 <h1>Information Theory<a class="headerlink" href="#information-theory" title="Permalink to this heading">#</a></h1>
 <p>In this report, I will be outlining what exactly Information theory is and what it means in the machine learning context. Many times when people ask me what I do, I say that I look at Information theory (IT) measures in the context of a generative network. But sometimes I have a difficult time convincing myself that these measures are actually useful. I think this is partially because I don’t fully understand the magnitude of IT measures and what they can do. So this post is designed to help me (and others) really dig deep into the space of information measures and I hope this will help someone else who is also interested in understanding IT without any formal classes. This post will not be formula heavy and will instead focus on concepts. See the end of the post for some additional references where you can explore each of these ideas even further.</p>
 <hr class="docutils" />
 <section id="information-revisited">
 <h2>Information (Revisited)<a class="headerlink" href="#information-revisited" title="Permalink to this heading">#</a></h2>
 <p>Now we will start to do a deep dive into IT measures and define them in a more concrete sense.</p>
-<p>$$I(x)= \underset{Intuition}{\log \frac{1}{p(x)}} = \underset{Simplified}{- \log p(x)}$$</p>
+<div class="math notranslate nohighlight">
+\[I(x)= \underset{Intuition}{\log \frac{1}{p(x)}} = \underset{Simplified}{- \log p(x)}\]</div>
 <p>The intuitive definition is important because it really showcases how the heuristic works in the end. I’m actually not entirely sure if there is a mathematical way to formalate this without some sort of axiom that we mentioned before about <strong>surprise</strong> and <strong>uncertainty</strong>.</p>
 <p>We use logs because…</p>
 <p><strong>Example Pt I: Delta Function, Uniform Function, Binomial Curve, Gaussian Curve</strong></p>
@@ -937,7 +940,7 @@ title="Print to PDF"
 </section>
 <section id="pdf-estimation">
 <h2>PDF Estimation<a class="headerlink" href="#pdf-estimation" title="Permalink to this heading">#</a></h2>
-<p>For almost all of these measures to work, we need to have a really good PDF estimation of our dataset, $\mathcal{X}$. This is a hard problem and should not be taken lightly. There is an entire field of methods that can be used, e.g. autoregressive models, generative networks, and Gaussianization. One of the simplest techniques (and often fairly effective) is just histogram transformation.
+<p>For almost all of these measures to work, we need to have a really good PDF estimation of our dataset, <span class="math notranslate nohighlight">\(\mathcal{X}\)</span>. This is a hard problem and should not be taken lightly. There is an entire field of methods that can be used, e.g. autoregressive models, generative networks, and Gaussianization. One of the simplest techniques (and often fairly effective) is just histogram transformation.
 I work specifically with Gaussianization methods and we have found that a simple histogram transformation works really well. It also led to some properties which allow one to estimate some IT measures in unison with PDF estimation. Another way of estimating PDFs would be to look at kernel methods (Parezen Windows). A collaborator works with this methodology and has found success in utitlize kernel methods and have also been able to provide good IT measures through these techniques.</p>
 </section>
 <hr class="docutils" />

@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/concepts/identity_trick';</script>
@@ -869,17 +871,21 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="identity-trick">
+  <section class="tex2jax_ignore mathjax_ignore" id="identity-trick">
 <h1><a class="reference external" href="https://www.shakirm.com/slides/MLSS2018-Madrid-ProbThinking.pdf">Identity Trick</a><a class="headerlink" href="#identity-trick" title="Permalink to this heading">#</a></h1>
 <p>I think the slides from the MLSS 2018 meeting is the only place that I have encountered anyone actually explicitly mentioning this Identity trick.</p>
 <p>Given an integral problem:</p>
-<p>$$p(x) = \int p(x|z)p(z)dz$$</p>
+<div class="math notranslate nohighlight">
+\[p(x) = \int p(x|z)p(z)dz\]</div>
 <p>I can multiply by an arbitrary distribution which is equivalent to 1.</p>
-<p>$$p(x)=\int p(x|z) p(z) \frac{q(z)}{q(z)}dz$$</p>
+<div class="math notranslate nohighlight">
+\[p(x)=\int p(x|z) p(z) \frac{q(z)}{q(z)}dz\]</div>
 <p>Then I can regroup and reweight the integral</p>
-<p>$$p(x) = \int p(x|z)\frac{p(z)}{q(z)}q(z)dz$$</p>
+<div class="math notranslate nohighlight">
+\[p(x) = \int p(x|z)\frac{p(z)}{q(z)}q(z)dz\]</div>
 <p>This results in a different expectation that we initially had</p>
-<p>$$p(x) = \underset{q(z)}{\mathbb{E}}\left[ p(x|z)\frac{p(z)}{q(z)} \right]$$</p>
+<div class="math notranslate nohighlight">
+\[p(x) = \underset{q(z)}{\mathbb{E}}\left[ p(x|z)\frac{p(z)}{q(z)} \right]\]</div>
 <p>Examples:</p>
 <ul class="simple">
 <li><p>Importance Sampling</p></li>

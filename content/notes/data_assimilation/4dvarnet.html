@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data_assimilation/4dvarnet';</script>
@@ -881,7 +883,10 @@ title="Print to PDF"
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#interpolation-problem-boldsymbol-i">
-     Interpolation Problem, $\boldsymbol{I}$
+     Interpolation Problem,
+     <span class="math notranslate nohighlight">
+      \(\boldsymbol{I}\)
+     </span>
     </a>
    </li>
   </ul>
@@ -1013,65 +1018,74 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="dvarnet">
+  <section class="tex2jax_ignore mathjax_ignore" id="dvarnet">
 <h1>4DVarNet<a class="headerlink" href="#dvarnet" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <p><strong>Observations</strong></p>
 <p>We assume that we have the following representation:</p>
-<p>$$
-\mathbf{y}<em>{\text{obs}} = \mathbf{x}</em>{\text{gt}} + \epsilon
-$$</p>
-<p>We assume they are the true state, $\mathbf{x}_\text{gt}$, corrupted by some noise, $\epsilon$.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{y}_{\text{obs}} = \mathbf{x}_{\text{gt}} + \epsilon
+\]</div>
+<p>We assume they are the true state, <span class="math notranslate nohighlight">\(\mathbf{x}_\text{gt}\)</span>, corrupted by some noise, <span class="math notranslate nohighlight">\(\epsilon\)</span>.</p>
 <hr class="docutils" />
 <p><strong>Prior</strong></p>
 <p>We have some way to generate samples.</p>
-<p>$$
-\mathbf{x}<em>\text{init} \sim P</em>\text{init}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_\text{init} \sim P_\text{init}
+\]</div>
 <p>e.g. we have an <em>inexpensive</em> physical model where we can generate samples from. We could also use a <em>cheap</em> emulator of the physical model to draw samples.</p>
 <hr class="docutils" />
 <p><strong>Prior</strong> vs. <strong>Observations</strong></p>
-<p>We need to relate the <strong>prior</strong>, $\mathbf{x}<em>\text{gt}$, and the observations, $\mathbf{y}</em>\text{gt}$.</p>
-<p>We assume that there is some function, $\boldsymbol{f}$, that maps the observations, $\mathbf{y}<em>\text{obs}$, and prior, $\mathbf{x}</em>\text{init}$, to the true state, $\mathbf{x}_\text{gt}$.</p>
-<p>$$
-\mathbf{x}<em>\text{gt} = \boldsymbol{f}(\mathbf{x}</em>\text{init}, \mathbf{y}_\text{obs}; \boldsymbol{\theta})
-$$</p>
+<p>We need to relate the <strong>prior</strong>, <span class="math notranslate nohighlight">\(\mathbf{x}_\text{gt}\)</span>, and the observations, <span class="math notranslate nohighlight">\(\mathbf{y}_\text{gt}\)</span>.</p>
+<p>We assume that there is some function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, that maps the observations, <span class="math notranslate nohighlight">\(\mathbf{y}_\text{obs}\)</span>, and prior, <span class="math notranslate nohighlight">\(\mathbf{x}_\text{init}\)</span>, to the true state, <span class="math notranslate nohighlight">\(\mathbf{x}_\text{gt}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_\text{gt} = \boldsymbol{f}(\mathbf{x}_\text{init}, \mathbf{y}_\text{obs}; \boldsymbol{\theta})
+\]</div>
 <p><strong>Note</strong>:</p>
 <hr class="docutils" />
 <p><strong>Data</strong> (Unsupervised)</p>
 <p>The first case is when we do not have any realization of the ground truth.</p>
-<p>$$
-\mathcal{D}<em>{\text{unsupervised}} = \left{ \mathbf{x}</em>{\text{init}^(i)}, \mathbf{y}_{\text{obs}^(i)}\right}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{D}_{\text{unsupervised}} = \left\{ \mathbf{x}_{\text{init}^(i)}, \mathbf{y}_{\text{obs}^(i)}\right\}
+\]</div>
 <p>In this scenario, we do not have</p>
 <hr class="docutils" />
 <p><strong>Data</strong> (Supervised)</p>
 <p>The second case assumes that we do not have any realizations of the true state, we only have our prior and posterior.</p>
-<p>$$
-\mathcal{D}<em>{\text{supervised}} = \left{ \mathbf{x}</em>{\text{init}^(i)},; \mathbf{x}<em>{\text{gt}^(i)},; \mathbf{x}</em>{\text{obs}^(i)}\right}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{D}_{\text{supervised}} = \left\{ \mathbf{x}_{\text{init}^(i)},\; \mathbf{x}_{\text{gt}^(i)},\; \mathbf{x}_{\text{obs}^(i)}\right\}
+\]</div>
 <p><strong>Note</strong>: This is very useful in the case of pre-training a model on emulated data.</p>
 <hr class="docutils" />
 <p><strong>Minimization Problem</strong></p>
-<p>$$
-\boldsymbol{g}(\mathbf{x}<em>\text{init}, \mathbf{y}</em>\text{obs}, \mathbf{x}<em>\text{gt}; \boldsymbol{\theta}) = \boldsymbol{f}(\mathbf{x}</em>\text{init}, \mathbf{y}<em>\text{obs}; \boldsymbol{\theta}) - \mathbf{x}</em>\text{gt}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{g}(\mathbf{x}_\text{init}, \mathbf{y}_\text{obs}, \mathbf{x}_\text{gt}; \boldsymbol{\theta}) = \boldsymbol{f}(\mathbf{x}_\text{init}, \mathbf{y}_\text{obs}; \boldsymbol{\theta}) - \mathbf{x}_\text{gt}
+\]</div>
 <hr class="docutils" />
 <p><strong>Minimization Strategy</strong></p>
 <p>We are interested in finding the fixed-point solution such that</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^{(k+1)} = \boldsymbol{f}(\mathbf{x}^{(k)}, \mathbf{y}_{\text{obs}} )
-$$</p>
-<p>In this task, we are looking to minimize the above function wrt to the inputs, $\mathbf{x}_\text{init}$, but also with the best parameters, $\boldsymbol{\theta}$.</p>
-<p>$$
-\mathbf{x}^*(\boldsymbol{\theta}) = \argmin_{\mathbf{x}} ; \boldsymbol{g}(\mathbf{x}<em>\text{init}, \mathbf{y}</em>\text{obs}, \mathbf{x}_\text{gt}; \boldsymbol{\theta})
-$$</p>
+\]</div>
+<p>In this task, we are looking to minimize the above function wrt to the inputs, <span class="math notranslate nohighlight">\(\mathbf{x}_\text{init}\)</span>, but also with the best parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}^*(\boldsymbol{\theta}) = \argmin_{\mathbf{x}} \; \boldsymbol{g}(\mathbf{x}_\text{init}, \mathbf{y}_\text{obs}, \mathbf{x}_\text{gt}; \boldsymbol{\theta})
+\]</div>
 <hr class="docutils" />
 <p><strong>Loss Function</strong> (Generic)</p>
-<p>Given $N$ samples of data pairs, $\mathcal{D} = \left{ \mathbf{x}<em>{\text{init}^{(i)}}, \mathbf{y}</em>{\text{obs}^{(i)}}\right}_{i=1}^N$, we have a energy function, $\boldsymbol{U}$ which represents the generic inverse problem.</p>
-<p>$$
-\boldsymbol{U}(\mathbf{x}<em>{\text{init}^{(i)}}, \mathbf{y}</em>{\text{obs}^{(i)}}) = \mathcal{L}<em>\text{Data}(\mathbf{x}</em>{\text{init}^{(i)}}, \mathbf{y}<em>{\text{obs}^{(i)}}) + \lambda \mathcal{R}(\mathbf{x}</em>{\text{init}^{(i)}})
-$$</p>
+<p>Given <span class="math notranslate nohighlight">\(N\)</span> samples of data pairs, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{x}_{\text{init}^{(i)}}, \mathbf{y}_{\text{obs}^{(i)}}\right\}_{i=1}^N\)</span>, we have a energy function, <span class="math notranslate nohighlight">\(\boldsymbol{U}\)</span> which represents the generic inverse problem.</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{U}(\mathbf{x}_{\text{init}^{(i)}}, \mathbf{y}_{\text{obs}^{(i)}}) = \mathcal{L}_\text{Data}(\mathbf{x}_{\text{init}^{(i)}}, \mathbf{y}_{\text{obs}^{(i)}}) + \lambda \mathcal{R}(\mathbf{x}_{\text{init}^{(i)}})
+\]</div>
 <p><strong>Loss Function</strong> (4D Variational)</p>
 <hr class="docutils" />
 <section id="problem-setting">
@@ -1081,23 +1095,25 @@ $$</p>
 $$
 
 where $\theta = \{ x,\}$ -->
-<p>Let’s take some observations, $\mathbf{y}$, which are sparse and incomplete. We are interested in finding a state, $\mathbf{x}$, that best matches the observations <strong>and</strong> fills in the missing observations.</p>
+<p>Let’s take some observations, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>, which are sparse and incomplete. We are interested in finding a state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, that best matches the observations <strong>and</strong> fills in the missing observations.</p>
 <p>This is a learning problem of the reconstruction error for the observed data. It is given by:</p>
-<p>$$
-\theta^* = \argmin_{\theta}\sum_i^N || \mathbf{y}_i - \boldsymbol{I}(\boldsymbol{U}(\mathbf{x};\theta), \mathbf{y}<em>i, \Omega_i)||</em>{\Omega_i}^2
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\theta^* = \argmin_{\theta}\sum_i^N || \mathbf{y}_i - \boldsymbol{I}(\boldsymbol{U}(\mathbf{x};\theta), \mathbf{y}_i, \Omega_i)||_{\Omega_i}^2
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$||\cdot||_\Omega^2$ - L2 norm evaluated on the subdomain $\Omega$.</p></li>
-<li><p>$\boldsymbol{U}(\cdot)$ - the energy function</p></li>
-<li><p>$\boldsymbol{I}(\cdot)$ - the solution to the interpolation problem</p></li>
+<li><p><span class="math notranslate nohighlight">\(||\cdot||_\Omega^2\)</span> - L2 norm evaluated on the subdomain <span class="math notranslate nohighlight">\(\Omega\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{U}(\cdot)\)</span> - the energy function</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{I}(\cdot)\)</span> - the solution to the interpolation problem</p></li>
 </ul>
 <section id="interpolation-problem-boldsymbol-i">
-<h3>Interpolation Problem, $\boldsymbol{I}$<a class="headerlink" href="#interpolation-problem-boldsymbol-i" title="Permalink to this heading">#</a></h3>
-<p>This tries to solve the interpolation problem of finding the best state, $\mathbf{x}$, given the observations, $\mathbf{y}$, on a subdomain, $\boldsymbol{\Omega}$. This involves minimizing some energy function, $\boldsymbol{U}$.</p>
-<p>$$
+<h3>Interpolation Problem, <span class="math notranslate nohighlight">\(\boldsymbol{I}\)</span><a class="headerlink" href="#interpolation-problem-boldsymbol-i" title="Permalink to this heading">#</a></h3>
+<p>This tries to solve the interpolation problem of finding the best state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, given the observations, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>, on a subdomain, <span class="math notranslate nohighlight">\(\boldsymbol{\Omega}\)</span>. This involves minimizing some energy function, <span class="math notranslate nohighlight">\(\boldsymbol{U}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^* = \argmin_{\mathbf{x}} \boldsymbol{U}(\mathbf{x},\mathbf{y},\boldsymbol{\theta}, \boldsymbol{\Omega}) \coloneqq \boldsymbol{I}()
-$$</p>
+\]</div>
 <p>They use a fixed point method to solve this problem.</p>
 </section>
 </section>
@@ -1105,10 +1121,11 @@ $$</p>
 <section id="domain">
 <h2>Domain<a class="headerlink" href="#domain" title="Permalink to this heading">#</a></h2>
 <p>The first term in the loss function is the observation term defined as:</p>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-loss-domain">
+<span class="eqno">(57)<a class="headerlink" href="#equation-loss-domain" title="Permalink to this equation">#</a></span>\[
 ||\cdot ||_{\Omega}^2
-$$(loss_domain)</p>
-<p>This is the evaluation of the quadratic norm restricted to the domain, $\Omega$.</p>
+\]</div>
+<p>This is the evaluation of the quadratic norm restricted to the domain, <span class="math notranslate nohighlight">\(\Omega\)</span>.</p>
 <p><strong>Pseudo-Code</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 <span class="c1"># do some computation</span>
@@ -1128,9 +1145,10 @@ $$(loss_domain)</p>
 </section>
 <section id="constrained">
 <h3>Constrained<a class="headerlink" href="#constrained" title="Permalink to this heading">#</a></h3>
-<p>$$
-\boldsymbol{\psi}(\mathbf{x};\boldsymbol{\theta}) =
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\psi}(\mathbf{x};\boldsymbol{\theta}) = 
+\]</div>
 </section>
 <section id="id1">
 <h3><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
@@ -1142,9 +1160,10 @@ $$</p>
 <section id="fixed-point-algorithm">
 <h3>Fixed Point Algorithm<a class="headerlink" href="#fixed-point-algorithm" title="Permalink to this heading">#</a></h3>
 <p>We are interested in minimizing this function.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^* = \argmin_{\mathbf{x}} \boldsymbol{U}(\mathbf{x},\mathbf{y}, \Omega, \boldsymbol{\theta}) \text{  s.t. } \mathbf{y}_{} =
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><strong>Psuedo-Code</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize x</span>
@@ -1168,19 +1187,22 @@ $$</p>
 <li><p>DINCAE, Barth et. al. (2020)</p></li>
 </ul>
 <p><strong>Projection</strong></p>
-<p>We will use our function, $\boldsymbol{\phi}$, to map the data one iteration, $k$.</p>
-<p>$$
+<p>We will use our function, <span class="math notranslate nohighlight">\(\boldsymbol{\phi}\)</span>, to map the data one iteration, <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \tilde{\mathbf{x}}^{(k+1)} = \boldsymbol{\psi}(\mathbf{x}^{(k)}; \boldsymbol{\theta})
-$$</p>
+\]</div>
 <p><strong>Update Observed Domain</strong></p>
-<p>We will update the true state, $\mathbf{x}$, where we have observations, $\mathbf{y}$. This is given by the $\Omega$ function (i.e. a mask).</p>
-<p>$$
-\mathbf{x}^{(k+1)}(\boldsymbol{\Omega}) = \mathbf{y}(\boldsymbol{\Omega})
-$$</p>
+<p>We will update the true state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, where we have observations, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>. This is given by the <span class="math notranslate nohighlight">\(\Omega\)</span> function (i.e. a mask).</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}^{(k+1)}(\boldsymbol{\Omega}) = \mathbf{y}(\boldsymbol{\Omega}) 
+\]</div>
 <p><strong>Update Unobserved Domain</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^{(k+1)}(\bar{\boldsymbol \Omega}) = \tilde{\mathbf{x}}^{(k+1)}(\bar{\boldsymbol \Omega})
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><strong>Pseudo-code</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">pytree</span><span class="p">,</span> <span class="n">phi_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
@@ -1194,19 +1216,22 @@ $$</p>
 <hr class="docutils" />
 <section id="gradient-based-iterative-update">
 <h4>Gradient-Based Iterative Update<a class="headerlink" href="#gradient-based-iterative-update" title="Permalink to this heading">#</a></h4>
-<p>Let $\boldsymbol{U}(\mathbf{x}, \mathbf{y},\boldsymbol{\Omega},\boldsymbol{\theta}) : \mathbb{R}^D \rightarrow \mathbb{R}$ be the energy function.</p>
+<p>Let <span class="math notranslate nohighlight">\(\boldsymbol{U}(\mathbf{x}, \mathbf{y},\boldsymbol{\Omega},\boldsymbol{\theta}) : \mathbb{R}^D \rightarrow \mathbb{R}\)</span> be the energy function.</p>
 <p><strong>Gradient Step</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \tilde{\mathbf{x}}^{(k+1)} = \mathbf{x}^{(k)} - \lambda \boldsymbol{\nabla}_{\mathbf{x}^{(k)}}\boldsymbol{U}(\mathbf{x}^{(k)}, \mathbf{y}, \boldsymbol{\Omega}, \boldsymbol{\theta})
-$$</p>
+\]</div>
 <p><strong>Update Observed Domain</strong></p>
-<p>$$
-\mathbf{x}^{(k+1)}(\boldsymbol{\Omega}) = \mathbf{y}(\boldsymbol{\Omega})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}^{(k+1)}(\boldsymbol{\Omega}) = \mathbf{y}(\boldsymbol{\Omega}) 
+\]</div>
 <p><strong>Update Unobserved Domain</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^{(k+1)}(\bar{\boldsymbol \Omega}) = \tilde{\mathbf{x}}^{(k+1)}(\bar{\boldsymbol \Omega})
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><strong>Pseudo-Code</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">energy_fn</span><span class="p">(</span>
@@ -1246,27 +1271,32 @@ $$</p>
 <hr class="docutils" />
 <section id="nn-interpolator-iterative-update">
 <h4>NN-Interpolator Iterative Update<a class="headerlink" href="#nn-interpolator-iterative-update" title="Permalink to this heading">#</a></h4>
-<p>Let $\boldsymbol{NN}(\mathbf{x}, \mathbf{y};\boldsymbol{\theta})$ be an arbitrary NN function.</p>
+<p>Let <span class="math notranslate nohighlight">\(\boldsymbol{NN}(\mathbf{x}, \mathbf{y};\boldsymbol{\theta})\)</span> be an arbitrary NN function.</p>
 <p><strong>Projection</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \dot{\mathbf{x}}^{(k)} = \lambda \boldsymbol{\nabla}_{\mathbf{x}^{(k)}}\boldsymbol{U}(\mathbf{x}^{(k)}, \mathbf{y}, \boldsymbol{\Omega}, \boldsymbol{\theta})
-$$</p>
+\]</div>
 <p><strong>Gradient Step</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \tilde{\mathbf{x}}^{(k)} = \mathbf{x}^{(k)} - \boldsymbol{NN} \left( \mathbf{x}^{(k)},  \dot{\mathbf{x}}^{(k)}; \boldsymbol{\theta}\right)
-$$</p>
+\]</div>
 <p><strong>Update Observed Domain</strong></p>
-<p>$$
-\mathbf{x}^{(k+1)}(\boldsymbol{\Omega}) = \mathbf{y}(\boldsymbol{\Omega})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}^{(k+1)}(\boldsymbol{\Omega}) = \mathbf{y}(\boldsymbol{\Omega}) 
+\]</div>
 <p><strong>Update Unobserved Domain</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^{(k+1)}(\bar{\boldsymbol \Omega}) = \tilde{\mathbf{x}}^{(k+1)}(\bar{\boldsymbol \Omega})
-$$</p>
+\]</div>
 <p>Example:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{NN} \left( \mathbf{x}^{(k); \boldsymbol{\theta}},  \tilde{\mathbf{x}}^{(k+1)}\right) = \tilde{\boldsymbol{NN}} \left( \mathbf{x}^{(k)} - \tilde{\mathbf{x}}^{(k+1)}; \boldsymbol{\theta}\right)
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="lstm">
 <h5>LSTM<a class="headerlink" href="#lstm" title="Permalink to this heading">#</a></h5>
@@ -1336,38 +1366,43 @@ $$</p>
 <h2>Stochastic Transformation<a class="headerlink" href="#stochastic-transformation" title="Permalink to this heading">#</a></h2>
 <section id="deterministic">
 <h3>Deterministic<a class="headerlink" href="#deterministic" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^{(k+1)} = \boldsymbol{f}(\mathbf{x}^{(k)}, \mathbf{y}_\text{obs})
-$$</p>
+\]</div>
 <p><strong>Loss</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L} = ||\mathbf{x} - \boldsymbol{f}(\mathbf{x},\mathbf{y})||_2^2
-$$</p>
+\]</div>
 </section>
 <section id="probabilistic">
 <h3>Probabilistic<a class="headerlink" href="#probabilistic" title="Permalink to this heading">#</a></h3>
-<p>$$
-p(\mathbf{x}^{(k+1)}|\mathbf{x}^{(k)}) = \mathcal{N}(\mathbf{x}^{(k)}| \boldsymbol{\mu}<em>{\boldsymbol \theta}(\mathbf{x}^{(k)}), \boldsymbol{\sigma}^2</em>{\boldsymbol \theta}(\mathbf{x}))
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{x}^{(k+1)}|\mathbf{x}^{(k)}) = \mathcal{N}(\mathbf{x}^{(k)}| \boldsymbol{\mu}_{\boldsymbol \theta}(\mathbf{x}^{(k)}), \boldsymbol{\sigma}^2_{\boldsymbol \theta}(\mathbf{x}))
+\]</div>
 <p><strong>Loss</strong></p>
-<p>$$
--\log p(y|\mathbf{x}) = \frac{1}{2}\log \boldsymbol{\sigma}^2_{\boldsymbol \theta}(\mathbf{x}) + \frac{(y - \boldsymbol{\mu}<em>{\boldsymbol \theta}(\mathbf{x}))}{2\boldsymbol{\sigma}^2</em>{\boldsymbol \theta}(\mathbf{x})} + \text{constant}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+-\log p(y|\mathbf{x}) = \frac{1}{2}\log \boldsymbol{\sigma}^2_{\boldsymbol \theta}(\mathbf{x}) + \frac{(y - \boldsymbol{\mu}_{\boldsymbol \theta}(\mathbf{x}))}{2\boldsymbol{\sigma}^2_{\boldsymbol \theta}(\mathbf{x})} + \text{constant}
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$y \in \mathbb{R}$</p></li>
-<li><p>$\mathbf{x} \in \mathbb{R}^{D}$</p></li>
+<li><p><span class="math notranslate nohighlight">\(y \in \mathbb{R}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D}\)</span></p></li>
 </ul>
 <hr class="docutils" />
-<p>$$
--\log p(\mathbf{y}|\mathbf{x}) = \frac{1}{2} \log|\det \boldsymbol{\Sigma}<em>{\boldsymbol \theta}(\mathbf{x}) |  + ||\mathbf{y} - \boldsymbol{\mu}</em>{\boldsymbol \theta}(\mathbf{x})||^2_{\boldsymbol{\Sigma}_{\boldsymbol \theta}(\mathbf{x})} + \text{constant}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+-\log p(\mathbf{y}|\mathbf{x}) = \frac{1}{2} \log|\det \boldsymbol{\Sigma}_{\boldsymbol \theta}(\mathbf{x}) |  + ||\mathbf{y} - \boldsymbol{\mu}_{\boldsymbol \theta}(\mathbf{x})||^2_{\boldsymbol{\Sigma}_{\boldsymbol \theta}(\mathbf{x})} + \text{constant}
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf{y} \in \mathbb{R}^{D_y}$</p></li>
-<li><p>$\mathbf{x} \in \mathbb{R}^{D_x}$</p></li>
-<li><p>$\boldsymbol{\mu}_{\boldsymbol \theta}:\mathbb{R}^{D_x} \rightarrow \mathbb{R}^{D_y}$</p></li>
-<li><p>$\boldsymbol{\Sigma}_{\boldsymbol \theta}:\mathbb{R}^{D_x} \rightarrow \mathbb{R}^{D_y \times D_y}$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{D_y}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_x}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}_{\boldsymbol \theta}:\mathbb{R}^{D_x} \rightarrow \mathbb{R}^{D_y}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_{\boldsymbol \theta}:\mathbb{R}^{D_x} \rightarrow \mathbb{R}^{D_y \times D_y}\)</span></p></li>
 </ul>
 </section>
 </section>
@@ -1378,41 +1413,46 @@ $$</p>
 <h3>Explicit vs Implicit Model<a class="headerlink" href="#explicit-vs-implicit-model" title="Permalink to this heading">#</a></h3>
 <section id="explicit-model">
 <h4>Explicit Model<a class="headerlink" href="#explicit-model" title="Permalink to this heading">#</a></h4>
-<p>$$
-\mathbf{x}<em>\text{gt} = \boldsymbol{f}(\mathbf{x}</em>\text{init})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_\text{gt} = \boldsymbol{f}(\mathbf{x}_\text{init})
+\]</div>
 <p><strong>Penalize the Loss</strong></p>
-<p>$$
-\mathcal{L} = \mathcal{L}<em>\text{model}(\mathbf{x}</em>\text{gt}, \tilde{\mathbf{x}}<em>\text{init}) + \mathcal{L}</em>\text{data}(\mathbf{x}<em>\text{gt}(\boldsymbol{\Omega}), \mathbf{y}</em>\text{obs}(\boldsymbol{\Omega}))
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L} = \mathcal{L}_\text{model}(\mathbf{x}_\text{gt}, \tilde{\mathbf{x}}_\text{init}) + \mathcal{L}_\text{data}(\mathbf{x}_\text{gt}(\boldsymbol{\Omega}), \mathbf{y}_\text{obs}(\boldsymbol{\Omega}))
+\]</div>
 </section>
 <section id="conditional-explicit-model">
 <h4>Conditional Explicit Model<a class="headerlink" href="#conditional-explicit-model" title="Permalink to this heading">#</a></h4>
 <p>We assume some function maps both the observations and the initial condition to the solution.</p>
-<p>$$
-\mathbf{x}<em>\text{gt} = \boldsymbol{f}(\mathbf{x}</em>\text{init}, \mathbf{y}_\text{obs})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_\text{gt} = \boldsymbol{f}(\mathbf{x}_\text{init}, \mathbf{y}_\text{obs})
+\]</div>
 <p>The difference here is that we do not add any extra terms into the loss because it is explicit.</p>
 </section>
 <section id="implicit-model">
 <h4>Implicit Model<a class="headerlink" href="#implicit-model" title="Permalink to this heading">#</a></h4>
 <p>We assume
-$$
+$<span class="math notranslate nohighlight">\(
 \begin{aligned}
-\mathbf{x}<em>\text{gt}\boldsymbol{g}(\mathbf{x}</em>\text{init}, \mathbf{y}_\text{obs}) = 0
+\mathbf{x}_\text{gt}\boldsymbol{g}(\mathbf{x}_\text{init}, \mathbf{y}_\text{obs}) = 0
 \end{aligned}
-$$</p>
+\)</span>$</p>
 <p>where:</p>
-<p>$$
-\boldsymbol{g}(\mathbf{x}<em>\text{init}, \mathbf{y}</em>\text{obs}) = \boldsymbol{f}(\mathbf{x}<em>\text{init}, \mathbf{y}</em>\text{obs}) - \mathbf{x}_\text{init}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{g}(\mathbf{x}_\text{init}, \mathbf{y}_\text{obs}) = \boldsymbol{f}(\mathbf{x}_\text{init}, \mathbf{y}_\text{obs}) - \mathbf{x}_\text{init}
+\]</div>
 <p>This is the same as a fixed-point solution.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{x}<em>\text{gt} &amp;= \mathbf{x}</em>\text{init}\
-\mathbf{x}<em>\text{gt} &amp;= \boldsymbol{f}(\mathbf{x}</em>\text{gt}, \mathbf{y}_\text{obs})
+\mathbf{x}_\text{gt} &amp;= \mathbf{x}_\text{init}\\
+\mathbf{x}_\text{gt} &amp;= \boldsymbol{f}(\mathbf{x}_\text{gt}, \mathbf{y}_\text{obs})
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 </section>
 </section>
@@ -1494,7 +1534,10 @@ $$</p>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#interpolation-problem-boldsymbol-i">
-     Interpolation Problem, $\boldsymbol{I}$
+     Interpolation Problem,
+     <span class="math notranslate nohighlight">
+      \(\boldsymbol{I}\)
+     </span>
     </a>
    </li>
   </ul>

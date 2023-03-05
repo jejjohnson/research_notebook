@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data/overview';</script>
@@ -952,7 +954,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="data">
+  <section class="tex2jax_ignore mathjax_ignore" id="data">
 <h1>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <section id="structure">
@@ -961,51 +963,61 @@ title="Print to PDF"
 <section id="tabular">
 <h3>Tabular<a class="headerlink" href="#tabular" title="Permalink to this heading">#</a></h3>
 <p><strong>Features</strong></p>
-<p>$$\mathbf{x} \in \mathbb{R}^{F}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{x} \in \mathbb{R}^{F}\]</div>
 </section>
 <hr class="docutils" />
 <section id="time-series">
 <h3>Time Series<a class="headerlink" href="#time-series" title="Permalink to this heading">#</a></h3>
-<p>$$\mathbf{x} \in \mathbb{R}^{T}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{x} \in \mathbb{R}^{T}\]</div>
 <p><strong>Time Series (Variables)</strong></p>
-<p>$$\mathbf{x} \in \mathbb{R}^{F\times T}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{x} \in \mathbb{R}^{F\times T}\]</div>
 </section>
 <hr class="docutils" />
 <section id="images">
 <h3>Images<a class="headerlink" href="#images" title="Permalink to this heading">#</a></h3>
 <p><strong>Image</strong></p>
-<p>$$\mathbf{x} \in \mathbb{R}^{H \times W \times C}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{x} \in \mathbb{R}^{H \times W \times C}\]</div>
 <p><strong>Multiple Variables</strong></p>
-<p>$$\mathbf{x} \in \mathbb{R}^{H \times W \times C \times F}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{x} \in \mathbb{R}^{H \times W \times C \times F}\]</div>
 </section>
 <hr class="docutils" />
 <section id="video">
 <h3>Video<a class="headerlink" href="#video" title="Permalink to this heading">#</a></h3>
 <p>Image + Time</p>
-<p>$$\mathbf{x} \in \mathbb{R}^{H \times W \times C \times T}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{x} \in \mathbb{R}^{H \times W \times C \times T}\]</div>
 <p><strong>Multiple Variables</strong></p>
-<p>$$\mathbf{x} \in \mathbb{R}^{H \times W \times C \times T \times F}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{x} \in \mathbb{R}^{H \times W \times C \times T \times F}\]</div>
 </section>
 <hr class="docutils" />
 <section id="spatial-data">
 <h3>Spatial Data<a class="headerlink" href="#spatial-data" title="Permalink to this heading">#</a></h3>
 <section id="d-spatial">
 <h4>1D Spatial<a class="headerlink" href="#d-spatial" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} \in \mathbb{R}^{D}
-$$</p>
+\]</div>
 </section>
 <section id="id1">
 <h4>2D Spatial<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} \in \mathbb{R}^{lat \times lon}
-$$</p>
+\]</div>
 </section>
 <section id="id2">
 <h4>3D Spatial<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} \in \mathbb{R}^{lat \times lon \times depth}
-$$</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />
@@ -1013,24 +1025,28 @@ $$</p>
 <h3>Spatio Temporal Data<a class="headerlink" href="#spatio-temporal-data" title="Permalink to this heading">#</a></h3>
 <section id="d-spatio-temporal">
 <h4>1D Spatio-Temporal<a class="headerlink" href="#d-spatio-temporal" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} \in \mathbb{R}^{D \times time}
-$$</p>
+\]</div>
 </section>
 <section id="id3">
 <h4>2D Spatio-Temporal<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} \in \mathbb{R}^{lat \times lon \times time}
-$$</p>
+\]</div>
 </section>
 <section id="id4">
 <h4>3D Spatio-Temporal<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} \in \mathbb{R}^{lat \times lon \times depth \times time}
-$$</p>
-<p>$$
+\]</div>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x} \in \mathbb{R}^{lat \times lon \times depth \times time \times F}
-$$</p>
+\]</div>
 <hr class="docutils" />
 <ul class="simple">
 <li><p><a class="reference internal" href="cds.html"><span class="doc std std-doc">Climate Data Store</span></a></p></li>

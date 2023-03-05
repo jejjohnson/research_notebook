@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/normalizing_flows/ddd';</script>
@@ -886,21 +888,26 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="deep-density-destructors">
+  <section class="tex2jax_ignore mathjax_ignore" id="deep-density-destructors">
 <h1>Deep Density Destructors<a class="headerlink" href="#deep-density-destructors" title="Permalink to this heading">#</a></h1>
 <section id="main-idea">
 <h2>Main Idea<a class="headerlink" href="#main-idea" title="Permalink to this heading">#</a></h2>
-<p>We can view the approach of modeling from two perspectives: constructive or destructive. A constructive process tries to learn how to build an exact sequence of transformations to go from $z$ to $x$. The destructive process does the complete opposite and decides to create a sequence of transforms from $x$ to $z$ while also remembering the exact transforms; enabling it to reverse that sequence of transforms.</p>
-<p>We can write some equations to illustrate exactly what we mean by these two terms. Let’s define two spaces: one is our data space $\mathcal X$ and the other is the base space $\mathcal Z$. We want to learn a transformation $f_\theta$ that maps us from $\mathcal X$ to $\mathcal Z$, $f : \mathcal X \rightarrow \mathcal Z$. We also want a function $G_\theta$ that maps us from $\mathcal Z$ to $\mathcal X$, $f : \mathcal Z \rightarrow \mathcal X$.</p>
+<p>We can view the approach of modeling from two perspectives: constructive or destructive. A constructive process tries to learn how to build an exact sequence of transformations to go from <span class="math notranslate nohighlight">\(z\)</span> to <span class="math notranslate nohighlight">\(x\)</span>. The destructive process does the complete opposite and decides to create a sequence of transforms from <span class="math notranslate nohighlight">\(x\)</span> to <span class="math notranslate nohighlight">\(z\)</span> while also remembering the exact transforms; enabling it to reverse that sequence of transforms.</p>
+<p>We can write some equations to illustrate exactly what we mean by these two terms. Let’s define two spaces: one is our data space <span class="math notranslate nohighlight">\(\mathcal X\)</span> and the other is the base space <span class="math notranslate nohighlight">\(\mathcal Z\)</span>. We want to learn a transformation <span class="math notranslate nohighlight">\(f_\theta\)</span> that maps us from <span class="math notranslate nohighlight">\(\mathcal X\)</span> to <span class="math notranslate nohighlight">\(\mathcal Z\)</span>, <span class="math notranslate nohighlight">\(f : \mathcal X \rightarrow \mathcal Z\)</span>. We also want a function <span class="math notranslate nohighlight">\(G_\theta\)</span> that maps us from <span class="math notranslate nohighlight">\(\mathcal Z\)</span> to <span class="math notranslate nohighlight">\(\mathcal X\)</span>, <span class="math notranslate nohighlight">\(f : \mathcal Z \rightarrow \mathcal X\)</span>.</p>
 <p><strong>TODO: Plot</strong></p>
 <p>More concretely, let’s define the following pair of equations:</p>
-<p>$$z \sim \mathcal{P}<em>\mathcal{Z}$$
-$$\hat x = \mathcal G</em>\theta (z)$$</p>
-<p>This is called the generative step; how well do we fit our parameters such that $x \approx \hat x$. We can define the alternative step below:</p>
-<p>$$x \sim \mathcal{P}<em>\mathcal{X}$$
-$$\hat z = \mathcal f</em>\theta (x)$$</p>
-<p>This is called the inference step: how well do we fit the parameters of our transformation $f_\theta$ s.t. $z \approx \hat z$. So there are immediately some things to notice about this. Depending on the method you use in the deep learning community, the functions $\mathcal G_\theta$ and $f_\theta$ can be defined differently. Typically we are looking at the class of algorithms where we want $f_\theta = \mathcal G_\theta^{-1}$. In this ideal scenario, we only need to learn one transformation instead of two. With this requirement, we can actually compute the likelihood values exactly. The likelihood of the value $x$ given the transformation $\mathcal G_\theta$ is given as:</p>
-<p>$$\mathcal P_{\hat x}(x)=\mathcal P_{z} \left( \mathcal G_\theta (x) \right)\left| \text{det } \mathbf J_{\mathcal G_\theta} \right|$$</p>
+<div class="math notranslate nohighlight">
+\[z \sim \mathcal{P}_\mathcal{Z}\]</div>
+<div class="math notranslate nohighlight">
+\[\hat x = \mathcal G_\theta (z)\]</div>
+<p>This is called the generative step; how well do we fit our parameters such that <span class="math notranslate nohighlight">\(x \approx \hat x\)</span>. We can define the alternative step below:</p>
+<div class="math notranslate nohighlight">
+\[x \sim \mathcal{P}_\mathcal{X}\]</div>
+<div class="math notranslate nohighlight">
+\[\hat z = \mathcal f_\theta (x)\]</div>
+<p>This is called the inference step: how well do we fit the parameters of our transformation <span class="math notranslate nohighlight">\(f_\theta\)</span> s.t. <span class="math notranslate nohighlight">\(z \approx \hat z\)</span>. So there are immediately some things to notice about this. Depending on the method you use in the deep learning community, the functions <span class="math notranslate nohighlight">\(\mathcal G_\theta\)</span> and <span class="math notranslate nohighlight">\(f_\theta\)</span> can be defined differently. Typically we are looking at the class of algorithms where we want <span class="math notranslate nohighlight">\(f_\theta = \mathcal G_\theta^{-1}\)</span>. In this ideal scenario, we only need to learn one transformation instead of two. With this requirement, we can actually compute the likelihood values exactly. The likelihood of the value <span class="math notranslate nohighlight">\(x\)</span> given the transformation <span class="math notranslate nohighlight">\(\mathcal G_\theta\)</span> is given as:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal P_{\hat x}(x)=\mathcal P_{z} \left( \mathcal G_\theta (x) \right)\left| \text{det } \mathbf J_{\mathcal G_\theta} \right|\]</div>
 </section>
 </section>
 

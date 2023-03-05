@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/normalizing_flows/linear';</script>
@@ -925,7 +927,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="linear-layers">
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-layers">
 <h1>Linear Layers<a class="headerlink" href="#linear-layers" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <section id="overview">
@@ -934,23 +936,26 @@ title="Print to PDF"
 <hr class="docutils" />
 <section id="permutations">
 <h2>Permutations<a class="headerlink" href="#permutations" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f}(\mathbf{x}) = \mathbf{Px}
-$$</p>
-<p>where $\mathbf{P}$ is a permutation matrix.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{P}\)</span> is a permutation matrix.</p>
 </section>
 <hr class="docutils" />
 <section id="free">
 <h2>Free<a class="headerlink" href="#free" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f} = \mathbf{Ax}
-$$</p>
+\]</div>
 <section id="orthogonal">
 <h3>Orthogonal<a class="headerlink" href="#orthogonal" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f}(\mathbf{x}) = \mathbf{Ax}
-$$</p>
-<p>where $\mathbf{AA}\top = \mathbf{I}$. There are two ways to accomplish this:</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{AA}\top = \mathbf{I}\)</span>. There are two ways to accomplish this:</p>
 <ul class="simple">
 <li><p>Random sample st it is</p></li>
 <li><p>QR decomposition</p></li>
@@ -973,22 +978,26 @@ $$</p>
 <section id="convolutional-exponential">
 <h2>Convolutional Exponential<a class="headerlink" href="#convolutional-exponential" title="Permalink to this heading">#</a></h2>
 <p><strong>Forward</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f}(\mathbf{x}) = \exp(\mathbf{M})\mathbf{x}
-$$</p>
+\]</div>
 <p><strong>Inverse</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f}^{-1}(\mathbf{x}) = \exp(-\mathbf{M})\mathbf{x}
-$$</p>
-<p>This is because $\exp(x)^{-1} = \exp(-x)$ (Golinski et al, 2019).</p>
+\]</div>
+<p>This is because <span class="math notranslate nohighlight">\(\exp(x)^{-1} = \exp(-x)\)</span> (Golinski et al, 2019).</p>
 <p><strong>Log Determinant Jacobian</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{\nabla}_{\mathbf{x}}\boldsymbol{f}(\mathbf{x}) =\log |\exp(\mathbf{M})| = \text{trace}(\mathbf{M})
-$$</p>
+\]</div>
 <p>We can apply the same strategy for convolutions.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{m}_e^* \mathbf{x} = \mathbf{x} + \frac{\mathbf{mx}}{1!} + \frac{\mathbf{m}(\mathbf{mx})}{2!} + \ldots
-$$</p>
+\]</div>
 <p>All higher order terms need the same consecutive convolutions.</p>
 </section>
 </section>

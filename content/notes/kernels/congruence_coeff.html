@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/kernels/congruence_coeff';</script>
@@ -888,14 +890,15 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="congruence-coefficient">
+  <section class="tex2jax_ignore mathjax_ignore" id="congruence-coefficient">
 <h1>Congruence Coefficient<a class="headerlink" href="#congruence-coefficient" title="Permalink to this heading">#</a></h1>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\xi = r_c &amp;= \frac{\sum_{ij}x_{ij}y_{ij}}{\sqrt{\left( \sum_{ij}x_{ij}^2 \right)\left( \sum_{ij}y_{ij}^2 \right)}} \
-&amp;= \frac{\text{Tr}(\mathbf{XY^\top})}{\sqrt{\text{Tr}(\mathbf{XX^\top})\text{Tr}(\mathbf{YY^\top})}} \
+\xi = r_c &amp;= \frac{\sum_{ij}x_{ij}y_{ij}}{\sqrt{\left( \sum_{ij}x_{ij}^2 \right)\left( \sum_{ij}y_{ij}^2 \right)}} \\
+&amp;= \frac{\text{Tr}(\mathbf{XY^\top})}{\sqrt{\text{Tr}(\mathbf{XX^\top})\text{Tr}(\mathbf{YY^\top})}} \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <section id="rv-coefficient">
 <h2>RV Coefficient<a class="headerlink" href="#rv-coefficient" title="Permalink to this heading">#</a></h2>
 <ul class="simple">

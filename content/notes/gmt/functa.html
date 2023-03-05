@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gmt/functa';</script>
@@ -971,11 +973,11 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="functa">
+  <section class="tex2jax_ignore mathjax_ignore" id="functa">
 <h1>Functa<a class="headerlink" href="#functa" title="Permalink to this heading">#</a></h1>
 </section>
 <hr class="docutils" />
-<section id="motivation">
+<section class="tex2jax_ignore mathjax_ignore" id="motivation">
 <h1>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h1>
 <p>In my experience, we seem to jump a little bit when talking about models and data representations, especially in the geosciences. We often jump straight to image-to-image applications without really thinking about the data/functa. I think there is a logical progression that describes data by the means of coordinates, data, and models. This is my interpretation of how we can describe data and its representations and what we hope to achieve. Throughout this entire tutorial, I will be using sea surface height (SSH) as my example quantity of interest to showcase how each of these quantities are related.</p>
 <section id="my-objective">
@@ -988,13 +990,14 @@ title="Print to PDF"
 </section>
 </section>
 <hr class="docutils" />
-<section id="space">
+<section class="tex2jax_ignore mathjax_ignore" id="space">
 <h1>Space<a class="headerlink" href="#space" title="Permalink to this heading">#</a></h1>
 <p>Almost no quantity of interest (QOI) exist within a vacuum. We almost always assume that our quantities of interest lie within some spatial-temporal space, even if we choose to ignore it. For example, they may spatially lie within a pixel space (e.g. an image) and temporally lie along a time line. In most geoscience applications, we can define some arbitrary coordinate system which varies in space and time. Let</p>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-functa-space">
+<span class="eqno">(1)<a class="headerlink" href="#equation-functa-space" title="Permalink to this equation">#</a></span>\[
 \mathbf{x}_s \in \mathbb{R}^{D_s}, \hspace{5mm} t \in\mathbb{R}^+
-$$ (functa_space)</p>
-<p>where $\mathbb{R}^{D_s},\mathbb{R}^{+}$ is the domain for all possible queries in space and time. It represents the form of the queries for each of these QOIs. The full domain $\mathbb{R}$ represent the infinite values that the coordinates can have and the exponent defines the properties of the coordinate. In general, a single spatial coordinate is a vector of size $D_s$ and a single temporal coordinate is a positive integer. These coordinates define the entire space where “data” can lie.  For example, we can have the Cartesian coordinate system which is generally rectangular, cubic or hyper-cubic. We could also have the spherical coordinate system which is circular, spherical or hyper-spherical. We can also have some hybrid version of the two, e.g. the cylindrical coordinate system, or some other very funky coordinate systems.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbb{R}^{D_s},\mathbb{R}^{+}\)</span> is the domain for all possible queries in space and time. It represents the form of the queries for each of these QOIs. The full domain <span class="math notranslate nohighlight">\(\mathbb{R}\)</span> represent the infinite values that the coordinates can have and the exponent defines the properties of the coordinate. In general, a single spatial coordinate is a vector of size <span class="math notranslate nohighlight">\(D_s\)</span> and a single temporal coordinate is a positive integer. These coordinates define the entire space where “data” can lie.  For example, we can have the Cartesian coordinate system which is generally rectangular, cubic or hyper-cubic. We could also have the spherical coordinate system which is circular, spherical or hyper-spherical. We can also have some hybrid version of the two, e.g. the cylindrical coordinate system, or some other very funky coordinate systems.</p>
 <div class="dropdown idea admonition">
 <p class="admonition-title">Code Formulation</p>
 <p>One example of a space</p>
@@ -1005,7 +1008,7 @@ $$ (functa_space)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_samples</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;100&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_domain</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now the minimum and maximum of these samples would be between $(-\infty,\infty)$.</p>
+<p>Now the minimum and maximum of these samples would be between <span class="math notranslate nohighlight">\((-\infty,\infty)\)</span>.</p>
 </div>
 <div class="dropdown info admonition">
 <p class="admonition-title">Example: Sea Surface Height</p>
@@ -1017,12 +1020,13 @@ $$ (functa_space)</p>
 </div>
 </section>
 <hr class="docutils" />
-<section id="domain">
+<section class="tex2jax_ignore mathjax_ignore" id="domain">
 <h1>Domain<a class="headerlink" href="#domain" title="Permalink to this heading">#</a></h1>
-<p>In almost all cases in geoscience, we can take the Earth as the domain where all the geophysical quantities lie. If we were to think about Cartesian coordinate system and the Earth, we could assume that the center of the earth is the origin of the domain and the values are bounded between 0 and the radius of the Earth, e.g. ~6,371 km (perhaps a bit further into space if we account for the atmosphere). We can also think about it in spherical terms which bounds the domain in terms of how many rotations, e.g. $-2\pi,2\pi$. We can even be interested in subregions along the globe like the Mediterranean sea or the open ocean. For the spatial domain, we define $\Omega$ as proper subset of the entire domain $\mathbb{R}^{D_s}$. For the temporal domain, $\mathcal{T}$, it is usually defined along a bounded number line $\mathcal{T}\in[0, T]$. However, we could also use the 24 hour clock as well as cyclic calendars with years, months and days. So more concretely, we define our coordinate system where our quantities of interest lie as</p>
-<p>$$
+<p>In almost all cases in geoscience, we can take the Earth as the domain where all the geophysical quantities lie. If we were to think about Cartesian coordinate system and the Earth, we could assume that the center of the earth is the origin of the domain and the values are bounded between 0 and the radius of the Earth, e.g. ~6,371 km (perhaps a bit further into space if we account for the atmosphere). We can also think about it in spherical terms which bounds the domain in terms of how many rotations, e.g. <span class="math notranslate nohighlight">\(-2\pi,2\pi\)</span>. We can even be interested in subregions along the globe like the Mediterranean sea or the open ocean. For the spatial domain, we define <span class="math notranslate nohighlight">\(\Omega\)</span> as proper subset of the entire domain <span class="math notranslate nohighlight">\(\mathbb{R}^{D_s}\)</span>. For the temporal domain, <span class="math notranslate nohighlight">\(\mathcal{T}\)</span>, it is usually defined along a bounded number line <span class="math notranslate nohighlight">\(\mathcal{T}\in[0, T]\)</span>. However, we could also use the 24 hour clock as well as cyclic calendars with years, months and days. So more concretely, we define our coordinate system where our quantities of interest lie as</p>
+<div class="math notranslate nohighlight" id="equation-functa-domain">
+<span class="eqno">(2)<a class="headerlink" href="#equation-functa-domain" title="Permalink to this equation">#</a></span>\[
 \mathbf{x}_s \in \Omega \subset \mathbb{R}^{D_s}, \hspace{5mm} t\in\mathcal{T}\subset\mathbb{R}^+
-$$ (functa_domain)</p>
+\]</div>
 <p>There are of course simplifications to this system. For example, we could be looking for processes that stationary (don’t change in time) or constant (don’t change in space). However, both are sub-cases and are still covered within this notation!</p>
 <div class="dropdown idea admonition">
 <p class="admonition-title">Code Formulation</p>
@@ -1037,7 +1041,7 @@ $$ (functa_domain)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;inf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_domain</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">inf</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now the minimum and maximum of these samples would be between $[0,1.0]$. This would be nearly equivalent with a vector of spatial coordinates along a line.</p>
+<p>Now the minimum and maximum of these samples would be between <span class="math notranslate nohighlight">\([0,1.0]\)</span>. This would be nearly equivalent with a vector of spatial coordinates along a line.</p>
 <p><strong>2D Space Domain</strong></p>
 <p>So let’s assume we have a 2D domain that’s defined on Euclidean space.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_space</span><span class="p">:</span> <span class="nb">object</span> <span class="o">=</span> <span class="n">Domain</span><span class="p">((</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">))</span>
@@ -1052,23 +1056,26 @@ $$ (functa_domain)</p>
 <div class="dropdown tip admonition">
 <p class="admonition-title">Example: Sea Surface Height</p>
 <p>For sea surface height, it can exist on the surface of a sphere (roughly). This has the spatial coordinates as latitude, longitude and we can set some arbitrary temporal some coordinates as days.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}_s = [\text{latitude},\text{longitude}], \hspace{5mm} t=[0 \text{ day},1 \text{ day}]
-$$</p>
+\]</div>
 <p>We can also transform these coordinates into an x,y plane with a higher frequency. For example, we can use the local tangent coordinate system defined over the Gulfstream where SSH is queried every hour.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}_s=[x,y], \hspace{5mm} t=[\text{hours}]
-$$</p>
+\]</div>
 <p>This is typically what we do in numerical schemes as it can be quite difficult to march along the entire globe, especially at finer resolutions (see my discussion on discretization).</p>
 </div>
 </section>
 <hr class="docutils" />
-<section id="functa-data">
+<section class="tex2jax_ignore mathjax_ignore" id="functa-data">
 <h1>Functa (Data)<a class="headerlink" href="#functa-data" title="Permalink to this heading">#</a></h1>
-<p>Coordinates alone can be thought of as references (or query points) to an actual quantity of interest, $\boldsymbol{f}\in\mathbb{R}^{D}$, which could be a scalar or a vector. Almost all of these quantities live on some domain. I really like the term <em>functa</em> to describe these quantities, i.e. the quantity of interest and its context which includes the set of coordinates, the mapping, and the resulting function value. So the function mapping the coordinates to the variable is give as:</p>
-<p>$$
+<p>Coordinates alone can be thought of as references (or query points) to an actual quantity of interest, <span class="math notranslate nohighlight">\(\boldsymbol{f}\in\mathbb{R}^{D}\)</span>, which could be a scalar or a vector. Almost all of these quantities live on some domain. I really like the term <em>functa</em> to describe these quantities, i.e. the quantity of interest and its context which includes the set of coordinates, the mapping, and the resulting function value. So the function mapping the coordinates to the variable is give as:</p>
+<div class="math notranslate nohighlight" id="equation-functa">
+<span class="eqno">(3)<a class="headerlink" href="#equation-functa" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{f}=\boldsymbol{f}(\mathbf{x}_s,t), \hspace{10mm} \boldsymbol{f}:\Omega\times\mathcal{T}\rightarrow\mathbb{R}^{D}
-$$ (functa)</p>
+\]</div>
 <p>In physics, we typically call this a scalar or vector field which means that each value within this field is a scalar or vector value with an associated spatio-temporal coordinate. These <em>functa</em> are continuous as there exists infinitely many spatial-temporal queries we can do which lead to infinitely many values of the functa. The actual functa values could also be infinite. I don’t put any restrictions on the actual functa values themselves. I just say that there is a functa value for the infinitely many coordinates we could query which, by association, would result in infinitely many functa values.</p>
 <p><strong>Note</strong>: I did not include any stochastic term in this formulation but one could easily include this here. I don’t know if there exists any stochasticity in nature and it could just be an artefact of our parameterizations. That’s an open debate I have with myself. In either case, I leave this as an artefact and have included a short discussion below.</p>
 <div class="dropdown tip admonition">
@@ -1090,70 +1097,77 @@ Don’t think about it as an image →  think about it as a mapping</p>
 </ul>
 <p>===
 I often get these requirements from geoscientists to want to encode the physical relationships (i.e. interactions between variables) and global information (i.e. the relative position of the measurement and its effect on the overall structure).</p>
-<p>For example, when using ML to map the state from $f_1$ to $f_2$, they often don’t want to give the model the actual global, $(\mathbf{x}_s,t)$, coordinates because they are afraid that the model will memorize the state based on it’s global position. But they want the model to know the global structure of the state when making predictions. To get global structure, you need a relative position (not a global position).</p>
+<p>For example, when using ML to map the state from <span class="math notranslate nohighlight">\(f_1\)</span> to <span class="math notranslate nohighlight">\(f_2\)</span>, they often don’t want to give the model the actual global, <span class="math notranslate nohighlight">\((\mathbf{x}_s,t)\)</span>, coordinates because they are afraid that the model will memorize the state based on it’s global position. But they want the model to know the global structure of the state when making predictions. To get global structure, you need a relative position (not a global position).</p>
 <p>I think this conversation always comes up because our intuition doesn’t fit the standard mathematical model / objects that we use.</p>
-<p>Practically speaking, you can do this my normalizing your input coordinates, i.e. $(\mathbf{x}_s, t) \rightarrow (\hat{\mathbf{x}_s}, \hat{t})$.</p>
+<p>Practically speaking, you can do this my normalizing your input coordinates, i.e. <span class="math notranslate nohighlight">\((\mathbf{x}_s, t) \rightarrow (\hat{\mathbf{x}_s}, \hat{t})\)</span>.</p>
 </div>
 <div class="dropdown idea admonition">
 <p class="admonition-title">Example: Sea Surface Height</p>
 <p>For SSH, we are interested in the height of the ocean above the mean sea level. We can denote this as:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \text{Sea Surface Height [m]} \hspace{10mm} \eta = \boldsymbol{\eta}(\mathbf{x}_s,t)
-$$</p>
+\]</div>
 <p>So although we typically take the SSH values as “data”, they are actually fields/functa which have an associated coordinate for every SSH value and (as mentioned above), in nature, there are infinitely queries we could use which would result in potentially infinitely many SSH values.</p>
 </div>
 </section>
 <hr class="docutils" />
-<section id="physical-model">
+<section class="tex2jax_ignore mathjax_ignore" id="physical-model">
 <h1>Physical Model<a class="headerlink" href="#physical-model" title="Permalink to this heading">#</a></h1>
-<p>The objective would be to somehow find the true functa. In geosciences, we can write some partial differential equations (PDE) that we believe describe how this field changes in space and time. In most cases, we typically denote this evolving field as $u$ which is some approximation to the true field $\boldsymbol{f}$.</p>
-<p>$$
+<p>The objective would be to somehow find the true functa. In geosciences, we can write some partial differential equations (PDE) that we believe describe how this field changes in space and time. In most cases, we typically denote this evolving field as <span class="math notranslate nohighlight">\(u\)</span> which is some approximation to the true field <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>.</p>
+<div class="math notranslate nohighlight" id="equation-functa-field">
+<span class="eqno">(4)<a class="headerlink" href="#equation-functa-field" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{f}(\mathbf{x}_s,t)\approx\boldsymbol{u}(\mathbf{x}_s,t)\hspace{15mm}\boldsymbol{u}:\Omega\times\mathcal{T}\rightarrow\mathbb{R}^{D}
-$$ (functa_field)</p>
-<p>where field $u$ is a representation of the true field $f$. However, we need some way for this field, $u$, to be close to the true field $f$. So this is where the (partial) differential equations come into play. We state that this field needs to satisfy some constraints which we define as space-time operations. The associated PDE constraint is defined by some arbitrary differential operators on the field to describe how it changes in space and time. Therefore, the PDE can be thought of a set of equations that act as constraints to how the field needs to behave in space and time.  So we can add the PDE constraints as:</p>
-<p>$$
+\]</div>
+<p>where field <span class="math notranslate nohighlight">\(u\)</span> is a representation of the true field <span class="math notranslate nohighlight">\(f\)</span>. However, we need some way for this field, <span class="math notranslate nohighlight">\(u\)</span>, to be close to the true field <span class="math notranslate nohighlight">\(f\)</span>. So this is where the (partial) differential equations come into play. We state that this field needs to satisfy some constraints which we define as space-time operations. The associated PDE constraint is defined by some arbitrary differential operators on the field to describe how it changes in space and time. Therefore, the PDE can be thought of a set of equations that act as constraints to how the field needs to behave in space and time.  So we can add the PDE constraints as:</p>
+<div class="math notranslate nohighlight" id="equation-functa-pde">
+<span class="eqno">(5)<a class="headerlink" href="#equation-functa-pde" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
-u &amp;= \boldsymbol{u}(\mathbf{x}_s,t) \
-\text{s.t.  } \partial_tu &amp;=\mathcal{N}<span class="xref myst">u;\boldsymbol{\theta}</span>
+u &amp;= \boldsymbol{u}(\mathbf{x}_s,t) \\
+\text{s.t.  } \partial_tu &amp;=\mathcal{N}[u;\boldsymbol{\theta}](\mathbf{x}_s,t)
 \end{aligned}
-$$ (functa_pde)</p>
-<p>where $\mathcal{N}$ is the differential operator on the field and $\boldsymbol{\theta}$ are the (hyper-) parameters for the PDE. These parameters don’t actually exist in nature. They are artefacts introduced by the PDE which are often unknown and/or assumed based on some prior knowledge.</p>
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{N}\)</span> is the differential operator on the field and <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> are the (hyper-) parameters for the PDE. These parameters don’t actually exist in nature. They are artefacts introduced by the PDE which are often unknown and/or assumed based on some prior knowledge.</p>
 <div class="dropdown idea admonition">
 <p class="admonition-title">Example: Sea Surface Height</p>
 <p>For our SSH variable, there are many approximate models we can use to describe the dynamics. One such model is the Quasi-Geostrophic equations given by</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\eta &amp;= \boldsymbol{\eta_\theta}(\mathbf{x}<em>s,t) &amp;&amp; &amp;&amp; &amp;\boldsymbol{\eta</em>\theta}:\Omega\times\mathcal{T}\rightarrow\mathbb{R} \
+\eta &amp;= \boldsymbol{\eta_\theta}(\mathbf{x}_s,t) &amp;&amp; &amp;&amp; &amp;\boldsymbol{\eta_\theta}:\Omega\times\mathcal{T}\rightarrow\mathbb{R} \\
 \text{s.t.   }\dot{\eta} &amp;= -\frac{g}{f} \det\boldsymbol{J}(\eta,\nabla\eta)
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>Through a series of assumptions, we approximate this. For this example, we know that this is a crude approximate of the actual dynamics. However, we can assume that this is “good enough”.</p>
 </div>
 <section id="id1">
 <h2>Domain<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
-<p>Because our functa is often defined on a bounded domain, our PDE must also be able to understand the field on the bounded domain. For the spatial domain, we need to describe what happens at the edges (e.g. rectangle) of the domain. For the temporal domain, we need to describe what happens at the beginning of the domain, e.g. $t=0$. We can also define these as operators. Let’s define these as:</p>
-<p>$$
+<p>Because our functa is often defined on a bounded domain, our PDE must also be able to understand the field on the bounded domain. For the spatial domain, we need to describe what happens at the edges (e.g. rectangle) of the domain. For the temporal domain, we need to describe what happens at the beginning of the domain, e.g. <span class="math notranslate nohighlight">\(t=0\)</span>. We can also define these as operators. Let’s define these as:</p>
+<div class="math notranslate nohighlight" id="equation-functa-pde-domain">
+<span class="eqno">(6)<a class="headerlink" href="#equation-functa-pde-domain" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
-\mathcal{BC}<span class="xref myst">u;\boldsymbol{\theta}</span> &amp;=  \boldsymbol{u}_b, &amp;&amp; &amp;&amp;
-\mathbf{x}_s\in\partial\Omega &amp;&amp;
-&amp; &amp;t\in\mathcal{T} \
-\mathcal{IC}<span class="xref myst">u; \boldsymbol{\theta}</span> &amp;= \boldsymbol{u}_0, &amp;&amp; &amp;&amp; \mathbf{x}_s\in\Omega
+\mathcal{BC}[u;\boldsymbol{\theta}](\mathbf{x}_s,t) &amp;=  \boldsymbol{u}_b, &amp;&amp; &amp;&amp;
+ \mathbf{x}_s\in\partial\Omega &amp;&amp;
+ &amp; &amp;t\in\mathcal{T} \\
+\mathcal{IC}[u; \boldsymbol{\theta}](\mathbf{x}_s,0) &amp;= \boldsymbol{u}_0, &amp;&amp; &amp;&amp; \mathbf{x}_s\in\Omega
 \end{aligned}
-$$  (functa_pde_domain)</p>
-<p>where $\mathcal{BC}$, are the boundary conditions on the field, $\mathcal{IC}$ are the initial conditions on the field. The boundary conditions dictate the behaviour on the spatial domain on the boundaries and the initial conditions dictate the behaviour at the initial condition, $t=0$. We find these a lot even in ML applications. For example, whenever we deal with convolutions on images, we need to think about what to do at the boundaries (the solution is almost always padding, a.k.a. ghost points). In toy problems in physics, we also often simplify these to make the problem easier and well-behaved. A common approach is to use periodic boundary conditions; which are very rare in nature; but they are very convenient because they allow us to use simpler solvers like spectral and pseudo-spectral solvers. If we have access to observations, then we can use these as initial and boundary conditions. This is often done in data assimilation fields like gap-filling and reanalysis.</p>
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{BC}\)</span>, are the boundary conditions on the field, <span class="math notranslate nohighlight">\(\mathcal{IC}\)</span> are the initial conditions on the field. The boundary conditions dictate the behaviour on the spatial domain on the boundaries and the initial conditions dictate the behaviour at the initial condition, <span class="math notranslate nohighlight">\(t=0\)</span>. We find these a lot even in ML applications. For example, whenever we deal with convolutions on images, we need to think about what to do at the boundaries (the solution is almost always padding, a.k.a. ghost points). In toy problems in physics, we also often simplify these to make the problem easier and well-behaved. A common approach is to use periodic boundary conditions; which are very rare in nature; but they are very convenient because they allow us to use simpler solvers like spectral and pseudo-spectral solvers. If we have access to observations, then we can use these as initial and boundary conditions. This is often done in data assimilation fields like gap-filling and reanalysis.</p>
 </section>
 </section>
 <hr class="docutils" />
-<section id="parameterized-model">
+<section class="tex2jax_ignore mathjax_ignore" id="parameterized-model">
 <h1>Parameterized Model<a class="headerlink" href="#parameterized-model" title="Permalink to this heading">#</a></h1>
-<p>We could also assume that we don’t know anything about the physical equations that govern the system. However, we believe that we can learn about it from <em>data</em>. Let’s assume (by luck) we can define each pairwise spatial-temporal coordinate and field value of the <em>functa</em> that we are interested in. So we have a set of pairwise points which we can call a dataset $\mathcal{D}$ defined as</p>
-<p>$$
-\mathcal{D} = \left{(\mathbf{x}_{s,n},t_n),\boldsymbol{f}_n \right}_n^{\infty}
-$$ (functa_model)</p>
-<p>I say this is infinite because technically we can sample any continuous function infinitely many times without revisiting any previous samples (even on a bounded domain). The objective would be to find some sort of approximation of the actual function, $\boldsymbol{f}$, which maps each of these coordinate-values to the correct scaler/vector value. So we can define some arbitrary parameterized function, $\boldsymbol{f_\theta}$, which tries to approximate the functa. We can say that:</p>
-<p>$$
-\boldsymbol{f}(\mathbf{x}<em>s,t)\approx\boldsymbol{f</em>\theta}(\mathbf{x}_s,t)
-$$</p>
+<p>We could also assume that we don’t know anything about the physical equations that govern the system. However, we believe that we can learn about it from <em>data</em>. Let’s assume (by luck) we can define each pairwise spatial-temporal coordinate and field value of the <em>functa</em> that we are interested in. So we have a set of pairwise points which we can call a dataset <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> defined as</p>
+<div class="math notranslate nohighlight" id="equation-functa-model">
+<span class="eqno">(7)<a class="headerlink" href="#equation-functa-model" title="Permalink to this equation">#</a></span>\[
+\mathcal{D} = \left\{(\mathbf{x}_{s,n},t_n),\boldsymbol{f}_n \right\}_n^{\infty}
+\]</div>
+<p>I say this is infinite because technically we can sample any continuous function infinitely many times without revisiting any previous samples (even on a bounded domain). The objective would be to find some sort of approximation of the actual function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, which maps each of these coordinate-values to the correct scaler/vector value. So we can define some arbitrary parameterized function, <span class="math notranslate nohighlight">\(\boldsymbol{f_\theta}\)</span>, which tries to approximate the functa. We can say that:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{f}(\mathbf{x}_s,t)\approx\boldsymbol{f_\theta}(\mathbf{x}_s,t)
+\]</div>
 <p>This parameters depend upon the architecture of the function we choose. Again, like the PDE, these parameters are artefacts introduced by the function. So for a linear function, we may have just a few set of parameters (weights and bias), for a basis function we may the same parameters with some additional hyper-parameters for the basis, and neural networks have many weights and biases which we apply compositionally. Now, if we have a flexible enough model and infinite data, we should be able to find such parameters to fit the functa. However, the problem becomes <em>how</em> to find those parameters. This is the <em>learning problem.</em> We assume the solution exists and we can find it. But the question becomes: 1) how do we find it and 2) how do we know we have found it. However, there is an entire field dedicated to trying to resolve these issues, e.g. optimization for finding the solution and defining the metrics for knowing if we’ve found it. In addition, I stated that we assume the problem exists and we have infinite data which is never true at all. So that only adds more problems…</p>
 <section id="non-parametric-models">
 <h2>Non-Parametric Models<a class="headerlink" href="#non-parametric-models" title="Permalink to this heading">#</a></h2>
@@ -1165,12 +1179,13 @@ $$</p>
 </section>
 </section>
 <hr class="docutils" />
-<section id="observations">
+<section class="tex2jax_ignore mathjax_ignore" id="observations">
 <h1>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">#</a></h1>
-<p>Throughout this note, we have assumed that there exists a true field, $f$, for some QOI, e.g. SSH. And we have determined that one can either write down a PDE function, $u$, using physical equations or we can write a parametric function, $\boldsymbol{f_\theta}$, where we can learn from samples from the field. However, in practice, we often never actually observe the true field that we are interested in. In the best case scenario, we observe noisy, sparse or incomplete measurements of the field; symptoms of circumstance. So we define some observation variable $y$ and we can define a function, $\boldsymbol{h}$, that maps the “true” field to the observations.</p>
-<p>$$
-y = \mathcal{H}<span class="xref myst">u</span>
-$$ (functa_obs)</p>
+<p>Throughout this note, we have assumed that there exists a true field, <span class="math notranslate nohighlight">\(f\)</span>, for some QOI, e.g. SSH. And we have determined that one can either write down a PDE function, <span class="math notranslate nohighlight">\(u\)</span>, using physical equations or we can write a parametric function, <span class="math notranslate nohighlight">\(\boldsymbol{f_\theta}\)</span>, where we can learn from samples from the field. However, in practice, we often never actually observe the true field that we are interested in. In the best case scenario, we observe noisy, sparse or incomplete measurements of the field; symptoms of circumstance. So we define some observation variable <span class="math notranslate nohighlight">\(y\)</span> and we can define a function, <span class="math notranslate nohighlight">\(\boldsymbol{h}\)</span>, that maps the “true” field to the observations.</p>
+<div class="math notranslate nohighlight" id="equation-functa-obs">
+<span class="eqno">(8)<a class="headerlink" href="#equation-functa-obs" title="Permalink to this equation">#</a></span>\[
+y = \mathcal{H}[u](\mathbf{x}_s,t)
+\]</div>
 <p>In the worst case scenario, we observe proxy variables which are related to the QOI through some complex, unknown dynamics. This is often the case (especially in geosciences) as we are interested in one variable but for some reason, we cannot observe this variable. However, we can observe another variable which is related in some way, shape or form.</p>
 <div class="dropdown hint admonition">
 <p class="admonition-title">Example: Geosciences</p>
@@ -1178,7 +1193,7 @@ $$ (functa_obs)</p>
 </div>
 </section>
 <hr class="docutils" />
-<section id="real-problems">
+<section class="tex2jax_ignore mathjax_ignore" id="real-problems">
 <h1>Real Problems<a class="headerlink" href="#real-problems" title="Permalink to this heading">#</a></h1>
 <p>Now, this is all idealized where everything is continuous and accessible. But reality strikes quickly and we realize that much of the stuff above becomes impossible. I alluded to a few of these issues above but I will expand upon a few of them below. I try to go in a “logical” order that increases the impending doom and the ill-posedness of the problem we are trying to solve.</p>
 <hr class="docutils" />

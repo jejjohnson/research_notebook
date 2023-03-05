@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/info_theory/entropy';</script>
@@ -958,15 +960,18 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="entropy-relative-entropy">
+  <section class="tex2jax_ignore mathjax_ignore" id="entropy-relative-entropy">
 <h1>Entropy &amp; Relative Entropy<a class="headerlink" href="#entropy-relative-entropy" title="Permalink to this heading">#</a></h1>
 <section id="entropy">
 <h2>Entropy<a class="headerlink" href="#entropy" title="Permalink to this heading">#</a></h2>
 <p>This is an upper bound on the amount of information you can convey without any loss (<a class="reference external" href="https://blog.evjang.com/2019/07/likelihood-model-tips.html">source</a>). More entropy means more <strong>randomness</strong> or <strong>uncertainty</strong></p>
-<p>$$H(X)=\int_{\mathcal{X}}p(x)\cdot \log p(x) \cdot dx$$</p>
+<div class="math notranslate nohighlight">
+\[H(X)=\int_{\mathcal{X}}p(x)\cdot \log p(x) \cdot dx\]</div>
 <p>We use logs so that wee get sums of entropies. It implies independence but the log also forces sums.</p>
-<p>$$H(Y|X) = H(X,Y)-H(X)$$</p>
-<p>$$H(Y|X) = \int_{\mathcal{X}, \mathcal{Y}}p(x,y) \log \frac{p(x,y)}{p(x)}dxdy$$</p>
+<div class="math notranslate nohighlight">
+\[H(Y|X) = H(X,Y)-H(X)\]</div>
+<div class="math notranslate nohighlight">
+\[H(Y|X) = \int_{\mathcal{X}, \mathcal{Y}}p(x,y) \log \frac{p(x,y)}{p(x)}dxdy\]</div>
 <section id="examples">
 <h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h3>
 <p><strong>Example Pt II: Delta Function, Uniform Function, Binomial Curve, Gaussian Curve</strong></p>
@@ -974,7 +979,8 @@ title="Print to PDF"
 <section id="under-transformations">
 <h3>Under Transformations<a class="headerlink" href="#under-transformations" title="Permalink to this heading">#</a></h3>
 <p>In my line of work, we work with generative models that utilize the change of variable formulation in order to estimate some distribution with</p>
-<p>$$H(Y) = H(X) + \mathbb{E}\left[ \log |\nabla f(X)|\right]$$</p>
+<div class="math notranslate nohighlight">
+\[H(Y) = H(X) + \mathbb{E}\left[ \log |\nabla f(X)|\right]\]</div>
 <ul class="simple">
 <li><p>Under rotation: Entropy is invariant</p></li>
 <li><p>Under scale: Entropy is …???</p></li>
@@ -986,39 +992,46 @@ title="Print to PDF"
 <section id="relative-entropy-kullback-leibler-divergence">
 <h2>Relative Entropy (Kullback Leibler Divergence)<a class="headerlink" href="#relative-entropy-kullback-leibler-divergence" title="Permalink to this heading">#</a></h2>
 <p>This is the measure of the distance between two distributions. I like the term <em>relative entropy</em> because it offers a different perspective in relation to information theory measures.</p>
-<p>$$D_{KL}(p||q) = \int_{\mathcal{X}}p(x) \cdot \log \frac{p(x)}{q(x)} \cdot dx \geq 0$$</p>
-<p>If you’ve studied machine learning then you are fully aware that it is not a distance as this measure is not symmetric i.e. $D_{KL}(p||q) \neq D_{KL}(q||p)$.</p>
+<div class="math notranslate nohighlight">
+\[D_{KL}(p||q) = \int_{\mathcal{X}}p(x) \cdot \log \frac{p(x)}{q(x)} \cdot dx \geq 0\]</div>
+<p>If you’ve studied machine learning then you are fully aware that it is not a distance as this measure is not symmetric i.e. <span class="math notranslate nohighlight">\(D_{KL}(p||q) \neq D_{KL}(q||p)\)</span>.</p>
 <p>Furthermore, the KL divergence is the difference between the cross-entropy and the entropy.</p>
-<p>$$D_{KL}(P||Q) = H(P, Q) - H(P)$$</p>
+<div class="math notranslate nohighlight">
+\[D_{KL}(P||Q) = H(P, Q) - H(P)\]</div>
 <p>So this is how far away our predictions are from our actual distribution.</p>
 <section id="id1">
 <h3>Under Transformations<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
-<p>The KLD is invariance under invertible affine transformations, e.g. $b = \mu + Ga, \nabla F = G$</p>
-<p>$$
-\text{D}<em>\text{KL}\left[p(y)||q(y) \right] = \int</em>\mathcal{Y}p(y)\log \frac{p(y)}{q(y)}dy
-$$</p>
-<p>Let’s make a transformation on $p(y)$ using some nonlinear function $f()$. So that leaves us with $y = f(x)$. So let’s apply the change of variables formula to get the probability of $y$ after the transformation.</p>
-<p>$$
+<p>The KLD is invariance under invertible affine transformations, e.g. <span class="math notranslate nohighlight">\(b = \mu + Ga, \nabla F = G\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\text{D}_\text{KL}\left[p(y)||q(y) \right] = \int_\mathcal{Y}p(y)\log \frac{p(y)}{q(y)}dy
+\]</div>
+<p>Let’s make a transformation on <span class="math notranslate nohighlight">\(p(y)\)</span> using some nonlinear function <span class="math notranslate nohighlight">\(f()\)</span>. So that leaves us with <span class="math notranslate nohighlight">\(y = f(x)\)</span>. So let’s apply the change of variables formula to get the probability of <span class="math notranslate nohighlight">\(y\)</span> after the transformation.</p>
+<div class="math notranslate nohighlight">
+\[
 p(y)dy=p(x)dx = p(x)\left|\frac{dx}{dy} \right|
-$$</p>
-<p>Remember, we defined our function as $y=f(x)$ so technically we don’t have access to the probability of $y$.  Only the probability of $x$. So we cannot take the derivative in terms of y. But we can take the derivative in terms of $x$. So let’s rewrite the function:</p>
-<p>$$
+\]</div>
+<p>Remember, we defined our function as <span class="math notranslate nohighlight">\(y=f(x)\)</span> so technically we don’t have access to the probability of <span class="math notranslate nohighlight">\(y\)</span>.  Only the probability of <span class="math notranslate nohighlight">\(x\)</span>. So we cannot take the derivative in terms of y. But we can take the derivative in terms of <span class="math notranslate nohighlight">\(x\)</span>. So let’s rewrite the function:</p>
+<div class="math notranslate nohighlight">
+\[
 p(y) = p(x) \left| \frac{dy}{dx} \right|^{-1}
-$$</p>
+\]</div>
 <p>Now, let’s plug in this formula into our KLD formulation.</p>
-<p>$$
-\text{D}<em>\text{KL}\left[p(y)||q(y) \right] =
-\int</em>\mathcal{y=?}p(x)\left| \frac{dy}{dx} \right|^{-1}
+<div class="math notranslate nohighlight">
+\[
+\text{D}_\text{KL}\left[p(y)||q(y) \right] =
+\int_\mathcal{y=?}p(x)\left| \frac{dy}{dx} \right|^{-1}
 \log \frac{p(x) \left| \frac{dy}{dx} \right|^{-1}}{q(y)}dy
-$$</p>
-<p>We still have two terms that need to go: $dy$ and $q(y)$. For the intergration, we can simply multiple by 1 to get $dy\frac{dx}{dx}$ and then with a bit of rearranging we get: $\frac{dy}{dx}dx$. I’m also going to change the notation as well to get $\left| \frac{dy}{dx}  \right|dx$. And plugging this in our formula gives us:</p>
-<p>$$
-\text{D}<em>\text{KL}\left[p(y)||q(y) \right] =
-\int</em>\mathcal{y=?}p(x)\left| \frac{dy}{dx} \right|^{-1}
+\]</div>
+<p>We still have two terms that need to go: <span class="math notranslate nohighlight">\(dy\)</span> and <span class="math notranslate nohighlight">\(q(y)\)</span>. For the intergration, we can simply multiple by 1 to get <span class="math notranslate nohighlight">\(dy\frac{dx}{dx}\)</span> and then with a bit of rearranging we get: <span class="math notranslate nohighlight">\(\frac{dy}{dx}dx\)</span>. I’m also going to change the notation as well to get <span class="math notranslate nohighlight">\(\left| \frac{dy}{dx}  \right|dx\)</span>. And plugging this in our formula gives us:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{D}_\text{KL}\left[p(y)||q(y) \right] =
+\int_\mathcal{y=?}p(x)\left| \frac{dy}{dx} \right|^{-1}
 \log \frac{p(x) \left| \frac{dy}{dx} \right|^{-1}}{q(y)}
 \left| \frac{dy}{dx}  \right|dx
-$$</p>
-<p>Now, we still have the distribution $q(y)$.</p>
+\]</div>
+<p>Now, we still have the distribution <span class="math notranslate nohighlight">\(q(y)\)</span>.</p>
 </section>
 </section>
 <hr class="docutils" />
@@ -1028,33 +1041,37 @@ $$</p>
 <blockquote>
 <div><p>Expected uncertainty.</p>
 </div></blockquote>
-<p>$$H(X) = \log \frac{\text{# of Outcomes}}{\text{States}}$$</p>
+<div class="math notranslate nohighlight">
+\[H(X) = \log \frac{\text{\# of Outcomes}}{\text{States}}\]</div>
 <ul class="simple">
 <li><p>Lower bound on the number of bits needed to represent a RV, e.g. a RV that has a unform distribution over 32 outcomes.</p>
 <ul>
-<li><p>Lower bound on the average length of the shortest description of $X$</p></li>
+<li><p>Lower bound on the average length of the shortest description of <span class="math notranslate nohighlight">\(X\)</span></p></li>
 </ul>
 </li>
 <li><p>Self-Information</p></li>
 </ul>
 <details>
 The standard definition of Entropy can be written as:
-<p>$$\begin{aligned}
-D_{KLD}(P||Q) &amp;=-\int_{-\infty}^{\infty} P(x) \log \frac{Q(y)}{P(x)}dx\
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+D_{KLD}(P||Q) &amp;=-\int_{-\infty}^{\infty} P(x) \log \frac{Q(y)}{P(x)}dx\\
 &amp;=\int_{-\infty}^{\infty} P(x) \log \frac{P(x)}{Q(y)}dx
-\end{aligned}$$</p>
+\end{aligned}\end{split}\]</div>
 <p>and the discrete version:</p>
-<p>$$\begin{aligned}
-D_{KLD}(P||Q) &amp;=-\sum_{x\in\mathcal{X}} P(x) \log \frac{Q(x)}{P(x)}\
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+D_{KLD}(P||Q) &amp;=-\sum_{x\in\mathcal{X}} P(x) \log \frac{Q(x)}{P(x)}\\
 &amp;=\sum_{x\in\mathcal{X}} P(x) \log \frac{P(x)}{Q(y)}
-\end{aligned}$$</p>
+\end{aligned}\end{split}\]</div>
 <p>If we want the viewpoint in terms of expectations, we can do a bit of rearranging to get:</p>
-<p>$$\begin{aligned}
-D_{KLD} &amp;= \sum_{x\in\mathcal{X}} P(x) \log \frac{P(x)}{Q(y)}\
-&amp;= \sum_{x\in\mathcal{X}} P(x) \log P(x)- \sum_{-\infty}^{\infty}P(x)\log Q(y)dx \
-&amp;= \sum_{x\in\mathcal{X}} P(x)\left[\log P(x) - \log Q(y) \right] \
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+D_{KLD} &amp;= \sum_{x\in\mathcal{X}} P(x) \log \frac{P(x)}{Q(y)}\\
+&amp;= \sum_{x\in\mathcal{X}} P(x) \log P(x)- \sum_{-\infty}^{\infty}P(x)\log Q(y)dx \\
+&amp;= \sum_{x\in\mathcal{X}} P(x)\left[\log P(x) - \log Q(y) \right] \\
 &amp;= \mathbb{E}_x\left[ \log P(x) - \log Q(y)  \right]
-\end{aligned}$$</p>
+\end{aligned}\end{split}\]</div>
 </details>
 <details>
 <section id="code-step-by-step">
@@ -1089,10 +1106,12 @@ D_{KLD} &amp;= \sum_{x\in\mathcal{X}} P(x) \log \frac{P(x)}{Q(y)}\
 </section>
 <section id="formulas">
 <h2>Formulas<a class="headerlink" href="#formulas" title="Permalink to this heading">#</a></h2>
-<p>$$H(\mathbf{X}) = - \int_\mathcal{X} p(\mathbf{x}) \log p(\mathbf{x}) d\mathbf{x}$$</p>
+<div class="math notranslate nohighlight">
+\[H(\mathbf{X}) = - \int_\mathcal{X} p(\mathbf{x}) \log p(\mathbf{x}) d\mathbf{x}\]</div>
 <p>And we can estimate this empirically by:</p>
-<p>$$H(\mathbf{X}) = -\sum_{i=1}^N p_i \log p_i$$</p>
-<p>where $p_i = P(\mathbf{X})$.</p>
+<div class="math notranslate nohighlight">
+\[H(\mathbf{X}) = -\sum_{i=1}^N p_i \log p_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(p_i = P(\mathbf{X})\)</span>.</p>
 <section id="id2">
 <h3>Code - Step-by-Step<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. obtain all possible occurrences of the outcomes</span>
@@ -1128,9 +1147,10 @@ D_{KLD} &amp;= \sum_{x\in\mathcal{X}} P(x) \log \frac{P(x)}{Q(y)}\
 <section id="renyi">
 <h3>Renyi<a class="headerlink" href="#renyi" title="Permalink to this heading">#</a></h3>
 <p>Above we looked at Shannon entropy which is a special case of Renyi’s Entropy measure. But the generalized entropy formula actually is a generalization on entropy. Below is the given formula.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 H_\alpha(x) = \frac{1}{1-\alpha} \log_2 \sum_{x \in \mathcal{X}} p^{\alpha}(x)
-$$</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />

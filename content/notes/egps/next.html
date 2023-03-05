@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/egps/next';</script>
@@ -911,7 +913,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="next-steps">
+  <section class="tex2jax_ignore mathjax_ignore" id="next-steps">
 <h1>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">#</a></h1>
 <p>So after all of this literature, what is the next step for the community? I have a few suggestions based on what I’ve seen:</p>
 <section id="apply-these-algorithms-to-different-problems-other-than-dynamical-systems">
@@ -920,7 +922,7 @@ title="Print to PDF"
 </section>
 <section id="improve-the-kernel-expectation-calculations">
 <h2>2. Improve the Kernel Expectation Calculations<a class="headerlink" href="#improve-the-kernel-expectation-calculations" title="Permalink to this heading">#</a></h2>
-<p>So how we calculate kernel expectations is costly. A typical sparse GP has a cost of $O(NM^2)$. But when we do the calculation of kernel expectations, that order goes back up to $O (DNM^2)$ . It’s not bad considering but it is still now an order of magnitude larger for high dimensional datasets. This is going backwards in terms of efficiency. Also, many implementations attempt to do this in parallel for speed but then the cost of memory becomes prohibitive (especially on GPUs). There are some other good approximation schemes we might be able to use such as advanced Bayesian Quadrature techniques and the many moment transformation techniques that are present in the Kalman Filter literature. I’m sure there are tricks of the trade to be had there.</p>
+<p>So how we calculate kernel expectations is costly. A typical sparse GP has a cost of <span class="math notranslate nohighlight">\(O(NM^2)\)</span>. But when we do the calculation of kernel expectations, that order goes back up to <span class="math notranslate nohighlight">\(O (DNM^2)\)</span> . It’s not bad considering but it is still now an order of magnitude larger for high dimensional datasets. This is going backwards in terms of efficiency. Also, many implementations attempt to do this in parallel for speed but then the cost of memory becomes prohibitive (especially on GPUs). There are some other good approximation schemes we might be able to use such as advanced Bayesian Quadrature techniques and the many moment transformation techniques that are present in the Kalman Filter literature. I’m sure there are tricks of the trade to be had there.</p>
 </section>
 <section id="think-about-the-problem-differently">
 <h2>3. Think about the problem differently<a class="headerlink" href="#think-about-the-problem-differently" title="Permalink to this heading">#</a></h2>

@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/tutorials/jax_journey/algorithms/kernel_derivatives';</script>
@@ -992,46 +994,46 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="kernel-derivatives">
+  <section class="tex2jax_ignore mathjax_ignore" id="kernel-derivatives">
 <h1>Kernel Derivatives<a class="headerlink" href="#kernel-derivatives" title="Permalink to this heading">#</a></h1>
 <p><strong>Linear Operators and Stochastic Partial Differential Equations in GPR</strong> - Simo Särkkä - <a class="reference external" href="https://users.aalto.fi/~ssarkka/pub/spde.pdf">PDF</a></p>
 <blockquote>
 <div><p>Expresses derivatives of GPs as operators</p>
 </div></blockquote>
 <p><a class="reference external" href="https://colab.research.google.com/drive/1pbb0qlypJCqPTN_cu2GEkkKLNXCYO9F2"><strong>Demo Colab Notebook</strong></a></p>
-<p>He looks at ths special case where we have a GP with a mean function zero and a covariance matrix $K$ defined as:
-$$
-\mathbb{E}[f(\mathbf{x})f^\top(\mathbf{x’})] = K_{ff}(\mathbf{x,x’})
-$$
+<p>He looks at ths special case where we have a GP with a mean function zero and a covariance matrix <span class="math notranslate nohighlight">\(K\)</span> defined as:
+$<span class="math notranslate nohighlight">\(
+\mathbb{E}[f(\mathbf{x})f^\top(\mathbf{x'})] = K_{ff}(\mathbf{x,x'})
+\)</span><span class="math notranslate nohighlight">\(
 So in GP terminology:
-$$
-f(\mathbf(x)) \sim \mathcal{GP}(\mathbf{0}, K_{ff}(\mathbf{x,x’}))
-$$
+\)</span><span class="math notranslate nohighlight">\(
+f(\mathbf(x)) \sim \mathcal{GP}(\mathbf{0}, K_{ff}(\mathbf{x,x'}))
+\)</span>$
 We use the rulse for linear transformations of GPs to obtain the different transformations of the kernel matrix.</p>
-<p>Let’s define the notation for the derivative of a kernel matrix. Let $g(\cdot)$ be the derivative operator on a function $f(\cdot)$. So:
-$$
+<p>Let’s define the notation for the derivative of a kernel matrix. Let <span class="math notranslate nohighlight">\(g(\cdot)\)</span> be the derivative operator on a function <span class="math notranslate nohighlight">\(f(\cdot)\)</span>. So:
+$<span class="math notranslate nohighlight">\(
 g(\mathbf{x}) = \mathcal{L}_x f(\mathbf{x})
-$$</p>
-<p>So now, we want to define the cross operators between the derivative $g(\cdot)$ and the function $f(\cdot)$.</p>
-<p><strong>Example</strong>: He draws a distinction between the two operators with an example of how this works in practice. So let’s take the linear operator $\mathcal{L}_{x}=(1, \frac{\partial}{\partial x})$. This operator:</p>
+\)</span>$</p>
+<p>So now, we want to define the cross operators between the derivative <span class="math notranslate nohighlight">\(g(\cdot)\)</span> and the function <span class="math notranslate nohighlight">\(f(\cdot)\)</span>.</p>
+<p><strong>Example</strong>: He draws a distinction between the two operators with an example of how this works in practice. So let’s take the linear operator <span class="math notranslate nohighlight">\(\mathcal{L}_{x}=(1, \frac{\partial}{\partial x})\)</span>. This operator:</p>
 <ul class="simple">
-<li><p>acts on a scalar GP $f(x)$</p></li>
-<li><p>a scalar input $x$</p></li>
-<li><p>a covariance function $k_{ff}(x,x’)$</p></li>
-<li><p>outputs a scalar value $y$</p></li>
+<li><p>acts on a scalar GP <span class="math notranslate nohighlight">\(f(x)\)</span></p></li>
+<li><p>a scalar input <span class="math notranslate nohighlight">\(x\)</span></p></li>
+<li><p>a covariance function <span class="math notranslate nohighlight">\(k_{ff}(x,x')\)</span></p></li>
+<li><p>outputs a scalar value <span class="math notranslate nohighlight">\(y\)</span></p></li>
 </ul>
 <p>We can get the following transformations:
-$$
+$<span class="math notranslate nohighlight">\(
 \begin{aligned}
-K_{gf}(\mathbf{x,x’})
-&amp;= \mathcal{L}<em>x f(\mathbf{x}) f(\mathbf{x}) = \mathcal{L}<em>xK</em>{ff}(\mathbf{x,x’}) \
-K</em>{fg}(\mathbf{x,x’})
-&amp;= f(\mathbf{x}) f(\mathbf{x’}) \mathcal{L}<em>{x’} = K</em>{ff}(\mathbf{x,x’})\mathcal{L}<em>{x’} \
-K</em>{gg}(\mathbf{x,x’})
-&amp;= \mathcal{L}<em>x f(\mathbf{x}) f(\mathbf{x’}) \mathcal{L}</em>{x’}
-= \mathcal{L}<em>xK</em>{ff}(\mathbf{x,x’})\mathcal{L}_{x’}^\top \
+K_{gf}(\mathbf{x,x'})
+&amp;= \mathcal{L}_x f(\mathbf{x}) f(\mathbf{x}) = \mathcal{L}_xK_{ff}(\mathbf{x,x'}) \\
+K_{fg}(\mathbf{x,x'})
+&amp;= f(\mathbf{x}) f(\mathbf{x'}) \mathcal{L}_{x'} = K_{ff}(\mathbf{x,x'})\mathcal{L}_{x'} \\
+K_{gg}(\mathbf{x,x'})
+&amp;= \mathcal{L}_x f(\mathbf{x}) f(\mathbf{x'}) \mathcal{L}_{x'}
+= \mathcal{L}_xK_{ff}(\mathbf{x,x'})\mathcal{L}_{x'}^\top \\
 \end{aligned}
-$$</p>
+\)</span>$</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Packages</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 
@@ -1113,9 +1115,10 @@ $$</p>
 </div>
 <section id="kernel-function">
 <h2>Kernel Function<a class="headerlink" href="#kernel-function" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \text{dist} = \sum_{i=1}^D (\mathbf{x_i} - \mathbf{y_i})^2
-$$</p>
+\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Kernel Functions</span>
 
 <span class="c1"># Squared Euclidean Distance Formula</span>
@@ -1180,9 +1183,10 @@ $$</p>
 <ol class="arabic simple">
 <li><p>We need to map all points with one vector to another.</p></li>
 </ol>
-<p>We’re going to take a single sample from $X’$ and take the rbf kernel between it and all of $X$. So:</p>
-<p>$$\text{vmap}_f(\mathbf{X}, \mathbf{x})$$</p>
-<p>where $X\in \mathbb{R}^{N \times D}$ is a matrix and $\mathbf{x} \in \mathbb{R}^{D}$ is a vector.</p>
+<p>We’re going to take a single sample from <span class="math notranslate nohighlight">\(X'\)</span> and take the rbf kernel between it and all of <span class="math notranslate nohighlight">\(X\)</span>. So:</p>
+<div class="math notranslate nohighlight">
+\[\text{vmap}_f(\mathbf{X}, \mathbf{x})\]</div>
+<p>where <span class="math notranslate nohighlight">\(X\in \mathbb{R}^{N \times D}\)</span> is a matrix and <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D}\)</span> is a vector.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gram Matrix</span>
 <span class="k">def</span> <span class="nf">gram</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x1</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y1</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">))(</span><span class="n">y</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
@@ -1199,8 +1203,8 @@ $$</p>
 <span class="k">assert</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">x1_mapped</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>   
 </pre></div>
 </div>
-<p>This that’s good: we have an array of size $N$. So we’ve effectively mapped all points from one array to the other.</p>
-<p>So now we can do another vector mapping which allows us to take all samples of $X’$ and map them against all samples of $X$. So it’ll be a <code class="docutils literal notranslate"><span class="pre">vmap</span></code> of a <code class="docutils literal notranslate"><span class="pre">vmap</span></code>. Then we’ll get the $N\times N$ kernel matrix.</p>
+<p>This that’s good: we have an array of size <span class="math notranslate nohighlight">\(N\)</span>. So we’ve effectively mapped all points from one array to the other.</p>
+<p>So now we can do another vector mapping which allows us to take all samples of <span class="math notranslate nohighlight">\(X'\)</span> and map them against all samples of <span class="math notranslate nohighlight">\(X\)</span>. So it’ll be a <code class="docutils literal notranslate"><span class="pre">vmap</span></code> of a <code class="docutils literal notranslate"><span class="pre">vmap</span></code>. Then we’ll get the <span class="math notranslate nohighlight">\(N\times N\)</span> kernel matrix.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mapx2</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">mapx1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">out_axes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">K</span> <span class="o">=</span> <span class="n">mapx2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
@@ -1216,7 +1220,7 @@ $$</p>
 </pre></div>
 </div>
 <p>So great! We now have our kernel matrix. Let’s plot it and check to see if it matches the manually constructed kernel matrix.</p>
-<p>Great! We have a vectorized kernel function and we were still able to construct our functions in terms of vectors only! This is nice for me personally because I’ve always struggled with understanding some of the coding when trying to deal with samples/batch-sizes. Most pseudo-code is written in vector format so paper $\rightarrow$ has always been a painful transition for me. So now, let’s wrap this in a nice function so that we can finish “wrap up” this model.</p>
+<p>Great! We have a vectorized kernel function and we were still able to construct our functions in terms of vectors only! This is nice for me personally because I’ve always struggled with understanding some of the coding when trying to deal with samples/batch-sizes. Most pseudo-code is written in vector format so paper <span class="math notranslate nohighlight">\(\rightarrow\)</span> has always been a painful transition for me. So now, let’s wrap this in a nice function so that we can finish “wrap up” this model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_2d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
 <span class="n">test_X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="c1">#[:2, :]</span>
@@ -1301,16 +1305,18 @@ $$</p>
 </section>
 <section id="cross-covariance-term-1st-derivative">
 <h2>1. Cross-Covariance Term - 1st Derivative<a class="headerlink" href="#cross-covariance-term-1st-derivative" title="Permalink to this heading">#</a></h2>
-<p>We can calculate the cross-covariance term $K_{fg}(\mathbf{x,x})$. We apply the following operation</p>
-<p>$$
-K_{fg}(x,x’) = k_{ff}(\mathbf{x,x’})(1, \frac{\partial}{\partial x’})
-$$
-If we multiply the terms across, we get:
-$$
-K_{fg}(x,x’) = k_{ff}(\mathbf{x,x’})\frac{\partial k_{ff}(\mathbf{x,x’})}{\partial x’}
-$$</p>
+<p>We can calculate the cross-covariance term <span class="math notranslate nohighlight">\(K_{fg}(\mathbf{x,x})\)</span>. We apply the following operation</p>
+<div class="math notranslate nohighlight">
+\[
+K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})(1, \frac{\partial}{\partial x'})
+\]</div>
+<p>If we multiply the terms across, we get:
+$<span class="math notranslate nohighlight">\(
+K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\partial x'}
+\)</span>$</p>
 <p>For the RBF Kernel, it’s this:</p>
-<p>$$\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)$$</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)\]</div>
 <p>Note: I did the derivations from scratch.</p>
 <section id="single-sample">
 <h3>Single Sample<a class="headerlink" href="#single-sample" title="Permalink to this heading">#</a></h3>
@@ -1374,7 +1380,7 @@ $$</p>
 </section>
 <section id="multiple-dimensions">
 <h3>Multiple Dimensions<a class="headerlink" href="#multiple-dimensions" title="Permalink to this heading">#</a></h3>
-<p>Now, we have the same problem but for a vector $\mathbf{x}$ instead of a single sample $x$. In this example, $\mathbf{x}$ has 2 features, $\mathbf{x} \in \mathbb{R}^2$. We’re still going to do it for a single sample.</p>
+<p>Now, we have the same problem but for a vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> instead of a single sample <span class="math notranslate nohighlight">\(x\)</span>. In this example, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> has 2 features, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^2\)</span>. We’re still going to do it for a single sample.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate some data</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_2d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
@@ -1405,7 +1411,7 @@ $$</p>
 </section>
 <section id="multiple-samples-batches">
 <h3>Multiple Samples (Batches)<a class="headerlink" href="#multiple-samples-batches" title="Permalink to this heading">#</a></h3>
-<p>Now, we’re going to input a matrix $\mathbf{X}$ which are stacked samples of multiple features. So $\mathbf{X} \in \mathbb{R}^{N\times D}$.</p>
+<p>Now, we’re going to input a matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> which are stacked samples of multiple features. So <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{N\times D}\)</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_2d_data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">sigma_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
 <span class="n">test_X</span> <span class="o">=</span> <span class="n">X</span>
@@ -1444,25 +1450,28 @@ $$</p>
 <section id="cross-covariance-term-2nd-derivative">
 <h2>2. Cross-Covariance Term - 2nd Derivative<a class="headerlink" href="#cross-covariance-term-2nd-derivative" title="Permalink to this heading">#</a></h2>
 <p>Recall the 1st derivative is:</p>
-<p>$$\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)$$</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)\]</div>
 <p>So now we repeat. First we decompose the function using the product rule:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 \frac{\partial^2 k(x,y)}{\partial x^{j^2}} &amp;=
--2 \gamma (x^j - y^j) \frac{\partial }{\partial x^j} k(x,y) + k(x,y) \frac{\partial }{\partial x^j} \left[ -2 \gamma (x^j - y^j) \right]\
+-2 \gamma (x^j - y^j) \frac{\partial }{\partial x^j} k(x,y) + k(x,y) \frac{\partial }{\partial x^j} \left[ -2 \gamma (x^j - y^j) \right]\\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>The first term is basically the 1st Derivative squared and the 2nd term is a constant. So after applying the derivative and simplifying, we get:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 \frac{\partial^2 k(x,y)}{\partial x^{j^2}} &amp;=
-4 \gamma^2 (x^j - y^j)^2 k(x,y) -2 \gamma k(x,y)\
+4 \gamma^2 (x^j - y^j)^2 k(x,y) -2 \gamma k(x,y)\\
 &amp;=
-\left[ 4\gamma^2(x^j - y^j)^2 - 2\gamma\right] k(\mathbf{x}, \mathbf{y}) \
+\left[ 4\gamma^2(x^j - y^j)^2 - 2\gamma\right] k(\mathbf{x}, \mathbf{y}) \\
 &amp;=
-2 \gamma \left[ 2\gamma(x^j - y^j)^2 - 1\right] k(\mathbf{x}, \mathbf{y}) \
+2 \gamma \left[ 2\gamma(x^j - y^j)^2 - 1\right] k(\mathbf{x}, \mathbf{y}) \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <section id="id5">
 <h3>From Scratch<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
 <p>Recall, this is a Jacobian so we have</p>
@@ -1495,7 +1504,7 @@ $$</p>
 </section>
 <section id="id6">
 <h3>Jax<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
-<p>So with jax, we’re computing the hessian so we’ll get a matrix of size $N \times N \times D \times D$. So the 2nd derivative is just the diagonal terms of $D\times D$ part.</p>
+<p>So with jax, we’re computing the hessian so we’ll get a matrix of size <span class="math notranslate nohighlight">\(N \times N \times D \times D\)</span>. So the 2nd derivative is just the diagonal terms of <span class="math notranslate nohighlight">\(D\times D\)</span> part.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the cross operator K_fg(x, y), dK wrt x</span>
 <span class="n">dK_fg_func</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">rbf_kernel</span><span class="p">,</span> <span class="n">argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 
@@ -1523,26 +1532,30 @@ $$</p>
 <section id="cross-covariance-term-2nd-derivative-partial-derivatives">
 <h2>3. Cross-Covariance Term - 2nd Derivative (Partial Derivatives)<a class="headerlink" href="#cross-covariance-term-2nd-derivative-partial-derivatives" title="Permalink to this heading">#</a></h2>
 <p>Recall the 1st derivative is:</p>
-<p>$$\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)$$</p>
-<p>So now we repeat. First we decompose the function using the product rule. But this time, we need to do the product rule first w.r.t. $x^j$ and then w.r.t. $y^k$.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\frac{\partial k(x,y)}{\partial x^j}=-2 \gamma (x^j - y^j) k(x,y)\]</div>
+<p>So now we repeat. First we decompose the function using the product rule. But this time, we need to do the product rule first w.r.t. <span class="math notranslate nohighlight">\(x^j\)</span> and then w.r.t. <span class="math notranslate nohighlight">\(y^k\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 \frac{\partial^2 k(x,y)}{\partial x^j y^k} &amp;=
--2 \gamma (x^j - y^j) \frac{\partial }{\partial y^k} k(x,y) + k(x,y) \frac{\partial }{\partial y^k} \left[ -2 \gamma (x^j - y^j) \right]\
+-2 \gamma (x^j - y^j) \frac{\partial }{\partial y^k} k(x,y) + k(x,y) \frac{\partial }{\partial y^k} \left[ -2 \gamma (x^j - y^j) \right]\\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>So now let’s start expanding and collapsing terms:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 \frac{\partial^2 k(x,y)}{\partial x^j y^k} &amp;=
-4 \gamma^2 (x^j - y^j)(x^k - y^k) k(x,y) \
+4 \gamma^2 (x^j - y^j)(x^k - y^k) k(x,y) \\
 \end{aligned}
-$$</p>
-<p>The second term should go to zero and the first term is the same except it has different dimensions (w.r.t. $y$ instead of $x$).</p>
-<p>$$
+\end{split}\]</div>
+<p>The second term should go to zero and the first term is the same except it has different dimensions (w.r.t. <span class="math notranslate nohighlight">\(y\)</span> instead of <span class="math notranslate nohighlight">\(x\)</span>).</p>
+<div class="math notranslate nohighlight">
+\[
 \frac{\partial^2 k(x,y)}{\partial x^j \partial y^k} =
 4 \gamma^2 (x^k - y^k)(x^j - y^j) k(\mathbf{x}, \mathbf{y})
-$$</p>
+\]</div>
 <section id="id7">
 <h3>From Scratch<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">d2rbf_kernel_scratch_hessian</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>

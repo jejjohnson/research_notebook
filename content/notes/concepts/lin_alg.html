@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/concepts/lin_alg';</script>
@@ -941,29 +943,32 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="linear-algebra-tricks">
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-algebra-tricks">
 <h1>Linear Algebra Tricks<a class="headerlink" href="#linear-algebra-tricks" title="Permalink to this heading">#</a></h1>
 <section id="identities">
 <h2>Identities<a class="headerlink" href="#identities" title="Permalink to this heading">#</a></h2>
 <section id="woodbury-identity">
 <h3>Woodbury Identity<a class="headerlink" href="#woodbury-identity" title="Permalink to this heading">#</a></h3>
-<p>Given some matrices $\mathbf{A} \in \mathbb{R}^{D \times D}, \mathbf{U} \in \mathbb{R}^{D \times d}, \mathbf{B} \in \mathbb{R}^{d \times d}, \mathbf{V} \in \mathbb{R}^{d \times D}$ where $d &lt; D$.</p>
-<p>$$
+<p>Given some matrices <span class="math notranslate nohighlight">\(\mathbf{A} \in \mathbb{R}^{D \times D}, \mathbf{U} \in \mathbb{R}^{D \times d}, \mathbf{B} \in \mathbb{R}^{d \times d}, \mathbf{V} \in \mathbb{R}^{d \times D}\)</span> where <span class="math notranslate nohighlight">\(d &lt; D\)</span>.</p>
+<div class="math notranslate nohighlight" id="equation-woodbury">
+<span class="eqno">(18)<a class="headerlink" href="#equation-woodbury" title="Permalink to this equation">#</a></span>\[
 (A + UBV^\top)^{-1} = A^{-1} - A^{-1} U (B^{-1} + V^\top A^{-1} U)^{-1}V^\top A^{-1}
-$$(woodbury)</p>
+\]</div>
 <section id="symmetric-version">
 <h4>Symmetric Version<a class="headerlink" href="#symmetric-version" title="Permalink to this heading">#</a></h4>
 <p>This is an easier version with symmetric assumptions about the decomposition.</p>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-woodbury-sum">
+<span class="eqno">(19)<a class="headerlink" href="#equation-woodbury-sum" title="Permalink to this equation">#</a></span>\[
 (A + CBC^\top)^{-1} = A^{-1} - A^{-1} C (B^{-1} + C^\top A^{-1} C)^{-1}C^\top A^{-1}
-$$(woodbury_sum)</p>
+\]</div>
 </section>
 </section>
 <section id="sylvester-determinant-theorem">
 <h3>Sylvester Determinant Theorem<a class="headerlink" href="#sylvester-determinant-theorem" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-woodbury-det">
+<span class="eqno">(20)<a class="headerlink" href="#equation-woodbury-det" title="Permalink to this equation">#</a></span>\[
 \left|A + \sigma_y^2 \mathbf I_N \right| \approx |\mathbf \Lambda_{MM} | \left|\sigma_y^{2} \mathbf \Lambda_{MM}^{-1} + U_{NM}^{\top} \mathbf U_{NM} \right|
-$$(woodbury_det)</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />
@@ -976,30 +981,33 @@ $$(woodbury_det)</p>
 <hr class="docutils" />
 <section id="formulation">
 <h3>Formulation<a class="headerlink" href="#formulation" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-||A||<em>F &amp;= \sqrt{\langle A, A \rangle_F} \
-||A|| &amp;= \sqrt{\sum</em>{i,j}|a_{ij}|^2} \
-&amp;= \sqrt{\text{tr}(A^\top A)} \
+||A||_F &amp;= \sqrt{\langle A, A \rangle_F} \\
+||A|| &amp;= \sqrt{\sum_{i,j}|a_{ij}|^2} \\
+&amp;= \sqrt{\text{tr}(A^\top A)} \\
 &amp;= \sqrt{\sum_{i=1}\lambda_i^2}
-\end{aligned}$$</p>
+\end{aligned}\end{split}\]</div>
 <details>
 <summary>
     <font color="red">Proof
     </font>
 </summary>
-<p>Let $A=U\Sigma V^\top$ be the Singular Value Decomposition of A. Then</p>
-<p>$$||A||_{F}^2 = ||\Sigma||<em>F^2 = \sum</em>{i=1}^r \lambda_i^2$$</p>
-<p>If $\lambda_i^2$ are the eigenvalues of $AA^\top$ and $A^\top A$, then we can show</p>
-<p>$$
+<p>Let <span class="math notranslate nohighlight">\(A=U\Sigma V^\top\)</span> be the Singular Value Decomposition of A. Then</p>
+<div class="math notranslate nohighlight">
+\[||A||_{F}^2 = ||\Sigma||_F^2 = \sum_{i=1}^r \lambda_i^2\]</div>
+<p>If <span class="math notranslate nohighlight">\(\lambda_i^2\)</span> are the eigenvalues of <span class="math notranslate nohighlight">\(AA^\top\)</span> and <span class="math notranslate nohighlight">\(A^\top A\)</span>, then we can show</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-||A||<em>F^2 &amp;= tr(AA^\top) \
-&amp;= tr(U\Lambda V^\top V\Lambda^\top U^\top) \
-&amp;= tr(\Lambda \Lambda^\top U^\top U) \
-&amp;= tr(\Lambda \Lambda^\top) \
-&amp;= \sum</em>{i}\lambda_i^2
+||A||_F^2 &amp;= tr(AA^\top) \\
+&amp;= tr(U\Lambda V^\top V\Lambda^\top U^\top) \\
+&amp;= tr(\Lambda \Lambda^\top U^\top U) \\
+&amp;= tr(\Lambda \Lambda^\top) \\
+&amp;= \sum_{i}\lambda_i^2
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </details>
 </section>
 <hr class="docutils" />
@@ -1031,32 +1039,36 @@ $$</p>
 <hr class="docutils" />
 <section id="frobenius-norm">
 <h2>Frobenius Norm<a class="headerlink" href="#frobenius-norm" title="Permalink to this heading">#</a></h2>
-<p>$$||X + Y||^2_F = ||X||_F^2 + ||Y||_F^2 + 2 \langle X, Y \rangle_F$$</p>
+<div class="math notranslate nohighlight">
+\[||X + Y||^2_F = ||X||_F^2 + ||Y||_F^2 + 2 \langle X, Y \rangle_F\]</div>
 <section id="frobenius-norm-or-hilbert-schmidt-norm-a-matrix">
 <h3>Frobenius Norm (or Hilbert-Schmidt Norm) a matrix<a class="headerlink" href="#frobenius-norm-or-hilbert-schmidt-norm-a-matrix" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-||A|| &amp;= \sqrt{\sum_{i,j}|a_{ij}|^2} \
-&amp;= \sqrt{\text{tr}(A^\top A)} \
+||A|| &amp;= \sqrt{\sum_{i,j}|a_{ij}|^2} \\
+&amp;= \sqrt{\text{tr}(A^\top A)} \\
 &amp;= \sqrt{\sum_{i=1}\lambda_i^2}
-\end{aligned}$$</p>
+\end{aligned}\end{split}\]</div>
 <!-- <details> -->
 <summary>
     <font color="black">Details
     </font>
 </summary>
-<p>Let $A=U\Sigma V^\top$ be the Singular Value Decomposition of A. Then</p>
-<p>$$||A||_{F}^2 = ||\Sigma||<em>F^2 = \sum</em>{i=1}^r \lambda_i^2$$</p>
-<p>If $\lambda_i^2$ are the eigenvalues of $AA^\top$ and $A^\top A$, then we can show</p>
-<p>$$
+<p>Let <span class="math notranslate nohighlight">\(A=U\Sigma V^\top\)</span> be the Singular Value Decomposition of A. Then</p>
+<div class="math notranslate nohighlight">
+\[||A||_{F}^2 = ||\Sigma||_F^2 = \sum_{i=1}^r \lambda_i^2\]</div>
+<p>If <span class="math notranslate nohighlight">\(\lambda_i^2\)</span> are the eigenvalues of <span class="math notranslate nohighlight">\(AA^\top\)</span> and <span class="math notranslate nohighlight">\(A^\top A\)</span>, then we can show</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-||A||<em>F^2 &amp;= tr(AA^\top) \
-&amp;= tr(U\Lambda V^\top V\Lambda^\top U^\top) \
-&amp;= tr(\Lambda \Lambda^\top U^\top U) \
-&amp;= tr(\Lambda \Lambda^\top) \
-&amp;= \sum</em>{i}\lambda_i^2
+||A||_F^2 &amp;= tr(AA^\top) \\
+&amp;= tr(U\Lambda V^\top V\Lambda^\top U^\top) \\
+&amp;= tr(\Lambda \Lambda^\top U^\top U) \\
+&amp;= tr(\Lambda \Lambda^\top) \\
+&amp;= \sum_{i}\lambda_i^2
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 </section>
 </section>

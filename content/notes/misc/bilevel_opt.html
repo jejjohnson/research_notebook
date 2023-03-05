@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/misc/bilevel_opt';</script>
@@ -915,87 +917,100 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="bi-level-optimization">
+  <section class="tex2jax_ignore mathjax_ignore" id="bi-level-optimization">
 <h1>Bi-Level Optimization<a class="headerlink" href="#bi-level-optimization" title="Permalink to this heading">#</a></h1>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-eqn-learn-bilevel">
+<span class="eqno">(58)<a class="headerlink" href="#equation-eqn-learn-bilevel" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
-\boldsymbol{\theta}^* &amp;= \underset{\boldsymbol{\theta}}{\text{argmin  }}  \mathcal{L}(\boldsymbol{\theta},\mathbf{x}^<em>(\boldsymbol{\theta})) \
-\mathbf{x}^</em>(\boldsymbol{\theta}) &amp;= \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x},\boldsymbol{\theta})
+\boldsymbol{\theta}^* &amp;= \underset{\boldsymbol{\theta}}{\text{argmin  }}  \mathcal{L}(\boldsymbol{\theta},\mathbf{x}^*(\boldsymbol{\theta})) \\
+\mathbf{x}^*(\boldsymbol{\theta}) &amp;= \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x},\boldsymbol{\theta})
 \end{aligned}
-$$ (eqn:learn-bilevel)</p>
+\end{split}\]</div>
 <section id="unrolling">
 <h2>Unrolling<a class="headerlink" href="#unrolling" title="Permalink to this heading">#</a></h2>
 <p>We assume the solution at the end of the unrolling is the solution to the minimization problem</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 x_k(\theta) \approx x^*(\theta)
-$$</p>
+\]</div>
 <p>We define a loss function which takes this value</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}_k(\theta) := f(\theta, x_k(\theta))
-$$</p>
-<p>We can define the process for unrolling. Let’s choose an initial value, $x_0(\theta)$. We define the unrolling step as</p>
-<p>$$
+\]</div>
+<p>We can define the process for unrolling. Let’s choose an initial value, <span class="math notranslate nohighlight">\(x_0(\theta)\)</span>. We define the unrolling step as</p>
+<div class="math notranslate nohighlight">
+\[
 x_k(\theta): x_{k+1}(\theta) = x_k(\theta) - \lambda \nabla_x\mathcal{U}(\theta,x_k(\theta))
-$$</p>
+\]</div>
 <p>Note: We can choose whatever algorithm we want for this entire step. For example, we can choose SGD or even Adam.</p>
 <p>Similarly, we can also choose an algorithm for how we find the parameters</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \theta_n^*:=\theta_{n+1} = \theta_n - \mu \nabla_\theta \mathcal{L}_k(\theta_n)
-$$</p>
-<p>Note, we assume that the best parameter for the minimization problem, $\theta_k^*$ is a good choice for the parameter estimation problem, $\theta_n$.</p>
+\]</div>
+<p>Note, we assume that the best parameter for the minimization problem, <span class="math notranslate nohighlight">\(\theta_k^*\)</span> is a good choice for the parameter estimation problem, <span class="math notranslate nohighlight">\(\theta_n\)</span>.</p>
 </section>
 <hr class="docutils" />
 <section id="implicit-differentiation">
 <h2>Implicit Differentiation<a class="headerlink" href="#implicit-differentiation" title="Permalink to this heading">#</a></h2>
 <p>We focus on the argmin differentiation problem</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^*(\boldsymbol{\theta}) = \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x},\boldsymbol{\theta})
-$$</p>
+\]</div>
 <p>Assumptions:</p>
 <ul class="simple">
-<li><p>Strongly convex in $x$</p></li>
+<li><p>Strongly convex in <span class="math notranslate nohighlight">\(x\)</span></p></li>
 <li><p>Smooth</p></li>
 </ul>
 <p><strong>Implicit Function Theorem</strong></p>
-<p>This states that $x^*(\theta)$ is a unique solution of</p>
-<p>$$
+<p>This states that <span class="math notranslate nohighlight">\(x^*(\theta)\)</span> is a unique solution of</p>
+<div class="math notranslate nohighlight">
+\[
 \nabla_x \mathcal{U}(\theta, x^*(\theta)) = 0
-$$</p>
-<p><strong>Note</strong>: unrolling just does $\nabla_x (x_k(\theta))$. My job is to construct the solution!</p>
-<p>Implications: This holds for all $\theta$’s!</p>
-<p>Goal: Estimation $\nabla_\theta x^*(\theta)$.</p>
+\]</div>
+<p><strong>Note</strong>: unrolling just does <span class="math notranslate nohighlight">\(\nabla_x (x_k(\theta))\)</span>. My job is to construct the solution!</p>
+<p>Implications: This holds for all <span class="math notranslate nohighlight">\(\theta\)</span>’s!</p>
+<p>Goal: Estimation <span class="math notranslate nohighlight">\(\nabla_\theta x^*(\theta)\)</span>.</p>
 <p>Result: A Linear System!</p>
-<p>$$
-\partial_x \partial_\theta \mathcal{U}(\theta,x^<em>(\theta)) + \partial^2_x\mathcal{U}(\theta,x^</em>(\theta)) \nabla_\theta x^*(\theta) = 0
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_x \partial_\theta \mathcal{U}(\theta,x^*(\theta)) + \partial^2_x\mathcal{U}(\theta,x^*(\theta)) \nabla_\theta x^*(\theta) = 0
+\]</div>
 <p>We can simplify this</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 B(\theta) + A(\theta) \nabla_\theta x^*(\theta) = 0
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p>In Theory: We can find a Jacobian by solving the linear system (in theory).</p>
 <p>In Practice: We don’t need the Hessian. We just need Hessian vector products! If we observe the term, we notice that we get</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 A(\theta) = [D_\theta \times D_x]
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p>Observe: Let’s look at the original loss function. Using the chain rule we get:</p>
-<p>$$
-\nabla \mathcal{L}(\theta) = \partial_\theta f(\theta, x^<em>(\theta)) + \nabla_\theta x^</em>(\theta)^\top \partial_x f(\theta, x^*(\theta)) = 0
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\nabla \mathcal{L}(\theta) = \partial_\theta f(\theta, x^*(\theta)) + \nabla_\theta x^*(\theta)^\top \partial_x f(\theta, x^*(\theta)) = 0
+\]</div>
 <p>And now, let’s look at the linear system we want to solve</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \nabla_\theta x^*(\theta) = - \left[A(\theta)\right]^{-1}B(\theta)
-$$</p>
+\]</div>
 <p>which is awful. So plugging this back into the equation, we get:</p>
-<p>$$
-\nabla \mathcal{L}(\theta) = \partial_\theta f(\theta, x^<em>(\theta)) + \left(-\left[A(\theta)\right]^{-1}B(\theta)\right)^\top \partial_x f(\theta, x^</em>(\theta)) = 0
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\nabla \mathcal{L}(\theta) = \partial_\theta f(\theta, x^*(\theta)) + \left(-\left[A(\theta)\right]^{-1}B(\theta)\right)^\top \partial_x f(\theta, x^*(\theta)) = 0
+\]</div>
 <p>However, looking at the sizes, we notice that</p>
 <p><code class="docutils literal notranslate"><span class="pre">(D_x</span> <span class="pre">x</span> <span class="pre">D_x)(???)(D_x)</span></code></p>
 <p>This is hard: <code class="docutils literal notranslate"><span class="pre">(D_x</span> <span class="pre">x</span> <span class="pre">D_x</span> <span class="pre">x</span> <span class="pre">???)()</span></code></p>
 <p>This is easy: <code class="docutils literal notranslate"><span class="pre">(D_x</span> <span class="pre">x</span> <span class="pre">D_x)(????x</span> <span class="pre">D_x)</span></code></p>
-<p>This is simply a <code class="docutils literal notranslate"><span class="pre">vjp</span></code> -&gt; $B(\theta)^\top$.</p>
+<p>This is simply a <code class="docutils literal notranslate"><span class="pre">vjp</span></code> -&gt; <span class="math notranslate nohighlight">\(B(\theta)^\top\)</span>.</p>
 <hr class="docutils" />
 <p><strong>Note</strong>: We can also solve the linear system using gradient descent and Hessian products instead of pure hessians.</p>
 <hr class="docutils" />
@@ -1009,11 +1024,11 @@ $$</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-center"><p>$k$-steps forward (unrolling)</p></td>
-<td class="text-center"><p>$k$-steps for optimization $\nabla_\theta x^*(\theta)$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(k\)</span>-steps forward (unrolling)</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(k\)</span>-steps for optimization <span class="math notranslate nohighlight">\(\nabla_\theta x^*(\theta)\)</span></p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$k$-steps backwards (backprop unrolling)</p></td>
-<td class="text-center"><p>$k$-steps for linear system opt ($Ax-b$)</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(k\)</span>-steps backwards (backprop unrolling)</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(k\)</span>-steps for linear system opt (<span class="math notranslate nohighlight">\(Ax-b\)</span>)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1021,17 +1036,19 @@ $$</p>
 </section>
 <section id="approximate-soln-or-gradient">
 <h3>Approximate Soln or Gradient<a class="headerlink" href="#approximate-soln-or-gradient" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}_k(\theta) \approx \nabla\mathcal{L}(\theta)
-$$</p>
+\]</div>
 <p>Do we approximate the solution (unrolling) or approximate the gradient (Implicit Diff)</p>
 </section>
 <section id="warm-starts">
 <h3>Warm Starts<a class="headerlink" href="#warm-starts" title="Permalink to this heading">#</a></h3>
 <p>We can do a warmstart for the linear system optimization.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 x^*(\theta)=-[A(\theta)]^{-1}B(\theta)
-$$</p>
+\]</div>
 <p>by starting from an already good solution. (Is this called pre-conditioning?)</p>
 </section>
 <section id="strongly-convex-solution">

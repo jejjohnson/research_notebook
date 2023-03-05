@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/info_theory/experiments/rbig_sample_consistency';</script>
@@ -960,7 +962,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="experiment-rbig-sample-consistency">
+  <section class="tex2jax_ignore mathjax_ignore" id="experiment-rbig-sample-consistency">
 <h1>Experiment - RBIG Sample Consistency<a class="headerlink" href="#experiment-rbig-sample-consistency" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1357,8 +1359,8 @@ WARNING:root:Too few points to create valid contours
 <h3>Gaussian<a class="headerlink" href="#gaussian" title="Permalink to this heading">#</a></h3>
 <p><strong>Implementation Notes</strong>:</p>
 <ol class="arabic simple">
-<li><p>We randomly generate a positive semi-definite $D \times D$ matrix. This acts as our covariance matrix $\boldsymbol{\Sigma}$.</p></li>
-<li><p>We use a mean, $\boldsymbol{\mu}$ of $\mathbf{0}$.</p></li>
+<li><p>We randomly generate a positive semi-definite <span class="math notranslate nohighlight">\(D \times D\)</span> matrix. This acts as our covariance matrix <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}\)</span>.</p></li>
+<li><p>We use a mean, <span class="math notranslate nohighlight">\(\boldsymbol{\mu}\)</span> of <span class="math notranslate nohighlight">\(\mathbf{0}\)</span>.</p></li>
 <li><p>We generate an upper limit of 5e5 data points and then random subset the requested number.</p></li>
 </ol>
 <div class="cell docutils container">

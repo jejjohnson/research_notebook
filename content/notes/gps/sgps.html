@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gps/sgps';</script>
@@ -911,22 +913,35 @@ title="Print to PDF"
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#joint-distribution-augmented-space-mathcal-p-f-u">
-       Joint Distribution - Augmented Space $\mathcal{P}(f,u)$
+       Joint Distribution - Augmented Space
+       <span class="math notranslate nohighlight">
+        \(\mathcal{P}(f,u)\)
+       </span>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#conditional-distribution-mathcal-p-y-u">
-       Conditional Distribution - $\mathcal{P}(y|u)$
+       Conditional Distribution -
+       <span class="math notranslate nohighlight">
+        \(\mathcal{P}(y|u)\)
+       </span>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#variational-bound-on-mathcal-p-y-u">
-       Variational Bound on $\mathcal P (y|u)$
+       Variational Bound on
+       <span class="math notranslate nohighlight">
+        \(\mathcal P (y|u)\)
+       </span>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#titsias-innovation-et-q-f-mathcal-p-f-u">
-       Titsias Innovation: et $q(f) = \mathcal{P}(f|u)$.
+       Titsias Innovation: et
+       <span class="math notranslate nohighlight">
+        \(q(f) = \mathcal{P}(f|u)\)
+       </span>
+       .
       </a>
      </li>
     </ul>
@@ -945,7 +960,10 @@ title="Print to PDF"
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#variational-bound-on-mathcal-p-y">
-       Variational Bound on $\mathcal P (y)$
+       Variational Bound on
+       <span class="math notranslate nohighlight">
+        \(\mathcal P (y)\)
+       </span>
       </a>
      </li>
     </ul>
@@ -1039,7 +1057,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="sparse-gaussian-processes">
+  <section class="tex2jax_ignore mathjax_ignore" id="sparse-gaussian-processes">
 <h1>Sparse Gaussian Processes<a class="headerlink" href="#sparse-gaussian-processes" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <p>Sparse GPs refer to a family of methods that seek to take a subset of points in order to approximate the full dataset. Typically we can break them down into 5 categories:</p>
@@ -1050,20 +1068,21 @@ title="Print to PDF"
 <li><p>Linear Algebra (Toeplitz, Kronecker, )</p></li>
 <li><p>Approximate Inference (Variational Methods)</p></li>
 </ul>
-<p>Each of these methods ultimately augment the model so that the largest computation goes from $\mathcal{O}(N^3)$ to $\mathcal{O}(MN^2)$ where $M&lt;&lt;N$.</p>
+<p>Each of these methods ultimately augment the model so that the largest computation goes from <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span> to <span class="math notranslate nohighlight">\(\mathcal{O}(MN^2)\)</span> where <span class="math notranslate nohighlight">\(M&lt;&lt;N\)</span>.</p>
 <hr class="docutils" />
 <hr class="docutils" />
 <section id="subset-of-data">
 <h2>Subset of Data<a class="headerlink" href="#subset-of-data" title="Permalink to this heading">#</a></h2>
 <p>This is the simplest way to approximate the data. The absolute simplest way is to take a random subsample of your data. However this is often not a good idea because the more data you have the more information you’re more likely to have. It’s an age old rule that says if you want better predictions, it’s often better just to have more data.</p>
-<p>A more sophisticated way to get a subsample of your data is to do some sort of pairwise similarity comparison scheme - i.e. Kernel methods. There are a family of methods like the Nystrom approximation or Random Fourier Features (RFF) which takes a subset of the points through pairwise comparisons. These are kernel matrix approximations so we can transform our data from our data space $\mathcal{X} \in \mathbb{R}^{N \times D}$ to subset data space $\mathcal{Z} \in \mathbb{R}^{M \times d}$ which is found through an eigen decomposition scheme.</p>
-<p>In GPs we calculate a kernel matrix $\mathbf K \in \mathbb{R}^{N \times N}$. If $N$ is large enough, then throughout the marginal likelihood, we need to calculate $\mathbf K^{-1}$ and $|\mathbf K|$ which has $\mathcal{O}(N^3)$ operations and $\mathcal{O}(N^2)$ memory costs. So we make an approximate matrix $\mathbf {\tilde{K}}$ given by the following formula:</p>
-<p>$$\tilde{K}=K_{z}K_{zz}^{-1}K_z^{\top}$$</p>
+<p>A more sophisticated way to get a subsample of your data is to do some sort of pairwise similarity comparison scheme - i.e. Kernel methods. There are a family of methods like the Nystrom approximation or Random Fourier Features (RFF) which takes a subset of the points through pairwise comparisons. These are kernel matrix approximations so we can transform our data from our data space <span class="math notranslate nohighlight">\(\mathcal{X} \in \mathbb{R}^{N \times D}\)</span> to subset data space <span class="math notranslate nohighlight">\(\mathcal{Z} \in \mathbb{R}^{M \times d}\)</span> which is found through an eigen decomposition scheme.</p>
+<p>In GPs we calculate a kernel matrix <span class="math notranslate nohighlight">\(\mathbf K \in \mathbb{R}^{N \times N}\)</span>. If <span class="math notranslate nohighlight">\(N\)</span> is large enough, then throughout the marginal likelihood, we need to calculate <span class="math notranslate nohighlight">\(\mathbf K^{-1}\)</span> and <span class="math notranslate nohighlight">\(|\mathbf K|\)</span> which has <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span> operations and <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span> memory costs. So we make an approximate matrix <span class="math notranslate nohighlight">\(\mathbf {\tilde{K}}\)</span> given by the following formula:</p>
+<div class="math notranslate nohighlight">
+\[\tilde{K}=K_{z}K_{zz}^{-1}K_z^{\top}\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$K_{zz}=K(z,z)\in \mathbb{R}^{M\times M}$ - the kernel matrix for the subspace $\mathcal{Z}$</p></li>
-<li><p>$K_z=K(x,z)\in \mathbb{R}^{N\times M}$ - the transformation matrix from the data space $\mathcal{X}$ to the subspace $\mathcal{Z}$</p></li>
-<li><p>$K \approx \tilde{K} \in \mathbb{R}^{N \times N}$ - the approximate kernel matrix of the data space $\mathcal{X}$</p></li>
+<li><p><span class="math notranslate nohighlight">\(K_{zz}=K(z,z)\in \mathbb{R}^{M\times M}\)</span> - the kernel matrix for the subspace <span class="math notranslate nohighlight">\(\mathcal{Z}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(K_z=K(x,z)\in \mathbb{R}^{N\times M}\)</span> - the transformation matrix from the data space <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> to the subspace <span class="math notranslate nohighlight">\(\mathcal{Z}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(K \approx \tilde{K} \in \mathbb{R}^{N \times N}\)</span> - the approximate kernel matrix of the data space <span class="math notranslate nohighlight">\(\mathcal{X}\)</span></p></li>
 </ul>
 <p>Below is an example of where this would be applicable where we just implement this method where we just transform the day.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.kernel_approximation</span> <span class="kn">import</span> <span class="n">Nystroem</span>
@@ -1091,11 +1110,13 @@ title="Print to PDF"
 <section id="kernel-approximations">
 <h2>Kernel Approximations<a class="headerlink" href="#kernel-approximations" title="Permalink to this heading">#</a></h2>
 <p>Pivoting off of the method above, we
-So now when we calculate the log likelihood term $\log \mathcal{P}(y|X,\theta)$ we can have an approximation:</p>
-<p>$$\log \mathcal{N}(y | 0, K + \sigma^2I) \approx \log \mathcal{N}(y | 0, \tilde{K} + \sigma^2I)$$</p>
-<p>Notice how we haven’t actually changing our formulation because we still have to calculate the inverse of $\tilde{K}$ which is $\mathbb{R}^{N \times N}$. Using the <a class="reference external" href="https://en.wikipedia.org/wiki/Woodbury_matrix_identity">Woodbury matrix identity</a> for the kernel approximation form (<a class="reference external" href="https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula">Sherman-Morrison Formula</a>):</p>
-<p>$$(\tilde{K} + \sigma^2 I)^{-1}=\sigma^{-2}I - \sigma^{-4}K_z(K_{zz}+\sigma^{-2}K_z^{\top}K_z)^{-1}K_z^{\top}$$</p>
-<p>Now the matrix that we need to invert is $(K_{zz}+\sigma^{-2}K_z^{\top}K_z)^{-1}$ which is $(M \times M)$ which is considerably smaller if $M &lt;&lt; N$. So the overall computational complexity reduces to $\mathcal{O}(NM^2)$.</p>
+So now when we calculate the log likelihood term <span class="math notranslate nohighlight">\(\log \mathcal{P}(y|X,\theta)\)</span> we can have an approximation:</p>
+<div class="math notranslate nohighlight">
+\[\log \mathcal{N}(y | 0, K + \sigma^2I) \approx \log \mathcal{N}(y | 0, \tilde{K} + \sigma^2I)\]</div>
+<p>Notice how we haven’t actually changing our formulation because we still have to calculate the inverse of <span class="math notranslate nohighlight">\(\tilde{K}\)</span> which is <span class="math notranslate nohighlight">\(\mathbb{R}^{N \times N}\)</span>. Using the <a class="reference external" href="https://en.wikipedia.org/wiki/Woodbury_matrix_identity">Woodbury matrix identity</a> for the kernel approximation form (<a class="reference external" href="https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula">Sherman-Morrison Formula</a>):</p>
+<div class="math notranslate nohighlight">
+\[(\tilde{K} + \sigma^2 I)^{-1}=\sigma^{-2}I - \sigma^{-4}K_z(K_{zz}+\sigma^{-2}K_z^{\top}K_z)^{-1}K_z^{\top}\]</div>
+<p>Now the matrix that we need to invert is <span class="math notranslate nohighlight">\((K_{zz}+\sigma^{-2}K_z^{\top}K_z)^{-1}\)</span> which is <span class="math notranslate nohighlight">\((M \times M)\)</span> which is considerably smaller if <span class="math notranslate nohighlight">\(M &lt;&lt; N\)</span>. So the overall computational complexity reduces to <span class="math notranslate nohighlight">\(\mathcal{O}(NM^2)\)</span>.</p>
 </section>
 <hr class="docutils" />
 <section id="inducing-points">
@@ -1108,49 +1129,53 @@ So now when we calculate the log likelihood term $\log \mathcal{P}(y|X,\theta)$ 
 <hr class="docutils" />
 <section id="sparse-gps-inducing-points-summary">
 <h2>Sparse GPs - Inducing Points Summary<a class="headerlink" href="#sparse-gps-inducing-points-summary" title="Permalink to this heading">#</a></h2>
-<p>One big issue with the above expression is that the inverse of the $\mathbf{K}_\mathcal{GP}^{-1}$ is $\mathcal{O}(N^3)$ which can be very expensive. One can use inducing points which act as a subset of points of size $M &lt;&lt; N$. This can be used to reduce the computation to a cost of $\mathcal{O}(NM^2)$. There are a number of different methods using this idea including earlier methods like subset of regressors, …, Fully Independent Training t</p>
-<p>In this thesis, we focus on a particular implementation called <em>sparse variational free energy</em> (VFE) method <code class="docutils literal notranslate"><span class="pre">cite</span></code>. This performs an approximate inference scheme by introducing a variational parameter $q(f)$ over the latent function. Then, we can optimize a lower bound on the likelihood (ELBO) to approximate the posterior.</p>
-<p>$$
+<p>One big issue with the above expression is that the inverse of the <span class="math notranslate nohighlight">\(\mathbf{K}_\mathcal{GP}^{-1}\)</span> is <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span> which can be very expensive. One can use inducing points which act as a subset of points of size <span class="math notranslate nohighlight">\(M &lt;&lt; N\)</span>. This can be used to reduce the computation to a cost of <span class="math notranslate nohighlight">\(\mathcal{O}(NM^2)\)</span>. There are a number of different methods using this idea including earlier methods like subset of regressors, …, Fully Independent Training t</p>
+<p>In this thesis, we focus on a particular implementation called <em>sparse variational free energy</em> (VFE) method <code class="docutils literal notranslate"><span class="pre">cite</span></code>. This performs an approximate inference scheme by introducing a variational parameter <span class="math notranslate nohighlight">\(q(f)\)</span> over the latent function. Then, we can optimize a lower bound on the likelihood (ELBO) to approximate the posterior.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\log p(\mathbf{y}) &amp;\geq \log p(\mathbf{y}) - \text{KL}\left[ q(f)||p(f|\mathbf{y}) \right] \
-&amp;\geq \log \mathcal{N}(\mathbf{y}; 0, \mathbf{Q}<em>ff + \sigma^2\mathbf{I}) - \frac{1}{2\sigma^2} \text{Tr}\left( \mathbf{K}</em>{ff} - \mathbf{Q}_{ff} \right)
+\log p(\mathbf{y}) &amp;\geq \log p(\mathbf{y}) - \text{KL}\left[ q(f)||p(f|\mathbf{y}) \right] \\
+&amp;\geq \log \mathcal{N}(\mathbf{y}; 0, \mathbf{Q}_ff + \sigma^2\mathbf{I}) - \frac{1}{2\sigma^2} \text{Tr}\left( \mathbf{K}_{ff} - \mathbf{Q}_{ff} \right) 
 \end{aligned}
-$$</p>
-<p>where $\mathbf{Q}<em>{ff}=\mathbf{K}</em>{fu}\mathbf{K}^{-1}<em>{uu}\mathbf{K}</em>{uf}$ is the Nystrom approximation of $\mathbf{K}<em>{ff}$ and $u$ is a small subset of $M&lt;&lt;N$ inducing points at locations ${ z_j }^M</em>{j=1}$ which makes $[\mathbf{K}<em>{fu}]</em>{ij}=k(\mathbf{x}<em>i, \mathbf{z}<em>j)$ and $[\mathbf{K}</em>{uu}]</em>{ij}=k(\mathbf{z}<em>i, \mathbf{z}<em>j)$. The first term of the ELBO corresponds to a deterministic training conditional (DTC, <code class="docutils literal notranslate"><span class="pre">cite</span></code>) and the added regularization trace term prevents overfitting which has is a problem with the DTC. Since this variational approximation is a Gaussian distribution, $q(y</em>*)=\mathcal{N}(y</em><em>; \mu_</em>, \sigma^2_*)$, there is a closed-form predictive mean and variance given by:</p>
-<p>$$
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{Q}_{ff}=\mathbf{K}_{fu}\mathbf{K}^{-1}_{uu}\mathbf{K}_{uf}\)</span> is the Nystrom approximation of <span class="math notranslate nohighlight">\(\mathbf{K}_{ff}\)</span> and <span class="math notranslate nohighlight">\(u\)</span> is a small subset of <span class="math notranslate nohighlight">\(M&lt;&lt;N\)</span> inducing points at locations <span class="math notranslate nohighlight">\(\{ z_j \}^M_{j=1}\)</span> which makes <span class="math notranslate nohighlight">\([\mathbf{K}_{fu}]_{ij}=k(\mathbf{x}_i, \mathbf{z}_j)\)</span> and <span class="math notranslate nohighlight">\([\mathbf{K}_{uu}]_{ij}=k(\mathbf{z}_i, \mathbf{z}_j)\)</span>. The first term of the ELBO corresponds to a deterministic training conditional (DTC, <code class="docutils literal notranslate"><span class="pre">cite</span></code>) and the added regularization trace term prevents overfitting which has is a problem with the DTC. Since this variational approximation is a Gaussian distribution, <span class="math notranslate nohighlight">\(q(y_*)=\mathcal{N}(y_*; \mu_*, \sigma^2_*)\)</span>, there is a closed-form predictive mean and variance given by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mu_\mathcal{SGP}(\mathbf{x}<em>*) &amp;= k</em>{u*}^\top \left( \mathbf{K}<em>{uf}\mathbf{K}</em>{fu} + \sigma^2 \mathbf{K}<em>{uu} \right)^{-1} \mathbf{K}</em>{uf}\mathbf{y} \
-\sigma^2_\mathcal{SGP}(\mathbf{x}<em>*) &amp;= \sigma^2 + k</em>{**} - k_{u*}^\top \mathbf{K}<em>{uu}^\top k</em>{u*} + k_{u*}^\top \left( \sigma^{-2}\mathbf{K}<em>{uf}\mathbf{K}</em>{fu}+ \mathbf{K}<em>{uu} \right)k</em>{u*}
+\mu_\mathcal{SGP}(\mathbf{x}_*) &amp;= k_{u*}^\top \left( \mathbf{K}_{uf}\mathbf{K}_{fu} + \sigma^2 \mathbf{K}_{uu} \right)^{-1} \mathbf{K}_{uf}\mathbf{y} \\
+\sigma^2_\mathcal{SGP}(\mathbf{x}_*) &amp;= \sigma^2 + k_{**} - k_{u*}^\top \mathbf{K}_{uu}^\top k_{u*} + k_{u*}^\top \left( \sigma^{-2}\mathbf{K}_{uf}\mathbf{K}_{fu}+ \mathbf{K}_{uu} \right)k_{u*}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <hr class="docutils" />
 <section id="objective-function">
 <h3>Objective Function<a class="headerlink" href="#objective-function" title="Permalink to this heading">#</a></h3>
-<p>So I think it is important to make note of the similarities between methods; specifically between FITC and VFE which are some staple methods one would use to scale GPs naively. Not only is it helpful for understanding the connection between all of the methods but it also helps with programming and seeing where each method differs algorithmically. Each sparse method is a method of using some set of inducing points or subset of data $\mathcal{Z}$ from the data space $\mathcal{D}$. We typically have some approximate matrix $\mathbf{Q}$ which approximates the kernel matrix $\mathbf{K}$:</p>
-<p>$$\mathbf{Q}<em>{ff}=\mathbf{K}</em>{fu}\mathbf{K}<em>{uu}^{-1}\mathbf{K}</em>{uf}$$</p>
-<p>Then we would use the Sherman-Morrison formula to reduce the computation cost of inverting the matrix $\mathbf{K}$. Below is the negative marginal log likelihood cost function that is minimized where we can see the each term broken down:</p>
-<p>$$
-\mathcal{L}(\theta)= \frac{N}{2}\log 2\pi + \underbrace{\frac{1}{2} \log\left| \mathbf{Q}<em>{ff}+\mathbf{G}\right|}</em>{\text{Complexity Penalty}} + \underbrace{\frac{1}{2}\mathbf{y}^{\top}(\mathbf{Q}<em>{ff}+\mathbf{G})^{-1}\mathbf{y}}</em>{\text{Data Fit}} + \underbrace{\frac{1}{2\sigma_n^2}\text{trace}(\mathbf{T})}_{\text{Trace Term}}
-$$</p>
-<p>The <strong>data fit</strong> term penalizes the data lying outside the covariance ellipse, the <strong>complexity penalty</strong> is the integral of the data fit term over all possible observations $\mathbf{y}$ which characterizes the volume of possible datasets, the <strong>trace term</strong> ensures the objective function is a true lower bound to the MLE of the full GP. Now, below is a table that shows the differences between each of the methods.</p>
+<p>So I think it is important to make note of the similarities between methods; specifically between FITC and VFE which are some staple methods one would use to scale GPs naively. Not only is it helpful for understanding the connection between all of the methods but it also helps with programming and seeing where each method differs algorithmically. Each sparse method is a method of using some set of inducing points or subset of data <span class="math notranslate nohighlight">\(\mathcal{Z}\)</span> from the data space <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>. We typically have some approximate matrix <span class="math notranslate nohighlight">\(\mathbf{Q}\)</span> which approximates the kernel matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{Q}_{ff}=\mathbf{K}_{fu}\mathbf{K}_{uu}^{-1}\mathbf{K}_{uf}\]</div>
+<p>Then we would use the Sherman-Morrison formula to reduce the computation cost of inverting the matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>. Below is the negative marginal log likelihood cost function that is minimized where we can see the each term broken down:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\theta)= \frac{N}{2}\log 2\pi + \underbrace{\frac{1}{2} \log\left| \mathbf{Q}_{ff}+\mathbf{G}\right|}_{\text{Complexity Penalty}} + \underbrace{\frac{1}{2}\mathbf{y}^{\top}(\mathbf{Q}_{ff}+\mathbf{G})^{-1}\mathbf{y}}_{\text{Data Fit}} + \underbrace{\frac{1}{2\sigma_n^2}\text{trace}(\mathbf{T})}_{\text{Trace Term}}
+\]</div>
+<p>The <strong>data fit</strong> term penalizes the data lying outside the covariance ellipse, the <strong>complexity penalty</strong> is the integral of the data fit term over all possible observations <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> which characterizes the volume of possible datasets, the <strong>trace term</strong> ensures the objective function is a true lower bound to the MLE of the full GP. Now, below is a table that shows the differences between each of the methods.</p>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head text-center"><p>Algorithm</p></th>
-<th class="head text-center"><p>$\mathbf{G}$</p></th>
-<th class="head text-center"><p>$\mathbf{T}$</p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(\mathbf{G}\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(\mathbf{T}\)</span></p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td class="text-center"><p>FITC</p></td>
-<td class="text-center"><p>diag $(\mathbf{K}<em>{ff}-\mathbf{Q}</em>{ff}) + \sigma_n^2\mathbf{I}$</p></td>
+<td class="text-center"><p>diag <span class="math notranslate nohighlight">\((\mathbf{K}_{ff}-\mathbf{Q}_{ff}) + \sigma_n^2\mathbf{I}\)</span></p></td>
 <td class="text-center"><p>0</p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p>VFE</p></td>
-<td class="text-center"><p>$\sigma_n^2 \mathbf{I}$</p></td>
-<td class="text-center"><p>$\mathbf{K}<em>{ff}-\mathbf{Q}</em>{ff}$</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\sigma_n^2 \mathbf{I}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{K}_{ff}-\mathbf{Q}_{ff}\)</span></p></td>
 </tr>
 <tr class="row-even"><td class="text-center"><p>DTC</p></td>
-<td class="text-center"><p>$\sigma_n^2 \mathbf{I}$</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\sigma_n^2 \mathbf{I}\)</span></p></td>
 <td class="text-center"><p>0</p></td>
 </tr>
 </tbody>
@@ -1201,94 +1226,110 @@ $$</p>
 <p align="center">
   <img src="pics/variational_compression.png" alt="drawing" width="500"/>
 </p>
-<p><strong>Figure</strong>: This graphical model shows the relationship between the data $X$, the labels $y$ and the augmented labels $z$.</p>
-<p>This is a concept I’ve came across that seeks to give a stronger argument for using an augmented space $\mathcal Z\in \mathbb{R}^{M \times D}$ instead of just the data space $\mathcal X \in \mathbb{R}^{N \times D}$. This has allowed us to reduce the computational complexity of all of our most expensive calculations from $\mathcal{O}(N^3)$ to $\mathcal{O}(NM^2)$ when we are learning the best parameters for our GP models. The term <strong>variational compression</strong> comes from the notion that we want to suppress the function valuse $f$ with some auxilary variables $u$. It’s kind of like reducing the data space $\mathcal X$ with the auxilary data space $\mathcal Z$ in a principled way. This approach is very useful as it allows us to use a suite of variational inference techniques which in turn allows us to scale GP methods. In addition, we even have access to advanced optimization strategies such as stochastic variational inference and parallization strategies. You’ll also notice that the GP literature has essentially formulated almost all major GP algorithm families (e.g. GP regression, GP classification and GP latent variable modeling) through this variation compression strategy. Below we will look at a nice argument; presented by Neil Lawrence (MLSS 2019); which really highlights the usefulness and cleverness of this approach and how it relates to many GP algorithms.</p>
+<p><strong>Figure</strong>: This graphical model shows the relationship between the data <span class="math notranslate nohighlight">\(X\)</span>, the labels <span class="math notranslate nohighlight">\(y\)</span> and the augmented labels <span class="math notranslate nohighlight">\(z\)</span>.</p>
+<p>This is a concept I’ve came across that seeks to give a stronger argument for using an augmented space <span class="math notranslate nohighlight">\(\mathcal Z\in \mathbb{R}^{M \times D}\)</span> instead of just the data space <span class="math notranslate nohighlight">\(\mathcal X \in \mathbb{R}^{N \times D}\)</span>. This has allowed us to reduce the computational complexity of all of our most expensive calculations from <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span> to <span class="math notranslate nohighlight">\(\mathcal{O}(NM^2)\)</span> when we are learning the best parameters for our GP models. The term <strong>variational compression</strong> comes from the notion that we want to suppress the function valuse <span class="math notranslate nohighlight">\(f\)</span> with some auxilary variables <span class="math notranslate nohighlight">\(u\)</span>. It’s kind of like reducing the data space <span class="math notranslate nohighlight">\(\mathcal X\)</span> with the auxilary data space <span class="math notranslate nohighlight">\(\mathcal Z\)</span> in a principled way. This approach is very useful as it allows us to use a suite of variational inference techniques which in turn allows us to scale GP methods. In addition, we even have access to advanced optimization strategies such as stochastic variational inference and parallization strategies. You’ll also notice that the GP literature has essentially formulated almost all major GP algorithm families (e.g. GP regression, GP classification and GP latent variable modeling) through this variation compression strategy. Below we will look at a nice argument; presented by Neil Lawrence (MLSS 2019); which really highlights the usefulness and cleverness of this approach and how it relates to many GP algorithms.</p>
 <section id="joint-distribution-augmented-space-mathcal-p-f-u">
-<h4>Joint Distribution - Augmented Space $\mathcal{P}(f,u)$<a class="headerlink" href="#joint-distribution-augmented-space-mathcal-p-f-u" title="Permalink to this heading">#</a></h4>
-<p>Let’s add an additional set of variables $u$ that’s jointly Gaussian with our original function $f$.</p>
-<p>$$p(f,u)=\mathcal{N}\left(
-\begin{bmatrix}<br />
-f \ u
-\end{bmatrix};
-\begin{bmatrix}
-0 \ 0
-\end{bmatrix},
-\begin{bmatrix}
-K_{ff} &amp; K_{fu} \
-K_{uf} &amp; K_{uu}
-\end{bmatrix} \right)$$</p>
-<p>We have a new space where we have introduced some auxilary variables $u$ to be modeled jointly with $f$. Using all of the nice properties of Gaussian distributions, we can easily write down the conditional distribution $\mathcal{P}(f|u)$ and marginal distribution $\mathcal{P}(u)$ in terms of the joint distribution $\mathcal P (f,u)$ using conditional probability rules.</p>
-<p>$$\mathcal P (f,u) = \mathcal{P}(f|u) \cdot \mathcal{P}(u)$$</p>
+<h4>Joint Distribution - Augmented Space <span class="math notranslate nohighlight">\(\mathcal{P}(f,u)\)</span><a class="headerlink" href="#joint-distribution-augmented-space-mathcal-p-f-u" title="Permalink to this heading">#</a></h4>
+<p>Let’s add an additional set of variables <span class="math notranslate nohighlight">\(u\)</span> that’s jointly Gaussian with our original function <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(f,u)=\mathcal{N}\left( 
+    \begin{bmatrix}  
+    f \\ u
+    \end{bmatrix}; 
+    \begin{bmatrix}
+    0 \\ 0
+    \end{bmatrix},
+    \begin{bmatrix}
+    K_{ff} &amp; K_{fu} \\
+    K_{uf} &amp; K_{uu}
+    \end{bmatrix} \right)\end{split}\]</div>
+<p>We have a new space where we have introduced some auxilary variables <span class="math notranslate nohighlight">\(u\)</span> to be modeled jointly with <span class="math notranslate nohighlight">\(f\)</span>. Using all of the nice properties of Gaussian distributions, we can easily write down the conditional distribution <span class="math notranslate nohighlight">\(\mathcal{P}(f|u)\)</span> and marginal distribution <span class="math notranslate nohighlight">\(\mathcal{P}(u)\)</span> in terms of the joint distribution <span class="math notranslate nohighlight">\(\mathcal P (f,u)\)</span> using conditional probability rules.</p>
+<div class="math notranslate nohighlight">
+\[\mathcal P (f,u) = \mathcal{P}(f|u) \cdot \mathcal{P}(u)\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>Conditional Dist.: $\mathcal{P}(\mathbf{f | u}) = \mathcal N (f| \mathbf {\mu_u, \nu^2_{uu}})$</p>
+<li><p>Conditional Dist.: <span class="math notranslate nohighlight">\(\mathcal{P}(\mathbf{f | u}) = \mathcal N (f| \mathbf {\mu_u, \nu^2_{uu}})\)</span></p>
 <ul>
-<li><p>$\mu_u = \mathbf{K_{fu}K_{uu}^{-1}u}$</p></li>
-<li><p>$\nu^2_{uu} = \mathbf{K_{ff} - K_{fu}K_{uu}^{-1}K_{uf}}$</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_u = \mathbf{K_{fu}K_{uu}^{-1}u}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\nu^2_{uu} = \mathbf{K_{ff} - K_{fu}K_{uu}^{-1}K_{uf}}\)</span></p></li>
 </ul>
 </li>
-<li><p>Augmented space Prior: $\mathcal P (\mathbf u) = \mathcal N\left( \mathbf u | 0, \mathbf K_{uu} \right)$</p></li>
+<li><p>Augmented space Prior: <span class="math notranslate nohighlight">\(\mathcal P (\mathbf u) = \mathcal N\left( \mathbf u | 0, \mathbf K_{uu} \right)\)</span></p></li>
 </ul>
-<p>We <strong>could</strong> actually marginalize out $u$ to get back to the standard GP prior $\mathcal P (f) = \mathcal{GP} (f | \mathbf{ m, K_{ff}})$. But keep in mind that the reason why we did the conditional probability is this way is because of the computationally decreased complexity that we gain ,$\mathcal{O}(N^3) \rightarrow \mathcal{O}(NM^2)$. We want to ‘compress’ the data space $\mathcal X$ and subsequently the function space of $f$. So now let’s write the complete joint distribution which includes the data likelihood and the augmented latent variable space:</p>
-<p>$$\mathcal{P}(y,f,u|X,Z)= \underbrace{\mathcal{P}(y|f)}<em>{\text{Likelihood}} \cdot \underbrace{\mathcal{P} (f|u, X, Z)}</em>{\text{Conditional Dist.}} \cdot \underbrace{\mathcal{P}(u|Z)}_{\text{Prior}}$$</p>
-<p>We have a new term which is the familiar GP likelihood term $\mathcal P (y|f) = \mathcal{N}(y|f, \sigma_y^2\mathbf I)$. The rest of the terms we have already defined above. So now you can kind of see how we’re attempting to compress the conditional distribution $f$. We no longer need the prior for $X$ or $f$ in order to obtain the joint distribution for our model. The prior we have is $\mathcal P (u)$ which is kind of a made up variable.  From henceforth, I will be omitting the dependency on $X$ and $Z$ as they’re not important for the argument that follows. But keep it in the back of your mind that that dependency does exist.</p>
+<p>We <strong>could</strong> actually marginalize out <span class="math notranslate nohighlight">\(u\)</span> to get back to the standard GP prior <span class="math notranslate nohighlight">\(\mathcal P (f) = \mathcal{GP} (f | \mathbf{ m, K_{ff}})\)</span>. But keep in mind that the reason why we did the conditional probability is this way is because of the computationally decreased complexity that we gain ,<span class="math notranslate nohighlight">\(\mathcal{O}(N^3) \rightarrow \mathcal{O}(NM^2)\)</span>. We want to ‘compress’ the data space <span class="math notranslate nohighlight">\(\mathcal X\)</span> and subsequently the function space of <span class="math notranslate nohighlight">\(f\)</span>. So now let’s write the complete joint distribution which includes the data likelihood and the augmented latent variable space:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y,f,u|X,Z)= \underbrace{\mathcal{P}(y|f)}_{\text{Likelihood}} \cdot \underbrace{\mathcal{P} (f|u, X, Z)}_{\text{Conditional Dist.}} \cdot \underbrace{\mathcal{P}(u|Z)}_{\text{Prior}}\]</div>
+<p>We have a new term which is the familiar GP likelihood term <span class="math notranslate nohighlight">\(\mathcal P (y|f) = \mathcal{N}(y|f, \sigma_y^2\mathbf I)\)</span>. The rest of the terms we have already defined above. So now you can kind of see how we’re attempting to compress the conditional distribution <span class="math notranslate nohighlight">\(f\)</span>. We no longer need the prior for <span class="math notranslate nohighlight">\(X\)</span> or <span class="math notranslate nohighlight">\(f\)</span> in order to obtain the joint distribution for our model. The prior we have is <span class="math notranslate nohighlight">\(\mathcal P (u)\)</span> which is kind of a made up variable.  From henceforth, I will be omitting the dependency on <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Z\)</span> as they’re not important for the argument that follows. But keep it in the back of your mind that that dependency does exist.</p>
 </section>
 <section id="conditional-distribution-mathcal-p-y-u">
-<h4>Conditional Distribution - $\mathcal{P}(y|u)$<a class="headerlink" href="#conditional-distribution-mathcal-p-y-u" title="Permalink to this heading">#</a></h4>
-<p>The next step would be to try and condition on $f$ and $u$ to obtain the conditional distribution of $y$ given $u$, $\mathcal{P}(y|u)$. We can rearrange the terms of the formula above like so:</p>
-<p>$$\frac{\mathcal{P}(y,f,u)}{\mathcal{P}(u)}=  \mathcal{P}(y|f) \cdot\mathcal{P}(f|u)$$</p>
-<p>and using the conditional probability rules $P(A,B)=P(A|B) \cdot P(B) \rightarrow P(A|B)=\frac{P(A,B)}{P(B)}$ we can simplify the formula even further:</p>
-<p>$$\mathcal{P}(y,f|u)=\mathcal{P}(y|f) \cdot \mathcal{P}(f|u)$$</p>
-<p>So, what are we looking at? We are looking at the new joint distribution of $y$ and $f$ given the augmented variable space that we have defined. One step closer to the conditional density. In the nature of GP models and Bayesian inference in general, the next step is to see how we obtain the marginal likelihood where we marginalize out the $f$’s. In doing so, we obtain the conditional density that we set off to explore:</p>
-<p>$$\mathcal{P}(y|u)=\int_f \mathcal{P}(y|f) \cdot \mathcal{P}(f|u) \cdot df$$</p>
+<h4>Conditional Distribution - <span class="math notranslate nohighlight">\(\mathcal{P}(y|u)\)</span><a class="headerlink" href="#conditional-distribution-mathcal-p-y-u" title="Permalink to this heading">#</a></h4>
+<p>The next step would be to try and condition on <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(u\)</span> to obtain the conditional distribution of <span class="math notranslate nohighlight">\(y\)</span> given <span class="math notranslate nohighlight">\(u\)</span>, <span class="math notranslate nohighlight">\(\mathcal{P}(y|u)\)</span>. We can rearrange the terms of the formula above like so:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\mathcal{P}(y,f,u)}{\mathcal{P}(u)}=  \mathcal{P}(y|f) \cdot\mathcal{P}(f|u)\]</div>
+<p>and using the conditional probability rules <span class="math notranslate nohighlight">\(P(A,B)=P(A|B) \cdot P(B) \rightarrow P(A|B)=\frac{P(A,B)}{P(B)}\)</span> we can simplify the formula even further:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y,f|u)=\mathcal{P}(y|f) \cdot \mathcal{P}(f|u)\]</div>
+<p>So, what are we looking at? We are looking at the new joint distribution of <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(f\)</span> given the augmented variable space that we have defined. One step closer to the conditional density. In the nature of GP models and Bayesian inference in general, the next step is to see how we obtain the marginal likelihood where we marginalize out the <span class="math notranslate nohighlight">\(f\)</span>’s. In doing so, we obtain the conditional density that we set off to explore:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y|u)=\int_f \mathcal{P}(y|f) \cdot \mathcal{P}(f|u) \cdot df\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathcal{P}(y|f)$ - Likelihood</p></li>
-<li><p>$\mathcal{P}(f|u)$ - Conditional Distribution</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{P}(y|f)\)</span> - Likelihood</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{P}(f|u)\)</span> - Conditional Distribution</p></li>
 </ul>
-<p>The last step would be to try and see if we can calculate $\mathcal{P}(y)$ because if we can get a distribution there, then we can actually train our model using marginal likelihood. Unfortunately we are going to see a problem with this line of thinking when we try to do it directly. If I marginalize out the $u$’s I get after grouping the terms:</p>
-<p>$$\mathcal{P}(y)=\int_u \underbrace{\left[\int_f  \mathcal{P}(y|f) \cdot \mathcal{P}(f|u) \cdot df \right]}_{\mathcal{P}(y|u)}  \cdot \mathcal P(u) \cdot du$$</p>
+<p>The last step would be to try and see if we can calculate <span class="math notranslate nohighlight">\(\mathcal{P}(y)\)</span> because if we can get a distribution there, then we can actually train our model using marginal likelihood. Unfortunately we are going to see a problem with this line of thinking when we try to do it directly. If I marginalize out the <span class="math notranslate nohighlight">\(u\)</span>’s I get after grouping the terms:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y)=\int_u \underbrace{\left[\int_f  \mathcal{P}(y|f) \cdot \mathcal{P}(f|u) \cdot df \right]}_{\mathcal{P}(y|u)}  \cdot \mathcal P(u) \cdot du\]</div>
 <p>which reduces to:</p>
-<p>$$\mathcal{P}(y)=\int_u \mathcal{P}(y|u) \cdot \mathcal P(u) \cdot du$$</p>
-<p>This looks very similar to the parameter form of the marginal likelihood. And technically speaking this would allow us to make predictions by conditioning on the trained data $\mathcal P (y*|y)$. The two important issues are highlighted in that equation alone:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y)=\int_u \mathcal{P}(y|u) \cdot \mathcal P(u) \cdot du\]</div>
+<p>This looks very similar to the parameter form of the marginal likelihood. And technically speaking this would allow us to make predictions by conditioning on the trained data <span class="math notranslate nohighlight">\(\mathcal P (y*|y)\)</span>. The two important issues are highlighted in that equation alone:</p>
 <ol class="arabic simple">
-<li><p>We now have the same bottleneck on our parameter for $u$ as we do for standard Bayesian parametric modeling.</p></li>
-<li><p>The computation of $\mathcal P (y|u)$ is not trivial calculation and we do not get any computational complexity gains trying to do that integral with the prior $\mathcal P (u)$.</p></li>
+<li><p>We now have the same bottleneck on our parameter for <span class="math notranslate nohighlight">\(u\)</span> as we do for standard Bayesian parametric modeling.</p></li>
+<li><p>The computation of <span class="math notranslate nohighlight">\(\mathcal P (y|u)\)</span> is not trivial calculation and we do not get any computational complexity gains trying to do that integral with the prior <span class="math notranslate nohighlight">\(\mathcal P (u)\)</span>.</p></li>
 </ol>
 </section>
 <section id="variational-bound-on-mathcal-p-y-u">
-<h4>Variational Bound on $\mathcal P (y|u)$<a class="headerlink" href="#variational-bound-on-mathcal-p-y-u" title="Permalink to this heading">#</a></h4>
-<p>We’ve shown the difficulties of actually obtaining the probability density function of $\mathcal{P}(y)$ but in this section we’re just going to show that we can obtain a lower bound for the conditional density function $\mathcal{P}(y|u)$</p>
-<p>$$\mathcal{P}(y|u)=\int_f \mathcal P (y|f) \cdot \mathcal{P}(f|u) \cdot df$$</p>
+<h4>Variational Bound on <span class="math notranslate nohighlight">\(\mathcal P (y|u)\)</span><a class="headerlink" href="#variational-bound-on-mathcal-p-y-u" title="Permalink to this heading">#</a></h4>
+<p>We’ve shown the difficulties of actually obtaining the probability density function of <span class="math notranslate nohighlight">\(\mathcal{P}(y)\)</span> but in this section we’re just going to show that we can obtain a lower bound for the conditional density function <span class="math notranslate nohighlight">\(\mathcal{P}(y|u)\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{P}(y|u)=\int_f \mathcal P (y|f) \cdot \mathcal{P}(f|u) \cdot df\]</div>
 <p>I’ll do the 4.5 classic steps in order to arrive at a variational lower bound:</p>
 <ol class="arabic simple">
-<li><p>Given an <strong>integral problem</strong>, take the $\log$ of both sides of the function.</p></li>
+<li><p>Given an <strong>integral problem</strong>, take the <span class="math notranslate nohighlight">\(\log\)</span> of both sides of the function.</p></li>
 </ol>
-<p>$$\log \mathcal P (y|u) = \log \int_f \mathcal P (y|f) \cdot \mathcal{P}(f|u) \cdot df$$</p>
+<div class="math notranslate nohighlight">
+\[\log \mathcal P (y|u) = \log \int_f \mathcal P (y|f) \cdot \mathcal{P}(f|u) \cdot df\]</div>
 <ol class="arabic simple" start="2">
-<li><p>Introduce the variational parameter $q(f)$ as a <strong>proposal</strong> with the Identity trick.</p></li>
+<li><p>Introduce the variational parameter <span class="math notranslate nohighlight">\(q(f)\)</span> as a <strong>proposal</strong> with the Identity trick.</p></li>
 </ol>
-<p>$$\log \mathcal P (y|u) = \log \int_f \mathcal P (y|f) \cdot \mathcal{P}(f|u) \cdot \frac{q(f)}{q(f)} \cdot df$$</p>
+<div class="math notranslate nohighlight">
+\[\log \mathcal P (y|u) = \log \int_f \mathcal P (y|f) \cdot \mathcal{P}(f|u) \cdot \frac{q(f)}{q(f)} \cdot df\]</div>
 <ol class="arabic simple" start="3">
-<li><p>Use Jensen’s inequality for the log function to rearrange the formula to highlight the <strong>importance weight</strong> and provide a bound for $\mathcal{F}(q)$:</p></li>
+<li><p>Use Jensen’s inequality for the log function to rearrange the formula to highlight the <strong>importance weight</strong> and provide a bound for <span class="math notranslate nohighlight">\(\mathcal{F}(q)\)</span>:</p></li>
 </ol>
-<p>$$\mathcal L () = \log \mathcal P (y|u) \geq  \int_f q(f)  \cdot \log \frac{\mathcal P (y|f) \cdot \mathcal{P}(f|u)}{q(f) } \cdot df = \mathcal F (q)$$</p>
+<div class="math notranslate nohighlight">
+\[\mathcal L () = \log \mathcal P (y|u) \geq  \int_f q(f)  \cdot \log \frac{\mathcal P (y|f) \cdot \mathcal{P}(f|u)}{q(f) } \cdot df = \mathcal F (q)\]</div>
 <ol class="arabic simple" start="4">
-<li><p>Rearrange to look like an expectation and KL divergence using targeted $\log$ rules:</p></li>
+<li><p>Rearrange to look like an expectation and KL divergence using targeted <span class="math notranslate nohighlight">\(\log\)</span> rules:</p></li>
 </ol>
-<p>$$\mathcal F (q) = \int_f q(f) \cdot \log \mathcal P(y|f) \cdot df - \int_f q(f) \cdot \log \frac{\mathcal{P}(f|u)}{q(f)} \cdot df$$</p>
+<div class="math notranslate nohighlight">
+\[\mathcal F (q) = \int_f q(f) \cdot \log \mathcal P(y|f) \cdot df - \int_f q(f) \cdot \log \frac{\mathcal{P}(f|u)}{q(f)} \cdot df\]</div>
 <ol class="arabic simple" start="5">
 <li><p>Simplify notation to look like every paper in ML that uses VI to profit and obtain the <strong>variational lower bound</strong>.</p></li>
 </ol>
-<p>$$\mathcal F (q) = \mathbb E_{q(f)} \left[ \log \mathcal P(y|f) \right]  - \text{D}_{\text{KL}} \left[ q(f) || \mathcal{P}(f|u)\right]$$</p>
+<div class="math notranslate nohighlight">
+\[\mathcal F (q) = \mathbb E_{q(f)} \left[ \log \mathcal P(y|f) \right]  - \text{D}_{\text{KL}} \left[ q(f) || \mathcal{P}(f|u)\right]\]</div>
 </section>
 <section id="titsias-innovation-et-q-f-mathcal-p-f-u">
-<h4>Titsias Innovation: et $q(f) = \mathcal{P}(f|u)$.<a class="headerlink" href="#titsias-innovation-et-q-f-mathcal-p-f-u" title="Permalink to this heading">#</a></h4>
-<p>According to Titsias et al. (2009) he looked at what happens if we let $q(f)=\mathcal P (f|u)$. For starters, without our criteria, the KL divergence went to zero and the integral we achieved will have one term less.</p>
-<p>$$\log \mathcal P (y|u) \geq \int_f \mathcal P (f|u) \cdot \log \mathcal P(y|f) \cdot df $$</p>
-<p>As a thought experiment though, what would happen if we had thee true posterior of $\mathcal{P}(f|y,u)$ and an approximating density of $\mathcal{P}(f|u)$? Well, we can take the $KL$ divergence of that quantity and we get the following:</p>
-<p>$$\text{D}_{\text{KL}} \left[ q(f) || \mathcal{P}(f|y, u)\right] = \int_u \mathcal P (f|u) \cdot \log \frac{\mathcal P (f|u)}{\mathcal P (f|y,u)} \cdot du$$</p>
-<p>According to Neil Lawrence, maximizing the lower bound minimizes the KL divergence between $\mathcal{P}(f|u)$ and $\mathcal{P}(f|u)$. Maximizing the bound will try to find the optimal compression and looks at the information between $y$ and $u$. He does not that there is no bound and it is an exact bound when $u=f$. I believe that’s related to the GPFlow <a class="reference external" href="https://gpflow.readthedocs.io/en/latest/notebooks/vgp_notes.html">derivation</a> of variational GPs <a class="reference external" href="https://gpflow.readthedocs.io/en/develop/_modules/gpflow/models/vgp.html#VGP">implementation</a> but I don’t have more information on this.</p>
+<h4>Titsias Innovation: et <span class="math notranslate nohighlight">\(q(f) = \mathcal{P}(f|u)\)</span>.<a class="headerlink" href="#titsias-innovation-et-q-f-mathcal-p-f-u" title="Permalink to this heading">#</a></h4>
+<p>According to Titsias et al. (2009) he looked at what happens if we let <span class="math notranslate nohighlight">\(q(f)=\mathcal P (f|u)\)</span>. For starters, without our criteria, the KL divergence went to zero and the integral we achieved will have one term less.</p>
+<div class="math notranslate nohighlight">
+\[\log \mathcal P (y|u) \geq \int_f \mathcal P (f|u) \cdot \log \mathcal P(y|f) \cdot df \]</div>
+<p>As a thought experiment though, what would happen if we had thee true posterior of <span class="math notranslate nohighlight">\(\mathcal{P}(f|y,u)\)</span> and an approximating density of <span class="math notranslate nohighlight">\(\mathcal{P}(f|u)\)</span>? Well, we can take the <span class="math notranslate nohighlight">\(KL\)</span> divergence of that quantity and we get the following:</p>
+<div class="math notranslate nohighlight">
+\[\text{D}_{\text{KL}} \left[ q(f) || \mathcal{P}(f|y, u)\right] = \int_u \mathcal P (f|u) \cdot \log \frac{\mathcal P (f|u)}{\mathcal P (f|y,u)} \cdot du\]</div>
+<p>According to Neil Lawrence, maximizing the lower bound minimizes the KL divergence between <span class="math notranslate nohighlight">\(\mathcal{P}(f|u)\)</span> and <span class="math notranslate nohighlight">\(\mathcal{P}(f|u)\)</span>. Maximizing the bound will try to find the optimal compression and looks at the information between <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(u\)</span>. He does not that there is no bound and it is an exact bound when <span class="math notranslate nohighlight">\(u=f\)</span>. I believe that’s related to the GPFlow <a class="reference external" href="https://gpflow.readthedocs.io/en/latest/notebooks/vgp_notes.html">derivation</a> of variational GPs <a class="reference external" href="https://gpflow.readthedocs.io/en/develop/_modules/gpflow/models/vgp.html#VGP">implementation</a> but I don’t have more information on this.</p>
 <p><strong>Sources</strong>:</p>
 <ul class="simple">
 <li><p>Deep Gaussian Processes - <a class="reference external" href="http://inverseprobability.com/talks/notes/deep-gaussian-processes.html">MLSS 2019</a></p></li>
@@ -1302,36 +1343,39 @@ K_{uf} &amp; K_{uu}
 <hr class="docutils" />
 <section id="elbos">
 <h2>ELBOs<a class="headerlink" href="#elbos" title="Permalink to this heading">#</a></h2>
-<p>Let $\mathbf \Sigma = K_{ff} - K_{fu}K_{uu}^{-1}K_{fu}^{\top}$</p>
+<p>Let <span class="math notranslate nohighlight">\(\mathbf \Sigma = K_{ff} - K_{fu}K_{uu}^{-1}K_{fu}^{\top}\)</span></p>
 <section id="lower-bound">
 <h3>Lower Bound<a class="headerlink" href="#lower-bound" title="Permalink to this heading">#</a></h3>
-<p>$$\mathcal{F}=
+<div class="math notranslate nohighlight">
+\[\mathcal{F}=
 \log \mathcal{N} \left(y|0, \tilde{\mathbf K}_{ff} + \sigma_y^2\mathbf I \right) -
-\frac{1}{2\sigma_y^2}\text{tr}\left( \mathbf \Sigma\right)$$</p>
+\frac{1}{2\sigma_y^2}\text{tr}\left( \mathbf \Sigma\right)\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\tilde{\mathbf K}<em>{ff} = \mathbf{K</em>{fu}K_{uu}^{-1}K_{fu}^{\top}}$</p>
+<li><p><span class="math notranslate nohighlight">\(\tilde{\mathbf K}_{ff} = \mathbf{K_{fu}K_{uu}^{-1}K_{fu}^{\top}}\)</span></p>
 <ul>
 <li><p>Nystrom approximation</p></li>
 </ul>
 </li>
-<li><p>$\mathbf \Sigma = \mathbf K_{ff} - \tilde{\mathbf K}_{ff}$</p>
+<li><p><span class="math notranslate nohighlight">\(\mathbf \Sigma = \mathbf K_{ff} - \tilde{\mathbf K}_{ff}\)</span></p>
 <ul>
 <li><p>Uncertainty Based Correction</p></li>
 </ul>
 </li>
 </ul>
 <section id="variational-bound-on-mathcal-p-y">
-<h4>Variational Bound on $\mathcal P (y)$<a class="headerlink" href="#variational-bound-on-mathcal-p-y" title="Permalink to this heading">#</a></h4>
-<p>In this scenario, we marginalize out the remaining $u$’s and we can get an error bound on the $\mathcal P(y)$</p>
-<p>$$\mathcal P (y) = \int_u \mathcal P (y|u) \cdot \mathcal P (u|Z) du$$</p>
+<h4>Variational Bound on <span class="math notranslate nohighlight">\(\mathcal P (y)\)</span><a class="headerlink" href="#variational-bound-on-mathcal-p-y" title="Permalink to this heading">#</a></h4>
+<p>In this scenario, we marginalize out the remaining <span class="math notranslate nohighlight">\(u\)</span>’s and we can get an error bound on the <span class="math notranslate nohighlight">\(\mathcal P(y)\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathcal P (y) = \int_u \mathcal P (y|u) \cdot \mathcal P (u|Z) du\]</div>
 <p><strong>Source</strong>:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://arxiv.org/pdf/1412.1370.pdf">Nested Variational Compression in Deep Gaussian Processes</a> - Hensman et. al. (2014)</p></li>
 <li><p>James Hensman - <a class="reference external" href="http://gpss.cc/gpss15/talks/talk_james.pdf">GPSS 2015</a> | <a class="reference external" href="http://www.approximateinference.org/schedule/Hensman2015.pdf">Aweseome Graphical Models</a></p></li>
 </ul>
-<p>The explicit form of the lower bound $\mathcal{P}(y)$ for is gives us:</p>
-<p>$$\log \mathcal P (y) \geq \log \mathcal{N} (y|\mathbf{y|K_{fu}^{-1}m, \sigma_y^2I}) - \frac{1}{2\sigma_y^2} \text{tr}\left(  \right)$$</p>
+<p>The explicit form of the lower bound <span class="math notranslate nohighlight">\(\mathcal{P}(y)\)</span> for is gives us:</p>
+<div class="math notranslate nohighlight">
+\[\log \mathcal P (y) \geq \log \mathcal{N} (y|\mathbf{y|K_{fu}^{-1}m, \sigma_y^2I}) - \frac{1}{2\sigma_y^2} \text{tr}\left(  \right)\]</div>
 <p><strong>Source</strong>:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://arxiv.org/pdf/1412.1370.pdf">Nested Variational Compression in Deep Gaussian Processes</a> - Hensman et. al. (2014)</p></li>
@@ -1348,18 +1392,21 @@ K_{uf} &amp; K_{uu}
 <hr class="docutils" />
 <section id="important-formulas">
 <h3>Important Formulas<a class="headerlink" href="#important-formulas" title="Permalink to this heading">#</a></h3>
-<p>These formulas come up when we’re looking for clever ways to deal with sparse matrices in GPs. Typically we will have some matrix $\mathbf K\in \mathbb R^{N\times N}$ which implies we need to calculate the inverse $\mathbf K^{-1}$ and the determinant $|$det $\mathbf K|$ which both require $\mathcal{O}(N^3)$. These formulas below are useful when we want to avoid those computational complexity counts.</p>
+<p>These formulas come up when we’re looking for clever ways to deal with sparse matrices in GPs. Typically we will have some matrix <span class="math notranslate nohighlight">\(\mathbf K\in \mathbb R^{N\times N}\)</span> which implies we need to calculate the inverse <span class="math notranslate nohighlight">\(\mathbf K^{-1}\)</span> and the determinant <span class="math notranslate nohighlight">\(|\)</span>det <span class="math notranslate nohighlight">\(\mathbf K|\)</span> which both require <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span>. These formulas below are useful when we want to avoid those computational complexity counts.</p>
 <section id="nystrom-approximation">
 <h4>Nystrom Approximation<a class="headerlink" href="#nystrom-approximation" title="Permalink to this heading">#</a></h4>
-<p>$$\mathbf K_{NN} \approx  \mathbf U_{NM} \mathbf \Lambda_{MM} \mathbf U_{NM}^{\top}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf K_{NN} \approx  \mathbf U_{NM} \mathbf \Lambda_{MM} \mathbf U_{NM}^{\top}\]</div>
 </section>
 <section id="sherman-morrison-woodbury-formula">
 <h4>Sherman-Morrison-Woodbury Formula<a class="headerlink" href="#sherman-morrison-woodbury-formula" title="Permalink to this heading">#</a></h4>
-<p>$$(\mathbf K_{NN} + \sigma_y^2 \mathbf I_N)^{-1} \approx \sigma_y^{-2}\mathbf I_N + \sigma_y^{-2} \mathbf U_{NM}\left( \sigma_y^{-2}\mathbf \Lambda_{MM}^{-1} + \mathbf U_{NM}^{\top} \mathbf U_{NM} \right)^{-1}\mathbf U_{NM}^{\top}$$</p>
+<div class="math notranslate nohighlight">
+\[(\mathbf K_{NN} + \sigma_y^2 \mathbf I_N)^{-1} \approx \sigma_y^{-2}\mathbf I_N + \sigma_y^{-2} \mathbf U_{NM}\left( \sigma_y^{-2}\mathbf \Lambda_{MM}^{-1} + \mathbf U_{NM}^{\top} \mathbf U_{NM} \right)^{-1}\mathbf U_{NM}^{\top}\]</div>
 </section>
 <section id="sylvester-determinant-theorem">
 <h4>Sylvester Determinant Theorem<a class="headerlink" href="#sylvester-determinant-theorem" title="Permalink to this heading">#</a></h4>
-<p>$$\left|\mathbf K_{NN} + \sigma_y^2 \mathbf I_N \right| \approx |\mathbf \Lambda_{MM} | \left|\sigma_y^{2} \mathbf \Lambda_{MM}^{-1} + U_{NM}^{\top} \mathbf U_{NM} \right|$$</p>
+<div class="math notranslate nohighlight">
+\[\left|\mathbf K_{NN} + \sigma_y^2 \mathbf I_N \right| \approx |\mathbf \Lambda_{MM} | \left|\sigma_y^{2} \mathbf \Lambda_{MM}^{-1} + U_{NM}^{\top} \mathbf U_{NM} \right|\]</div>
 </section>
 </section>
 </section>
@@ -1487,7 +1534,7 @@ K_{uf} &amp; K_{uu}
 <h3>Blogs<a class="headerlink" href="#blogs" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="https://gonzmg88.github.io/blog/2018/04/19/VariationalFreeEnergy">Variational Free Energy for Sparse GPs</a> - Gonzalo</p></li>
-<li><p>https://github.com/Alaya-in-Matrix/SparseGP</p></li>
+<li><p><a class="github reference external" href="https://github.com/Alaya-in-Matrix/SparseGP">Alaya-in-Matrix/SparseGP</a></p></li>
 </ul>
 </section>
 </section>
@@ -1588,22 +1635,35 @@ K_{uf} &amp; K_{uu}
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#joint-distribution-augmented-space-mathcal-p-f-u">
-       Joint Distribution - Augmented Space $\mathcal{P}(f,u)$
+       Joint Distribution - Augmented Space
+       <span class="math notranslate nohighlight">
+        \(\mathcal{P}(f,u)\)
+       </span>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#conditional-distribution-mathcal-p-y-u">
-       Conditional Distribution - $\mathcal{P}(y|u)$
+       Conditional Distribution -
+       <span class="math notranslate nohighlight">
+        \(\mathcal{P}(y|u)\)
+       </span>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#variational-bound-on-mathcal-p-y-u">
-       Variational Bound on $\mathcal P (y|u)$
+       Variational Bound on
+       <span class="math notranslate nohighlight">
+        \(\mathcal P (y|u)\)
+       </span>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#titsias-innovation-et-q-f-mathcal-p-f-u">
-       Titsias Innovation: et $q(f) = \mathcal{P}(f|u)$.
+       Titsias Innovation: et
+       <span class="math notranslate nohighlight">
+        \(q(f) = \mathcal{P}(f|u)\)
+       </span>
+       .
       </a>
      </li>
     </ul>
@@ -1622,7 +1682,10 @@ K_{uf} &amp; K_{uu}
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#variational-bound-on-mathcal-p-y">
-       Variational Bound on $\mathcal P (y)$
+       Variational Bound on
+       <span class="math notranslate nohighlight">
+        \(\mathcal P (y)\)
+       </span>
       </a>
      </li>
     </ul>

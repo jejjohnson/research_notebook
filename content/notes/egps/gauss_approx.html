@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/egps/gauss_approx';</script>
@@ -898,63 +900,66 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="gaussian-approximation">
+  <section class="tex2jax_ignore mathjax_ignore" id="gaussian-approximation">
 <h1>Gaussian Approximation<a class="headerlink" href="#gaussian-approximation" title="Permalink to this heading">#</a></h1>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-m(\mathbf{\mu}<em>\mathbf{x}, \mathbf{\Sigma}</em>\mathbf{x}) &amp;= \mathbb{E}<em>\mathbf{x</em><em>}\left[ \mathbb{E}<em>{f</em></em>} \left[ f_* |\mathbf{x}<em>* \right] \right] = \mathbb{E}</em>\mathbf{x_<em>}\left[ \mathbf{\mu}(\mathbf{x}) \right] \
-\nu(\mathbf{\mu}<em>\mathbf{x}, \mathbf{\Sigma}</em>\mathbf{x}) &amp;= \mathbb{E}<em>\mathbf{x</em></em>} \left[ \mathbb{V}<em>{f</em><em>} \left[ f_</em> | \mathbf{x_<em>} \right]  \right] + \mathbb{V}<em>\mathbf{x</em></em>}\left[ \mathbb{E}<em>{f</em><em>} \left[  f_</em>|\mathbf{x}<em>* \right] \right] \
-&amp;= \mathbb{E}</em>\mathbf{x_<em>}\left[ \mathbf{\Sigma}^2(\mathbf{x_</em>}) \right] + \mathbb{V}\left[ \mathbf{\mu}(\mathbf{x_<em>}) \right] \
-&amp;= \mathbb{E}<em>\mathbf{x</em></em>}\left[ \mathbf{\Sigma}^2(\mathbf{x_<em>}) \right] + \mathbb{E}<em>\mathbf{x</em></em>}\left[ \mathbf{\mu}^2(\mathbf{x_<em>}) \right] - \mathbb{E}^2_\mathbf{x_</em>}\left[ \mathbf{\mu}(\mathbf{x_*}) \right]
+m(\mathbf{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\mathbf{x_*}\left[ \mathbb{E}_{f_*} \left[ f_* |\mathbf{x}_* \right] \right] = \mathbb{E}_\mathbf{x_*}\left[ \mathbf{\mu}(\mathbf{x}) \right] \\ 
+\nu(\mathbf{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x}) &amp;= \mathbb{E}_\mathbf{x_*} \left[ \mathbb{V}_{f_*} \left[ f_* | \mathbf{x_*} \right]  \right] + \mathbb{V}_\mathbf{x_*}\left[ \mathbb{E}_{f_*} \left[  f_*|\mathbf{x}_* \right] \right] \\ 
+&amp;= \mathbb{E}_\mathbf{x_*}\left[ \mathbf{\Sigma}^2(\mathbf{x_*}) \right] + \mathbb{V}\left[ \mathbf{\mu}(\mathbf{x_*}) \right] \\ 
+&amp;= \mathbb{E}_\mathbf{x_*}\left[ \mathbf{\Sigma}^2(\mathbf{x_*}) \right] + \mathbb{E}_\mathbf{x_*}\left[ \mathbf{\mu}^2(\mathbf{x_*}) \right] - \mathbb{E}^2_\mathbf{x_*}\left[ \mathbf{\mu}(\mathbf{x_*}) \right]
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <section id="proof">
 <h2>Proof<a class="headerlink" href="#proof" title="Permalink to this heading">#</a></h2>
 <section id="mean-function">
 <h3>Mean Function<a class="headerlink" href="#mean-function" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 m(\mu_\mathbf{x}, \Sigma_\mathbf{x})
 &amp;=
-\mathbb{E}<em>\mathbf{f</em><em>}
-\left[ f_</em> , \mathbb{E}<em>\mathbf{x</em><em>} \left[ p(f_</em>|\mathbf{x}<em>*) \right] \right] \
+\mathbb{E}_\mathbf{f_*}
+\left[ f_* \, \mathbb{E}_\mathbf{x_*} \left[ p(f_*|\mathbf{x}_*) \right] \right] \\
 &amp;=
-\mathbb{E}</em>\mathbf{x_<em>}
-\left[ \mathbb{E}<em>{f</em></em>} \left[ f_* ,p(f_* | \mathbf{x_<em>}) \right]\right]\
+\mathbb{E}_\mathbf{x_*}
+\left[ \mathbb{E}_{f_*} \left[ f_* \,p(f_* | \mathbf{x_*}) \right]\right]\\
 &amp;=
-\mathbb{E}<em>{x</em></em>}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]
+\mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 <section id="variance-function">
 <h3>Variance Function<a class="headerlink" href="#variance-function" title="Permalink to this heading">#</a></h3>
 <p>The variance term is a bit more complex.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 v(\mu_\mathbf{x}, \Sigma_\mathbf{x})
 &amp;=
-\mathbb{E}<em>\mathbf{f</em><em>}
-\left[ f_</em>^2 , \mathbb{E}<em>\mathbf{x</em><em>} \left[ p(f_</em>|\mathbf{x}<em>*) \right] \right] -
-\left(\mathbb{E}</em>\mathbf{f_<em>}
-\left[ f_</em> , \mathbb{E}<em>\mathbf{x</em><em>} \left[ p(f_</em>|\mathbf{x}<em>*) \right] \right]\right)^2\
+\mathbb{E}_\mathbf{f_*}
+\left[ f_*^2 \, \mathbb{E}_\mathbf{x_*} \left[ p(f_*|\mathbf{x}_*) \right] \right] -
+\left(\mathbb{E}_\mathbf{f_*}
+\left[ f_* \, \mathbb{E}_\mathbf{x_*} \left[ p(f_*|\mathbf{x}_*) \right] \right]\right)^2\\
 &amp;=
-\mathbb{E}</em>\mathbf{x_<em>}
-\left[ \mathbb{E}<em>\mathbf{x</em></em>} \left[ f_<em>^2 , p(f_</em>|\mathbf{x}<em>*) \right] \right] -
-\left(\mathbb{E}</em>\mathbf{x_<em>}
-\left[ \mathbb{E}<em>\mathbf{x</em></em>} \left[ f_* , p(f_<em>|\mathbf{x}_</em>) \right] \right]\right)^2\
+\mathbb{E}_\mathbf{x_*}
+\left[ \mathbb{E}_\mathbf{x_*} \left[ f_*^2 \, p(f_*|\mathbf{x}_*) \right] \right] -
+\left(\mathbb{E}_\mathbf{x_*}
+\left[ \mathbb{E}_\mathbf{x_*} \left[ f_* \, p(f_*|\mathbf{x}_*) \right] \right]\right)^2\\
 &amp;=
-\mathbb{E}<em>\mathbf{x</em><em>}
-\left[  \sigma_\text{GP}^2(\mathbf{x}_</em>) + \mu_\text{GP}^2(\mathbf{x}<em>*) \right] -
-\mathbb{E}</em>{x_<em>}\left[ \mu_\text{GP}(\mathbf{x_</em>}) \right]^2 \
+\mathbb{E}_\mathbf{x_*}
+\left[  \sigma_\text{GP}^2(\mathbf{x}_*) + \mu_\text{GP}^2(\mathbf{x}_*) \right] -
+\mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]^2 \\
 &amp;=
-\mathbb{E}<em>\mathbf{x</em><em>}
-\left[  \sigma_\text{GP}^2(\mathbf{x}_</em>) \right] + \mathbb{E}<em>\mathbf{x</em><em>} \left[ \mu_\text{GP}^2(\mathbf{x}_</em>) \right] -
-\mathbb{E}<em>{x</em><em>}\left[ \mu_\text{GP}(\mathbf{x_</em>}) \right]^2\
+\mathbb{E}_\mathbf{x_*}
+\left[  \sigma_\text{GP}^2(\mathbf{x}_*) \right] + \mathbb{E}_\mathbf{x_*} \left[ \mu_\text{GP}^2(\mathbf{x}_*) \right] -
+\mathbb{E}_{x_*}\left[ \mu_\text{GP}(\mathbf{x_*}) \right]^2\\
 &amp;=
-\mathbb{E}<em>\mathbf{x</em><em>} \left[  \sigma_\text{GP}^2(\mathbf{x}_</em>) \right] +
-\mathbb{V}<em>\mathbf{x</em><em>} \left[\mu_\text{GP}(\mathbf{x}_</em>) \right]
+\mathbb{E}_\mathbf{x_*} \left[  \sigma_\text{GP}^2(\mathbf{x}_*) \right] +
+\mathbb{V}_\mathbf{x_*} \left[\mu_\text{GP}(\mathbf{x}_*) \right]
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 </section>
 </section>

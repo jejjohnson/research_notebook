@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data/representation';</script>
@@ -903,42 +905,45 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="representation">
+  <section class="tex2jax_ignore mathjax_ignore" id="representation">
 <h1>Representation<a class="headerlink" href="#representation" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <section id="field-representation">
 <h2>Field Representation<a class="headerlink" href="#field-representation" title="Permalink to this heading">#</a></h2>
 <p>We basically present a ‘raveled’ version of the state whereby we measure the entire field. This can be shown as:</p>
-<p>$$
-\mathbf{x} = \left[\text{lon}<em>1, \ldots, \text{lon}</em>{D_\text{lat}}, \text{lat}<em>1, \ldots, \text{lat}</em>{D_\text{lon}},, \text{time}<em>1, \ldots, \text{time}</em>{D_\text{time}} \right] \in \mathbb{R}^{D_\text{lat} \times D_\text{lon} \times D_\text{time}}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x} = \left[\text{lon}_1, \ldots, \text{lon}_{D_\text{lat}}, \text{lat}_1, \ldots, \text{lat}_{D_\text{lon}},, \text{time}_1, \ldots, \text{time}_{D_\text{time}} \right] \in \mathbb{R}^{D_\text{lat} \times D_\text{lon} \times D_\text{time}}
+\]</div>
 <p><strong>Example</strong>: if we have a <em>full</em> spatial lat-lon grid of <code class="docutils literal notranslate"><span class="pre">30x30</span></code> points and <code class="docutils literal notranslate"><span class="pre">30</span></code> time steps, then the vector is <code class="docutils literal notranslate"><span class="pre">30x30x30</span></code> which is <code class="docutils literal notranslate"><span class="pre">27,000</span></code>-dimensional vector! This is compounded if we wish to calculate correlations between each of the grid points which would result in a matrix of size <code class="docutils literal notranslate"><span class="pre">27,000</span> <span class="pre">x</span> <span class="pre">27,000</span></code> points. As we see below, this is a very high dimensional problem.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 D_\mathbf{x} = [\text{lat}_1, \ldots, \text{lat}_D, \text{lon}_1, \ldots, \text{lon}_D, \text{time}_1, \ldots, \text{time}_D]
-$$</p>
-<p>And the final vector, $\mathbf{x}$, can be massive for this unrolled spatio-temporal vector. So stacking all of these together gives us a very large vector of $\mathbf{X} \in \mathbb{R}^{D_\mathbf{x}}$. Estimating the covariance between each of coordinates would results in a massive matrix, $\mathbf{C}_{XX} \in \mathbb{R}^{D_x \times D_x}$. In the above algorithm, we need to do a matrix inversion in conjunction which is very expensive. Below you have the computational complexity when considering the state, $\mathbf{x}$:</p>
-<p>State $\mathbf{x}$:</p>
+\]</div>
+<p>And the final vector, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, can be massive for this unrolled spatio-temporal vector. So stacking all of these together gives us a very large vector of <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{D_\mathbf{x}}\)</span>. Estimating the covariance between each of coordinates would results in a massive matrix, <span class="math notranslate nohighlight">\(\mathbf{C}_{XX} \in \mathbb{R}^{D_x \times D_x}\)</span>. In the above algorithm, we need to do a matrix inversion in conjunction which is very expensive. Below you have the computational complexity when considering the state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>:</p>
+<p>State <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>:</p>
 <ul class="simple">
-<li><p>computational complexity - $\mathcal{O}(D_{\mathbf{x}}^3)$</p></li>
-<li><p>memory $\mathcal{O}(D_{\mathbf{x}}^2)$</p></li>
+<li><p>computational complexity - <span class="math notranslate nohighlight">\(\mathcal{O}(D_{\mathbf{x}}^3)\)</span></p></li>
+<li><p>memory <span class="math notranslate nohighlight">\(\mathcal{O}(D_{\mathbf{x}}^2)\)</span></p></li>
 </ul>
 </section>
 <hr class="docutils" />
 <section id="coordinate-representation">
 <h2>Coordinate Representation<a class="headerlink" href="#coordinate-representation" title="Permalink to this heading">#</a></h2>
-<p>The coordinate representation assumes the input vector, $\boldsymbol{x}$, is a single set of coordinates.</p>
-<p>$$
+<p>The coordinate representation assumes the input vector, <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>, is a single set of coordinates.</p>
+<div class="math notranslate nohighlight">
+\[
 D_\phi = [\text{lat,lon,time}]
-$$</p>
-<p>If we assume we have a large number of sparsely distributed coordinate values. This gives us a large number of samples, $N$. Stacked together, we get a matrix of samples and features (coordinates), $\boldsymbol{X} \in \mathbb{R}^{N \times D_\phi}$.</p>
+\]</div>
+<p>If we assume we have a large number of sparsely distributed coordinate values. This gives us a large number of samples, <span class="math notranslate nohighlight">\(N\)</span>. Stacked together, we get a matrix of samples and features (coordinates), <span class="math notranslate nohighlight">\(\boldsymbol{X} \in \mathbb{R}^{N \times D_\phi}\)</span>.</p>
 <p><strong>Example</strong>: Take the full grid from the field representation, i.e. <code class="docutils literal notranslate"><span class="pre">30x30x30=27,000</span></code>-dimensional vector. Under this representation, we would have a vector which is three times the size, i.e. <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">x</span> <span class="pre">D</span> <span class="pre">=</span> <span class="pre">27,000</span> <span class="pre">x</span> <span class="pre">3</span></code> because for every grid point, we have a lat, lon, time coordinate. However, in our specific application, we have very sparse observations which means that we will never have to have a full grid of that size in memory (or during compute). If we assume there to be only 20% of the grid observed, then we have: <code class="docutils literal notranslate"><span class="pre">0.20</span> <span class="pre">*</span> <span class="pre">27,000</span> <span class="pre">=</span> <span class="pre">5,400</span></code> and a covariance of <code class="docutils literal notranslate"><span class="pre">5,400x5,400</span></code>. This is significantly less data that the full grid. This allows us to push the upper limit of the amount of observations where we can learn the parameters. For example, if we have a budget of <code class="docutils literal notranslate"><span class="pre">20,000</span></code> points for our memory (including the covariance), then we could potentially have a grid size of <code class="docutils literal notranslate"><span class="pre">46x46x46</span></code> if we wanted an evenly distribued spatio-temporal grid, <code class="docutils literal notranslate"><span class="pre">54x54x30</span></code> for a spatially dense grid and <code class="docutils literal notranslate"><span class="pre">30x30x74</span></code> for a temporal dense grid. This would allow the methods to capture processes at a finer scale without sacrificing computability.</p>
 <p>This operation is still very expensive however, we assume that the observations are</p>
-<p>State $\boldsymbol{x}$:</p>
+<p>State <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>:</p>
 <ul class="simple">
-<li><p>computational complexity $\mathcal{O}(N^3)$</p></li>
-<li><p>memory $\mathcal{O}(N^2)$</p></li>
+<li><p>computational complexity <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span></p></li>
+<li><p>memory <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span></p></li>
 </ul>
-<p>As you can see, the covariance matrix is still very expensive to calculate. However, the observations are very sparse compared to the full coordinate grid, i.e. $N &lt;&lt; D_\mathbf{x}$.</p>
+<p>As you can see, the covariance matrix is still very expensive to calculate. However, the observations are very sparse compared to the full coordinate grid, i.e. <span class="math notranslate nohighlight">\(N &lt;&lt; D_\mathbf{x}\)</span>.</p>
 <section id="pros-and-cons">
 <h3>Pros and Cons<a class="headerlink" href="#pros-and-cons" title="Permalink to this heading">#</a></h3>
 <p><strong>Coordinate Transformations</strong>: We have direct access to the lat-lon-time coordinates. This gives us the flexibility to perform transformations such that this is reflected within the input representation. 3 coordinates might lack information and it might be useful to transform these coordinates into a high representation. For example, if we transform the spatial coordinates from lat-lon to spherical coordinates, it goes from 2 to 3 dimensions. If we transform the time coordinate to a cyclic coordinate that encodes the minute, hour, day, month, year, then we go from a 1D vector to a 5D vector which could potentially encode some multi-scale dynamics.</p>
@@ -950,7 +955,7 @@ $$</p>
 <hr class="docutils" />
 <section id="data">
 <h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h2>
-<p>We assume that we have some set of input and output data points, $\mathcal{D} = \left{ \mathbf{x}_n, \mathbf{y}<em>n \right}</em>{n=1}^N$. This dataset, $\mathcal{D}$, will be used for training to find the parameters of interest, $\boldsymbol{\theta}$.</p>
+<p>We assume that we have some set of input and output data points, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{x}_n, \mathbf{y}_n \right\}_{n=1}^N\)</span>. This dataset, <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>, will be used for training to find the parameters of interest, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>.</p>
 </section>
 </section>
 

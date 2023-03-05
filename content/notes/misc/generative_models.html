@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/misc/generative_models';</script>
@@ -954,32 +956,37 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="generative-models">
+  <section class="tex2jax_ignore mathjax_ignore" id="generative-models">
 <h1>Generative Models<a class="headerlink" href="#generative-models" title="Permalink to this heading">#</a></h1>
-<p>:::{figure-md} markdown-fig
-<img src="./assets/gen_models.png" alt="fishy" class="bg-primary mb-1" width="200px"></p>
-<p>This figure was taken from <span class="xref myst">Lilians blog</span>.
-:::</p>
-<p>$$
+<figure class="align-default" id="markdown-fig">
+<a class="bg-primary mb-1 reference internal image-reference" href="../../../_images/gen_models.png"><img alt="fishy" class="bg-primary mb-1" src="../../../_images/gen_models.png" style="width: 200px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">This figure was taken from <span class="xref myst">Lilians blog</span>.</span><a class="headerlink" href="#markdown-fig" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="math notranslate nohighlight">
+\[
 p(x,z) = p(x,z)p(z)
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="quantities-of-interest">
 <h2>Quantities of Interest<a class="headerlink" href="#quantities-of-interest" title="Permalink to this heading">#</a></h2>
 <p>By having this generative model, we are typically only interested in two things: sampling and density estimation.</p>
 <section id="sampling">
 <h3>Sampling<a class="headerlink" href="#sampling" title="Permalink to this heading">#</a></h3>
-<p>We want to be able to generate samples of, $x’$, such that they are indistinguishable from our real data distribution, $x$.</p>
-<p>$$
-x’ \sim P_X(\boldsymbol{\theta})
-$$</p>
+<p>We want to be able to generate samples of, <span class="math notranslate nohighlight">\(x'\)</span>, such that they are indistinguishable from our real data distribution, <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+x' \sim P_X(\boldsymbol{\theta})
+\]</div>
 </section>
 <section id="density-estimation">
 <h3>Density Estimation<a class="headerlink" href="#density-estimation" title="Permalink to this heading">#</a></h3>
 <p>We want to be able to estimate densities of new data samples</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(x; \boldsymbol{\theta})
-$$</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />
@@ -988,15 +995,17 @@ $$</p>
 <ol class="arabic simple">
 <li><p>Generate samples from the latent variable.</p></li>
 </ol>
-<p>$$
-z’ \sim P_Z
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+z' \sim P_Z
+\]</div>
 <ol class="arabic simple" start="2">
 <li><p>Propagate the samples through the transformation</p></li>
 </ol>
-<p>$$
-x’ = T(z’; \boldsymbol{\theta})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+x' = T(z'; \boldsymbol{\theta})
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="latent-variable">
@@ -1004,15 +1013,17 @@ $$</p>
 <p>We generally require this to be simple as possible:</p>
 <section id="gaussian">
 <h3>Gaussian<a class="headerlink" href="#gaussian" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 z \sim \mathcal{N}(0, 1)
-$$</p>
+\]</div>
 </section>
 <section id="uniform">
 <h3>Uniform<a class="headerlink" href="#uniform" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 z \sim \mathcal{U}([0,1])
-$$</p>
+\]</div>
 </section>
 <section id="mixture-of-distributions">
 <h3>Mixture of Distributions<a class="headerlink" href="#mixture-of-distributions" title="Permalink to this heading">#</a></h3>
@@ -1024,7 +1035,7 @@ $$</p>
 <figure class="align-default" id="gen-models">
 <a class="reference internal image-reference" href="../../../_images/gen_models.png"><img alt="../../../_images/gen_models.png" src="../../../_images/gen_models.png" style="height: 500px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Overview of generative models.  Source: <span id="id1">[<a class="reference internal" href="../info_theory/similarity.html#id36" title="Lilian Weng. What are diffusion models? 2021. URL: https://lilianweng.github.io/lil-log/2021/07/11/diffusion-models.html.">Weng, 2021</a>]</span>.</span><a class="headerlink" href="#gen-models" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Overview of generative models.  Source: <span id="id1">[<a class="reference internal" href="../info_theory/similarity.html#id36" title="Lilian Weng. What are diffusion models? 2021. URL: https://lilianweng.github.io/lil-log/2021/07/11/diffusion-models.html.">Weng, 2021</a>]</span>.</span><a class="headerlink" href="#gen-models" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <section id="normalizing-flows-nfs">

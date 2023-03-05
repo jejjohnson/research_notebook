@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/normalizing_flows/conditional';</script>
@@ -925,49 +927,57 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="conditional-normalizing-flows">
+  <section class="tex2jax_ignore mathjax_ignore" id="conditional-normalizing-flows">
 <h1>Conditional Normalizing Flows<a class="headerlink" href="#conditional-normalizing-flows" title="Permalink to this heading">#</a></h1>
 <section id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = \boldsymbol{f}(\mathbf{x};\boldsymbol{\theta})
-$$</p>
-<p>$$
+\]</div>
+<div class="math notranslate nohighlight">
+\[
 \tilde{\mathbf{x}} = \text{NN}_{\boldsymbol \theta}(\mathbf{x})
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="transform">
 <h2>Transform<a class="headerlink" href="#transform" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{z} = \boldsymbol{T}_{\boldsymbol{\theta}}(\mathbf{y};\mathbf{x})
-$$</p>
-<p>We can also add a type of encoder function for the inputs, $\mathbf{x}$.</p>
-<p>$$
+\]</div>
+<p>We can also add a type of encoder function for the inputs, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \tilde{\mathbf{x}} = \text{NN}_{\boldsymbol \theta}(\mathbf{x})
-$$</p>
+\]</div>
 <p>So this alters the formulation slightly:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{z} = \boldsymbol{T}_{\boldsymbol{\theta}}(\mathbf{y}; \tilde{\mathbf{x}})
-$$</p>
+\]</div>
 <p>or more compactly:</p>
-<p>$$
-\mathbf{z} = \boldsymbol{T}<em>{\boldsymbol{\theta}}(\mathbf{y}; \text{NN}</em>{\boldsymbol \theta}(\mathbf{x}))
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{z} = \boldsymbol{T}_{\boldsymbol{\theta}}(\mathbf{y}; \text{NN}_{\boldsymbol \theta}(\mathbf{x}))
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="prior">
 <h2>Prior<a class="headerlink" href="#prior" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(\mathbf{z}|\mathbf{x}) = \mathcal{N}\left(\mathbf{z}; \boldsymbol{\mu}(\mathbf{x}), \boldsymbol{\sigma}^2(\mathbf{x}) \right)
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="split-prior">
 <h2>Split Prior<a class="headerlink" href="#split-prior" title="Permalink to this heading">#</a></h2>
-<p>$$
-p(\mathbf{z}<em>{\ell+1}|\mathbf{z}</em>\ell, \mathbf{x}) = \mathcal{N}(\mathbf{z}<em>{\ell+1}; \boldsymbol{\mu}</em>{\boldsymbol\theta}(\mathbf{z}<em>\ell, \mathbf{x}), \boldsymbol{\sigma}^2</em>{\boldsymbol\theta}(\mathbf{z}_\ell,\mathbf{x}))
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{z}_{\ell+1}|\mathbf{z}_\ell, \mathbf{x}) = \mathcal{N}(\mathbf{z}_{\ell+1}; \boldsymbol{\mu}_{\boldsymbol\theta}(\mathbf{z}_\ell, \mathbf{x}), \boldsymbol{\sigma}^2_{\boldsymbol\theta}(\mathbf{z}_\ell,\mathbf{x}))
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="transformations">
@@ -980,9 +990,10 @@ $$</p>
 <hr class="docutils" />
 <section id="coupling">
 <h2>Coupling<a class="headerlink" href="#coupling" title="Permalink to this heading">#</a></h2>
-<p>$$
-\mathbf{z}<em>\ell = \boldsymbol{T}(\mathbf{x}; \text{NN}</em>{\boldsymbol \theta}(\mathbf{z}_\ell,\mathbf{x}))
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{z}_\ell = \boldsymbol{T}(\mathbf{x}; \text{NN}_{\boldsymbol \theta}(\mathbf{z}_\ell,\mathbf{x}))
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="sources">

@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gps/kissgp';</script>
@@ -867,22 +869,26 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="structured-kernel-interpolation">
+  <section class="tex2jax_ignore mathjax_ignore" id="structured-kernel-interpolation">
 <h1>Structured Kernel Interpolation<a class="headerlink" href="#structured-kernel-interpolation" title="Permalink to this heading">#</a></h1>
-<p>$$
-\tilde{\boldsymbol{k}}(\mathbf{x}, \mathbf{x}’) = \mathbf{w}<em>\mathbf{x}\mathbf{K}</em>{\mathbf{XX}}\mathbf{w}_{\mathbf{x}’}
-$$</p>
-<p>$$
-\tilde{\mathbf{K}}<em>{\mathbf{XX}} = \mathbf{W} \mathbf{K}</em>{\mathbf{XX}}\mathbf{W}^\top
-$$</p>
-<p>$$
-\tilde{\mathbf{K}}<em>{\mathbf{XU}} \approx \boldsymbol{w}</em>{U}(\mathbf{x})\mathbf{K_{UU}}
-$$</p>
-<p>where $\mathbf{W_U} \in \mathbb{R}^{N \times M}$ is matrix of interpolation weights.</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\boldsymbol{k}}(\mathbf{x}, \mathbf{x}') = \mathbf{w}_\mathbf{x}\mathbf{K}_{\mathbf{XX}}\mathbf{w}_{\mathbf{x}'}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\mathbf{K}}_{\mathbf{XX}} = \mathbf{W} \mathbf{K}_{\mathbf{XX}}\mathbf{W}^\top
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\mathbf{K}}_{\mathbf{XU}} \approx \boldsymbol{w}_{U}(\mathbf{x})\mathbf{K_{UU}}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{W_U} \in \mathbb{R}^{N \times M}\)</span> is matrix of interpolation weights.</p>
 <p>Here we have the standard decomposition of the inverse</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 (\mathbf{K} + \sigma^2 \mathbf{I})^{-1}\mathbf{y} = (\mathbf{QVQ}^\top + \sigma^2\mathbf{I})^{-1}\mathbf{y}
-$$</p>
+\]</div>
 </section>
 
     <script type="text/x-thebe-config">

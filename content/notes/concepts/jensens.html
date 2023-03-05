@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/concepts/jensens';</script>
@@ -888,26 +890,29 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="jensens-inequality">
+  <section class="tex2jax_ignore mathjax_ignore" id="jensens-inequality">
 <h1>Jensens Inequality<a class="headerlink" href="#jensens-inequality" title="Permalink to this heading">#</a></h1>
 <p>This theorem is one of those <a class="reference external" href="https://www.johndcook.com/blog/2012/12/10/sleeper-theorems/">sleeper theorems</a> which comes up in a big way in many machine learning problems.</p>
-<p>The Jensen inequality theorem states that for a convex function $f$,</p>
-<p>$$\mathbb{E} [f(x)] \geq f(\mathbb{E}[x])$$</p>
-<p>A convex function (or concave up) is when there exists a minimum to that function. If we take two points on any part of the graph and draw a line between them, we will be above or at (as a limit) the minimum point of the graph. We can flip the signs for a concave function. But we want the convex property because then it means it has a minimum value and this is useful for minimization strategies. Recall from Calculus class 101: let’s look at the function $f(x)=\log x$.</p>
-<p>We can use the second derivative test to find out if a function is convex or not. If $f’(x) \geq 0$ then it is concave up (or convex). I’ll map out the derivatives below:</p>
-<p>$$f’(x) = \frac{1}{x}$$
-$$f’’(x) = -\frac{1}{x^2}$$</p>
-<p>You’ll see that $-\frac{1}{x^2}\leq 0$ for $x \in [0, \infty)$. This means that $\log x$ is a concave function. So, the solution to this if we want a convex function is to take the negative $\log$ (which adds intuition as to why we typically take the negative log likelihood of many functions).</p>
+<p>The Jensen inequality theorem states that for a convex function <span class="math notranslate nohighlight">\(f\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{E} [f(x)] \geq f(\mathbb{E}[x])\]</div>
+<p>A convex function (or concave up) is when there exists a minimum to that function. If we take two points on any part of the graph and draw a line between them, we will be above or at (as a limit) the minimum point of the graph. We can flip the signs for a concave function. But we want the convex property because then it means it has a minimum value and this is useful for minimization strategies. Recall from Calculus class 101: let’s look at the function <span class="math notranslate nohighlight">\(f(x)=\log x\)</span>.</p>
+<p>We can use the second derivative test to find out if a function is convex or not. If <span class="math notranslate nohighlight">\(f'(x) \geq 0\)</span> then it is concave up (or convex). I’ll map out the derivatives below:</p>
+<div class="math notranslate nohighlight">
+\[f'(x) = \frac{1}{x}\]</div>
+<div class="math notranslate nohighlight">
+\[f''(x) = -\frac{1}{x^2}\]</div>
+<p>You’ll see that <span class="math notranslate nohighlight">\(-\frac{1}{x^2}\leq 0\)</span> for <span class="math notranslate nohighlight">\(x \in [0, \infty)\)</span>. This means that <span class="math notranslate nohighlight">\(\log x\)</span> is a concave function. So, the solution to this if we want a convex function is to take the negative <span class="math notranslate nohighlight">\(\log\)</span> (which adds intuition as to why we typically take the negative log likelihood of many functions).</p>
 <section id="variational-inference">
 <h2>Variational Inference<a class="headerlink" href="#variational-inference" title="Permalink to this heading">#</a></h2>
-<p>Typically in the VI literature, they add this Jensen inequality property in order to come up with the Evidence Lower Bound (ELBO). But I never understood how it worked because I didn’t know if they wanted the convex or concave. If we think of the loss function of the likelihood $\mathcal{L}(\theta)$ and the ELBO $\mathcal{F}(q, \theta)$. Take a look at the figure from</p>
+<p>Typically in the VI literature, they add this Jensen inequality property in order to come up with the Evidence Lower Bound (ELBO). But I never understood how it worked because I didn’t know if they wanted the convex or concave. If we think of the loss function of the likelihood <span class="math notranslate nohighlight">\(\mathcal{L}(\theta)\)</span> and the ELBO <span class="math notranslate nohighlight">\(\mathcal{F}(q, \theta)\)</span>. Take a look at the figure from</p>
 <figure class="align-default" id="id1">
 <img alt="../../../_images/elbo_inequality.png" src="../../../_images/elbo_inequality.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 1 </span><span class="caption-text">A quick demo with the Elbo inequality.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Typically we use the $\log$ function when it’s used</p>
+<p>Typically we use the <span class="math notranslate nohighlight">\(\log\)</span> function when it’s used</p>
 <p><strong>Resources</strong></p>
 <ul class="simple">
 <li><p><a class="reference external" href="http://people.duke.edu/~ccc14/sta-663-2016/14_ExpectationMaximization.html">Computational Statistics</a></p></li>

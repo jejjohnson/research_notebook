@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data/models';</script>
@@ -901,15 +903,16 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="models">
+  <section class="tex2jax_ignore mathjax_ignore" id="models">
 <h1>Models<a class="headerlink" href="#models" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <section id="explicit">
 <h2>Explicit<a class="headerlink" href="#explicit" title="Permalink to this heading">#</a></h2>
-<p>These models take the input features, $\mathbf{x}_D$, and output a scalar/vector value for the signal. So this is defined as:</p>
-<p>$$
+<p>These models take the input features, <span class="math notranslate nohighlight">\(\mathbf{x}_D\)</span>, and output a scalar/vector value for the signal. So this is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = \boldsymbol{f}(\mathbf{x}_D;\boldsymbol{\theta})
-$$</p>
+\]</div>
 <p><strong>Examples</strong>:</p>
 <ul class="simple">
 <li><p>DeepVoxels</p></li>
@@ -927,9 +930,10 @@ $$</p>
 <section id="global-implicit">
 <h2>Global Implicit<a class="headerlink" href="#global-implicit" title="Permalink to this heading">#</a></h2>
 <p>These take the coordinates as inputs and output a scalar/vector value for the signal. So this is defined as:</p>
-<p>$$
-y = \boldsymbol{f}<em>{\boldsymbol{\theta}}(\mathbf{x}</em>\phi)
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+y = \boldsymbol{f}_{\boldsymbol{\theta}}(\mathbf{x}_\phi)
+\]</div>
 <p><strong>Examples</strong>:</p>
 <ul class="simple">
 <li><p>DeepSDF</p></li>
@@ -950,13 +954,14 @@ $$</p>
 <section id="local-implicit">
 <h2>Local Implicit<a class="headerlink" href="#local-implicit" title="Permalink to this heading">#</a></h2>
 <p>These use a hybrid of the above two approaches. They have some function that takes in the features and the coordinates and outputs a signal.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{z} &amp;= \text{Encoder}(\mathbf{x}<em>D) \
-\mathbf{y} &amp;= \boldsymbol{f}(\mathbf{x}</em>\phi, \mathbf{z};\boldsymbol{\theta})
+\mathbf{z} &amp;= \text{Encoder}(\mathbf{x}_D) \\
+\mathbf{y} &amp;= \boldsymbol{f}(\mathbf{x}_\phi, \mathbf{z};\boldsymbol{\theta})
 \end{aligned}
-$$</p>
-<p>Notice how we have an encoder for the input vector $\mathbf{x}_D$ because often we want these in some lower dimensional space. Then we concatenate the feature vector and the coordinate vector to learn the output signal value.</p>
+\end{split}\]</div>
+<p>Notice how we have an encoder for the input vector <span class="math notranslate nohighlight">\(\mathbf{x}_D\)</span> because often we want these in some lower dimensional space. Then we concatenate the feature vector and the coordinate vector to learn the output signal value.</p>
 <p><strong>Examples</strong>:</p>
 <ul class="simple">
 <li><p>Local Implicit Image Functions</p></li>
@@ -978,12 +983,13 @@ $$</p>
 <section id="hybrid-implicit-explicit">
 <h2>Hybrid Implicit-Explicit<a class="headerlink" href="#hybrid-implicit-explicit" title="Permalink to this heading">#</a></h2>
 <p>This framework is a hybrid implicit-explicit architecture as an attempt to bypass the issues of each of the individual approaches. It has a <em>global coordinate encoder</em> which transforms the global coordinates to a set of features. It also has a <em>local coordinate decoder</em> which transforms the encoded features and the local coordinates to output the signal.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{z} &amp;= \text{GlobalEncoder}<em>{\boldsymbol\theta}(\mathbf{x}</em>{\phi_G}) \
-\mathbf{y} &amp;= \text{LocalDecoder}<em>{\boldsymbol\theta}(\mathbf{x}</em>{\phi_L},\mathbf{z})
+\mathbf{z} &amp;= \text{GlobalEncoder}_{\boldsymbol\theta}(\mathbf{x}_{\phi_G}) \\
+\mathbf{y} &amp;= \text{LocalDecoder}_{\boldsymbol\theta}(\mathbf{x}_{\phi_L},\mathbf{z})
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p><strong>Examples</strong>:</p>
 <ul class="simple">
 <li><p>ACORN</p></li>

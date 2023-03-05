@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gps/cg';</script>
@@ -869,21 +871,24 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="conjugate-gradients">
+  <section class="tex2jax_ignore mathjax_ignore" id="conjugate-gradients">
 <h1>Conjugate Gradients<a class="headerlink" href="#conjugate-gradients" title="Permalink to this heading">#</a></h1>
-<p>Consider the following optimal solution to the GP given the best optimal hyper-parameters, $\boldsymbol{\theta} = { \boldsymbol{\psi, \phi}, \sigma^2 }$:</p>
-<p>$$
-\boldsymbol{\alpha} = \mathbf{K}<em>{\boldsymbol{\phi}}^{-1} \bar{\mathbf{Y}}</em>{\boldsymbol{\psi}}
-$$</p>
+<p>Consider the following optimal solution to the GP given the best optimal hyper-parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta} = \{ \boldsymbol{\psi, \phi}, \sigma^2 \}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\alpha} = \mathbf{K}_{\boldsymbol{\phi}}^{-1} \bar{\mathbf{Y}}_{\boldsymbol{\psi}}
+\]</div>
 <p>We can rewrite this as a linear system.</p>
-<p>$$
-\mathbf{K}<em>{\boldsymbol{\phi}}\boldsymbol{\alpha} - \bar{\mathbf{Y}}</em>{\boldsymbol{\psi}} = \mathbf{0}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{K}_{\boldsymbol{\phi}}\boldsymbol{\alpha} - \bar{\mathbf{Y}}_{\boldsymbol{\psi}} = \mathbf{0}
+\]</div>
 <p>We can reformulate this as a quadratic optimization problem:</p>
-<p>$$
-\boldsymbol{\alpha}^* = \argmin_{\boldsymbol{\alpha}} \boldsymbol{\alpha}^\top \mathbf{K}<em>{\boldsymbol{\phi}}\boldsymbol{\alpha} - \boldsymbol{\alpha}^\top \bar{\mathbf{Y}}</em>{\boldsymbol{\psi}}
-$$</p>
-<p>There are many efficient ways to solve this problem where one of them is the <em>conjugate gradient</em> operation. This is an iterative algorithm that recovers the exact solution after $k$ iterations. But we can recover an approximate solution after $\tilde{k}$ iterations where $\tilde{k} &lt;&lt; k$. Each iteration is $\mathcal{O}(N^2)$.</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\alpha}^* = \argmin_{\boldsymbol{\alpha}} \boldsymbol{\alpha}^\top \mathbf{K}_{\boldsymbol{\phi}}\boldsymbol{\alpha} - \boldsymbol{\alpha}^\top \bar{\mathbf{Y}}_{\boldsymbol{\psi}}
+\]</div>
+<p>There are many efficient ways to solve this problem where one of them is the <em>conjugate gradient</em> operation. This is an iterative algorithm that recovers the exact solution after <span class="math notranslate nohighlight">\(k\)</span> iterations. But we can recover an approximate solution after <span class="math notranslate nohighlight">\(\tilde{k}\)</span> iterations where <span class="math notranslate nohighlight">\(\tilde{k} &lt;&lt; k\)</span>. Each iteration is <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span>.</p>
 <p><strong>GPyTorch: BlackBox Matrix-Matrix Gaussian Process Inference with GPU Acceleration</strong> - Gardner et al (2018)</p>
 </section>
 

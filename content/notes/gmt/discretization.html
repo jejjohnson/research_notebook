@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gmt/discretization';</script>
@@ -939,7 +941,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="discretization">
+  <section class="tex2jax_ignore mathjax_ignore" id="discretization">
 <h1>Discretization<a class="headerlink" href="#discretization" title="Permalink to this heading">#</a></h1>
 <section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">#</a></h2>
@@ -951,111 +953,125 @@ title="Print to PDF"
 <section id="formulation">
 <h2>Formulation<a class="headerlink" href="#formulation" title="Permalink to this heading">#</a></h2>
 <p>Let’s take the general form of a PDE.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}
 \begin{aligned}
-\dot{\boldsymbol{u}}(\mathbf{x}_s,t) &amp;= \mathcal{N}<span class="xref myst">\boldsymbol{u},\boldsymbol{\theta}</span> &amp;&amp; &amp;&amp; &amp;&amp; \mathbf{x}_s\in\Omega\sub\mathbb{R}^{D_s} &amp;&amp; t \in \mathcal{T} \sub \mathbb{R}^+ \
-\boldsymbol{b}(\mathbf{x}_s, t) &amp;= \mathcal{B}<span class="xref myst">\boldsymbol{u},\boldsymbol{\theta}</span> &amp;&amp; &amp;&amp; &amp;&amp;  \mathbf{x}_s\in\partial\Omega &amp;&amp; t \in \mathcal{T} \</p>
-<p>\end{aligned}
-$$</p>
+\dot{\boldsymbol{u}}(\mathbf{x}_s,t) &amp;= \mathcal{N}[\boldsymbol{u},\boldsymbol{\theta}](\mathbf{x}_s,t) &amp;&amp; &amp;&amp; &amp;&amp; \mathbf{x}_s\in\Omega\sub\mathbb{R}^{D_s} &amp;&amp; t \in \mathcal{T} \sub \mathbb{R}^+ \\
+\boldsymbol{b}(\mathbf{x}_s, t) &amp;= \mathcal{B}[\boldsymbol{u},\boldsymbol{\theta}](\mathbf{x}_s,t) &amp;&amp; &amp;&amp; &amp;&amp;  \mathbf{x}_s\in\partial\Omega &amp;&amp; t \in \mathcal{T} \\\end{split}\\\end{aligned}
+\end{aligned}\end{align} \]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\boldsymbol{u}:\Omega\times\mathcal{T}\rightarrow \Omega$ - is the unknown vector field</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{u}:\Omega\times\mathcal{T}\rightarrow \Omega\)</span> - is the unknown vector field</p></li>
 <li></li>
 </ul>
 <hr class="docutils" />
 <p>Let’s take the general form of an ODE</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \dot{x}(t) = \boldsymbol{F}\left( x(t),t \right) \hspace{10mm} t \in \mathcal{T} \sub\mathbb{R}^+
-$$</p>
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$x:\mathcal{T} \rightarrow\mathbb{R}^D$ - is an unknown function</p></li>
-<li><p>$\boldsymbol{F}:\mathbb{R}^D\times \mathbb{R} \rightarrow \mathbb{R}^D$ - is a vector field</p></li>
-<li><p>$\mathcal{T}$ - is the time domain; typically $\mathcal{T}=[0,\mathcal{T}]$</p></li>
+<li><p><span class="math notranslate nohighlight">\(x:\mathcal{T} \rightarrow\mathbb{R}^D\)</span> - is an unknown function</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{F}:\mathbb{R}^D\times \mathbb{R} \rightarrow \mathbb{R}^D\)</span> - is a vector field</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{T}\)</span> - is the time domain; typically <span class="math notranslate nohighlight">\(\mathcal{T}=[0,\mathcal{T}]\)</span></p></li>
 </ul>
 <p>The art of differential equations is <em>knowing the form of solution and then finding tricks to arrive there</em>. So we can write this down using the <em>fundamental theorem of calculus</em>. It has the form:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 x(t) = x(0) + \int_0^t\boldsymbol{F}(x(\tau),\tau)d\tau
-$$</p>
-<p>where the solution depends upon the initial value $x(0)=x_0$. So knowing this, we can actually rewrite the general form of the ODE in the above equation to be:</p>
-<p>$$
+\]</div>
+<p>where the solution depends upon the initial value <span class="math notranslate nohighlight">\(x(0)=x_0\)</span>. So knowing this, we can actually rewrite the general form of the ODE in the above equation to be:</p>
+<div class="math notranslate nohighlight">
+\[
 \dot{x}(t) = \boldsymbol{F}\left( x(t),t \right) \hspace{10mm} t \in \mathcal{T} \sub\mathbb{R}^+ \hspace{5mm} x(0) = x_0
-$$</p>
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$x:\mathcal{T} \rightarrow\mathbb{R}^D$ - is an unknown function</p></li>
-<li><p>$\boldsymbol{F}:\mathbb{R}^D\times \mathbb{R} \rightarrow \mathbb{R}^D$ - is a vector field</p></li>
-<li><p>$\mathcal{T}$ - is the time domain; typically $\mathcal{T}=[0,\mathcal{T}]$</p></li>
-<li><p>$x_0$ - is the initial value</p></li>
+<li><p><span class="math notranslate nohighlight">\(x:\mathcal{T} \rightarrow\mathbb{R}^D\)</span> - is an unknown function</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{F}:\mathbb{R}^D\times \mathbb{R} \rightarrow \mathbb{R}^D\)</span> - is a vector field</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{T}\)</span> - is the time domain; typically <span class="math notranslate nohighlight">\(\mathcal{T}=[0,\mathcal{T}]\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(x_0\)</span> - is the initial value</p></li>
 </ul>
-<p>However, the equation for the solution is difficult because of the integral term. Integrals are hard…as it is impossible to take the expectation of the space with all time. In general, our <em>numerical solvers</em> find the solution by stepping forward in time. So instead of finding the complete trajectory from $x(0)$ to $x(t)$, we take a sequence of sub-steps, i.e. $x(t)$ to $x(t+\delta t)$. So we can rewrite the solution as</p>
-<p>$$
+<p>However, the equation for the solution is difficult because of the integral term. Integrals are hard…as it is impossible to take the expectation of the space with all time. In general, our <em>numerical solvers</em> find the solution by stepping forward in time. So instead of finding the complete trajectory from <span class="math notranslate nohighlight">\(x(0)\)</span> to <span class="math notranslate nohighlight">\(x(t)\)</span>, we take a sequence of sub-steps, i.e. <span class="math notranslate nohighlight">\(x(t)\)</span> to <span class="math notranslate nohighlight">\(x(t+\delta t)\)</span>. So we can rewrite the solution as</p>
+<div class="math notranslate nohighlight">
+\[
 x(t + \delta t) = x(0) + \int_0^{t+\delta t}\boldsymbol{F}(x(\tau),\tau)d\tau
-$$</p>
+\]</div>
 <hr class="docutils" />
 <section id="taylor-expansion-methods">
 <h3>Taylor Expansion Methods<a class="headerlink" href="#taylor-expansion-methods" title="Permalink to this heading">#</a></h3>
 <p>We can use the Taylor series expansion around:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 g(\tau) = \sum_{n=0}^\infty \frac{g^{(n)}(t_0)}{n!}(\tau - t_0)^n
-$$</p>
+\]</div>
 <p>Having access to all of the derivatives would fully describe the dynamical system</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 x(t+\delta t) = \sum_{k=0}^q\frac{h^k}{k!}x^{(k)}(t) + \mathcal{O}(h^{q+1})
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="quadrature-methods">
 <h3>Quadrature Methods<a class="headerlink" href="#quadrature-methods" title="Permalink to this heading">#</a></h3>
 <p>We can use numerical quadrature!</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \int_l^r g(\tau)d\tau \approx \sum_{i=1}^Nw_ig(t_i)
-$$</p>
+\]</div>
 <p>which motivates the <em>explicit Runge-Kutta</em> algorithm.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \int_t^{t+\delta t} \boldsymbol{F}(x(\tau),\tau)d\tau \approx h \sum_{i=1}^N w_i \boldsymbol{F}(\hat{x}(\tau_i),\tau_i)
-$$</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />
 <section id="generalized-form">
 <h2>Generalized Form<a class="headerlink" href="#generalized-form" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 x(t+\delta t) = x(t) + \mathbf{g}_t
-$$</p>
-<p>$$
-[\mathbf{g}<em>t, \mathbf{h}</em>{t+\delta t}] = \boldsymbol{g}\left(\boldsymbol{\nabla}\boldsymbol{f}(x(t)),\mathbf{h}_t\right)
-$$</p>
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+[\mathbf{g}_t, \mathbf{h}_{t+\delta t}] = \boldsymbol{g}\left(\boldsymbol{\nabla}\boldsymbol{f}(x(t)),\mathbf{h}_t\right)
+\]</div>
 <p>Source: <em><a class="reference external" href="https://teddykoker.com/2022/04/learning-to-learn-jax/">Learning to Learn with JAX - Teddy Kroker</a></em></p>
 <hr class="docutils" />
 <section id="surrogate-methods">
 <h3>Surrogate Methods<a class="headerlink" href="#surrogate-methods" title="Permalink to this heading">#</a></h3>
 <p>We can even use some</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 x(t+\delta t) = x(t) + \mathbf{g}
-$$</p>
+\]</div>
 </section>
 </section>
 </section>
 <hr class="docutils" />
-<section id="temporal-discretization">
+<section class="tex2jax_ignore mathjax_ignore" id="temporal-discretization">
 <h1>Temporal Discretization<a class="headerlink" href="#temporal-discretization" title="Permalink to this heading">#</a></h1>
 <blockquote>
 <div><p>Parameters are artefacts of discretizations…*</p>
 </div></blockquote>
 <p>Time Steppers - dealing with the integral</p>
 <p><code class="docutils literal notranslate"><span class="pre">X(t)=x(0)</span> <span class="pre">+</span> <span class="pre">int</span> <span class="pre">f(x(t),t)dt</span></code></p>
-<p>$$
-u(\mathbf{x}_s, t) = u(\mathbf{x}<em>s, 0) + \int</em>{0}^{t} \mathcal{N}<span class="xref myst">u</span>d\tau
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+u(\mathbf{x}_s, t) = u(\mathbf{x}_s, 0) + \int_{0}^{t} \mathcal{N}[u](\mathbf{x}_s,\tau)d\tau
+\]</div>
 <p>This integral is a hard problem so we instead try and do a time-stepping way.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 u(t+\delta t) = u(t) + \int_{t}^{t+\delta t} \mathcal{N}[u](\mathbf{x}_s, \tau)d\tau
-$$</p>
+\]</div>
 <p>where we can apply this recursively by marching along.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 u(t+\delta t) = u(t) + \boldsymbol{g}(u(t), h)
-$$</p>
+\]</div>
 <ul class="simple">
 <li><p>Euler - correction</p></li>
 <li><p>RK - correction, basis functions</p></li>
@@ -1063,11 +1079,12 @@ $$</p>
 </ul>
 </section>
 <hr class="docutils" />
-<section id="spatial-discretization">
+<section class="tex2jax_ignore mathjax_ignore" id="spatial-discretization">
 <h1>Spatial Discretization<a class="headerlink" href="#spatial-discretization" title="Permalink to this heading">#</a></h1>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \partial_x u = \lim_{h \rightarrow 0}\frac{u(x + h) + 2 u(x) - u(x-h)}{2h}
-$$</p>
+\]</div>
 <p>Spatial Gradients - dealing with the derivatives</p>
 <p><code class="docutils literal notranslate"><span class="pre">N[u](x,t)</span></code></p>
 <ul class="simple">
@@ -1079,7 +1096,7 @@ $$</p>
 </ul>
 </section>
 <hr class="docutils" />
-<section id="ml-models">
+<section class="tex2jax_ignore mathjax_ignore" id="ml-models">
 <h1>ML Models<a class="headerlink" href="#ml-models" title="Permalink to this heading">#</a></h1>
 <ul class="simple">
 <li><p>Discrete Space - Convolutions + Finite Difference</p>

@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/bayesian/confidence_intervals';</script>
@@ -996,7 +998,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="confidence-intervals">
+  <section class="tex2jax_ignore mathjax_ignore" id="confidence-intervals">
 <h1>Confidence Intervals<a class="headerlink" href="#confidence-intervals" title="Permalink to this heading">#</a></h1>
 <ul class="simple">
 <li><p>Last Update: 19-April-2021</p></li>
@@ -1010,9 +1012,10 @@ title="Print to PDF"
 <hr class="docutils" />
 <section id="tldr">
 <h3>TLDR<a class="headerlink" href="#tldr" title="Permalink to this heading">#</a></h3>
-<p>:::{note}
-A lot of these methods are common within the <strong>machine learning</strong> literature, not the <strong>scientific literature</strong>. There is a huge difference between the fields regarding what’s popular for research and what’s popular for practical applications. A lot of the more complex methods are because people are using giant models trying to fit large and very complex datasets. Many times, smaller data problems (&lt;10K data points) don’t require so much difficult stuff.
-:::</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A lot of these methods are common within the <strong>machine learning</strong> literature, not the <strong>scientific literature</strong>. There is a huge difference between the fields regarding what’s popular for research and what’s popular for practical applications. A lot of the more complex methods are because people are using giant models trying to fit large and very complex datasets. Many times, smaller data problems (&lt;10K data points) don’t require so much difficult stuff.</p>
+</div>
 <p><strong>Bootstrapping</strong> - A very simple way to obtain confidence intervals is to using bootstrapping. This works by taking random permutations of your dataset and then training multiple models given this subset of data. This is advantageous because we can use any model we want, we just have to find ways of permuting the data effectively. For small data problems, we do run the risk of using so few data points that it becomes ill-advised. However, in general, it’s a very trustworthy method.</p>
 <p><strong>Ensembles</strong> - This method is analagous to the above approach but instead of many models using different permutations of the data, we train multiple models using different initial conditions. It follows the idea that combinations many smaller “weak learners” can result in a robust learner. Random forests are a notoriously good example of this. With a few modifications, one can get confidence intervals. This method is also very popular with neural networks because they tend to have a lot of local minima. This can get more expensive and more because it requires training, storing and predicting these huge models; essentially a lot of plumbing. However, these are currently the state-of-the-art methods right now.</p>
 <p><strong>Gaussian Processes</strong> - The best thing to use is a Gaussian process (GP). They come equipped with confidence intervals already. They work by using a mean function and a kernel function defined by hyperparameters to obtain a function approximation conditioned on your data. For small data problems (&lt; 2,000 points) you’re not going to find a better method. Scaling is an issue after 10K points but there are many sparse methods which compensate this with approximations. There are studies that show the confidence intervals can deteriorate with these approximations but there are other methods investigating ways to compensate this.</p>
@@ -1032,7 +1035,7 @@ A lot of these methods are common within the <strong>machine learning</strong> l
 </section>
 <section id="sparse">
 <h4>Sparse<a class="headerlink" href="#sparse" title="Permalink to this heading">#</a></h4>
-<p>The problem with standard GPs is that they are very slow after about 10K samples (on a beefy machine). So most people resort to sparse methods. This works by conditioning the best subset of points (inducing points) in order to reduce the computation cost of $\mathcal{O}(N^3)$ to $\mathcal{O}(NM^2)$ which is significantly less expensive. There are quite a few standard methods out there including:</p>
+<p>The problem with standard GPs is that they are very slow after about 10K samples (on a beefy machine). So most people resort to sparse methods. This works by conditioning the best subset of points (inducing points) in order to reduce the computation cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N^3)\)</span> to <span class="math notranslate nohighlight">\(\mathcal{O}(NM^2)\)</span> which is significantly less expensive. There are quite a few standard methods out there including:</p>
 <ul class="simple">
 <li><p>Fully Independent Training Conditional (FITC)</p></li>
 <li><p>Variational Free Energy (VFE)</p></li>

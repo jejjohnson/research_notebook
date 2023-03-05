@@ -906,7 +906,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="numpyro-tutorial">
+  <section class="tex2jax_ignore mathjax_ignore" id="numpyro-tutorial">
 <h1>Numpyro Tutorial<a class="headerlink" href="#numpyro-tutorial" title="Permalink to this heading">#</a></h1>
 <section id="objective">
 <h2>Objective<a class="headerlink" href="#objective" title="Permalink to this heading">#</a></h2>
@@ -918,92 +918,92 @@ title="Print to PDF"
 <blockquote>
 <div><p>Building a Kalman Filter with Numpyro</p>
 </div></blockquote>
-<ul class="simple">
-<li><p>[X] Simple Kalman Filter - loops + known params</p></li>
-<li><p>[X] Scan Function (faster, better labels)</p></li>
-<li><p>[X] Unconditional - Prior samples</p></li>
-<li><p>[ ] Datasets</p>
-<ul>
-<li><p>[ ] Sine Wave</p></li>
-<li><p>[ ] Multivariate Sine Waves</p></li>
-<li><p>[X] Object Tracking</p></li>
-<li><p>[ ] Robot Data</p></li>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> Simple Kalman Filter - loops + known params</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> Scan Function (faster, better labels)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> Unconditional - Prior samples</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Datasets</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Sine Wave</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Multivariate Sine Waves</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> Object Tracking</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Robot Data</p></li>
 </ul>
 </li>
 </ul>
 <hr class="docutils" />
 <p><strong>Unknown Parameters</strong></p>
-<ul class="simple">
-<li><p>[ ] Object Tracking</p></li>
-<li><p>[ ] Parameters - <code class="docutils literal notranslate"><span class="pre">numpyro.param</span></code></p></li>
-<li><p>[ ] Constraints and Shapes (Diag/Full)</p></li>
-<li><p>[ ] Inference (MLE)</p></li>
-<li><p>[ ] Noise Estimation</p></li>
-<li><p>[ ] Conditioning - posterior samples</p></li>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Object Tracking</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Parameters - <code class="docutils literal notranslate"><span class="pre">numpyro.param</span></code></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Constraints and Shapes (Diag/Full)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Inference (MLE)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Noise Estimation</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Conditioning - posterior samples</p></li>
 </ul>
 <hr class="docutils" />
-<ul class="simple">
-<li><p>[ ] <code class="docutils literal notranslate"><span class="pre">numpyro.sample</span></code> | <code class="docutils literal notranslate"><span class="pre">numpyro.dist</span></code> - +ve constraint, cholesky decomposition, MAP/MCMC Estimation</p></li>
-<li><p>[ ] Object Tracking</p></li>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> <code class="docutils literal notranslate"><span class="pre">numpyro.sample</span></code> | <code class="docutils literal notranslate"><span class="pre">numpyro.dist</span></code> - +ve constraint, cholesky decomposition, MAP/MCMC Estimation</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Object Tracking</p></li>
 </ul>
 <hr class="docutils" />
-<ul class="simple">
-<li><p>[ ] masking - missing values, faster inference</p></li>
-<li><p>[ ] reparam - augmentation, marginal Gaussianization, Gaussianization</p></li>
-<li><p>[ ] associative scan - faster inference</p></li>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> masking - missing values, faster inference</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> reparam - augmentation, marginal Gaussianization, Gaussianization</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> associative scan - faster inference</p></li>
 </ul>
 <hr class="docutils" />
-<ul class="simple">
-<li><p>[ ] ensemble - vmap, sample</p></li>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> ensemble - vmap, sample</p></li>
 </ul>
 </section>
 <hr class="docutils" />
 <section id="inference">
 <h2>Inference<a class="headerlink" href="#inference" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p>[ ] Maximum Likelihood Estimation (MLE)</p></li>
-<li><p>[ ] Maximum A Priori (MAP)</p></li>
-<li><p>[ ] Sampling:</p>
-<ul>
-<li><p>[ ] Markov Chain Monte Carlo (MCMC)</p></li>
-<li><p>[ ] Hamiltonian Monte Carlo (HMC)</p></li>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Maximum Likelihood Estimation (MLE)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Maximum A Priori (MAP)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Sampling:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Markov Chain Monte Carlo (MCMC)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Hamiltonian Monte Carlo (HMC)</p></li>
 </ul>
 </li>
-<li><p>[ ] Approximate Inference (AutoGuide)</p>
-<ul>
-<li><p>[ ] Delta (MAP)</p></li>
-<li><p>[ ] Laplace Approximation</p></li>
-<li><p>[ ] Normal (Diag)</p></li>
-<li><p>[ ] Normal (Full)</p></li>
-<li><p>[ ] Normalizing Flow (NF)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Approximate Inference (AutoGuide)</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Delta (MAP)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Laplace Approximation</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Normal (Diag)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Normal (Full)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Normalizing Flow (NF)</p></li>
 </ul>
 </li>
-<li><p>[ ] Hybrid Methods</p>
-<ul>
-<li><p>[ ] NeuTraReparam</p></li>
-<li><p>[ ] Differentiable Annealed Importance Sampling (DAIS)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Hybrid Methods</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> NeuTraReparam</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Differentiable Annealed Importance Sampling (DAIS)</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p>[ ] Object Tracking</p></li>
-<li><p>[ ] Lorenz63</p></li>
-<li><p>[ ] Lorenz96</p></li>
-<li><p>[ ] Sea Surface Temperature (SST)</p></li>
-<li><p>[ ] Sea Surface Height (SSH)</p></li>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Object Tracking</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Lorenz63</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Lorenz96</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Sea Surface Temperature (SST)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Sea Surface Height (SSH)</p></li>
 </ul>
 </section>
 <section id="kalman-filter">
 <h2>Kalman Filter<a class="headerlink" href="#kalman-filter" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p>[ ] Linear (Discrete)</p></li>
-<li><p>[ ] Linear (Continuous)</p></li>
-<li><p>[ ] Ensemble (Stochastic)</p></li>
-<li><p>[ ] Ensemble (Deterministic)</p></li>
-<li><p>[ ] Dynamical System</p></li>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Linear (Discrete)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Linear (Continuous)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Ensemble (Stochastic)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Ensemble (Deterministic)</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Dynamical System</p></li>
 </ul>
 </section>
 </section>

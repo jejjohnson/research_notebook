@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/inr/pinns';</script>
@@ -912,32 +914,36 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="physics-informed-loss">
+  <section class="tex2jax_ignore mathjax_ignore" id="physics-informed-loss">
 <h1>Physics-Informed Loss<a class="headerlink" href="#physics-informed-loss" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <section id="function">
 <h2>Function<a class="headerlink" href="#function" title="Permalink to this heading">#</a></h2>
-<p>The learned function, $\boldsymbol{f_\theta}$, will map the spatial coordinates, $\mathbf{x}_\phi \in \mathbb{R}^{D\phi}$, and time coordinate, $t \in \mathbb{R}$, to sea surface height, $u \in \mathbb{R}$.</p>
-<p>$$
+<p>The learned function, <span class="math notranslate nohighlight">\(\boldsymbol{f_\theta}\)</span>, will map the spatial coordinates, <span class="math notranslate nohighlight">\(\mathbf{x}_\phi \in \mathbb{R}^{D\phi}\)</span>, and time coordinate, <span class="math notranslate nohighlight">\(t \in \mathbb{R}\)</span>, to sea surface height, <span class="math notranslate nohighlight">\(u \in \mathbb{R}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 u = \boldsymbol{f_\theta}(\mathbf{x}_\phi, t)
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="loss">
 <h2>Loss<a class="headerlink" href="#loss" title="Permalink to this heading">#</a></h2>
 <p>The standard loss term is data-driven</p>
-<p>$$
-\mathcal{L}<em>{data} = \text{MSE}(u, \hat{u}) = \frac{1}{N} \sum</em>{n=1}^N  \left(u - \boldsymbol{f_\phi}(\mathbf{x}_\phi, t) \right)^2
-$$</p>
-<p>However, there is no penalization to make the field behave the way we would expect. We also want a regularization which makes the field, $u$, behave how we would expect. This can be achieved by adding a physics-informed loss regularization term to the total loss.</p>
-<p>$$
-\mathcal{L} = \mathcal{L}<em>{data} + \lambda \mathcal{L}</em>{phy}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{data} = \text{MSE}(u, \hat{u}) = \frac{1}{N} \sum_{n=1}^N  \left(u - \boldsymbol{f_\phi}(\mathbf{x}_\phi, t) \right)^2
+\]</div>
+<p>However, there is no penalization to make the field behave the way we would expect. We also want a regularization which makes the field, <span class="math notranslate nohighlight">\(u\)</span>, behave how we would expect. This can be achieved by adding a physics-informed loss regularization term to the total loss.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L} = \mathcal{L}_{data} + \lambda \mathcal{L}_{phy}
+\]</div>
 <p>This loss term can be minimized by effectively minimizing a PDE function. For example:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f}_{phy}(\mathbf{x},t):= \partial_t u(\mathbf{x},t) + \mathcal{N}[u(\mathbf{x},t)] = 0
-$$</p>
-<p>where $\partial_t$ is the derivative of the field, $u$, wrt to time and $\mathcal{N}[\cdot]$ are some partial differential equations. We are interested in minimizing the full PDE, which we denote $\boldsymbol{f}_{phy}$, st it is 0. So the standard loss function applies.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\partial_t\)</span> is the derivative of the field, <span class="math notranslate nohighlight">\(u\)</span>, wrt to time and <span class="math notranslate nohighlight">\(\mathcal{N}[\cdot]\)</span> are some partial differential equations. We are interested in minimizing the full PDE, which we denote <span class="math notranslate nohighlight">\(\boldsymbol{f}_{phy}\)</span>, st it is 0. So the standard loss function applies.</p>
 </section>
 <hr class="docutils" />
 <section id="examples">
@@ -947,18 +953,20 @@ $$</p>
 <section id="qg-equation">
 <h3>QG Equation<a class="headerlink" href="#qg-equation" title="Permalink to this heading">#</a></h3>
 <p>We have the following PDE for the QG dynamics:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \partial_t q + \det J(\psi, q) = 0
-$$</p>
-<p>where $q(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}$ is the potential vorticity (PV), $\psi(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}$ is the stream function, $\partial_t$ is the partial derivative wrt $t$, $\boldsymbol{J}$, is the Jacobian operator and $\det \boldsymbol{J}(\cdot,\cdot)$ is the <em>determinant</em> of the Jacobian.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(q(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the potential vorticity (PV), <span class="math notranslate nohighlight">\(\psi(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the stream function, <span class="math notranslate nohighlight">\(\partial_t\)</span> is the partial derivative wrt <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(\boldsymbol{J}\)</span>, is the Jacobian operator and <span class="math notranslate nohighlight">\(\det \boldsymbol{J}(\cdot,\cdot)\)</span> is the <em>determinant</em> of the Jacobian.</p>
 <p><strong>Objective</strong>: We want to convert this PDE in terms of sea surface height (SSH) instead of PV and the stream function.</p>
 <hr class="docutils" />
 <section id="qg-equation-4-ssh-tldr">
 <h4>QG Equation 4 SSH (TLDR)<a class="headerlink" href="#qg-equation-4-ssh-tldr" title="Permalink to this heading">#</a></h4>
-<p><strong>Note</strong>: For the ease of notation, let’s denote $u$ as the SSH. The above PDE can be written in terms of $u$</p>
-<p>$$
+<p><strong>Note</strong>: For the ease of notation, let’s denote <span class="math notranslate nohighlight">\(u\)</span> as the SSH. The above PDE can be written in terms of <span class="math notranslate nohighlight">\(u\)</span></p>
+<div class="math notranslate nohighlight">
+\[
 \partial_t \nabla^2 u + c_2 \partial_t u + c_1\det \boldsymbol{J}(u, \nabla^2 u) +  c_3 \det \boldsymbol{J}(u, u) = 0
-$$</p>
+\]</div>
 <p>See <a class="reference internal" href="qg.html"><span class="doc std std-doc">the following page</span></a> for more and how this equation was derived.</p>
 </section>
 </section>

@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data_assimilation/kf';</script>
@@ -968,7 +970,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="kalman-filter">
+  <section class="tex2jax_ignore mathjax_ignore" id="kalman-filter">
 <h1>Kalman Filter<a class="headerlink" href="#kalman-filter" title="Permalink to this heading">#</a></h1>
 <p>Implementation of the Kalman Filter</p>
 <hr class="docutils" />
@@ -976,9 +978,10 @@ title="Print to PDF"
 <h2>Methods<a class="headerlink" href="#methods" title="Permalink to this heading">#</a></h2>
 <section id="filter">
 <h3>Filter<a class="headerlink" href="#filter" title="Permalink to this heading">#</a></h3>
-<p>$$
-p(\mathbf{z}<em>t|\mathbf{x}</em>{1:t}) = \mathcal{N}(\mathbf{z}<em>t|\boldsymbol{\mu}</em>{\mathbf{z}<em>{t|t-1}}, \boldsymbol{\Sigma}</em>{\mathbf{z}_{t|t-1}})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{z}_t|\mathbf{x}_{1:t}) = \mathcal{N}(\mathbf{z}_t|\boldsymbol{\mu}_{\mathbf{z}_{t|t-1}}, \boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}})
+\]</div>
 <p>This is a two step process:</p>
 <ol class="arabic simple">
 <li><p>Prediction Step for the Transition Model</p></li>
@@ -987,12 +990,13 @@ $$</p>
 <hr class="docutils" />
 <section id="predict-step">
 <h4>Predict Step<a class="headerlink" href="#predict-step" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\text{(Pred. Mean)} \hspace{10mm} \boldsymbol{\mu}<em>{\mathbf{z}</em>{t|t-1}} &amp;=  \mathbf{F}\mathbf{z}<em>{t-1} \
-\text{(Pred. Cov.)} \hspace{10mm} \boldsymbol{\Sigma}</em>{\mathbf{z}<em>{t|t-1}} &amp;= \mathbf{F} \boldsymbol{\Sigma}</em>{t-1}\mathbf{F}^\top+\mathbf{Q}
+\text{(Pred. Mean)} \hspace{10mm} \boldsymbol{\mu}_{\mathbf{z}_{t|t-1}} &amp;=  \mathbf{F}\mathbf{z}_{t-1} \\
+\text{(Pred. Cov.)} \hspace{10mm} \boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}} &amp;= \mathbf{F} \boldsymbol{\Sigma}_{t-1}\mathbf{F}^\top+\mathbf{Q}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># predictive mean (state), t|t-1</span>
 <span class="n">mu_z_t_cond</span> <span class="o">=</span> <span class="n">F</span> <span class="o">@</span> <span class="n">mu_t</span>
 <span class="c1"># predictive covariance (state), t|t-1</span>
@@ -1003,20 +1007,22 @@ $$</p>
 <hr class="docutils" />
 <section id="update-step">
 <h4>Update Step<a class="headerlink" href="#update-step" title="Permalink to this heading">#</a></h4>
-<p>$$
-p(\mathbf{z}<em>t|\mathbf{x}</em>{1:t}) = \mathcal{N}(\mathbf{z}<em>t|\boldsymbol{\mu}</em>{\mathbf{z}<em>t}, \boldsymbol{\Sigma}</em>{\mathbf{z}_t})
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{z}_t|\mathbf{x}_{1:t}) = \mathcal{N}(\mathbf{z}_t|\boldsymbol{\mu}_{\mathbf{z}_t}, \boldsymbol{\Sigma}_{\mathbf{z}_t})
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\boldsymbol{\mu}_{\mathbf{z}_t}$ is the estimation of the state mean given the observations</p></li>
-<li><p>$\boldsymbol{\Sigma}_{\mathbf{z}_t}$ is the estimation of the state cov given the observations.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}_{\mathbf{z}_t}\)</span> is the estimation of the state mean given the observations</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_{\mathbf{z}_t}\)</span> is the estimation of the state cov given the observations.</p></li>
 </ul>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\text{(Pred. Mean)} \hspace{10mm} \boldsymbol{\mu}<em>{\mathbf{x}</em>{t}} &amp;=  \mathbf{H}\boldsymbol{\mu}<em>{\mathbf{z}</em>{t|t-1}} \
-\text{(Innovation)} \hspace{10mm} \boldsymbol{\Sigma}<em>{\mathbf{x}</em>{t}} &amp;= \mathbf{H} \boldsymbol{\Sigma}<em>{\mathbf{z}</em>{t|t-1}} \mathbf{H}^\top + \mathbf{R}
+\text{(Pred. Mean)} \hspace{10mm} \boldsymbol{\mu}_{\mathbf{x}_{t}} &amp;=  \mathbf{H}\boldsymbol{\mu}_{\mathbf{z}_{t|t-1}} \\
+\text{(Innovation)} \hspace{10mm} \boldsymbol{\Sigma}_{\mathbf{x}_{t}} &amp;= \mathbf{H} \boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}} \mathbf{H}^\top + \mathbf{R}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pred Mean (obs)</span>
 <span class="n">mu_x_t_cond</span> <span class="o">=</span> <span class="n">H</span> <span class="o">@</span> <span class="n">mu_z_t_cond</span>
 <span class="c1"># Pred Cov (obs)</span>
@@ -1026,12 +1032,13 @@ $$</p>
 <p>We then need to do a correction. This is done via a 2-step process</p>
 <section id="innovation-kalman-gain">
 <h5>Innovation &amp; Kalman Gain<a class="headerlink" href="#innovation-kalman-gain" title="Permalink to this heading">#</a></h5>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\text{(Innovation)} \hspace{10mm} \boldsymbol{r}<em>{t} &amp;= \mathbf{x}<em>t - \boldsymbol{\mu}</em>{\mathbf{x}</em>{t}} \
-\text{(Kalman Gain)} \hspace{10mm} \mathbf{K}<em>{t} &amp;= \boldsymbol{\Sigma}</em>{\mathbf{z}<em>{t|t-1}} \mathbf{H}^{-1} \boldsymbol{\Sigma}</em>{\mathbf{x}_{t}}^{-1}
+\text{(Innovation)} \hspace{10mm} \boldsymbol{r}_{t} &amp;= \mathbf{x}_t - \boldsymbol{\mu}_{\mathbf{x}_{t}} \\
+\text{(Kalman Gain)} \hspace{10mm} \mathbf{K}_{t} &amp;= \boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}} \mathbf{H}^{-1} \boldsymbol{\Sigma}_{\mathbf{x}_{t}}^{-1}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># innovation</span>
 <span class="n">r_t</span> <span class="o">=</span> <span class="n">x_t</span> <span class="o">-</span> <span class="n">mu_x_t_cond</span>
 <span class="c1"># kalman gain</span>
@@ -1041,12 +1048,13 @@ $$</p>
 </section>
 <section id="correction">
 <h5>Correction<a class="headerlink" href="#correction" title="Permalink to this heading">#</a></h5>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\text{(Est. Mean)} \hspace{10mm} \boldsymbol{\mu}<em>{\mathbf{z}</em>{t}} &amp;=  \boldsymbol{\mu}<em>{\mathbf{z}</em>{t|t-1}} + \mathbf{K}<em>t\boldsymbol{r}</em>{t} \
-\text{(Est. Cov.)} \hspace{10mm} \boldsymbol{\Sigma}<em>{\mathbf{z}</em>{t}} &amp;= (\mathbf{I} - \mathbf{K}<em>t\mathbf{H})\boldsymbol{\Sigma}</em>{\mathbf{z}_{t|t-1}}
+\text{(Est. Mean)} \hspace{10mm} \boldsymbol{\mu}_{\mathbf{z}_{t}} &amp;=  \boldsymbol{\mu}_{\mathbf{z}_{t|t-1}} + \mathbf{K}_t\boldsymbol{r}_{t} \\
+\text{(Est. Cov.)} \hspace{10mm} \boldsymbol{\Sigma}_{\mathbf{z}_{t}} &amp;= (\mathbf{I} - \mathbf{K}_t\mathbf{H})\boldsymbol{\Sigma}_{\mathbf{z}_{t|t-1}}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimated state mean</span>
 <span class="n">mu_z_t</span> <span class="o">=</span> <span class="n">mu_z_t_cond</span> <span class="o">+</span> <span class="n">K_t</span> <span class="o">@</span> <span class="n">r_t</span>
 <span class="c1"># estimated state covariance </span>
@@ -1064,18 +1072,18 @@ $$</p>
 <h3>Psuedocode<a class="headerlink" href="#psuedocode" title="Permalink to this heading">#</a></h3>
 <p><strong>Inputs</strong></p>
 <ul class="simple">
-<li><p>$\mathbf{A} \in \mathbb{R}^{D_x \times D_x}$ - transition matrix</p></li>
-<li><p>$\mathbf{Q} \in \mathbb{R}^{D_x \times D_x}$ - transition noise</p></li>
-<li><p>$\mathbf{H} \in \mathbb{R}^{D_y \times D_x}$ - emission matrix</p></li>
-<li><p>$\boldsymbol{\mu}_0 \in \mathbb{R}^{D_x}$ - prior for state, $\mathbf{x}$, mean</p></li>
-<li><p>$\boldsymbol{\Sigma}_0 \in \mathbb{R}^{D_x \times D_x}$ - prior for state, $\mathbf{x}$, covariance</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{A} \in \mathbb{R}^{D_x \times D_x}\)</span> - transition matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{Q} \in \mathbb{R}^{D_x \times D_x}\)</span> - transition noise</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{H} \in \mathbb{R}^{D_y \times D_x}\)</span> - emission matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}_0 \in \mathbb{R}^{D_x}\)</span> - prior for state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, mean</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_0 \in \mathbb{R}^{D_x \times D_x}\)</span> - prior for state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, covariance</p></li>
 <li></li>
 </ul>
 <p><strong>Parameters</strong></p>
 <ul class="simple">
-<li><p>$\mathbf{x} \in \mathbb{R}^{D_x}$ - transition matrix</p></li>
-<li><p>$\mathbf{y} \in \mathbb{R}^{D_y }$ - transition noise</p></li>
-<li><p>$\mathbf{H} \in \mathbb{R}^{D_y \times D_x}$ - emission matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_x}\)</span> - transition matrix</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{D_y }\)</span> - transition noise</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{H} \in \mathbb{R}^{D_y \times D_x}\)</span> - emission matrix</p></li>
 </ul>
 <p><strong>Function</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_sequential_kf</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">Rs</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">Qs</span><span class="p">,</span> <span class="n">m0</span><span class="p">,</span> <span class="n">P0</span><span class="p">,</span> <span class="n">masks</span><span class="p">,</span> <span class="n">return_predict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

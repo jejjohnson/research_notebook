@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/bayesian/intro';</script>
@@ -959,11 +961,11 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="language-of-uncertainty">
+  <section class="tex2jax_ignore mathjax_ignore" id="language-of-uncertainty">
 <h1>Language of Uncertainty<a class="headerlink" href="#language-of-uncertainty" title="Permalink to this heading">#</a></h1>
 <section id="formulation">
 <h2>Formulation<a class="headerlink" href="#formulation" title="Permalink to this heading">#</a></h2>
-<p>A model is something that links inputs to outputs. If we are given data, $X \in \mathbb{R}^{NxD}$, and observations, $y$, we ideally would want to know these two entities are related. That relationship (or transformation) from the data $X$ to the observations $y$ is what we would call a model, $\mathcal{M}$.</p>
+<p>A model is something that links inputs to outputs. If we are given data, <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{NxD}\)</span>, and observations, <span class="math notranslate nohighlight">\(y\)</span>, we ideally would want to know these two entities are related. That relationship (or transformation) from the data <span class="math notranslate nohighlight">\(X\)</span> to the observations <span class="math notranslate nohighlight">\(y\)</span> is what we would call a model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>.</p>
 <p align="center">
 <div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>graph LR
 A[X] --&gt; B[Model];
@@ -972,9 +974,10 @@ B --&gt; C[y]
 </div>
 </p>
 <p><img alt="alt text" src="content/notes/bayesian/pics/model_map.png" /></p>
-<p>More concretely, let $X\in \mathbb{R}^{NxD}$ and $y \in \mathbb{R}^{N}$ where $N$ is the number of samples and $D$ is the number of dimensions/features. In a transformation sense, we could think of it as a function, $f$ that maps the data from $X$ to $y$, or $f:\mathbb{X}\rightarrow \mathbb{Y}, \mathbb{R}^{NxD}\rightarrow \mathbb{R}^{N}$. To put it simply, we have the following equation to describe our model.</p>
-<p>$$y = f(X)$$</p>
-<p>But if we put a statistical spin on it and say that $X$ is a random variabe (r.v.), $X \sim \mathbb{P}$. We typically don’t know $\mathbb{P}$ or else there really would not be a problem. Or even worse, let’s say that there is actually noise in our observation so we’re not entirely 100% sure that each input, $x$ corresponds to each output, $y$. Fortunately, we have mathematics where we can easily find some mathematical framework to transform our problem into a way we can easily solve. In this case, we can use the mathematics of probability theory to express the uncertainty and noise that come with our model, $\mathcal{M}$. More specifically, we can use Bayes rule to give us inverse probabilities that allow us to use inference; basically using our data to infer unknown quantities, model aspects and (most importantly) make predictions.</p>
+<p>More concretely, let <span class="math notranslate nohighlight">\(X\in \mathbb{R}^{NxD}\)</span> and <span class="math notranslate nohighlight">\(y \in \mathbb{R}^{N}\)</span> where <span class="math notranslate nohighlight">\(N\)</span> is the number of samples and <span class="math notranslate nohighlight">\(D\)</span> is the number of dimensions/features. In a transformation sense, we could think of it as a function, <span class="math notranslate nohighlight">\(f\)</span> that maps the data from <span class="math notranslate nohighlight">\(X\)</span> to <span class="math notranslate nohighlight">\(y\)</span>, or <span class="math notranslate nohighlight">\(f:\mathbb{X}\rightarrow \mathbb{Y}, \mathbb{R}^{NxD}\rightarrow \mathbb{R}^{N}\)</span>. To put it simply, we have the following equation to describe our model.</p>
+<div class="math notranslate nohighlight">
+\[y = f(X)\]</div>
+<p>But if we put a statistical spin on it and say that <span class="math notranslate nohighlight">\(X\)</span> is a random variabe (r.v.), <span class="math notranslate nohighlight">\(X \sim \mathbb{P}\)</span>. We typically don’t know <span class="math notranslate nohighlight">\(\mathbb{P}\)</span> or else there really would not be a problem. Or even worse, let’s say that there is actually noise in our observation so we’re not entirely 100% sure that each input, <span class="math notranslate nohighlight">\(x\)</span> corresponds to each output, <span class="math notranslate nohighlight">\(y\)</span>. Fortunately, we have mathematics where we can easily find some mathematical framework to transform our problem into a way we can easily solve. In this case, we can use the mathematics of probability theory to express the uncertainty and noise that come with our model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>. More specifically, we can use Bayes rule to give us inverse probabilities that allow us to use inference; basically using our data to infer unknown quantities, model aspects and (most importantly) make predictions.</p>
 <section id="bayes-rule-in-words">
 <h3>Bayes Rule in Words<a class="headerlink" href="#bayes-rule-in-words" title="Permalink to this heading">#</a></h3>
 <p>In a Machine Learning problem, we almost always have the following components:</p>
@@ -996,97 +999,110 @@ B --&gt; C[y]
 </li>
 </ul>
 <p>The Bayesian framework works best when you think about it from a probabilistic standpoint.</p>
-<p>$$\begin{aligned}P(\text{ Model }|\text{ Data })=
-\frac{P(\text{ Data }|\text{ Model })P(\text{ Model })}{P(\text{ Data })}\end{aligned}$$</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}P(\text{ Model }|\text{ Data })=
+\frac{P(\text{ Data }|\text{ Model })P(\text{ Model })}{P(\text{ Data })}\end{aligned}\]</div>
 <blockquote>
-<div><p>I’ve seen some people (<a class="reference external" href="https://work.caltech.edu/library/012.html">here</a>, <a class="reference external" href="https://youtu.be/5KdWhDpeQvU?t=1310">here</a>) have some sort of equivalence between Model, $\mathcal{M}$ and Hypothesis, $\mathcal{H}$. In this particular instance, think of the $\mathcal{M}$ as the best possible outcome that we can achieve to map $x$ to $y$ <strong>correctly</strong>. And think of $\mathcal{H}$ as a set of possible formulas we could use; like in a Universe where we have all of the possible formulas and collection of parameters. I quite like the term Hypothesis because it adds another level of abstraction when thinking about the problem. But at the same time I feel like this extra layer of abstraction is not something I like to think about all of the time.</p>
+<div><p>I’ve seen some people (<a class="reference external" href="https://work.caltech.edu/library/012.html">here</a>, <a class="reference external" href="https://youtu.be/5KdWhDpeQvU?t=1310">here</a>) have some sort of equivalence between Model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> and Hypothesis, <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>. In this particular instance, think of the <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> as the best possible outcome that we can achieve to map <span class="math notranslate nohighlight">\(x\)</span> to <span class="math notranslate nohighlight">\(y\)</span> <strong>correctly</strong>. And think of <span class="math notranslate nohighlight">\(\mathcal{H}\)</span> as a set of possible formulas we could use; like in a Universe where we have all of the possible formulas and collection of parameters. I quite like the term Hypothesis because it adds another level of abstraction when thinking about the problem. But at the same time I feel like this extra layer of abstraction is not something I like to think about all of the time.</p>
 </div></blockquote>
 <p>Let’s break down each of these components.</p>
 <ul class="simple">
-<li><p>$P(\text{ Model })$ - Prior Probability</p></li>
-<li><p>$P(\text{ Data } | \text{})$ - Evidence, Normalization Constant</p></li>
-<li><p>$P(\text{ Model } | \text{ Data })$ - Posterior Probability</p></li>
-<li><p>$P(\text{ Data } | \text{ Model })$ - Likelihood</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(\text{ Model })\)</span> - Prior Probability</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(\text{ Data } | \text{})\)</span> - Evidence, Normalization Constant</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(\text{ Model } | \text{ Data })\)</span> - Posterior Probability</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(\text{ Data } | \text{ Model })\)</span> - Likelihood</p></li>
 </ul>
 <p>Let’s change the notation to something a bit more common.</p>
-<p>$$P(\theta | \mathcal{D}, \mathcal{M})=
-\frac{P(\mathcal{D}|\theta, \mathcal{M})P(\theta | \mathcal{M})}{P(\mathcal{D}|\mathcal{M})}$$</p>
+<div class="math notranslate nohighlight">
+\[P(\theta | \mathcal{D}, \mathcal{M})=
+\frac{P(\mathcal{D}|\theta, \mathcal{M})P(\theta | \mathcal{M})}{P(\mathcal{D}|\mathcal{M})}\]</div>
 <p>where:</p>
 <ul>
-<li><p>$P(\mathcal{D}|\theta, \mathcal{M})$ - Likelihood of the parameters, $\theta$ in model $\mathcal{M}$</p>
+<li><p><span class="math notranslate nohighlight">\(P(\mathcal{D}|\theta, \mathcal{M})\)</span> - Likelihood of the parameters, <span class="math notranslate nohighlight">\(\theta\)</span> in model <span class="math notranslate nohighlight">\(\mathcal{M}\)</span></p>
 <blockquote>
 <div><p>Likelihood of the parameters (<strong>not of the data</strong>). For every set of parameters, I can assign a probability to some observable data.</p>
 </div></blockquote>
 </li>
-<li><p>$P(\theta | \mathcal{M})$ - prior probability of $\theta$</p>
+<li><p><span class="math notranslate nohighlight">\(P(\theta | \mathcal{M})\)</span> - prior probability of <span class="math notranslate nohighlight">\(\theta\)</span></p>
 <blockquote>
 <div><p>This expresses the distribution and the uncertainty of the parameters that define my model. It’s a way of constraining the range of values that can occur. Expert knowledge in this area is crucial if you would like Physics-aware machine learning models.</p>
 </div></blockquote>
 </li>
-<li><p>$P(\mathcal{D}|\mathcal{M})$ - The normalization constant (the marginal likelihood)</p>
+<li><p><span class="math notranslate nohighlight">\(P(\mathcal{D}|\mathcal{M})\)</span> - The normalization constant (the marginal likelihood)</p>
 <blockquote>
 <div><p>This term seems to give us a lot of problems <strong>???</strong> but this is an artifact of Bayes Rule where in order to obtain my Posterior, I need to renormalize.</p>
 </div></blockquote>
 </li>
-<li><p>$P(\theta | \mathcal{D,M})$ - Posterior of $\theta$ given data $\mathcal{D}$</p>
+<li><p><span class="math notranslate nohighlight">\(P(\theta | \mathcal{D,M})\)</span> - Posterior of <span class="math notranslate nohighlight">\(\theta\)</span> given data <span class="math notranslate nohighlight">\(\mathcal{D}\)</span></p>
 <blockquote>
 <div><p>T</p>
 </div></blockquote>
 </li>
 </ul>
-<p>There are few things that are different. First of all, every single component is conditioned on a model $\mathcal{M}$. This is to say, given that I have described my model, here are the configurations that this model requires. So we’re really staying true to the model based Machine Learning instead of the Toolbox method. Also, I’ve changed the data to be denoted as $\mathcal{D}$ where $\mathcal{D}=\left{ (x_1, y_1), \ldots, (x_N, y_N) \right}^{N}_{1}$.</p>
+<p>There are few things that are different. First of all, every single component is conditioned on a model <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>. This is to say, given that I have described my model, here are the configurations that this model requires. So we’re really staying true to the model based Machine Learning instead of the Toolbox method. Also, I’ve changed the data to be denoted as <span class="math notranslate nohighlight">\(\mathcal{D}\)</span> where <span class="math notranslate nohighlight">\(\mathcal{D}=\left\{ (x_1, y_1), \ldots, (x_N, y_N) \right\}^{N}_{1}\)</span>.</p>
 </section>
 <section id="maximum-a-posteriori-map-estimation">
 <h3>Maximum A Posteriori (MAP) Estimation<a class="headerlink" href="#maximum-a-posteriori-map-estimation" title="Permalink to this heading">#</a></h3>
-<p>Notice how this doesn’t really help us <strong>use</strong> or <strong>evaluate</strong> the parameters for the model that we’ve learned. That’s when it comes to predictions. If we look at the sum for Bayes rule $P(x)=\int P(x,y)dy\approx\sum_y P(x,y)$, we can write something similar for actual datapoints, $P(x|\mathcal{D,M})$.</p>
-<p>$$P(x|\mathcal{D,M})=\int P(x, \theta|\mathcal{D,M})d\theta$$</p>
-<p>This integral is by $d\theta$ because we want to integrate out the parameters <strong>(WHY???)</strong>. There is now a joint distribution between $x$ and $\theta$. We actually don’t have access to that. But we do have access to the posterior probability of $\theta$ given the data $\mathcal{D}$. So using the product rule ($P(x,y)=P(x)P(y|x)$), we can split apart that quantity to obtain:</p>
-<p>$$P(x|\mathcal{D},\mathcal{M})=
+<p>Notice how this doesn’t really help us <strong>use</strong> or <strong>evaluate</strong> the parameters for the model that we’ve learned. That’s when it comes to predictions. If we look at the sum for Bayes rule <span class="math notranslate nohighlight">\(P(x)=\int P(x,y)dy\approx\sum_y P(x,y)\)</span>, we can write something similar for actual datapoints, <span class="math notranslate nohighlight">\(P(x|\mathcal{D,M})\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[P(x|\mathcal{D,M})=\int P(x, \theta|\mathcal{D,M})d\theta\]</div>
+<p>This integral is by <span class="math notranslate nohighlight">\(d\theta\)</span> because we want to integrate out the parameters <strong>(WHY???)</strong>. There is now a joint distribution between <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(\theta\)</span>. We actually don’t have access to that. But we do have access to the posterior probability of <span class="math notranslate nohighlight">\(\theta\)</span> given the data <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>. So using the product rule (<span class="math notranslate nohighlight">\(P(x,y)=P(x)P(y|x)\)</span>), we can split apart that quantity to obtain:</p>
+<div class="math notranslate nohighlight">
+\[P(x|\mathcal{D},\mathcal{M})=
 \int P(x|\theta, \mathcal{D},\mathcal{M})
-P(\theta|\mathcal{D}, \mathcal{M})d\theta$$</p>
-<p>Now dissecting this formula a little further, we now have the average predictions for all $\theta$’s which we weight by the posteriors. This arises a natural ensemble scheme where we are averaging models. Also worth noting is that there is no optimization within any of these quantities. Practically, my brain is telling me that that is a bit useless but I guess in the Bayesian framework, that’s not really all that necessary. But yes, optimal model parameters would be needed for actually making decisions on future data.</p>
-<p>We can write a loss function $\mathcal{L}$ w.r.t. $\theta$ to express how one would optimize this quantity:</p>
-<p>$$\mathcal{L}(\theta^*)=$$</p>
+P(\theta|\mathcal{D}, \mathcal{M})d\theta\]</div>
+<p>Now dissecting this formula a little further, we now have the average predictions for all <span class="math notranslate nohighlight">\(\theta\)</span>’s which we weight by the posteriors. This arises a natural ensemble scheme where we are averaging models. Also worth noting is that there is no optimization within any of these quantities. Practically, my brain is telling me that that is a bit useless but I guess in the Bayesian framework, that’s not really all that necessary. But yes, optimal model parameters would be needed for actually making decisions on future data.</p>
+<p>We can write a loss function <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> w.r.t. <span class="math notranslate nohighlight">\(\theta\)</span> to express how one would optimize this quantity:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\theta^*)=\]</div>
 </section>
 <section id="model-comparison">
 <h3>Model Comparison<a class="headerlink" href="#model-comparison" title="Permalink to this heading">#</a></h3>
-<p>$$P(\mathcal{M}|\mathcal{D})=\frac{P(\mathcal{D}|\mathcal{M})P(\mathcal{M})}{P(\mathcal{D})}$$</p>
-<p>The most interesting one is deriving the maximum likelihood formulation (Ocamz Razer, Model Evidence, Integrated Likelihood): what’s the probability that the data I have came from the model $P(\mathcal{D|M})$. Again using Bayes sum rule:</p>
-<p>$$P(\mathcal{D}|\mathcal{M})=\int P(\mathcal{D},\theta|\mathcal{M})d\theta$$</p>
+<div class="math notranslate nohighlight">
+\[P(\mathcal{M}|\mathcal{D})=\frac{P(\mathcal{D}|\mathcal{M})P(\mathcal{M})}{P(\mathcal{D})}\]</div>
+<p>The most interesting one is deriving the maximum likelihood formulation (Ocamz Razer, Model Evidence, Integrated Likelihood): what’s the probability that the data I have came from the model <span class="math notranslate nohighlight">\(P(\mathcal{D|M})\)</span>. Again using Bayes sum rule:</p>
+<div class="math notranslate nohighlight">
+\[P(\mathcal{D}|\mathcal{M})=\int P(\mathcal{D},\theta|\mathcal{M})d\theta\]</div>
 <p>Once again, we don’t have access to this joint distribution, but we do have access to the likelihood and the prior. So, again, we can decompose this joint distribution by using the Bayes product rule:</p>
-<p>$$P(\mathcal{D}|\mathcal{M})=\int P(\mathcal{D}|\theta,\mathcal{M})P(\mathcal{\theta}|\mathcal{M})d\theta$$</p>
+<div class="math notranslate nohighlight">
+\[P(\mathcal{D}|\mathcal{M})=\int P(\mathcal{D}|\theta,\mathcal{M})P(\mathcal{\theta}|\mathcal{M})d\theta\]</div>
 </section>
 </section>
 <hr class="docutils" />
 <section id="conditional-probability">
 <h2>Conditional Probability<a class="headerlink" href="#conditional-probability" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-cond-prob">
+<span class="eqno">(12)<a class="headerlink" href="#equation-cond-prob" title="Permalink to this equation">#</a></span>\[
 p(x,y) = p(x|y)p(y) = p(y|x)p(x)
-$$(cond_prob)</p>
+\]</div>
 </section>
 <section id="bayes-rule">
 <h2>Bayes Rule<a class="headerlink" href="#bayes-rule" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-bayes">
+<span class="eqno">(13)<a class="headerlink" href="#equation-bayes" title="Permalink to this equation">#</a></span>\[
 p(x|y) = \frac{p(y|x)p(x)}{p(y)}
-$$(bayes)</p>
+\]</div>
 <section id="parameters">
 <h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h3>
-<p>We can change the notation to suit data, $\mathcal{D}={x_i, y_i }_{i=1}^N$, and parameters, $\theta$.</p>
-<p>$$
+<p>We can change the notation to suit data, <span class="math notranslate nohighlight">\(\mathcal{D}=\{x_i, y_i \}_{i=1}^N\)</span>, and parameters, <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<div class="math notranslate nohighlight" id="equation-bayes-param">
+<span class="eqno">(14)<a class="headerlink" href="#equation-bayes-param" title="Permalink to this equation">#</a></span>\[
 p(\theta|\mathcal{D}) = \frac{p(\mathcal{D}|\theta)p(\theta)}{p(\mathcal{D})}
-$$(bayes_param)</p>
+\]</div>
 <p>This is often useful when thinking about machine learning and model parameters.</p>
 </section>
 </section>
 <section id="predictive-density">
 <h2>Predictive Density<a class="headerlink" href="#predictive-density" title="Permalink to this heading">#</a></h2>
-<p>$$
-p(x_<em>|x) = \int p(x_</em>|\theta) p(\theta|x)d\theta
-$$(bayes_posterior_predict)</p>
+<div class="math notranslate nohighlight" id="equation-bayes-posterior-predict">
+<span class="eqno">(15)<a class="headerlink" href="#equation-bayes-posterior-predict" title="Permalink to this equation">#</a></span>\[
+p(x_*|x) = \int p(x_*|\theta) p(\theta|x)d\theta
+\]</div>
 <p>We can do this for pairs of data points.</p>
-<p>$$
-p(y_* |x_<em>,\mathcal{D}) = \int p(y_</em>|x_*,\theta) p(\theta|\mathcal{D})d\theta
-$$(bayes_posterior_predict_data)</p>
+<div class="math notranslate nohighlight" id="equation-bayes-posterior-predict-data">
+<span class="eqno">(16)<a class="headerlink" href="#equation-bayes-posterior-predict-data" title="Permalink to this equation">#</a></span>\[
+p(y_* |x_*,\mathcal{D}) = \int p(y_*|x_*,\theta) p(\theta|\mathcal{D})d\theta
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="questions">
@@ -1110,27 +1126,31 @@ Bayesian - hard to make it work but sometimes makes more sense.</p>
 <ul class="simple">
 <li><p>Maximum Likelihood</p></li>
 </ul>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \underset{w}{\text{argmax }} \mathcal{P}(y|x,w)
-$$</p>
+\]</div>
 <ul class="simple">
 <li><p>MAP</p></li>
 </ul>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \underset{w}{\text{argmax }} \mathcal{P}(y|x,w)\mathcal{P}(w)
-$$</p>
+\]</div>
 <ul class="simple">
 <li><p>Type II Maximum Likelihood</p></li>
 </ul>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \underset{\alpha}{\text{argmax }} \mathcal{P}(y|x,\alpha)=\int \mathcal{P}(y|x,w)\mathcal{P}(w|\alpha)dw
-$$</p>
+\]</div>
 <ul class="simple">
 <li><p>Type II MAP:</p></li>
 </ul>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \underset{\alpha}{\text{argmax }} \mathcal{P}(y|x,\alpha)\mathcal{P}(\alpha)
-$$</p>
+\]</div>
 </section>
 <section id="tips-and-tricks-for-practicioners">
 <h3>Tips and Tricks for Practicioners<a class="headerlink" href="#tips-and-tricks-for-practicioners" title="Permalink to this heading">#</a></h3>
@@ -1138,17 +1158,17 @@ $$</p>
 <li><p>Set initial hyper-parameters with domain knowledge</p></li>
 <li><p>Standardize input data</p>
 <ul>
-<li><p>Set initial length scales to $\sigma_l \approx 0.5$</p></li>
+<li><p>Set initial length scales to <span class="math notranslate nohighlight">\(\sigma_l \approx 0.5\)</span></p></li>
 </ul>
 </li>
-<li><p>Standardize targets $\mathbf{y}$</p>
+<li><p>Standardize targets <span class="math notranslate nohighlight">\(\mathbf{y}\)</span></p>
 <ul>
-<li><p>Set initial signal variance to $\sigma_f\approx 1.0$</p></li>
+<li><p>Set initial signal variance to <span class="math notranslate nohighlight">\(\sigma_f\approx 1.0\)</span></p></li>
 </ul>
 </li>
-<li><p>Set noise level initially high $\sigma_n \approx 0.5 \times \sigma_f$</p></li>
+<li><p>Set noise level initially high <span class="math notranslate nohighlight">\(\sigma_n \approx 0.5 \times \sigma_f\)</span></p></li>
 <li><p>Random restarts</p></li>
-<li><p>Penalize high signal-to-noise ratios ($\frac{\sigma_f}{\sigma_n}$)</p></li>
+<li><p>Penalize high signal-to-noise ratios (<span class="math notranslate nohighlight">\(\frac{\sigma_f}{\sigma_n}\)</span>)</p></li>
 </ul>
 </section>
 </section>

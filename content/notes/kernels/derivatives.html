@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/kernels/derivatives';</script>
@@ -886,7 +888,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="literature">
+  <section class="tex2jax_ignore mathjax_ignore" id="literature">
 <h1>Literature<a class="headerlink" href="#literature" title="Permalink to this heading">#</a></h1>
 <section id="paper-i">
 <h2>Paper I<a class="headerlink" href="#paper-i" title="Permalink to this heading">#</a></h2>
@@ -895,48 +897,49 @@ title="Print to PDF"
 <div><p>Expresses derivatives of GPs as operators</p>
 </div></blockquote>
 <p><a class="reference external" href="https://colab.research.google.com/drive/1pbb0qlypJCqPTN_cu2GEkkKLNXCYO9F2"><strong>Demo Colab Notebook</strong></a></p>
-<p>He looks at ths special case where we have a GP with a mean function zero and a covariance matrix $K$ defined as:
-$$
-\mathbb{E}[f(\mathbf{x})f^\top(\mathbf{x’})] = K_{ff}(\mathbf{x,x’})
-$$
+<p>He looks at ths special case where we have a GP with a mean function zero and a covariance matrix <span class="math notranslate nohighlight">\(K\)</span> defined as:
+$<span class="math notranslate nohighlight">\(
+\mathbb{E}[f(\mathbf{x})f^\top(\mathbf{x'})] = K_{ff}(\mathbf{x,x'})
+\)</span><span class="math notranslate nohighlight">\(
 So in GP terminology:
-$$
-f(\mathbf(x)) \sim \mathcal{GP}(\mathbf{0}, K_{ff}(\mathbf{x,x’}))
-$$
+\)</span><span class="math notranslate nohighlight">\(
+f(\mathbf(x)) \sim \mathcal{GP}(\mathbf{0}, K_{ff}(\mathbf{x,x'}))
+\)</span>$
 We use the rulse for linear transformations of GPs to obtain the different transformations of the kernel matrix.</p>
-<p>Let’s define the notation for the derivative of a kernel matrix. Let $g(\cdot)$ be the derivative operator on a function $f(\cdot)$. So:
-$$
+<p>Let’s define the notation for the derivative of a kernel matrix. Let <span class="math notranslate nohighlight">\(g(\cdot)\)</span> be the derivative operator on a function <span class="math notranslate nohighlight">\(f(\cdot)\)</span>. So:
+$<span class="math notranslate nohighlight">\(
 g(\mathbf{x}) = \mathcal{L}_x f(\mathbf{x})
-$$</p>
-<p>So now, we want to define the cross operators between the derivative $g(\cdot)$ and the function $f(\cdot)$.</p>
-<p><strong>Example</strong>: He draws a distinction between the two operators with an example of how this works in practice. So let’s take the linear operator $\mathcal{L}_{x}=(1, \frac{\partial}{\partial x})$. This operator:</p>
+\)</span>$</p>
+<p>So now, we want to define the cross operators between the derivative <span class="math notranslate nohighlight">\(g(\cdot)\)</span> and the function <span class="math notranslate nohighlight">\(f(\cdot)\)</span>.</p>
+<p><strong>Example</strong>: He draws a distinction between the two operators with an example of how this works in practice. So let’s take the linear operator <span class="math notranslate nohighlight">\(\mathcal{L}_{x}=(1, \frac{\partial}{\partial x})\)</span>. This operator:</p>
 <ul class="simple">
-<li><p>acts on a scalar GP $f(x)$</p></li>
-<li><p>a scalar input $x$</p></li>
-<li><p>a covariance function $k_{ff}(x,x’)$</p></li>
-<li><p>outputs a scalar value $y$</p></li>
+<li><p>acts on a scalar GP <span class="math notranslate nohighlight">\(f(x)\)</span></p></li>
+<li><p>a scalar input <span class="math notranslate nohighlight">\(x\)</span></p></li>
+<li><p>a covariance function <span class="math notranslate nohighlight">\(k_{ff}(x,x')\)</span></p></li>
+<li><p>outputs a scalar value <span class="math notranslate nohighlight">\(y\)</span></p></li>
 </ul>
 <p>We can get the following transformations:
-$$
+$<span class="math notranslate nohighlight">\(
 \begin{aligned}
-K_{gf}(\mathbf{x,x’})
-&amp;= \mathcal{L}<em>x f(\mathbf{x}) f(\mathbf{x}) = \mathcal{L}<em>xK</em>{ff}(\mathbf{x,x’}) \
-K</em>{fg}(\mathbf{x,x’})
-&amp;= f(\mathbf{x}) f(\mathbf{x’}) \mathcal{L}<em>{x’} = K</em>{ff}(\mathbf{x,x’})\mathcal{L}<em>{x’} \
-K</em>{gg}(\mathbf{x,x’})
-&amp;= \mathcal{L}<em>x f(\mathbf{x}) f(\mathbf{x’}) \mathcal{L}</em>{x’}
-= \mathcal{L}<em>xK</em>{ff}(\mathbf{x,x’})\mathcal{L}_{x’}^\top \
+K_{gf}(\mathbf{x,x'})
+&amp;= \mathcal{L}_x f(\mathbf{x}) f(\mathbf{x}) = \mathcal{L}_xK_{ff}(\mathbf{x,x'}) \\
+K_{fg}(\mathbf{x,x'})
+&amp;= f(\mathbf{x}) f(\mathbf{x'}) \mathcal{L}_{x'} = K_{ff}(\mathbf{x,x'})\mathcal{L}_{x'} \\
+K_{gg}(\mathbf{x,x'})
+&amp;= \mathcal{L}_x f(\mathbf{x}) f(\mathbf{x'}) \mathcal{L}_{x'}
+= \mathcal{L}_xK_{ff}(\mathbf{x,x'})\mathcal{L}_{x'}^\top \\
 \end{aligned}
-$$</p>
-<p><strong>Example</strong>: The Cross-Covariance term $K_{fg}(\mathbf{x,x’})$</p>
-<p>We can calculate the cross-covariance term $K_{fg}(\mathbf{x,x})$. We apply the following operation</p>
-<p>$$
-K_{fg}(x,x’) = k_{ff}(\mathbf{x,x’})(1, \frac{\partial}{\partial x’})
-$$
-If we multiply the terms across, we get:
-$$
-K_{fg}(x,x’) = k_{ff}(\mathbf{x,x’})\frac{\partial k_{ff}(\mathbf{x,x’})}{\partial x’}
-$$</p>
+\)</span>$</p>
+<p><strong>Example</strong>: The Cross-Covariance term <span class="math notranslate nohighlight">\(K_{fg}(\mathbf{x,x'})\)</span></p>
+<p>We can calculate the cross-covariance term <span class="math notranslate nohighlight">\(K_{fg}(\mathbf{x,x})\)</span>. We apply the following operation</p>
+<div class="math notranslate nohighlight">
+\[
+K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})(1, \frac{\partial}{\partial x'})
+\]</div>
+<p>If we multiply the terms across, we get:
+$<span class="math notranslate nohighlight">\(
+K_{fg}(x,x') = k_{ff}(\mathbf{x,x'})\frac{\partial k_{ff}(\mathbf{x,x'})}{\partial x'}
+\)</span>$</p>
 </section>
 </section>
 

@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/normalizing_flows/inverse';</script>
@@ -869,64 +871,77 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="minimization-problems">
+  <section class="tex2jax_ignore mathjax_ignore" id="minimization-problems">
 <h1>Minimization Problems<a class="headerlink" href="#minimization-problems" title="Permalink to this heading">#</a></h1>
 <p>Recall the bilevel optimization problem.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\boldsymbol{\theta}^* &amp;= \underset{\boldsymbol{\theta}}{\text{argmin  }}  \mathcal{L}(\boldsymbol{\theta},\mathbf{x}^<em>(\boldsymbol{\theta})) \
-\mathbf{x}^</em>(\boldsymbol{\theta}) &amp;= \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x},\boldsymbol{\theta})
+\boldsymbol{\theta}^* &amp;= \underset{\boldsymbol{\theta}}{\text{argmin  }}  \mathcal{L}(\boldsymbol{\theta},\mathbf{x}^*(\boldsymbol{\theta})) \\
+\mathbf{x}^*(\boldsymbol{\theta}) &amp;= \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x},\boldsymbol{\theta})
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>We can define a simple minimization problem as</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 x^* = \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x},\boldsymbol{\theta})
-$$</p>
+\]</div>
 <p>To be more explicit, let’s have</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 x^* = \underset{\mathbf{x}}{\text{argmin  }} ||y-Ax||^2 - \log p_\theta(x)
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p>We let the normalizing flow be the prior!</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \log p_\theta(x) = \log p_z(T(x)) + \log\det|\nabla_x T_\theta(x)|
-$$</p>
+\]</div>
 <p>or equivalently</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \log p_\theta(x) = \log p_z(z) + \log\det|\nabla_z T_\theta^{-1}(z)|
-$$</p>
+\]</div>
 <hr class="docutils" />
-<p>We define the same minimization function in the transform domain, $z$.</p>
-<p>$$
+<p>We define the same minimization function in the transform domain, <span class="math notranslate nohighlight">\(z\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathcal{L}_z(x,\theta) = \underset{\mathbf{z}}{\text{argmin  }}
-$$</p>
-<p>$$
-\mathcal{L}<em>z(z,\theta) = ||y-AT</em>\theta(z)||^2 - \log\mathcal{G}(z)
-$$</p>
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_z(z,\theta) = ||y-AT_\theta(z)||^2 - \log\mathcal{G}(z)
+\]</div>
 <p><strong>Proof</strong>:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p(x|y) \propto \frac{1}{Z}\exp(-||y-Ax||^2)p_\theta(x)
-$$</p>
+\]</div>
 <p>We can compute expectations of the posterior</p>
-<p>$$
-\mathbb{E}<em>{x\sim p(x|y)}[f(x)] = \int</em>{} f(x)\exp(-||y-Ax||^2)p_\theta(x)dx
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_{x\sim p(x|y)}[f(x)] = \int_{} f(x)\exp(-||y-Ax||^2)p_\theta(x)dx
+\]</div>
 <p>Let’s describe the function</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 F(x):=f(x)\exp(-||y-Ax||^2)
-$$</p>
+\]</div>
 <p>We can do the change of variables here:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 F(T_\theta(z)):=f(T_\theta(z))\exp(-||y-AT_\theta(z)||^2)
-$$</p>
+\]</div>
 <p>Now we can plug this back into the integral</p>
-<p>$$
-\mathbb{E}<em>{z\sim p(z|y)}[f(z)] = \int</em>{} f(T_\theta(z))\exp(-||y-AT_\theta(z)||^2)\eta(z)dz
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_{z\sim p(z|y)}[f(z)] = \int_{} f(T_\theta(z))\exp(-||y-AT_\theta(z)||^2)\eta(z)dz
+\]</div>
 <p>So we have our loss function again</p>
-<p>$$
-\mathcal{L}<em>z(z,\theta) = ||y-AT</em>\theta(z)||^2 - \log\mathcal{G}(z)
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_z(z,\theta) = ||y-AT_\theta(z)||^2 - \log\mathcal{G}(z)
+\]</div>
 <p><strong>Proof</strong>:</p>
 </section>
 

@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gmt/learning';</script>
@@ -898,28 +900,31 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="learning">
+  <section class="tex2jax_ignore mathjax_ignore" id="learning">
 <h1>Learning<a class="headerlink" href="#learning" title="Permalink to this heading">#</a></h1>
 <section id="parameter-learning-problem">
 <h2>Parameter Learning Problem<a class="headerlink" href="#parameter-learning-problem" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-eqn-learn-param">
+<span class="eqno">(9)<a class="headerlink" href="#equation-eqn-learn-param" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\theta}^* = \underset{\boldsymbol{\theta}}{\text{argmin  }} \mathcal{L}(\boldsymbol{\theta})
-$$ (eqn:learn-param)</p>
+\]</div>
 </section>
 <section id="minimization-problem">
 <h2>Minimization Problem<a class="headerlink" href="#minimization-problem" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-eqn-learn-minimize">
+<span class="eqno">(10)<a class="headerlink" href="#equation-eqn-learn-minimize" title="Permalink to this equation">#</a></span>\[
 \mathbf{x}^* = \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x})
-$$ (eqn:learn-minimize)</p>
+\]</div>
 </section>
 <section id="bi-level-optimization-scheme">
 <h2>Bi-Level Optimization Scheme<a class="headerlink" href="#bi-level-optimization-scheme" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-eqn-learn-bilevel">
+<span class="eqno">(11)<a class="headerlink" href="#equation-eqn-learn-bilevel" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
-\boldsymbol{\theta}^* &amp;= \underset{\boldsymbol{\theta}}{\text{argmin  }}  \mathcal{L}(\boldsymbol{\theta}) \
+\boldsymbol{\theta}^* &amp;= \underset{\boldsymbol{\theta}}{\text{argmin  }}  \mathcal{L}(\boldsymbol{\theta}) \\
 \mathbf{x}^*(\boldsymbol{\theta}) &amp;= \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x})
 \end{aligned}
-$$ (eqn:learn-bilevel)</p>
+\end{split}\]</div>
 </section>
 </section>
 

@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/info_theory/mutual_info';</script>
@@ -903,14 +905,17 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="mutual-information-and-total-correlation">
+  <section class="tex2jax_ignore mathjax_ignore" id="mutual-information-and-total-correlation">
 <h1>Mutual Information and Total Correlation<a class="headerlink" href="#mutual-information-and-total-correlation" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <p>This is the reduction of uncertainty of one random variable due to the knowledge of another (like the definition above). It is the amount of information one r.v. contains about another r.v..</p>
-<p><strong>Definition</strong>: The mutual information (MI) between two discreet r.v.s $X,Y$ jointly distributed according to $p(x,y)$ is given by:</p>
-<p>$$I(X;Y) = \sum_{x,y} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}$$</p>
-<p>$$I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)$$</p>
-<p>$$I(X;Y) = H(X) + H(Y) - H(X,Y)$$</p>
+<p><strong>Definition</strong>: The mutual information (MI) between two discreet r.v.s <span class="math notranslate nohighlight">\(X,Y\)</span> jointly distributed according to <span class="math notranslate nohighlight">\(p(x,y)\)</span> is given by:</p>
+<div class="math notranslate nohighlight">
+\[I(X;Y) = \sum_{x,y} p(x,y) \log \frac{p(x,y)}{p(x)p(y)}\]</div>
+<div class="math notranslate nohighlight">
+\[I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)\]</div>
+<div class="math notranslate nohighlight">
+\[I(X;Y) = H(X) + H(Y) - H(X,Y)\]</div>
 <p><strong>Sources</strong>:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="http://www.scholarpedia.org/article/Mutual_information">Scholarpedia</a></p></li>
@@ -940,38 +945,44 @@ title="Print to PDF"
 <h2>Total Correlation<a class="headerlink" href="#total-correlation" title="Permalink to this heading">#</a></h2>
 <p>This isn’t really talked about outside of the ML community but I think this is a useful measure to have; especially when dealing with multi-dimensional and multi-variate datesets.</p>
 <p>In general, the formula for Total Correlation (TC) between two random variables is as follows:</p>
-<p>$$TC(X,Y) = H(X) + H(Y) - H(X,Y)$$</p>
-<p><strong>Note</strong>: This is the same as the equation for mutual information between two random variables, $I(X;Y)=H(X)+H(Y)-H(X,Y)$. This makes sense because for a Venn Diagram between two r.v.s will only have one part that intersects. This is different for the multivariate case where the number of r.v.s is greater than 2.</p>
-<p>Let’s have $D$ random variables for $X = { X_1, X_2, \ldots, X_D}$. The TC is:</p>
-<p>$$TC(X) = \sum_{d=1}^{D}H(X_d) - H(X_1, X_2, \ldots, X_D)$$</p>
-<p>In this case, $D$ can be a feature for $X$.</p>
-<p>Now, let’s say we would like to get the <strong>difference in total correlation</strong> between two random variables, $\Delta$TC.</p>
-<p>$$\Delta\text{TC}(X,Y) =  \text{TC}(X) - \text{TC}(Y)$$</p>
-<p>$$\Delta\text{TC}(X,Y) =  \sum_{d=1}^{D}H(X_d) - \sum_{d=1}^{D} H(Y_d) - H(X) + H(Y)$$</p>
-<p><strong>Note</strong>: There is a special case in <a class="reference external" href="https://github.com/jejjohnson/rbig">RBIG</a> where the two random variables are simply rotations of one another. So each feature will have a difference in entropy but the total overall dataset will not. So our function would be reduced to: $\Delta\text{TC}(X,Y) =  \sum_{d=1}^{D}H(X_d) - \sum_{d=1}^{D} H(Y_d)$ which is overall much easier to solve.</p>
+<div class="math notranslate nohighlight">
+\[TC(X,Y) = H(X) + H(Y) - H(X,Y)\]</div>
+<p><strong>Note</strong>: This is the same as the equation for mutual information between two random variables, <span class="math notranslate nohighlight">\(I(X;Y)=H(X)+H(Y)-H(X,Y)\)</span>. This makes sense because for a Venn Diagram between two r.v.s will only have one part that intersects. This is different for the multivariate case where the number of r.v.s is greater than 2.</p>
+<p>Let’s have <span class="math notranslate nohighlight">\(D\)</span> random variables for <span class="math notranslate nohighlight">\(X = \{ X_1, X_2, \ldots, X_D\}\)</span>. The TC is:</p>
+<div class="math notranslate nohighlight">
+\[TC(X) = \sum_{d=1}^{D}H(X_d) - H(X_1, X_2, \ldots, X_D)\]</div>
+<p>In this case, <span class="math notranslate nohighlight">\(D\)</span> can be a feature for <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>Now, let’s say we would like to get the <strong>difference in total correlation</strong> between two random variables, <span class="math notranslate nohighlight">\(\Delta\)</span>TC.</p>
+<div class="math notranslate nohighlight">
+\[\Delta\text{TC}(X,Y) =  \text{TC}(X) - \text{TC}(Y)\]</div>
+<div class="math notranslate nohighlight">
+\[\Delta\text{TC}(X,Y) =  \sum_{d=1}^{D}H(X_d) - \sum_{d=1}^{D} H(Y_d) - H(X) + H(Y)\]</div>
+<p><strong>Note</strong>: There is a special case in <a class="reference external" href="https://github.com/jejjohnson/rbig">RBIG</a> where the two random variables are simply rotations of one another. So each feature will have a difference in entropy but the total overall dataset will not. So our function would be reduced to: <span class="math notranslate nohighlight">\(\Delta\text{TC}(X,Y) =  \sum_{d=1}^{D}H(X_d) - \sum_{d=1}^{D} H(Y_d)\)</span> which is overall much easier to solve.</p>
 <hr class="docutils" />
 </section>
 <section id="higher-order">
 <h2>Higher Order<a class="headerlink" href="#higher-order" title="Permalink to this heading">#</a></h2>
 <p>This is a term that measures the statistical dependency of multi-variate sources using the common mutual-information measure.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 I(\mathbf{x})
-&amp;=
-D_\text{KL} \left[ p(\mathbf{x}) || \prod_d p(\mathbf{x}<em>d) \right] \
-&amp;= \sum</em>{d=1}^D H(x_d) - H(\mathbf{x})
+&amp;= 
+D_\text{KL} \left[ p(\mathbf{x}) || \prod_d p(\mathbf{x}_d) \right] \\
+&amp;= \sum_{d=1}^D H(x_d) - H(\mathbf{x})
 \end{aligned}
-$$</p>
-<p>where $H(\mathbf{x})$ is the differential entropy of $\mathbf{x}$ and $H(x_d)$ represents the differential entropy of the $d^\text{th}$ component of $\mathbf{x}$. This is nicely summaries in equation 1 from ([Lyu &amp; Simoncelli, 2008][1]).</p>
-<p>?&gt; Note: We find that $I$ in 2 dimensions is the same as mutual information.</p>
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(H(\mathbf{x})\)</span> is the differential entropy of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(H(x_d)\)</span> represents the differential entropy of the <span class="math notranslate nohighlight">\(d^\text{th}\)</span> component of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>. This is nicely summaries in equation 1 from ([Lyu &amp; Simoncelli, 2008][1]).</p>
+<p>?&gt; Note: We find that <span class="math notranslate nohighlight">\(I\)</span> in 2 dimensions is the same as mutual information.</p>
 <p>We can decompose this measure into two parts representing second order and higher-order dependencies:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
 I(\mathbf{x}) &amp;=
-\underbrace{\sum_{d=1}^D \log{\Sigma_{dd}} - \log{|\Sigma|}}<em>{\text{2nd Order Dependencies}} \
-&amp;- \underbrace{D</em>\text{KL} \left[ p(\mathbf{x}) || \mathcal{G}<em>\theta (\mathbf{x}) \right] - \sum</em>{d=1}^D D_\text{KL} \left[ p(x_d) || \mathcal{G}<em>\theta (x_d) \right]}</em>{\text{high-order dependencies}}
+\underbrace{\sum_{d=1}^D \log{\Sigma_{dd}} - \log{|\Sigma|}}_{\text{2nd Order Dependencies}} \\
+&amp;- \underbrace{D_\text{KL} \left[ p(\mathbf{x}) || \mathcal{G}_\theta (\mathbf{x}) \right] - \sum_{d=1}^D D_\text{KL} \left[ p(x_d) || \mathcal{G}_\theta (x_d) \right]}_{\text{high-order dependencies}}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>again, nicely summarized with equation 2 from ([Lyu &amp; Simoncelli, 2008][1]).</p>
 <p><strong>Sources</strong>:</p>
 <ul class="simple">

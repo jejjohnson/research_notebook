@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/data_assimilation/dynamical_sys';</script>
@@ -886,12 +888,18 @@ title="Print to PDF"
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#function-boldsymbol-f">
-     Function, $\boldsymbol{f}$
+     Function,
+     <span class="math notranslate nohighlight">
+      \(\boldsymbol{f}\)
+     </span>
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#time-t">
-     Time, $t$
+     Time,
+     <span class="math notranslate nohighlight">
+      \(t\)
+     </span>
     </a>
    </li>
   </ul>
@@ -913,12 +921,18 @@ title="Print to PDF"
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#observed-variable-mathbf-y">
-       Observed Variable, $\mathbf{y}$
+       Observed Variable,
+       <span class="math notranslate nohighlight">
+        \(\mathbf{y}\)
+       </span>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#function-boldsymbol-g">
-       Function, $\boldsymbol{g}$
+       Function,
+       <span class="math notranslate nohighlight">
+        \(\boldsymbol{g}\)
+       </span>
       </a>
       <ul class="nav section-nav flex-column">
        <li class="toc-h5 nav-item toc-entry">
@@ -951,32 +965,33 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="dynamical-systems">
+  <section class="tex2jax_ignore mathjax_ignore" id="dynamical-systems">
 <h1>Dynamical Systems<a class="headerlink" href="#dynamical-systems" title="Permalink to this heading">#</a></h1>
 <p>Assume we have an imperfect model of reality:</p>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-dyn-sys">
+<span class="eqno">(26)<a class="headerlink" href="#equation-dyn-sys" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\nabla}_t{\color{blue}\mathbf{x}}= \boldsymbol{f} \left( {\color{blue}\mathbf{x}}, t, \mathbf{u}, \boldsymbol{\beta}, \boldsymbol{\epsilon}\right)
-$$(dyn_sys)</p>
+\]</div>
 <p>where</p>
 <section id="components">
 <h2>Components<a class="headerlink" href="#components" title="Permalink to this heading">#</a></h2>
 <section id="state">
 <h3>State<a class="headerlink" href="#state" title="Permalink to this heading">#</a></h3>
-<p>${\color{blue}\mathbf{x}} \in \mathbb{R}^D$ is the <em>state</em> of the system. This can be meteorological variables such as wind speed, temperature or pressure. It could also be oceanographic like temperature, salinity and pressure.</p>
+<p><span class="math notranslate nohighlight">\({\color{blue}\mathbf{x}} \in \mathbb{R}^D\)</span> is the <em>state</em> of the system. This can be meteorological variables such as wind speed, temperature or pressure. It could also be oceanographic like temperature, salinity and pressure.</p>
 </section>
 <section id="function-boldsymbol-f">
-<h3>Function, $\boldsymbol{f}$<a class="headerlink" href="#function-boldsymbol-f" title="Permalink to this heading">#</a></h3>
+<h3>Function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span><a class="headerlink" href="#function-boldsymbol-f" title="Permalink to this heading">#</a></h3>
 <p>This is the imperfect model of reality. For example, it could be a linear model, non-linear, stochastic or chaotic.</p>
-<p>We treat $\boldsymbol{f}$ as a stochastic model for many reasons:</p>
+<p>We treat <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span> as a stochastic model for many reasons:</p>
 <ul class="simple">
-<li><p><strong>Imperfect Model</strong>: the model $\boldsymbol{f}$ embeds our knowledge about the laws governing the process. This is well known to be partial and/or incorrect.</p></li>
-<li><p><strong>Numerical Discretization</strong>: the model $\boldsymbol{f}$ is a spatial-temporal discretization of the physical laws (e.g. Navier Stokes for fluids) which is expressed as a partial differential equation on continuous domain. This is a finite resolution which is dictated by the computational power/speed availability). This will always induce errors.</p></li>
+<li><p><strong>Imperfect Model</strong>: the model <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span> embeds our knowledge about the laws governing the process. This is well known to be partial and/or incorrect.</p></li>
+<li><p><strong>Numerical Discretization</strong>: the model <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span> is a spatial-temporal discretization of the physical laws (e.g. Navier Stokes for fluids) which is expressed as a partial differential equation on continuous domain. This is a finite resolution which is dictated by the computational power/speed availability). This will always induce errors.</p></li>
 <li><p><strong>Chaos</strong>: Many natural systems are chaotic and exhibit extreme sensitivity to initial conditions. This is an error (possibly inevitable) that is inherent to the system at an arbitrary time which contaminates the prediction.</p></li>
 </ul>
 </section>
 <section id="time-t">
-<h3>Time, $t$<a class="headerlink" href="#time-t" title="Permalink to this heading">#</a></h3>
-<p>This is dynamic so we have some time, $t$ which shows that the system evolves with time.</p>
+<h3>Time, <span class="math notranslate nohighlight">\(t\)</span><a class="headerlink" href="#time-t" title="Permalink to this heading">#</a></h3>
+<p>This is dynamic so we have some time, <span class="math notranslate nohighlight">\(t\)</span> which shows that the system evolves with time.</p>
 </section>
 </section>
 <section id="state-representation">
@@ -985,23 +1000,24 @@ $$(dyn_sys)</p>
 <section id="observation-models">
 <h2>Observation Models<a class="headerlink" href="#observation-models" title="Permalink to this heading">#</a></h2>
 <p>We often don’t have access to the original signal we are interested in</p>
-<p>$$
+<div class="math notranslate nohighlight" id="equation-obs-model">
+<span class="eqno">(27)<a class="headerlink" href="#equation-obs-model" title="Permalink to this equation">#</a></span>\[
 \mathbf{y} = \boldsymbol{g}(\mathbf{x},t, \boldsymbol{\eta})
-$$(obs_model)</p>
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf{y} \in \mathbb{R}^P$ - observations</p></li>
-<li><p>$\boldsymbol{g}: \mathbb{R}^D\rightarrow \mathbb{R}^P$ - observation model (mapping of the state to the observations)</p></li>
-<li><p>$\mathbf{x} \in \mathbb{R}^D$ - state of the system, e.g. meteorological variables (wind speed, temperature, etc) in every single grid point</p></li>
-<li><p>$t$ - time of the observations (discrete, continuous)</p></li>
-<li><p>$\boldsymbol{\eta}$ - noise model</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^P\)</span> - observations</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{g}: \mathbb{R}^D\rightarrow \mathbb{R}^P\)</span> - observation model (mapping of the state to the observations)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^D\)</span> - state of the system, e.g. meteorological variables (wind speed, temperature, etc) in every single grid point</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> - time of the observations (discrete, continuous)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\eta}\)</span> - noise model</p></li>
 </ul>
 <p>Here, we assume that the observations are not perfect.</p>
 <hr class="docutils" />
 <section id="id1">
 <h3>Components<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
 <section id="observed-variable-mathbf-y">
-<h4>Observed Variable, $\mathbf{y}$<a class="headerlink" href="#observed-variable-mathbf-y" title="Permalink to this heading">#</a></h4>
+<h4>Observed Variable, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span><a class="headerlink" href="#observed-variable-mathbf-y" title="Permalink to this heading">#</a></h4>
 <p>These are often things that we can actually observe in nature with some sort of instrument.</p>
 <p><strong>In Situ</strong></p>
 <p>These measurements are direct using instruments. They are typically very sparse and irregular in space and time because it’s just impossible to obtain more. For example, in an oceanographic setting, these can be hydrographic observations via ships. In a meteorological setting, these are often weather balloons and possibly aircraft. It has to be said that the ARGO project is a grand effort to make these measurements more regular.</p>
@@ -1011,8 +1027,8 @@ $$(obs_model)</p>
 <p>in situ observations or possibly satellite observations. For example, in the case of many meteorological applications, it’s the radiance.</p>
 </section>
 <section id="function-boldsymbol-g">
-<h4>Function, $\boldsymbol{g}$<a class="headerlink" href="#function-boldsymbol-g" title="Permalink to this heading">#</a></h4>
-<p>We also treat $\boldsymbol{g}$ as a stochastic model for many reasons (some are the same as the state space model):</p>
+<h4>Function, <span class="math notranslate nohighlight">\(\boldsymbol{g}\)</span><a class="headerlink" href="#function-boldsymbol-g" title="Permalink to this heading">#</a></h4>
+<p>We also treat <span class="math notranslate nohighlight">\(\boldsymbol{g}\)</span> as a stochastic model for many reasons (some are the same as the state space model):</p>
 <ul class="simple">
 <li><p><strong>Instrument Noise</strong>: Each instrument comes with errors that need to be accounted for, e.g. in-situ, satellites, etc.</p></li>
 <li><p>Representativity: The models and the observations may have different resolutions.</p></li>
@@ -1022,28 +1038,31 @@ $$(obs_model)</p>
 <h5>Example Operators<a class="headerlink" href="#example-operators" title="Permalink to this heading">#</a></h5>
 <p><strong>Identity</strong></p>
 <p>I</p>
-<p>$$\mathbf{y} = \mathbf{x}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{y} = \mathbf{x}\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf{x}$ - variable at time $t$.</p></li>
-<li><p>$\mathbf{y}$ - observation at time $t$</p></li>
-<li><p>$\boldsymbol{h}$ - this operator is the identity</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x}\)</span> - variable at time <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y}\)</span> - observation at time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{h}\)</span> - this operator is the identity</p></li>
 </ul>
 <p><strong>Transformation</strong></p>
-<p>$$\mathbf{y} = \boldsymbol{h}_{\boldsymbol \theta}(\mathbf{x})$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{y} = \boldsymbol{h}_{\boldsymbol \theta}(\mathbf{x})\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf{x}$ - variable at time $t$</p></li>
-<li><p>$\mathbf{y}$ - observation at time $t$</p></li>
-<li><p>$\mathbf{h}: \mathbf{x} \in \mathbb{R}^{N_x} \rightarrow \mathbf{y} \in \mathbb{R}^{N_y}$ - this operator is a function that tries to relate the variable $\mathbf{x}$ and $\mathbf{y}$.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x}\)</span> - variable at time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y}\)</span> - observation at time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{h}: \mathbf{x} \in \mathbb{R}^{N_x} \rightarrow \mathbf{y} \in \mathbb{R}^{N_y}\)</span> - this operator is a function that tries to relate the variable <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>.</p></li>
 </ul>
 <p><strong>Interpolator</strong></p>
-<p>$$\mathbf{y} = \mathbf{H}\mathbf{x}$$</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{y} = \mathbf{H}\mathbf{x}\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$\mathbf{x}$ - variable at time $t$</p></li>
-<li><p>$\mathbf{y}$ - observation at time $t$</p></li>
-<li><p>$\mathbf{H}\in \mathbb{R}^{N_y \times N_x}$ - this operator is an interpolator that maps the data between the full resolution of $\mathbf{x}$ and partially observed resolution of $\mathbf{y}$.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x}\)</span> - variable at time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y}\)</span> - observation at time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{H}\in \mathbb{R}^{N_y \times N_x}\)</span> - this operator is an interpolator that maps the data between the full resolution of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and partially observed resolution of <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>.</p></li>
 </ul>
 </section>
 </section>
@@ -1053,9 +1072,9 @@ $$(obs_model)</p>
 <section id="challenges">
 <h2>Challenges<a class="headerlink" href="#challenges" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Unknown $\boldsymbol{f}$</p></li>
-<li><p>Non-Linear $\boldsymbol{f}$</p></li>
-<li><p>High-Dimensional $\mathbf{x,y}$.</p></li>
+<li><p>Unknown <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span></p></li>
+<li><p>Non-Linear <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span></p></li>
+<li><p>High-Dimensional <span class="math notranslate nohighlight">\(\mathbf{x,y}\)</span>.</p></li>
 <li><p>Multi-scale</p></li>
 <li><p>Chaotic</p></li>
 <li><p>Latent/Hidden Variables</p></li>
@@ -1146,12 +1165,18 @@ $$(obs_model)</p>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#function-boldsymbol-f">
-     Function, $\boldsymbol{f}$
+     Function,
+     <span class="math notranslate nohighlight">
+      \(\boldsymbol{f}\)
+     </span>
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#time-t">
-     Time, $t$
+     Time,
+     <span class="math notranslate nohighlight">
+      \(t\)
+     </span>
     </a>
    </li>
   </ul>
@@ -1173,12 +1198,18 @@ $$(obs_model)</p>
     <ul class="nav section-nav flex-column">
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#observed-variable-mathbf-y">
-       Observed Variable, $\mathbf{y}$
+       Observed Variable,
+       <span class="math notranslate nohighlight">
+        \(\mathbf{y}\)
+       </span>
       </a>
      </li>
      <li class="toc-h4 nav-item toc-entry">
       <a class="reference internal nav-link" href="#function-boldsymbol-g">
-       Function, $\boldsymbol{g}$
+       Function,
+       <span class="math notranslate nohighlight">
+        \(\boldsymbol{g}\)
+       </span>
       </a>
       <ul class="nav section-nav flex-column">
        <li class="toc-h5 nav-item toc-entry">

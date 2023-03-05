@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/tutorials/jax_journey/algorithms/bisection';</script>
@@ -934,7 +936,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="bisection-search">
+  <section class="tex2jax_ignore mathjax_ignore" id="bisection-search">
 <h1>Bisection search<a class="headerlink" href="#bisection-search" title="Permalink to this heading">#</a></h1>
 <p>This is a very interesting thing that you can do instead of interpolation. This comes from the fact that <strong>PyTorch</strong> doesn’t have a native interpolation algorithm. Although there are saints on the internet who have implemented their own native algorithm, the library itself doesn’t have a core one. I find it very interesting that they don’t and I’m not sure why. Is there something difficult about automatic differentiation and interpolation?</p>
 <p>In any case, one thing that I did see was bisection search instead of interpolation. I’ve also seen it in the <code class="docutils literal notranslate"><span class="pre">rv_histogram</span></code> function in the scipy library. This function allows you to construct an empirical distribution based on histograms. You construct the histograms using the <code class="docutils literal notranslate"><span class="pre">np.histogram</span></code> function and then you go through and normalize the PDF estimates found in the bins followed by creating the CDF by using the <code class="docutils literal notranslate"><span class="pre">cumsum</span></code> function. Now with these, you should be able to calculate the PDF, the CDF, the quantile function and virtually any other distribution function that you may need, even on new data.</p>
@@ -944,10 +946,11 @@ title="Print to PDF"
 <p>Recall, a histogram works by putting bins in intervals along the domain of your data. Then you calculate how many times you get values within those bins. The probability is the number of times you have data within that bin divided by the width of the bin. To make a density, you need to normalize the entire distribution so that it sums to 1. So in order to estimate the PDF for new data, you need to find where are the bins closest to your data.</p>
 <section id="interpolation">
 <h3>Interpolation<a class="headerlink" href="#interpolation" title="Permalink to this heading">#</a></h3>
-<p>One thing you can do is to interpolate. You find the support that is closest to your query points $X$ and then output the corresponding values for the estimated histogram values. Old school algebra, this looks like:</p>
-<p>$$
+<p>One thing you can do is to interpolate. You find the support that is closest to your query points <span class="math notranslate nohighlight">\(X\)</span> and then output the corresponding values for the estimated histogram values. Old school algebra, this looks like:</p>
+<div class="math notranslate nohighlight">
+\[
 \frac{x}{?} = \frac{\text{support}}{\text{hist pdf}}
-$$</p>
+\]</div>
 <p>So in code, this translates to:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_pdf_est</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">X_new</span><span class="p">,</span> <span class="n">X_hist_bins</span><span class="p">,</span> <span class="n">X_hist_pdf</span><span class="p">)</span>
 </pre></div>
@@ -971,9 +974,10 @@ $$</p>
 <p>This is</p>
 <section id="cdfs">
 <h3>CDFs<a class="headerlink" href="#cdfs" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \frac{X}{?} = \frac{Quantiles}{References}
-$$</p>
+\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X_uniform</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X_cdf</span><span class="p">,</span> <span class="n">X_ref</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -984,9 +988,10 @@ $$</p>
 </section>
 <section id="quantiles">
 <h3>Quantiles<a class="headerlink" href="#quantiles" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \frac{X}{?} = \frac{References}{Quantiles}
-$$</p>
+\]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">X_approx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">X_uniform</span><span class="p">,</span> <span class="n">X_references</span><span class="p">,</span> <span class="n">X_quantiles</span><span class="p">)</span>
 </pre></div>
 </div>

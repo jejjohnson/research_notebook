@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/concepts/notation';</script>
@@ -975,7 +977,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="notation">
+  <section class="tex2jax_ignore mathjax_ignore" id="notation">
 <h1>Notation<a class="headerlink" href="#notation" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <section id="spaces">
@@ -987,10 +989,10 @@ title="Print to PDF"
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-center"><p>$N \in \mathbb{N}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(N \in \mathbb{N}\)</span></p></td>
 <td class="text-left"><p>the number of samples (natural number)</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$D \in \mathbb{N}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(D \in \mathbb{N}\)</span></p></td>
 <td class="text-left"><p>the number of features/covariates (natural number)</p></td>
 </tr>
 </tbody>
@@ -1006,35 +1008,35 @@ title="Print to PDF"
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-center"><p>$x,y \in \mathbb{R}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(x,y \in \mathbb{R}\)</span></p></td>
 <td class="text-left"><p>scalers (real numbers)</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\mathbf{x} \in \mathbb{R}^{D_\mathbf{x}}$</p></td>
-<td class="text-left"><p>a $D_\mathbf{x}$-dimensional column vector, usually the input.</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_\mathbf{x}}\)</span></p></td>
+<td class="text-left"><p>a <span class="math notranslate nohighlight">\(D_\mathbf{x}\)</span>-dimensional column vector, usually the input.</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\mathbf{y} \in \mathbb{R}^{D_\mathbf{y}}$</p></td>
-<td class="text-left"><p>a $D_\mathbf{y}$-dimensional column vector, usually the output.</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{D_\mathbf{y}}\)</span></p></td>
+<td class="text-left"><p>a <span class="math notranslate nohighlight">\(D_\mathbf{y}\)</span>-dimensional column vector, usually the output.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$x^j \in \mathbb{R}$</p></td>
-<td class="text-left"><p>the $j$-th feature from a vector, $\mathbf{x} \in \mathbb{R}^{D}$, where $(x^j)_{1\leq j \leq D}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(x^j \in \mathbb{R}\)</span></p></td>
+<td class="text-left"><p>the <span class="math notranslate nohighlight">\(j\)</span>-th feature from a vector, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D}\)</span>, where <span class="math notranslate nohighlight">\((x^j)_{1\leq j \leq D}\)</span></p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$x_i \in \mathbb{R}$</p></td>
-<td class="text-left"><p>the $i$-th sample from a vector, $\mathbf{x} \in \mathbb{R}^{N}$, where $(x_i)_{1\leq j \leq D}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(x_i \in \mathbb{R}\)</span></p></td>
+<td class="text-left"><p>the <span class="math notranslate nohighlight">\(i\)</span>-th sample from a vector, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{N}\)</span>, where <span class="math notranslate nohighlight">\((x_i)_{1\leq j \leq D}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\mathbf{X} \in \mathbb{R}^{N \times D}$</p></td>
-<td class="text-left"><p>a collection of $N$ input vectors, $\mathbf{X}=[\mathbf{x}_1, \ldots, \mathbf{x}_N]^\top$, where $\mathbf{x} \in \mathbb{R}^{D}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{N \times D}\)</span></p></td>
+<td class="text-left"><p>a collection of <span class="math notranslate nohighlight">\(N\)</span> input vectors, <span class="math notranslate nohighlight">\(\mathbf{X}=[\mathbf{x}_1, \ldots, \mathbf{x}_N]^\top\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D}\)</span></p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\mathbf{Y} \in \mathbb{R}^{N \times P}$</p></td>
-<td class="text-left"><p>a collection of $N$ output vectors, $\mathbf{Y}=[\mathbf{y}_1, \ldots, \mathbf{y}_N]^\top$, where $\mathbf{y} \in \mathbb{R}^{P}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{Y} \in \mathbb{R}^{N \times P}\)</span></p></td>
+<td class="text-left"><p>a collection of <span class="math notranslate nohighlight">\(N\)</span> output vectors, <span class="math notranslate nohighlight">\(\mathbf{Y}=[\mathbf{y}_1, \ldots, \mathbf{y}_N]^\top\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{P}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\mathbf{x}^{j} \in \mathbb{R}^{N}$</p></td>
-<td class="text-left"><p>the $j$-th feature from a collection of vectors, $\mathbf{X}$, where $(\mathbf{x}^{j} )_{1\leq j \leq D}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{x}^{j} \in \mathbb{R}^{N}\)</span></p></td>
+<td class="text-left"><p>the <span class="math notranslate nohighlight">\(j\)</span>-th feature from a collection of vectors, <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, where <span class="math notranslate nohighlight">\((\mathbf{x}^{j} )_{1\leq j \leq D}\)</span></p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\mathbf{x}_{i} \in \mathbb{R}^{D}$</p></td>
-<td class="text-left"><p>the $i$-th sample from a collection of vectors, $\mathbf{X}$, where $(\mathbf{x}<em>{i})</em>{1\leq i \leq N}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{x}_{i} \in \mathbb{R}^{D}\)</span></p></td>
+<td class="text-left"><p>the <span class="math notranslate nohighlight">\(i\)</span>-th sample from a collection of vectors, <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, where <span class="math notranslate nohighlight">\((\mathbf{x}_{i})_{1\leq i \leq N}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$x_{i}^j \in \mathbb{R}$</p></td>
-<td class="text-left"><p>the $i$-th sample and $j$-th feature from a collection of vectors, $\mathbf{X}$, where $(\mathbf{x}<em>{i}^{j})</em>{1\leq i \leq N,1\leq j \leq D}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(x_{i}^j \in \mathbb{R}\)</span></p></td>
+<td class="text-left"><p>the <span class="math notranslate nohighlight">\(i\)</span>-th sample and <span class="math notranslate nohighlight">\(j\)</span>-th feature from a collection of vectors, <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, where <span class="math notranslate nohighlight">\((\mathbf{x}_{i}^{j})_{1\leq i \leq N,1\leq j \leq D}\)</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -1049,19 +1051,19 @@ title="Print to PDF"
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-center"><p>$f : \mathcal{X} \rightarrow \mathcal{Y}$</p></td>
-<td class="text-left"><p>a latent function that operates on a scaler and maps a space $\mathcal{X}$ to a space $\mathcal{Y}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(f : \mathcal{X} \rightarrow \mathcal{Y}\)</span></p></td>
+<td class="text-left"><p>a latent function that operates on a scaler and maps a space <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> to a space <span class="math notranslate nohighlight">\(\mathcal{Y}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\boldsymbol{f} : \mathcal{X} \rightarrow \mathcal{Y}$</p></td>
-<td class="text-left"><p>a latent function  that operates on a vector and maps a space $\mathcal{X}$ to a space $\mathcal{Y}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{f} : \mathcal{X} \rightarrow \mathcal{Y}\)</span></p></td>
+<td class="text-left"><p>a latent function  that operates on a vector and maps a space <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> to a space <span class="math notranslate nohighlight">\(\mathcal{Y}\)</span></p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\boldsymbol{f}(;\cdot;;\boldsymbol{\theta})$</p></td>
-<td class="text-left"><p>a latent function parameterized by $\boldsymbol{\theta}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{f}(\;\cdot\;;\boldsymbol{\theta})\)</span></p></td>
+<td class="text-left"><p>a latent function parameterized by <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\boldsymbol{f}_{\boldsymbol \theta}(\cdot)$</p></td>
-<td class="text-left"><p>a latent function parameterized by $\boldsymbol{\theta}$ (succinct version)</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{f}_{\boldsymbol \theta}(\cdot)\)</span></p></td>
+<td class="text-left"><p>a latent function parameterized by <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> (succinct version)</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\boldsymbol{k}(\cdot, \cdot)$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{k}(\cdot, \cdot)\)</span></p></td>
 <td class="text-left"><p>kernel or covariance function</p></td>
 </tr>
 </tbody>
@@ -1069,70 +1071,80 @@ title="Print to PDF"
 <hr class="docutils" />
 <p>Below, we have some specificities for these functions and how they translate to real situations.</p>
 <p><strong>Scalar Input - Scalar Output</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 f: \mathbb{R} \rightarrow \mathbb{R}
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><strong>Vector Input - Scalar Output</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f}: \mathbb{R}^D \rightarrow \mathbb{R}
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><em>Example</em>: 1D Spatio-Temporal Scalar Field</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 y = \boldsymbol{f}(x_\phi, t)
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><em>Example</em>: 2D Spatial Scalar Field</p>
-<p>We have a 2-dimensional scalar field. The coordinates, $\mathbf{x} \in \mathbb{R}^{D_\phi}$, are 2D, e.g. (lat,lon) coordinates $D_\phi = [\phi, \psi]$. Then each of these coordinates are represented by a scalar value, $y \in \mathbb{R}$. So we have a function, $\boldsymbol{f}$, maps each coordinate, $\mathbf{x}$, of the field to a scalar value, $y$, i.e. $\boldsymbol{f}: \mathbb{R}^{D_\phi} \rightarrow \mathbb{R}$. More explicitly, we can write this function as:</p>
-<p>$$
+<p>We have a 2-dimensional scalar field. The coordinates, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_\phi}\)</span>, are 2D, e.g. (lat,lon) coordinates <span class="math notranslate nohighlight">\(D_\phi = [\phi, \psi]\)</span>. Then each of these coordinates are represented by a scalar value, <span class="math notranslate nohighlight">\(y \in \mathbb{R}\)</span>. So we have a function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, maps each coordinate, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, of the field to a scalar value, <span class="math notranslate nohighlight">\(y\)</span>, i.e. <span class="math notranslate nohighlight">\(\boldsymbol{f}: \mathbb{R}^{D_\phi} \rightarrow \mathbb{R}\)</span>. More explicitly, we can write this function as:</p>
+<div class="math notranslate nohighlight">
+\[
 y = \boldsymbol{f}(\mathbf{x}_\phi)
-$$</p>
-<p>if we stack a lot of samples together, $\mathcal{D} = \left{ \mathbf{x}<em>n, y_n\right}</em>{n=1}^N$, we get a matrix for the coordinates, $\mathbf{X}$, and a vector for the scalar values, $\mathbf{y}$. So we have $\mathcal{D} = \left{ \mathbf{X}, \mathbf{y}\right}$.</p>
-<p><strong>Note</strong>: For more consistent and aesthetically pleasing notation, we have $\mathbf{Y} = \mathbf{y}^\top$ so we can have the dataset, $\mathcal{D} = \left{ \mathbf{X}, \mathbf{Y}\right}$</p>
+\]</div>
+<p>if we stack a lot of samples together, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{x}_n, y_n\right\}_{n=1}^N\)</span>, we get a matrix for the coordinates, <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, and a vector for the scalar values, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>. So we have <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{X}, \mathbf{y}\right\}\)</span>.</p>
+<p><strong>Note</strong>: For more consistent and aesthetically pleasing notation, we have <span class="math notranslate nohighlight">\(\mathbf{Y} = \mathbf{y}^\top\)</span> so we can have the dataset, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{X}, \mathbf{Y}\right\}\)</span></p>
 <hr class="docutils" />
 <p><em>Example</em>: 2D Spatio-Temporal Scalar Field</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 y = \boldsymbol{f}(\mathbf{x}_\phi, t)
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><strong>Vector Input - Vector Output</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f}: \mathbb{R}^D \rightarrow \mathbb{R}^P
-$$</p>
+\]</div>
 <hr class="docutils" />
 <p><em>Example</em>: 2D Vector Field</p>
-<p>We have a 2-dimensional vector field (similar to the above example). The coordinates, $\mathbf{x} \in \mathbb{R}^{D_\phi}$, are 2D, e.g. (lat,lon) coordinates $D_\phi = [\phi, \psi]$. Then each of these coordinates are represented by a <strong>vector</strong> value, $\mathbf{y} \in \mathbb{R}^{P}$. In this case, let the dimensions be the (u,v) fields, i.e. $P=[u,v]$. So we have a function, $\boldsymbol{f}$, maps each coordinate, $\mathbf{x}$, of the field to a vector value, $y$, i.e. $\boldsymbol{f}: \mathbb{R}^{D_\phi} \rightarrow \mathbb{R}^{P}$. More explicitly, we can write this function as:</p>
-<p>$$
+<p>We have a 2-dimensional vector field (similar to the above example). The coordinates, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_\phi}\)</span>, are 2D, e.g. (lat,lon) coordinates <span class="math notranslate nohighlight">\(D_\phi = [\phi, \psi]\)</span>. Then each of these coordinates are represented by a <strong>vector</strong> value, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{P}\)</span>. In this case, let the dimensions be the (u,v) fields, i.e. <span class="math notranslate nohighlight">\(P=[u,v]\)</span>. So we have a function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, maps each coordinate, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, of the field to a vector value, <span class="math notranslate nohighlight">\(y\)</span>, i.e. <span class="math notranslate nohighlight">\(\boldsymbol{f}: \mathbb{R}^{D_\phi} \rightarrow \mathbb{R}^{P}\)</span>. More explicitly, we can write this function as:</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = \boldsymbol{f}(\mathbf{x})
-$$</p>
-<p>Again, if we stack a lot of samples together, $\mathcal{D} = \left{ \mathbf{x}_n, \mathbf{y}<em>n\right}</em>{n=1}^N$, we get a stack of matrices, $\mathcal{D} = \left{ \mathbf{X}, \mathbf{Y}\right}$.</p>
+\]</div>
+<p>Again, if we stack a lot of samples together, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{x}_n, \mathbf{y}_n\right\}_{n=1}^N\)</span>, we get a stack of matrices, <span class="math notranslate nohighlight">\(\mathcal{D} = \left\{ \mathbf{X}, \mathbf{Y}\right\}\)</span>.</p>
 <hr class="docutils" />
-<p><strong>Special Case: $D = P$</strong></p>
-<p>$$
+<p><strong>Special Case: <span class="math notranslate nohighlight">\(D = P\)</span></strong></p>
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f}:\mathbb{R}^2 \rightarrow \mathbb{R}^2
-$$</p>
-<p>where each of the functions takes in a 2D vector, $(x,y)$, and outputs a vector, $(u, v)$. This is analagous to scalar field for $u$ and $v$ which appears in physics. So</p>
-<p>$$
+\]</div>
+<p>where each of the functions takes in a 2D vector, <span class="math notranslate nohighlight">\((x,y)\)</span>, and outputs a vector, <span class="math notranslate nohighlight">\((u, v)\)</span>. This is analagous to scalar field for <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span> which appears in physics. So</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-f_1(x,y) &amp;= u \
+f_1(x,y) &amp;= u \\
 f_2(x,y) &amp;= v
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>We have our functional form given by:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \mathbf{f}\left(
 \begin{bmatrix}
-x \ y
+x \\ y
 \end{bmatrix}
 \right) =
 \begin{bmatrix}
-f_1(x,y) \ f_2(x,y)
+f_1(x,y) \\ f_2(x,y)
 \end{bmatrix} =
 \begin{bmatrix}
-u \ v
+u \\ v
 \end{bmatrix}
-$$</p>
+\end{split}\]</div>
 </section>
 <hr class="docutils" />
 <section id="common-terms">
@@ -1144,17 +1156,17 @@ $$</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-center"><p>$\theta$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\theta\)</span></p></td>
 <td class="text-left"><p>a parameter</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\theta_\alpha$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\theta_\alpha\)</span></p></td>
 <td class="text-left"><p>a hyperparameter</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\boldsymbol{\theta}$</p></td>
-<td class="text-left"><p>a collection of parameters, $\boldsymbol{\theta}=[\theta_1, \theta_2, \ldots, \theta_p]$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span></p></td>
+<td class="text-left"><p>a collection of parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}=[\theta_1, \theta_2, \ldots, \theta_p]\)</span></p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\boldsymbol{\theta_\alpha}$</p></td>
-<td class="text-left"><p>a collection of hyperparameters, $\boldsymbol{\theta_\alpha}=[\theta_{\alpha,1}, \theta_{\alpha,2}, \ldots, \theta_{\alpha,p}]$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{\theta_\alpha}\)</span></p></td>
+<td class="text-left"><p>a collection of hyperparameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta_\alpha}=[\theta_{\alpha,1}, \theta_{\alpha,2}, \ldots, \theta_{\alpha,p}]\)</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -1169,40 +1181,40 @@ $$</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-center"><p>$\mathcal{X,Y}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathcal{X,Y}\)</span></p></td>
 <td class="text-left"><p>the space of data</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$P,Q$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(P,Q\)</span></p></td>
 <td class="text-left"><p>the probability space of data</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$f_\mathcal{X}(\mathbf{x})$</p></td>
-<td class="text-left"><p>the probability density function (PDF) on $\mathbf{x}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(f_\mathcal{X}(\mathbf{x})\)</span></p></td>
+<td class="text-left"><p>the probability density function (PDF) on <span class="math notranslate nohighlight">\(\mathbf{x}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$F_\mathcal{X}(\mathbf{x})$</p></td>
-<td class="text-left"><p>the cumulative density function (CDF) on $\mathbf{x}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(F_\mathcal{X}(\mathbf{x})\)</span></p></td>
+<td class="text-left"><p>the cumulative density function (CDF) on <span class="math notranslate nohighlight">\(\mathbf{x}\)</span></p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$F_\mathcal{X}^{-1}(\mathbf{x})$</p></td>
-<td class="text-left"><p>the  Quantile or Point Percentile Function (ppf) (i.e. inverse cumulative density function) on $\mathbf{x}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(F_\mathcal{X}^{-1}(\mathbf{x})\)</span></p></td>
+<td class="text-left"><p>the  Quantile or Point Percentile Function (ppf) (i.e. inverse cumulative density function) on <span class="math notranslate nohighlight">\(\mathbf{x}\)</span></p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$p(x;\theta)$</p></td>
-<td class="text-left"><p>A probability distribution, $p$, of the variable $x$, parameterized by $\theta$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(p(x;\theta)\)</span></p></td>
+<td class="text-left"><p>A probability distribution, <span class="math notranslate nohighlight">\(p\)</span>, of the variable <span class="math notranslate nohighlight">\(x\)</span>, parameterized by <span class="math notranslate nohighlight">\(\theta\)</span></p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$p_\theta(x)$</p></td>
-<td class="text-left"><p>A probability distribution, $p$, of the variable $x$, parameterized by $\theta$ (succinct version)</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(p_\theta(x)\)</span></p></td>
+<td class="text-left"><p>A probability distribution, <span class="math notranslate nohighlight">\(p\)</span>, of the variable <span class="math notranslate nohighlight">\(x\)</span>, parameterized by <span class="math notranslate nohighlight">\(\theta\)</span> (succinct version)</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$p(\mathbf{x};\boldsymbol{\theta})$</p></td>
-<td class="text-left"><p>A probability distribution, p, of the multidimensional variable, $\mathbf{x}$, parameterized by $\boldsymbol{\theta}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(p(\mathbf{x};\boldsymbol{\theta})\)</span></p></td>
+<td class="text-left"><p>A probability distribution, p, of the multidimensional variable, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, parameterized by <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span></p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$p_{\boldsymbol{\theta}}(\mathbf{x})$</p></td>
-<td class="text-left"><p>A probability distribution, p, of the multidimensional variable, $\mathbf{x}$, parameterized by $\boldsymbol{\theta}$ (succinct version)</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(p_{\boldsymbol{\theta}}(\mathbf{x})\)</span></p></td>
+<td class="text-left"><p>A probability distribution, p, of the multidimensional variable, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, parameterized by <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> (succinct version)</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\mathcal{N}(x; \mu, \sigma)$</p></td>
-<td class="text-left"><p>A normal distribution for $x$ parameterized by $\mu$ and $\sigma$.</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathcal{N}(x; \mu, \sigma)\)</span></p></td>
+<td class="text-left"><p>A normal distribution for <span class="math notranslate nohighlight">\(x\)</span> parameterized by <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span>.</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\mathcal{N}(\mathbf{x}; \boldsymbol{\mu}, \boldsymbol{\Sigma})$</p></td>
-<td class="text-left"><p>A multivariate normal distribution for $\mathbf{x}$ parameterized by $\boldsymbol{\mu}$ and $\boldsymbol{\Sigma}$.</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathcal{N}(\mathbf{x}; \boldsymbol{\mu}, \boldsymbol{\Sigma})\)</span></p></td>
+<td class="text-left"><p>A multivariate normal distribution for <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> parameterized by <span class="math notranslate nohighlight">\(\boldsymbol{\mu}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}\)</span>.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\mathcal{N}(\mathbf{0}, \mathbf{I}_D)$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathcal{N}(\mathbf{0}, \mathbf{I}_D)\)</span></p></td>
 <td class="text-left"><p>A multivariate normal distribution with a zero mean and 1 variance.</p></td>
 </tr>
 </tbody>
@@ -1218,23 +1230,23 @@ $$</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-center"><p>$I(X)$</p></td>
-<td class="text-left"><p>Self-Information for a rv $X$.</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(I(X)\)</span></p></td>
+<td class="text-left"><p>Self-Information for a rv <span class="math notranslate nohighlight">\(X\)</span>.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$H(X)$</p></td>
-<td class="text-left"><p>Entropy of a rv $X$.</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(H(X)\)</span></p></td>
+<td class="text-left"><p>Entropy of a rv <span class="math notranslate nohighlight">\(X\)</span>.</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$TC(X)$</p></td>
-<td class="text-left"><p>Total correlation (multi-information) of a rv $X$.</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(TC(X)\)</span></p></td>
+<td class="text-left"><p>Total correlation (multi-information) of a rv <span class="math notranslate nohighlight">\(X\)</span>.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$H(X,Y)$</p></td>
-<td class="text-left"><p>Joint entropy of rvs $X$ and $Y$.</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(H(X,Y)\)</span></p></td>
+<td class="text-left"><p>Joint entropy of rvs <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>.</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$I(X,Y)$</p></td>
-<td class="text-left"><p>Mutual information between two rvs $X$ and $Y$.</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(I(X,Y)\)</span></p></td>
+<td class="text-left"><p>Mutual information between two rvs <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\text{D}_{\text{KL}}(X,Y)$</p></td>
-<td class="text-left"><p>Jullback-Leibler divergence between $X$ and $Y$.</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\text{D}_{\text{KL}}(X,Y)\)</span></p></td>
+<td class="text-left"><p>Jullback-Leibler divergence between <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1249,22 +1261,22 @@ $$</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-center"><p>$\boldsymbol{m}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{m}\)</span></p></td>
 <td class="text-left"><p>mean function for a Gaussian process.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\mathbf{K}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{K}\)</span></p></td>
 <td class="text-left"><p>kernel function for a Gaussian process</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\mathcal{GP}(\boldsymbol{m}, \mathbf{K})$</p></td>
-<td class="text-left"><p>Gaussian process distribution parameterized by a mean function, $\boldsymbol{m}$ and kernel matrix, $\mathbf{K}$.</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\mathcal{GP}(\boldsymbol{m}, \mathbf{K})\)</span></p></td>
+<td class="text-left"><p>Gaussian process distribution parameterized by a mean function, <span class="math notranslate nohighlight">\(\boldsymbol{m}\)</span> and kernel matrix, <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\boldsymbol{\mu}_\mathcal{GP}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}_\mathcal{GP}\)</span></p></td>
 <td class="text-left"><p>GP predictive mean function.</p></td>
 </tr>
-<tr class="row-even"><td class="text-center"><p>$\boldsymbol{\sigma}^2_\mathcal{GP}$</p></td>
+<tr class="row-even"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{\sigma}^2_\mathcal{GP}\)</span></p></td>
 <td class="text-left"><p>GP predictive variance function.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-center"><p>$\boldsymbol{\Sigma}_\mathcal{GP}$</p></td>
+<tr class="row-odd"><td class="text-center"><p><span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_\mathcal{GP}\)</span></p></td>
 <td class="text-left"><p>GP predictive covariance function.</p></td>
 </tr>
 </tbody>
@@ -1274,41 +1286,42 @@ $$</p>
 <section id="field-space">
 <h2>Field Space<a class="headerlink" href="#field-space" title="Permalink to this heading">#</a></h2>
 <p>The first case, we have</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = \boldsymbol{H}(\mathbf{x}) + \epsilon
-$$</p>
-<p>This represents the state, $\mathbf{x}$, as a representation fo the field</p>
+\]</div>
+<p>This represents the state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, as a representation fo the field</p>
 <ul class="simple">
-<li><p>$\mathbf{x} \in \mathbb{R}^{D_x}$ - state</p></li>
-<li><p>$\boldsymbol{\mu}_{\mathbf{x}} \in \mathbb{R}^{D_x}$ - mean prediction for state vector</p></li>
-<li><p>$\boldsymbol{\sigma^2}_{\mathbf{x}} \in \mathbb{R}^{D_x}$ - variance prediction for state vector</p></li>
-<li><p>$\mathbf{X}_{\boldsymbol{\Sigma}} \in \mathbb{R}^{D_x \times D_x}$ - covariance prediction for state vector</p></li>
-<li><p>$\mathbf{X}_{\boldsymbol{\mu}} \in \mathbb{R}^{N \times D_x}$ - variance prediction for state vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_x}\)</span> - state</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}_{\mathbf{x}} \in \mathbb{R}^{D_x}\)</span> - mean prediction for state vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\sigma^2}_{\mathbf{x}} \in \mathbb{R}^{D_x}\)</span> - variance prediction for state vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{X}_{\boldsymbol{\Sigma}} \in \mathbb{R}^{D_x \times D_x}\)</span> - covariance prediction for state vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{X}_{\boldsymbol{\mu}} \in \mathbb{R}^{N \times D_x}\)</span> - variance prediction for state vector</p></li>
 </ul>
 </section>
 <section id="state-coordinates">
 <h2>State (Coordinates)<a class="headerlink" href="#state-coordinates" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>$\boldsymbol{x} \in \mathbb{R}^{D_\phi}$ - the coordinate vector</p></li>
-<li><p>$\boldsymbol{\mu}<em>{\boldsymbol{x}} \in \mathbb{R}^{D</em>\phi}$ - mean prediction for state vector</p></li>
-<li><p>$\boldsymbol{\sigma^2}_{\boldsymbol{x}} \in \mathbb{R}^{D_x}$ - variance prediction for state vector</p></li>
-<li><p>$\boldsymbol{X}<em>{\boldsymbol{\Sigma}} \in \mathbb{R}^{D</em>\phi \times D_\phi}$ - covariance prediction for state vector</p></li>
-<li><p>$\boldsymbol{X}<em>{\boldsymbol{\mu}} \in \mathbb{R}^{N \times D</em>\phi}$ - variance prediction for state vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{x} \in \mathbb{R}^{D_\phi}\)</span> - the coordinate vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\mu}_{\boldsymbol{x}} \in \mathbb{R}^{D_\phi}\)</span> - mean prediction for state vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\sigma^2}_{\boldsymbol{x}} \in \mathbb{R}^{D_x}\)</span> - variance prediction for state vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{X}_{\boldsymbol{\Sigma}} \in \mathbb{R}^{D_\phi \times D_\phi}\)</span> - covariance prediction for state vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{X}_{\boldsymbol{\mu}} \in \mathbb{R}^{N \times D_\phi}\)</span> - variance prediction for state vector</p></li>
 </ul>
 </section>
 <section id="observations">
 <h2>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>$\mathbf{z} \in \mathbb{R}^{D_z}$ - latent domain</p></li>
-<li><p>$\mathbf{y} \in \mathbb{R}^{D_y}$ - observations</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{z} \in \mathbb{R}^{D_z}\)</span> - latent domain</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^{D_y}\)</span> - observations</p></li>
 </ul>
 </section>
 <section id="matrices">
 <h2>Matrices<a class="headerlink" href="#matrices" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>$\mathbf{Z} \in \mathbb{R}^{N \times D_z}$ - latent domain</p></li>
-<li><p>$\mathbf{X} \in \mathbb{R}^{N \times D_x}$ - state</p></li>
-<li><p>$\mathbf{Y} \in \mathbb{R}^{N \times D_y}$ - observations</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{Z} \in \mathbb{R}^{N \times D_z}\)</span> - latent domain</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{N \times D_x}\)</span> - state</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{Y} \in \mathbb{R}^{N \times D_y}\)</span> - observations</p></li>
 </ul>
 </section>
 <hr class="docutils" />
@@ -1316,18 +1329,18 @@ $$</p>
 <h2>Functions<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <section id="coordinates">
 <h3>Coordinates<a class="headerlink" href="#coordinates" title="Permalink to this heading">#</a></h3>
-<p>In this case, we assume that the state, $\mathbf{x} \in \mathbb{R}^{D_\phi}$, are the coordinates, $[\text{lat,lon,time}]$, and the output is the value of the variable of interest, $\mathbf{y}$, at that point in space and time.</p>
+<p>In this case, we assume that the state, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{D_\phi}\)</span>, are the coordinates, <span class="math notranslate nohighlight">\([\text{lat,lon,time}]\)</span>, and the output is the value of the variable of interest, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>, at that point in space and time.</p>
 <ul class="simple">
-<li><p>$[\mathbf{K}]_{ij} = \boldsymbol{k}(\mathbf{x}_i, \mathbf{x}_j)$ - covariance matrix for the coordinates</p></li>
-<li><p>$\boldsymbol{k}_{\mathbf{X}}(\mathbf{x}_i) = \boldsymbol{k}(\mathbf{X}, \mathbf{x}_i)$ - cross covariance for the data</p></li>
-<li><p>$\boldsymbol{k}(\mathbf{x}<em>i, \mathbf{x}<em>j) : \mathbb{R}^{D</em>\phi} \times \mathbb{R}^{D</em>\phi} \rightarrow \mathbb{R}$ - the kernel function applied to two vectors.</p></li>
+<li><p><span class="math notranslate nohighlight">\([\mathbf{K}]_{ij} = \boldsymbol{k}(\mathbf{x}_i, \mathbf{x}_j)\)</span> - covariance matrix for the coordinates</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{k}_{\mathbf{X}}(\mathbf{x}_i) = \boldsymbol{k}(\mathbf{X}, \mathbf{x}_i)\)</span> - cross covariance for the data</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{k}(\mathbf{x}_i, \mathbf{x}_j) : \mathbb{R}^{D_\phi} \times \mathbb{R}^{D_\phi} \rightarrow \mathbb{R}\)</span> - the kernel function applied to two vectors.</p></li>
 </ul>
 </section>
 <section id="data-field">
 <h3>Data Field<a class="headerlink" href="#data-field" title="Permalink to this heading">#</a></h3>
-<p>In this case, we assume that the state, $\mathbf{x}$, is the input</p>
+<p>In this case, we assume that the state, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, is the input</p>
 <ul class="simple">
-<li><p>$[\mathbf{C}]_{ij} = \boldsymbol{c}(\mathbf{x}_i, \mathbf{x}_j)$ - covariance matrix for the data field</p></li>
+<li><p><span class="math notranslate nohighlight">\([\mathbf{C}]_{ij} = \boldsymbol{c}(\mathbf{x}_i, \mathbf{x}_j)\)</span> - covariance matrix for the data field</p></li>
 </ul>
 </section>
 </section>
@@ -1339,53 +1352,60 @@ $$</p>
 <h3>Jacobian<a class="headerlink" href="#jacobian" title="Permalink to this heading">#</a></h3>
 <p>So here, we’re talking about gradients and how they operate on functions.</p>
 <p><strong>Scalar Input-Output</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 f: \mathbb{R} \rightarrow \mathbb{R}
-$$</p>
+\]</div>
 <p>There are no vectors in this operation so this is simply the derivative.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-J_f: \mathbb{R} &amp;\rightarrow \mathbb{R} \
+J_f: \mathbb{R} &amp;\rightarrow \mathbb{R} \\
 J_f(x) &amp;= \frac{df}{dx}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <hr class="docutils" />
 <p><strong>Vector Input, Scalar Output</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{f} : \mathbb{R}^D \rightarrow \mathbb{R}
-$$</p>
+\]</div>
 <p>This has vector-inputs so the output dimension of the Jacobian operator will be the same dimensionality as the input vector.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\boldsymbol{J}<span class="xref myst">\boldsymbol{f}</span> &amp;: \mathbb{R}^{D} \rightarrow \mathbb{R}^D \
+\boldsymbol{J}[\boldsymbol{f}](\mathbf{x}) &amp;: \mathbb{R}^{D} \rightarrow \mathbb{R}^D \\
 \mathbf{J}_{\boldsymbol{f}}(\mathbf{x}) &amp;=
 \begin{bmatrix}
 \frac{\partial f}{\partial x_1} &amp;\cdots \frac{\partial f}{\partial x_D}
 \end{bmatrix}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <hr class="docutils" />
 <p><strong>Vector Input, Vector Output</strong></p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \vec{\boldsymbol{f}} : \mathbb{R}^D \rightarrow \mathbb{R}^P
-$$</p>
-<p>The inputs are the vector, $\mathbf{x} \in \mathbb{R}^D$, and the outputs are a vector, $\mathbf{y} \in \mathbb{R}^P$. So the Jacobian operator will produce a matrix of size $\mathbf{J} \in \mathbb{R}^{P \times D}$.</p>
-<p>$$
+\]</div>
+<p>The inputs are the vector, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^D\)</span>, and the outputs are a vector, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^P\)</span>. So the Jacobian operator will produce a matrix of size <span class="math notranslate nohighlight">\(\mathbf{J} \in \mathbb{R}^{P \times D}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\boldsymbol{J}<span class="xref myst">{\boldsymbol{f}}</span> &amp;: \mathbb{R}^{D} \rightarrow \mathbb{R}^{P\times D}\
-\mathbf{J}<span class="xref myst">\boldsymbol{f}</span> &amp;=
+\boldsymbol{J}[{\boldsymbol{f}}](\mathbf{x}) &amp;: \mathbb{R}^{D} \rightarrow \mathbb{R}^{P\times D}\\
+\mathbf{J}[\boldsymbol{f}](\mathbf{x}) &amp;=
 \begin{bmatrix}
-\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_D} \
-\ldots &amp;\ddots &amp; \ldots \
+\frac{\partial f_1}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_1}{\partial x_D} \\
+\ldots &amp;\ddots &amp; \ldots \\
 \frac{\partial f_p}{\partial x_1} &amp;\cdots &amp;\frac{\partial f_p}{\partial x_D}
 \end{bmatrix}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <hr class="docutils" />
 <p><strong>Alternative Forms</strong></p>
 <p>I’ve also seen alternative forms which depends on whether the authors want to highlight the inputs or the outputs.</p>
 <p><strong>Form I</strong>: Highlight the input vectors</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{J}_{\boldsymbol{f}}(\mathbf{x}) =
 \begin{bmatrix}
 \frac{\partial \boldsymbol{f}}{\partial x_1} &amp; \cdots &amp; \frac{\partial \boldsymbol{f}}{\partial x_D}
@@ -1393,17 +1413,18 @@ $$</p>
 \begin{bmatrix}
 \frac{\nabla \boldsymbol{f}}{\partial x_1} &amp; \cdots &amp; \frac{\nabla \boldsymbol{f}}{\partial x_D}
 \end{bmatrix}
-$$</p>
+\]</div>
 <p><strong>Form II</strong>: Highlights the output vectors</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \mathbf{J}_{\boldsymbol{f}}(\mathbf{x}) =
 \begin{bmatrix}
-\frac{\partial \boldsymbol{f}_1}{\partial \mathbf{x}} \ \vdots \ \frac{\partial \boldsymbol{f}_p}{\partial \mathbf{x}}
+\frac{\partial \boldsymbol{f}_1}{\partial \mathbf{x}} \\ \vdots \\ \frac{\partial \boldsymbol{f}_p}{\partial \mathbf{x}}
 \end{bmatrix} =
 \begin{bmatrix}
-\boldsymbol{\nabla}^\top \boldsymbol{f}_1 \ \vdots \ \boldsymbol{\nabla}^\top \boldsymbol{f}_P
+\boldsymbol{\nabla}^\top \boldsymbol{f}_1 \\ \vdots \\ \boldsymbol{\nabla}^\top \boldsymbol{f}_P
 \end{bmatrix}
-$$</p>
+\end{split}\]</div>
 </section>
 <hr class="docutils" />
 <section id="special-cases">
@@ -1411,86 +1432,97 @@ $$</p>
 <p>There are probably many special cases where we have closed-form operators but I will highlight one here which comes up in physics a lot.</p>
 <hr class="docutils" />
 <p><strong>2D Vector Input, 2D Vector Output</strong></p>
-<p>Recall the special case from the above vectors where the dimensionality of the input vector, $\mathbf{x} \in \mathbb{R}^2$, is the same dimensionality of the output vector, $\mathbf{y} \in \mathbb{R}^2$.</p>
-<p>$$
+<p>Recall the special case from the above vectors where the dimensionality of the input vector, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^2\)</span>, is the same dimensionality of the output vector, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^2\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\boldsymbol{f}&amp;:\mathbb{R}^2 \rightarrow \mathbb{R}^2 \
+\boldsymbol{f}&amp;:\mathbb{R}^2 \rightarrow \mathbb{R}^2 \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>The functional form was:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \mathbf{f}\left(
 \begin{bmatrix}
-x \ y
+x \\ y
 \end{bmatrix}
 \right) =
 \begin{bmatrix}
-f_1(x,y) \ f_2(x,y)
+f_1(x,y) \\ f_2(x,y)
 \end{bmatrix} =
 \begin{bmatrix}
-u \ v
+u \\ v
 \end{bmatrix}
-$$</p>
-<p>So in this special case, our Jacobian matrix, $\mathbf{J}$, will be:</p>
-<p>$$
+\end{split}\]</div>
+<p>So in this special case, our Jacobian matrix, <span class="math notranslate nohighlight">\(\mathbf{J}\)</span>, will be:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \mathbf{J}_{\boldsymbol{f}(x,y)} =
 \begin{bmatrix}
-\frac{\partial u}{\partial x} &amp; \frac{\partial u}{\partial y} \
+\frac{\partial u}{\partial x} &amp; \frac{\partial u}{\partial y} \\
 \frac{\partial v}{\partial x} &amp; \frac{\partial v}{\partial y}
 \end{bmatrix}
-$$</p>
-<p><strong>Note</strong>: This is a square matrix because the dimension of the input vector, $(x,y)$, matches the dimension of the output vector, $(u,v)$.</p>
+\end{split}\]</div>
+<p><strong>Note</strong>: This is a square matrix because the dimension of the input vector, <span class="math notranslate nohighlight">\((x,y)\)</span>, matches the dimension of the output vector, <span class="math notranslate nohighlight">\((u,v)\)</span>.</p>
 </section>
 <hr class="docutils" />
 <section id="determinant-jacobian">
 <h3>Determinant Jacobian<a class="headerlink" href="#determinant-jacobian" title="Permalink to this heading">#</a></h3>
 <p>The determinant of the Jacobian is the amount of (volumetric) change. It is given by:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \det \boldsymbol{J}_{\boldsymbol{f}}(\mathbf{x}): \mathbb{R}^D \rightarrow \mathbb{R}
-$$</p>
-<p>Notice how we input the vectors, $\mathbf{x}$, and it results in a scalar, $\mathbb{R}$.</p>
-<p><strong>Note</strong>: This can be a very expensive operation especially with high dimensional data. A naive linear function, $\boldsymbol{f}(\mathbf{x}) = \mathbf{Ax}$, will have an operation of $\mathcal{O}(D^3)$. So the name of the game is to try and look at the Jacobian structure and find tricks to reduce the expense of the calculation.</p>
+\]</div>
+<p>Notice how we input the vectors, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, and it results in a scalar, <span class="math notranslate nohighlight">\(\mathbb{R}\)</span>.</p>
+<p><strong>Note</strong>: This can be a very expensive operation especially with high dimensional data. A naive linear function, <span class="math notranslate nohighlight">\(\boldsymbol{f}(\mathbf{x}) = \mathbf{Ax}\)</span>, will have an operation of <span class="math notranslate nohighlight">\(\mathcal{O}(D^3)\)</span>. So the name of the game is to try and look at the Jacobian structure and find tricks to reduce the expense of the calculation.</p>
 <hr class="docutils" />
 <p><strong>Special Case: Input Vector 2D, Output Vector - 2D</strong></p>
-<p>Again, let’s go back to the special case where we have a two input vector, $\mathbf{x}\in \mathbb{R}^2$, and a 2D output vector, $\mathbf{y} \in \mathbb{R}^2$. Recall that the Jacobian matrix for the function, $\boldsymbol{f}$, is a $2\times 2$ square matrix. More generally, we can write this as:</p>
-<p>$$
+<p>Again, let’s go back to the special case where we have a two input vector, <span class="math notranslate nohighlight">\(\mathbf{x}\in \mathbb{R}^2\)</span>, and a 2D output vector, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^2\)</span>. Recall that the Jacobian matrix for the function, <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>, is a <span class="math notranslate nohighlight">\(2\times 2\)</span> square matrix. More generally, we can write this as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \boldsymbol{J}
 \begin{bmatrix}
-A(x,y) \
+A(x,y) \\
 B(x,y)
 \end{bmatrix} =
 \begin{bmatrix}
-\frac{\partial A}{\partial x} &amp; \frac{\partial A}{\partial y} \
+\frac{\partial A}{\partial x} &amp; \frac{\partial A}{\partial y} \\
 \frac{\partial B}{\partial x} &amp; \frac{\partial B}{\partial y}
 \end{bmatrix}
-$$</p>
+\end{split}\]</div>
 <p>To calculate the determinant of this Jacobian matrix, we has a closed-form expression. It’s given by:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \det \mathbf{J} = AD - BC
-$$</p>
+\]</div>
 <p>So if we apply it to our notation</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \det \mathbf{J}_{\mathbf{f}}(x,y) = \frac{\partial f_1}{\partial x}\frac{\partial f_2}{\partial y} - \frac{\partial f_1}{\partial y}\frac{\partial f_2}{\partial x}
-$$</p>
+\]</div>
 <p>This is probably the <strong>easiest</strong> determinant Jacobian to calculate (apart from the scalar-valued which is simply the gradient) and it comes up from time to time in physics.</p>
-<p><strong>Note</strong>: I have seem an alternaive form in the geoscience literature, $\boldsymbol{J}(\boldsymbol{f}_1, \boldsymbol{f}_2)$. I personally don’t like this notation because in no way does it specify the <strong>determinant</strong>. I propose a better, clearer notation: $\det \boldsymbol{J}(\boldsymbol{f}_1, \boldsymbol{f}_2)$. Now we at least have the</p>
+<p><strong>Note</strong>: I have seem an alternaive form in the geoscience literature, <span class="math notranslate nohighlight">\(\boldsymbol{J}(\boldsymbol{f}_1, \boldsymbol{f}_2)\)</span>. I personally don’t like this notation because in no way does it specify the <strong>determinant</strong>. I propose a better, clearer notation: <span class="math notranslate nohighlight">\(\det \boldsymbol{J}(\boldsymbol{f}_1, \boldsymbol{f}_2)\)</span>. Now we at least have the</p>
 <hr class="docutils" />
 <p><strong>Example</strong>: This is in the QG PDE. It is given by:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \partial_t q + \boldsymbol{J}(\psi, q) = 0
-$$</p>
+\]</div>
 <p>where the Jacobian operator is given by:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{J}(\psi, q) = \partial_x \psi \partial_y q - \partial_y \psi \partial_x q
-$$</p>
+\]</div>
 <p>With my updated notation, this would now be:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \partial_t q + \det\boldsymbol{J}(\psi, q) = 0
-$$</p>
+\]</div>
 <p>where the <em>determinant</em> Jacobian operator is given:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \det\boldsymbol{J}(\psi, q) = \partial_x \psi \partial_y q - \partial_y \psi \partial_x q
-$$</p>
+\]</div>
 <p>In my eyes, this is clearer. Especially in the papers where people recycle the equations without explicitly defining the operators and their meaning.</p>
 </section>
 </section>

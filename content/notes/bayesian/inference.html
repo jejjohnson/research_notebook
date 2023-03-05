@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/bayesian/inference';</script>
@@ -956,7 +958,7 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="inference-schemes">
+  <section class="tex2jax_ignore mathjax_ignore" id="inference-schemes">
 <h1>Inference Schemes<a class="headerlink" href="#inference-schemes" title="Permalink to this heading">#</a></h1>
 <p><a class="reference external" href="https://www.cs.ubc.ca/~schmidtm/MLRG/GaussianProcesses.pdf"><strong>Source</strong></a> | Deisenroth - <a class="reference external" href="https://drive.google.com/file/d/1Ryb1zDzndnv1kOe8nT0Iu4OD6m0KC8ry/view">Sampling</a></p>
 <p><strong>Advances in VI</strong> - <a class="reference external" href="https://github.com/magister-informatica-uach/INFO320/blob/master/6_advances_in_VI.ipynb">Notebook</a></p>
@@ -985,40 +987,48 @@ title="Print to PDF"
 <section class="example-content" id="proof-content">
 </section>
 </div><p>The likelihood of our model is:</p>
-<p>$$\log p(y|\mathbf{X,w}) = \sum_{i=1}^N \log p(y_i|x_i,\theta)$$</p>
-<p>And for simplicity, we assume the noise $\epsilon$ comes from a Gaussian distribution and that it is constant. So we can rewrite our likelihood as</p>
-<p>$$\log p(y|\mathbf{X,w}) = \sum_{i=1}^N \log \mathcal{N}(y_i | \mathbf{x}_i\mathbf{w}, \sigma^2)$$</p>
+<div class="math notranslate nohighlight">
+\[\log p(y|\mathbf{X,w}) = \sum_{i=1}^N \log p(y_i|x_i,\theta)\]</div>
+<p>And for simplicity, we assume the noise <span class="math notranslate nohighlight">\(\epsilon\)</span> comes from a Gaussian distribution and that it is constant. So we can rewrite our likelihood as</p>
+<div class="math notranslate nohighlight">
+\[\log p(y|\mathbf{X,w}) = \sum_{i=1}^N \log \mathcal{N}(y_i | \mathbf{x}_i\mathbf{w}, \sigma^2)\]</div>
 <p>Plugging in the full formula for the Gaussian distribution with some simplifications gives us:</p>
-<p>$$
-\log p(y|\mathbf{X,w}) =
-\sum_{i=1}^N
-\log \frac{1}{\sqrt{2 \pi \sigma_e^2}}
+<div class="math notranslate nohighlight">
+\[
+\log p(y|\mathbf{X,w}) = 
+\sum_{i=1}^N 
+\log \frac{1}{\sqrt{2 \pi \sigma_e^2}} 
 \exp\left( - \frac{(y_i - \mathbf{x}_i\mathbf{w})^2}{2\sigma_e^2} \right)
-$$</p>
-<p>We can use the log rule $\log ab = \log a + \log b$ to rewrite this expression to separate the constant term from the exponential. Also, $\log e^x = x$.</p>
-<p>$$
+\]</div>
+<p>We can use the log rule <span class="math notranslate nohighlight">\(\log ab = \log a + \log b\)</span> to rewrite this expression to separate the constant term from the exponential. Also, <span class="math notranslate nohighlight">\(\log e^x = x\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \log p(y|\mathbf{X,w}) = - \frac{N}{2} \log 2 \pi \sigma_e^2 - \sum_{i=1}^N \frac{(y_i - \mathbf{x_iw})^2}{2\sigma_e^2}
-$$</p>
+\]</div>
 <p>So, the first term is constant so that we can ignore that in our loss function. We can do the same for the denominator for the second term. Let’s simplify it to make our life easier.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \log p(y|\mathbf{X,w}) = - \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2
-$$</p>
-<p>So we want to maximize this quantity: in other words, I want to find the parameter $\mathbf{w}$ s.t. this equation is maximum.</p>
-<p>$$
-\mathbf{w}<em>{MLE} = \operatorname*{argmin}</em>{\mathbf{w}} - \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2
-$$</p>
+\]</div>
+<p>So we want to maximize this quantity: in other words, I want to find the parameter <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> s.t. this equation is maximum.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{w}_{MLE} = \operatorname*{argmin}_{\mathbf{w}} - \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2
+\]</div>
 <p>We can rewrite this expression because the maximum of a negative quantity is the same as minimizing a positive quantity.</p>
-<p>$$
-\mathbf{w}<em>{MLE} = \operatorname*{argmin}</em>{\mathbf{w}} \frac{1}{N} \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2
-$$</p>
-<p>This is the same as the MSE error expression; with the edition of a scalar value $1/N$.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
+\mathbf{w}_{MLE} = \operatorname*{argmin}_{\mathbf{w}} \frac{1}{N} \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2
+\]</div>
+<p>This is the same as the MSE error expression; with the edition of a scalar value <span class="math notranslate nohighlight">\(1/N\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{w}<em>{MLE} &amp;= \operatorname*{argmin}</em>{\mathbf{w}} \frac{1}{N} \sum_{i=1}^N (y_i - \mathbf{x}<em>i\mathbf{w})^2 \
-&amp;= \operatorname*{argmin}</em>{\mathbf{w}} \text{MSE}
+\mathbf{w}_{MLE} &amp;= \operatorname*{argmin}_{\mathbf{w}} \frac{1}{N} \sum_{i=1}^N (y_i - \mathbf{x}_i\mathbf{w})^2 \\
+&amp;= \operatorname*{argmin}_{\mathbf{w}} \text{MSE}
 \end{aligned}
-$$</p>
-<p><strong>Note</strong>: If we did not know $\sigma_y^2$ then we would have to optimize this as well.</p>
+\end{split}\]</div>
+<p><strong>Note</strong>: If we did not know <span class="math notranslate nohighlight">\(\sigma_y^2\)</span> then we would have to optimize this as well.</p>
 <p><strong>Sources</strong>:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://python-intro.quantecon.org/mle.html">Intro to Quantitative Econ w. Python</a></p></li>
@@ -1029,43 +1039,52 @@ $$</p>
 <h3>Maximum A Priori (MAP)<a class="headerlink" href="#maximum-a-priori-map" title="Permalink to this heading">#</a></h3>
 <section id="loss-function">
 <h4>Loss Function<a class="headerlink" href="#loss-function" title="Permalink to this heading">#</a></h4>
-<p>$$
-\boldsymbol{\theta}<em>{\text{MAP}} = \operatorname*{argmax}</em>{\boldsymbol{\theta}} - \frac{1}{N}\sum_n^N\log p\left(y_n|f(x_n; \theta)\right) + \log p(\theta)
-$$(map_loss)</p>
+<div class="math notranslate nohighlight" id="equation-map-loss">
+<span class="eqno">(17)<a class="headerlink" href="#equation-map-loss" title="Permalink to this equation">#</a></span>\[
+\boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} - \frac{1}{N}\sum_n^N\log p\left(y_n|f(x_n; \theta)\right) + \log p(\theta)
+\]</div>
 <div class="proof example admonition" id="map">
 <p class="admonition-title"><span class="caption-number">Example 2 </span> (Proof)</p>
 <section class="example-content" id="proof-content">
 </section>
-</div><p>$$
-\boldsymbol{\theta}<em>{\text{MAP}} = \operatorname*{argmax}</em>{\boldsymbol{\theta}} \log p(\boldsymbol{\theta}|\mathcal{D})
-$$</p>
+</div><div class="math notranslate nohighlight">
+\[
+\boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} \log p(\boldsymbol{\theta}|\mathcal{D})
+\]</div>
 <p>We can plug in the base Bayesian formulation</p>
-<p>$$
-\boldsymbol{\theta}<em>{\text{MAP}} = \operatorname*{argmax}</em>{\boldsymbol{\theta}} \log \left[ \frac{p(\mathcal{D}|\boldsymbol{\theta})p(\boldsymbol{\theta})}{p(\mathcal{D})} \right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} \log \left[ \frac{p(\mathcal{D}|\boldsymbol{\theta})p(\boldsymbol{\theta})}{p(\mathcal{D})} \right]
+\]</div>
 <p>We can expand this term using the log rules</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \theta_{map} = \operatorname*{argmax}_\theta \left[ \log p(D|\theta) + \log p(\theta) - \log p(D) \right]
-$$</p>
-<p>Notice that $\log p(D)$ is a constant as the distribution of the data won’t change. It also does not depend on the parameters, $\theta$. So we can cancel that term out.</p>
-<p>$$
-\theta_{map} = \operatorname*{argmax}_\theta \left[ \log p(D|\theta) + \log p(\theta) \right]$$</p>
+\]</div>
+<p>Notice that <span class="math notranslate nohighlight">\(\log p(D)\)</span> is a constant as the distribution of the data won’t change. It also does not depend on the parameters, <span class="math notranslate nohighlight">\(\theta\)</span>. So we can cancel that term out.</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmax}_\theta \left[ \log p(D|\theta) + \log p(\theta) \right]\]</div>
 <p>We will change this problem into a minimization problem instead of maximization</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \log p(D|\theta)
-$$</p>
-<p>We cannot find the probability distribution of $p(D|\theta)$ irregardless of what it is conditioned on. So we need to take some sort of expectations over the entire data.</p>
-<p>$$
-\theta_{map} = \operatorname*{argmin}<em>{\theta} - \mathbb{E}</em>{\mathbf{x}\sim P_X} \left[ \log p(D|\theta)\right] + \log p(\theta)
-$$</p>
+\]</div>
+<p>We cannot find the probability distribution of <span class="math notranslate nohighlight">\(p(D|\theta)\)</span> irregardless of what it is conditioned on. So we need to take some sort of expectations over the entire data.</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{map} = \operatorname*{argmin}_{\theta} - \mathbb{E}_{\mathbf{x}\sim P_X} \left[ \log p(D|\theta)\right] + \log p(\theta)
+\]</div>
 <p>We can approximate this using Monte carlo samples. This is given by:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbb{E}_{x}[\log p(D|\theta)] \approx \frac{1}{N}\sum_n^N p(y_n | f(x_n; \theta))
-$$</p>
+\]</div>
 <p>and we assume that with enough samples, we will capture the essence of our data.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))+ \log p(\theta)
-$$</p>
+\]</div>
 <hr class="docutils" />
 </section>
 </section>
@@ -1073,21 +1092,24 @@ $$</p>
 <h3>Maximum Likelihood Estimation (MLE)<a class="headerlink" href="#maximum-likelihood-estimation-mle" title="Permalink to this heading">#</a></h3>
 <section id="id1">
 <h4>Loss Function<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h4>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))
-$$</p>
+\]</div>
 <div class="proof example admonition" id="mle">
 <p class="admonition-title"><span class="caption-number">Example 3 </span> (Proof)</p>
 <section class="example-content" id="proof-content">
 </section>
-</div><p>This is straightforward to derive because we can pick up from the proof of the MAP loss function, eq:<code class="xref eq docutils literal notranslate"><span class="pre">map_loss</span></code>.</p>
-<p>$$
+</div><p>This is straightforward to derive because we can pick up from the proof of the MAP loss function, eq:<a class="reference internal" href="#equation-map-loss">(17)</a>.</p>
+<div class="math notranslate nohighlight">
+\[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))+ \log p(\theta)
-$$</p>
-<p>In this case, we will assume a uniform prior on our parameters, $\theta$. This means that any parameter value would work to solve the problem. The uniform distribution has a constant probability of 1. As a result, the $\log$ of $p(\theta)=1$ is equal to 0. So we can simply remove the log prior on our parameters in the above equation.</p>
-<p>$$
+\]</div>
+<p>In this case, we will assume a uniform prior on our parameters, <span class="math notranslate nohighlight">\(\theta\)</span>. This means that any parameter value would work to solve the problem. The uniform distribution has a constant probability of 1. As a result, the <span class="math notranslate nohighlight">\(\log\)</span> of <span class="math notranslate nohighlight">\(p(\theta)=1\)</span> is equal to 0. So we can simply remove the log prior on our parameters in the above equation.</p>
+<div class="math notranslate nohighlight">
+\[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))
-$$</p>
+\]</div>
 <div class="proof remark admonition" id="remark-3">
 <p class="admonition-title"><span class="caption-number">Remark 1 </span></p>
 <section class="remark-content" id="proof-content">
@@ -1097,51 +1119,59 @@ $$</p>
 </section>
 <section id="kl-divergence-forward">
 <h3>KL-Divergence (Forward)<a class="headerlink" href="#kl-divergence-forward" title="Permalink to this heading">#</a></h3>
-<p>$$
-\text{D}<em>{\text{KL}}\left[ p</em><em>(x) || p(x;\theta) \right] = \mathbb{E}<em>{x\sim p</em></em>}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right]
-$$</p>
-<p>This is the distance between the best distribution, $p_*(x)$, for the data and the parameterized version, $p(x;\theta)$.</p>
+<div class="math notranslate nohighlight">
+\[
+\text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = \mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right]
+\]</div>
+<p>This is the distance between the best distribution, <span class="math notranslate nohighlight">\(p_*(x)\)</span>, for the data and the parameterized version, <span class="math notranslate nohighlight">\(p(x;\theta)\)</span>.</p>
 <p>There is an equivalence between the (Forward) KL-Divergence and the Maximum Likelihood Estimation. Maximizing the likelihood expresses it as maximizing the likelihood of the data given our estimated distribution. Whereas the KL-divergence is a distance measure between the parameterized distribution and the “true” or “best” distribution of the real data. They are equivalent formulations but the MLE equations shows how this is a proxy for fitting the “real” data distribution to the estimated distribution function.</p>
 <div class="proof example admonition" id="nll_kl">
 <p class="admonition-title"><span class="caption-number">Example 4 </span> (Proof)</p>
 <section class="example-content" id="proof-content">
 </section>
-</div><p>$$
-\text{D}<em>{\text{KL}}\left[ p</em><em>(x) || p(x;\theta) \right] = \mathbb{E}<em>{x\sim p</em></em>}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right]
-$$</p>
+</div><div class="math notranslate nohighlight">
+\[
+\text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = \mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right]
+\]</div>
 <p>We can expand this term via logs</p>
-<p>$$
-\mathbb{E}<em>{x\sim p</em><em>}\left[ \log \frac{p_</em>(x)}{p(x;\theta)}\right] = \mathbb{E}<em>{x\sim p</em><em>}\left[ \log p_</em>(x) - \log p(x;\theta)  \right]
-$$</p>
-<p>The first expectation, $\mathbb{E}<em>{x\sim p</em><em>}[p_</em>(x)]$, is the <em>entropy</em> term (i.e. the expected uncertainty in the data). This is a constant term because no matter how well we estimate this distribution via our parameterized representation, $p(x;\theta)$, this term will not change. So we can ignore this term in our loss function.</p>
-<p>$$
-\mathbb{E}<em>{x\sim p</em><em>}\left[ \log \frac{p_</em>(x)}{p(x;\theta)}\right] = -\mathbb{E}<em>{x\sim p</em>*}\left[ \log p(x;\theta)\right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right] = \mathbb{E}_{x\sim p_*}\left[ \log p_*(x) - \log p(x;\theta)  \right]
+\]</div>
+<p>The first expectation, <span class="math notranslate nohighlight">\(\mathbb{E}_{x\sim p_*}[p_*(x)]\)</span>, is the <em>entropy</em> term (i.e. the expected uncertainty in the data). This is a constant term because no matter how well we estimate this distribution via our parameterized representation, <span class="math notranslate nohighlight">\(p(x;\theta)\)</span>, this term will not change. So we can ignore this term in our loss function.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right] = -\mathbb{E}_{x\sim p_*}\left[ \log p(x;\theta)\right]
+\]</div>
 <p>We can rewrite this in its integral form:</p>
-<p>$$
--\mathbb{E}<em>{x\sim p</em><em>}\left[ \log p(x;\theta)\right] = - \int \log p(x;\theta) p_</em>(x)dx
-$$</p>
-<p>We will assume that the data distribution is a delta function, $p_*(x) = \delta (x - x_i)$. This means that each data point is represented equally. If we plug that into our model, we see that it is</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
+-\mathbb{E}_{x\sim p_*}\left[ \log p(x;\theta)\right] = - \int \log p(x;\theta) p_*(x)dx
+\]</div>
+<p>We will assume that the data distribution is a delta function, <span class="math notranslate nohighlight">\(p_*(x) = \delta (x - x_i)\)</span>. This means that each data point is represented equally. If we plug that into our model, we see that it is</p>
+<div class="math notranslate nohighlight">
+\[
 -\int \log p(x;\theta) p_*(x)dx = - \int \log p(x;\theta) \delta (x - x_i)dx
-$$</p>
+\]</div>
 <p>We will do the same approximation of the integral with samples from our delta distribution.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 -\int \log p(x;\theta) \delta (x - x_i)dx = - \frac{1}{N}\sum_n^N \log p(x_n;\theta)
-$$</p>
+\]</div>
 <p>So we have:</p>
-<p>$$
-\text{D}<em>{\text{KL}}\left[ p</em>*(x) || p(x;\theta) \right] = - \frac{1}{N}\sum_n^N \log p(x_n;\theta) = \mathcal{L}_{NLL}(\theta)
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = - \frac{1}{N}\sum_n^N \log p(x_n;\theta) = \mathcal{L}_{NLL}(\theta)
+\]</div>
 <p>which exactly the function for the NLL Loss</p>
 <hr class="docutils" />
 </section>
 <section id="laplace-approximation">
 <h3>Laplace Approximation<a class="headerlink" href="#laplace-approximation" title="Permalink to this heading">#</a></h3>
-<p>This is where we approximate the posterior with a Gaussian distribution $\mathcal{N}(\mu, A^{-1})$.</p>
+<p>This is where we approximate the posterior with a Gaussian distribution <span class="math notranslate nohighlight">\(\mathcal{N}(\mu, A^{-1})\)</span>.</p>
 <ul class="simple">
-<li><p>$w=w_{map}$, finds a mode (local max) of $p(w|D)$</p></li>
-<li><p>$A = \nabla\nabla \log p(D|w) p(w)$ - very expensive calculation</p></li>
+<li><p><span class="math notranslate nohighlight">\(w=w_{map}\)</span>, finds a mode (local max) of <span class="math notranslate nohighlight">\(p(w|D)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(A = \nabla\nabla \log p(D|w) p(w)\)</span> - very expensive calculation</p></li>
 <li><p>Only captures a single mode and discards the probability mass</p>
 <ul>
 <li><p>similar to the KLD in one direction.</p></li>
@@ -1157,34 +1187,39 @@ $$</p>
 <section id="variational-inference">
 <h3>Variational Inference<a class="headerlink" href="#variational-inference" title="Permalink to this heading">#</a></h3>
 <p><strong>Definition</strong>: We can find the best approximation within a given family w.r.t. KL-Divergence.
-$$
-\text{KLD}[q||p] = \int_w q(w) \log \frac{q(w)}{p(w|D)}dw
-$$
-Let $q(w)=\mathcal{N}(\mu, S)$ and then we minimize KLD$(q||p)$ to find the parameters $\mu, S$.</p>
+$<span class="math notranslate nohighlight">\(
+\text{KLD}[q||p] = \int_w q(w) \log \frac{q(w)}{p(w|D)}dw 
+\)</span><span class="math notranslate nohighlight">\(
+Let \)</span>q(w)=\mathcal{N}(\mu, S)<span class="math notranslate nohighlight">\( and then we minimize KLD\)</span>(q||p)<span class="math notranslate nohighlight">\( to find the parameters \)</span>\mu, S$.</p>
 <blockquote>
 <div><p>“Approximate the posterior, not the model” - James Hensman.</p>
 </div></blockquote>
-<p>We write out the marginal log-likelihood term for our observations, $y$.</p>
-<p>$$
+<p>We write out the marginal log-likelihood term for our observations, <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \log p(y;\theta) = \mathbb{E}_{x \sim p(x|y;\theta)}\left[  \log p(y|\theta) \right]
-$$</p>
-<p>We can expand this term using Bayes rule: $p(y) = p(x,y)p(x|y)$.</p>
-<p>$$
-\log p(y;\theta) = \mathbb{E}<em>{x \sim p(x|y;\theta)}\left[ \log \underbrace{p(x,y;\theta)}</em>{prior} - \log \underbrace{p(x|y;\theta)}_{posterior}\right]
-$$</p>
-<p>where $p(x,y;\theta)$ is the joint distribution function and $p(x|y;\theta)$ is the posterior distribution function.</p>
-<p>We can use a variational distribution, $q(x|y;\phi)$ which will approximate the</p>
-<p>$$
+\]</div>
+<p>We can expand this term using Bayes rule: <span class="math notranslate nohighlight">\(p(y) = p(x,y)p(x|y)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\log p(y;\theta) = \mathbb{E}_{x \sim p(x|y;\theta)}\left[ \log \underbrace{p(x,y;\theta)}_{prior} - \log \underbrace{p(x|y;\theta)}_{posterior}\right]
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(p(x,y;\theta)\)</span> is the joint distribution function and <span class="math notranslate nohighlight">\(p(x|y;\theta)\)</span> is the posterior distribution function.</p>
+<p>We can use a variational distribution, <span class="math notranslate nohighlight">\(q(x|y;\phi)\)</span> which will approximate the</p>
+<div class="math notranslate nohighlight">
+\[
 \log p(y;\theta) \geq \mathcal{L}_{ELBO}(\theta,\phi)
-$$</p>
-<p>where $\mathcal{L}_{ELBO}$ is the Evidence Lower Bound (ELBO) term. This serves as an upper bound to the true marginal likelihood.</p>
-<p>$$
-\mathcal{L}<em>{ELBO}(\theta,\phi) = \mathbb{E}</em>{q(x|y;\phi)}\left[ \log p(x,y;\theta) - \log q(x|y;\phi) \right]
-$$</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathcal{L}_{ELBO}\)</span> is the Evidence Lower Bound (ELBO) term. This serves as an upper bound to the true marginal likelihood.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{ELBO}(\theta,\phi) = \mathbb{E}_{q(x|y;\phi)}\left[ \log p(x,y;\theta) - \log q(x|y;\phi) \right]
+\]</div>
 <p>we can rewrite this to single out the expectations. This will result in two important quantities.</p>
-<p>$$
-\mathcal{L}<em>{ELBO}(\theta,\phi) = \underbrace{\mathbb{E}</em>{q(x|y;\phi)}\left[ \log p(x,y;\theta)\right]}<em>{\text{Reconstruction}} - \underbrace{\text{D}</em>{\text{KL}}\left[ \log q(x|y;\phi) || p(x;\theta)\right]}_{\text{Regularization}}
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}_{ELBO}(\theta,\phi) = \underbrace{\mathbb{E}_{q(x|y;\phi)}\left[ \log p(x,y;\theta)\right]}_{\text{Reconstruction}} - \underbrace{\text{D}_{\text{KL}}\left[ \log q(x|y;\phi) || p(x;\theta)\right]}_{\text{Regularization}}
+\]</div>
 </section>
 </section>
 <hr class="docutils" />

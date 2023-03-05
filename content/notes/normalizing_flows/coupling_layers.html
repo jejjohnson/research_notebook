@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/normalizing_flows/coupling_layers';</script>
@@ -983,15 +985,15 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="coupling-layers">
+  <section class="tex2jax_ignore mathjax_ignore" id="coupling-layers">
 <h1>Coupling Layers<a class="headerlink" href="#coupling-layers" title="Permalink to this heading">#</a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
 <p>There are three ingredients to coupling layers:</p>
 <ul class="simple">
 <li><p>A split function</p></li>
-<li><p>A coupling function, $\boldsymbol{h}$</p></li>
-<li><p>A condition function, $\boldsymbol{\Theta}$</p></li>
+<li><p>A coupling function, <span class="math notranslate nohighlight">\(\boldsymbol{h}\)</span></p></li>
+<li><p>A condition function, <span class="math notranslate nohighlight">\(\boldsymbol{\Theta}\)</span></p></li>
 </ul>
 <hr class="docutils" />
 <ul class="simple">
@@ -1004,158 +1006,179 @@ title="Print to PDF"
 <section id="algorithm-tldr">
 <h2>Algorithm (TLDR)<a class="headerlink" href="#algorithm-tldr" title="Permalink to this heading">#</a></h2>
 <p><strong>Step 1</strong>: Split the features into two disjoint sets.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^A, \mathbf{x}^B = \text{Split}(\mathbf{x})
-$$</p>
-<p><strong>Step 2</strong>: Apply identity to partial $A$.</p>
-<p>$$
+\]</div>
+<p><strong>Step 2</strong>: Apply identity to partial <span class="math notranslate nohighlight">\(A\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{z}^A = \mathbf{x}^A
-$$</p>
-<p><strong>Step 3</strong>: Apply conditioner, $\Theta$, to partition $A$.</p>
-<p>$$
+\]</div>
+<p><strong>Step 3</strong>: Apply conditioner, <span class="math notranslate nohighlight">\(\Theta\)</span>, to partition <span class="math notranslate nohighlight">\(A\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \boldsymbol{\Theta}_A = \boldsymbol{\Theta}(\mathbf{x}^A)
-$$</p>
-<p><strong>Step 4</strong>: Apply bijection, $\boldsymbol{h}$, given the parameters from the conditioner, $\boldsymbol{\Theta}$.</p>
-<p>$$
+\]</div>
+<p><strong>Step 4</strong>: Apply bijection, <span class="math notranslate nohighlight">\(\boldsymbol{h}\)</span>, given the parameters from the conditioner, <span class="math notranslate nohighlight">\(\boldsymbol{\Theta}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{z}^B = \boldsymbol{h}(\mathbf{x}^A; \boldsymbol{\Theta}(\mathbf{x}^A))
-$$</p>
-<p><strong>Step 5</strong>: Concatenate the two partitions, $A,B$.</p>
-<p>$$
+\]</div>
+<p><strong>Step 5</strong>: Concatenate the two partitions, <span class="math notranslate nohighlight">\(A,B\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{z} = \text{Concat}(\mathbf{z}^A, \mathbf{z}^B)
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="formulation">
 <h2>Formulation<a class="headerlink" href="#formulation" title="Permalink to this heading">#</a></h2>
-<p>We have a bijective, diffeomorphic parameterized function, $\boldsymbol{T}_{\boldsymbol \theta}$, which is a mapping from inputs, $\mathbf{x} \in \mathbb{R}^D$, to some outputs, $\mathbf{y} \in \mathbb{R}^D$, i.e. $\boldsymbol{T}:\mathcal{X}\in\mathbb{R}^{D} \rightarrow \mathcal{Y}\in\mathbb{R}^D$. So more compactly, we can write this as:</p>
-<p>$$
+<p>We have a bijective, diffeomorphic parameterized function, <span class="math notranslate nohighlight">\(\boldsymbol{T}_{\boldsymbol \theta}\)</span>, which is a mapping from inputs, <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^D\)</span>, to some outputs, <span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^D\)</span>, i.e. <span class="math notranslate nohighlight">\(\boldsymbol{T}:\mathcal{X}\in\mathbb{R}^{D} \rightarrow \mathcal{Y}\in\mathbb{R}^D\)</span>. So more compactly, we can write this as:</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = \boldsymbol{T}(\mathbf{x};\boldsymbol{\theta})
-$$</p>
-<p>Let’s partition the inputs, $\mathbf{x}$, into two disjoint subspaces</p>
-<p>$$
+\]</div>
+<p>Let’s partition the inputs, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, into two disjoint subspaces</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{x}^A,\mathbf{x}^B = \text{Split}(\mathbf{x})
-$$</p>
-<p>where $\mathbf{x}^A \in \mathbb{R}^{D_A}$ and $\mathbf{x}^B \in \mathbb{R}^{D_B}$ where $D = D_A + D_B$.</p>
-<p>Now we do not transform the $A$ features however we use a bijective, diffeomorphic coupling function transformation, $\boldsymbol{h}$, where the parameters are given by a conditioner function, $\boldsymbol{\Theta}: \mathbb{R}^{D_A} \rightarrow \mathbb{R}^{D_{\boldsymbol{\theta}}}$. So we can write this explicitly as:</p>
-<p>$$
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{x}^A \in \mathbb{R}^{D_A}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{x}^B \in \mathbb{R}^{D_B}\)</span> where <span class="math notranslate nohighlight">\(D = D_A + D_B\)</span>.</p>
+<p>Now we do not transform the <span class="math notranslate nohighlight">\(A\)</span> features however we use a bijective, diffeomorphic coupling function transformation, <span class="math notranslate nohighlight">\(\boldsymbol{h}\)</span>, where the parameters are given by a conditioner function, <span class="math notranslate nohighlight">\(\boldsymbol{\Theta}: \mathbb{R}^{D_A} \rightarrow \mathbb{R}^{D_{\boldsymbol{\theta}}}\)</span>. So we can write this explicitly as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{y}^A &amp;= \mathbf{x}^A \
-\mathbf{y}^B &amp;= \boldsymbol{h}\left(\mathbf{x}^B; \boldsymbol{\Theta}(\mathbf{x}^A)\right) \
+\mathbf{y}^A &amp;= \mathbf{x}^A \\
+\mathbf{y}^B &amp;= \boldsymbol{h}\left(\mathbf{x}^B; \boldsymbol{\Theta}(\mathbf{x}^A)\right) \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <p>where</p>
 </section>
 <hr class="docutils" />
 <section id="simplification">
 <h2>Simplification<a class="headerlink" href="#simplification" title="Permalink to this heading">#</a></h2>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{y}^A &amp;= \boldsymbol{h}_A\left(\mathbf{x}^A; \boldsymbol{\Theta}(\mathbf{x}^B)\right) \
-\mathbf{y}^B &amp;= \boldsymbol{h}_B\left(\mathbf{x}^B; \boldsymbol{\Theta}(\mathbf{x}^A)\right) \
+\mathbf{y}^A &amp;= \boldsymbol{h}_A\left(\mathbf{x}^A; \boldsymbol{\Theta}(\mathbf{x}^B)\right) \\
+\mathbf{y}^B &amp;= \boldsymbol{h}_B\left(\mathbf{x}^B; \boldsymbol{\Theta}(\mathbf{x}^A)\right) \\
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 <hr class="docutils" />
 <section id="log-determinant-jacobian">
 <h2>Log Determinant Jacobian<a class="headerlink" href="#log-determinant-jacobian" title="Permalink to this heading">#</a></h2>
 <p>To see how we can calculate the log determinant jacobian (LDJ), we can demonstrate this with a partition.</p>
-<p>$$
-\boldsymbol{\nabla}_\mathbf{x}\boldsymbol{T}(\mathbf{x}) =
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\boldsymbol{\nabla}_\mathbf{x}\boldsymbol{T}(\mathbf{x}) = 
 \begin{bmatrix}
-A &amp; B \
+A &amp; B \\
 C &amp;
 D
 \end{bmatrix}
-$$</p>
+\end{split}\]</div>
 <p>And so we can simply showcase the LDJ for each of them</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-A &amp;:= \boldsymbol{\nabla}<em>{\mathbf{x}^A}(\mathbf{x}^A) = 1 \
-B &amp;:= \boldsymbol{\nabla}</em>{\mathbf{x}^B}(\mathbf{x}^A) = 0 \
+A &amp;:= \boldsymbol{\nabla}_{\mathbf{x}^A}(\mathbf{x}^A) = 1 \\
+B &amp;:= \boldsymbol{\nabla}_{\mathbf{x}^B}(\mathbf{x}^A) = 0 \\
 \end{aligned}
-$$</p>
-<p>The $C$ partition is a function of the input partition, $\mathbf{x}^A$ but the derivative is wrt to</p>
+\end{split}\]</div>
+<p>The <span class="math notranslate nohighlight">\(C\)</span> partition is a function of the input partition, <span class="math notranslate nohighlight">\(\mathbf{x}^A\)</span> but the derivative is wrt to</p>
 <hr class="docutils" />
-<p>The Jacobian, $\mathbf{J},\nabla$</p>
-<p>$$
-\boldsymbol{\nabla}<em>\mathbf{x}\boldsymbol{T}(\mathbf{x}) =
+<p>The Jacobian, <span class="math notranslate nohighlight">\(\mathbf{J},\nabla\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\boldsymbol{\nabla}_\mathbf{x}\boldsymbol{T}(\mathbf{x}) = 
 \begin{bmatrix}
-\mathbf{I} &amp; \mathbf{0} \
-\boldsymbol{\nabla}</em>{\mathbf{x}^A}\boldsymbol{h}(\mathbf{x}^B; \boldsymbol{\Theta}(\mathbf{x}^A)) &amp;
+\mathbf{I} &amp; \mathbf{0} \\
+\boldsymbol{\nabla}_{\mathbf{x}^A}\boldsymbol{h}(\mathbf{x}^B; \boldsymbol{\Theta}(\mathbf{x}^A)) &amp;
 \boldsymbol{\nabla}_{\mathbf{x}^B}\boldsymbol{h}(\mathbf{x}^B; \boldsymbol{\Theta}(\mathbf{x}^A))
 \end{bmatrix}
-$$</p>
+\end{split}\]</div>
 <p>We end up with a very simple formulation</p>
-<p>$$
-\det \boldsymbol{\nabla}<em>{\mathbf{x}}\boldsymbol{T}(\mathbf{x}) = \det \boldsymbol{\nabla}</em>{\mathbf{x}} \boldsymbol{T}(\mathbf{x}^B; \boldsymbol{\Theta}(\mathbf{x}^A))
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\det \boldsymbol{\nabla}_{\mathbf{x}}\boldsymbol{T}(\mathbf{x}) = \det \boldsymbol{\nabla}_{\mathbf{x}} \boldsymbol{T}(\mathbf{x}^B; \boldsymbol{\Theta}(\mathbf{x}^A))
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="general-form">
 <h2>General Form<a class="headerlink" href="#general-form" title="Permalink to this heading">#</a></h2>
 <p>We can write this more generally if we consider a masked transformation. This formulation was introduced in the original <span class="xref myst">REALNVP paper</span>.</p>
-<p>$$</p>
-<p>$$</p>
+<div class="math notranslate nohighlight">
+\[\]</div>
 </section>
 <hr class="docutils" />
 <section id="whirlwind-tour">
 <h2>Whirlwind Tour<a class="headerlink" href="#whirlwind-tour" title="Permalink to this heading">#</a></h2>
 <section id="additive">
 <h3>Additive<a class="headerlink" href="#additive" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 h(x;\boldsymbol) = x + \theta_a
-$$</p>
-<p>where $\theta_a \in \mathbb{R}$.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta_a \in \mathbb{R}\)</span>.</p>
 </section>
 <hr class="docutils" />
 <section id="affine">
 <h3>Affine<a class="headerlink" href="#affine" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 h(x;\boldsymbol) = x \odot \theta_s + \theta_a
-$$</p>
-<p>where $\theta_s \neq 0$ and $\theta_a \in \mathbb{R}$.</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta_s \neq 0\)</span> and <span class="math notranslate nohighlight">\(\theta_a \in \mathbb{R}\)</span>.</p>
 </section>
 <hr class="docutils" />
 <section id="neural-splines">
 <h3>Neural Splines<a class="headerlink" href="#neural-splines" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 h(x; \boldsymbol) = \text{Spline}(x;\theta_p)
-$$</p>
+\]</div>
 </section>
 <hr class="docutils" />
 <section id="mixture-cdf">
 <h3>Mixture CDF<a class="headerlink" href="#mixture-cdf" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 h(x; \boldsymbol) = \text{MixCDF}(x;\theta_p)
-$$</p>
-<p>where $\theta_p = \left[ \boldsymbol{\pi}, \boldsymbol{\mu}, \boldsymbol{s}\right] \in \mathbb{R}^K\times\mathbb{R}^{K}\times\mathbb{R}^K$ are the parameters of the mixture CDF function, $F$. The function, $F$, is the Mixture CDF Transformation given by:</p>
-<p>$$
-\text{MixCDF}(x;\boldsymbol{\pi}, \boldsymbol{\mu}, \boldsymbol{s}) = \sigma^{-1}\left( \sum_{j=1}^K \pi_j \sigma\left( \frac{x - \mu_j}{s_k} \right) \right)
-$$</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta_p = \left[ \boldsymbol{\pi}, \boldsymbol{\mu}, \boldsymbol{s}\right] \in \mathbb{R}^K\times\mathbb{R}^{K}\times\mathbb{R}^K\)</span> are the parameters of the mixture CDF function, <span class="math notranslate nohighlight">\(F\)</span>. The function, <span class="math notranslate nohighlight">\(F\)</span>, is the Mixture CDF Transformation given by:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{MixCDF}(x\;\boldsymbol{\pi}, \boldsymbol{\mu}, \boldsymbol{s}) = \sigma^{-1}\left( \sum_{j=1}^K \pi_j \sigma\left( \frac{x - \mu_j}{s_k} \right) \right)
+\]</div>
 </section>
 <section id="inverse-cdf">
 <h3>Inverse CDF<a class="headerlink" href="#inverse-cdf" title="Permalink to this heading">#</a></h3>
-<p>We have the inverse CDF transform function, $\text{InvCDF}(x_u): [0, 1]\rightarrow \mathbb{R}$.</p>
-<p>$$
+<p>We have the inverse CDF transform function, <span class="math notranslate nohighlight">\(\text{InvCDF}(x_u): [0, 1]\rightarrow \mathbb{R}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 h(x; \boldsymbol) = \text{InvCDF} \odot \text{MixCDF}(x;\theta_p)
-$$</p>
+\]</div>
 <section id="flow">
 <h4>Flow++<a class="headerlink" href="#flow" title="Permalink to this heading">#</a></h4>
 <p>The Flow++ algorithm did a composition of the Mixture CDF Flow and the Affine Flow.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-h(x; \boldsymbol) &amp;= \text{Affine}(x;\theta_s, \theta_a)\circ\text{InvCDF}(x) \circ\text{MixCDF}(x;\theta_p) \
-&amp;= \text{MixCDF}(x;\theta_p)\odot \text{InvCDF}(x) \odot \theta_s + \theta_a
+h(x; \boldsymbol) &amp;= \text{Affine}(x;\theta_s, \theta_a)\circ\text{InvCDF}(x) \circ\text{MixCDF}(x;\theta_p) \\
+ &amp;= \text{MixCDF}(x;\theta_p)\odot \text{InvCDF}(x) \odot \theta_s + \theta_a
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 </section>
 </section>
 <hr class="docutils" />
 <section id="naf">
 <h3>NAF<a class="headerlink" href="#naf" title="Permalink to this heading">#</a></h3>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 h(x; \boldsymbol) = \text{NN}(x;\theta_p)
-$$</p>
+\]</div>
 </section>
 </section>
 <hr class="docutils" />

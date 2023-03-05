@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/bayesian/inference/cond_vi';</script>
@@ -913,51 +915,58 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="conditional-variational-inference">
+  <section class="tex2jax_ignore mathjax_ignore" id="conditional-variational-inference">
 <h1>Conditional Variational Inference<a class="headerlink" href="#conditional-variational-inference" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
 <section id="motivations">
 <h2>Motivations<a class="headerlink" href="#motivations" title="Permalink to this heading">#</a></h2>
 <p><img alt="figure" src="https://cvws.icloud-content.com/B/AXJ9rUeugE62r5wOOJGZplFkqQ2AAciBENkJg7AR6H79V70Lrc3KTPH6/Motivation.jpg?o=ApLY0goJWL5NkZyyYTtwj8USHSjRYJLQZJqTVK3czpdn&amp;v=1&amp;x=3&amp;a=CAogRHJLzZNCKG3vI1B4x3b7JcTBaU0HlUFRE9KjoKC6YkASbRDvk6TV2zAY7_D_1tswIgEAUgRkqQ2AWgTKTPH6aiaYk08JNOG61Pu_HMRe7MCQrI-mGrILCwleX8wCib2pfpjdDxfg_nImR8i0It6Sw5Co0EnCW0BSrDmW6t2xhv2n-8JkGJN6lQspVQ7h7eQ&amp;e=1673877518&amp;fl=&amp;r=6b99f1f8-20fb-4a9f-a718-8de67620876f-1&amp;k=KzYtz42KdChgNAei2IZb7g&amp;ckc=com.apple.clouddocs&amp;ckz=com.apple.CloudDocs&amp;p=70&amp;s=B5SVOB5laiQ7qAU_RI8bJZLaxCc&amp;cd=i" /></p>
 <p>Variational inference is the most scalable inference method the machine learning community has (as of 2019).</p>
-<p>Ultimately, we are interested in approximating the likelihood distribution of our observations, $\mathcal{Y}$, which we assume come from some $\mathcal{X}$.</p>
-<p>$$
+<p>Ultimately, we are interested in approximating the likelihood distribution of our observations, <span class="math notranslate nohighlight">\(\mathcal{Y}\)</span>, which we assume come from some <span class="math notranslate nohighlight">\(\mathcal{X}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 y \sim p(y|x)
-$$</p>
+\]</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>With a tip!</p>
 </div>
 <p>We write some sort of approximation of the <em>true</em> (or best) underlying distribution via some parameterized form like so</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p_*(\mathbf{y}|\mathbf{x}) \approx p_{\boldsymbol \theta}(\mathbf{y}|\mathbf{x}).
-$$</p>
+\]</div>
 <p>We can do the discriminative version which just means fitting a function to approximate the likelihood</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = \boldsymbol{f_\theta}(\mathbf{x}) + \epsilon
-$$</p>
-<p>However, we’re often not happy with this approximation and would prefer a more probabilistic interpretation. Another method would be to assume some latent variable, $z$, also plays a pivotal role in order to obtain a probabilistic interpretation.</p>
-<p>$$
+\]</div>
+<p>However, we’re often not happy with this approximation and would prefer a more probabilistic interpretation. Another method would be to assume some latent variable, <span class="math notranslate nohighlight">\(z\)</span>, also plays a pivotal role in order to obtain a probabilistic interpretation.</p>
+<div class="math notranslate nohighlight">
+\[
 \mathbf{y} = \boldsymbol{f_\theta}(\mathbf{x},\mathbf{z}) + \epsilon
-$$</p>
-<p>So how do we express this in a more bayesian way? We can use the same methodology for VIs but we will always be conditioned on, $\mathbf{x}$. So again, we need to assume some latent variable, $\mathbf{z}$, plays a role in estimating the underlying conditional density estimation of $\mathbf{y}$. In the simplest form, we assume a generative model for the joint distribution can be written as</p>
-<p>$$
+\]</div>
+<p>So how do we express this in a more bayesian way? We can use the same methodology for VIs but we will always be conditioned on, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>. So again, we need to assume some latent variable, <span class="math notranslate nohighlight">\(\mathbf{z}\)</span>, plays a role in estimating the underlying conditional density estimation of <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>. In the simplest form, we assume a generative model for the joint distribution can be written as</p>
+<div class="math notranslate nohighlight">
+\[
 p_\theta(y,z|x) = p(y|z,x)p(z|x)
-$$</p>
+\]</div>
 <p>When fitting a model, we are interested in maximizing the marginal likelihood</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p_\theta(y|x) = \int p_\theta(y|z,x)p_\theta(z|x)dz
-$$</p>
-<p>However, this quantity is intractable because we have a non-linear function thats within an integral.  So we use an variational distribution, $q_\phi(z|x,y)$.</p>
-<p>$$
-\log p_\theta(y|x) = \mathbb{E}<em>{q</em>\phi(z|x,y)}\left[ \log p_\theta(y|x) \right]
-$$</p>
+\]</div>
+<p>However, this quantity is intractable because we have a non-linear function thats within an integral.  So we use an variational distribution, <span class="math notranslate nohighlight">\(q_\phi(z|x,y)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\log p_\theta(y|x) = \mathbb{E}_{q_\phi(z|x,y)}\left[ \log p_\theta(y|x) \right]
+\]</div>
 <p>Like the VI section, we have many types of conditional variational distributions we can impose. For example, we have some of the following:</p>
 <ul class="simple">
-<li><p><em>Conditional Gaussian</em>, $q(z|x)$</p></li>
-<li><p><em>Conditional Mixture Distribution</em>, $\sum_{k}^{K}\pi_k \mathbb{P}(z|x)$</p></li>
-<li><p><em>Conditional Bijective Transform</em> (Flow), $q(z|\tilde{z},x)$</p></li>
-<li><p><em>Conditional Stochastic Transform</em>, $q(z|y,x)$</p></li>
+<li><p><em>Conditional Gaussian</em>, <span class="math notranslate nohighlight">\(q(z|x)\)</span></p></li>
+<li><p><em>Conditional Mixture Distribution</em>, <span class="math notranslate nohighlight">\(\sum_{k}^{K}\pi_k \mathbb{P}(z|x)\)</span></p></li>
+<li><p><em>Conditional Bijective Transform</em> (Flow), <span class="math notranslate nohighlight">\(q(z|\tilde{z},x)\)</span></p></li>
+<li><p><em>Conditional Stochastic Transform</em>, <span class="math notranslate nohighlight">\(q(z|y,x)\)</span></p></li>
 </ul>
 <p>We won’t go through each of these like in the previous section because it is <em>relatively</em> straightforward to extend each of the previous section to include a conditional rv.</p>
 </section>
@@ -968,61 +977,73 @@ $$</p>
 <div><p>This derivation comes from the book by <a class="reference internal" href="../inference.html"><span class="doc std std-doc">paper</span></a> and the blog post from <a class="reference internal" href="../inference.html"><span class="doc std std-doc">pyro-ppl/CVAE</span></a>. I find it to be a much better and intuitive derivation.</p>
 </div></blockquote>
 <p><strong>Note</strong>: I put the <em>encoder</em> tag in the title. This is because there are other ELBOs that have different purposes, for example, variational distributions without an encoder and also an encoder for conditional likelihoods. In this first one, we will like at the ELBO derivation</p>
-<p><strong>Note</strong>: This derivation is more or less <em>the exact same</em> as the standard VI however it will include the conditional term, $q(\cdot|\cdot,x),p(\cdot|\cdot,x)$.</p>
+<p><strong>Note</strong>: This derivation is more or less <em>the exact same</em> as the standard VI however it will include the conditional term, <span class="math notranslate nohighlight">\(q(\cdot|\cdot,x),p(\cdot|\cdot,x)\)</span>.</p>
 <p>As mentioned above, we are interested in expanding the expectation of the marginal likelihood wrt the encoder variational distribution</p>
-<p>$$
-\log p_\theta(y|x) = \mathbb{E}<em>{q</em>\phi(z|x,y)}\left[ \log p_\theta(y|x) \right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\log p_\theta(y|x) = \mathbb{E}_{q_\phi(z|x,y)}\left[ \log p_\theta(y|x) \right]
+\]</div>
 <p>We will do a bit of mathematical manipulation to expand this expectation. Firstly, we will start with Bayes rule:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 p_\theta(y|x) = \frac{p_\theta(z,y|x)}{p_\theta(z|y,x)}
-$$</p>
+\]</div>
 <p>Plugging this into our expectation gives us:</p>
-<p>$$
-\log p_\theta(y|x) = \mathbb{E}<em>{q</em>\phi(z|x)}\left[ \log \frac{p_\theta(z,y|x)}{p_\theta(z|y,x)} \right]
-$$</p>
-<p>Now we will do the identity trick (multiply by 1/1 :) ) within the log term to incorporate the variational distribution, $q_\phi$.</p>
-<p>$$
-\log p_\theta(y|x) = \mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)q_\phi(z|y,x)}{p_\theta(z|y,x)q_\phi(z|y,x)} \right] = \mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)q_\phi(z|y,x)}{q_\phi(z|y,x)p_\theta(z|y,x)} \right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\log p_\theta(y|x) = \mathbb{E}_{q_\phi(z|x)}\left[ \log \frac{p_\theta(z,y|x)}{p_\theta(z|y,x)} \right]
+\]</div>
+<p>Now we will do the identity trick (multiply by 1/1 :) ) within the log term to incorporate the variational distribution, <span class="math notranslate nohighlight">\(q_\phi\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\log p_\theta(y|x) = \mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)q_\phi(z|y,x)}{p_\theta(z|y,x)q_\phi(z|y,x)} \right] = \mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)q_\phi(z|y,x)}{q_\phi(z|y,x)p_\theta(z|y,x)} \right]
+\]</div>
 <p>Using the log rules, we can split this fraction into two fractions;</p>
-<p>$$
-\log p_\theta(y|x) =  \mathbb{E}<em>{q</em>\phi(z|x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} + \log \frac{q_\phi(z|y,x)}{p_\theta(z|y,x)} \right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\log p_\theta(y|x) =  \mathbb{E}_{q_\phi(z|x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} + \log \frac{q_\phi(z|y,x)}{p_\theta(z|y,x)} \right]
+\]</div>
 <p>Now, we can expand the expectation term across the additive operator</p>
-<p>$$
-\log p_\theta(y|x) =  \mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} \right] + \mathbb{E}<em>{q</em>\phi(z|y,x)}\left[\log \frac{q_\phi(z|y,x)}{p_\theta(z|y,x)} \right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\log p_\theta(y|x) =  \mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} \right] + \mathbb{E}_{q_\phi(z|y,x)}\left[\log \frac{q_\phi(z|y,x)}{p_\theta(z|y,x)} \right]
+\]</div>
 <p>Here, we notice that the second term is actually the Kullback-Leibler divergence term.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \text{D}_{\text{KL}} [Q||P] = \mathbb{E}_Q\left[\log \frac{Q}{P} \right] = - \mathbb{E}_Q\left[\log \frac{P}{Q} \right]
-$$</p>
+\]</div>
 <p>so we can replace this with the more compact form.</p>
-<p>$$
-\log p_\theta(y|x) =  \mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} \right] + \text{D}<em>{\text{KL}} \left[q</em>\phi(z|y,x)||p_\theta(z|y,x) \right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+\log p_\theta(y|x) =  \mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} \right] + \text{D}_{\text{KL}} \left[q_\phi(z|y,x)||p_\theta(z|y,x) \right]
+\]</div>
 <p>We know from theory that the KL divergence term is always zero or positive. So this means that we can draw a bound on the first term in terms of the marginal log-likelihood.</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}:=\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} \right] \leq \log p_\theta(y|x)
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}:=\mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} \right] \leq \log p_\theta(y|x)
+\]</div>
 <p>This term is called the Evidence Lower Bound (ELBO). So the objective is to <em>maximize</em> this term which will also minimize the KLD.</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}=\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} \right]
-$$</p>
-<p>So now, we can expand the joint distribution using Bayes rule, i.e. $p(y,z|x)=p(y|z,x)p(z|x)$, to give us.</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}=\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log \frac{p(y|z,x)p(z|x)}{q_\phi(z|y,x)} \right]
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}=\mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(z,y|x)}{q_\phi(z|y,x)} \right]
+\]</div>
+<p>So now, we can expand the joint distribution using Bayes rule, i.e. <span class="math notranslate nohighlight">\(p(y,z|x)=p(y|z,x)p(z|x)\)</span>, to give us.</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}=\mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p(y|z,x)p(z|x)}{q_\phi(z|y,x)} \right]
+\]</div>
 <p>We can also expand this fraction using the log rules,</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}=\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log p(y|z,x) + \log p(z|x) - \log q_\phi(z|y,x) \right].
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}=\mathbb{E}_{q_\phi(z|y,x)}\left[ \log p(y|z,x) + \log p(z|x) - \log q_\phi(z|y,x) \right].
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>$q_\phi(z|y,x)$ - (conditional) prior network</p></li>
-<li><p>$p_\theta(y|z,x)$ - generation network</p></li>
-<li><p>$p_\theta(z|x)$ - prior network</p></li>
-<li><p>$p_\theta(y|x)$ - (pretrained) baseline network</p></li>
+<li><p><span class="math notranslate nohighlight">\(q_\phi(z|y,x)\)</span> - (conditional) prior network</p></li>
+<li><p><span class="math notranslate nohighlight">\(p_\theta(y|z,x)\)</span> - generation network</p></li>
+<li><p><span class="math notranslate nohighlight">\(p_\theta(z|x)\)</span> - prior network</p></li>
+<li><p><span class="math notranslate nohighlight">\(p_\theta(y|x)\)</span> - (pretrained) baseline network</p></li>
 </ul>
 <p>Now, we have some options on how we can group the likelihood, the prior and the variational distribution together and each of them will offer a slightly different interpretation and application.</p>
 </section>
@@ -1030,50 +1051,57 @@ $$</p>
 <section id="reconstruction-loss">
 <h2>Reconstruction Loss<a class="headerlink" href="#reconstruction-loss" title="Permalink to this heading">#</a></h2>
 <p>If we group the prior probability and the variational distribution together, we get:</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}=\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log p(y|z,x) \right] + \mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log \frac{p(z|x)}{q_\phi(z|y,x)} \right].
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}=\mathbb{E}_{q_\phi(z|y,x)}\left[ \log p(y|z,x) \right] + \mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p(z|x)}{q_\phi(z|y,x)} \right].
+\]</div>
 <p>This is the same KLD term as before but in the reverse order. So with a slight of hand in terms of the signs, we can rearrange the term to be</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}= \mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log p(y|z,x) \right] - \mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log \frac{q_\phi(z|y,x)} {p(z|x)}\right].
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}= \mathbb{E}_{q_\phi(z|y,x)}\left[ \log p(y|z,x) \right] - \mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{q_\phi(z|y,x)} {p(z|x)}\right].
+\]</div>
 <hr class="docutils" />
 <p><strong>Proof</strong>:</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[
 \mathbb{E}_q[ \log p - \log q] = - \mathbb{E}_q[\log q - \log p] = - \mathbb{E}_q[\log\frac{q}{p}]
-$$</p>
+\]</div>
 <p><strong>QED</strong>.</p>
 <hr class="docutils" />
 <p>So now, we have the exact same KLD term as before. Let’s use the simplified form.</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}={\color{blue}\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log p_\theta(y|z,x) \right]} - {\color{green}\text{D}<em>\text{KL}\left[q</em>\phi(z|y,x)||p_\theta(z|x)\right]}.
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}={\color{blue}\mathbb{E}_{q_\phi(z|y,x)}\left[ \log p_\theta(y|z,x) \right]} - {\color{green}\text{D}_\text{KL}\left[q_\phi(z|y,x)||p_\theta(z|x)\right]}.
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>${\color{blue}\mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log p_\theta(y|z,x) \right]}$ - is the $\color{blue}\text{reconstruction loss}$.</p></li>
-<li><p>${\color{green}\text{D}<em>\text{KL}\left[q</em>\phi(z|y,x)||p_\theta(z|x)\right]}$ - is the complexity, i.e. the $\color{green}\text{KL divergence}$ (a distance metric) between the prior and the variational distribution.</p></li>
+<li><p><span class="math notranslate nohighlight">\({\color{blue}\mathbb{E}_{q_\phi(z|y,x)}\left[ \log p_\theta(y|z,x) \right]}\)</span> - is the <span class="math notranslate nohighlight">\(\color{blue}\text{reconstruction loss}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\({\color{green}\text{D}_\text{KL}\left[q_\phi(z|y,x)||p_\theta(z|x)\right]}\)</span> - is the complexity, i.e. the <span class="math notranslate nohighlight">\(\color{green}\text{KL divergence}\)</span> (a distance metric) between the prior and the variational distribution.</p></li>
 </ul>
 <p>This is easily the most common ELBO term especially with conditional Variational AutoEncoders (cVAEs). The first term is the expectation of the likelihood term wrt the variational distribution. The second term is the KLD between the prior and the variational distribution.</p>
 </section>
 <hr class="docutils" />
 <section id="volume-correction">
 <h2>Volume Correction<a class="headerlink" href="#volume-correction" title="Permalink to this heading">#</a></h2>
-<p>Another approach is more along the lines of the transform distribution. Assume we have our original data domain $\mathcal{X}$ and we have some stochastic transformation, p(z|y,x), which transforms the data from our original domain to a transform domain, $\mathcal{Z}$.</p>
-<p>$$
+<p>Another approach is more along the lines of the transform distribution. Assume we have our original data domain <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> and we have some stochastic transformation, p(z|y,x), which transforms the data from our original domain to a transform domain, <span class="math notranslate nohighlight">\(\mathcal{Z}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 z \sim p_\theta(z|y,x)
-$$</p>
+\]</div>
 <p>To acquire this, let’s look at the equation again</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}=\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log p_\theta(y|z,x) + \log p_\theta(z|x) - \log q_\phi(z|y,x) \right].
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}=\mathbb{E}_{q_\phi(z|y,x)}\left[ \log p_\theta(y|z,x) + \log p_\theta(z|x) - \log q_\phi(z|y,x) \right].
+\]</div>
 <p>except this time we will isolate the prior and combine the likelihood and the variational distribution.</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}={\color{blue}\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log p_\theta(z|x) \right]} + {\color{green}\mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log \frac{p_\theta(y|z,x)}{q_\phi(z|y,x)} \right]}.
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}={\color{blue}\mathbb{E}_{q_\phi(z|y,x)}\left[ \log p_\theta(z|x) \right]} + {\color{green}\mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(y|z,x)}{q_\phi(z|y,x)} \right]}.
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>${\color{blue}\mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log p_\theta(z|x) \right]}$ - is the expectation of the transformed distribution, aka the ${\color{blue}\text{reparameterized probability}}$.</p></li>
-<li><p>${\color{green}\mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log \frac{p_\theta(y|z,x)}{q_\phi(z|y,x)} \right]}$ - is the ratio between the inverse transform and the forward transform , i.e. ${\color{green}\text{Volume Correction Factor}}$ or <em>likelihood contribution</em>.</p></li>
+<li><p><span class="math notranslate nohighlight">\({\color{blue}\mathbb{E}_{q_\phi(z|y,x)}\left[ \log p_\theta(z|x) \right]}\)</span> - is the expectation of the transformed distribution, aka the <span class="math notranslate nohighlight">\({\color{blue}\text{reparameterized probability}}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\({\color{green}\mathbb{E}_{q_\phi(z|y,x)}\left[ \log \frac{p_\theta(y|z,x)}{q_\phi(z|y,x)} \right]}\)</span> - is the ratio between the inverse transform and the forward transform , i.e. <span class="math notranslate nohighlight">\({\color{green}\text{Volume Correction Factor}}\)</span> or <em>likelihood contribution</em>.</p></li>
 </ul>
 <p><strong>Source</strong>: I first saw this approach in the SurVAE Flows paper.</p>
 </section>
@@ -1081,23 +1109,25 @@ $$</p>
 <section id="variational-free-energy-vfe">
 <h2>Variational Free Energy (VFE)<a class="headerlink" href="#variational-free-energy-vfe" title="Permalink to this heading">#</a></h2>
 <p>There is one more main derivation that remains (that’s often seen in the literature). Looking at the equation again</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}=\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log p_\theta(y|z,x) + \log p(z|x) - \log q_\phi(z|y,x) \right],
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}=\mathbb{E}_{q_\phi(z|y,x)}\left[ \log p_\theta(y|z,x) + \log p(z|x) - \log q_\phi(z|y,x) \right],
+\]</div>
 <p>we now isolate the likelihood <em>and</em> the prior under the variational expectation. This gives us:</p>
-<p>$$
-\mathcal{L}<em>{\text{ELBO}}={\color{blue}\mathbb{E}</em>{q_\phi(z|y,x)}\left[ \log <em>\theta(y|z,x) p</em>\theta(z|x)\right]} - {\color{green} \mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log q_\phi(z|y,x) \right]}.
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+ \mathcal{L}_{\text{ELBO}}={\color{blue}\mathbb{E}_{q_\phi(z|y,x)}\left[ \log _\theta(y|z,x) p_\theta(z|x)\right]} - {\color{green} \mathbb{E}_{q_\phi(z|y,x)}\left[ \log q_\phi(z|y,x) \right]}.
+\]</div>
 <p>where:</p>
 <ul class="simple">
-<li><p>${\color{blue}\mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log p_\theta(y|z,x) p_\theta(z|x)\right]}$ - is the ${\color{blue}\text{energy}}$ function</p></li>
-<li><p>${\color{green} \mathbb{E}<em>{q</em>\phi(z|y,x)}\left[ \log q_\phi(z|y,x) \right]}$ - is the ${\color{green}\text{entropy}}$</p></li>
+<li><p><span class="math notranslate nohighlight">\({\color{blue}\mathbb{E}_{q_\phi(z|y,x)}\left[ \log p_\theta(y|z,x) p_\theta(z|x)\right]}\)</span> - is the <span class="math notranslate nohighlight">\({\color{blue}\text{energy}}\)</span> function</p></li>
+<li><p><span class="math notranslate nohighlight">\({\color{green} \mathbb{E}_{q_\phi(z|y,x)}\left[ \log q_\phi(z|y,x) \right]}\)</span> - is the <span class="math notranslate nohighlight">\({\color{green}\text{entropy}}\)</span></p></li>
 </ul>
 <p><strong>Source</strong>: I see this approach a lot in the Gaussian process literature when they are deriving the Sparse Gaussian Process from Titsias.</p>
 </section>
 <section id="prior-guess">
 <h2>Prior Guess<a class="headerlink" href="#prior-guess" title="Permalink to this heading">#</a></h2>
-<p>We can also utilize an initial guess from a baseline model, $p_\theta(y|x)$. This can be fed as an input into the encoder, $q(z|x,y)$.</p>
+<p>We can also utilize an initial guess from a baseline model, <span class="math notranslate nohighlight">\(p_\theta(y|x)\)</span>. This can be fed as an input into the encoder, <span class="math notranslate nohighlight">\(q(z|x,y)\)</span>.</p>
 <div class="highlight-python= notranslate"><div class="highlight"><pre><span></span># =========
 # MODEL
 # =========

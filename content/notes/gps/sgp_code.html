@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gps/sgp_code';</script>
@@ -910,46 +912,49 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="sparse-gp-from-scratch">
+  <section class="tex2jax_ignore mathjax_ignore" id="sparse-gp-from-scratch">
 <h1>Sparse GP From Scratch<a class="headerlink" href="#sparse-gp-from-scratch" title="Permalink to this heading">#</a></h1>
 <section id="objective-function">
 <h2>Objective Function<a class="headerlink" href="#objective-function" title="Permalink to this heading">#</a></h2>
-<p>So I think it is important to make note of the similarities between methods; specifically between FITC and VFE which are some staple methods one would use to scale GPs naively. Not only is it helpful for understanding the connection between all of the methods but it also helps with programming and seeing where each method differs algorithmically. Each sparse method is a method of using some set of inducing points or subset of data $\mathcal{Z}$ from the data space $\mathcal{D}$. We typically have some approximate matrix $\mathbf{Q}$ which approximates the kernel matrix $\mathbf{K}$:</p>
-<p>$$\mathbf{Q}<em>{ff}=\mathbf{K}</em>{fu}\mathbf{K}<em>{uu}^{-1}\mathbf{K}</em>{uf}$$</p>
-<p>Then we would use the Sherman-Morrison formula to reduce the computation cost of inverting the matrix $\mathbf{K}$. Below is the negative marginal log likelihood cost function that is minimized where we can see the each term broken down:</p>
-<p>$$
-\mathcal{L}(\theta)= \frac{N}{2}\log 2\pi + \underbrace{\frac{1}{2} \log\left| \mathbf{Q}<em>{ff}+\mathbf{G}\right|}</em>{\text{Complexity Penalty}} + \underbrace{\frac{1}{2}\mathbf{y}^{\top}(\mathbf{Q}<em>{ff}+\mathbf{G})^{-1}\mathbf{y}}</em>{\text{Data Fit}} + \underbrace{\frac{1}{2\sigma_n^2}\text{trace}(\mathbf{T})}_{\text{Trace Term}}
-$$</p>
-<p>The <strong>data fit</strong> term penalizes the data lying outside the covariance ellipse, the <strong>complexity penalty</strong> is the integral of the data fit term over all possible observations $\mathbf{y}$ which characterizes the volume of possible datasets, the <strong>trace term</strong> ensures the objective function is a true lower bound to the MLE of the full GP. Now, below is a table that shows the differences between each of the methods.</p>
+<p>So I think it is important to make note of the similarities between methods; specifically between FITC and VFE which are some staple methods one would use to scale GPs naively. Not only is it helpful for understanding the connection between all of the methods but it also helps with programming and seeing where each method differs algorithmically. Each sparse method is a method of using some set of inducing points or subset of data <span class="math notranslate nohighlight">\(\mathcal{Z}\)</span> from the data space <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>. We typically have some approximate matrix <span class="math notranslate nohighlight">\(\mathbf{Q}\)</span> which approximates the kernel matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{Q}_{ff}=\mathbf{K}_{fu}\mathbf{K}_{uu}^{-1}\mathbf{K}_{uf}\]</div>
+<p>Then we would use the Sherman-Morrison formula to reduce the computation cost of inverting the matrix <span class="math notranslate nohighlight">\(\mathbf{K}\)</span>. Below is the negative marginal log likelihood cost function that is minimized where we can see the each term broken down:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{L}(\theta)= \frac{N}{2}\log 2\pi + \underbrace{\frac{1}{2} \log\left| \mathbf{Q}_{ff}+\mathbf{G}\right|}_{\text{Complexity Penalty}} + \underbrace{\frac{1}{2}\mathbf{y}^{\top}(\mathbf{Q}_{ff}+\mathbf{G})^{-1}\mathbf{y}}_{\text{Data Fit}} + \underbrace{\frac{1}{2\sigma_n^2}\text{trace}(\mathbf{T})}_{\text{Trace Term}}
+\]</div>
+<p>The <strong>data fit</strong> term penalizes the data lying outside the covariance ellipse, the <strong>complexity penalty</strong> is the integral of the data fit term over all possible observations <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> which characterizes the volume of possible datasets, the <strong>trace term</strong> ensures the objective function is a true lower bound to the MLE of the full GP. Now, below is a table that shows the differences between each of the methods.</p>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head text-center"><p>Algorithm</p></th>
-<th class="head text-center"><p>$\mathbf{G}$</p></th>
-<th class="head text-center"><p>$\mathbf{T}$</p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(\mathbf{G}\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(\mathbf{T}\)</span></p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td class="text-center"><p>FITC</p></td>
-<td class="text-center"><p>diag $(\mathbf{K}<em>{ff}-\mathbf{Q}</em>{ff}) + \sigma_n^2\mathbf{I}$</p></td>
+<td class="text-center"><p>diag <span class="math notranslate nohighlight">\((\mathbf{K}_{ff}-\mathbf{Q}_{ff}) + \sigma_n^2\mathbf{I}\)</span></p></td>
 <td class="text-center"><p>0</p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p>VFE</p></td>
-<td class="text-center"><p>$\sigma_n^2 \mathbf{I}$</p></td>
-<td class="text-center"><p>$\mathbf{K}<em>{ff}-\mathbf{Q}</em>{ff}$</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\sigma_n^2 \mathbf{I}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{K}_{ff}-\mathbf{Q}_{ff}\)</span></p></td>
 </tr>
 <tr class="row-even"><td class="text-center"><p>DTC</p></td>
-<td class="text-center"><p>$\sigma_n^2 \mathbf{I}$</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\sigma_n^2 \mathbf{I}\)</span></p></td>
 <td class="text-center"><p>0</p></td>
 </tr>
 </tbody>
 </table>
 <p>Another thing to keep in mind is that the FITC algorithm approximates the model whereas the VFE algorithm approximates the inference step (the posterior). So here we just a have a difference in philosophy in how one should approach this problem. Many people in the Bayesian community will <a class="reference external" href="https://www.prowler.io/blog/sparse-gps-approximate-the-posterior-not-the-model">argue</a> for approximating the inference but I think it’s important to be pragmatic about these sorts of things.</p>
-<p>$$
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\mathbf{W} &amp;= \mathbf{L_{uu}}^\top \mathbf{K_{uf}}^\top \
+\mathbf{W} &amp;= \mathbf{L_{uu}}^\top \mathbf{K_{uf}}^\top \\
 \mathbf{Q_{ff}} &amp;= \mathbf{K_{fu}}\mathbf{K_{uu}}^{-1} \mathbf{K_{uf}}=\mathbf{WW^\top}
 \end{aligned}
-$$</p>
+\end{split}\]</div>
 <hr class="docutils" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Kuu</span> <span class="p">:</span> <span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">)</span>
 <span class="n">Luu</span> <span class="p">:</span> <span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">)</span>

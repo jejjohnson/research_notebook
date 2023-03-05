@@ -59,6 +59,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/egps/mcmc';</script>
@@ -867,11 +869,12 @@ title="Print to PDF"
 
             <article class="bd-article" role="main">
               
-  <section id="monte-carlo-sampling">
+  <section class="tex2jax_ignore mathjax_ignore" id="monte-carlo-sampling">
 <h1>Monte Carlo Sampling<a class="headerlink" href="#monte-carlo-sampling" title="Permalink to this heading">#</a></h1>
-<p>$$
-p(\mathbf{f}<em>*|\mathbf{\mu}</em>\mathbf{x},\mathbf{\Sigma}<em>\mathbf{x},\mathcal{D}) = \int \mathcal{N}\left(\mathbf{f}</em><em>|\mathbf{\mu}<em>\mathcal{GP}(\mathbf{x}</em></em>),\mathbf{\Sigma}^2_\mathcal{GP}(\mathbf{x}<em>*) \right) ; \mathcal{N}(\mathbf{x}</em><em>|\mathbf{\mu}<em>\mathbf{x}, \mathbf{\Sigma}</em>\mathbf{x}); d\mathbf{x}_</em>
-$$</p>
+<div class="math notranslate nohighlight">
+\[
+p(\mathbf{f}_*|\mathbf{\mu}_\mathbf{x},\mathbf{\Sigma}_\mathbf{x},\mathcal{D}) = \int \mathcal{N}\left(\mathbf{f}_*|\mathbf{\mu}_\mathcal{GP}(\mathbf{x}_*),\mathbf{\Sigma}^2_\mathcal{GP}(\mathbf{x}_*) \right) \; \mathcal{N}(\mathbf{x}_*|\mathbf{\mu}_\mathbf{x}, \mathbf{\Sigma}_\mathbf{x})\; d\mathbf{x}_*
+\]</div>
 </section>
 
     <script type="text/x-thebe-config">

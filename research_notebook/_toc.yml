@@ -216,6 +216,7 @@ parts:
       - file: content/notes/misc/diffusion_models.md
       - file: content/notes/misc/fixed_point.md
       - file: content/notes/misc/bilevel_opt.md
+      - file: content/notes/misc/diff_operators.md
   # ###################################################################
   # CHEATSHEETS
   # ###################################################################

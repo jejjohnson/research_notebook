@@ -30,14 +30,9 @@
 
 In the case of regression, we can use the MSE as a loss function. This will exactly solve for the negative log-likelihood term above.
 
----
-**Proof**
 
-````{prf:example} Proof 
-:label: mse_nll
-````
-
-
+````{admonition} Proof
+:class: info dropdown
 
 The likelihood of our model is:
 
@@ -50,9 +45,9 @@ $$\log p(y|\mathbf{X,w}) = \sum_{i=1}^N \log \mathcal{N}(y_i | \mathbf{x}_i\math
 Plugging in the full formula for the Gaussian distribution with some simplifications gives us:
 
 $$
-\log p(y|\mathbf{X,w}) = 
-\sum_{i=1}^N 
-\log \frac{1}{\sqrt{2 \pi \sigma_e^2}} 
+\log p(y|\mathbf{X,w}) =
+\sum_{i=1}^N
+\log \frac{1}{\sqrt{2 \pi \sigma_e^2}}
 \exp\left( - \frac{(y_i - \mathbf{x}_i\mathbf{w})^2}{2\sigma_e^2} \right)
 $$
 
@@ -89,7 +84,13 @@ $$
 \end{aligned}
 $$
 
-**Note**: If we did not know $\sigma_y^2$ then we would have to optimize this as well. 
+**Note**: If we did not know $\sigma_y^2$ then we would have to optimize this as well.
+
+````
+
+
+
+
 
 
 **Sources**:
@@ -108,9 +109,8 @@ $$
 \boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} - \frac{1}{N}\sum_n^N\log p\left(y_n|f(x_n; \theta)\right) + \log p(\theta)
 $$(map_loss)
 
-````{prf:example} Proof 
-:label: map
-````
+````{admonition} Proof
+:class: dropdown info
 
 $$
 \boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} \log p(\boldsymbol{\theta}|\mathcal{D})
@@ -149,13 +149,18 @@ We can approximate this using Monte carlo samples. This is given by:
 
 $$
 \mathbb{E}_{x}[\log p(D|\theta)] \approx \frac{1}{N}\sum_n^N p(y_n | f(x_n; \theta))
-$$ 
+$$
 
-and we assume that with enough samples, we will capture the essence of our data. 
+and we assume that with enough samples, we will capture the essence of our data.
 
 $$
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))+ \log p(\theta)
 $$
+
+
+````
+
+
 
 ---
 
@@ -169,9 +174,8 @@ $$
 $$
 
 
-````{prf:example} Proof 
-:label: mle
-````
+````{admonition} Proof
+:class: info dropdown
 
 This is straightforward to derive because we can pick up from the proof of the MAP loss function, eq:{eq}`map_loss`.
 
@@ -184,6 +188,10 @@ In this case, we will assume a uniform prior on our parameters, $\theta$. This m
 $$
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))
 $$
+
+````
+
+
 
 
 ```{prf:remark}
@@ -198,13 +206,12 @@ $$
 \text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = \mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right]
 $$
 
-This is the distance between the best distribution, $p_*(x)$, for the data and the parameterized version, $p(x;\theta)$. 
+This is the distance between the best distribution, $p_*(x)$, for the data and the parameterized version, $p(x;\theta)$.
 
 There is an equivalence between the (Forward) KL-Divergence and the Maximum Likelihood Estimation. Maximizing the likelihood expresses it as maximizing the likelihood of the data given our estimated distribution. Whereas the KL-divergence is a distance measure between the parameterized distribution and the "true" or "best" distribution of the real data. They are equivalent formulations but the MLE equations shows how this is a proxy for fitting the "real" data distribution to the estimated distribution function.
 
-````{prf:example} Proof 
-:label: nll_kl
-````
+````{admonition} Proof
+:class: info dropdown
 
 $$
 \text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = \mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right]
@@ -251,6 +258,10 @@ which exactly the function for the NLL Loss
 
 
 
+````
+
+
+
 
 ---
 #### Laplace Approximation
@@ -260,7 +271,7 @@ This is where we approximate the posterior with a Gaussian distribution $\mathca
 
 * $w=w_{map}$, finds a mode (local max) of $p(w|D)$
 * $A = \nabla\nabla \log p(D|w) p(w)$ - very expensive calculation
-* Only captures a single mode and discards the probability mass 
+* Only captures a single mode and discards the probability mass
   * similar to the KLD in one direction.
 
 
@@ -274,7 +285,7 @@ This is where we approximate the posterior with a Gaussian distribution $\mathca
 
 **Definition**: We can find the best approximation within a given family w.r.t. KL-Divergence.
 $$
-\text{KLD}[q||p] = \int_w q(w) \log \frac{q(w)}{p(w|D)}dw 
+\text{KLD}[q||p] = \int_w q(w) \log \frac{q(w)}{p(w|D)}dw
 $$
 Let $q(w)=\mathcal{N}(\mu, S)$ and then we minimize KLD$(q||p)$ to find the parameters $\mu, S$.
 
@@ -334,4 +345,3 @@ We actually do this in practice with NNs because of the stochastic training regi
 
 
 #### Stochastic Langevin Dynamics
-

@@ -715,6 +715,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../misc/diffusion_models.html">Diffusion Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc/fixed_point.html">Fixed-Point Methods</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc/bilevel_opt.html">Bi-Level Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../misc/diff_operators.html">Differential Operators</a></li>
 </ul>
 </li>
 </ul>
@@ -980,13 +981,9 @@ title="Print to PDF"
 <section id="mean-squared-error-mse">
 <h3>Mean Squared Error (MSE)<a class="headerlink" href="#mean-squared-error-mse" title="Permalink to this heading">#</a></h3>
 <p>In the case of regression, we can use the MSE as a loss function. This will exactly solve for the negative log-likelihood term above.</p>
-<hr class="docutils" />
-<p><strong>Proof</strong></p>
-<div class="proof example admonition" id="mse_nll">
-<p class="admonition-title"><span class="caption-number">Example 1 </span> (Proof)</p>
-<section class="example-content" id="proof-content">
-</section>
-</div><p>The likelihood of our model is:</p>
+<div class="info dropdown admonition">
+<p class="admonition-title">Proof</p>
+<p>The likelihood of our model is:</p>
 <div class="math notranslate nohighlight">
 \[\log p(y|\mathbf{X,w}) = \sum_{i=1}^N \log p(y_i|x_i,\theta)\]</div>
 <p>And for simplicity, we assume the noise <span class="math notranslate nohighlight">\(\epsilon\)</span> comes from a Gaussian distribution and that it is constant. So we can rewrite our likelihood as</p>
@@ -995,9 +992,9 @@ title="Print to PDF"
 <p>Plugging in the full formula for the Gaussian distribution with some simplifications gives us:</p>
 <div class="math notranslate nohighlight">
 \[
-\log p(y|\mathbf{X,w}) = 
-\sum_{i=1}^N 
-\log \frac{1}{\sqrt{2 \pi \sigma_e^2}} 
+\log p(y|\mathbf{X,w}) =
+\sum_{i=1}^N
+\log \frac{1}{\sqrt{2 \pi \sigma_e^2}}
 \exp\left( - \frac{(y_i - \mathbf{x}_i\mathbf{w})^2}{2\sigma_e^2} \right)
 \]</div>
 <p>We can use the log rule <span class="math notranslate nohighlight">\(\log ab = \log a + \log b\)</span> to rewrite this expression to separate the constant term from the exponential. Also, <span class="math notranslate nohighlight">\(\log e^x = x\)</span>.</p>
@@ -1029,6 +1026,7 @@ title="Print to PDF"
 \end{aligned}
 \end{split}\]</div>
 <p><strong>Note</strong>: If we did not know <span class="math notranslate nohighlight">\(\sigma_y^2\)</span> then we would have to optimize this as well.</p>
+</div>
 <p><strong>Sources</strong>:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://python-intro.quantecon.org/mle.html">Intro to Quantitative Econ w. Python</a></p></li>
@@ -1043,11 +1041,9 @@ title="Print to PDF"
 <span class="eqno">(17)<a class="headerlink" href="#equation-map-loss" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} - \frac{1}{N}\sum_n^N\log p\left(y_n|f(x_n; \theta)\right) + \log p(\theta)
 \]</div>
-<div class="proof example admonition" id="map">
-<p class="admonition-title"><span class="caption-number">Example 2 </span> (Proof)</p>
-<section class="example-content" id="proof-content">
-</section>
-</div><div class="math notranslate nohighlight">
+<div class="dropdown info admonition">
+<p class="admonition-title">Proof</p>
+<div class="math notranslate nohighlight">
 \[
 \boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} \log p(\boldsymbol{\theta}|\mathcal{D})
 \]</div>
@@ -1085,6 +1081,7 @@ title="Print to PDF"
 \[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))+ \log p(\theta)
 \]</div>
+</div>
 <hr class="docutils" />
 </section>
 </section>
@@ -1096,11 +1093,9 @@ title="Print to PDF"
 \[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))
 \]</div>
-<div class="proof example admonition" id="mle">
-<p class="admonition-title"><span class="caption-number">Example 3 </span> (Proof)</p>
-<section class="example-content" id="proof-content">
-</section>
-</div><p>This is straightforward to derive because we can pick up from the proof of the MAP loss function, eq:<a class="reference internal" href="#equation-map-loss">(17)</a>.</p>
+<div class="info dropdown admonition">
+<p class="admonition-title">Proof</p>
+<p>This is straightforward to derive because we can pick up from the proof of the MAP loss function, eq:<a class="reference internal" href="#equation-map-loss">(17)</a>.</p>
 <div class="math notranslate nohighlight">
 \[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))+ \log p(\theta)
@@ -1110,7 +1105,8 @@ title="Print to PDF"
 \[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))
 \]</div>
-<div class="proof remark admonition" id="remark-3">
+</div>
+<div class="proof remark admonition" id="remark-0">
 <p class="admonition-title"><span class="caption-number">Remark 1 </span></p>
 <section class="remark-content" id="proof-content">
 <p>You can get an intuition that this will lead to local minimum as there are many possible solutions that would minimize this equation. Or even worse, there are many possible local minimum that we could get stuck in when trying to optimize for this.</p>
@@ -1125,11 +1121,9 @@ title="Print to PDF"
 \]</div>
 <p>This is the distance between the best distribution, <span class="math notranslate nohighlight">\(p_*(x)\)</span>, for the data and the parameterized version, <span class="math notranslate nohighlight">\(p(x;\theta)\)</span>.</p>
 <p>There is an equivalence between the (Forward) KL-Divergence and the Maximum Likelihood Estimation. Maximizing the likelihood expresses it as maximizing the likelihood of the data given our estimated distribution. Whereas the KL-divergence is a distance measure between the parameterized distribution and the “true” or “best” distribution of the real data. They are equivalent formulations but the MLE equations shows how this is a proxy for fitting the “real” data distribution to the estimated distribution function.</p>
-<div class="proof example admonition" id="nll_kl">
-<p class="admonition-title"><span class="caption-number">Example 4 </span> (Proof)</p>
-<section class="example-content" id="proof-content">
-</section>
-</div><div class="math notranslate nohighlight">
+<div class="info dropdown admonition">
+<p class="admonition-title">Proof</p>
+<div class="math notranslate nohighlight">
 \[
 \text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = \mathbb{E}_{x\sim p_*}\left[ \log \frac{p_*(x)}{p(x;\theta)}\right]
 \]</div>
@@ -1164,6 +1158,7 @@ title="Print to PDF"
 \text{D}_{\text{KL}}\left[ p_*(x) || p(x;\theta) \right] = - \frac{1}{N}\sum_n^N \log p(x_n;\theta) = \mathcal{L}_{NLL}(\theta)
 \]</div>
 <p>which exactly the function for the NLL Loss</p>
+</div>
 <hr class="docutils" />
 </section>
 <section id="laplace-approximation">
@@ -1188,7 +1183,7 @@ title="Print to PDF"
 <h3>Variational Inference<a class="headerlink" href="#variational-inference" title="Permalink to this heading">#</a></h3>
 <p><strong>Definition</strong>: We can find the best approximation within a given family w.r.t. KL-Divergence.
 $<span class="math notranslate nohighlight">\(
-\text{KLD}[q||p] = \int_w q(w) \log \frac{q(w)}{p(w|D)}dw 
+\text{KLD}[q||p] = \int_w q(w) \log \frac{q(w)}{p(w|D)}dw
 \)</span><span class="math notranslate nohighlight">\(
 Let \)</span>q(w)=\mathcal{N}(\mu, S)<span class="math notranslate nohighlight">\( and then we minimize KLD\)</span>(q||p)<span class="math notranslate nohighlight">\( to find the parameters \)</span>\mu, S$.</p>
 <blockquote>

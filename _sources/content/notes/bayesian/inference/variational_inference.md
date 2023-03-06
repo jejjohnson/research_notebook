@@ -420,7 +420,7 @@ $$
 $$
 
 
----
+<!-- ---
 ## ELBO - Derivation (Old)
 
 > This is my own derivation from a few years ago. I have improved it (see above) but I keep it here for reference. :)
@@ -500,11 +500,11 @@ If we optimize $\mathcal{F}$ with respect to $q(\mathbf x)$, the KL is minimized
 * We can easily see the convergence as we just have to wait until the loss (free energy) reaches convergence.
 * Typically $q(x)$ is a Gaussian whereby the variational parameters are the mean and the variance. Practically speaking, we could freeze or unfreeze any of these parameters if we have some prior knowledge about our problem.
 * Many people say 'tighten the bound' but they really just mean optimization: modifying the hyperparameters so that we get as close as possible to the true marginal likelihood.
+ -->
 
 
-
----
-## Resources
+````{admonition} Resources
+:class: seealso dropdown
 
 * Tutorial Series - [Why?](https://chrisorm.github.io/VI-Why.html) | [ELBO](https://chrisorm.github.io/VI-ELBO.html) | [MC ELBO](https://chrisorm.github.io/VI-MC.html) | [Reparameterization](https://chrisorm.github.io/VI-reparam.html) | [MC ELBO unBias](https://chrisorm.github.io/VI-ELBO-MC-approx.html) | [MC ELBO PyTorch](https://chrisorm.github.io/VI-MC-PYT.html) | [Talk](https://chrisorm.github.io/pydata-2018.html)
 * Blog Posts: Neural Variational Inference
@@ -556,7 +556,7 @@ If we optimize $\mathcal{F}$ with respect to $q(\mathbf x)$, the KL is minimized
 * [Neural Samplers and Hierarchical Variational Inference](http://artem.sobolev.name/posts/2019-04-26-neural-samplers-and-hierarchical-variational-inference.html)
 
 
-#### From Scratch
+**From Scratch**
 
 * Programming a Neural Network from Scratch - Ritchie Vink (2017) - [blog](https://www.ritchievink.com/blog/2017/07/10/programming-a-neural-network-from-scratch/)
 * An Introduction to Probability and Computational Bayesian Statistcs - Eric Ma 0[Blog](https://ericmjl.github.io/essays-on-data-science/machine-learning/computational-bayesian-stats/)
@@ -568,3 +568,5 @@ If we optimize $\mathcal{F}$ with respect to $q(\mathbf x)$, the KL is minimized
 * Variational Bayes and The Mean-Field Approximation - Keng (2017) - [blog](http://bjlkeng.github.io/posts/variational-bayes-and-the-mean-field-approximation/)
 * https://www.ritchievink.com/blog/2019/06/10/bayesian-inference-how-we-are-able-to-chase-the-posterior/
 * https://www.ritchievink.com/blog/2019/09/16/variational-inference-from-scratch/
+
+````

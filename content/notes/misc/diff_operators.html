@@ -1,0 +1,1621 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Differential Operators &#8212; Research Notebook</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=4ec06e9971c5264fbd345897d5258098f11cc577" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=8bf782fb4ee92b3d3646425e50f299c4e1fd152d"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/misc/diff_operators';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Bash" href="../../cheatsheets/bash.html" />
+    <link rel="prev" title="Bi-Level Optimization" href="bilevel_opt.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../../intro.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../../_static/book_v2.jpeg" class="logo__image only-light" alt="Logo image">
+    <img src="../../../_static/book_v2.jpeg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../resources/python/overview.html">
+                        Python
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorials/jax_journey/overview.html">
+                        My JAX Journey
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorials/remote/overview.html">
+                        Remote Computing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../gmt/overview.html">
+                        GMT of Learning
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../concepts/uncertainty.html">
+                        Modeling Uncertainty
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../bayesian/overview.html">
+                        Bayesian
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../concepts/overview.html">
+                        Sleeper Concepts
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../kernels/overview.html">
+                        Kernel Methods
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../gps/intro.html">
+                        Gaussian Processes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../info_theory/similarity.html">
+                        Similarity
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../info_theory/overview.html">
+                        Information Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../normalizing_flows/overview.html">
+                        Normalizing Flows
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../inr/overview.html">
+                        Implicit Neural Representations
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../data_assimilation/overview.html">
+                        Data Assimilation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="overview.html">
+                        Miscellaneous Notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/bash.html">
+                        Bash
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/cli.html">
+                        Command Line
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/python.html">
+                        Python
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
+          
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
+      
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../resources/python/overview.html">
+                        Python
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorials/jax_journey/overview.html">
+                        My JAX Journey
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorials/remote/overview.html">
+                        Remote Computing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../gmt/overview.html">
+                        GMT of Learning
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../concepts/uncertainty.html">
+                        Modeling Uncertainty
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../bayesian/overview.html">
+                        Bayesian
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../concepts/overview.html">
+                        Sleeper Concepts
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../kernels/overview.html">
+                        Kernel Methods
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../gps/intro.html">
+                        Gaussian Processes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../info_theory/similarity.html">
+                        Similarity
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../info_theory/overview.html">
+                        Information Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../normalizing_flows/overview.html">
+                        Normalizing Flows
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../inr/overview.html">
+                        Implicit Neural Representations
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../data_assimilation/overview.html">
+                        Data Assimilation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="overview.html">
+                        Miscellaneous Notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/bash.html">
+                        Bash
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/cli.html">
+                        Command Line
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../cheatsheets/python.html">
+                        Python
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item">
+  
+
+
+<a class="navbar-brand logo" href="../../../intro.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="../../../_static/book_v2.jpeg" class="logo__image only-light" alt="Logo image">
+    <img src="../../../_static/book_v2.jpeg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    </div>
+    <div class="sidebar-start-items__item">
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    Overview
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../resources/python/overview.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/ides.html">Integraded Development Environment (IDE)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/stack.html">Standard Python Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/earthsci_stack.html">Earth Science Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/dl_stack.html">Deep Learning Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/scale_stack.html">Scaling Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/python/good_code.html">Good Code</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/jax_journey/overview.html">My JAX Journey</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/jax_journey/ecosystem.html">Ecosystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/jax_journey/vmap.html">vmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/jax_journey/jit.html">Jit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/jax_journey/classes.html">Classes</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/jax_journey/algorithms/overview.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/jax_journey/algorithms/bisection.html">Bisection search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/jax_journey/algorithms/kernel_derivatives.html">Kernel Derivatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/jax_journey/gfs_with_jax.html">Gaussianization Flows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/remote/overview.html">Remote Computing</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/remote/ssh.html">SSH Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/remote/conda.html">Conda 4 Remote Servers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/remote/jlab.html">Jupyter Lab 4 Remote Servers</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gmt/overview.html">GMT of Learning</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/hierarchical_rep.html">Hierarchical Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/functa.html">Functa</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../gmt/discretization.html">Discretization</a></li>
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../gmt/learning.html">Learning</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/uncertainty.html">Modeling Uncertainty</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../bayesian/overview.html">Bayesian</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/intro.html">Language of Uncertainty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/inference.html">Inference Schemes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/inference/variational_inference.html">Variational Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/inference/cond_vi.html">Conditional Variational Inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/confidence_intervals.html">Confidence Intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bayesian/regression.html">Regression</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../concepts/overview.html">Sleeper Concepts</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/gaussian.html">Gaussian Distributions</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../concepts/change_of_variables.html">Change of Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/identity_trick.html">Identity Trick</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/inverse_function.html">Inverse Function Theorem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/jensens.html">Jensens Inequality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/lin_alg.html">Linear Algebra Tricks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../kernels/overview.html">Kernel Methods</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/kernel_derivatives.html">Kernel Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/rv.html">RV Coefficient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/congruence_coeff.html">Congruence Coefficient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/hsic.html">HSIC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernels/mmd.html">Maximum Mean Discrepancy (MMD)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gps/intro.html">Gaussian Processes</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gps/gps.html">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gps/literature.html">Literature Review</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gps/cg.html">Conjugate Gradients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gps/sgps.html">Sparse Gaussian Processes</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../gps/algorithms.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gps/gpr_code.html">GP from Scratch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gps/sgp_code.html">Sparse GP From Scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../egps/overview.html">Input Uncertainty in GPs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../info_theory/similarity.html">Similarity</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../info_theory/overview.html">Information Theory</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../info_theory/measures.html">Measures</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/information.html">Information Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/entropy.html">Entropy &amp; Relative Entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/mutual_info.html">Mutual Information and Total Correlation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../info_theory/estimators.html">Information Theory Measures</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/classic.html">Classic Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/histogram.html">Entropy Estimator - Histogram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../info_theory/experiments/rbig_sample_consistency.html">Experiment - RBIG Sample Consistency</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../normalizing_flows/overview.html">Normalizing Flows</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/linear.html">Linear Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/coupling_layers.html">Coupling Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/conditional.html">Conditional Normalizing Flows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/multiscale.html">Multiscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/inverse.html">Minimization Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../normalizing_flows/losses.html">Losses</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../normalizing_flows/lecture_1_ig.html">Lecture I - Iterative Gaussianization</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/1.0_univariate_gauss.html">1.1 - Univariate Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/1.1_marginal_gauss.html">1.2 - Marginal Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/1.2_gaussianization.html">1.2 - Iterative Gaussianization</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../normalizing_flows/lecture_2_gf.html">Lecture II - Gaussianization Flows</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt1_mg.html">Parameterized Marginal Gaussianization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt2_rot.html">Parameterized Rotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../normalizing_flows/lecture_3_gfs_pt3_plane.html">Example - 2D Plane</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../inr/overview.html">Implicit Neural Representations</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../inr/formulation.html">Formulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../inr/literature_review.html">Literature Review</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../inr/pinns.html">Physics-Informed Loss</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../inr/qg.html">QG PDE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../data_assimilation/overview.html">Data Assimilation</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-19"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/dynamical_sys.html">Dynamical Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/oi.html">Optimal Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/interp.html">Interpolation Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/emu.html">Emulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/inv_problems.html">Inverse Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_assimilation/projects.html">Projects</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../data_assimilation/algorithms.html">Algorithms</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-20"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/markov_models.html">Markov Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/gauss_markov.html">Gauss-Markov Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/kf.html">Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/nkf.html">Normalizing Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/enskf.html">Ensemble Kalman Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/dmm.html">Deep Markov Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/4dvarnet.html">4DVarNet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_assimilation/markov_gp.html">Markovian Gaussian Processes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../data_assimilation/nbs/notebooks.html">Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-21"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="overview.html">Miscellaneous Notes</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-22"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="generative_models.html">Generative Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffusion_models.html">Diffusion Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fixed_point.html">Fixed-Point Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bilevel_opt.html">Bi-Level Optimization</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Differential Operators</a></li>
+</ul>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cheat Sheets</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../cheatsheets/bash.html">Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cheatsheets/cli.html">Command Line</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cheatsheets/python.html">Python</a></li>
+</ul>
+
+    </div>
+</nav>
+    </div>
+  </div>
+  
+
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
+
+  
+  <div id="rtd-footer-container"></div>
+
+      </div>
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        <label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" data-toggle="tooltip" data-placement="right" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars"></span>
+        </label>
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="dropdown dropdown-repository-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      <li><a href="https://github.com/jejjohnson/research_notebook" target="_blank"
+   class="btn btn-sm dropdown-item"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">repository</span>
+</a>
+</a>
+      
+      <li><a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/misc/diff_operators.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm dropdown-item"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">open issue</span>
+</a>
+</a>
+      
+  </ul>
+</div>
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      <li><a href="../../../_sources/content/notes/misc/diff_operators.md" target="_blank"
+   class="btn btn-sm dropdown-item"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</a>
+      
+      <li>
+<button onclick="printPdf(this)"
+  class="btn btn-sm dropdown-item"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</a>
+      
+  </ul>
+</div>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
+    </div>
+</div>
+            </div>
+            
+            
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Differential Operators</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#difference">
+   Difference
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gradient">
+   Gradient
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#vector-fields">
+     Vector Fields
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jacobian">
+   Jacobian
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#divergence">
+   Divergence
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#curl">
+   Curl
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#laplacian">
+   Laplacian
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#material-derivative">
+   Material Derivative
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scalar-field">
+     Scalar Field
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#vector-field">
+     Vector Field
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#determinant-jacobian">
+   Determinant Jacobian
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#helmholtz-equation">
+   Helmholtz Equation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#helmholtz-decomposition">
+     Helmholtz Decomposition
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+            <article class="bd-article" role="main">
+              
+  <section class="tex2jax_ignore mathjax_ignore" id="differential-operators">
+<h1>Differential Operators<a class="headerlink" href="#differential-operators" title="Permalink to this heading">#</a></h1>
+<hr class="docutils" />
+<section id="difference">
+<h2>Difference<a class="headerlink" href="#difference" title="Permalink to this heading">#</a></h2>
+<p>This is the case where we have a function <span class="math notranslate nohighlight">\(\boldsymbol{f}:\mathbb{R}^D \rightarrow \mathbb{R}^P\)</span> which maps an input vector <span class="math notranslate nohighlight">\(\vec{\mathbf{x}}\)</span> to a scalar value. We denote this operation as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{Difference}
+&amp;:= \partial_x \boldsymbol{f} \\
+&amp;= \nabla_i \boldsymbol{f}
+\end{aligned}
+\end{split}\]</div>
+<p>So this operator is</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_i \boldsymbol{f}: \mathbb{R} \rightarrow \mathbb{R}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(_i\)</span> is the index of the input vector, <span class="math notranslate nohighlight">\(\vec{\mathbf{x}}\)</span>, of the function <span class="math notranslate nohighlight">\(\boldsymbol{f}\)</span>. We can also right the functional transformation version</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_i [\boldsymbol{f}](\vec{\mathbf{x}}): \mathbb{R}^D \rightarrow \mathbb{R}
+\]</div>
+<div class="dropdown info admonition">
+<p class="admonition-title">Pseudo-Code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P Dx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">du_dx</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">du_dx</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># second partial derivative</span>
+<span class="n">d2u_dx2</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">d2u_dy2</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="dropdown seealso admonition">
+<p class="admonition-title">Resources</p>
+<ul class="simple">
+<li><p>3Blue3Brown - Visualization of Derivatives - <a class="reference external" href="https://www.youtube.com/watch?v=CfW845LNObM">Video</a></p></li>
+<li><p>3Blue3Brown - <a class="reference external" href="https://youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr">Essence of Calculus</a></p></li>
+</ul>
+</div>
+</section>
+<hr class="docutils" />
+<section id="gradient">
+<h2>Gradient<a class="headerlink" href="#gradient" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p>The directions of the fastest change and the directional derivative. Tells me locally where something is increasing or decreasing the fastest. Tells us the rate of change at every point (a vector direction of change)</p>
+</div></blockquote>
+<blockquote>
+<div><p>Turns a <em>scalar</em> field into a <em>vector</em> field!</p>
+</div></blockquote>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{Gradient}
+&amp;:=\text{grad}(\boldsymbol{f}) \\
+&amp;= \boldsymbol{\nabla} \boldsymbol{f}\\
+&amp;=
+\begin{bmatrix}
+\frac{\partial}{\partial x} \\
+\frac{\partial}{\partial y} \\
+\frac{\partial}{\partial z}
+\end{bmatrix} \cdot \boldsymbol{f} \\
+&amp;=
+\begin{bmatrix}
+\frac{\partial f}{\partial x} \\
+\frac{\partial f}{\partial y} \\
+\frac{\partial f}{\partial z}
+\end{bmatrix}\\
+&amp;= \boldsymbol{J}_i(\boldsymbol{f})
+\end{aligned}
+\end{split}\]</div>
+<p>So the operation is:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{grad}(\boldsymbol{f}) = \boldsymbol{\nabla}\boldsymbol{f}: \mathbb{R} \rightarrow \mathbb{R}^D
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(D\)</span> is the size of the input vector, <span class="math notranslate nohighlight">\(\vec{\mathbf{x}}\)</span>. Let’s take a scalar field with vector-valued inputs.</p>
+<div class="math notranslate nohighlight">
+\[
+f=\boldsymbol{f}(x,y,z)=\boldsymbol{f}(\vec{\mathbf{x}}) \hspace{10mm} f:\mathbb{R}^3\rightarrow \mathbb{R}
+\]</div>
+<p>Then the gradient is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\text{grad}(\boldsymbol{f})
+=
+\begin{bmatrix}
+\frac{\partial \boldsymbol{f}}{\partial x} \\
+\frac{\partial \boldsymbol{f}}{\partial y} \\
+\frac{\partial \boldsymbol{f}}{\partial z}
+\end{bmatrix}
+\end{split}\]</div>
+<p>We can also write the functional transformation version:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{grad}[\boldsymbol{f}](\vec{\mathbf{x}}) = \boldsymbol{\nabla}\boldsymbol{f}: \mathbb{R}^D \rightarrow \mathbb{R}^D
+\]</div>
+<div class="dropdown info admonition">
+<p class="admonition-title">Pseudo-Code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># scalar value</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">output</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># vectorized</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">output</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># meshgrid</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;M&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">X</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N M&quot;</span><span class="p">],</span> <span class="n">Y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N M&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;ij&quot;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;NM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;NM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<span class="n">output</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;NM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="dropdown info admonition">
+<p class="admonition-title">Example</p>
+<p>Let’s take the function</p>
+<div class="math notranslate nohighlight">
+\[
+f(x,y) = x^2 + y^2 \hspace{10mm} f:\mathbb{R}\times\mathbb{R}\rightarrow \mathbb{R}
+\]</div>
+<p>Then the gradient would be</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\nabla f =
+\begin{bmatrix}
+2x \\
+2y
+\end{bmatrix}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\mathbf{x},\mathbf{y}&amp;\in\Omega &amp;&amp; &amp;&amp; \Omega_x\in\mathbb{R}\\
+\boldsymbol{f}(\mathbf{x},\mathbf{y}) &amp;= \mathbf{x}^2 + \mathbf{y}^2 &amp;&amp; &amp;&amp;\boldsymbol{f}:\mathbb{R}^N\times\mathbb{R}^N\rightarrow \mathbb{R}^{N\times 2} \\
+\text{grad}[\mathbf{f}](\mathbf{x},\mathbf{y}) &amp;=
+\begin{bmatrix}
+2\mathbf{x} \\
+2\mathbf{y}
+\end{bmatrix} &amp;&amp; &amp;&amp; \text{grad}[\boldsymbol{f}]: \mathbb{R}^{N\times 2}\rightarrow\mathbb{R}^{N\times 2}
+\end{aligned}
+\end{split}\]</div>
+</div>
+<section id="vector-fields">
+<h3>Vector Fields<a class="headerlink" href="#vector-fields" title="Permalink to this heading">#</a></h3>
+<div class="dropdown info admonition">
+<p class="admonition-title">Psuedo-Code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># scalar value</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">output</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># vectorized</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">output</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># meshgrid</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;M&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">X</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N M&quot;</span><span class="p">],</span> <span class="n">Y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;N M&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;ij&quot;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;NM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;NM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<span class="n">output</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;NM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="jacobian">
+<h2>Jacobian<a class="headerlink" href="#jacobian" title="Permalink to this heading">#</a></h2>
+<div class="dropdown seealso admonition">
+<p class="admonition-title">Resources</p>
+<ul class="simple">
+<li><p>Mathemaniac Visualization of Jacobian - <a class="reference external" href="https://www.youtube.com/watch?v=wCZ1VEmVjVo">Video</a></p></li>
+<li><p>Serpentine Integral Visualization of the Change of Variables and the Jacobian - <a class="reference external" href="https://www.youtube.com/watch?v=hhFzJvaY__U&amp;t=515s">Video</a></p></li>
+</ul>
+</div>
+</section>
+<hr class="docutils" />
+<section id="divergence">
+<h2>Divergence<a class="headerlink" href="#divergence" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p>Turns a <em>vector</em> field into a <em>scalar</em> field. It measures locally how much stuff is flowing away or flowing towards a single point in space. Basically, how much the vector field is expanding outwards or into a point in space!</p>
+</div></blockquote>
+<blockquote>
+<div><p>How we measure sources and sinks!</p>
+</div></blockquote>
+<p>Let’s take a vector valued function:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{\boldsymbol{f}}:\mathbb{R}^{D}\rightarrow\mathbb{R}^D
+\]</div>
+<p>The divergence operator does the following transformation:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{div }(\vec{\boldsymbol{f}}): \mathbb{R}^D \rightarrow \mathbb{R}
+\]</div>
+<p>Then the divergence operator is the following:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{Divergence }
+&amp;:= \text{div }(\vec{\boldsymbol{f}}) \\
+&amp;= \vec{\nabla}\cdot \vec{\boldsymbol{f}} \\
+&amp;= \left(\frac{\partial}{\partial x}, \frac{\partial}{\partial y}, \frac{\partial}{\partial z} \right)\cdot \left(f_1, f_2, f_3\right) \\
+&amp;= \left(\frac{\partial}{\partial x}, \frac{\partial}{\partial y}, \frac{\partial}{\partial z} \right)\cdot \left(f\hat{i} + f\hat{j} + f\hat{k}\right) \\
+&amp;= \frac{\partial f_1}{\partial x} + \frac{\partial f_2}{\partial y} +  \frac{\partial f_3}{\partial z}
+\end{aligned}
+\end{split}\]</div>
+<p>We can also write the functional transformation version that maps a vector input, <span class="math notranslate nohighlight">\(\vec{\mathbf{x}}\)</span>, through the transformation <span class="math notranslate nohighlight">\(\boldsymbol{f}(\cdot)\)</span> to the output of the divergence operator <span class="math notranslate nohighlight">\(\text{div}(\cdot)\)</span>. We have the following:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{div}\left[\vec{\boldsymbol{f}}\right](\vec{\mathbf{x}}): \mathbb{R}^D \rightarrow \mathbb{R}
+\]</div>
+<div class="dropdown info admonition">
+<p class="admonition-title">Pseudo-Code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span>
+
+<span class="c1"># from scratch (differences)</span>
+<span class="n">du_dx</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">difference</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">du_dy</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">difference</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">u_div</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">du_dx</span> <span class="o">+</span> <span class="n">du_dy</span>
+
+<span class="c1"># from scratch (gradient)</span>
+<span class="n">u_grad</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">dz</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">u_div</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">u_grad</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># divergence operator</span>
+<span class="n">u_div</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">divergence</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">),</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="curl">
+<h2>Curl<a class="headerlink" href="#curl" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p>How we measure rotation!</p>
+</div></blockquote>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{Curl}
+&amp;:= \text{curl}(\vec{\boldsymbol{f}}) \\
+&amp;= \nabla\times \vec{\boldsymbol{f}} \\
+&amp;= \det
+\begin{vmatrix}
+\hat{i} &amp; \hat{j} &amp; \hat{j} \\
+\frac{\partial}{\partial x} &amp; \frac{\partial}{\partial y} &amp; \frac{\partial}{\partial z} \\
+f_1 &amp; f_2 &amp; f_3
+\end{vmatrix} \\
+&amp;= \begin{bmatrix}
+\frac{\partial f_2}{\partial z} -  \frac{\partial f_3}{\partial y}\\
+\frac{\partial f_1}{\partial z} -  \frac{\partial f_3}{\partial x} \\
+\frac{\partial f_1}{\partial z} -  \frac{\partial f_2}{\partial y}
+\end{bmatrix} \\
+&amp;= \left(\frac{\partial f_2}{\partial z} -  \frac{\partial f_3}{\partial y}\right)\hat{i}
+\left( \frac{\partial f_1}{\partial z} -  \frac{\partial f_3}{\partial x}\right)\hat{j}
+\left( \frac{\partial f_1}{\partial z} -  \frac{\partial f_2}{\partial y}\right)\hat{k}
+\end{aligned}
+\end{split}\]</div>
+<p>We can write this as</p>
+<div class="math notranslate nohighlight">
+\[
+\text{curl}(\vec{\boldsymbol{f}}): \mathbb{R}^D \rightarrow \mathbb{R}^D
+\]</div>
+<p>We can also write the functional transformation version</p>
+<div class="math notranslate nohighlight">
+\[
+\text{curl}[\vec{\boldsymbol{f}}](\vec{\mathbf{x}}): \mathbb{R}^D \rightarrow \mathbb{R}^D
+\]</div>
+<div class="dropdown seealso admonition">
+<p class="admonition-title">Resources</p>
+<ul class="simple">
+<li><p>Explanation using Vorticity - <a class="reference external" href="https://youtu.be/M55LbJr_SsQ">Part 1</a> | <a class="reference external" href="https://youtu.be/lqDx2uiKx_Q">Part 2</a></p></li>
+</ul>
+</div>
+</section>
+<section id="laplacian">
+<h2>Laplacian<a class="headerlink" href="#laplacian" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p>The second derivative</p>
+</div></blockquote>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\text{Laplacian }
+&amp;:= \Delta u \\
+&amp;= \nabla^2 u \\
+&amp;= \text{div}(\nabla u) \\
+&amp;= \partial_{xx}u + \partial_{yy}u + \partial_{zz}u
+\end{aligned}
+\end{split}\]</div>
+<p>We can also write this as the functional transformation version</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Laplacian}[\boldsymbol{f}](\vec{mathbf{x}}): \mathbf{R}^D \rightarrow \mathbf{R}
+\]</div>
+<div class="dropdown info admonition">
+<p class="admonition-title">Pseudo-Code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="c1"># from scratch (partial derivatives)</span>
+<span class="n">d2u_dx2</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">d2u_dy2</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">u_lap</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2u_dx2</span> <span class="o">+</span> <span class="n">d2u_dy2</span>
+
+<span class="c1"># from scratch (divergence)</span>
+<span class="n">u_grad</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">u_lap</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">divergence</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">),</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># laplacian operator</span>
+<span class="n">u_lap</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">laplacian</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">),</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="material-derivative">
+<h2>Material Derivative<a class="headerlink" href="#material-derivative" title="Permalink to this heading">#</a></h2>
+<section id="scalar-field">
+<h3>Scalar Field<a class="headerlink" href="#scalar-field" title="Permalink to this heading">#</a></h3>
+<p>Given a scalar field:</p>
+<div class="math notranslate nohighlight">
+\[
+\phi:=\boldsymbol{\phi}(\vec{\mathbf{x}},t)=\boldsymbol{\phi}(x,y,z,t) \hspace{10mm} \phi:\mathbb{R}^3\times\mathbb{R}\rightarrow \mathbb{R}
+\]</div>
+<p>We can write the Material derivative as</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{D\phi}{Dt} := \frac{\partial \phi}{\partial t} + \vec{\mathbf{u}} \cdot \nabla \phi
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{\mathbf{u}} \cdot \nabla \phi =
+u_1\frac{\partial \phi}{\partial x} +
+u_2\frac{\partial \phi}{\partial y} +
+u_3\frac{\partial \phi}{\partial z}
+\]</div>
+</section>
+<hr class="docutils" />
+<section id="vector-field">
+<h3>Vector Field<a class="headerlink" href="#vector-field" title="Permalink to this heading">#</a></h3>
+<p>Given a vector valued field:</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{\boldsymbol{F}}:=\vec{\boldsymbol{F}}(\vec{\mathbf{x}},t)=
+\vec{\boldsymbol{F}}(x,y,z,t) \hspace{10mm}
+\vec{\boldsymbol{F}}:\mathbb{R}^3\times\mathbb{R}\rightarrow \mathbb{R}^{3}
+\]</div>
+<p>We can write the Material derivative as</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{D \vec{\boldsymbol{F}}}{Dt} := \frac{\partial \vec{\boldsymbol{F}}}{\partial t} + \vec{\mathbf{u}} \cdot \nabla \vec{\boldsymbol{F}}
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{\mathbf{u}} \cdot \nabla \vec{\boldsymbol{F}} =
+u_1\frac{\partial \vec{\boldsymbol{F}}}{\partial x} +
+u_2\frac{\partial \vec{\boldsymbol{F}}}{\partial y} +
+u_3\frac{\partial \vec{\boldsymbol{F}}}{\partial z}
+\]</div>
+<div class="dropdown seealso admonition">
+<p class="admonition-title">Resources</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Material_derivative">Good ol’ Wikipedia Page</a></p></li>
+<li><p>Fluid Mechanics Lecture - <a class="reference external" href="https://youtu.be/p7qFS9umcx8">Video</a></p></li>
+<li><p>Atmospheric Dynamics Lecture - <a class="reference external" href="https://youtu.be/TPmkx_hfuAc">Video</a></p></li>
+</ul>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="determinant-jacobian">
+<h2>Determinant Jacobian<a class="headerlink" href="#determinant-jacobian" title="Permalink to this heading">#</a></h2>
+<p>From a differential operator perspective, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\det\boldsymbol{J}(A,B) &amp;= -\det\boldsymbol{J}(B,A)\\
+&amp;= \mathbf{k}\cdot\left(\nabla A\times \nabla B\right) \\
+&amp;= - \mathbf{k}\cdot \nabla\times\left(A\nabla B\right) \\
+&amp;= - \mathbf{k}\cdot \nabla\times\left(B\nabla A\right) \\
+&amp;= -\mathbf{k}\text{ curl}\left(B\nabla A\right)
+\end{aligned}
+\end{split}\]</div>
+<p>If we think of Cartesian coordinates, we have</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\det \boldsymbol{J}(A,B) &amp;= \frac{\partial A}{\partial x}\frac{\partial B}{\partial y} -\frac{\partial A}{\partial y}\frac{\partial B}{\partial x} \\
+&amp;= \frac{\partial }{\partial x}\left(A\frac{\partial B}{\partial y}\right) -\frac{\partial }{\partial y}\left(A\frac{\partial B}{\partial x}\right) \\
+&amp;= \frac{\partial }{\partial y}\left(B\frac{\partial A}{\partial x}\right) -\frac{\partial }{\partial x}\left(B\frac{\partial A}{\partial y}\right) \\
+\end{aligned}
+\end{split}\]</div>
+<p>We can write this transformation as</p>
+<div class="math notranslate nohighlight">
+\[
+\det\boldsymbol{J}(\boldsymbol{f}, \boldsymbol{g}): \mathbf{R}^D\times\mathbb{R}^{D} \rightarrow \mathbf{R}^{D}
+\]</div>
+<p>We can also write this as the functional transformation version</p>
+<div class="math notranslate nohighlight">
+\[
+\det\boldsymbol{J}[\boldsymbol{f}, \boldsymbol{g}](\vec{mathbf{x}}): \mathbf{R}^D \rightarrow \mathbf{R}
+\]</div>
+<div class="dropdown info admonition">
+<p class="admonition-title">Pseudo-Code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">v</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="c1"># det Jacobian operator</span>
+<span class="n">step_size</span> <span class="o">=</span> <span class="p">((</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">),(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">))</span>
+<span class="n">u_detj</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">det_jacobian</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+
+<span class="c1"># from scratch (partial derivatives)</span>
+<span class="n">du_dx</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">du_dy</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">dv_dx</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">dv_dy</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">u_detj</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">du_dx</span> <span class="o">*</span> <span class="n">dv_dy</span> <span class="o">-</span> <span class="n">du_dy</span> <span class="o">*</span> <span class="n">dv_dx</span>
+
+<span class="c1"># from scratch (partial derivatives + divergence)</span>
+<span class="n">du_dx</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">du_dy</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">vdu_dx</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">du_dx</span>
+<span class="n">vdu_dy</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">du_dy</span>
+
+<span class="c1"># from scratch (gradient + divergence)</span>
+<span class="n">u_grad</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">vu_grad</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">u_grad</span>
+<span class="n">u_detj</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">curl</span><span class="p">(</span><span class="n">vu_grad</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">),</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="seealso dropdown admonition">
+<p class="admonition-title">Resources</p>
+<ul class="simple">
+<li><p>Explanation of Jacobian from Flows Perspective - <a class="reference external" href="https://drive.google.com/file/d/10LqMqk9gT97avcPJqRHA2F0CNSlTpQLx/view">Slides</a></p></li>
+<li><p>Serpentine Integral Visualization of the Change of Variables and the Jacobian - <a class="reference external" href="https://www.youtube.com/watch?v=hhFzJvaY__U&amp;t=515s">Video</a></p></li>
+<li><p>Khan Academy Explanation of Determinant - <a class="reference external" href="https://www.youtube.com/watch?v=wCZ1VEmVjVo">Video</a></p></li>
+<li><p>3Blue3Brown Visualization of Determinant Jacobian - <a class="reference external" href="https://www.youtube.com/watch?v=Ip3X9LOh2dk">Video</a></p></li>
+</ul>
+</div>
+</section>
+<hr class="docutils" />
+<section id="helmholtz-equation">
+<h2>Helmholtz Equation<a class="headerlink" href="#helmholtz-equation" title="Permalink to this heading">#</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\nabla \boldsymbol{f}(\vec{\mathbf{x}}) - k^2 \boldsymbol{f}(\vec{\mathbf{x}}) &amp;= 0 \\
+\left( \nabla  - k^2 \right)\boldsymbol{f}(\vec{\mathbf{x}}) &amp;= 0
+\end{aligned}
+\end{split}\]</div>
+<section id="helmholtz-decomposition">
+<h3>Helmholtz Decomposition<a class="headerlink" href="#helmholtz-decomposition" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+\vec{\boldsymbol{f}} = \underbrace{- \nabla\phi}_{\text{Div-Free}}+ \underbrace{\nabla\times \mathbf{A}}_{\text{Curl-Free}}
+\]</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./content/notes/misc"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+            </article>
+            
+
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="bilevel_opt.html" title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Bi-Level Optimization</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="../../cheatsheets/bash.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Bash</p>
+  </div>
+  <i class="fa-solid fa-angle-right"></i>
+  </a>
+</div>
+            </footer>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#difference">
+   Difference
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gradient">
+   Gradient
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#vector-fields">
+     Vector Fields
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#jacobian">
+   Jacobian
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#divergence">
+   Divergence
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#curl">
+   Curl
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#laplacian">
+   Laplacian
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#material-derivative">
+   Material Derivative
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#scalar-field">
+     Scalar Field
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#vector-field">
+     Vector Field
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#determinant-jacobian">
+   Determinant Jacobian
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#helmholtz-equation">
+   Helmholtz Equation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#helmholtz-decomposition">
+     Helmholtz Decomposition
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+</div>
+
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By J. Emmanuel Johnson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2023.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+Last updated on None.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </div>
+        </footer>
+        
+
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
+
+  </body>
+</html>

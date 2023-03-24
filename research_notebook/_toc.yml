@@ -65,7 +65,8 @@ parts:
       sections:
       - file: content/notes/gmt/hierarchical_rep.md
       - file: content/notes/gmt/functa.md
-      - file: content/notes/gmt/discretization.md
+      - file: content/notes/gmt/discretize_space.md
+      - file: content/notes/gmt/discretize_time.md
       - file: content/notes/gmt/learning.md
     # ==================
     # UNCERTAINTY
@@ -217,6 +218,8 @@ parts:
       - file: content/notes/misc/fixed_point.md
       - file: content/notes/misc/bilevel_opt.md
       - file: content/notes/misc/diff_operators.md
+      - file: content/notes/misc/qg.md
+      - file: content/notes/misc/elliptical_pde_solver.md
   # ###################################################################
   # CHEATSHEETS
   # ###################################################################

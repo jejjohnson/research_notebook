@@ -38,7 +38,7 @@ $$
 We typically add some sort of regularization in order to constrain the solution
 
 $$
-\mathcal{L}(\theta) = \sum_{i=1}^N \left[ f(x_i;\theta) - y   \right]^2 + \lambda \mathcal{R}(\theta) 
+\mathcal{L}(\theta) = \sum_{i=1}^N \left[ f(x_i;\theta) - y   \right]^2 + \lambda \mathcal{R}(\theta)
 $$
 
 ---
@@ -86,7 +86,7 @@ We can simplify the notion a bit to make it more compact. This essentially puts 
 
 $$
 \begin{aligned}
-\log p(\mathbf{y}|\mathbf{x},\theta) 
+\log p(\mathbf{y}|\mathbf{x},\theta)
 &= - \frac{1}{2\sigma^2} \left(\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta)\right)^\top\left(\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta) \right) \\
 &= - \frac{1}{2\sigma^2} ||\mathbf{y} - \boldsymbol{f}(\mathbf{x};\theta)||_2^2
 \end{aligned}
@@ -95,7 +95,7 @@ $$
 where $||\cdot ||_2^2$ is the Maholanobis Distance.
 
 
-**Note**: we often see this notation in many papers and books.  
+**Note**: we often see this notation in many papers and books.
 
 #### Priors
 
@@ -106,12 +106,13 @@ where $||\cdot ||_2^2$ is the Maholanobis Distance.
 ## Different Parameterizations
 
 
-|   Model    |                                                                        Equation                                                                         |
-| :--------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------: |
-|  Identity  |                                                                      $ \mathbf{x}$                                                                      |
-|   Linear   |                                                                $\mathbf{wx}+\mathbf{b}$                                                                 |
-|   Basis    |                                                 $\mathbf{w}\boldsymbol{\phi}(\mathbf{x}) + \mathbf{b}$                                                  |
-| Non-Linear |                                                     $\sigma\left( \mathbf{wx} + \mathbf{b}\right)$                                                      |
+|   Model    |  Equation |
+|:--------|:---------|
+|  Identity  | $ \mathbf{x}$ |
+|   Linear   | $\mathbf{wx}+\mathbf{b}$ |
+|   Basis    |  $\mathbf{w}\boldsymbol{\phi}(\mathbf{x}) + \mathbf{b}$  |
+| Non-Linear | $\sigma\left( \mathbf{wx} + \mathbf{b}\right)$ |
+| Neural Network | $\boldsymbol{f}_{L}\circ \boldsymbol{f}_{L-1}\circ\ldots\circ\boldsymbol{f}_1$ |
 | Functional | $\boldsymbol{f} \sim \mathcal{GP}\left(\boldsymbol{\mu}_{\boldsymbol \alpha}(\mathbf{x}),\boldsymbol{\sigma}^2_{\boldsymbol \alpha}(\mathbf{x})\right)$ |
 
 ---
@@ -119,7 +120,7 @@ where $||\cdot ||_2^2$ is the Maholanobis Distance.
 
 
 $$
-f(x;\theta) = x 
+f(x;\theta) = x
 $$
 
 $$
@@ -261,5 +262,3 @@ $$
 $$
 -\log p(y|x,\theta) = \frac{1}{2}\log \boldsymbol{\sigma}^2(\mathbf{x};\boldsymbol{\theta}) + \frac{1}{2}||\mathbf{y} - \boldsymbol{\mu}(\mathbf{x};\boldsymbol{\theta})||^2_{\boldsymbol{\sigma}^2(\mathbf{x};\boldsymbol{\theta})} + \text{C}
 $$
-
-

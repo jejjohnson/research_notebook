@@ -465,7 +465,7 @@ $$
 We can also write this as the functional transformation version
 
 $$
-\det\boldsymbol{J}[\boldsymbol{f}, \boldsymbol{g}](\vec{mathbf{x}}): \mathbf{R}^D \rightarrow \mathbf{R}
+\det\boldsymbol{J}[\boldsymbol{f}, \boldsymbol{g}](\vec{\mathbf{x}}): \mathbf{R}^D \rightarrow \mathbf{R}
 $$
 
 ````{admonition} Pseudo-Code

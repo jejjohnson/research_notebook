@@ -1,4 +1,4 @@
-# Discretization
+# Temporal Discretization
 
 ## Motivation
 
@@ -153,23 +153,7 @@ $$
 - RK - correction, basis functions
 - Explicit vs implicit
 
----
 
-# Spatial Discretization
-
-$$
-\partial_x u = \lim_{h \rightarrow 0}\frac{u(x + h) + 2 u(x) - u(x-h)}{2h}
-$$
-
-Spatial Gradients - dealing with the derivatives
-
-`N[u](x,t)`
-
-- Analytical
-- Finite difference
-- Finite Volume
-- Finite Element
-- Spectral
 
 ---
 

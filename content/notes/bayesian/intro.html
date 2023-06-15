@@ -185,7 +185,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/twelve_steps_ns/overview.html">12 Steps to Navier-Stokes</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../tutorials/twelve_steps_ns/1.1_linear_advection.html">Linear Convection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/twelve_steps_ns/1.1_linear_advection.html">1D Linear Convection</a></li>
 </ul>
 </li>
 </ul>
@@ -680,21 +680,21 @@ P(\theta|\mathcal{D}, \mathcal{M})d\theta\]</div>
 <section id="conditional-probability">
 <h2>Conditional Probability<a class="headerlink" href="#conditional-probability" title="Permalink to this heading">#</a></h2>
 <div class="math notranslate nohighlight" id="equation-cond-prob">
-<span class="eqno">(12)<a class="headerlink" href="#equation-cond-prob" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(13)<a class="headerlink" href="#equation-cond-prob" title="Permalink to this equation">#</a></span>\[
 p(x,y) = p(x|y)p(y) = p(y|x)p(x)
 \]</div>
 </section>
 <section id="bayes-rule">
 <h2>Bayes Rule<a class="headerlink" href="#bayes-rule" title="Permalink to this heading">#</a></h2>
 <div class="math notranslate nohighlight" id="equation-bayes">
-<span class="eqno">(13)<a class="headerlink" href="#equation-bayes" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(14)<a class="headerlink" href="#equation-bayes" title="Permalink to this equation">#</a></span>\[
 p(x|y) = \frac{p(y|x)p(x)}{p(y)}
 \]</div>
 <section id="parameters">
 <h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h3>
 <p>We can change the notation to suit data, <span class="math notranslate nohighlight">\(\mathcal{D}=\{x_i, y_i \}_{i=1}^N\)</span>, and parameters, <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
 <div class="math notranslate nohighlight" id="equation-bayes-param">
-<span class="eqno">(14)<a class="headerlink" href="#equation-bayes-param" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(15)<a class="headerlink" href="#equation-bayes-param" title="Permalink to this equation">#</a></span>\[
 p(\theta|\mathcal{D}) = \frac{p(\mathcal{D}|\theta)p(\theta)}{p(\mathcal{D})}
 \]</div>
 <p>This is often useful when thinking about machine learning and model parameters.</p>
@@ -703,12 +703,12 @@ p(\theta|\mathcal{D}) = \frac{p(\mathcal{D}|\theta)p(\theta)}{p(\mathcal{D})}
 <section id="predictive-density">
 <h2>Predictive Density<a class="headerlink" href="#predictive-density" title="Permalink to this heading">#</a></h2>
 <div class="math notranslate nohighlight" id="equation-bayes-posterior-predict">
-<span class="eqno">(15)<a class="headerlink" href="#equation-bayes-posterior-predict" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(16)<a class="headerlink" href="#equation-bayes-posterior-predict" title="Permalink to this equation">#</a></span>\[
 p(x_*|x) = \int p(x_*|\theta) p(\theta|x)d\theta
 \]</div>
 <p>We can do this for pairs of data points.</p>
 <div class="math notranslate nohighlight" id="equation-bayes-posterior-predict-data">
-<span class="eqno">(16)<a class="headerlink" href="#equation-bayes-posterior-predict-data" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(17)<a class="headerlink" href="#equation-bayes-posterior-predict-data" title="Permalink to this equation">#</a></span>\[
 p(y_* |x_*,\mathcal{D}) = \int p(y_*|x_*,\theta) p(\theta|\mathcal{D})d\theta
 \]</div>
 </section>

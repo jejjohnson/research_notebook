@@ -185,7 +185,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/twelve_steps_ns/overview.html">12 Steps to Navier-Stokes</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../tutorials/twelve_steps_ns/1.1_linear_advection.html">Linear Convection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/twelve_steps_ns/1.1_linear_advection.html">1D Linear Convection</a></li>
 </ul>
 </li>
 </ul>
@@ -587,14 +587,14 @@ These are my notes about the formulation, the use cases and also my imagined pse
 <h2>Formulation<a class="headerlink" href="#formulation" title="Permalink to this heading">#</a></h2>
 <p>Let’s take a field, <span class="math notranslate nohighlight">\(u\)</span>, which describes some quantity of interest</p>
 <div class="math notranslate nohighlight" id="equation-eq-field">
-<span class="eqno">(61)<a class="headerlink" href="#equation-eq-field" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(62)<a class="headerlink" href="#equation-eq-field" title="Permalink to this equation">#</a></span>\[
 \begin{aligned}
 u =\boldsymbol{u}(\vec{\mathbf{x}}) &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\Omega\sub\mathbb{R}^D
 \end{aligned}
 \]</div>
 <p>and derive a time-independent solution which takes the form of a generic Elliptical PDE.</p>
 <div class="math notranslate nohighlight" id="equation-eq-pde">
-<span class="eqno">(62)<a class="headerlink" href="#equation-eq-pde" title="Permalink to this equation">#</a></span>\[\begin{split}
+<span class="eqno">(63)<a class="headerlink" href="#equation-eq-pde" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
 \nabla^2u &amp;=
 \boldsymbol{f}(\vec{\mathbf{x}})
@@ -606,7 +606,7 @@ u =\boldsymbol{u}(\vec{\mathbf{x}}) &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\Om
 \end{split}\]</div>
 <p>Technically, we can decompose the field, <span class="math notranslate nohighlight">\(u\)</span>, into two fields. For example, we could have</p>
 <div class="math notranslate nohighlight" id="equation-eq-pde-decomposed">
-<span class="eqno">(67)<a class="headerlink" href="#equation-eq-pde-decomposed" title="Permalink to this equation">#</a></span>\[\begin{split}
+<span class="eqno">(68)<a class="headerlink" href="#equation-eq-pde-decomposed" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
 \begin{cases}
 u = u_1 + u_2 &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\Omega \\
@@ -614,9 +614,9 @@ u = u_1 + u_2  &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\partial\Omega
 \end{cases}
 \end{aligned}
 \end{split}\]</div>
-<p>We will propose one such decomposition here. We observe that all known boundary conditions can appear on the right hand side (RHS) of the PDE <a class="reference internal" href="#equation-eq-pde">(62)</a> because they are known. So we can write the decomposition of the PDE as an interior PDE and an exterior PDE:</p>
+<p>We will propose one such decomposition here. We observe that all known boundary conditions can appear on the right hand side (RHS) of the PDE <a class="reference internal" href="#equation-eq-pde">(63)</a> because they are known. So we can write the decomposition of the PDE as an interior PDE and an exterior PDE:</p>
 <div class="math notranslate nohighlight" id="equation-eq-pde-decomposed-bv">
-<span class="eqno">(64)<a class="headerlink" href="#equation-eq-pde-decomposed-bv" title="Permalink to this equation">#</a></span>\[\begin{split}
+<span class="eqno">(65)<a class="headerlink" href="#equation-eq-pde-decomposed-bv" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
 \begin{cases}
 u = u_\mathrm{I} + u_\mathrm{B} &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\Omega \\
@@ -628,7 +628,7 @@ u = u_\mathrm{I} + u_\mathrm{B}  &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\parti
 Notice: The only nonzero values of the <span class="math notranslate nohighlight">\(u_\mathrm{B}\)</span> term are along the boundaries.
 So we can write the PDE constraint as:</p>
 <div class="math notranslate nohighlight" id="equation-eq-pde-exterior">
-<span class="eqno">(65)<a class="headerlink" href="#equation-eq-pde-exterior" title="Permalink to this equation">#</a></span>\[\begin{split}
+<span class="eqno">(66)<a class="headerlink" href="#equation-eq-pde-exterior" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
 \nabla^2u_\mathrm{B} &amp;= \boldsymbol{f}_\mathrm{B}
 &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\Omega \\
@@ -637,9 +637,9 @@ u_\mathrm{B} &amp;= b_u
 \end{aligned}
 \end{split}\]</div>
 <p>where the values along the boundary <span class="math notranslate nohighlight">\(\partial\Omega\)</span> are what we set them as and the values within the domain <span class="math notranslate nohighlight">\(\Omega\)</span> are “unknown” and the values.
-So we can rewrite the solution to the PDE in <a class="reference internal" href="#equation-eq-pde">(62)</a> taking into account the decomposition.</p>
+So we can rewrite the solution to the PDE in <a class="reference internal" href="#equation-eq-pde">(63)</a> taking into account the decomposition.</p>
 <div class="math notranslate nohighlight" id="equation-eq-pde-interior">
-<span class="eqno">(66)<a class="headerlink" href="#equation-eq-pde-interior" title="Permalink to this equation">#</a></span>\[\begin{split}
+<span class="eqno">(67)<a class="headerlink" href="#equation-eq-pde-interior" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
 \nabla^2u_\mathrm{I} &amp;= -\nabla^2 u_\mathrm{B} + \boldsymbol{f}
 &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\Omega \\
@@ -650,7 +650,7 @@ u_\mathrm{I} &amp;= 0
 <p>where we see that we’re left with Dirichlet boundary conditions (BC) for the interior PDE. The extra term <span class="math notranslate nohighlight">\(\nabla^2 u_\mathrm{B}\)</span> can be thought of as removing the contaminated values from the interior points.
 Now we can see that the solution to this PDE will satisfy the following decomposition</p>
 <div class="math notranslate nohighlight" id="equation-eq-pde-decomposed">
-<span class="eqno">(67)<a class="headerlink" href="#equation-eq-pde-decomposed" title="Permalink to this equation">#</a></span>\[\begin{split}
+<span class="eqno">(68)<a class="headerlink" href="#equation-eq-pde-decomposed" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
 \begin{cases}
 u = u_\mathrm{I} &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\Omega \\
@@ -658,7 +658,7 @@ u = u_\mathrm{B}  &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\partial\Omega
 \end{cases}
 \end{aligned}
 \end{split}\]</div>
-<p>whereby we simply need to solve the interior PDE given by equation <a class="reference internal" href="#equation-eq-pde-interior">(66)</a> and then add the boundary values from our original PDE <a class="reference internal" href="#equation-eq-pde">(62)</a>.</p>
+<p>whereby we simply need to solve the interior PDE given by equation <a class="reference internal" href="#equation-eq-pde-interior">(67)</a> and then add the boundary values from our original PDE <a class="reference internal" href="#equation-eq-pde">(63)</a>.</p>
 <section id="discrete-sine-transformation">
 <h3>Discrete Sine Transformation<a class="headerlink" href="#discrete-sine-transformation" title="Permalink to this heading">#</a></h3>
 <p>Now we have an elliptical PDE which is zero on all of the boundaries, i.e. Dirichlet boundary conditions.
@@ -708,7 +708,7 @@ u_2 = u  &amp;&amp; &amp;&amp; \vec{\mathbf{x}}\in\partial\Omega
 \end{aligned}
 \end{split}\]</div>
 <p>To rename them, let’s call PDE 1, <span class="math notranslate nohighlight">\(u_1\)</span>, the solution of the PDE at the interior points with dirichlet boundaries, <span class="math notranslate nohighlight">\(u_I\)</span>, and let’s call PDE 2, <span class="math notranslate nohighlight">\(u_2\)</span>, the solution of the PDE at the boundaries with all interior points being zero, <span class="math notranslate nohighlight">\(u_B\)</span>.</p>
-<p>So going back to the original PDE <a class="reference internal" href="#equation-eq-pde">(62)</a>, we can incorporate these constraints into the solutions:</p>
+<p>So going back to the original PDE <a class="reference internal" href="#equation-eq-pde">(63)</a>, we can incorporate these constraints into the solutions:</p>
 </section>
 </section>
 <section id="use-cases">

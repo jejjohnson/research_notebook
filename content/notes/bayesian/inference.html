@@ -185,7 +185,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/twelve_steps_ns/overview.html">12 Steps to Navier-Stokes</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../tutorials/twelve_steps_ns/1.1_linear_advection.html">Linear Convection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/twelve_steps_ns/1.1_linear_advection.html">1D Linear Convection</a></li>
 </ul>
 </li>
 </ul>
@@ -649,7 +649,7 @@ document.write(`
 <section id="loss-function">
 <h4>Loss Function<a class="headerlink" href="#loss-function" title="Permalink to this heading">#</a></h4>
 <div class="math notranslate nohighlight" id="equation-map-loss">
-<span class="eqno">(17)<a class="headerlink" href="#equation-map-loss" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(18)<a class="headerlink" href="#equation-map-loss" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\theta}_{\text{MAP}} = \operatorname*{argmax}_{\boldsymbol{\theta}} - \frac{1}{N}\sum_n^N\log p\left(y_n|f(x_n; \theta)\right) + \log p(\theta)
 \]</div>
 <div class="dropdown info admonition">
@@ -706,7 +706,7 @@ document.write(`
 \]</div>
 <div class="info dropdown admonition">
 <p class="admonition-title">Proof</p>
-<p>This is straightforward to derive because we can pick up from the proof of the MAP loss function, eq:<a class="reference internal" href="#equation-map-loss">(17)</a>.</p>
+<p>This is straightforward to derive because we can pick up from the proof of the MAP loss function, eq:<a class="reference internal" href="#equation-map-loss">(18)</a>.</p>
 <div class="math notranslate nohighlight">
 \[
 \theta_{map} = \operatorname*{argmin}_{\theta} - \frac{1}{N}\sum_n^N \log p(y_n| f(x_n;\theta))+ \log p(\theta)

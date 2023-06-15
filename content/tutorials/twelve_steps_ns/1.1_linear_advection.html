@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Linear Convection &#8212; Research Notebook</title>
+    <title>1D Linear Convection &#8212; Research Notebook</title>
   
   
   
@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/tutorials/twelve_steps_ns/1.1_linear_advection';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -183,7 +185,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="overview.html">12 Steps to Navier-Stokes</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">Linear Convection</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">1D Linear Convection</a></li>
 </ul>
 </li>
 </ul>
@@ -557,7 +559,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Linear Convection</h1>
+    <h1>1D Linear Convection</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -567,6 +569,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem">Problem</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometry">Geometry</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jaxdf-api">JaxDF - API</a></li>
 </ul>
@@ -594,11 +597,12 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="linear-convection">
-<h1>Linear Convection<a class="headerlink" href="#linear-convection" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="d-linear-convection">
+<h1>1D Linear Convection<a class="headerlink" href="#d-linear-convection" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install jaxtyping diffrax xarray FiniteDiffX</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install --upgrade jax jaxlib</span>
+<span class="c1"># !pip install jaxtyping diffrax xarray FiniteDiffX jaxdf</span>
 </pre></div>
 </div>
 </div>
@@ -625,6 +629,15 @@ document.write(`
 </div>
 </div>
 </div>
+<section id="problem">
+<h2>Problem<a class="headerlink" href="#problem" title="Permalink to this heading">#</a></h2>
+<p>Let’s continue from the previous tutorial. Recall, we are working with a 1D Linear Convection scheme:</p>
+<div class="math notranslate nohighlight" id="equation-pde">
+<span class="eqno">(1)<a class="headerlink" href="#equation-pde" title="Permalink to this equation">#</a></span>\[
+\frac{\partial u}{\partial t} + c \frac{\partial u}{\partial x} = 0
+\]</div>
+<p>For the PDE <a class="reference internal" href="#equation-pde">(1)</a>, we are going to do a backwards difference discretization in space and a forwards in time.</p>
+</section>
 <section id="geometry">
 <h2>Geometry<a class="headerlink" href="#geometry" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
@@ -967,6 +980,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem">Problem</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometry">Geometry</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jaxdf-api">JaxDF - API</a></li>
 </ul>

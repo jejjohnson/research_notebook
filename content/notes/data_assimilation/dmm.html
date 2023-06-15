@@ -185,7 +185,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/twelve_steps_ns/overview.html">12 Steps to Navier-Stokes</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../tutorials/twelve_steps_ns/1.1_linear_advection.html">Linear Convection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/twelve_steps_ns/1.1_linear_advection.html">1D Linear Convection</a></li>
 </ul>
 </li>
 </ul>
@@ -592,7 +592,7 @@ p(x_t|z_t) &amp;= \mathcal{N}(x_t|\boldsymbol{\mu}_{\text{emiss}}(z_t), \boldsym
 <p>We are taking the same state-space model as before. However, this time, we do not restrict ourselves to linear functions. We allow for non-linear functions for the transition and emission functions.</p>
 <p>We allow for a non-linear function, <span class="math notranslate nohighlight">\(\boldsymbol f\)</span>, for the transition model between states.</p>
 <div class="math notranslate nohighlight" id="equation-dmm-transition">
-<span class="eqno">(54)<a class="headerlink" href="#equation-dmm-transition" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(55)<a class="headerlink" href="#equation-dmm-transition" title="Permalink to this equation">#</a></span>\[
 \mathbf{z}_t = \boldsymbol{f}(\mathbf{z}_{t-1}; \boldsymbol{\theta}_t) + \boldsymbol{\delta}_t 
 \]</div>
 <p>We also put a non-linear function, <span class="math notranslate nohighlight">\(\boldsymbol h\)</span>, for the emission model to describe the relationship between the state and the measurements.
@@ -615,13 +615,13 @@ p(\mathbf{x}_{1:T}, \mathbf{z}_{1:T}) = p(\mathbf{x}_{1:T}|\mathbf{z}_{1:T})p(\m
 \]</div>
 <p>If we wish to find the best function parameters based on the data, we can still calculate the marginal likelihood by integrating out the state, <span class="math notranslate nohighlight">\(\mathbf{z}_{1:T}\)</span>:</p>
 <div class="math notranslate nohighlight" id="equation-dmm-ml">
-<span class="eqno">(55)<a class="headerlink" href="#equation-dmm-ml" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(56)<a class="headerlink" href="#equation-dmm-ml" title="Permalink to this equation">#</a></span>\[
 p_{\boldsymbol \theta}(\mathbf{x}_{1:T}) = \int p_{\theta_e}(\mathbf{x}_{1:T}|\mathbf{z}_{1:T})p_{\theta_e}(\mathbf{z}_{1:T})d\mathbf{z}_{1:T}
 \]</div>
 </section>
 <section id="inference">
 <h2>Inference<a class="headerlink" href="#inference" title="Permalink to this heading">#</a></h2>
-<p>We can learn the parameters, <span class="math notranslate nohighlight">\(\boldsymbol \theta\)</span>, of the prescribed model by minimizing the marginal log-likelihood. We can log transform the marginal likelihood function (eq <a class="reference internal" href="#equation-dmm-ml">(55)</a>).</p>
+<p>We can learn the parameters, <span class="math notranslate nohighlight">\(\boldsymbol \theta\)</span>, of the prescribed model by minimizing the marginal log-likelihood. We can log transform the marginal likelihood function (eq <a class="reference internal" href="#equation-dmm-ml">(56)</a>).</p>
 <div class="math notranslate nohighlight">
 \[
 \log p_{\boldsymbol \theta}(\mathbf{x}) = \mathbb{E}_{\mathbf{z} \sim p_{\boldsymbol \theta}(\mathbf{z}|\mathbf{x})} \left[ \log p_{\theta_e}(\mathbf{x}|\mathbf{z}) + \log p_{\theta_e}(\mathbf{z})\right] 
@@ -631,7 +631,7 @@ p_{\boldsymbol \theta}(\mathbf{x}_{1:T}) = \int p_{\theta_e}(\mathbf{x}_{1:T}|\m
 <section id="loss-function">
 <h2>Loss Function<a class="headerlink" href="#loss-function" title="Permalink to this heading">#</a></h2>
 <div class="math notranslate nohighlight" id="equation-dmm-loss">
-<span class="eqno">(56)<a class="headerlink" href="#equation-dmm-loss" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(57)<a class="headerlink" href="#equation-dmm-loss" title="Permalink to this equation">#</a></span>\[
 \mathcal{L}(\boldsymbol{\theta},\boldsymbol{\phi}; \mathbf{x}) 
 = \sum_{t=1}^T \mathbb{E}_{q_{\boldsymbol \phi}}\left[ 
     \log \underbrace{p_{\boldsymbol{\theta}_t}(\mathbf{z}_t|\mathbf{z}_{t-1})}_{\text{Transition}} 

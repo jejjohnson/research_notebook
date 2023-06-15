@@ -32,6 +32,9 @@ parts:
         - file: content/tutorials/jax_journey/algorithms/kernel_derivatives
         - file: content/tutorials/jax_journey/algorithms/gpr
         - file: content/tutorials/jax_journey/gfs_with_jax.ipynb
+      - file: content/tutorials/twelve_steps_ns/overview
+        sections:
+        - file: content/tutorials/twelve_steps_ns/1.1_linear_advection
     - file: content/tutorials/remote/overview
       sections:
       - file: content/tutorials/remote/ssh

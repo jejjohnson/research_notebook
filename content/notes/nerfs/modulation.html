@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Physics-Informed Loss &#8212; Research Notebook</title>
+    <title>Modulations &#8212; Research Notebook</title>
   
   
   
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
   
-  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -39,8 +39,8 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
@@ -64,13 +64,9 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/inr/pinns';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/nerfs/modulation';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="QG PDE" href="qg.html" />
-    <link rel="prev" title="Literature Review" href="literature_review.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -196,7 +192,7 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../gmt/overview.html">GMT of Learning</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../gmt/hierarchical_rep.html">Hierarchical Representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../gmt/functa.html">Functa</a></li>
@@ -294,11 +290,10 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="overview.html">Implicit Neural Representations</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="overview.html">Neural Fields</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="formulation.html">Formulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="literature_review.html">Literature Review</a></li>
-<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">Physics-Informed Loss</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="qg.html">QG PDE</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pinns.html">Physics-Informed Loss</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -415,7 +410,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/inr/pinns.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/jejjohnson/research_notebook/issues/new?title=Issue%20on%20page%20%2Fcontent/notes/nerfs/modulation.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -445,7 +440,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../../_sources/content/notes/inr/pinns.md" target="_blank"
+      <li><a href="../../../_sources/content/notes/nerfs/modulation.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -527,7 +522,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Physics-Informed Loss</h1>
+    <h1>Modulations</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -537,15 +532,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function">Function</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loss">Loss</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qg-equation">QG Equation</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#qg-equation-4-ssh-tldr">QG Equation 4 SSH (TLDR)</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2d-sea-surface-height">Example: 2D Sea Surface Height</a></li>
 </ul>
             </nav>
         </div>
@@ -557,65 +544,46 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="physics-informed-loss">
-<h1>Physics-Informed Loss<a class="headerlink" href="#physics-informed-loss" title="Permalink to this heading">#</a></h1>
-<hr class="docutils" />
-<section id="function">
-<h2>Function<a class="headerlink" href="#function" title="Permalink to this heading">#</a></h2>
-<p>The learned function, <span class="math notranslate nohighlight">\(\boldsymbol{f_\theta}\)</span>, will map the spatial coordinates, <span class="math notranslate nohighlight">\(\mathbf{x}_\phi \in \mathbb{R}^{D\phi}\)</span>, and time coordinate, <span class="math notranslate nohighlight">\(t \in \mathbb{R}\)</span>, to sea surface height, <span class="math notranslate nohighlight">\(u \in \mathbb{R}\)</span>.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="modulations">
+<h1>Modulations<a class="headerlink" href="#modulations" title="Permalink to this heading">#</a></h1>
+<div class="math notranslate nohighlight" id="equation-eq-nerf-mod">
+<span class="eqno">()<a class="headerlink" href="#equation-eq-nerf-mod" title="Permalink to this equation">#</a></span>\[
+\phi_\ell = \sigma\left( \omega_\ell\left(\mathbf{wx} + \mathbf{b} \right) \right)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma\)</span> is an arbitrary activation function.</p>
 <div class="math notranslate nohighlight">
 \[
-u = \boldsymbol{f_\theta}(\mathbf{x}_\phi, t)
+\boldsymbol{h}(\mathbf{x};\boldsymbol{\theta}(\mathbf{x}))
 \]</div>
+<p>For example we have the hypernetwork:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\phi_\ell(\mathbf{x};\theta) &amp;= \mathbf{w}_\theta\mathbf{x} + \mathbf{b}_\theta \\
+[\mathbf{w}_\theta,\mathbf{b}_\theta] &amp;= \boldsymbol{h}(\mathbf{z};\boldsymbol{\theta})
+\end{aligned}
+\end{split}\]</div>
+<p>We have the additive transformation</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\phi_\ell(\mathbf{x};\theta) &amp;= \mathbf{w}_\ell\mathbf{x} + \mathbf{b}_\ell + \mathbf{s}_\theta \\
+\mathbf{s}_\theta &amp;= \boldsymbol{h}(\mathbf{z};\boldsymbol{\theta})
+\end{aligned}
+\end{split}\]</div>
+<p>We have the affine transformation</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\phi_\ell(\mathbf{x};\theta) &amp;=
+\left(\mathbf{w}_\ell\mathbf{x} + \mathbf{b}_\ell\right)\mathbf{s}_\theta + \mathbf{a}_\theta \\
+[\mathbf{s}_\theta, \mathbf{a}_\theta] &amp;= \boldsymbol{h}(\mathbf{z};\boldsymbol{\theta})
+\end{aligned}
+\end{split}\]</div>
+<section id="example-2d-sea-surface-height">
+<h2>Example: 2D Sea Surface Height<a class="headerlink" href="#example-2d-sea-surface-height" title="Permalink to this heading">#</a></h2>
+<p>In this example, we will train the same SIREN model from before but we will add a modulation extension.</p>
 </section>
-<hr class="docutils" />
-<section id="loss">
-<h2>Loss<a class="headerlink" href="#loss" title="Permalink to this heading">#</a></h2>
-<p>The standard loss term is data-driven</p>
-<div class="math notranslate nohighlight">
-\[
-\mathcal{L}_{data} = \text{MSE}(u, \hat{u}) = \frac{1}{N} \sum_{n=1}^N  \left(u - \boldsymbol{f_\phi}(\mathbf{x}_\phi, t) \right)^2
-\]</div>
-<p>However, there is no penalization to make the field behave the way we would expect. We also want a regularization which makes the field, <span class="math notranslate nohighlight">\(u\)</span>, behave how we would expect. This can be achieved by adding a physics-informed loss regularization term to the total loss.</p>
-<div class="math notranslate nohighlight">
-\[
-\mathcal{L} = \mathcal{L}_{data} + \lambda \mathcal{L}_{phy}
-\]</div>
-<p>This loss term can be minimized by effectively minimizing a PDE function. For example:</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{f}_{phy}(\mathbf{x},t):= \partial_t u(\mathbf{x},t) + \mathcal{N}[u(\mathbf{x},t)] = 0
-\]</div>
-<p>where <span class="math notranslate nohighlight">\(\partial_t\)</span> is the derivative of the field, <span class="math notranslate nohighlight">\(u\)</span>, wrt to time and <span class="math notranslate nohighlight">\(\mathcal{N}[\cdot]\)</span> are some partial differential equations. We are interested in minimizing the full PDE, which we denote <span class="math notranslate nohighlight">\(\boldsymbol{f}_{phy}\)</span>, st it is 0. So the standard loss function applies.</p>
-</section>
-<hr class="docutils" />
-<section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
-<p>Below are some examples of how I have used the PINNs loss/regularization formulation in my own research.</p>
-<hr class="docutils" />
-<section id="qg-equation">
-<h3>QG Equation<a class="headerlink" href="#qg-equation" title="Permalink to this heading">#</a></h3>
-<p>We have the following PDE for the QG dynamics:</p>
-<div class="math notranslate nohighlight">
-\[
-\partial_t q + \det J(\psi, q) = 0
-\]</div>
-<p>where <span class="math notranslate nohighlight">\(q(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the potential vorticity (PV), <span class="math notranslate nohighlight">\(\psi(x,t) \in \mathbb{R}^2 \times \mathbb{R} \rightarrow \mathbb{R}\)</span> is the stream function, <span class="math notranslate nohighlight">\(\partial_t\)</span> is the partial derivative wrt <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(\boldsymbol{J}\)</span>, is the Jacobian operator and <span class="math notranslate nohighlight">\(\det \boldsymbol{J}(\cdot,\cdot)\)</span> is the <em>determinant</em> of the Jacobian.</p>
-<p><strong>Objective</strong>: We want to convert this PDE in terms of sea surface height (SSH) instead of PV and the stream function.</p>
-<hr class="docutils" />
-<section id="qg-equation-4-ssh-tldr">
-<h4>QG Equation 4 SSH (TLDR)<a class="headerlink" href="#qg-equation-4-ssh-tldr" title="Permalink to this heading">#</a></h4>
-<p><strong>Note</strong>: For the ease of notation, let’s denote <span class="math notranslate nohighlight">\(u\)</span> as the SSH. The above PDE can be written in terms of <span class="math notranslate nohighlight">\(u\)</span></p>
-<div class="math notranslate nohighlight">
-\[
-\partial_t \nabla^2 u + c_2 \partial_t u + c_1\det \boldsymbol{J}(u, \nabla^2 u) +  c_3 \det \boldsymbol{J}(u, u) = 0
-\]</div>
-<p>See <a class="reference internal" href="qg.html"><span class="doc std std-doc">the following page</span></a> for more and how this equation was derived.</p>
-</section>
-</section>
-</section>
-<div class="toctree-wrapper compound">
-</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -631,7 +599,7 @@ u = \boldsymbol{f_\theta}(\mathbf{x}_\phi, t)
         },
         kernelOptions: {
             name: "python3",
-            path: "./content/notes/inr"
+            path: "./content/notes/nerfs"
         },
         predefinedOutput: true
     }
@@ -644,27 +612,15 @@ u = \boldsymbol{f_\theta}(\mathbf{x}_\phi, t)
               
               
                 <footer class="bd-footer-article">
-                  <!-- Previous / next buttons -->
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="literature_review.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Literature Review</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="qg.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">QG PDE</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
+</div></div>
+  
 </div>
+
                 </footer>
               
             </div>
@@ -679,15 +635,7 @@ u = \boldsymbol{f_\theta}(\mathbf{x}_\phi, t)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function">Function</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loss">Loss</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qg-equation">QG Equation</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#qg-equation-4-ssh-tldr">QG Equation 4 SSH (TLDR)</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2d-sea-surface-height">Example: 2D Sea Surface Height</a></li>
 </ul>
   </nav></div>
 
@@ -696,7 +644,7 @@ u = \boldsymbol{f_\theta}(\mathbf{x}_\phi, t)
             
           </div>
           <footer class="bd-footer-content">
-            <div class="bd-footer-content__inner">
+            
 <div class="bd-footer-content__inner container">
   
   <div class="footer-item">
@@ -726,7 +674,7 @@ By J. Emmanuel Johnson
     
   </div>
   
-</div></div>
+</div>
           </footer>
         
 
@@ -735,8 +683,8 @@ By J. Emmanuel Johnson
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
+  <script src="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
   <footer class="bd-footer">
   </footer>

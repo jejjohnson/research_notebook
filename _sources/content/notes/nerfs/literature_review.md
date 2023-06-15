@@ -34,7 +34,7 @@
 
 ---
 
-* Plenoxels: Radiance Fields without Neural Networks - Fridovich-Keil & Yu et al (2022) - [Project](https://alexyu.net/plenoxels/) 
+* Plenoxels: Radiance Fields without Neural Networks - Fridovich-Keil & Yu et al (2022) - [Project](https://alexyu.net/plenoxels/)
 > They used a sparse voxel grid along with a trilinear interpolation field to fill in the missing data. Superfast convergence
 
 pixelNeRF: Neural Radiance Fields from One or Few Images - Yu et al (2021) - [Project](https://alexyu.net/pixelnerf/)
@@ -69,7 +69,7 @@ Neural Radiance Flow for 4D View Synthesis and Video Processing - Du et al (2021
 ### Random Fourier Features
 
 * Random Feature Expansions for Deep Gaussian Processes - Cutajar et al - [Thesis](https://www.google.com/search?q=Kurt+Cutajar+thesis&oq=Kurt+Cutajar+thesis&aqs=chrome..69i57j33i160.2459j0j4&sourceid=chrome&ie=UTF-8)
-* On the Error of Random Fourier Features - [Paper](https://arxiv.org/abs/1506.02785) | 
+* On the Error of Random Fourier Features - [Paper](https://arxiv.org/abs/1506.02785) |
 
 
 #### Fourier Operators
@@ -77,4 +77,3 @@ Neural Radiance Flow for 4D View Synthesis and Video Processing - Du et al (2021
 * Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains - [Project](https://bmild.github.io/fourfeat/) | [Code Demo](https://github.com/GlassyWing/fourier-feature-networks)
 * Fourier Neural Operator for Parametric Partial Differential Equations - [Paper](https://arxiv.org/abs/2010.08895) | [Code](https://github.com/zongyi-li/fourier_neural_operator) | [Project](https://zongyi-li.github.io/neural-operator/) | [Paper Explained](https://www.youtube.com/watch?v=IaS72aHrJKE) | [Anima AnandKumar](https://www.youtube.com/watch?v=Bd4KvlmGbY4)
 * SIREN: Implicit Neural Representations with Periodic Activation Functions - [Paper Explained](https://www.youtube.com/watch?v=Q5g3p9Zwjrk) | [Project](https://www.vincentsitzmann.com/siren/) | [Jax](https://github.com/KeunwooPark/siren-jax) | [PyTorch](https://github.com/lucidrains/siren-pytorch)
-

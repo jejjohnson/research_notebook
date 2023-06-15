@@ -87,7 +87,7 @@ Noteably:
 
 
 $$
-\boldsymbol{\phi} \left(\mathbf{x}\right) = 
+\boldsymbol{\phi} \left(\mathbf{x}\right) =
 \begin{bmatrix}
 \sin \left( \boldsymbol{\omega}\mathbf{x}\right) \\
 \cos \left( \boldsymbol{\omega} \mathbf{x}\right)
@@ -111,7 +111,7 @@ $$
 
 where $\boldsymbol{\omega} \sim p(\boldsymbol{\omega})$ and $\boldsymbol{b} \sim \mathcal{U}(0,2\pi)$.
 
-**Source**: 
+**Source**:
 * [Blog](https://gregorygundersen.com/blog/2019/12/23/random-fourier-features/) - Gregory Gundersen
 * Random Features for Large-Scale Kernel Machines - Rahimi & Recht (2008) - [Paper]()
 * Random Features for Kernel Approximation: A Survey on Algorithms, Theory, and Beyond - Liu et al (2021)
@@ -128,11 +128,11 @@ $$
 $$
 
 $$
-\text{FiLM}(\mathbf{x}) = \boldsymbol{\alpha} \odot \mathbf{x} + \boldsymbol{\beta} 
+\text{FiLM}(\mathbf{x}) = \boldsymbol{\alpha} \odot \mathbf{x} + \boldsymbol{\beta}
 $$
 
 * pi-GAN: Periodic Implicit Generative Adversarial Networks for 3D-Aware Image Synthesis - Chan et al (2021)
-* COIN++: 
+* COIN++:
 
 #### Extended
 
@@ -148,9 +148,9 @@ where $\boldsymbol{\gamma}$ corresponds to the frequencies and $\boldsymbol{\bet
 ---
 ## Modulation
 
-Modulation is 
+Modulation is
 $$
-\boldsymbol{f}^\ell(\mathbf{x},\mathbf{z};\boldsymbol{\theta}) := \boldsymbol{h}_M^\ell\left(\;\text{NN}(\mathbf{x};\boldsymbol{\theta}_{NN})\;,\; \text{M}(\mathbf{z};\boldsymbol{\theta}_{M}) \;\right) 
+\boldsymbol{f}^\ell(\mathbf{x},\mathbf{z};\boldsymbol{\theta}) := \boldsymbol{h}_M^\ell\left(\;\text{NN}(\mathbf{x};\boldsymbol{\theta}_{NN})\;,\; \text{M}(\mathbf{z};\boldsymbol{\theta}_{M}) \;\right)
 $$
 
 where $NN$ is the output of the neural network wrt the input, $\mathbf{x}$, where $M$ is the output of the modulation function wrt the latent variable, $\mathbf{z}$, and $\times$ is an arbitrary operator.
@@ -172,7 +172,7 @@ where $NN$ is the output of the neural network wrt the input, $\mathbf{x}$, wher
 
 Neural Implicit Flows [Pan, 2022]()
 
-Neural 
+Neural
 
 
 
@@ -251,7 +251,7 @@ $$
 **Sources**:
 
 * Reimplementation (PyTorch) - [BoschResearch](https://github.com/boschresearch/multiplicative-filter-networks)
-* 
+*
 
 ---
 ## Probabilistic
@@ -386,7 +386,7 @@ $$
 * LSTM
 
 
-#### Priors 
+#### Priors
 
 > The impact on the priors on the learning procedure.
 

@@ -62,3 +62,9 @@ $$
 $$
 
 See [the following page](./qg.md) for more and how this equation was derived.
+
+
+## Example I: Divergence + Curl Free
+
+
+## Example II: Quasi-Geostrophic Equations

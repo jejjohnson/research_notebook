@@ -176,11 +176,11 @@ parts:
     # ================================
     # IMPLICIT NEURAL REPRESENTATIONS
     # ================================
-    - file: content/notes/inr/overview.md
+    - file: content/notes/nerfs/overview.md
       sections:
-      - file: content/notes/inr/formulation.md
-      - file: content/notes/inr/literature_review.md
-      - file: content/notes/inr/pinns.md
+      - file: content/notes/nerfs/formulation.md
+      - file: content/notes/nerfs/literature_review.md
+      - file: content/notes/nerfs/pinns.md
         sections:
           - file: content/notes/inr/qg.md
     # ================================

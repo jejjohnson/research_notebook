@@ -172,13 +172,17 @@ There are some PDEs where we define a PDE in terms of a derived variable however
 
 $$
 \begin{aligned}
-\frac{\partial u}{\partial t} &= \mathcal{N}[u,\xi](\mathbf{x}) \\
+\mathcal{N}[u;\theta](\vec{\mathbf{x}}) &= \xi \\
 \end{aligned}
 $$
 
 $$
-(\nabla^2 - k^2)u = \xi
+\begin{aligned}
+(\alpha\nabla^2 - \beta)u &= \xi
+\end{aligned}
 $$
+
+where $\theta=\{\alpha,\beta\}$
 
 
 ````{admonition} Example: Poisson Equation

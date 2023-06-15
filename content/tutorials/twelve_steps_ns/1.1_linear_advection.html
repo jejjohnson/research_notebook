@@ -704,7 +704,7 @@ document.write(`
 
     <span class="n">u</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="mi">2</span>
 
-    <span class="n">u_rhs</span> <span class="o">=</span> <span class="o">-</span><span class="n">c</span> <span class="o">*</span> <span class="n">gradient</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">u_rhs</span> <span class="o">=</span> <span class="o">-</span><span class="n">c</span> <span class="o">*</span> <span class="n">gradient</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">stagger</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">u_rhs</span><span class="o">.</span><span class="n">on_grid</span>
 </pre></div>
@@ -729,7 +729,7 @@ document.write(`
 <h3>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jaxdf.discretization</span> <span class="kn">import</span> <span class="n">FiniteDifferences</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jaxdf.discretization</span> <span class="kn">import</span> <span class="n">FiniteDifferences</span><span class="p">,</span> <span class="n">FourierSeries</span>
 <span class="kn">from</span> <span class="nn">jaxdf.operators</span> <span class="kn">import</span> <span class="n">gradient</span>
 
 
@@ -774,13 +774,20 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
 
 
+<span class="k">class</span> <span class="nc">Field</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">u</span><span class="p">:</span> <span class="n">Array</span>
+    <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span>
+
+
 <span class="nd">@operator</span>
 <span class="k">def</span> <span class="nf">difference</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">OnGrid</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">tp</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">FDParams</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">FDParams</span><span class="p">()</span>
 
+    <span class="c1"># extract params from grid object</span>
     <span class="n">u_values</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">on_grid</span>
 
+    <span class="c1"># apply custom FD method</span>
     <span class="n">u_values</span> <span class="o">=</span> <span class="n">fdx</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span>
         <span class="n">u_values</span><span class="p">,</span>
         <span class="n">axis</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">axis</span><span class="p">,</span>
@@ -799,13 +806,95 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jaxdf</span> <span class="kn">import</span> <span class="n">operator</span>
+<span class="kn">import</span> <span class="nn">equinox</span> <span class="k">as</span> <span class="nn">eqx</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Array</span>
+
+
+<span class="k">class</span> <span class="nc">FDParams</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">static_field</span><span class="p">()</span>
+    <span class="n">accuracy</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">static_field</span><span class="p">()</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">static_field</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;backward&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+
+
+<span class="k">class</span> <span class="nc">Field</span><span class="p">(</span><span class="n">eqx</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">u</span><span class="p">:</span> <span class="n">Array</span>
+    <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">init_fn</span><span class="p">:</span> <span class="n">tp</span><span class="o">.</span><span class="n">Callable</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">init_fn</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="n">domain</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span>
+
+
+<span class="nd">@operator</span>
+<span class="k">def</span> <span class="nf">difference</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">Field</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">tp</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">FDParams</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">FDParams</span><span class="p">()</span>
+
+    <span class="c1"># apply custom FD method</span>
+    <span class="n">u_diff</span> <span class="o">=</span> <span class="n">fdx</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span>
+        <span class="n">u</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+        <span class="n">axis</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">axis</span><span class="p">,</span>
+        <span class="n">accuracy</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">accuracy</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">step_size</span><span class="o">=</span><span class="n">u</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">dx</span><span class="p">[</span><span class="n">params</span><span class="o">.</span><span class="n">axis</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># update grid</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">eqx</span><span class="o">.</span><span class="n">tree_at</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u_diff</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="n">params</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize Field</span>
+<span class="n">u_field</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">init_u0</span><span class="p">)</span>
+
+<span class="c1"># RHS of equation of motion</span>
+<span class="n">u_rhs</span> <span class="o">=</span> <span class="n">difference</span><span class="p">(</span><span class="n">u_field</span><span class="p">)</span>
+
+<span class="n">u_rhs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">FDParams</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;backward&quot;</span><span class="p">)</span>
+
+<span class="n">u_rhs</span> <span class="o">=</span> <span class="n">difference</span><span class="p">(</span><span class="n">u_field</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+<span class="n">u_rhs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">equation_of_motion_custom</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">FiniteDifferences</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">args</span>
 
     <span class="c1"># initialize grid</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">OnGrid</span><span class="o">.</span><span class="n">from_grid</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+    <span class="c1"># u = FourierSeries.from_grid(u, domain)</span>
 
-    <span class="n">u_rhs</span> <span class="o">=</span> <span class="o">-</span><span class="n">c</span> <span class="o">*</span> <span class="n">difference</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+    <span class="c1"># initialize parameters (OPTIONAL)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># FDParams()</span>
+
+    <span class="n">u_rhs</span> <span class="o">=</span> <span class="o">-</span><span class="n">c</span> <span class="o">*</span> <span class="n">difference</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">u_rhs</span><span class="o">.</span><span class="n">on_grid</span>
 
@@ -824,6 +913,7 @@ document.write(`
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">spatial_axis</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">out_scratch</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Scratch&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">spatial_axis</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">out_custom</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Custom&quot;</span><span class="p">)</span>
 
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>

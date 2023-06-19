@@ -337,6 +337,7 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 <li class="toctree-l2"><a class="reference internal" href="../../notes/misc/elliptical_pde_solver.html">Elliptical PDE Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notes/misc/inverse_probs.html">Inverse Problems</a></li>
 </ul>
 </li>
 </ul>
@@ -707,6 +708,18 @@ document.write(`
     <span class="n">u_rhs</span> <span class="o">=</span> <span class="o">-</span><span class="n">c</span> <span class="o">*</span> <span class="n">gradient</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">stagger</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">u_rhs</span><span class="o">.</span><span class="n">on_grid</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jaxdf.operators.differential</span> <span class="kn">import</span> <span class="n">get_fd_coefficients</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="n">FiniteDifferences</span><span class="o">.</span><span class="n">from_grid</span><span class="p">(</span><span class="n">u_init</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
+
+<span class="n">coeffs</span> <span class="o">=</span> <span class="n">get_fd_coefficients</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stagger</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">coeffs</span>
 </pre></div>
 </div>
 </div>

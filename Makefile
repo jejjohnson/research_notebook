@@ -19,7 +19,7 @@ install_jaxlib:
 update_jaxlib:
 	mamba env update -f code/jax/environment.yaml
 
-build:
+jb_build:
 	jupyter-book build research_notebook --all
 
 clean:

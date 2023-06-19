@@ -223,6 +223,7 @@ parts:
       - file: content/notes/misc/diff_operators.md
       - file: content/notes/misc/qg.md
       - file: content/notes/misc/elliptical_pde_solver.md
+      - file: content/notes/misc/inverse_probs.md
   # ###################################################################
   # CHEATSHEETS
   # ###################################################################

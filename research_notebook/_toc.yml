@@ -71,6 +71,9 @@ parts:
       - file: content/notes/gmt/discretize_space.md
       - file: content/notes/gmt/discretize_time.md
       - file: content/notes/gmt/learning.md
+      - file: content/notes/gmt/state_est.md
+      - file: content/notes/gmt/param_est.md
+      - file: content/notes/gmt/bilevel_opt.md
     # ==================
     # UNCERTAINTY
     # ==================

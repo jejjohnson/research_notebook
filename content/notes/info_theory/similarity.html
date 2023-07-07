@@ -215,6 +215,9 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 <li class="toctree-l2"><a class="reference internal" href="../gmt/learning.html">Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/state_est.html">State Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/param_est.html">Parameter Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/bilevel_opt.html">Bi-Level Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../concepts/uncertainty.html">Modeling Uncertainty</a></li>
@@ -768,7 +771,7 @@ Proof Abdi 2007a,</p>
 <div><p>Comparing features is the same as comparing samples. <span id="id8">[]</span> (<a class="reference external" href="https://icml.cc/media/Slides/icml/2019/halla(13-11-00)-13-12-15-4871-similarity_of_n.pdf">slides</a>)</p>
 </div></blockquote>
 <div class="math notranslate nohighlight" id="equation-eq-symmetry">
-<span class="eqno">(26)<a class="headerlink" href="#equation-eq-symmetry" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(30)<a class="headerlink" href="#equation-eq-symmetry" title="Permalink to this equation">#</a></span>\[
 ||\mathbf{X}^\top \mathbf{Y}||_F^2 = \text{Tr}\left(\mathbf{XX^\top YY^\top} \right)
 \]</div>
 <ul class="simple">
@@ -814,7 +817,7 @@ K_{ij} = - \frac{1}{2}(d_{ij}^2 - d_{i.}^2 - d_{.j}^2 + d_{..}^2)
 \]</div>
 <p>where:</p>
 <div class="math notranslate nohighlight" id="equation-centering">
-<span class="eqno">(23)<a class="headerlink" href="#equation-centering" title="Permalink to this equation">#</a></span>\[ 
+<span class="eqno">(27)<a class="headerlink" href="#equation-centering" title="Permalink to this equation">#</a></span>\[ 
   \mathbf{H}=\mathbf{I}_N - \left(\frac{1}{N} \right)\mathbf{1}_N
 \]</div>
 <ol class="arabic simple">
@@ -851,10 +854,10 @@ K_{ij} = - \frac{1}{2}(d_{ij}^2 - d_{i.}^2 - d_{.j}^2 + d_{..}^2)
 <li><p>HSIC</p></li>
 </ul>
 <div class="math notranslate nohighlight" id="equation-hsic">
-<span class="eqno">(24)<a class="headerlink" href="#equation-hsic" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(28)<a class="headerlink" href="#equation-hsic" title="Permalink to this equation">#</a></span>\[
   \rho_\text{HSIC}(\mathbf{X,Y}) = \frac{1}{(N-1)^2}\text{Tr}(\tilde{\mathbf{K}}_\mathbf{x}\tilde{\mathbf{K}}_\mathbf{y})
 \]</div>
-<p>where: <span class="math notranslate nohighlight">\(\tilde{\mathbf{K}}=\mathbf{HKH}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{H}\)</span> is the same centering matrix as above in equation <a class="reference internal" href="#equation-centering">(23)</a>.</p>
+<p>where: <span class="math notranslate nohighlight">\(\tilde{\mathbf{K}}=\mathbf{HKH}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{H}\)</span> is the same centering matrix as above in equation <a class="reference internal" href="#equation-centering">(27)</a>.</p>
 <p><strong>Connections</strong>:</p>
 <ul class="simple">
 <li><p><span id="id15">[]</span>: some talks, <a class="reference external" href="http://www.mmds-data.org/presentations/2010/Holmes.pdf">Slides</a> | <a class="reference external" href="https://web.stanford.edu/class/bios221/Pune/Lectures/Lecture_Day5_CCA_Multitable.pdf">Slides</a></p></li>
@@ -868,7 +871,7 @@ K_{ij} = - \frac{1}{2}(d_{ij}^2 - d_{i.}^2 - d_{.j}^2 + d_{..}^2)
 <h4>Normalized Variants<a class="headerlink" href="#normalized-variants" title="Permalink to this heading">#</a></h4>
 <p>Just like comparing covariance versus correlation, HSIC is difficult to interpret because it is unbounded and inconsistent with respect to samples and dimensions. HSIC suffers from the curse of dimensionality because for a certain set of samples and dimensions you can get a vastly different HSIC values even though they should be more consistent. As such, normalized variants were used such as <span id="id20">[]</span> which sought to alleviate this issue. Just like correlation, this works by normalizing the HSIC metric with the corresponding</p>
 <div class="math notranslate nohighlight" id="equation-nhsic">
-<span class="eqno">(25)<a class="headerlink" href="#equation-nhsic" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(29)<a class="headerlink" href="#equation-nhsic" title="Permalink to this equation">#</a></span>\[
   \rho_\text{nHSIC}(\mathbf{X,Y}) = \frac{\text{Tr}(\tilde{\mathbf{K}}_\mathbf{x}\tilde{\mathbf{K}}_\mathbf{y})}{\sqrt{||\tilde{\mathbf{K}}_\mathbf{x}||_F ||\tilde{\mathbf{K}}_\mathbf{y}||_F} }
 \]</div>
 <p>This particular variant is called the Centered Kernel Alignment <span id="id21">[]</span> but through-out this thesis, we will just called it <em>normalized HSIC</em> to simplify the terminology. For more information, see this <span class="xref myst"><strong><em>reference</em></strong></span> in the appendix for more details regarding HSIC.</p>
@@ -881,9 +884,9 @@ K_{ij} = - \frac{1}{2}(d_{ij}^2 - d_{i.}^2 - d_{.j}^2 + d_{..}^2)
 \[
 \mathbf{K} \approx \hat{\mathbf{K}}= \mathbf{Z}\mathbf{Z}^\top
 \]</div>
-<p>The most important thing to take home from this is that using the relationship between the dot product of kernel matrices in the sample space versus the dot product of datasets in the feature as seen in equation <a class="reference internal" href="#equation-eq-symmetry">(26)</a>, we can potentially estimate the Frobenius norm much easily especially for very large scale datasets.</p>
+<p>The most important thing to take home from this is that using the relationship between the dot product of kernel matrices in the sample space versus the dot product of datasets in the feature as seen in equation <a class="reference internal" href="#equation-eq-symmetry">(30)</a>, we can potentially estimate the Frobenius norm much easily especially for very large scale datasets.</p>
 <div class="math notranslate nohighlight" id="equation-eq-symmetry">
-<span class="eqno">(26)<a class="headerlink" href="#equation-eq-symmetry" title="Permalink to this equation">#</a></span>\[\begin{split}
+<span class="eqno">(30)<a class="headerlink" href="#equation-eq-symmetry" title="Permalink to this equation">#</a></span>\[\begin{split}
 \begin{aligned}
 \text{Tr}\left(\tilde{\mathbf{K}}_\mathbf{x}\tilde{\mathbf{K}}_\mathbf{y} \right) &amp;= 
 \text{Tr}\left(\hat{\mathbf{K}}_\mathbf{x}\hat{\mathbf{K}}_\mathbf{y} \right)\\

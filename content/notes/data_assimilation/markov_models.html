@@ -215,6 +215,9 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 <li class="toctree-l2"><a class="reference internal" href="../gmt/learning.html">Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/state_est.html">State Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/param_est.html">Parameter Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/bilevel_opt.html">Bi-Level Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../concepts/uncertainty.html">Modeling Uncertainty</a></li>
@@ -635,7 +638,7 @@ D = [ \text{space} \times \text{T} \times \text{vars}]
 <h3>Property of States<a class="headerlink" href="#property-of-states" title="Permalink to this heading">#</a></h3>
 <p>Given <span class="math notranslate nohighlight">\(z_{t-1}\)</span>, <span class="math notranslate nohighlight">\(z_t\)</span> is independent of any other of the previous states, e.g. <span class="math notranslate nohighlight">\(z_{t-2}, z_{t-3}, \ldots\)</span>.</p>
 <div class="math notranslate nohighlight" id="equation-markov-prop-states">
-<span class="eqno">(30)<a class="headerlink" href="#equation-markov-prop-states" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(34)<a class="headerlink" href="#equation-markov-prop-states" title="Permalink to this equation">#</a></span>\[
 p(z_t | z_{1:t-1}, x_{1:t-1}) = p(z_t|z_{t-1})
 \]</div>
 <p>This is enforcing some kind of <em>local memory</em> within our system. So even if we have the full system of observed variables, <span class="math notranslate nohighlight">\(x_{1:T}\)</span>, and the posterior states, <span class="math notranslate nohighlight">\(z_{1:T}\)</span>, we still only have the dependencies on the previous time step.</p>
@@ -664,7 +667,7 @@ p(z_{1:T}, x_{1:T}) = p(x_{1:T}|z_{1:T})p(z_{1:T})
 \]</div>
 <p>Using the Markov local memory and conditioning principal, we can decompose these conditionals wrt to the time, <span class="math notranslate nohighlight">\(t\)</span>.</p>
 <div class="math notranslate nohighlight" id="equation-markov-joint">
-<span class="eqno">(31)<a class="headerlink" href="#equation-markov-joint" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(35)<a class="headerlink" href="#equation-markov-joint" title="Permalink to this equation">#</a></span>\[
 p(z_{1:T}, x_{1:T}) = p(z_0)\prod_{t=2}^Tp(z_t|z_{t-1})\prod_{t=1}^T p(x_t|z_t)
 \]</div>
 <p>where we have all of the elements of the distribution.</p>
@@ -715,10 +718,10 @@ p(z_{1:T}, x_{1:T}) = p(z_0)\prod_{t=2}^Tp(z_t|z_{t-1})\prod_{t=1}^T p(x_t|z_t)
 <h3>Filtering<a class="headerlink" href="#filtering" title="Permalink to this heading">#</a></h3>
 <p>We are interested in computing the belief of our state, <span class="math notranslate nohighlight">\(z_t\)</span>. This is given by</p>
 <div class="math notranslate nohighlight" id="equation-markov-filter">
-<span class="eqno">(32)<a class="headerlink" href="#equation-markov-filter" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(36)<a class="headerlink" href="#equation-markov-filter" title="Permalink to this equation">#</a></span>\[
 p(z_t | x_{1:t})
 \]</div>
-<p>This equation is the posterior probability of <span class="math notranslate nohighlight">\(z_t\)</span> given the present measurement, <span class="math notranslate nohighlight">\(x_t\)</span>, and all of the past measurements, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>. We can compute this using the Bayes method (eq <a class="reference internal" href="../bayesian/intro.html#equation-bayes">(14)</a>) in a sequential way.</p>
+<p>This equation is the posterior probability of <span class="math notranslate nohighlight">\(z_t\)</span> given the present measurement, <span class="math notranslate nohighlight">\(x_t\)</span>, and all of the past measurements, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>. We can compute this using the Bayes method (eq <a class="reference internal" href="../bayesian/intro.html#equation-bayes">(18)</a>) in a sequential way.</p>
 <div class="proof remark admonition" id="filter-name">
 <p class="admonition-title"><span class="caption-number">Remark 2 </span></p>
 <section class="remark-content" id="proof-content">
@@ -729,7 +732,7 @@ p(z_t | x_{1:t})
 <h4>Predict<a class="headerlink" href="#predict" title="Permalink to this heading">#</a></h4>
 <p>This quantity is given via the <em>Chapman-Kolmogrov</em> equation.</p>
 <div class="math notranslate nohighlight" id="equation-chapman-kolmogrov">
-<span class="eqno">(33)<a class="headerlink" href="#equation-chapman-kolmogrov" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(37)<a class="headerlink" href="#equation-chapman-kolmogrov" title="Permalink to this equation">#</a></span>\[
 p(z_t|x_{1:t-1}) = \int p(z_t|z_{t-1})p(z_{t-1}|x_{1:t-1})dx_{t-1}
 \]</div>
 <p><strong>Term I</strong>: This is the posterior of <span class="math notranslate nohighlight">\(z_t\)</span> given all of the previous observations, <span class="math notranslate nohighlight">\(x_{1:t-1}\)</span>.</p>
@@ -769,7 +772,7 @@ p(x_t|y_{1:t-1}) \rightarrow p(y_t|y_{1:t-1})
 <section id="update">
 <h4>Update<a class="headerlink" href="#update" title="Permalink to this heading">#</a></h4>
 <div class="math notranslate nohighlight" id="equation-markov-update">
-<span class="eqno">(34)<a class="headerlink" href="#equation-markov-update" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(38)<a class="headerlink" href="#equation-markov-update" title="Permalink to this equation">#</a></span>\[
 p(z_t|x_{1:t}) =  \frac{p(x_t|z_t)p(z_t|x_{1:t-1})}{p(x_t)}
 \]</div>
 <p><strong>Term I</strong>: The posterior distribution of state, <span class="math notranslate nohighlight">\(z_t\)</span>, given the current <strong>and</strong> previous measurements, <span class="math notranslate nohighlight">\(x_{1:t}\)</span>.</p>
@@ -794,7 +797,7 @@ p(z_t|x_{1:T})
 </section>
 </div><p>This use case is very common when we want to <em>understand</em> and <em>learn</em> from data. In a practical sense, many reanalysis datasets take this into account.</p>
 <div class="math notranslate nohighlight" id="equation-markov-smooth">
-<span class="eqno">(35)<a class="headerlink" href="#equation-markov-smooth" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(39)<a class="headerlink" href="#equation-markov-smooth" title="Permalink to this equation">#</a></span>\[
 p(z_t|x_{1:T}) = p(z_t|x_{1:t}) \int p(z_{t+1}|z_t) \frac{p(z_{t+1}|x_{1:T})}{p(z_{t+1}|x_{1:t})}dz_{t+1}
 \]</div>
 <p><strong>Term I</strong>: The current state, <span class="math notranslate nohighlight">\(z_t\)</span>, given all of the past, current and future measurements, <span class="math notranslate nohighlight">\(x_{1:T}\)</span> (smoothing step)</p>

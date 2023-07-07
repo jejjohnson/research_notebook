@@ -62,8 +62,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/misc/inverse_probs';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -215,6 +213,9 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 <li class="toctree-l2"><a class="reference internal" href="../gmt/learning.html">Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/state_est.html">State Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/param_est.html">Parameter Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/bilevel_opt.html">Bi-Level Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../concepts/uncertainty.html">Modeling Uncertainty</a></li>
@@ -516,9 +517,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -534,37 +533,6 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-definition">Problem Definition</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#terms">Terms</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#likelihood-data-fidelity">Likelihood (Data Fidelity)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prior-regularization">Prior (Regularization)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#objective">Objective</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#posterior">Posterior</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimization-problem">Minimization Problem</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#likelihood-options">Likelihood Options</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iid-gaussian-obs-noise-constant">IID Gaussian Obs. Noise (Constant)</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#priors">Priors</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-assumption">Gaussian Assumption</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laplace-assumption">Laplace Assumption</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Minimization Problem</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#state-estimation">State Estimation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation">Parameter Estimation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bi-level-optimization">Bi-Level Optimization</a></li>
-</ul>
-</li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -576,244 +544,6 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="inverse-problems">
 <h1>Inverse Problems<a class="headerlink" href="#inverse-problems" title="Permalink to this heading">#</a></h1>
-<section id="problem-definition">
-<h2>Problem Definition<a class="headerlink" href="#problem-definition" title="Permalink to this heading">#</a></h2>
-<div class="math notranslate nohighlight" id="equation-eq-inv-prob-continuous">
-<span class="eqno">(69)<a class="headerlink" href="#equation-eq-inv-prob-continuous" title="Permalink to this equation">#</a></span>\[
-\boldsymbol{y}_{obs}(\vec{\mathbf{x}},t) =
-\boldsymbol{H}\left[ \mathbf{u}; \boldsymbol{\theta} \right]
-(\vec{\mathbf{x}},t)
-+ \boldsymbol{\varepsilon}
-\]</div>
-<p><strong>Discretized</strong></p>
-<div class="math notranslate nohighlight" id="equation-eq-inv-prob-discretized">
-<span class="eqno">(70)<a class="headerlink" href="#equation-eq-inv-prob-discretized" title="Permalink to this equation">#</a></span>\[
-\boldsymbol{y}_{obs}(\boldsymbol{\Omega}_{obs}(\tau_{obs}),\tau_{obs}) =
-\boldsymbol{H}
-\left[ \mathbf{u}; \boldsymbol{\theta} \right]
-\left(\boldsymbol{\Omega}_{state}(\tau_{state}),\tau_{state}\right)
-+ \boldsymbol{\varepsilon}
-\]</div>
-</section>
-<hr class="docutils" />
-<section id="terms">
-<h2>Terms<a class="headerlink" href="#terms" title="Permalink to this heading">#</a></h2>
-<section id="likelihood-data-fidelity">
-<h3>Likelihood (Data Fidelity)<a class="headerlink" href="#likelihood-data-fidelity" title="Permalink to this heading">#</a></h3>
-<p>This term models the mapping between the state space and the observation space.</p>
-<div class="math notranslate nohighlight" id="equation-eq-inv-prob-likelihood">
-<span class="eqno">(71)<a class="headerlink" href="#equation-eq-inv-prob-likelihood" title="Permalink to this equation">#</a></span>\[
-\boldsymbol{L}(\mathbf{u}) = - \log \nu \left(\mathbf{y}_{obs} - \boldsymbol{H}(\mathbf{u})\right)
-\]</div>
-</section>
-<section id="prior-regularization">
-<h3>Prior (Regularization)<a class="headerlink" href="#prior-regularization" title="Permalink to this heading">#</a></h3>
-<p>This term models the <em>shape</em> of the state.</p>
-<div class="math notranslate nohighlight" id="equation-eq-inv-prob-prior">
-<span class="eqno">(72)<a class="headerlink" href="#equation-eq-inv-prob-prior" title="Permalink to this equation">#</a></span>\[
-\boldsymbol{R}(\mathbf{u}) = - \log p(\mathbf{u})
-\]</div>
-</section>
-<section id="objective">
-<h3>Objective<a class="headerlink" href="#objective" title="Permalink to this heading">#</a></h3>
-<div class="math notranslate nohighlight" id="equation-eq-inv-prob-objective">
-<span class="eqno">(73)<a class="headerlink" href="#equation-eq-inv-prob-objective" title="Permalink to this equation">#</a></span>\[
-\boldsymbol{J}(\mathbf{u}) = \boldsymbol{L}(\mathbf{u}) + \boldsymbol{R}(\mathbf{u})
-\]</div>
-</section>
-<section id="posterior">
-<h3>Posterior<a class="headerlink" href="#posterior" title="Permalink to this heading">#</a></h3>
-<p>This is the term we are actually interested in learning.</p>
-<div class="math notranslate nohighlight" id="equation-eq-inv-prob-posterior">
-<span class="eqno">(74)<a class="headerlink" href="#equation-eq-inv-prob-posterior" title="Permalink to this equation">#</a></span>\[
-p(\mathbf{u}|\mathbf{y}) = \frac{1}{Z}\nu
-\left(\mathbf{y}_{obs} -
-\boldsymbol{H}(\mathbf{u})\right)
-p(\mathbf{u}) \propto \exp \left(- \boldsymbol{J}(\mathbf{u}) \right)
-\]</div>
-</section>
-<section id="minimization-problem">
-<h3>Minimization Problem<a class="headerlink" href="#minimization-problem" title="Permalink to this heading">#</a></h3>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-\mathbf{u}^* &amp;= \underset{\mathbf{u}}{\text{argmax}} \hspace{2mm}
-p(\mathbf{u}|\mathbf{y}_{obs}) \\
-&amp;= \underset{\mathbf{u}}{\text{argmax}} \hspace{2mm}
-p(\mathbf{y}_{obs}|\mathbf{u})p(\mathbf{u}) \\
-&amp;= \underset{\mathbf{u}}{\text{argmax}} \hspace{2mm}
-\boldsymbol{J}(\mathbf{u})
-\end{aligned}
-\end{split}\]</div>
-<p><strong>Note</strong>: This means that maximizing the objective function, <span class="math notranslate nohighlight">\(\boldsymbol{J}(\cdot)\)</span>, is equivalent to maximizing the posterior, <span class="math notranslate nohighlight">\(p(u|y)\)</span>.</p>
-</section>
-</section>
-<hr class="docutils" />
-<section id="likelihood-options">
-<h2>Likelihood Options<a class="headerlink" href="#likelihood-options" title="Permalink to this heading">#</a></h2>
-<p>The likelihood encodes the data type we expect to observe.
-For example, if we are dealing with continuous data, then we need to encode this.
-If we’re dealing with discrete data, the we need to encode this.
-Another example is if we only expect positive values, then we need to encode this.</p>
-<hr class="docutils" />
-<section id="iid-gaussian-obs-noise-constant">
-<h3>IID Gaussian Obs. Noise (Constant)<a class="headerlink" href="#iid-gaussian-obs-noise-constant" title="Permalink to this heading">#</a></h3>
-<p>We define the noise term as:</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{\varepsilon} = \mathcal{N}(0,\sigma^2\mathbf{I})
-\]</div>
-<p>This means that the likelihood distribution will be</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-p(\mathbf{y}_{obs}|\mathbf{u})
-&amp;= \nu\left( \mathbf{y}_{obs} - \boldsymbol{H}(\mathbf{u}) \right) \\
-&amp;= \mathcal{N}(\mathbf{y}_{obs}|\boldsymbol{H}(\mathbf{u}), \sigma^2\mathbf{I}) \\
-&amp;\propto \exp \left( - \frac{1}{2\sigma^2}||\mathbf{y}_{obs} - \boldsymbol{H}(\mathbf{u}) ||^2_2\right)
-\end{aligned}
-\end{split}\]</div>
-<p>Therefore the likelihood term will be</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{L}(\mathbf{u}) = - \frac{1}{2\sigma^2}||\mathbf{y}_{obs} - \boldsymbol{H}(\mathbf{u}) ||^2_2
-\]</div>
-<hr class="docutils" />
-<p>We have some other standard options that we can do:</p>
-<p><strong>Full Covariance</strong>: <span class="math notranslate nohighlight">\(\mathcal{N}(0,\mathbf{\Sigma})\)</span></p>
-<p>This would result in the likelihood term:</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{L}(\mathbf{u}) = - \frac{1}{2\sigma^2}||\mathbf{y}_{obs} - \boldsymbol{H}(\mathbf{u}) ||^2_{\mathbf{\Sigma}}
-\]</div>
-<p><strong>T-Student</strong>:</p>
-<p><strong>Cauchy</strong>:</p>
-<p><strong>Heterogeneous</strong>:</p>
-</section>
-</section>
-<hr class="docutils" />
-<section id="priors">
-<h2>Priors<a class="headerlink" href="#priors" title="Permalink to this heading">#</a></h2>
-<p>Most of the time is spent here!</p>
-<section id="gaussian-assumption">
-<h3>Gaussian Assumption<a class="headerlink" href="#gaussian-assumption" title="Permalink to this heading">#</a></h3>
-<p>We can use the canonical Gaussian assumption. Let’s use the <em>full Gaussian</em> assumption with a mean vector and full covariance.
-This will promote smooth solutions.
-This gives us the distribution as:</p>
-<div class="math notranslate nohighlight">
-\[
-p(\mathbf{u}) = \mathcal{N}(\boldsymbol{\mu},\mathbf{\Sigma}) \propto
-\exp \left( - \frac{1}{2} || \mathbf{u} - \boldsymbol{\mu} ||_\mathbf{\Sigma}^2 \right)
-\]</div>
-<p>which results in the</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{R}(\mathbf{u}) = \frac{1}{2} ||\mathbf{u} - \boldsymbol{\mu}||_\mathbf{\Sigma}^2
-\]</div>
-<p>We can also make an assumption of a Gaussian with a constant covariance.
-This gives us the distribution</p>
-<div class="math notranslate nohighlight">
-\[
-p(\mathbf{u}) = \mathcal{N}(\mathbf{0},\lambda^{-1}\mathbf{I}) \propto
-\exp \left( - \frac{\lambda}{2} || \mathbf{u}||_2^2 \right)
-\]</div>
-<p>which results in the</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{R}(\mathbf{u}) = \frac{\lambda}{2} || \mathbf{u}||_2^2
-\]</div>
-<p><strong>Note</strong>: This is equivalent to the L<span class="math notranslate nohighlight">\(_2\)</span>-regularizer.</p>
-</section>
-<section id="laplace-assumption">
-<h3>Laplace Assumption<a class="headerlink" href="#laplace-assumption" title="Permalink to this heading">#</a></h3>
-<p>We can also make an assumption of a Laplacian with a constant covariance.
-This will promote sparse solutions.
-This gives us the distribution</p>
-<div class="math notranslate nohighlight">
-\[
-p(\mathbf{u}) = \mathcal{L}(\mathbf{0},\lambda^{-1}\mathbf{I}) \propto
-\exp \left( - \frac{\lambda}{2} || \mathbf{u}||_1 \right)
-\]</div>
-<p>which results in the</p>
-<div class="math notranslate nohighlight">
-\[
-\boldsymbol{R}(\mathbf{u}) = \frac{\lambda}{2} || \mathbf{u}||_1
-\]</div>
-<p><strong>Note</strong>: This is equivalent to the L<span class="math notranslate nohighlight">\(_1\)</span>-regularizer.</p>
-</section>
-</section>
-<hr class="docutils" />
-<section id="id1">
-<h2>Minimization Problem<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
-<section id="state-estimation">
-<h3>State Estimation<a class="headerlink" href="#state-estimation" title="Permalink to this heading">#</a></h3>
-<div class="math notranslate nohighlight">
-\[
-p(\mathbf{u}|\mathbf{y}_{obs}) = \frac{p(\mathbf{y}_{obs}|\mathbf{u})p(\mathbf{u})}{p(\mathbf{y}_{obs})}
-\]</div>
-<p>So the name of the game is to estimate the state, <span class="math notranslate nohighlight">\(\mathbf{u}\)</span>, given some objective function which may depend upon some external parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>.</p>
-<div class="math notranslate nohighlight">
-\[
-\begin{aligned}
-\mathbf{u}^* &amp;=
-\underset{\mathbf{u}}{\text{argmax}} \hspace{2mm}
-\mathcal{J}(\mathbf{u};\boldsymbol{\theta})
-\end{aligned}
-\]</div>
-</section>
-<hr class="docutils" />
-<section id="parameter-estimation">
-<h3>Parameter Estimation<a class="headerlink" href="#parameter-estimation" title="Permalink to this heading">#</a></h3>
-<p>Given some data</p>
-<div class="math notranslate nohighlight">
-\[
-\mathcal{D}= \left\{ \mathbf{y}_{n}, \mathbf{u}_n  \right\}_{n=1}^N
-\]</div>
-<p>We can estimate the parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>, of the model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>, from the data, <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>.</p>
-<div class="math notranslate nohighlight">
-\[
-p(\boldsymbol{\theta}|\mathcal{D}) = \frac{p(\mathcal{D}|\boldsymbol{\theta})p(\boldsymbol{\theta})}{p(\mathcal{D})}
-\]</div>
-<p>So the name of the game is to approximate the true state, <span class="math notranslate nohighlight">\(\mathbf{u}\)</span>, using a model, <span class="math notranslate nohighlight">\(\mathbf{u}_{\boldsymbol{\theta}}\)</span>, and then minimize the data likelihood</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
- \mathbf{u} &amp;\approx \mathbf{u}_{\boldsymbol{\theta}} \\
-\boldsymbol{\theta}^* &amp;=
-\underset{\boldsymbol{\theta}}{\text{argmax}} \hspace{2mm}
-\mathcal{L}(\boldsymbol{\theta};\mathbf{u}_{\boldsymbol{\theta}})
-\end{aligned}
-\end{split}\]</div>
-<p>Some example parameterizations of the state, <span class="math notranslate nohighlight">\(\mathbf{u}_{\boldsymbol \theta}\)</span>:</p>
-<ul class="simple">
-<li><p>ODE/PDE</p></li>
-<li><p>Neural Field</p></li>
-<li><p>Hybrid Model (Parameterization)</p></li>
-</ul>
-<p>Most of the prior information that can be embedded within the problem:</p>
-<ul class="simple">
-<li><p>Data, e.g. Historical observations</p></li>
-<li><p>State Representation / Architectures, e.g. coords –&gt; NerFs, discretized –&gt; CNN</p></li>
-<li><p>Loss, e.g. physics-informed, gradient-based</p></li>
-</ul>
-</section>
-<hr class="docutils" />
-<section id="bi-level-optimization">
-<h3>Bi-Level Optimization<a class="headerlink" href="#bi-level-optimization" title="Permalink to this heading">#</a></h3>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-\begin{aligned}
-\boldsymbol{\theta}^* &amp;=
-\underset{\boldsymbol{\theta}}{\text{argmax}} \hspace{2mm}
-\mathcal{L}(\boldsymbol{\theta}) \\
-\mathbf{u}^*(\boldsymbol{\theta}) &amp;=
-\underset{\mathbf{u}}{\text{argmax}} \hspace{2mm}
-\mathcal{J}(\mathbf{u};\boldsymbol{\theta})
-\end{aligned}
-\end{split}\]</div>
-</section>
-</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -874,43 +604,6 @@ p(\boldsymbol{\theta}|\mathcal{D}) = \frac{p(\mathcal{D}|\boldsymbol{\theta})p(\
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-definition">Problem Definition</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#terms">Terms</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#likelihood-data-fidelity">Likelihood (Data Fidelity)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prior-regularization">Prior (Regularization)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#objective">Objective</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#posterior">Posterior</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimization-problem">Minimization Problem</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#likelihood-options">Likelihood Options</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iid-gaussian-obs-noise-constant">IID Gaussian Obs. Noise (Constant)</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#priors">Priors</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-assumption">Gaussian Assumption</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laplace-assumption">Laplace Assumption</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Minimization Problem</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#state-estimation">State Estimation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation">Parameter Estimation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bi-level-optimization">Bi-Level Optimization</a></li>
-</ul>
-</li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>

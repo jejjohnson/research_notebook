@@ -215,6 +215,9 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 <li class="toctree-l2"><a class="reference internal" href="../gmt/learning.html">Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/state_est.html">State Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/param_est.html">Parameter Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/bilevel_opt.html">Bi-Level Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../concepts/uncertainty.html">Modeling Uncertainty</a></li>
@@ -574,7 +577,7 @@ document.write(`
 <h1>Dynamical Systems<a class="headerlink" href="#dynamical-systems" title="Permalink to this heading">#</a></h1>
 <p>Assume we have an imperfect model of reality:</p>
 <div class="math notranslate nohighlight" id="equation-dyn-sys">
-<span class="eqno">(27)<a class="headerlink" href="#equation-dyn-sys" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(31)<a class="headerlink" href="#equation-dyn-sys" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\nabla}_t{\color{blue}\mathbf{x}}= \boldsymbol{f} \left( {\color{blue}\mathbf{x}}, t, \mathbf{u}, \boldsymbol{\beta}, \boldsymbol{\epsilon}\right)
 \]</div>
 <p>where</p>
@@ -606,7 +609,7 @@ document.write(`
 <h2>Observation Models<a class="headerlink" href="#observation-models" title="Permalink to this heading">#</a></h2>
 <p>We often don’t have access to the original signal we are interested in</p>
 <div class="math notranslate nohighlight" id="equation-obs-model">
-<span class="eqno">(28)<a class="headerlink" href="#equation-obs-model" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(32)<a class="headerlink" href="#equation-obs-model" title="Permalink to this equation">#</a></span>\[
 \mathbf{y} = \boldsymbol{g}(\mathbf{x},t, \boldsymbol{\eta})
 \]</div>
 <p>where:</p>

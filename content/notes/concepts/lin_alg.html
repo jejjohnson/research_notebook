@@ -215,6 +215,9 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 <li class="toctree-l2"><a class="reference internal" href="../gmt/learning.html">Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/state_est.html">State Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/param_est.html">Parameter Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/bilevel_opt.html">Bi-Level Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="uncertainty.html">Modeling Uncertainty</a></li>
@@ -576,14 +579,14 @@ document.write(`
 <h3>Woodbury Identity<a class="headerlink" href="#woodbury-identity" title="Permalink to this heading">#</a></h3>
 <p>Given some matrices <span class="math notranslate nohighlight">\(\mathbf{A} \in \mathbb{R}^{D \times D}, \mathbf{U} \in \mathbb{R}^{D \times d}, \mathbf{B} \in \mathbb{R}^{d \times d}, \mathbf{V} \in \mathbb{R}^{d \times D}\)</span> where <span class="math notranslate nohighlight">\(d &lt; D\)</span>.</p>
 <div class="math notranslate nohighlight" id="equation-woodbury">
-<span class="eqno">(19)<a class="headerlink" href="#equation-woodbury" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(23)<a class="headerlink" href="#equation-woodbury" title="Permalink to this equation">#</a></span>\[
 (A + UBV^\top)^{-1} = A^{-1} - A^{-1} U (B^{-1} + V^\top A^{-1} U)^{-1}V^\top A^{-1}
 \]</div>
 <section id="symmetric-version">
 <h4>Symmetric Version<a class="headerlink" href="#symmetric-version" title="Permalink to this heading">#</a></h4>
 <p>This is an easier version with symmetric assumptions about the decomposition.</p>
 <div class="math notranslate nohighlight" id="equation-woodbury-sum">
-<span class="eqno">(20)<a class="headerlink" href="#equation-woodbury-sum" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(24)<a class="headerlink" href="#equation-woodbury-sum" title="Permalink to this equation">#</a></span>\[
 (A + CBC^\top)^{-1} = A^{-1} - A^{-1} C (B^{-1} + C^\top A^{-1} C)^{-1}C^\top A^{-1}
 \]</div>
 </section>
@@ -591,7 +594,7 @@ document.write(`
 <section id="sylvester-determinant-theorem">
 <h3>Sylvester Determinant Theorem<a class="headerlink" href="#sylvester-determinant-theorem" title="Permalink to this heading">#</a></h3>
 <div class="math notranslate nohighlight" id="equation-woodbury-det">
-<span class="eqno">(21)<a class="headerlink" href="#equation-woodbury-det" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(25)<a class="headerlink" href="#equation-woodbury-det" title="Permalink to this equation">#</a></span>\[
 \left|A + \sigma_y^2 \mathbf I_N \right| \approx |\mathbf \Lambda_{MM} | \left|\sigma_y^{2} \mathbf \Lambda_{MM}^{-1} + U_{NM}^{\top} \mathbf U_{NM} \right|
 \]</div>
 </section>

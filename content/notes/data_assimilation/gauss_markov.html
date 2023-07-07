@@ -215,6 +215,9 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 <li class="toctree-l2"><a class="reference internal" href="../gmt/learning.html">Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/state_est.html">State Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/param_est.html">Parameter Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gmt/bilevel_opt.html">Bi-Level Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../concepts/uncertainty.html">Modeling Uncertainty</a></li>
@@ -634,50 +637,50 @@ p(\mathbf{x}_t|\mathbf{z}_t) &amp;= \mathcal{N}(\mathbf{x}_t;\mathbf{Hz}_t, \mat
 <h4>Predict Step<a class="headerlink" href="#predict-step" title="Permalink to this heading">#</a></h4>
 <p>First, we need the predict step.</p>
 <div class="math notranslate nohighlight" id="equation-kalman-filter">
-<span class="eqno">(36)<a class="headerlink" href="#equation-kalman-filter" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(40)<a class="headerlink" href="#equation-kalman-filter" title="Permalink to this equation">#</a></span>\[
 p(\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_t; \boldsymbol{\mu}_{t|t-1},\boldsymbol{\Sigma}_{t|t-1})
 \]</div>
 <p>This equation is analytical but it is very involved. Below are each of the terms.</p>
 <p><strong>Predictive Mean</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-pred-mean">
-<span class="eqno">(37)<a class="headerlink" href="#equation-kf-pred-mean" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(41)<a class="headerlink" href="#equation-kf-pred-mean" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\mu}_{t|t-1} = \mathbf{A}\boldsymbol{\mu}_{t-1}
 \]</div>
 <p><strong>Predictive Covariance</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-pred-cov">
-<span class="eqno">(38)<a class="headerlink" href="#equation-kf-pred-cov" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(42)<a class="headerlink" href="#equation-kf-pred-cov" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\Sigma}_{t|t-1} = \mathbf{A}\boldsymbol{\Sigma}_{t-1}\mathbf{A}^\top + \mathbf{Q}
 \]</div>
 </section>
 <section id="update-step">
 <h4>Update Step<a class="headerlink" href="#update-step" title="Permalink to this heading">#</a></h4>
 <div class="math notranslate nohighlight" id="equation-kf-update">
-<span class="eqno">(39)<a class="headerlink" href="#equation-kf-update" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(43)<a class="headerlink" href="#equation-kf-update" title="Permalink to this equation">#</a></span>\[
 p(\mathbf{z}_t|\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_t; \boldsymbol{\mu}_t, \boldsymbol{\Sigma}_t)
 \]</div>
 <p><strong>Innvoation Residual</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-innovation-res">
-<span class="eqno">(40)<a class="headerlink" href="#equation-kf-innovation-res" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(44)<a class="headerlink" href="#equation-kf-innovation-res" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{r}_t = \mathbf{x}_t - \mathbf{H}\boldsymbol{\mu}_{t|t-1}
 \]</div>
 <p><strong>Innovation Covariance</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-innovation-cov">
-<span class="eqno">(41)<a class="headerlink" href="#equation-kf-innovation-cov" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(45)<a class="headerlink" href="#equation-kf-innovation-cov" title="Permalink to this equation">#</a></span>\[
 \mathbf{S}_t = \mathbf{H}\boldsymbol{\Sigma}_{t|t-1}\mathbf{H}^\top + \mathbf{R}
 \]</div>
 <p><strong>Kalman Gain</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-kalman-gain">
-<span class="eqno">(42)<a class="headerlink" href="#equation-kf-kalman-gain" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(46)<a class="headerlink" href="#equation-kf-kalman-gain" title="Permalink to this equation">#</a></span>\[
 \mathbf{K}_t = \boldsymbol{\Sigma}_{t|t-1}\mathbf{H}^\top \mathbf{S}^{-1}
 \]</div>
 <p><strong>Estimation Mean</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-est-mean">
-<span class="eqno">(43)<a class="headerlink" href="#equation-kf-est-mean" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(47)<a class="headerlink" href="#equation-kf-est-mean" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\mu}_t = \boldsymbol{\mu}_{t|t-1} + \mathbf{K}_t\mathbf{x}_t
 \]</div>
 <p><strong>Estimation Covariance</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-est-cov">
-<span class="eqno">(44)<a class="headerlink" href="#equation-kf-est-cov" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(48)<a class="headerlink" href="#equation-kf-est-cov" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\Sigma}_t = (\mathbf{I} - \mathbf{KH})\boldsymbol{\Sigma}_{t|t-1}
 \]</div>
 </section>
@@ -686,23 +689,23 @@ p(\mathbf{z}_t|\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_t; \boldsymbol{\mu}_t, \bo
 <h3>Kalman Smoothing<a class="headerlink" href="#kalman-smoothing" title="Permalink to this heading">#</a></h3>
 <p>This is the smoothing operation which predicts the states at time <span class="math notranslate nohighlight">\(t\)</span> given all of the measurements, <span class="math notranslate nohighlight">\(1:T\)</span>. This is given by:</p>
 <div class="math notranslate nohighlight" id="equation-kf-smooth">
-<span class="eqno">(45)<a class="headerlink" href="#equation-kf-smooth" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(49)<a class="headerlink" href="#equation-kf-smooth" title="Permalink to this equation">#</a></span>\[
 p(\mathbf{z}_t|\mathbf{x}_{1:T}) = \mathcal{N}(\mathbf{z}_t; \boldsymbol{\mu}_{1:T}, \boldsymbol{\Sigma}_{1:T})
 \]</div>
 <p>The terms within this equation are outlined below:</p>
 <p><strong>RTS Gain</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-rts-gain">
-<span class="eqno">(46)<a class="headerlink" href="#equation-kf-rts-gain" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(50)<a class="headerlink" href="#equation-kf-rts-gain" title="Permalink to this equation">#</a></span>\[
 \mathbf{G}_t = \boldsymbol{\Sigma}_t \mathbf{A}^\top(\boldsymbol{\Sigma}_{t+1|t})^{-1}
 \]</div>
 <p><strong>Smoothed Mean</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-smooth-mean">
-<span class="eqno">(47)<a class="headerlink" href="#equation-kf-smooth-mean" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(51)<a class="headerlink" href="#equation-kf-smooth-mean" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\mu}_{t:T} = \boldsymbol{\mu}_t + \mathbf{G}_t(\boldsymbol{\mu}_{t+1|T} - \boldsymbol{\mu}_{t+1|t})
 \]</div>
 <p><strong>Smoothed Covariance</strong></p>
 <div class="math notranslate nohighlight" id="equation-kf-smooth-cov">
-<span class="eqno">(48)<a class="headerlink" href="#equation-kf-smooth-cov" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(52)<a class="headerlink" href="#equation-kf-smooth-cov" title="Permalink to this equation">#</a></span>\[
 \boldsymbol{\Sigma}_{t:T} = \boldsymbol{\Sigma}_t + \mathbf{G}_t (\boldsymbol{\Sigma}_{t+1|T} - \boldsymbol{\Sigma}_{t+1|t})\mathbf{G}^\top
 \]</div>
 <p>Note: These equations are very involved. In addition, these are the naive equations. There are many more matrix reformulations and manipulations that increase the stability or speedup. So it might be worth it to try and code it from scratch the first time, but it is worth using well-tested implementations.</p>
@@ -714,7 +717,7 @@ p(\mathbf{z}_t|\mathbf{x}_{1:T}) = \mathcal{N}(\mathbf{z}_t; \boldsymbol{\mu}_{1
 <p>Recall from the previous section that we were interested in Markov models due to their simplification of high-dimensional, high-correlated time series data. We envoke a few Markov properties like local memory and conditional independence of measures to get a very simplified graphical model. We also showcased all of the resulting functions that can be computed for the quantities of interest such as filtering, smoothing and posterior predictions. However, we did not mention anything about the functional form of these distributions. In principal, they can be anything they want.</p>
 <p>Recall the joint distribution of interest:</p>
 <div class="math notranslate nohighlight" id="equation-markov-joint">
-<span class="eqno">(49)<a class="headerlink" href="#equation-markov-joint" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(53)<a class="headerlink" href="#equation-markov-joint" title="Permalink to this equation">#</a></span>\[
 p(z_{1:T}, x_{1:T}) = \underbrace{p(z_0)}_{\text{Prior}}\prod_{t=2}^T\underbrace{p(z_t|z_{t-1})}_{\text{Transition}}\prod_{t=1}^T \underbrace{p(x_t|z_t)}_{\text{Emission}}
 \]</div>
 <p>We see with have 3 terms that we need to define:</p>
@@ -729,7 +732,7 @@ p(z_{1:T}, x_{1:T}) = \underbrace{p(z_0)}_{\text{Prior}}\prod_{t=2}^T\underbrace
 <h3>Prior<a class="headerlink" href="#prior" title="Permalink to this heading">#</a></h3>
 <p>We assume a Gaussian distribution for the prior of our state.</p>
 <div class="math notranslate nohighlight" id="equation-gm-prior">
-<span class="eqno">(50)<a class="headerlink" href="#equation-gm-prior" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(54)<a class="headerlink" href="#equation-gm-prior" title="Permalink to this equation">#</a></span>\[
 p(\mathbf{z}_0) = \mathcal{N}(\mathbf{z}_0|\boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0)
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\boldsymbol{\mu}_0 \in \mathbb{R}^{D_z}\)</span> is the mean and <span class="math notranslate nohighlight">\(\boldsymbol{\Sigma}_0\in \mathbb{R}^{D_z \times D_z}\)</span> is the covariance parameterizes the prior Gaussian distribution. This is a rather uninformative prior, but this ends up not mattering too much as the filter and smoothing solution tends to dominate after just a few time steps.</p>
@@ -738,12 +741,12 @@ p(\mathbf{z}_0) = \mathcal{N}(\mathbf{z}_0|\boldsymbol{\mu}_0, \boldsymbol{\Sigm
 <h3>Transition Distribution<a class="headerlink" href="#transition-distribution" title="Permalink to this heading">#</a></h3>
 <p>We also assume the transition function is a linear function with some additive Gaussian noise on the state.</p>
 <div class="math notranslate nohighlight" id="equation-gm-trans-f">
-<span class="eqno">(51)<a class="headerlink" href="#equation-gm-trans-f" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(55)<a class="headerlink" href="#equation-gm-trans-f" title="Permalink to this equation">#</a></span>\[
 \mathbf{z}_{t} = \mathbf{A}\mathbf{z}_{t-1} + \boldsymbol{\delta}
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{A} \in \mathbb{R}^{D_z \times D_z}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{\delta} \sim \mathcal{N}(\mathbf{0}, \mathbf{Q})\)</span>. We can explicitly write the distribution for the transition model like so:</p>
 <div class="math notranslate nohighlight" id="equation-gm-trans-p">
-<span class="eqno">(52)<a class="headerlink" href="#equation-gm-trans-p" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(56)<a class="headerlink" href="#equation-gm-trans-p" title="Permalink to this equation">#</a></span>\[
 p(\mathbf{z}_{t}|\mathbf{z}_{t-1}) = \mathcal{N}(\mathbf{z}_{t}|\mathbf{Az}_{t-1}, \mathbf{Q})
 \]</div>
 <p>Note: the linear transformation gives us extra flexibility with sacrificing the easiness of manipulating Gaussian distributions. Any other non-linear function without any restrictions would give us problems later during the inference steps.</p>
@@ -752,12 +755,12 @@ p(\mathbf{z}_{t}|\mathbf{z}_{t-1}) = \mathcal{N}(\mathbf{z}_{t}|\mathbf{Az}_{t-1
 <h3>Emission Distribution<a class="headerlink" href="#emission-distribution" title="Permalink to this heading">#</a></h3>
 <p>We also assume the emission function is a linear function with some additive Gaussian noise on the measurements.</p>
 <div class="math notranslate nohighlight" id="equation-gm-em-f">
-<span class="eqno">(53)<a class="headerlink" href="#equation-gm-em-f" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(57)<a class="headerlink" href="#equation-gm-em-f" title="Permalink to this equation">#</a></span>\[
 \mathbf{x}_t = \mathbf{Hz}_t + \boldsymbol{\epsilon}
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{H} \in \mathbb{R}^{D_x \times D_z}\)</span> is a matrix and <span class="math notranslate nohighlight">\(\boldsymbol{\delta} \sim \mathcal{N}(\mathbf{0}, \mathbf{R})\)</span> is the additive Gaussian noise. Again, like the transition function, we can write the transition distribution as a Gaussian distribution like so:</p>
 <div class="math notranslate nohighlight" id="equation-gm-em-p">
-<span class="eqno">(54)<a class="headerlink" href="#equation-gm-em-p" title="Permalink to this equation">#</a></span>\[
+<span class="eqno">(58)<a class="headerlink" href="#equation-gm-em-p" title="Permalink to this equation">#</a></span>\[
 p(\mathbf{x}_t|\mathbf{z}_t) = \mathcal{N}(\mathbf{x}_t|\mathbf{Hz}_t, \mathbf{R})
 \]</div>
 </section>

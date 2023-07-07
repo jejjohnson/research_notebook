@@ -67,7 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'content/notes/gmt/learning';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Modeling Uncertainty" href="../concepts/uncertainty.html" />
+    <link rel="next" title="State Estimation" href="state_est.html" />
     <link rel="prev" title="Temporal Discretization" href="discretize_time.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -215,6 +215,9 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_est.html">State Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_est.html">Parameter Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bilevel_opt.html">Bi-Level Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../concepts/uncertainty.html">Modeling Uncertainty</a></li>
@@ -539,9 +542,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-learning-problem">Parameter Learning Problem</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimization-problem">Minimization Problem</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bi-level-optimization-scheme">Bi-Level Optimization Scheme</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#state-estimation">State Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation">Parameter Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bi-level-optimization">Bi-Level Optimization</a></li>
 </ul>
             </nav>
         </div>
@@ -555,27 +558,122 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="learning">
 <h1>Learning<a class="headerlink" href="#learning" title="Permalink to this heading">#</a></h1>
-<section id="parameter-learning-problem">
-<h2>Parameter Learning Problem<a class="headerlink" href="#parameter-learning-problem" title="Permalink to this heading">#</a></h2>
-<div class="math notranslate nohighlight" id="equation-eqn-learn-param">
-<span class="eqno">(10)<a class="headerlink" href="#equation-eqn-learn-param" title="Permalink to this equation">#</a></span>\[
-\boldsymbol{\theta}^* = \underset{\boldsymbol{\theta}}{\text{argmin  }} \mathcal{L}(\boldsymbol{\theta})
+<p>Recall, we are interested in the following problem</p>
+<div class="math notranslate nohighlight" id="equation-eq-inv-prob-continuous">
+<span class="eqno">(10)<a class="headerlink" href="#equation-eq-inv-prob-continuous" title="Permalink to this equation">#</a></span>\[
+\boldsymbol{y} =
+\boldsymbol{H}\left(\boldsymbol{u}; \boldsymbol{\theta} \right)
++ \boldsymbol{\varepsilon},
 \]</div>
-</section>
-<section id="minimization-problem">
-<h2>Minimization Problem<a class="headerlink" href="#minimization-problem" title="Permalink to this heading">#</a></h2>
-<div class="math notranslate nohighlight" id="equation-eqn-learn-minimize">
-<span class="eqno">(11)<a class="headerlink" href="#equation-eqn-learn-minimize" title="Permalink to this equation">#</a></span>\[
-\mathbf{x}^* = \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x})
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span> are the observations and <span class="math notranslate nohighlight">\(\boldsymbol{u}\)</span> is the quantity of interested, i.e. the state.
+We can assume that each of the fields (state, obs.) live on some domain, i.e. the state, <span class="math notranslate nohighlight">\(\boldsymbol{u}:\Omega_{state}\times\mathcal{T}_{state}\rightarrow \mathbb{R}^{D_u}\)</span>, and the <span class="math notranslate nohighlight">\(\boldsymbol{y}:\Omega_{obs}\times\mathcal{T}_{obs}\rightarrow \mathbb{R}^{D_y}\)</span>
+For the purposes of this section, we don’t need to specify</p>
+<hr class="docutils" />
+<section id="state-estimation">
+<h2>State Estimation<a class="headerlink" href="#state-estimation" title="Permalink to this heading">#</a></h2>
+<p>The first way to approach this problem is to tackle by directly trying to estimate the state.
+We are interested in the state, <span class="math notranslate nohighlight">\(\mathbf{u}\)</span>, given the observations, <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>.
+In Bayesian speak, this is known as the posterior, <span class="math notranslate nohighlight">\(p(\mathbf{u}|\mathbf{y})\)</span>.
+So we can write this using the Bayesian formulation:</p>
+<div class="math notranslate nohighlight">
+\[
+p(\boldsymbol{u}|\boldsymbol{y}) = \frac{p(\boldsymbol{y}|\boldsymbol{u})p(\boldsymbol{u})}{p(\boldsymbol{y})}
+\propto p(\boldsymbol{y}|\boldsymbol{u})p(\boldsymbol{u})
 \]</div>
-</section>
-<section id="bi-level-optimization-scheme">
-<h2>Bi-Level Optimization Scheme<a class="headerlink" href="#bi-level-optimization-scheme" title="Permalink to this heading">#</a></h2>
-<div class="math notranslate nohighlight" id="equation-eqn-learn-bilevel">
-<span class="eqno">(12)<a class="headerlink" href="#equation-eqn-learn-bilevel" title="Permalink to this equation">#</a></span>\[\begin{split}
+<p>We see that the posterior depends upon a conditional distribution which describes the likelihood of the observations, <span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span>, given some state, <span class="math notranslate nohighlight">\(\boldsymbol{u}\)</span>.
+This mapping can be described by the observation operator that we prescribed in equation <a class="reference internal" href="#equation-eq-inv-prob-continuous">(10)</a>.
+We also have a prior distribution for the state, <span class="math notranslate nohighlight">\(\boldsymbol{u}\)</span>.
+The problem is ill-posed so this prior is arguably the most important quantity within the Bayesian formulation so that we get sensible solutions.
+There is a lot of subsequent research that focuses on this portion of the Bayesian formulation.
+Typically, we can simplify this full Bayesian formulation to ignore the denominator which should be constant under certain conditions.
+This is shown on the far RHS of the equation.</p>
+<p>So the name of the game is to estimate the state, <span class="math notranslate nohighlight">\(\boldsymbol{u}\)</span>, given some objective function which may depend upon some external parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>.
+We can express this as a minimization problem where we find some state, <span class="math notranslate nohighlight">\(\mathbf{u}^*\)</span>, given an objective function, <span class="math notranslate nohighlight">\(\boldsymbol{J}(\mathbf{u};\boldsymbol{\theta})\)</span>.
+This is given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{aligned}
-\boldsymbol{\theta}^* &amp;= \underset{\boldsymbol{\theta}}{\text{argmin  }}  \mathcal{L}(\boldsymbol{\theta}) \\
-\mathbf{x}^*(\boldsymbol{\theta}) &amp;= \underset{\mathbf{x}}{\text{argmin  }} \mathcal{U}(\mathbf{x})
+\boldsymbol{u}^* &amp;=
+\underset{\boldsymbol{u}}{\text{argmin}}
+\hspace{2mm}
+\boldsymbol{L}(\boldsymbol{u};\boldsymbol{\theta}) +
+\boldsymbol{R}(\boldsymbol{u};\boldsymbol{\theta}) \\
+&amp;= \underset{\boldsymbol{u}}{\text{argmin}} \hspace{2mm}\boldsymbol{J}(\boldsymbol{u};\boldsymbol{\theta})
+\end{aligned}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{J}(\mathbf{u};\boldsymbol{\theta})\)</span> is objective function which is the additive combination of the likelihood term <span class="math notranslate nohighlight">\(\boldsymbol{L}(\boldsymbol{u};\boldsymbol{\theta})\)</span> and the prior term <span class="math notranslate nohighlight">\(\boldsymbol{R}(\boldsymbol{u};\boldsymbol{\theta})\)</span> seen in equation <a class="reference internal" href="state_est.html#equation-eq-inv-prob-objective">(15)</a>.
+So now, most of the decisions about how we embed prior information into our formulation will be by including priot</p>
+<p>For more details, please see the following section about <a class="reference internal" href="state_est.html"><span class="doc std std-doc">state estimation</span></a>.</p>
+</section>
+<hr class="docutils" />
+<section id="parameter-estimation">
+<h2>Parameter Estimation<a class="headerlink" href="#parameter-estimation" title="Permalink to this heading">#</a></h2>
+<p>This is more of a <em>model-driven</em> approach.
+The thinking is to have a (parameterized) model that is able to generate an approximate state that is similar to what we can observe.
+First we imagine that we can estimate the state, <span class="math notranslate nohighlight">\(\boldsymbol{u}\)</span>, using some parameterized function.</p>
+<div class="math notranslate nohighlight" id="equation-eq-field-parameterized">
+<span class="eqno">(11)<a class="headerlink" href="#equation-eq-field-parameterized" title="Permalink to this equation">#</a></span>\[
+\boldsymbol{u}(\vec{\mathbf{x}}, t) \approx \boldsymbol{u}_{\boldsymbol{\theta}}(\vec{\mathbf{x}},t)
+\]</div>
+<p>The parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>, are generic from some model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>, could be a function or it could be parameters described by a PDE.
+Secondly, we assume that the estimated state can be used as an input to the operational operator, <span class="math notranslate nohighlight">\(\boldsymbol{H}\)</span>.
+Now, we can modify equation <a class="reference internal" href="#equation-eq-inv-prob-continuous">(10)</a> to include this parameterized field to be:</p>
+<div class="math notranslate nohighlight" id="equation-eq-inv-prob-continuous-parameterized">
+<span class="eqno">(12)<a class="headerlink" href="#equation-eq-inv-prob-continuous-parameterized" title="Permalink to this equation">#</a></span>\[
+\boldsymbol{y} = \boldsymbol{H}(\boldsymbol{u_{\boldsymbol{\theta}}};\boldsymbol{\theta}) + \varepsilon_n, \hspace{10mm} \varepsilon\sim\mathcal{N}(0,\sigma^2)
+\]</div>
+<p>Noticed that the only difference between equation <a class="reference internal" href="#equation-eq-inv-prob-continuous-parameterized">(12)</a> and <a class="reference internal" href="#equation-eq-inv-prob-continuous">(10)</a> is that the state is generated from a parameterized model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>. We have essentially “amortized” the problem which removes the need for the inversion and directly estimate the state by having a function that directly matches the observations given some input parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>.</p>
+<!-- Another way to look at it as
+
+$$
+\boldsymbol{q}(\boldsymbol{y}|\boldsymbol{\theta})
+$$ -->
+<p>So given some dataset</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{D}= \left\{ \boldsymbol{y}_{n}, \boldsymbol{u}_n  \right\}_{n=1}^N
+\]</div>
+<p>either historical or sufficient for the problem setting, we can estimate the parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>, of the model, <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>, from the data, <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+p(\boldsymbol{\theta}|\mathcal{D}) = \frac{p(\mathcal{D}|\boldsymbol{\theta})p(\boldsymbol{\theta})}{p(\mathcal{D})}
+\]</div>
+<p>So the name of the game is to approximate the true state, <span class="math notranslate nohighlight">\(\mathbf{u}\)</span>, using a model, <span class="math notranslate nohighlight">\(\mathbf{u}_{\boldsymbol{\theta}}\)</span>, and then minimize the data likelihood</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{aligned}
+\boldsymbol{\theta}^* &amp;=
+\underset{\boldsymbol{\theta}}{\text{argmax}} \hspace{2mm}
+\mathcal{L}(\boldsymbol{\theta};\boldsymbol{u}_{\boldsymbol{\theta}})
+\end{aligned}
+\]</div>
+<p>Some example parameterizations of the state, <span class="math notranslate nohighlight">\(\mathbf{u}_{\boldsymbol \theta}\)</span>:</p>
+<ul class="simple">
+<li><p>ODE/PDE</p></li>
+<li><p>Neural Field</p></li>
+<li><p>Hybrid Model (Parameterization)</p></li>
+</ul>
+<p>Most of the prior information that can be embedded within the problem:</p>
+<ul class="simple">
+<li><p>Data, e.g. Historical observations</p></li>
+<li><p>State Representation / Architectures, e.g. coords –&gt; NerFs, discretized –&gt; CNN</p></li>
+<li><p>Loss, e.g. physics-informed, gradient-based</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="bi-level-optimization">
+<h2>Bi-Level Optimization<a class="headerlink" href="#bi-level-optimization" title="Permalink to this heading">#</a></h2>
+<p>Notice that we keep the parameters, <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span>, within the minimization problem in equation.</p>
+<p>A big question is how does one define the best parameters given the minimization problem.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\boldsymbol{\theta}^* &amp;=
+\underset{\boldsymbol{\theta}}{\text{argmax}} \hspace{2mm}
+\mathcal{L}(\boldsymbol{\theta}) \\
+\mathbf{u}^*(\boldsymbol{\theta}) &amp;=
+\underset{\mathbf{u}}{\text{argmax}} \hspace{2mm}
+\mathcal{J}(\mathbf{u};\boldsymbol{\theta})
 \end{aligned}
 \end{split}\]</div>
 </section>
@@ -622,11 +720,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="../concepts/uncertainty.html"
+       href="state_est.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Modeling Uncertainty</p>
+        <p class="prev-next-title">State Estimation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -648,9 +746,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-learning-problem">Parameter Learning Problem</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimization-problem">Minimization Problem</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bi-level-optimization-scheme">Bi-Level Optimization Scheme</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#state-estimation">State Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation">Parameter Estimation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bi-level-optimization">Bi-Level Optimization</a></li>
 </ul>
   </nav></div>
 

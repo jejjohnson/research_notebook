@@ -211,6 +211,9 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 <li class="toctree-l2"><a class="reference internal" href="learning.html">Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_est.html">State Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="param_est.html">Parameter Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bilevel_opt.html">Bi-Level Optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../concepts/uncertainty.html">Modeling Uncertainty</a></li>
@@ -512,7 +515,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -528,6 +533,14 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demo-code">Demo Code</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -544,6 +557,31 @@ document.write(`
 <p>Another common problem we choose to solve is one of segmentation.</p>
 <p>Lastly, we do the same for classification.</p>
 <p>This is very prevalent in applications that require decision-making. We often see extreme event indices like drought or heat whereby we mark a range of values with some semantic meaning. For example, we can say that temperatures that are between 20-30 are normal, temperatures between 30-40 are high and temperatures 40+ are considered extreme. We can do the same for droughts, wildfires and even hurricanes. A more extreme example is when we decide to mark a threshold to say when we act or don’t act (a binary classification problem).</p>
+<hr class="docutils" />
+<section id="demo-code">
+<h2>Demo Code<a class="headerlink" href="#demo-code" title="Permalink to this heading">#</a></h2>
+<p><strong>Apply Operations</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize the domain</span>
+<span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="c1"># initialize the field</span>
+<span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">...</span>
+<span class="n">u</span><span class="p">:</span> <span class="n">Field</span> <span class="o">=</span> <span class="n">Discretization</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+
+<span class="c1"># apply operator</span>
+<span class="n">du_dx</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+<span class="c1"># apply operator with predefined params</span>
+<span class="n">params</span><span class="p">:</span> <span class="n">Params</span> <span class="o">=</span> <span class="n">DiscretizationParams</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">u_grad</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Discretization</strong> - Finite Difference</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FDParams</span><span class="p">:</span>
+
+</pre></div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -586,6 +624,20 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#demo-code">Demo Code</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

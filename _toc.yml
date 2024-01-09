@@ -1,0 +1,54 @@
+# Table of Contents
+#
+# Myst will respect:
+# 1. New pages
+#      - file: relative/path/to/page
+# 2. New sections without an associated page
+#      - title: Folder Title
+#        sections: ...
+# 3. New sections with an associated page
+#      - file: relative/path/to/page
+#        sections: ...
+#
+# Note: Titles defined on pages here are not recognized.
+#
+# This spec is based on the JupyterBook table of contents.
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-article
+root: research_notebook/intro
+sections:
+- file: research_notebook/content/notes/gmt/overview
+  title: Data-Driven Problem Solving
+  sections:
+  - file: research_notebook/content/notes/gmt/framework/tasks
+  - file: research_notebook/content/notes/gmt/framework/problem
+    # title: Introduction
+    # sections:
+    # - file: chapters/01/1/1/computational-tools
+# parts:
+#   - caption: Data-Driven Problem Solving
+#     chapters:
+#       - file: research_notebook/content/notes/gmt/overview
+#         sections:
+#           - file: research_notebook/content/notes/gmt/framework/tasks
+#           - file: research_notebook/content/notes/gmt/framework/problem
+#           - file: research_notebook/content/notes/gmt/framework/decisions
+#           - file: research_notebook/content/notes/gmt/framework/estimation
+#   - caption: Gaussian Processes
+#     chapters:
+#       - file: research_notebook/content/gps/intro
+#         sections:
+#           - file: research_notebook/content/notes/gps/literature
+#           - file: research_notebook/content/notes/gps/gpr_code
+#           - file: research_notebook/content/notes/gps/sgp_code
+#   - caption: Error Gaussian Processes
+#     chapters:
+#       - file: research_notebook/content/notes/egps/overview
+#         sections:
+#           - file: research_notebook/content/notes/gps/lit_egp
+#           - file: research_notebook/content/notes/gps/literature
+# format: jb-book
+# root: research_notebook/intro
+# chapters:
+#   - title: Ideas

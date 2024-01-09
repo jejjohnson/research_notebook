@@ -16,3 +16,4 @@ rbig_consistency.csv
 *.woff
 *.xml
 \.idea/
+\_build/

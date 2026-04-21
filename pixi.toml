@@ -116,6 +116,36 @@ equinox = ">=0.11"
 [feature.coordax.tasks]
 execute-coordax = "jupyter nbconvert --to notebook --execute --inplace notebooks/coordax/foundations/*.ipynb notebooks/coordax/derivatives/*.ipynb notebooks/coordax/dynamics/*.ipynb --ExecutePreprocessor.timeout=600"
 
+# ---------------------------------------------------------------------------
+# Project env: methane-pod
+# Self-contained subproject living under projects/methane_pod/. Bundles
+# numpyro + jax so MCMC fits and Monte Carlo simulations from the POD +
+# TMTPP notebooks can be re-executed end-to-end.
+# ---------------------------------------------------------------------------
+[feature.methane-pod.dependencies]
+python = "3.12.*"
+ipykernel = ">=6.29"
+jupyter = "*"
+nbconvert = "*"
+jupytext = ">=1.16"
+
+[feature.methane-pod.pypi-dependencies]
+methane_pod = { path = "projects/methane_pod", editable = true }
+# Clamp jax below the 0.9 line to match numpyro's xla_pmap_p import (same
+# reasoning as the pyrox feature above). Drop this pin when numpyro ≥0.21
+# lands on PyPI with the updated import.
+jax = ">=0.7,<0.9"
+jaxlib = ">=0.7,<0.9"
+numpyro = ">=0.16"
+equinox = ">=0.11"
+corner = ">=2.2"
+pandas = ">=2"
+
+[feature.methane-pod.tasks]
+execute-methane-pod = "jupyter nbconvert --to notebook --execute --inplace projects/methane_pod/notebooks/*.ipynb --ExecutePreprocessor.timeout=1200"
+test-methane-pod = "pytest projects/methane_pod/tests -v -m 'not slow'"
+test-methane-pod-all = "pytest projects/methane_pod/tests -v"
+
 [environments]
 default = { features = ["dev"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
@@ -123,6 +153,7 @@ jupyterlab = { features = ["dev", "jupyterlab"], solve-group = "default" }
 marimo = { features = ["dev", "marimo"], solve-group = "default" }
 pyrox = { features = ["pyrox"], solve-group = "pyrox" }
 coordax = { features = ["coordax"], solve-group = "coordax" }
+methane-pod = { features = ["methane-pod", "dev"], solve-group = "methane-pod" }
 
 [tasks]
 test = "pytest -v"

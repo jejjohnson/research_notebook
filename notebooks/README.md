@@ -37,3 +37,12 @@ PNGs or reference a `docs/images/` directory.
 - [`coordax/`](./coordax/README.md) — coordinate-aware arrays for JAX
   (foundations, finite-difference and finite-volume derivatives, ODE/PDE
   integration and parameter estimation).
+
+Larger sub-projects with their own source tree, tests, and pixi feature live
+under `projects/` rather than here:
+
+- [`projects/methane_pod/`](../projects/methane_pod/README.md) — thinned
+  marked temporal point processes + POD models for satellite methane
+  retrieval. Self-contained `methane_pod` package with 4 library modules,
+  80+ tests, and 8 notebooks (theory `.md` + executed `.ipynb` galleries +
+  a NumPyro NUTS fit on synthetic data).

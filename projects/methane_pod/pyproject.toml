@@ -1,0 +1,45 @@
+[project]
+name = "methane_pod"
+version = "0.1.0"
+description = "Thinned marked temporal point processes and POD models for methane retrieval."
+requires-python = ">=3.12"
+# Core runtime deps — only what `intensity`, `pod_functions`, and `paradox`
+# need. `fitting` and the notebooks pull extra deps through the optional
+# extras below. The jax/jaxlib upper bound mirrors the pixi `methane-pod`
+# feature (numpyro < 0.21 still imports `xla_pmap_p`, which was removed on
+# the JAX 0.9 line).
+dependencies = [
+    "jax>=0.7,<0.9",
+    "jaxlib>=0.7,<0.9",
+    "equinox>=0.11",
+    "numpyro>=0.16",
+    "numpy",
+    "scipy",
+]
+
+[project.optional-dependencies]
+# `run_mcmc` returns a pandas DataFrame of posterior samples; the
+# `fitting` submodule imports pandas lazily inside `run_mcmc` so only
+# consumers of that entry point need the extra.
+fit = ["pandas", "corner"]
+# Pulled in by the notebooks (plots, markdown tables via IPython).
+notebooks = ["matplotlib", "pandas", "ipython"]
+dev = ["pytest>=8", "pytest-xdist>=3.5"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/methane_pod"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+markers = [
+    "slow: marks tests as slow (MCMC sampling); run with -m 'not slow' to skip",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]

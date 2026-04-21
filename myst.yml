@@ -58,6 +58,19 @@ project:
                 - file: notebooks/coordax/dynamics/08_ode_integration
                 - file: notebooks/coordax/dynamics/09_ode_parameter_state_estimation
                 - file: notebooks/coordax/dynamics/10_pde_parameter_estimation
+    - title: Projects
+      children:
+        - title: Methane PoD
+          children:
+            - file: projects/methane_pod/README
+            - file: projects/methane_pod/notebooks/01_mttpp_theory
+            - file: projects/methane_pod/notebooks/02_intensity_zoo
+            - file: projects/methane_pod/notebooks/03_missing_mass_paradox
+            - file: projects/methane_pod/notebooks/04_intensity_gallery
+            - file: projects/methane_pod/notebooks/05_pod_gallery
+            - file: projects/methane_pod/notebooks/06_stationary_numpyro_mcmc
+            - file: projects/methane_pod/notebooks/07_pod_fitting_mcmc
+            - file: projects/methane_pod/notebooks/08_persistency
     - title: API Reference
       children:
         - file: docs/api/reference

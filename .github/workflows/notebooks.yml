@@ -18,7 +18,7 @@ jobs:
         with:
           pixi-version: latest
           cache: true
-          locked: false
+          frozen: true
       - name: Validate .ipynb files with nbformat
         run: |
           pixi run -e jupyterlab python - <<'PY'

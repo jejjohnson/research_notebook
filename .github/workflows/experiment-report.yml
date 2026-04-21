@@ -16,7 +16,7 @@ jobs:
         with:
           pixi-version: latest
           cache: true
-          locked: false
+          frozen: true
       - name: Generate DVC metrics diff
         id: metrics
         run: |

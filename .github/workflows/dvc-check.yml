@@ -22,7 +22,7 @@ jobs:
         with:
           pixi-version: latest
           cache: true
-          locked: false
+          frozen: true
       - name: Check DVC status
         run: pixi run dvc status
       - name: Show DVC pipeline DAG

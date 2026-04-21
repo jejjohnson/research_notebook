@@ -8,7 +8,7 @@ A self-contained sub-project of atmospheric plume dispersion forward models, bui
 
 ## Sub-packages
 
-- [`gauss_plume`](src/plume_simulation/gauss_plume/) — **steady-state Gaussian plume** with Briggs-McElroy-Pooler dispersion coefficients (stability classes A-F), ground reflection, wind-frame coordinate rotation, and a NumPyro model for Bayesian emission-rate inference (with an optional joint categorical latent over the stability class).
+- [`gauss_plume`](src/plume_simulation/gauss_plume/) — **steady-state Gaussian plume** with Briggs-McElroy-Pooler dispersion coefficients (stability classes A-F), ground reflection, wind-frame coordinate rotation, and a NumPyro model for Bayesian emission-rate inference (with an optional joint categorical latent over the stability class). The [derivation note](notebooks/00_gaussian_plume_derivation.md) walks from the advection-diffusion PDE to the closed-form plume expression, following Stockie (2011).
 
 Future additions: Gaussian puff (time-dependent), spectral LES post-processing, finite-volume LES, look-up-table beams-law retrievals.
 

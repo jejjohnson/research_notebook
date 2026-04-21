@@ -76,6 +76,12 @@ nbconvert = "*"
 
 [feature.pyrox.pypi-dependencies]
 pyrox = { git = "https://github.com/jejjohnson/pyrox", branch = "main", extras = ["colab", "optax"] }
+# numpyro 0.20.1 declares `jax>=0.7` but its ops/provenance.py still imports
+# `xla_pmap_p`, which JAX removed at the 0.9 line. Clamp below 0.9 so the
+# resolver picks a version whose API matches numpyro's code. Drop this pin
+# once numpyro ≥0.21 (with the updated import) lands on PyPI.
+jax = ">=0.7,<0.9"
+jaxlib = ">=0.7,<0.9"
 
 [feature.pyrox.tasks]
 execute-pyrox = "jupyter nbconvert --to notebook --execute --inplace notebooks/pyrox/*.ipynb --ExecutePreprocessor.timeout=600"

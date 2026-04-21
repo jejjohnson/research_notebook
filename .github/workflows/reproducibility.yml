@@ -1,0 +1,27 @@
+name: Reproducibility Check
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: latest
+          cache: true
+      - name: Pull DVC data
+        run: pixi run dvc pull || echo "DVC pull failed or no remote configured, skipping."
+        continue-on-error: true
+      - name: Reproduce pipeline
+        run: pixi run dvc repro
+      - name: Show metrics diff
+        run: pixi run dvc metrics diff --md >> $GITHUB_STEP_SUMMARY
+        continue-on-error: true

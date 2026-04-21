@@ -1,0 +1,26 @@
+stages:
+  preprocess:
+    cmd: python scripts/preprocess.py
+    deps:
+      - data/raw
+      - scripts/preprocess.py
+      - src/research_notebook/data
+    outs:
+      - data/processed
+
+  train:
+    cmd: python scripts/train.py
+    deps:
+      - data/processed
+      - scripts/train.py
+      - configs/
+      - src/research_notebook/models
+    params:
+      - configs/train.yaml:
+          - training
+          - model
+    metrics:
+      - results/metrics/train_metrics.json:
+          cache: false
+    plots:
+      - results/figures/loss_curve.csv

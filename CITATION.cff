@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Research Notebook"
+abstract: "Research notebook — source code for experiments and notes."
+authors:
+  - family-names: "Johnson"
+    given-names: "Juan Emmanuel"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+    affiliation: "TODO"
+repository-code: "https://github.com/jejjohnson/research_notebook"
+url: "https://jejjohnson.github.io/research_notebook"
+license: MIT
+version: 0.1.0
+date-released: "2024-01-01"
+keywords:
+  - machine learning
+  - scientific computing
+  - reproducible research

@@ -1,0 +1,23 @@
+version: 1
+project:
+  title: Research Notebook
+  authors:
+    - name: Jane Doe
+      affiliation: University of Somewhere
+  bibliography:
+    - references.bib
+  toc:
+    - file: docs/index
+    - title: Notes
+      children:
+        - file: docs/notes/background
+        - file: docs/notes/methods
+    - title: Tutorials
+      children:
+        - file: docs/tutorials/getting_started
+    - title: API Reference
+      children:
+        - file: docs/api/reference
+site:
+  template: book-theme
+  title: Research Notebook

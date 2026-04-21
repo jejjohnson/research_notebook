@@ -1,0 +1,34 @@
+name: Experiment Report
+
+on:
+  pull_request:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: latest
+          cache: true
+      - name: Generate DVC metrics diff
+        id: metrics
+        run: |
+          echo "## DVC Metrics Diff" >> report.md
+          pixi run dvc metrics diff --md >> report.md || echo "No metrics available." >> report.md
+          echo "" >> report.md
+          echo "## DVC Params Diff" >> report.md
+          pixi run dvc params diff --md >> report.md || echo "No params available." >> report.md
+          echo "" >> report.md
+          echo "## DVC Status" >> report.md
+          pixi run dvc status >> report.md || echo "DVC status unavailable." >> report.md
+        continue-on-error: true
+      - name: Comment on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: report.md

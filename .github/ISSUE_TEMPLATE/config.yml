@@ -1,0 +1,10 @@
+blank_issues_enabled: false
+# Contact links. Discussions URL is intentionally commented out so that
+# repositories cloned from this template don't misroute support traffic
+# to the template's upstream. Uncomment and replace with your repo's URL
+# once you've enabled Discussions on your project.
+#
+# contact_links:
+#   - name: Question / discussion
+#     url: https://github.com/<owner>/<repo>/discussions
+#     about: Ask a question or start a discussion rather than opening an issue.

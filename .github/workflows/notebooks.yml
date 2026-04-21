@@ -1,0 +1,43 @@
+name: Validate Notebooks
+
+on:
+  pull_request:
+    paths:
+      - 'notebooks/**'
+      - 'docs/tutorials/**'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: latest
+          cache: true
+      - name: Validate Jupytext notebooks are parseable
+        run: |
+          for nb in $(find notebooks -name "*.py"); do
+            echo "Validating $nb..."
+            python -c "
+import ast, sys
+with open('$nb') as f:
+    src = f.read()
+try:
+    ast.parse(src)
+    print('  OK')
+except SyntaxError as e:
+    print(f'  FAILED: {e}', file=sys.stderr)
+    sys.exit(1)
+"
+          done
+      - name: Warn if any .ipynb files are committed
+        run: |
+          ipynb_files=$(find notebooks -name "*.ipynb" 2>/dev/null || true)
+          if [ -n "$ipynb_files" ]; then
+            echo "::warning::Committed .ipynb files found. Notebooks should be stored as Jupytext .py files only."
+            echo "$ipynb_files"
+          fi

@@ -1,0 +1,29 @@
+{
+  "name": "Research Template Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/pixi:1": {}
+  },
+  "postCreateCommand": "pixi install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "ms-toolsai.jupyter",
+        "iterative.dvc",
+        "executablebookproject.myst-highlight",
+        "github.copilot"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": ".pixi/envs/default/bin/python",
+        "editor.formatOnSave": true,
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        }
+      }
+    }
+  },
+  "remoteUser": "vscode"
+}

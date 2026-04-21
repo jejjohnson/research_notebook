@@ -1,0 +1,5 @@
+name: full
+num_samples: 100000
+train_split: 0.7
+val_split: 0.15
+test_split: 0.15

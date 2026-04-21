@@ -1,0 +1,28 @@
+name: DVC Check
+
+on:
+  pull_request:
+    paths:
+      - 'dvc.yaml'
+      - 'dvc.lock'
+      - '*.dvc'
+      - 'src/**'
+      - 'scripts/**'
+      - 'configs/**'
+
+permissions:
+  contents: read
+
+jobs:
+  dvc-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: latest
+          cache: true
+      - name: Check DVC status
+        run: pixi run dvc status
+      - name: Show DVC pipeline DAG
+        run: pixi run dvc dag

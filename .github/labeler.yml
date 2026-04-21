@@ -1,0 +1,38 @@
+"ci":
+  - changed-files:
+    - any-glob-to-any-file: ".github/workflows/**"
+
+"dependencies":
+  - changed-files:
+    - any-glob-to-any-file:
+      - "pixi.toml"
+      - "pyproject.toml"
+      - ".pre-commit-config.yaml"
+
+"documentation":
+  - changed-files:
+    - any-glob-to-any-file:
+      - "docs/**"
+      - "myst.yml"
+      - "*.md"
+
+"testing":
+  - changed-files:
+    - any-glob-to-any-file: "tests/**"
+
+"source":
+  - changed-files:
+    - any-glob-to-any-file: "src/**"
+
+"notebooks":
+  - changed-files:
+    - any-glob-to-any-file:
+      - "notebooks/**"
+      - "marimo_notebooks/**"
+
+"experiments":
+  - changed-files:
+    - any-glob-to-any-file:
+      - "configs/**"
+      - "scripts/**"
+      - "dvc.yaml"

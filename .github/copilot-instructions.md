@@ -18,7 +18,7 @@ This is a scientific research project template. Follow these conventions:
 - Data files managed by DVC (never commit raw data to git)
 - Configs managed by Hydra in `configs/` directory
 - Results saved to `results/` (DVC-managed)
-- Notebooks stored as Jupytext percent-format `.py` files in `notebooks/` (no `.ipynb` committed)
+- Notebooks stored as executed `.ipynb` files in `notebooks/` (outputs embedded, rendered by MyST)
 
 ## Testing
 
@@ -35,7 +35,7 @@ pixi run typecheck   # Type check
 | `src/research_notebook/` | Main package source code |
 | `tests/` | Test suite |
 | `docs/` | Documentation (MyST) |
-| `notebooks/` | Jupytext percent-format .py notebooks |
+| `notebooks/` | Executed `.ipynb` notebooks (committed with outputs, rendered by MyST) |
 | `marimo_notebooks/` | Marimo reactive notebooks |
 | `configs/` | Hydra configuration hierarchy |
 | `scripts/` | Entry point scripts |

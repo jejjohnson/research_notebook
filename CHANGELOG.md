@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.1...research_notebook-v0.1.2) (2026-04-21)
+
+
+### Features
+
+* port Gaussian plume model as plume_simulation sub-project ([#11](https://github.com/jejjohnson/research_notebook/issues/11)) ([322914d](https://github.com/jejjohnson/research_notebook/commit/322914dddb05060795489b2a7d5b3f510f73d3c3))
+
 ## [0.1.1](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.0...research_notebook-v0.1.1) (2026-04-21)
 
 

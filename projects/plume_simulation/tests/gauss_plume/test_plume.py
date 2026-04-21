@@ -231,7 +231,9 @@ def test_simulate_plume_rejects_bad_inputs():
             domain_y=(-500.0, 500.0, 10),
             domain_z=(0.0, 200.0, 5),
         )
-    with pytest.raises(ValueError, match=r"stability_class must be one of"):
+    with pytest.raises(
+        ValueError, match=r"simulate_plume: `stability_class` must be one of"
+    ):
         simulate_plume(
             emission_rate=0.1,
             source_location=(0.0, 0.0, 2.0),

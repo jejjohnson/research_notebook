@@ -30,6 +30,21 @@ from plume_simulation.gauss_plume.dispersion import (
 from plume_simulation.gauss_plume.plume import plume_concentration
 
 
+def _lognormal_from_moments(mean: float, std: float) -> tuple[jnp.ndarray, jnp.ndarray]:
+    """Convert real-scale (mean, std) into the log-scale (μ, σ) of a LogNormal.
+
+    Standard method-of-moments inversion: for ``X ~ LogNormal(μ, σ)`` with
+    ``E[X] = mean`` and ``Var[X] = std**2``,
+
+        σ² = ln(1 + (std / mean)²),   μ = ln(mean) − σ²/2.
+    """
+    cv_sq = (std / mean) ** 2
+    sigma_log_sq = jnp.log1p(cv_sq)
+    sigma_log = jnp.sqrt(sigma_log_sq)
+    mu_log = jnp.log(mean) - 0.5 * sigma_log_sq
+    return mu_log, sigma_log
+
+
 def gaussian_plume_model(
     observations: jnp.ndarray | None = None,
     receptor_coords: tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray] | None = None,
@@ -46,9 +61,13 @@ def gaussian_plume_model(
     """NumPyro model for the steady-state Gaussian plume.
 
     Priors:
-        emission_rate ~ LogNormal(ln(μ_Q), σ_Q / μ_Q)              [kg/s]
+        emission_rate ~ LogNormal(μ_log, σ_log)                    [kg/s]
         stability_idx ~ Categorical(1/6, ..., 1/6)  (optional)     [A..F]
         background    ~ HalfNormal(σ_bg)                            [kg/m³]
+
+    where ``(μ_log, σ_log)`` are the log-space parameters derived from the
+    requested real-scale ``(prior_emission_rate_mean, prior_emission_rate_std)``
+    via the method-of-moments inversion in :func:`_lognormal_from_moments`.
 
     Likelihood:
         obs ~ Normal(f_plume(emission_rate, ...) + background, σ_obs)
@@ -58,28 +77,67 @@ def gaussian_plume_model(
     observations : jnp.ndarray, shape (N,), optional
         Observed concentrations [kg/m³]. If None, runs in prior-predictive mode.
     receptor_coords : tuple of jnp.ndarray, optional
-        ``(x, y, z)``, each shape (N,), in the fixed frame [m].
+        ``(x, y, z)``, each shape (N,), in the fixed frame [m]. Required
+        whenever ``observations`` is not None.
     source_location : tuple of float, optional
-        ``(x, y, z)`` source coordinates [m].
+        ``(x, y, z)`` source coordinates [m]. Required whenever ``observations``
+        is not None.
     wind_u, wind_v : float, optional
-        Wind velocity components [m/s].
+        Wind velocity components [m/s]. Required whenever ``observations``
+        is not None.
     stability_class : str
         Stability class used if ``infer_stability=False``. Default ``'C'``.
     prior_emission_rate_mean, prior_emission_rate_std : float
-        Prior mean / std for the emission rate [kg/s].
+        **Real-scale** prior mean / std for the emission rate [kg/s]. The
+        implementation converts these to log-space parameters internally, so
+        the realised prior has the requested mean and variance.
     infer_stability : bool
         If True, sample a categorical ``stability_idx`` latent over A-F.
     background_prior_std : float
         HalfNormal scale for the background concentration [kg/m³].
     obs_noise_std : float
         Observation noise σ [kg/m³].
+
+    Raises
+    ------
+    ValueError
+        If ``observations`` is provided but any of ``receptor_coords``,
+        ``source_location``, ``wind_u``, or ``wind_v`` is ``None`` — that
+        combination disconnects the likelihood from the forward model and
+        would produce a meaningless posterior. Prior-predictive runs
+        (``observations=None``) are allowed with any subset of forward-model
+        inputs.
     """
+    forward_inputs_present = (
+        receptor_coords is not None
+        and source_location is not None
+        and wind_u is not None
+        and wind_v is not None
+    )
+    if observations is not None and not forward_inputs_present:
+        missing = [
+            name
+            for name, value in (
+                ("receptor_coords", receptor_coords),
+                ("source_location", source_location),
+                ("wind_u", wind_u),
+                ("wind_v", wind_v),
+            )
+            if value is None
+        ]
+        raise ValueError(
+            "gaussian_plume_model: `observations` were provided but the "
+            "forward model cannot be evaluated — missing inputs: "
+            f"{', '.join(missing)}. Either pass all of "
+            "(receptor_coords, source_location, wind_u, wind_v) or set "
+            "observations=None for prior-predictive mode."
+        )
+
+    mu_log, sigma_log = _lognormal_from_moments(
+        prior_emission_rate_mean, prior_emission_rate_std
+    )
     emission_rate = numpyro.sample(
-        "emission_rate",
-        dist.LogNormal(
-            jnp.log(prior_emission_rate_mean),
-            prior_emission_rate_std / prior_emission_rate_mean,
-        ),
+        "emission_rate", dist.LogNormal(mu_log, sigma_log)
     )
 
     if infer_stability:
@@ -96,12 +154,7 @@ def gaussian_plume_model(
 
     background = numpyro.sample("background", dist.HalfNormal(background_prior_std))
 
-    if (
-        receptor_coords is not None
-        and source_location is not None
-        and wind_u is not None
-        and wind_v is not None
-    ):
+    if forward_inputs_present:
         x_obs, y_obs, z_obs = receptor_coords
         src_x, src_y, src_z = source_location
         predicted = plume_concentration(
@@ -118,7 +171,8 @@ def gaussian_plume_model(
         )
         predicted = predicted + background
     else:
-        predicted = 0.0
+        # Prior-predictive mode (observations is None and no forward inputs).
+        predicted = background
 
     return numpyro.sample(
         "obs",

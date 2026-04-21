@@ -28,6 +28,8 @@ import jax.numpy as jnp
 import numpy as np
 
 from plume_simulation.gauss_plume.dispersion import (
+    BRIGGS_DISPERSION_PARAMS,
+    STABILITY_CLASSES,
     calculate_briggs_dispersion,
     get_dispersion_params,
 )
@@ -234,6 +236,11 @@ def simulate_plume(
     if not (wind_speed > 0.0):
         raise ValueError(
             f"simulate_plume: `wind_speed` must be > 0 (got {wind_speed!r})"
+        )
+    if stability_class not in BRIGGS_DISPERSION_PARAMS:
+        raise ValueError(
+            f"simulate_plume: `stability_class` must be one of "
+            f"{STABILITY_CLASSES} (got {stability_class!r})"
         )
     if len(source_location) != 3:
         raise ValueError(

@@ -71,6 +71,13 @@ project:
             - file: projects/methane_pod/notebooks/06_stationary_numpyro_mcmc
             - file: projects/methane_pod/notebooks/07_pod_fitting_mcmc
             - file: projects/methane_pod/notebooks/08_persistency
+        - title: Plume simulation
+          children:
+            - file: projects/plume_simulation/README
+            - file: projects/plume_simulation/notebooks/00_gaussian_plume_derivation
+            - file: projects/plume_simulation/notebooks/01_gaussian_plume_forward
+            - file: projects/plume_simulation/notebooks/02_emission_rate_parameter_estimation
+            - file: projects/plume_simulation/notebooks/03_plume_state_estimation
     - title: API Reference
       children:
         - file: docs/api/reference

@@ -63,11 +63,29 @@ anywidget = "*"
 vegafusion = {version = ">=2", extras = ["embed"]}
 plotly = ">=5"
 
+# ---------------------------------------------------------------------------
+# Showcase env: pyrox
+# Pulls pyrox from its git main + the [colab] and [optax] extras so every
+# notebook under notebooks/pyrox/ can be re-executed end-to-end.
+# ---------------------------------------------------------------------------
+[feature.pyrox.dependencies]
+python = "3.12.*"
+ipykernel = ">=6.29"
+jupyter = "*"
+nbconvert = "*"
+
+[feature.pyrox.pypi-dependencies]
+pyrox = { git = "https://github.com/jejjohnson/pyrox", branch = "main", extras = ["colab", "optax"] }
+
+[feature.pyrox.tasks]
+execute-pyrox = "jupyter nbconvert --to notebook --execute --inplace notebooks/pyrox/*.ipynb --ExecutePreprocessor.timeout=600"
+
 [environments]
 default = { features = ["dev"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 jupyterlab = { features = ["dev", "jupyterlab"], solve-group = "default" }
 marimo = { features = ["dev", "marimo"], solve-group = "default" }
+pyrox = { features = ["pyrox"], solve-group = "pyrox" }
 
 [tasks]
 test = "pytest -v"

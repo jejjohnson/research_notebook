@@ -16,8 +16,23 @@ project:
         - file: docs/tutorials/getting_started
     - title: Notebooks
       children:
-        - pattern: notebooks/**/*.ipynb
-        - pattern: notebooks/**/*.md
+        - file: notebooks/README
+        - title: pyrox
+          children:
+            - file: notebooks/pyrox/README
+            - title: GP regression & classification
+              children:
+                - file: notebooks/pyrox/exact_gp_regression
+                - file: notebooks/pyrox/latent_gp_classification
+            - title: Regression masterclass
+              children:
+                - file: notebooks/pyrox/regression_masterclass_treeat
+                - file: notebooks/pyrox/regression_masterclass_pyrox_sample
+                - file: notebooks/pyrox/regression_masterclass_parameterized
+            - title: Ensemble methods
+              children:
+                - file: notebooks/pyrox/ensemble_primitives_tutorial
+                - file: notebooks/pyrox/ensemble_runner_tutorial
     - title: API Reference
       children:
         - file: docs/api/reference

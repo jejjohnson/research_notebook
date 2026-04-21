@@ -160,6 +160,73 @@ def test_simulate_pg_accepts_calm_start_then_windy_schedule():
     assert float(ds["concentration"].max()) >= 0.0  # no NaNs + valid dataset
 
 
+def test_simulate_save_interval_not_dividing_window_does_not_overshoot():
+    # Regression test for PR #16 (second round): save_interval=6 and
+    # window 0..10 used to build save_times=[0, 6, 12], and 12 > t_end
+    # was rejected by diffrax.SaveAt.  The clipped / endpoint-snapped
+    # build must keep every save time inside [t_start, t_end].
+    ds = simulate_eulerian_dispersion(
+        domain_x=(0.0, 200.0, 8),
+        domain_y=(0.0, 100.0, 4),
+        domain_z=(0.0, 40.0, 4),
+        t_start=0.0, t_end=10.0, save_interval=6.0,
+        emission_rate=0.01,
+        source_location=(20.0, 50.0, 10.0),
+        uniform_wind=(5.0, 0.0, 0.0),
+        eddy_diffusivity=1.0,
+        solver="tsit5", dt0=0.5,
+    )
+    times = ds["time"].values
+    assert times[0] == 0.0
+    assert times[-1] <= 10.0 + 1e-6
+    # Also verify we still got at least two save points (start and end).
+    assert times.size >= 2
+
+
+def test_simulate_pg_calibration_uses_simulation_window_only():
+    # Regression test for PR #16 (second round): the PG calibration mean
+    # speed must depend only on the simulated window, not on schedule knot
+    # density nor on knots outside [t_start, t_end].  Two schedules that
+    # agree over the run window but differ outside it must produce the
+    # same concentration field.
+    times_short = jnp.asarray([0.0, 5.0, 10.0])
+    speed_short = jnp.asarray([5.0, 5.0, 5.0])
+    direction = jnp.asarray([270.0, 270.0, 270.0])
+    schedule_short = WindSchedule.from_speed_direction(
+        times=times_short, wind_speed=speed_short, wind_direction=direction
+    )
+
+    # A longer schedule that agrees with `schedule_short` on [0, 10] but
+    # has a wild calm period before and after — the calibration *must*
+    # ignore those out-of-window knots.
+    times_long = jnp.asarray([-20.0, -10.0, 0.0, 5.0, 10.0, 20.0, 30.0])
+    speed_long = jnp.asarray([0.0, 0.0, 5.0, 5.0, 5.0, 0.0, 0.0])
+    direction_long = jnp.full(7, 270.0)
+    schedule_long = WindSchedule.from_speed_direction(
+        times=times_long, wind_speed=speed_long, wind_direction=direction_long
+    )
+
+    common_kwargs = dict(
+        domain_x=(0.0, 400.0, 16),
+        domain_y=(0.0, 200.0, 8),
+        domain_z=(0.0, 80.0, 8),
+        t_start=0.0, t_end=10.0, save_interval=5.0,
+        emission_rate=0.05,
+        source_location=(50.0, 100.0, 20.0),
+        eddy_diffusivity="pg",
+        stability_class="C",
+        solver="tsit5", dt0=0.5,
+    )
+    ds_short = simulate_eulerian_dispersion(**common_kwargs, wind_schedule=schedule_short)
+    ds_long = simulate_eulerian_dispersion(**common_kwargs, wind_schedule=schedule_long)
+    np.testing.assert_allclose(
+        ds_short["concentration"].values,
+        ds_long["concentration"].values,
+        rtol=1e-4,
+        atol=1e-10,
+    )
+
+
 def test_simulate_pg_rejects_all_zero_schedule():
     # The guard must still fire when the entire schedule is calm — no
     # physically meaningful PG calibration exists in that case.

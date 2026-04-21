@@ -171,6 +171,8 @@ def simulate_eulerian_dispersion(
         wind_schedule=wind_schedule,
         uniform_wind=uniform_wind,
         pg_reference_distance=pg_reference_distance,
+        t_start=t_start,
+        t_end=t_end,
     )
 
     horizontal_bc, vertical_bc = build_default_concentration_bc(
@@ -190,8 +192,8 @@ def simulate_eulerian_dispersion(
     concentration0 = _build_initial_concentration(
         plume_grid=plume_grid, initial_concentration=initial_concentration
     )
-    save_times = jnp.arange(
-        t_start, t_end + 0.5 * save_interval, save_interval, dtype=jnp.float32
+    save_times = _build_save_times(
+        t_start=t_start, t_end=t_end, save_interval=save_interval
     )
     solution = _solve(
         rhs=rhs,
@@ -251,18 +253,20 @@ def _resolve_eddy_diffusivity(
     wind_schedule: WindSchedule | None,
     uniform_wind: tuple[float, float, float] | None,
     pg_reference_distance: float,
+    t_start: float,
+    t_end: float,
 ) -> EddyDiffusivity:
     wind_speed = None
     if uniform_wind is not None:
         u_mean, v_mean, _ = uniform_wind
         wind_speed = float(np.hypot(u_mean, v_mean))
     elif wind_schedule is not None:
-        # Time-mean speed across all schedule knots — robust to calm-start
-        # schedules that ramp up later, and matches the spirit of a single
-        # representative K for the whole integration window.
-        u_knots = np.asarray(wind_schedule.u_wind)
-        v_knots = np.asarray(wind_schedule.v_wind)
-        wind_speed = float(np.hypot(u_knots, v_knots).mean())
+        # Time-mean speed over the *simulated* window [t_start, t_end]. We
+        # sample the piecewise-linear schedule at densely-spaced points and
+        # take the mean of |V(t)| — this respects the simulation window
+        # and knot spacing, so adding knots outside the run interval or
+        # changing knot density does not move the calibration.
+        wind_speed = _mean_schedule_speed(wind_schedule, t_start, t_end)
     if (
         isinstance(eddy_diffusivity, str)
         and eddy_diffusivity.lower() == "pg"
@@ -279,6 +283,62 @@ def _resolve_eddy_diffusivity(
         wind_speed=wind_speed,
         reference_distance=pg_reference_distance,
     )
+
+
+def _mean_schedule_speed(
+    schedule: WindSchedule, t_start: float, t_end: float
+) -> float:
+    """Time-mean wind speed of a piecewise-linear schedule over ``[t_start, t_end]``.
+
+    Integrates ``|V(t)|`` with np.interp on a dense uniform sample grid
+    and returns the window mean.  100 samples is enough — the result is
+    only used to calibrate a scalar K-theory diffusivity.
+    """
+    if t_end <= t_start:
+        # Degenerate window — fall back to the instantaneous speed at t_start.
+        u_at = float(np.interp(
+            t_start, np.asarray(schedule.times), np.asarray(schedule.u_wind)
+        ))
+        v_at = float(np.interp(
+            t_start, np.asarray(schedule.times), np.asarray(schedule.v_wind)
+        ))
+        return float(np.hypot(u_at, v_at))
+    t_sample = np.linspace(t_start, t_end, 100)
+    u_sample = np.interp(
+        t_sample, np.asarray(schedule.times), np.asarray(schedule.u_wind)
+    )
+    v_sample = np.interp(
+        t_sample, np.asarray(schedule.times), np.asarray(schedule.v_wind)
+    )
+    return float(np.hypot(u_sample, v_sample).mean())
+
+
+def _build_save_times(
+    *, t_start: float, t_end: float, save_interval: float
+) -> Float[Array, "M"]:
+    """Return save-time knots clipped to ``[t_start, t_end]``.
+
+    ``jnp.arange(t_start, t_end + 0.5 * save_interval, save_interval)`` can
+    step past ``t_end`` when the interval does not evenly divide the run
+    window (e.g. ``0..10`` with ``save_interval = 6`` gives ``[0, 6, 12]``).
+    diffrax's ``SaveAt(ts=...)`` rejects save points outside the integration
+    interval, so we clip explicitly and dedupe the trailing value.
+    """
+    if save_interval <= 0.0:
+        raise ValueError(
+            f"save_interval must be > 0 (got {save_interval!r})"
+        )
+    if t_end < t_start:
+        raise ValueError(
+            f"t_end must be >= t_start (got t_start={t_start}, t_end={t_end})"
+        )
+    raw = np.arange(t_start, t_end + 0.5 * save_interval, save_interval)
+    raw = raw[raw <= t_end + 1e-9]  # guard against fp round-up
+    # Snap the last knot to exactly t_end when it falls short, so the final
+    # save point matches the user-requested simulation horizon.
+    if raw.size > 0 and raw[-1] < t_end - 1e-9:
+        raw = np.concatenate([raw, np.asarray([t_end])])
+    return jnp.asarray(raw, dtype=jnp.float32)
 
 
 def _build_initial_concentration(

@@ -1,0 +1,41 @@
+[project]
+name = "plume_simulation"
+version = "0.1.0"
+description = "Forward models for atmospheric plume dispersion (JAX + NumPyro)."
+requires-python = ">=3.12"
+# Core runtime deps — only what the forward model needs. The NumPyro-based
+# Bayesian inference module is imported lazily; users who only want the
+# xarray forward model do not pay for it. The jax/jaxlib upper bound
+# mirrors the pixi `plume-simulation` feature (numpyro < 0.21 still imports
+# `xla_pmap_p`, which was removed on the JAX 0.9 line).
+dependencies = [
+    "jax>=0.7,<0.9",
+    "jaxlib>=0.7,<0.9",
+    "numpy",
+    "xarray",
+]
+
+[project.optional-dependencies]
+# The `inference` submodule is the only consumer of numpyro.
+inference = ["numpyro>=0.16"]
+# Pulled in by the notebooks (plots, cartopy-free projections).
+notebooks = ["matplotlib", "ipython"]
+dev = ["pytest>=8", "pytest-xdist>=3.5", "numpyro>=0.16"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/plume_simulation"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+markers = [
+    "slow: marks tests as slow (MCMC sampling); run with -m 'not slow' to skip",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]

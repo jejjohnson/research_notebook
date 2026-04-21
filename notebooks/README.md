@@ -46,3 +46,9 @@ under `projects/` rather than here:
   retrieval. Self-contained `methane_pod` package with 4 library modules,
   80+ tests, and 8 notebooks (theory `.md` + executed `.ipynb` galleries +
   a NumPyro NUTS fit on synthetic data).
+- [`projects/plume_simulation/`](../projects/plume_simulation/README.md) —
+  atmospheric plume dispersion forward models. Currently ships
+  `gauss_plume`, a steady-state Gaussian plume (JAX forward model +
+  NumPyro Bayesian inference) with 36 tests and three notebooks
+  covering forward simulation, emission-rate parameter estimation, and
+  time-varying-state estimation.

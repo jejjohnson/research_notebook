@@ -146,6 +146,33 @@ execute-methane-pod = "jupyter nbconvert --to notebook --execute --inplace proje
 test-methane-pod = "pytest projects/methane_pod/tests -v -m 'not slow'"
 test-methane-pod-all = "pytest projects/methane_pod/tests -v"
 
+# ---------------------------------------------------------------------------
+# Project env: plume-simulation
+# Self-contained sub-project under projects/plume_simulation/. Bundles
+# numpyro + jax for the Bayesian inference layer and xarray for the
+# forward-simulation helper.
+# ---------------------------------------------------------------------------
+[feature.plume-simulation.dependencies]
+python = "3.12.*"
+ipykernel = ">=6.29"
+jupyter = "*"
+nbconvert = "*"
+jupytext = ">=1.16"
+
+[feature.plume-simulation.pypi-dependencies]
+plume_simulation = { path = "projects/plume_simulation", editable = true }
+# Same numpyro-0.9-line compatibility clamp as the pyrox / methane-pod envs.
+jax = ">=0.7,<0.9"
+jaxlib = ">=0.7,<0.9"
+numpyro = ">=0.16"
+xarray = "*"
+matplotlib = ">=3.8"
+
+[feature.plume-simulation.tasks]
+execute-plume-simulation = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/*.ipynb --ExecutePreprocessor.timeout=1200"
+test-plume-simulation = "pytest projects/plume_simulation/tests -v -m 'not slow'"
+test-plume-simulation-all = "pytest projects/plume_simulation/tests -v"
+
 [environments]
 default = { features = ["dev"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
@@ -154,6 +181,7 @@ marimo = { features = ["dev", "marimo"], solve-group = "default" }
 pyrox = { features = ["pyrox"], solve-group = "pyrox" }
 coordax = { features = ["coordax"], solve-group = "coordax" }
 methane-pod = { features = ["methane-pod", "dev"], solve-group = "methane-pod" }
+plume-simulation = { features = ["plume-simulation", "dev"], solve-group = "plume-simulation" }
 
 [tasks]
 test = "pytest -v"

@@ -24,6 +24,7 @@ jobs:
           pixi-version: latest
           environments: docs
           cache: true
+          frozen: true
       - name: Build docs
         run: pixi run -e docs docs-build
       - name: Upload artifact

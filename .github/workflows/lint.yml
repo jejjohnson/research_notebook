@@ -17,5 +17,6 @@ jobs:
         with:
           pixi-version: latest
           cache: true
+          frozen: true
       - name: Run linter
         run: pixi run lint

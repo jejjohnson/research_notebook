@@ -21,6 +21,7 @@ jobs:
         with:
           pixi-version: latest
           cache: true
+          frozen: true
       - name: Run tests
         run: pixi run test
       - name: Upload coverage report

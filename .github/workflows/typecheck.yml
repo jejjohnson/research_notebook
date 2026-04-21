@@ -17,5 +17,6 @@ jobs:
         with:
           pixi-version: latest
           cache: true
+          frozen: true
       - name: Run type checker
         run: pixi run typecheck

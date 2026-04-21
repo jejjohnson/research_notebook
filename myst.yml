@@ -86,6 +86,11 @@ project:
                 - file: projects/plume_simulation/notebooks/gauss_puff/01_gaussian_puff_forward
                 - file: projects/plume_simulation/notebooks/gauss_puff/02_emission_rate_parameter_estimation
                 - file: projects/plume_simulation/notebooks/gauss_puff/03_puff_state_estimation
+            - title: Eulerian dispersion (L2 finite volume)
+              children:
+                - file: projects/plume_simulation/notebooks/les_fvm/00_eulerian_dispersion_derivation
+                - file: projects/plume_simulation/notebooks/les_fvm/01_eulerian_dispersion_l2
+                - file: projects/plume_simulation/notebooks/les_fvm/03_puff_vs_eulerian
     - title: API Reference
       children:
         - file: docs/api/reference

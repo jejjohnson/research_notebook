@@ -157,7 +157,6 @@ python = "3.12.*"
 ipykernel = ">=6.29"
 jupyter = "*"
 nbconvert = "*"
-jupytext = ">=1.16"
 
 [feature.plume-simulation.pypi-dependencies]
 plume_simulation = { path = "projects/plume_simulation", editable = true }

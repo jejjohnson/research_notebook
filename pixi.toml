@@ -86,7 +86,7 @@ jax = ">=0.7,<0.9"
 jaxlib = ">=0.7,<0.9"
 
 [feature.pyrox.tasks]
-execute-pyrox = "jupyter nbconvert --to notebook --execute --inplace notebooks/pyrox/*.ipynb --ExecutePreprocessor.timeout=600"
+execute-pyrox = "jupyter nbconvert --to notebook --execute --inplace notebooks/pyrox/gp/*.ipynb notebooks/pyrox/masterclass/*.ipynb notebooks/pyrox/ensembles/*.ipynb --ExecutePreprocessor.timeout=600"
 
 [environments]
 default = { features = ["dev"], solve-group = "default" }

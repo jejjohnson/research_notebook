@@ -1,36 +1,39 @@
 # pyrox notebooks
 
 Showcase notebooks ported from [jejjohnson/pyrox](https://github.com/jejjohnson/pyrox) —
-an equinox + numpyro + JAX probabilistic-programming library.
+an equinox + NumPyro + JAX probabilistic-programming library.
 
 Each notebook is executed end-to-end with outputs embedded, so everything
 (figures, prints, tables) renders inline in the MyST docs site without
 re-execution.
 
-## GP regression & classification
+Each sub-section is a curated landing page that leads with the math,
+numerics, and references before pointing at the notebooks themselves.
+
+## [GP regression & classification](./gp/README.md)
 
 | Notebook | Topic |
 |---|---|
-| [`exact_gp_regression.ipynb`](./exact_gp_regression.ipynb) | Exact GP regression — the three patterns |
-| [`latent_gp_classification.ipynb`](./latent_gp_classification.ipynb) | Latent GP classification — the three patterns |
+| [`gp/exact_gp_regression.ipynb`](./gp/exact_gp_regression.ipynb) | Exact GP regression — the three patterns |
+| [`gp/latent_gp_classification.ipynb`](./gp/latent_gp_classification.ipynb) | Latent GP classification — the three patterns |
 
-## Regression masterclass — three patterns for parameter handling
+## [Regression masterclass — three patterns for parameter handling](./masterclass/README.md)
 
 The masterclass trio walks through three ways to wire the same regression
 problem, each leaning on a different level of abstraction:
 
 | Notebook | Pattern |
 |---|---|
-| [`regression_masterclass_treeat.ipynb`](./regression_masterclass_treeat.ipynb) | Pattern 1: `eqx.tree_at` + raw NumPyro |
-| [`regression_masterclass_pyrox_sample.ipynb`](./regression_masterclass_pyrox_sample.ipynb) | Pattern 2: `PyroxModule` + `pyrox_sample` |
-| [`regression_masterclass_parameterized.ipynb`](./regression_masterclass_parameterized.ipynb) | Pattern 3: `Parameterized` + `PyroxParam` + native `pyrox.gp` |
+| [`masterclass/regression_masterclass_treeat.ipynb`](./masterclass/regression_masterclass_treeat.ipynb) | Pattern 1: `eqx.tree_at` + raw NumPyro |
+| [`masterclass/regression_masterclass_pyrox_sample.ipynb`](./masterclass/regression_masterclass_pyrox_sample.ipynb) | Pattern 2: `PyroxModule` + `pyrox_sample` |
+| [`masterclass/regression_masterclass_parameterized.ipynb`](./masterclass/regression_masterclass_parameterized.ipynb) | Pattern 3: `Parameterized` + `PyroxParam` + native `pyrox.gp` |
 
-## Ensemble methods
+## [Ensemble methods](./ensembles/README.md)
 
 | Notebook | Topic |
 |---|---|
-| [`ensemble_primitives_tutorial.ipynb`](./ensemble_primitives_tutorial.ipynb) | Three ways to drive `ensemble_step` |
-| [`ensemble_runner_tutorial.ipynb`](./ensemble_runner_tutorial.ipynb) | `EnsembleMAP` and `EnsembleVI` runners |
+| [`ensembles/ensemble_primitives_tutorial.ipynb`](./ensembles/ensemble_primitives_tutorial.ipynb) | Three ways to drive `ensemble_step` |
+| [`ensembles/ensemble_runner_tutorial.ipynb`](./ensembles/ensemble_runner_tutorial.ipynb) | `EnsembleMAP` and `EnsembleVI` runners |
 
 ## Running locally
 
@@ -47,9 +50,9 @@ pixi run -e pyrox execute-pyrox          # nbconvert --execute --inplace on all 
 pixi run -e pyrox jupyter lab
 ```
 
-### JAX / numpyro version note
+### JAX / NumPyro version note
 
-The feature pins `jax>=0.7,<0.9` because numpyro 0.20.1 still imports
+The feature pins `jax>=0.7,<0.9` because NumPyro 0.20.1 still imports
 `xla_pmap_p` from `jax.extend.core.primitives` — a symbol JAX removed at the
-0.9 line. Once numpyro ≥0.21 lands with the updated import, the upper bound
+0.9 line. Once NumPyro ≥0.21 lands with the updated import, the upper bound
 can come off.

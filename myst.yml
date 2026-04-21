@@ -74,10 +74,18 @@ project:
         - title: Plume simulation
           children:
             - file: projects/plume_simulation/README
-            - file: projects/plume_simulation/notebooks/00_gaussian_plume_derivation
-            - file: projects/plume_simulation/notebooks/01_gaussian_plume_forward
-            - file: projects/plume_simulation/notebooks/02_emission_rate_parameter_estimation
-            - file: projects/plume_simulation/notebooks/03_plume_state_estimation
+            - title: Gaussian plume (steady)
+              children:
+                - file: projects/plume_simulation/notebooks/00_gaussian_plume_derivation
+                - file: projects/plume_simulation/notebooks/01_gaussian_plume_forward
+                - file: projects/plume_simulation/notebooks/02_emission_rate_parameter_estimation
+                - file: projects/plume_simulation/notebooks/03_plume_state_estimation
+            - title: Gaussian puff (time-resolved)
+              children:
+                - file: projects/plume_simulation/notebooks/gauss_puff/00_gaussian_puff_derivation
+                - file: projects/plume_simulation/notebooks/gauss_puff/01_gaussian_puff_forward
+                - file: projects/plume_simulation/notebooks/gauss_puff/02_emission_rate_parameter_estimation
+                - file: projects/plume_simulation/notebooks/gauss_puff/03_puff_state_estimation
     - title: API Reference
       children:
         - file: docs/api/reference

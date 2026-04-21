@@ -166,9 +166,13 @@ jaxlib = ">=0.7,<0.9"
 numpyro = ">=0.16"
 xarray = "*"
 matplotlib = ">=3.8"
+# diffrax is used by the gauss_puff sub-model for time-varying wind
+# cumulative-integral solves under the Gaussian puff forward model.
+diffrax = ">=0.6"
+equinox = ">=0.11"
 
 [feature.plume-simulation.tasks]
-execute-plume-simulation = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/*.ipynb --ExecutePreprocessor.timeout=1200"
+execute-plume-simulation = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/*.ipynb projects/plume_simulation/notebooks/gauss_puff/*.ipynb --ExecutePreprocessor.timeout=1200"
 test-plume-simulation = "pytest projects/plume_simulation/tests -v -m 'not slow'"
 test-plume-simulation-all = "pytest projects/plume_simulation/tests -v"
 

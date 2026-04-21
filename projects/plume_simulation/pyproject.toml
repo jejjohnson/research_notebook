@@ -13,6 +13,9 @@ dependencies = [
     "jaxlib>=0.7,<0.9",
     "numpy",
     "xarray",
+    # diffrax + equinox drive the gauss_puff time-varying wind solves.
+    "diffrax>=0.6",
+    "equinox>=0.11",
 ]
 
 [project.optional-dependencies]

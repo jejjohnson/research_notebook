@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-
 from methane_pod.fitting import (
     X_MAX_DEFAULT,
     X_MIN_DEFAULT,
@@ -41,6 +40,29 @@ def test_power_law_evaluates():
     assert y.shape == x.shape
     assert np.all(y > 0.0)
     assert y[0] > y[1] > y[2]
+
+
+def test_run_mcmc_rejects_invalid_inputs():
+    with pytest.raises(ValueError, match=r"at least one observation"):
+        run_mcmc(np.array([]), num_warmup=1, num_samples=1, num_chains=1)
+    with pytest.raises(ValueError, match=r"strictly positive"):
+        run_mcmc(np.array([10.0, 0.0]), num_warmup=1, num_samples=1, num_chains=1)
+    with pytest.raises(ValueError, match=r"closed support"):
+        run_mcmc(
+            np.array([X_MIN_DEFAULT - 1.0, 20.0]),
+            num_warmup=1,
+            num_samples=1,
+            num_chains=1,
+        )
+    with pytest.raises(ValueError, match=r"x_min < x_max"):
+        run_mcmc(
+            np.array([20.0, 30.0]),
+            x_min=100.0,
+            x_max=10.0,
+            num_warmup=1,
+            num_samples=1,
+            num_chains=1,
+        )
 
 
 def _sample_from_powerlaw(rng, alpha, x_min, x_max, n):

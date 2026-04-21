@@ -33,6 +33,7 @@ from jax.scipy.stats import norm as jax_norm
 from numpy.typing import NDArray
 from numpyro.infer import MCMC, NUTS
 
+
 if TYPE_CHECKING:  # pandas is imported lazily inside run_mcmc
     import pandas as pd
 
@@ -185,8 +186,34 @@ def run_mcmc(
     -------
     df_mcmc : pandas.DataFrame, shape (num_samples * num_chains, 3)
         Columns: ``x0`` [kg/hr], ``sk`` [dimensionless], ``alpha`` [dimensionless].
+
+    Raises
+    ------
+    ValueError
+        If ``data_values`` is empty, contains non-positive values, lies outside
+        ``[x_min, x_max]``, or if the support bounds are invalid.
     """
     import pandas as pd  # lazy — only `run_mcmc` requires pandas
+
+    data_values = np.asarray(data_values)
+    if not np.isfinite(x_min) or not np.isfinite(x_max) or not (x_min < x_max):
+        raise ValueError(
+            f"run_mcmc: expected finite bounds with x_min < x_max, got "
+            f"x_min={x_min!r}, x_max={x_max!r}"
+        )
+    if data_values.size == 0:
+        raise ValueError(
+            "run_mcmc: `data_values` must contain at least one observation"
+        )
+    if np.any(~np.isfinite(data_values)):
+        raise ValueError("run_mcmc: `data_values` must contain only finite values")
+    if np.any(data_values <= 0.0):
+        raise ValueError("run_mcmc: `data_values` must be strictly positive")
+    if np.any((data_values < x_min) | (data_values > x_max)):
+        raise ValueError(
+            "run_mcmc: all `data_values` must lie within the closed support "
+            f"[x_min, x_max] = [{x_min}, {x_max}]"
+        )
 
     kernel = NUTS(pod_powerlaw_model)
     mcmc = MCMC(

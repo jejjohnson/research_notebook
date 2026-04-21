@@ -139,6 +139,7 @@ jaxlib = ">=0.7,<0.9"
 numpyro = ">=0.16"
 equinox = ">=0.11"
 corner = ">=2.2"
+pandas = ">=2"
 
 [feature.methane-pod.tasks]
 execute-methane-pod = "jupyter nbconvert --to notebook --execute --inplace projects/methane_pod/notebooks/*.ipynb --ExecutePreprocessor.timeout=1200"

@@ -35,7 +35,7 @@ pixi run typecheck   # Type check
 | `src/research_notebook/` | Main package source code |
 | `tests/` | Test suite |
 | `docs/` | Documentation (MyST) |
-| `notebooks/` | Jupytext percent-format .py notebooks |
+| `notebooks/` | Executed `.ipynb` notebooks (committed with outputs, rendered by MyST) |
 | `marimo_notebooks/` | Marimo reactive notebooks |
 | `configs/` | Hydra configuration hierarchy |
 | `scripts/` | Entry point scripts |

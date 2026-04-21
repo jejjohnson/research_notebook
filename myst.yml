@@ -3,7 +3,6 @@ project:
   title: Research Notebook
   authors:
     - name: Juan Emmanuel Johnson
-      affiliation: TODO
   bibliography:
     - references.bib
   toc:

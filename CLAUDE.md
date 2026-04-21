@@ -78,7 +78,7 @@ Workflow when authoring a notebook tutorial:
 1. Author the notebook in JupyterLab or your editor of choice (`pixi run -e jupyterlab lab`).
 2. Execute all cells end-to-end so outputs (figures, prints, tables) embed into the `.ipynb`.
 3. Commit the `.ipynb` at `notebooks/<source-or-topic>/<name>.ipynb`.
-4. Optionally pair the page with a short prose write-up at `docs/<source-or-topic>/<name>.md` that cross-links the notebook.
+4. Optionally pair the page with a short prose write-up at `notebooks/<source-or-topic>/<name>.md` that cross-links the notebook.
 
 Figures render inline via the notebook's own outputs — do not save separate PNGs or reference `docs/images/`.
 

@@ -213,7 +213,7 @@ making them diff-friendly and importable as regular Python modules.
 | `typecheck.yml` | push/PR | ty type checking |
 | `pages.yml` | push to main | Build + deploy MyST docs |
 | `dvc-check.yml` | DVC file changes | Validate DVC pipeline |
-| `notebooks.yml` | notebook changes | Validate Jupytext .py notebooks |
+| `notebooks.yml` | notebook changes | Validate `.ipynb` structure via nbformat |
 | `reproducibility.yml` | weekly schedule | Full `dvc repro` |
 | `experiment-report.yml` | PR | DVC metrics diff comment |
 | `citation.yml` | CITATION.cff changes | Validate citation file |

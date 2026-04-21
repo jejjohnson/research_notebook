@@ -102,7 +102,10 @@ from plume_simulation.les_fvm import (
     # grid + coordinates
     PlumeGrid3D, make_grid,
     # wind (prescribed, not solved)
-    PrescribedWindField, uniform_wind_field, wind_field_from_schedule,
+    PrescribedWindField,
+    uniform_wind_field,            # constant in space + time
+    wind_field_from_schedule,      # time-varying via WindSchedule
+    wind_field_from_callable,      # user-supplied (t, X, Y, Z) -> (u, v, w)
     # source
     GaussianSource, make_gaussian_source,
     # physics

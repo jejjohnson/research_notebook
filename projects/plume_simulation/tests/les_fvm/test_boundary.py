@@ -57,10 +57,29 @@ def test_vertical_neumann_zero_gradient_mirrors_interior():
         bc_z=("neumann", "neumann"),
     )
     field = jnp.zeros(g.shape).at[1, 3, 3].set(2.0).at[-2, 3, 3].set(-1.0)
-    out = vbc(field)
-    # Ghost slices mirror nearest interior rows.
+    out = vbc(field, dz=g.dz)
+    # Ghost slices mirror nearest interior rows when gradient = 0.
     np.testing.assert_allclose(float(out[0, 3, 3]), 2.0)
     np.testing.assert_allclose(float(out[-1, 3, 3]), -1.0)
+
+
+def test_vertical_neumann_nonzero_gradient_applies_offset():
+    # Regression test for PR #16: non-zero Neumann gradients must be
+    # propagated into the ghost row via ghost = interior + sign·grad·dz.
+    g = _build_grid()
+    _, vbc = build_default_concentration_bc(
+        bc_z=(("neumann", 0.25), ("neumann", -0.1)),
+    )
+    field = jnp.ones(g.shape) * 5.0
+    out = vbc(field, dz=g.dz)
+    # Bottom: outward sign is -1, so ghost = 5 + (-1) * 0.25 * dz = 5 - 0.25·dz.
+    np.testing.assert_allclose(
+        float(out[0, 3, 3]), 5.0 - 0.25 * g.dz, rtol=1e-6
+    )
+    # Top: outward sign is +1, ghost = 5 + (+1) * (-0.1) * dz.
+    np.testing.assert_allclose(
+        float(out[-1, 3, 3]), 5.0 - 0.1 * g.dz, rtol=1e-6
+    )
 
 
 def test_vertical_dirichlet_sets_correct_ghost():
@@ -69,7 +88,7 @@ def test_vertical_dirichlet_sets_correct_ghost():
         bc_z=(("dirichlet", 0.5), ("dirichlet", 1.5)),
     )
     field = jnp.ones(g.shape) * 2.0
-    out = vbc(field)
+    out = vbc(field, dz=g.dz)
     # Dirichlet ghost at bottom/top: ghost = 2 * value - interior.
     np.testing.assert_allclose(float(out[0, 3, 3]), 2.0 * 0.5 - 2.0)
     np.testing.assert_allclose(float(out[-1, 3, 3]), 2.0 * 1.5 - 2.0)

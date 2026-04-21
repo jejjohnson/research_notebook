@@ -62,9 +62,13 @@ class VerticalBC(eqx.Module):
     bottom_kind : {"dirichlet", "neumann", "outflow", "periodic"}
         Ground-boundary behaviour.
     bottom_value : float, default 0.0
-        Dirichlet target value (ignored for ``neumann``/``outflow`` where
-        the imposed gradient is zero, and for ``periodic``).
-    top_kind, top_value : same
+        For ``dirichlet``: the boundary value.
+        For ``neumann``: the *outward-normal* gradient ``∂C/∂n`` — i.e.
+        the gradient along ``-z`` at the bottom face (a positive value
+        means ``C`` increases as you move downward out of the domain).
+        Ignored for ``outflow`` / ``periodic``.
+    top_kind, top_value : same, but Neumann ``value`` is the outward-normal
+        gradient along ``+z``.
     """
 
     bottom_kind: VerticalBCKind = eqx.field(static=True)
@@ -75,13 +79,20 @@ class VerticalBC(eqx.Module):
     def __call__(
         self,
         field: Float[Array, "Nz Ny Nx"],
+        dz: float,
     ) -> Float[Array, "Nz Ny Nx"]:
-        """Return ``field`` with top and bottom ghost slices updated."""
+        """Return ``field`` with top and bottom ghost slices updated.
+
+        ``dz`` is required to translate a Neumann outward-normal gradient
+        into the half-cell ghost offset ``sign · gradient · dz``.
+        """
         out = _apply_vertical_face(
-            field, face="bottom", kind=self.bottom_kind, value=self.bottom_value
+            field, face="bottom", kind=self.bottom_kind,
+            value=self.bottom_value, dz=dz,
         )
         out = _apply_vertical_face(
-            out, face="top", kind=self.top_kind, value=self.top_value
+            out, face="top", kind=self.top_kind,
+            value=self.top_value, dz=dz,
         )
         return out
 
@@ -91,22 +102,31 @@ def _apply_vertical_face(
     face: Literal["bottom", "top"],
     kind: VerticalBCKind,
     value: float,
+    dz: float,
 ) -> Float[Array, "Nz Ny Nx"]:
-    """Update one vertical ghost slice using the requested BC flavour."""
+    """Update one vertical ghost slice using the requested BC flavour.
+
+    Conventions match :class:`finitevolx.Neumann1D`: the ``value`` for
+    a Neumann BC is the *outward-normal* gradient, i.e. along ``-z`` at
+    the bottom face and along ``+z`` at the top face.
+    """
     if face == "bottom":
         interior_slice = field[1, :, :]
         opposite_slice = field[-2, :, :]
+        outward_sign = -1.0
         ghost_index = 0
     else:
         interior_slice = field[-2, :, :]
         opposite_slice = field[1, :, :]
+        outward_sign = 1.0
         ghost_index = -1
 
     if kind == "dirichlet":
         ghost = 2.0 * value - interior_slice
     elif kind == "neumann":
-        # Zero-gradient Neumann: ghost mirrors interior (no cross-boundary flux).
-        ghost = interior_slice
+        # Ghost value so that the finite-difference outward-normal gradient
+        # across the wall equals ``value``. Matches finitevolX.Neumann1D.
+        ghost = interior_slice + outward_sign * value * dz
     elif kind == "outflow":
         ghost = interior_slice
     elif kind == "periodic":
@@ -125,7 +145,7 @@ def apply_boundary_conditions(
 ) -> Float[Array, "Nz Ny Nx"]:
     """Apply horizontal then vertical BCs to a 3-D tracer field."""
     out = horizontal_bc(field, dx=plume_grid.dx, dy=plume_grid.dy)
-    out = vertical_bc(out)
+    out = vertical_bc(out, dz=plume_grid.dz)
     return out
 
 

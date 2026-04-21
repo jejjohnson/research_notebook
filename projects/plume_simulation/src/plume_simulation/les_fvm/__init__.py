@@ -60,6 +60,7 @@ from plume_simulation.les_fvm.source import (
 from plume_simulation.les_fvm.wind import (
     PrescribedWindField,
     uniform_wind_field,
+    wind_field_from_callable,
     wind_field_from_schedule,
 )
 
@@ -89,5 +90,6 @@ __all__ = [
     "source",
     "uniform_wind_field",
     "wind",
+    "wind_field_from_callable",
     "wind_field_from_schedule",
 ]

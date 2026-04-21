@@ -60,6 +60,24 @@ def test_make_grid_rejects_nonpositive_extent():
         )
 
 
+def test_make_grid_error_message_names_correct_axis():
+    # Regression test for PR #16: the validation error used to always say
+    # ``x_max - x_min`` regardless of which axis failed.  The message must
+    # now name the actual axis that violated the constraint.
+    with pytest.raises(ValueError, match=r"y_max - y_min"):
+        make_grid(
+            domain_x=(0.0, 10.0, 4),
+            domain_y=(5.0, 5.0, 4),   # zero y-extent
+            domain_z=(0.0, 10.0, 4),
+        )
+    with pytest.raises(ValueError, match=r"z_max - z_min"):
+        make_grid(
+            domain_x=(0.0, 10.0, 4),
+            domain_y=(0.0, 10.0, 4),
+            domain_z=(5.0, 5.0, 4),   # zero z-extent
+        )
+
+
 def test_coord_arrays_from_grid_layout():
     g = make_grid(
         domain_x=(0.0, 40.0, 4),

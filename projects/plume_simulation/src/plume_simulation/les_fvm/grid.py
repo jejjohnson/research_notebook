@@ -58,9 +58,9 @@ class PlumeGrid3D(eqx.Module):
     """
 
     grid: CartesianGrid3D
-    x: Float[Array, nx_interior]
-    y: Float[Array, ny_interior]
-    z: Float[Array, nz_interior]
+    x: Float[Array, "nx_interior"]
+    y: Float[Array, "ny_interior"]
+    z: Float[Array, "nz_interior"]
 
     @property
     def dx(self) -> float:
@@ -130,11 +130,15 @@ def make_grid(
     Lx = float(x_max - x_min)
     Ly = float(y_max - y_min)
     Lz = float(z_max - z_min)
-    for label, L in (("x", Lx), ("y", Ly), ("z", Lz)):
+    for label, L, expr in (
+        ("x", Lx, "x_max - x_min"),
+        ("y", Ly, "y_max - y_min"),
+        ("z", Lz, "z_max - z_min"),
+    ):
         if L <= 0.0:
             raise ValueError(
                 f"make_grid: {label}-extent must be positive "
-                f"(got x_max - x_min = {L})"
+                f"(got {expr} = {L})"
             )
 
     grid = CartesianGrid3D.from_interior(

@@ -130,6 +130,60 @@ def test_simulate_pg_diffusivity_requires_nonzero_wind():
         )
 
 
+def test_simulate_pg_accepts_calm_start_then_windy_schedule():
+    # Regression test for PR #16: the PG calibration used to take the
+    # first schedule knot only, which rejected a calm-start-then-windy
+    # schedule.  The time-mean speed across all knots must be used
+    # instead, so this schedule now runs successfully.
+    n = 7
+    times = jnp.linspace(0.0, 60.0, n)
+    speed = jnp.concatenate(
+        [jnp.zeros(2), jnp.linspace(2.0, 7.0, n - 2)]  # calm then ramp
+    )
+    schedule = WindSchedule.from_speed_direction(
+        times=times,
+        wind_speed=speed,
+        wind_direction=jnp.full(n, 270.0),
+    )
+    ds = simulate_eulerian_dispersion(
+        domain_x=(0.0, 400.0, 16),
+        domain_y=(0.0, 200.0, 8),
+        domain_z=(0.0, 80.0, 8),
+        t_start=0.0, t_end=30.0, save_interval=15.0,
+        emission_rate=0.05,
+        source_location=(50.0, 100.0, 20.0),
+        wind_schedule=schedule,
+        eddy_diffusivity="pg",
+        stability_class="C",
+        solver="tsit5", dt0=0.5,
+    )
+    assert float(ds["concentration"].max()) >= 0.0  # no NaNs + valid dataset
+
+
+def test_simulate_pg_rejects_all_zero_schedule():
+    # The guard must still fire when the entire schedule is calm — no
+    # physically meaningful PG calibration exists in that case.
+    n = 5
+    times = jnp.linspace(0.0, 20.0, n)
+    schedule = WindSchedule.from_speed_direction(
+        times=times,
+        wind_speed=jnp.zeros(n),
+        wind_direction=jnp.full(n, 270.0),
+    )
+    with pytest.raises(ValueError, match=r"non-zero mean wind"):
+        simulate_eulerian_dispersion(
+            domain_x=(0.0, 100.0, 8),
+            domain_y=(0.0, 100.0, 8),
+            domain_z=(0.0, 40.0, 4),
+            t_start=0.0, t_end=5.0, save_interval=1.0,
+            emission_rate=0.01,
+            source_location=(20.0, 50.0, 10.0),
+            wind_schedule=schedule,
+            eddy_diffusivity="pg",
+            stability_class="C",
+        )
+
+
 def test_simulate_rejects_mismatched_initial_concentration():
     # Initial tracer shape must match the interior grid shape (no ghost ring).
     with pytest.raises(ValueError, match=r"does not match interior shape"):

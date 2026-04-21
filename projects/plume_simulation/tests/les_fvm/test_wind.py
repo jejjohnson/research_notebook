@@ -75,3 +75,12 @@ def test_prescribed_wind_field_returns_pytree():
     # Callable when sampled.
     u, v, w = wf(jnp.asarray(0.0))
     assert u.shape == w.shape == v.shape == g.shape
+
+
+def test_wind_field_from_callable_is_reexported_from_package_root():
+    # Regression test for PR #16: wind_field_from_callable was reachable
+    # via plume_simulation.les_fvm.wind but not via the package root.
+    import plume_simulation.les_fvm as L
+
+    assert L.wind_field_from_callable is wind_field_from_callable
+    assert "wind_field_from_callable" in L.__all__

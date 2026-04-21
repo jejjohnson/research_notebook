@@ -257,9 +257,12 @@ def _resolve_eddy_diffusivity(
         u_mean, v_mean, _ = uniform_wind
         wind_speed = float(np.hypot(u_mean, v_mean))
     elif wind_schedule is not None:
-        u0 = float(wind_schedule.u_wind[0])
-        v0 = float(wind_schedule.v_wind[0])
-        wind_speed = float(np.hypot(u0, v0))
+        # Time-mean speed across all schedule knots — robust to calm-start
+        # schedules that ramp up later, and matches the spirit of a single
+        # representative K for the whole integration window.
+        u_knots = np.asarray(wind_schedule.u_wind)
+        v_knots = np.asarray(wind_schedule.v_wind)
+        wind_speed = float(np.hypot(u_knots, v_knots).mean())
     if (
         isinstance(eddy_diffusivity, str)
         and eddy_diffusivity.lower() == "pg"
@@ -317,7 +320,7 @@ def _solve_jit(
     t_end: float,
     dt0: float,
     y0: Float[Array, "Nz Ny Nx"],
-    save_times: Float[Array, M],
+    save_times: Float[Array, "M"],
     solver,
     stepsize_controller,
     max_steps: int,
@@ -343,7 +346,7 @@ def _solve(
     t_end: float,
     dt0: float,
     y0: Float[Array, "Nz Ny Nx"],
-    save_times: Float[Array, M],
+    save_times: Float[Array, "M"],
     solver_name: SolverName,
     rtol: float,
     atol: float,

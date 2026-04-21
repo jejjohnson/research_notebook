@@ -27,12 +27,15 @@ Public surface
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import diffrax
 import equinox as eqx
-from jax import jit
 import jax.numpy as jnp
 from jaxtyping import Array, Float
-import numpy as np
+
+if TYPE_CHECKING:  # NumPy arrays are accepted as factory inputs only.
+    import numpy as np
 
 
 class WindSchedule(eqx.Module):
@@ -130,7 +133,10 @@ def cumulative_wind_integrals(
         Time-varying wind field.
     save_at : Float[Array, "M"]
         **Monotone non-decreasing** times [s] at which to return the integrals.
-        Must lie within ``[schedule.times[0], schedule.times[-1]]``.
+        Save times outside ``[schedule.times[0], schedule.times[-1]]`` are
+        evaluated using the linear extrapolation supported by
+        :attr:`WindSchedule` — use the schedule knots to bound the physically
+        meaningful range when that matters.
     rtol, atol : float
         Relative and absolute tolerances for the adaptive step controller.
 

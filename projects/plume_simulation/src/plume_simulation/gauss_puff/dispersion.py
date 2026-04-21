@@ -26,6 +26,8 @@ Public surface
 
 from __future__ import annotations
 
+from typing import Callable
+
 from jax import jit
 import jax.numpy as jnp
 
@@ -33,6 +35,14 @@ from plume_simulation.gauss_plume.dispersion import (
     BRIGGS_DISPERSION_PARAMS,
     calculate_briggs_dispersion,
 )
+
+
+# Callable signature shared by all dispersion evaluators:
+# ``(travel_distance, params) → (σ_x, σ_y, σ_z)``.
+DispersionFn = Callable[
+    [jnp.ndarray, jnp.ndarray],
+    tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray],
+]
 
 
 STABILITY_CLASSES: tuple[str, ...] = ("A", "B", "C", "D", "E", "F")
@@ -141,14 +151,16 @@ def calculate_briggs_dispersion_xyz(
 # `simulate_puff` and friends use this to pick PG vs Briggs by name.
 DISPERSION_SCHEMES: dict[
     str,
-    tuple[dict[str, jnp.ndarray], "callable"],  # (params registry, evaluator)
+    tuple[dict[str, jnp.ndarray], DispersionFn],
 ] = {
     "pg": (PG_DISPERSION_PARAMS, calculate_pg_dispersion),
     "briggs": (BRIGGS_DISPERSION_PARAMS, calculate_briggs_dispersion_xyz),
 }
 
 
-def get_dispersion_scheme(scheme: str):
+def get_dispersion_scheme(
+    scheme: str,
+) -> tuple[dict[str, jnp.ndarray], DispersionFn]:
     """Return ``(params_dict, calculator_fn)`` for a named dispersion scheme.
 
     Parameters

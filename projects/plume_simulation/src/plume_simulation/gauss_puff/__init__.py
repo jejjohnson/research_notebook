@@ -27,7 +27,6 @@ from plume_simulation.gauss_puff.dispersion import (
     get_pg_params,
 )
 from plume_simulation.gauss_puff.puff import (
-    MIN_WIND_SPEED,
     PuffState,
     evolve_puffs,
     frequency_to_release_interval,
@@ -81,7 +80,6 @@ __all__ = [
     "DISPERSION_SCHEMES",
     "PG_DISPERSION_PARAMS",
     "STABILITY_CLASSES",
-    "MIN_WIND_SPEED",
     "PuffState",
     "WindSchedule",
     "calculate_briggs_dispersion_xyz",

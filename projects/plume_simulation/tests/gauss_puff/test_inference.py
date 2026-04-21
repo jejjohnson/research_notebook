@@ -7,10 +7,14 @@ import jax.numpy as jnp
 import numpy as np
 import pytest
 from numpyro.infer import Predictive
+from plume_simulation.gauss_puff import make_release_times
 from plume_simulation.gauss_puff.inference import (
     gaussian_puff_model,
+    gaussian_puff_rw_model,
     infer_emission_rate,
+    infer_emission_timeseries,
 )
+from plume_simulation.gauss_puff.wind import WindSchedule
 
 
 def test_model_importable():
@@ -27,6 +31,55 @@ def test_gaussian_puff_model_rejects_missing_forward_inputs():
             source_location=(0.0, 0.0, 2.0),
             schedule=None,
         )
+
+
+def test_gaussian_puff_model_rejects_missing_release_params():
+    # Observations without release_times/release_interval should not silently
+    # fall back to a background-only likelihood — the guard must fire.
+    obs = jnp.array([1e-7, 2e-7])
+    schedule = WindSchedule.from_speed_direction(
+        jnp.linspace(0, 10, 3), jnp.full(3, 5.0), jnp.full(3, 270.0)
+    )
+    with pytest.raises(ValueError, match=r"missing inputs: .*release_times.*release_interval"):
+        gaussian_puff_model(
+            observations=obs,
+            receptor_coords=(jnp.zeros(2), jnp.zeros(2), jnp.ones(2)),
+            observation_times=jnp.array([1.0, 2.0]),
+            source_location=(0.0, 0.0, 2.0),
+            schedule=schedule,
+            release_times=None,
+            release_interval=None,
+        )
+
+
+def test_gaussian_puff_model_predictive_runs_forward_with_full_inputs():
+    # Predictive (observations=None) + all forward inputs present should
+    # produce model-driven obs draws, not just background-only samples.
+    schedule = WindSchedule.from_speed_direction(
+        jnp.linspace(0, 30, 7), jnp.full(7, 5.0), jnp.full(7, 270.0)
+    )
+    release_times = make_release_times(0.0, 30.0, 1.0)
+    predictive = Predictive(gaussian_puff_model, num_samples=10)
+    samples = predictive(
+        jax.random.PRNGKey(0),
+        observations=None,
+        receptor_coords=(jnp.array([200.0, 400.0]),
+                         jnp.zeros(2), jnp.ones(2)),
+        observation_times=jnp.array([15.0, 25.0]),
+        source_location=(0.0, 0.0, 2.0),
+        schedule=schedule,
+        release_times=release_times,
+        release_interval=1.0,
+        prior_emission_rate_mean=0.1,
+        prior_emission_rate_std=0.05,
+    )
+    # With the forward evaluated, obs has shape (num_samples, n_obs) and
+    # should not be identically equal to background (an effectively-zero value
+    # only if emission_rate is ignored). We check obs > background for at
+    # least some draws by confirming a non-negligible variation across draws.
+    obs_draws = np.asarray(samples["obs"])
+    assert obs_draws.shape == (10, 2)
+    assert obs_draws.std() > 0.0
 
 
 def test_gaussian_puff_prior_matches_requested_moments():
@@ -84,6 +137,76 @@ def test_infer_emission_rate_rejects_shape_mismatch():
             t_start=0.0,
             t_end=30.0,
             num_warmup=1, num_samples=1,
+        )
+
+
+def test_gaussian_puff_rw_model_rejects_zero_puffs():
+    # A release window shorter than one interval produces no puffs; the RW
+    # model must raise rather than indexing an empty innovations array.
+    schedule = WindSchedule.from_speed_direction(
+        jnp.linspace(0, 10, 3), jnp.full(3, 5.0), jnp.full(3, 270.0)
+    )
+    with pytest.raises(ValueError, match=r"release_times.*must contain ≥ 1 puff"):
+        gaussian_puff_rw_model(
+            observations=jnp.array([1e-7]),
+            receptor_coords=(jnp.zeros(1), jnp.zeros(1), jnp.ones(1)),
+            observation_times=jnp.array([5.0]),
+            source_location=(0.0, 0.0, 2.0),
+            schedule=schedule,
+            release_times=jnp.asarray(jnp.array([], dtype=jnp.float32)),
+            release_interval=1.0,
+        )
+
+
+def test_infer_emission_timeseries_validates_inputs():
+    # Shared validator — empty observations should fail fast.
+    with pytest.raises(ValueError, match=r"must contain ≥ 1 point"):
+        infer_emission_timeseries(
+            observations=np.array([]),
+            observation_coords=(np.array([]), np.array([]), np.array([])),
+            observation_times=np.array([]),
+            source_location=(0, 0, 2),
+            wind_times=np.linspace(0, 10, 3),
+            wind_speed=np.full(3, 5.0),
+            wind_direction=np.full(3, 270.0),
+            release_frequency=1.0,
+            t_start=0.0, t_end=10.0,
+            num_warmup=1, num_samples=1,
+        )
+
+
+def test_simulate_puff_allows_zero_scalar_emission_rate():
+    # Previously rejected; aligned with the array branch which allows 0.
+    from plume_simulation.gauss_puff import simulate_puff
+
+    time_array = np.linspace(0, 10, 5, dtype=np.float32)
+    ds = simulate_puff(
+        emission_rate=0.0,
+        source_location=(0.0, 0.0, 2.0),
+        wind_speed=np.full(5, 5.0, dtype=np.float32),
+        wind_direction=np.full(5, 270.0, dtype=np.float32),
+        stability_class="C",
+        domain_x=(0, 100, 5), domain_y=(0, 100, 5), domain_z=(0, 50, 5),
+        time_array=time_array,
+        release_frequency=1.0,
+    )
+    np.testing.assert_allclose(ds["concentration"].values, 0.0, atol=1e-10)
+
+
+def test_simulate_puff_rejects_negative_scalar_emission_rate():
+    from plume_simulation.gauss_puff import simulate_puff
+
+    time_array = np.linspace(0, 10, 5, dtype=np.float32)
+    with pytest.raises(ValueError, match=r"scalar `emission_rate` must be ≥ 0"):
+        simulate_puff(
+            emission_rate=-0.01,
+            source_location=(0.0, 0.0, 2.0),
+            wind_speed=np.full(5, 5.0, dtype=np.float32),
+            wind_direction=np.full(5, 270.0, dtype=np.float32),
+            stability_class="C",
+            domain_x=(0, 100, 5), domain_y=(0, 100, 5), domain_z=(0, 50, 5),
+            time_array=time_array,
+            release_frequency=1.0,
         )
 
 

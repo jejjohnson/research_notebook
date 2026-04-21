@@ -8,7 +8,6 @@ import numpy as np
 import pytest
 from plume_simulation.gauss_puff.dispersion import PG_DISPERSION_PARAMS
 from plume_simulation.gauss_puff.puff import (
-    MIN_WIND_SPEED,
     PuffState,
     evolve_puffs,
     frequency_to_release_interval,
@@ -87,8 +86,6 @@ def test_puff_concentration_ground_reflection_doubles_at_ground():
 def test_puff_concentration_normalization_integral():
     # Volume integral on a fine grid for an elevated puff (reflection negligible)
     # should approach puff_mass.
-    import itertools
-
     sx, sy, sz = 5.0, 5.0, 5.0
     puff_z = 50.0  # high enough that reflected term ≈ 0
     grid = jnp.linspace(-40.0, 40.0, 41)
@@ -324,11 +321,6 @@ def test_simulate_puff_briggs_scheme_runs():
         scheme="briggs",
     )
     assert ds.attrs["dispersion_scheme"] == "briggs"
-
-
-def test_simulate_puff_min_wind_speed_positive():
-    # Just asserting the module constant is available and sensible.
-    assert MIN_WIND_SPEED > 0.0
 
 
 def test_simulate_puff_array_emission_rate_matches_puff_count():

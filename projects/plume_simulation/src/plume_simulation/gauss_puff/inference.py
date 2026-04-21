@@ -40,13 +40,39 @@ from plume_simulation.gauss_puff.puff import (
 from plume_simulation.gauss_puff.wind import WindSchedule
 
 
+def _forward_inputs_present(
+    receptor_coords,
+    observation_times,
+    source_location,
+    schedule,
+    release_times,
+    release_interval,
+) -> bool:
+    """Return True iff every input needed to evaluate the forward puff model is set."""
+    return (
+        receptor_coords is not None
+        and observation_times is not None
+        and source_location is not None
+        and schedule is not None
+        and release_times is not None
+        and release_interval is not None
+    )
+
+
 def _require_forward_inputs(
     observations: jnp.ndarray | None,
     receptor_coords: tuple | None,
     observation_times: jnp.ndarray | None,
     source_location: tuple | None,
     schedule: WindSchedule | None,
+    release_times: jnp.ndarray | None,
+    release_interval: float | None,
 ) -> None:
+    """Validate that when ``observations`` are given, every forward-model input is too.
+
+    Prior-predictive calls (``observations=None``) can proceed with any subset of
+    forward-model inputs; only full-forward evaluation is skipped in that case.
+    """
     if observations is None:
         return
     missing = [
@@ -56,6 +82,8 @@ def _require_forward_inputs(
             ("observation_times", observation_times),
             ("source_location", source_location),
             ("schedule", schedule),
+            ("release_times", release_times),
+            ("release_interval", release_interval),
         )
         if value is None
     ]
@@ -64,8 +92,9 @@ def _require_forward_inputs(
             "gaussian_puff_model: `observations` were provided but the "
             "forward model cannot be evaluated — missing inputs: "
             f"{', '.join(missing)}. Either pass all of "
-            "(receptor_coords, observation_times, source_location, schedule) "
-            "or set observations=None for prior-predictive mode."
+            "(receptor_coords, observation_times, source_location, schedule, "
+            "release_times, release_interval) or set observations=None for "
+            "prior-predictive mode."
         )
 
 
@@ -154,7 +183,13 @@ def gaussian_puff_model(
     background_prior_std, obs_noise_std : float
     """
     _require_forward_inputs(
-        observations, receptor_coords, observation_times, source_location, schedule
+        observations,
+        receptor_coords,
+        observation_times,
+        source_location,
+        schedule,
+        release_times,
+        release_interval,
     )
     scheme_params_dict, dispersion_fn = get_dispersion_scheme(scheme)
     if stability_class not in scheme_params_dict:
@@ -174,14 +209,18 @@ def gaussian_puff_model(
         "background", dist.HalfNormal(background_prior_std)
     )
 
-    forward_ready = (
-        observations is not None
-        and receptor_coords is not None
-        and observation_times is not None
-        and source_location is not None
-        and schedule is not None
-        and release_times is not None
-        and release_interval is not None
+    # The forward model is evaluated whenever its inputs are present —
+    # independently of whether `observations` were provided. This keeps
+    # NumPyro's `Predictive` path (observations=None + full inputs) producing
+    # model-driven draws, while prior-predictive calls without forward inputs
+    # fall through to a background-only draw.
+    forward_ready = _forward_inputs_present(
+        receptor_coords,
+        observation_times,
+        source_location,
+        schedule,
+        release_times,
+        release_interval,
     )
 
     if forward_ready:
@@ -243,11 +282,17 @@ def gaussian_puff_rw_model(
         )
     dispersion_params = scheme_params_dict[stability_class]
 
+    n_puffs = release_times.shape[0]
+    if n_puffs == 0:
+        raise ValueError(
+            "gaussian_puff_rw_model: `release_times` must contain ≥ 1 puff; "
+            "got n_puffs=0. Check that t_end − t_start ≥ 1/release_frequency."
+        )
+
     mu_log, sigma_log = _lognormal_from_moments(
         prior_emission_rate_mean, prior_emission_rate_std
     )
 
-    n_puffs = release_times.shape[0]
     innovations = numpyro.sample(
         "innovations",
         dist.Normal(0.0, 1.0).expand([n_puffs]).to_event(1),
@@ -286,6 +331,90 @@ def gaussian_puff_rw_model(
 
 
 # ── High-level runners ───────────────────────────────────────────────────────
+
+
+def _validate_inference_inputs(
+    func_name: str,
+    observations,
+    observation_coords,
+    observation_times,
+    wind_times,
+    wind_speed,
+    wind_direction,
+    source_location,
+    release_frequency,
+    t_start,
+    t_end,
+    prior_mean,
+    prior_std,
+):
+    """Shared input-validation guard for the NUTS inference runners.
+
+    Returns the coerced ``(obs, coords, times)`` NumPy views on success.
+    """
+    obs = np.asarray(observations)
+    if obs.size == 0:
+        raise ValueError(
+            f"{func_name}: `observations` must contain ≥ 1 point"
+        )
+    if len(observation_coords) != 3:
+        raise ValueError(
+            f"{func_name}: `observation_coords` must be (x, y, z); "
+            f"got length {len(observation_coords)}"
+        )
+    coords = tuple(np.asarray(c) for c in observation_coords)
+    for axis_name, arr in zip("xyz", coords, strict=False):
+        if arr.shape != obs.shape:
+            raise ValueError(
+                f"{func_name}: `observation_coords` axis '{axis_name}' "
+                f"has shape {arr.shape} ≠ observations shape {obs.shape}"
+            )
+    times = np.asarray(observation_times)
+    if times.shape != obs.shape:
+        raise ValueError(
+            f"{func_name}: `observation_times` shape {times.shape} "
+            f"≠ observations shape {obs.shape}"
+        )
+    wt = np.asarray(wind_times)
+    ws = np.asarray(wind_speed)
+    wd = np.asarray(wind_direction)
+    if wt.ndim != 1 or wt.size == 0:
+        raise ValueError(
+            f"{func_name}: `wind_times` must be 1-D with ≥ 1 entry"
+        )
+    if ws.shape != wt.shape:
+        raise ValueError(
+            f"{func_name}: `wind_speed` shape {ws.shape} must match "
+            f"`wind_times` shape {wt.shape}"
+        )
+    if wd.shape != wt.shape:
+        raise ValueError(
+            f"{func_name}: `wind_direction` shape {wd.shape} must match "
+            f"`wind_times` shape {wt.shape}"
+        )
+    if len(source_location) != 3:
+        raise ValueError(
+            f"{func_name}: `source_location` must contain exactly three values"
+        )
+    if not (release_frequency > 0.0):
+        raise ValueError(
+            f"{func_name}: `release_frequency` must be > 0 "
+            f"(got {release_frequency!r})"
+        )
+    if not (t_end > t_start):
+        raise ValueError(
+            f"{func_name}: `t_end` must be > `t_start` "
+            f"(got t_start={t_start!r}, t_end={t_end!r})"
+        )
+    if not (prior_mean > 0.0):
+        raise ValueError(
+            f"{func_name}: `prior_mean` must be > 0 (got {prior_mean!r})"
+        )
+    if not (prior_std > 0.0):
+        raise ValueError(
+            f"{func_name}: `prior_std` must be > 0 (got {prior_std!r})"
+        )
+    return obs, coords, times
 
 
 def infer_emission_rate(
@@ -341,37 +470,21 @@ def infer_emission_rate(
     samples : dict[str, ndarray]
         Posterior draws keyed by site name: ``'emission_rate'``, ``'background'``.
     """
-    obs = np.asarray(observations)
-    if obs.size == 0:
-        raise ValueError(
-            "infer_emission_rate: `observations` must contain ≥ 1 point"
-        )
-    if len(observation_coords) != 3:
-        raise ValueError(
-            "infer_emission_rate: `observation_coords` must be (x, y, z); "
-            f"got length {len(observation_coords)}"
-        )
-    coords = tuple(np.asarray(c) for c in observation_coords)
-    for axis_name, arr in zip("xyz", coords, strict=False):
-        if arr.shape != obs.shape:
-            raise ValueError(
-                f"infer_emission_rate: `observation_coords` axis '{axis_name}' "
-                f"has shape {arr.shape} ≠ observations shape {obs.shape}"
-            )
-    times = np.asarray(observation_times)
-    if times.shape != obs.shape:
-        raise ValueError(
-            f"infer_emission_rate: `observation_times` shape {times.shape} "
-            f"≠ observations shape {obs.shape}"
-        )
-    if not (prior_mean > 0.0):
-        raise ValueError(
-            f"infer_emission_rate: `prior_mean` must be > 0 (got {prior_mean!r})"
-        )
-    if not (prior_std > 0.0):
-        raise ValueError(
-            f"infer_emission_rate: `prior_std` must be > 0 (got {prior_std!r})"
-        )
+    obs, coords, times = _validate_inference_inputs(
+        "infer_emission_rate",
+        observations,
+        observation_coords,
+        observation_times,
+        wind_times,
+        wind_speed,
+        wind_direction,
+        source_location,
+        release_frequency,
+        t_start,
+        t_end,
+        prior_mean,
+        prior_std,
+    )
 
     schedule = WindSchedule.from_speed_direction(
         wind_times, wind_speed, wind_direction
@@ -443,9 +556,32 @@ def infer_emission_timeseries(
     Returns posterior draws with key ``'emission_rate'`` of shape
     ``(num_samples, n_puffs)``.
     """
-    obs = np.asarray(observations)
-    coords = tuple(np.asarray(c) for c in observation_coords)
-    times = np.asarray(observation_times)
+    obs, coords, times = _validate_inference_inputs(
+        "infer_emission_timeseries",
+        observations,
+        observation_coords,
+        observation_times,
+        wind_times,
+        wind_speed,
+        wind_direction,
+        source_location,
+        release_frequency,
+        t_start,
+        t_end,
+        prior_mean,
+        prior_std,
+    )
+    if not (rw_step_std > 0.0):
+        raise ValueError(
+            "infer_emission_timeseries: `rw_step_std` must be > 0 "
+            f"(got {rw_step_std!r})"
+        )
+    if not (obs_noise_std > 0.0):
+        raise ValueError(
+            "infer_emission_timeseries: `obs_noise_std` must be > 0 "
+            f"(got {obs_noise_std!r})"
+        )
+
     schedule = WindSchedule.from_speed_direction(
         wind_times, wind_speed, wind_direction
     )

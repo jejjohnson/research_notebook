@@ -17,7 +17,6 @@ Dispersion coefficients are evaluated as functions of puff travel distance
 
 Public surface
 --------------
-- ``MIN_WIND_SPEED``                     : clamp constant [m/s]
 - ``release_interval_to_frequency`` / ``frequency_to_release_interval`` : helpers
 - ``make_release_times``                 : build evenly spaced release times
 - ``PuffState``                           : eqx.Module bundling puff positions/mass
@@ -46,9 +45,6 @@ from plume_simulation.gauss_puff.wind import WindSchedule, cumulative_wind_integ
 
 if TYPE_CHECKING:  # xarray is imported lazily inside simulate_puff
     import xarray as xr
-
-
-MIN_WIND_SPEED: float = 0.5  # [m/s] below which the advection is clamped
 
 
 # ── Release cadence helpers ──────────────────────────────────────────────────
@@ -353,6 +349,7 @@ def simulate_puff(
         Continuous emission rate Q [kg/s]. Scalar constant Q, or an array of
         length ``n_puffs`` specifying Q at each puff release time. The puff
         mass is ``Q · Δt_release`` with ``Δt_release = 1/release_frequency``.
+        Entries must be ≥ 0 (scalar or array); ``Q = 0`` yields a zero field.
     source_location : tuple of float, (3,)
         ``(x, y, z)`` source coordinates [m]. ``z ≥ 0``.
     wind_speed : ndarray, shape (T_w,)
@@ -471,13 +468,14 @@ def simulate_puff(
     n_puffs = int(release_times.shape[0])
 
     if np.ndim(emission_rate) == 0:
-        puff_mass = jnp.full((n_puffs,), float(emission_rate) * dt_release,
-                             dtype=jnp.float32)
-        if not (float(emission_rate) > 0.0):
+        q_scalar = float(emission_rate)
+        if q_scalar < 0.0:
             raise ValueError(
-                "simulate_puff: scalar `emission_rate` must be > 0 "
+                "simulate_puff: scalar `emission_rate` must be ≥ 0 "
                 f"(got {emission_rate!r})"
             )
+        puff_mass = jnp.full((n_puffs,), q_scalar * dt_release,
+                             dtype=jnp.float32)
     else:
         Q = np.asarray(emission_rate, dtype=np.float32)
         if Q.shape != (n_puffs,):

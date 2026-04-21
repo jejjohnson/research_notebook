@@ -170,9 +170,15 @@ matplotlib = ">=3.8"
 # cumulative-integral solves under the Gaussian puff forward model.
 diffrax = ">=0.6"
 equinox = ">=0.11"
+# finitevolx supplies the Arakawa C-grid FVM operators used by the
+# les_fvm Eulerian dispersion sub-model (3D advection-diffusion of a
+# passive methane tracer under a prescribed wind field). Pulled from
+# git by tag so the lockfile is reproducible — bump when a new tag
+# is released.
+finitevolx = { git = "https://github.com/jejjohnson/finitevolX", tag = "v0.0.41" }
 
 [feature.plume-simulation.tasks]
-execute-plume-simulation = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/*.ipynb projects/plume_simulation/notebooks/gauss_puff/*.ipynb --ExecutePreprocessor.timeout=1200"
+execute-plume-simulation = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/*.ipynb projects/plume_simulation/notebooks/gauss_puff/*.ipynb projects/plume_simulation/notebooks/les_fvm/*.ipynb --ExecutePreprocessor.timeout=1200"
 test-plume-simulation = "pytest projects/plume_simulation/tests -v -m 'not slow'"
 test-plume-simulation-all = "pytest projects/plume_simulation/tests -v"
 

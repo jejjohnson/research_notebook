@@ -4773,18 +4773,23 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-3.23.1-pyhcf101f3_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zlib-ng-2.3.3-hceb46e0_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.7-hb78ec9c_6.conda
+      - pypi: https://files.pythonhosted.org/packages/71/cc/18245721fa7747065ab478316c7fea7c74777d07f37ae60db2e84f8172e8/beartype-0.22.9-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/6c/48/c42f657f3d6b4d9d9674c9bc48e763d024511ea4cc1d6e0c68c7b4380c43/diffrax-0.7.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/1b/5e/28df919a8d5741a96fe7f56ac19493389f7a3de9c819c7a1ec3b2c557852/equinox-0.13.7-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/0d/d3/818f9d6ca330f4aa78e618f24dac8a79c5d0825b00e9927c461a23539bb4/finitediffx-0.1.0-py3-none-any.whl
+      - pypi: git+https://github.com/jejjohnson/finitevolX?tag=v0.0.41#236b060ae5c7eb2041c4806d33befaad2f227958
       - pypi: https://files.pythonhosted.org/packages/a5/cc/64d0fad725570ed6a02f5c7676cbfe3a268bed2fc3b10a74b59425ce6386/hydra_zen-0.16.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b6/d2/65cd40732c412218f71472aa24b037d3f086960c09eb643351edf3f78492/jax-0.8.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c0/86/f4ea3508ed3900145a25c220e426e6ed08411367363fa6905ec8fa4b3f1d/jaxlib-0.8.3-cp312-cp312-manylinux_2_27_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/94/05/3e39d416fb92b2738a76e8265e6bfc5d10542f90a7c32ad1eb831eea3fa3/jaxtyping-0.3.9-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/47/ff/108214af06b6b1259bdd66a7ccb49e370395c648cd2fbfe7872f705d9e40/kernex-0.2.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/80/0c/2ed47112fc1958a0a81c9b015d4e1861953a1ec3a17b081c0180a25ce82c/lineax-0.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/3a/cb/28ce52eb94390dda42599c98ea0204d74799e4d8047a0eb559b6fd648056/ml_dtypes-0.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/51/c0/00c9809d8b9346eb238a6bbd5f83e846a4ce4503da94a4c08cb7284c325b/multipledispatch-1.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/85/1d/f76ac13d49a7558a4530b002165e76c110e42a81f114708671098b157d8a/numpyro-0.20.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/23/cd/066e86230ae37ed0be70aae89aabf03ca8d9f39c8aea0dec8029455b5540/opt_einsum-3.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/63/53/6a81a6ebb1739f19c32002139719d4ee021a349d5bdbe066910feed327a1/optimistix-0.1.0-py3-none-any.whl
+      - pypi: git+https://github.com/jejjohnson/spectraldiffx.git#eac31a578ae31da61fa855cccc594459722e1517
       - pypi: https://files.pythonhosted.org/packages/7a/da/ed6f772339cf29bd9a46def9d6db5084689eb574ee4d150ff704224c1ed8/ty-0.0.32-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/8d/96/04e7b441807b26b794da5b11e59ed7f83b2cf8af202bd7eba8ad2fa6046e/wadler_lindig-0.1.7-py3-none-any.whl
       - pypi: ./
@@ -5143,18 +5148,23 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-3.23.1-pyhcf101f3_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/zlib-ng-2.3.3-hed4e4f5_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/zstd-1.5.7-hbf9d68e_6.conda
+      - pypi: https://files.pythonhosted.org/packages/71/cc/18245721fa7747065ab478316c7fea7c74777d07f37ae60db2e84f8172e8/beartype-0.22.9-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/6c/48/c42f657f3d6b4d9d9674c9bc48e763d024511ea4cc1d6e0c68c7b4380c43/diffrax-0.7.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/1b/5e/28df919a8d5741a96fe7f56ac19493389f7a3de9c819c7a1ec3b2c557852/equinox-0.13.7-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/0d/d3/818f9d6ca330f4aa78e618f24dac8a79c5d0825b00e9927c461a23539bb4/finitediffx-0.1.0-py3-none-any.whl
+      - pypi: git+https://github.com/jejjohnson/finitevolX?tag=v0.0.41#236b060ae5c7eb2041c4806d33befaad2f227958
       - pypi: https://files.pythonhosted.org/packages/a5/cc/64d0fad725570ed6a02f5c7676cbfe3a268bed2fc3b10a74b59425ce6386/hydra_zen-0.16.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b6/d2/65cd40732c412218f71472aa24b037d3f086960c09eb643351edf3f78492/jax-0.8.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/36/49/b355a58cbb5a7e4375a2bee805f577a5a45b52de39b7b42a99ced4b4ca20/jaxlib-0.8.3-cp312-cp312-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/94/05/3e39d416fb92b2738a76e8265e6bfc5d10542f90a7c32ad1eb831eea3fa3/jaxtyping-0.3.9-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/47/ff/108214af06b6b1259bdd66a7ccb49e370395c648cd2fbfe7872f705d9e40/kernex-0.2.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/80/0c/2ed47112fc1958a0a81c9b015d4e1861953a1ec3a17b081c0180a25ce82c/lineax-0.1.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/a8/b8/3c70881695e056f8a32f8b941126cf78775d9a4d7feba8abcb52cb7b04f2/ml_dtypes-0.5.4-cp312-cp312-macosx_10_13_universal2.whl
       - pypi: https://files.pythonhosted.org/packages/51/c0/00c9809d8b9346eb238a6bbd5f83e846a4ce4503da94a4c08cb7284c325b/multipledispatch-1.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/85/1d/f76ac13d49a7558a4530b002165e76c110e42a81f114708671098b157d8a/numpyro-0.20.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/23/cd/066e86230ae37ed0be70aae89aabf03ca8d9f39c8aea0dec8029455b5540/opt_einsum-3.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/63/53/6a81a6ebb1739f19c32002139719d4ee021a349d5bdbe066910feed327a1/optimistix-0.1.0-py3-none-any.whl
+      - pypi: git+https://github.com/jejjohnson/spectraldiffx.git#eac31a578ae31da61fa855cccc594459722e1517
       - pypi: https://files.pythonhosted.org/packages/96/32/c827da3ca480456fb02d8cea68a2609273b6c220fea0be9a4c8d8470b86e/ty-0.0.32-py3-none-macosx_11_0_arm64.whl
       - pypi: https://files.pythonhosted.org/packages/8d/96/04e7b441807b26b794da5b11e59ed7f83b2cf8af202bd7eba8ad2fa6046e/wadler_lindig-0.1.7-py3-none-any.whl
       - pypi: ./
@@ -7050,6 +7060,111 @@ packages:
   - pkg:pypi/backports-zstd?source=hash-mapping
   size: 241051
   timestamp: 1767045000787
+- pypi: https://files.pythonhosted.org/packages/71/cc/18245721fa7747065ab478316c7fea7c74777d07f37ae60db2e84f8172e8/beartype-0.22.9-py3-none-any.whl
+  name: beartype
+  version: 0.22.9
+  sha256: d16c9bbc61ea14637596c5f6fbff2ee99cbe3573e46a716401734ef50c3060c2
+  requires_dist:
+  - autoapi>=0.9.0 ; extra == 'dev'
+  - celery ; extra == 'dev'
+  - click ; extra == 'dev'
+  - coverage>=5.5 ; extra == 'dev'
+  - docutils>=0.22.0 ; extra == 'dev'
+  - equinox ; python_full_version < '3.15' and sys_platform == 'linux' and extra == 'dev'
+  - fastmcp ; python_full_version < '3.14' and extra == 'dev'
+  - jax[cpu] ; python_full_version < '3.15' and sys_platform == 'linux' and extra == 'dev'
+  - jaxtyping ; sys_platform == 'linux' and extra == 'dev'
+  - langchain ; python_full_version < '3.14' and platform_python_implementation != 'PyPy' and sys_platform != 'darwin' and extra == 'dev'
+  - mypy>=0.800 ; platform_python_implementation != 'PyPy' and extra == 'dev'
+  - nuitka>=1.2.6 ; python_full_version < '3.14' and sys_platform == 'linux' and extra == 'dev'
+  - numba ; python_full_version < '3.14' and extra == 'dev'
+  - numpy ; python_full_version < '3.15' and platform_python_implementation != 'PyPy' and sys_platform != 'darwin' and extra == 'dev'
+  - pandera>=0.26.0 ; python_full_version < '3.14' and extra == 'dev'
+  - poetry ; extra == 'dev'
+  - polars ; python_full_version < '3.14' and extra == 'dev'
+  - pydata-sphinx-theme<=0.7.2 ; extra == 'dev'
+  - pygments ; extra == 'dev'
+  - pyinstaller ; extra == 'dev'
+  - pyright>=1.1.370 ; extra == 'dev'
+  - pytest>=6.2.0 ; extra == 'dev'
+  - redis ; extra == 'dev'
+  - rich-click ; extra == 'dev'
+  - setuptools ; extra == 'dev'
+  - sphinx ; extra == 'dev'
+  - sphinx>=4.2.0,<6.0.0 ; extra == 'dev'
+  - sphinxext-opengraph>=0.7.5 ; extra == 'dev'
+  - sqlalchemy ; extra == 'dev'
+  - torch ; python_full_version < '3.14' and sys_platform == 'linux' and extra == 'dev'
+  - tox>=3.20.1 ; extra == 'dev'
+  - typer ; extra == 'dev'
+  - typing-extensions>=3.10.0.0 ; extra == 'dev'
+  - xarray ; python_full_version < '3.15' and extra == 'dev'
+  - mkdocs-material[imaging]>=9.6.0 ; extra == 'doc-ghp'
+  - mkdocstrings-python-xref>=1.16.0 ; extra == 'doc-ghp'
+  - mkdocstrings-python>=1.16.0 ; extra == 'doc-ghp'
+  - autoapi>=0.9.0 ; extra == 'doc-rtd'
+  - pydata-sphinx-theme<=0.7.2 ; extra == 'doc-rtd'
+  - setuptools ; extra == 'doc-rtd'
+  - sphinx>=4.2.0,<6.0.0 ; extra == 'doc-rtd'
+  - sphinxext-opengraph>=0.7.5 ; extra == 'doc-rtd'
+  - celery ; extra == 'test'
+  - click ; extra == 'test'
+  - coverage>=5.5 ; extra == 'test'
+  - docutils>=0.22.0 ; extra == 'test'
+  - equinox ; python_full_version < '3.15' and sys_platform == 'linux' and extra == 'test'
+  - fastmcp ; python_full_version < '3.14' and extra == 'test'
+  - jax[cpu] ; python_full_version < '3.15' and sys_platform == 'linux' and extra == 'test'
+  - jaxtyping ; sys_platform == 'linux' and extra == 'test'
+  - langchain ; python_full_version < '3.14' and platform_python_implementation != 'PyPy' and sys_platform != 'darwin' and extra == 'test'
+  - mypy>=0.800 ; platform_python_implementation != 'PyPy' and extra == 'test'
+  - nuitka>=1.2.6 ; python_full_version < '3.14' and sys_platform == 'linux' and extra == 'test'
+  - numba ; python_full_version < '3.14' and extra == 'test'
+  - numpy ; python_full_version < '3.15' and platform_python_implementation != 'PyPy' and sys_platform != 'darwin' and extra == 'test'
+  - pandera>=0.26.0 ; python_full_version < '3.14' and extra == 'test'
+  - poetry ; extra == 'test'
+  - polars ; python_full_version < '3.14' and extra == 'test'
+  - pygments ; extra == 'test'
+  - pyinstaller ; extra == 'test'
+  - pyright>=1.1.370 ; extra == 'test'
+  - pytest>=6.2.0 ; extra == 'test'
+  - redis ; extra == 'test'
+  - rich-click ; extra == 'test'
+  - sphinx ; extra == 'test'
+  - sqlalchemy ; extra == 'test'
+  - torch ; python_full_version < '3.14' and sys_platform == 'linux' and extra == 'test'
+  - tox>=3.20.1 ; extra == 'test'
+  - typer ; extra == 'test'
+  - typing-extensions>=3.10.0.0 ; extra == 'test'
+  - xarray ; python_full_version < '3.15' and extra == 'test'
+  - celery ; extra == 'test-tox'
+  - click ; extra == 'test-tox'
+  - docutils>=0.22.0 ; extra == 'test-tox'
+  - equinox ; python_full_version < '3.15' and sys_platform == 'linux' and extra == 'test-tox'
+  - fastmcp ; python_full_version < '3.14' and extra == 'test-tox'
+  - jax[cpu] ; python_full_version < '3.15' and sys_platform == 'linux' and extra == 'test-tox'
+  - jaxtyping ; sys_platform == 'linux' and extra == 'test-tox'
+  - langchain ; python_full_version < '3.14' and platform_python_implementation != 'PyPy' and sys_platform != 'darwin' and extra == 'test-tox'
+  - mypy>=0.800 ; platform_python_implementation != 'PyPy' and extra == 'test-tox'
+  - nuitka>=1.2.6 ; python_full_version < '3.14' and sys_platform == 'linux' and extra == 'test-tox'
+  - numba ; python_full_version < '3.14' and extra == 'test-tox'
+  - numpy ; python_full_version < '3.15' and platform_python_implementation != 'PyPy' and sys_platform != 'darwin' and extra == 'test-tox'
+  - pandera>=0.26.0 ; python_full_version < '3.14' and extra == 'test-tox'
+  - poetry ; extra == 'test-tox'
+  - polars ; python_full_version < '3.14' and extra == 'test-tox'
+  - pygments ; extra == 'test-tox'
+  - pyinstaller ; extra == 'test-tox'
+  - pyright>=1.1.370 ; extra == 'test-tox'
+  - pytest>=6.2.0 ; extra == 'test-tox'
+  - redis ; extra == 'test-tox'
+  - rich-click ; extra == 'test-tox'
+  - sphinx ; extra == 'test-tox'
+  - sqlalchemy ; extra == 'test-tox'
+  - torch ; python_full_version < '3.14' and sys_platform == 'linux' and extra == 'test-tox'
+  - typer ; extra == 'test-tox'
+  - typing-extensions>=3.10.0.0 ; extra == 'test-tox'
+  - xarray ; python_full_version < '3.15' and extra == 'test-tox'
+  - coverage>=5.5 ; extra == 'test-tox-coverage'
+  requires_python: '>=3.10'
 - conda: https://conda.anaconda.org/conda-forge/noarch/beautifulsoup4-4.14.3-pyha770c72_0.conda
   sha256: bf1e71c3c0a5b024e44ff928225a0874fc3c3356ec1a0b6fe719108e6d1288f6
   md5: 5267bef8efea4127aacd1f4e1f149b6e
@@ -8568,6 +8683,54 @@ packages:
   - pkg:pypi/filelock?source=compressed-mapping
   size: 34211
   timestamp: 1776621506566
+- pypi: https://files.pythonhosted.org/packages/0d/d3/818f9d6ca330f4aa78e618f24dac8a79c5d0825b00e9927c461a23539bb4/finitediffx-0.1.0-py3-none-any.whl
+  name: finitediffx
+  version: 0.1.0
+  sha256: 0b4a900453d8c7317f5e6668e47371cfe27020f075dd9890182561ab19e11572
+  requires_dist:
+  - jax>=0.4.7
+  - typing-extensions
+  requires_python: '>=3.8'
+- pypi: git+https://github.com/jejjohnson/finitevolX?tag=v0.0.41#236b060ae5c7eb2041c4806d33befaad2f227958
+  name: finitevolx
+  version: 0.0.41
+  requires_dist:
+  - jax>=0.4.38
+  - jaxlib>=0.4.38
+  - jaxtyping>=0.3.0
+  - beartype>=0.20.0
+  - equinox>=0.11.0
+  - scipy>=1.14.0
+  - lineax>=0.1.0
+  - diffrax>=0.6.0
+  - spectraldiffx @ git+https://github.com/jejjohnson/spectraldiffx.git@v0.0.10
+  - pytest>=8.3.0 ; extra == 'test'
+  - pytest-cov>=5.0.0 ; extra == 'test'
+  - pytest-pretty>=1.2.0 ; extra == 'test'
+  - pytest-xdist>=3.5.0 ; extra == 'test'
+  - networkx>=3.3 ; extra == 'test'
+  - coverage>=7.6.0 ; extra == 'test'
+  - matplotlib>=3.9.0 ; extra == 'test'
+  - pillow>=11.0.0 ; extra == 'test'
+  - xarray>=2025.1.0 ; extra == 'test'
+  - zarr>=3.1.5 ; extra == 'test'
+  - ruff>=0.15.0 ; extra == 'dev'
+  - pre-commit>=4.0.0 ; extra == 'dev'
+  - nbstripout>=0.7.1 ; extra == 'dev'
+  - ty>=0.0.23 ; extra == 'dev'
+  - cyclopts>=2.0.0 ; extra == 'examples'
+  - loguru>=0.7.2 ; extra == 'examples'
+  - matplotlib>=3.9.0 ; extra == 'examples'
+  - pillow>=11.0.0 ; extra == 'examples'
+  - numpy>=2.0.0 ; extra == 'examples'
+  - tqdm>=4.66.0 ; extra == 'examples'
+  - xarray>=2025.1.0 ; extra == 'examples'
+  - zarr>=3.1.5 ; extra == 'examples'
+  - mkdocs>=1.6.0 ; extra == 'docs'
+  - mkdocs-material>=9.5.0 ; extra == 'docs'
+  - mkdocstrings[python]>=0.25.0 ; extra == 'docs'
+  - mkdocs-jupyter>=0.24.0 ; extra == 'docs'
+  requires_python: '>=3.12,<3.14'
 - conda: https://conda.anaconda.org/conda-forge/noarch/flake8-7.1.2-pyhd8ed1ab_0.conda
   sha256: a8ac1bf60dcc317e35614bfb5e49ff63a4874ccfc8212c3771fe0837946e9afe
   md5: 5811f74de55030cb5f4054ab9a846139
@@ -10273,6 +10436,13 @@ packages:
   - pkg:pypi/jupytext?source=hash-mapping
   size: 113306
   timestamp: 1769455798581
+- pypi: https://files.pythonhosted.org/packages/47/ff/108214af06b6b1259bdd66a7ccb49e370395c648cd2fbfe7872f705d9e40/kernex-0.2.1-py3-none-any.whl
+  name: kernex
+  version: 0.2.1
+  sha256: 5f02f70209765f4c6c01ef9ee80f5d739ee6cc0dda31a5f3a603a53c8081a53d
+  requires_dist:
+  - jax>=0.3.5
+  requires_python: '>=3.10'
 - conda: https://conda.anaconda.org/conda-forge/linux-64/keyutils-1.6.3-hb9d3cd8_0.conda
   sha256: 0960d06048a7185d3542d850986d807c6e37ca2e644342dd0c72feefcf26c2a4
   md5: b38117a3c920364aff79f870c984b4a3
@@ -14452,7 +14622,7 @@ packages:
 - pypi: ./projects/plume_simulation
   name: plume-simulation
   version: 0.1.0
-  sha256: bc3f09a7259238ab6583d1a1759112f8babf78e6dd75c8eacea50b27779ce5c3
+  sha256: 3b85b983c1f1f8592c25bfe366234a86b4bc6f40a2e1364d42f2744c7f59a7d6
   requires_dist:
   - jax>=0.7,<0.9
   - jaxlib>=0.7,<0.9
@@ -14460,6 +14630,7 @@ packages:
   - xarray
   - diffrax>=0.6
   - equinox>=0.11
+  - finitevolx>=0.0.41
   - numpyro>=0.16 ; extra == 'inference'
   - matplotlib ; extra == 'notebooks'
   - ipython ; extra == 'notebooks'
@@ -16513,6 +16684,66 @@ packages:
   - pkg:pypi/soupsieve?source=hash-mapping
   size: 38187
   timestamp: 1769034509657
+- pypi: git+https://github.com/jejjohnson/spectraldiffx.git#eac31a578ae31da61fa855cccc594459722e1517
+  name: spectraldiffx
+  version: 0.0.10
+  requires_dist:
+  - jaxtyping>=0.2.28
+  - beartype>=0.18.0
+  - jax>=0.4.30
+  - jaxlib>=0.4.30
+  - finitediffx>=0.1.0
+  - kernex>=0.2.0
+  - equinox
+  - pytest>=8.0.0 ; extra == 'test'
+  - pytest-cov>=5.0.0 ; extra == 'test'
+  - pytest-pretty>=1.2.0 ; extra == 'test'
+  - pytest-xdist>=3.5.0 ; extra == 'test'
+  - networkx>=3.2 ; extra == 'test'
+  - coverage>=7.4.0 ; extra == 'test'
+  - xdoctest>=1.1.3 ; extra == 'test'
+  - mktestdocs>=0.2.2 ; extra == 'test'
+  - ruff>=0.8.0 ; extra == 'dev'
+  - pre-commit>=4.0.0 ; extra == 'dev'
+  - nbstripout>=0.7.1 ; extra == 'dev'
+  - ty>=0.0.19 ; extra == 'dev'
+  - wandb>=0.18.0 ; extra == 'exp'
+  - loguru>=0.7.2 ; extra == 'exp'
+  - hydra-core>=1.3.2 ; extra == 'exp'
+  - matplotlib>=3.9.0 ; extra == 'exp'
+  - seaborn>=0.13.2 ; extra == 'exp'
+  - autoroot>=1.0.0 ; extra == 'exp'
+  - ipykernel>=6.29.0 ; extra == 'jlab'
+  - jupyter>=1.0.0 ; extra == 'jlab'
+  - autoroot>=1.0.0 ; extra == 'jlab'
+  - cyclopts>=0.8.0 ; extra == 'examples'
+  - diffrax>=0.5.0 ; extra == 'examples'
+  - lineax>=0.1.0 ; extra == 'examples'
+  - loguru>=0.7.2 ; extra == 'examples'
+  - matplotlib>=3.9.0 ; extra == 'examples'
+  - numpy>=1.26.0 ; extra == 'examples'
+  - tqdm>=4.66.0 ; extra == 'examples'
+  - xarray>=2024.6.0 ; extra == 'examples'
+  - netcdf4>=1.6.5 ; extra == 'examples'
+  - mkdocs>=1.6.0 ; extra == 'docs'
+  - mkdocs-material>=9.5.0 ; extra == 'docs'
+  - mkdocstrings[python]>=0.26.0 ; extra == 'docs'
+  - mkdocs-jupyter>=0.25.0 ; extra == 'docs'
+  - mkdocs-gen-files>=0.5.0 ; extra == 'docs'
+  - mkdocs-literate-nav>=0.6.1 ; extra == 'docs'
+  - mkdocs-git-authors-plugin>=0.9.0 ; extra == 'docs'
+  - pymdown-extensions>=10.11 ; extra == 'docs'
+  - pygments>=2.18.0 ; extra == 'docs'
+  - mkdocs-bibtex>=2.16.0 ; extra == 'docs'
+  - mdx-truly-sane-lists>=1.3 ; extra == 'docs'
+  - linkify-it-py>=2.0.3 ; extra == 'docs'
+  - ipython>=8.28.0 ; extra == 'docs'
+  - ipykernel>=6.29.0 ; extra == 'docs'
+  - watermark>=2.5.0 ; extra == 'docs'
+  - jupytext>=1.16.0 ; extra == 'docs'
+  - matplotlib>=3.9.0 ; extra == 'docs'
+  - spectraldiffx[test,dev,exp,jlab,docs,examples] ; extra == 'all'
+  requires_python: '>=3.12,<3.14'
 - conda: https://conda.anaconda.org/conda-forge/noarch/sqltrie-0.11.2-pyhd8ed1ab_0.conda
   sha256: da5d9b35e250c73231daf89de26dacfb2f9d264a6e13e77fc3b50ad25b11c342
   md5: 3b2dc1e08cda9b392792f859fbbc293d

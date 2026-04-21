@@ -26,7 +26,7 @@ numerics, and references before pointing at the notebooks themselves.
 | Notebook | Topic |
 |---|---|
 | [`derivatives/05_finite_difference.ipynb`](./derivatives/05_finite_difference.ipynb) | Periodic + non-uniform finite-difference derivatives; `cmap` pattern |
-| [`derivatives/06_finite_difference_spherical.ipynb`](./derivatives/06_finite_difference_spherical.ipynb) | Lat-lon grid derivatives, variable $\mathrm{d}x$, vorticity, divergence |
+| [`derivatives/06_spherical_harmonics_derivatives.ipynb`](./derivatives/06_spherical_harmonics_derivatives.ipynb) | Spherical-harmonic derivatives on a Gauss-Legendre lat-lon grid (no FD pole singularity); Laplacian; vorticity and divergence |
 | [`derivatives/07_finite_volume.ipynb`](./derivatives/07_finite_volume.ipynb) | Cell-centred FV operators; flux divergence; conservative schemes |
 
 ## [Dynamics](./dynamics/README.md)

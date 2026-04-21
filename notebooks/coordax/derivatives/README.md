@@ -114,12 +114,16 @@ quantity that must globally conserve.
 
 - [`05_finite_difference`](05_finite_difference.ipynb) — periodic and
   non-uniform 1-D derivatives; the coordinate-aware `cmap` dispatch pattern.
-- [`06_finite_difference_spherical`](06_finite_difference_spherical.ipynb) —
-  lat-lon derivatives with metric factors; vorticity and divergence on the
-  sphere; pole handling.
+- [`06_spherical_harmonics_derivatives`](06_spherical_harmonics_derivatives.ipynb)
+  — spherical-harmonic derivatives on a Gauss-Legendre lat-lon grid;
+  algebraic operators on coefficients ($\partial_\lambda$, $\nabla^2$,
+  $\cos\phi\,\partial_\phi$); machine-precision round-trip and a spectral
+  vs finite-difference accuracy showdown.
 - [`07_finite_volume`](07_finite_volume.ipynb) — cell-centred FV operators
-  and flux divergence; a conservation check that verifies exact tracer mass
-  preservation to machine precision.
+  and flux divergence; a conservation check that verifies tracer mass
+  preservation at the ~1e-6 relative level on the committed example (bulk
+  flux cancellation; not formally bit-exact because the chosen driver
+  only updates interior cells).
 
 ## References
 

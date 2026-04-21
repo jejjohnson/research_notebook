@@ -65,18 +65,22 @@ The installable package lives in [src/research_notebook](src/research_notebook/)
 | `results/` | DVC-managed experiment results |
 | `scripts/` | Entry-point scripts (train, evaluate, preprocess) |
 | `docs/` | MyST documentation source |
-| `notebooks/` | Jupytext percent-format `.py` notebooks |
+| `notebooks/` | Executed Jupyter `.ipynb` notebooks (committed with outputs) |
 | `marimo_notebooks/` | Marimo reactive notebooks |
 | `tests/` | Test suite |
 
 ## Documentation Examples
 
-Docs pages live in [docs](docs/). Notebooks may live in [notebooks](notebooks/) as jupytext percent-format `.py` files. When notebooks produce figures for docs pages:
+Docs pages live in [docs](docs/). Notebook-style examples live in [notebooks](notebooks/) as executed `.ipynb` files with cell outputs embedded. MyST renders them directly via the `Notebooks` section of `myst.yml` — no conversion step needed.
 
-1. Run them locally
-2. Save figures under `docs/images/{notebook_name}/`
-3. Reference those assets from the relevant MyST page in `docs/`
-4. Commit the notebook source and generated assets together
+Workflow when authoring a notebook tutorial:
+
+1. Author the notebook in JupyterLab or your editor of choice (`pixi run -e jupyterlab lab`).
+2. Execute all cells end-to-end so outputs (figures, prints, tables) embed into the `.ipynb`.
+3. Commit the `.ipynb` at `notebooks/<source-or-topic>/<name>.ipynb`.
+4. Optionally pair the page with a short prose write-up at `docs/<source-or-topic>/<name>.md` that cross-links the notebook.
+
+Figures render inline via the notebook's own outputs — do not save separate PNGs or reference `docs/images/`.
 
 ## Coding Conventions
 

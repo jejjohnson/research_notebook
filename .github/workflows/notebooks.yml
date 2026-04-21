@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'notebooks/**'
-      - 'docs/tutorials/**'
+      - 'docs/**/*.ipynb'
 
 permissions:
   contents: read
@@ -18,26 +18,19 @@ jobs:
         with:
           pixi-version: latest
           cache: true
-      - name: Validate Jupytext notebooks are parseable
+      - name: Validate .ipynb files with nbformat
         run: |
-          for nb in $(find notebooks -name "*.py"); do
-            echo "Validating $nb..."
-            python -c "
-import ast, sys
-with open('$nb') as f:
-    src = f.read()
-try:
-    ast.parse(src)
-    print('  OK')
-except SyntaxError as e:
-    print(f'  FAILED: {e}', file=sys.stderr)
-    sys.exit(1)
-"
-          done
-      - name: Warn if any .ipynb files are committed
-        run: |
-          ipynb_files=$(find notebooks -name "*.ipynb" 2>/dev/null || true)
-          if [ -n "$ipynb_files" ]; then
-            echo "::warning::Committed .ipynb files found. Notebooks should be stored as Jupytext .py files only."
-            echo "$ipynb_files"
-          fi
+          pixi run -e jupyterlab python - <<'PY'
+          import pathlib, sys, nbformat
+          failed = []
+          for nb in list(pathlib.Path("notebooks").rglob("*.ipynb")) + list(
+              pathlib.Path("docs").rglob("*.ipynb")
+          ):
+              try:
+                  nbformat.validate(nbformat.read(nb, as_version=4))
+                  print(f"OK  {nb}")
+              except Exception as exc:
+                  print(f"FAIL {nb}: {exc}", file=sys.stderr)
+                  failed.append(nb)
+          sys.exit(1 if failed else 0)
+          PY

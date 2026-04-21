@@ -16,7 +16,7 @@
 - 📊 **[DVC](https://dvc.org)** for data versioning and ML pipeline management
 - ⚙️ **[Hydra](https://hydra.cc)** + **[hydra-zen](https://mit-ll-responsible-ai.github.io/hydra-zen/)** for type-safe configuration management
 - 📓 **[JupyterLab](https://jupyterlab.readthedocs.io)** with LSP, Git integration, and MyST rendering
-- 📝 **[Jupytext](https://jupytext.readthedocs.io)** — notebooks stored as diff-friendly `.py` files, convert to `.ipynb` on demand
+- 📓 **Jupyter notebooks** — executed `.ipynb` files committed with outputs, rendered directly by MyST
 - 🌊 **[Marimo](https://marimo.io)** reactive notebook environment
 - 📚 **[MyST-MD](https://mystmd.org)** for publication-quality documentation
 - 🔍 **[Ruff](https://docs.astral.sh/ruff/)** for fast linting and formatting
@@ -42,7 +42,7 @@ research_template/
 │   └── external/
 ├── docs/                 # MyST documentation
 ├── marimo_notebooks/     # Marimo reactive notebooks
-├── notebooks/            # Jupyter notebooks
+├── notebooks/            # Jupyter notebooks (.ipynb, MyST-rendered)
 ├── results/              # Experiment results (DVC-managed)
 ├── scripts/              # Entry point scripts
 ├── src/research_notebook/        # Source package
@@ -179,22 +179,11 @@ Docs are automatically deployed to GitHub Pages on every push to `main`.
 
 ## Notebook Environments
 
-Notebooks are stored as [Jupytext](https://jupytext.readthedocs.io) percent-format
-`.py` scripts — not `.ipynb` files. This keeps the repository clean, diff-friendly,
-and free of committed cell outputs. Generated `.ipynb` files are gitignored.
-
-### Converting to .ipynb
-
-```bash
-# Convert all notebooks/ scripts to .ipynb
-pixi run notebooks-to-ipynb
-
-# Convert a single file
-pixi run jupytext --to notebook notebooks/01_eda.py
-
-# Keep .py and .ipynb in sync while editing (paired mode)
-pixi run -e jupyterlab jupytext --set-formats py:percent,ipynb notebooks/01_eda.py
-```
+Notebooks are committed as executed `.ipynb` files under `notebooks/`, with
+cell outputs embedded. MyST renders them directly in the docs site (no
+conversion step), so figures and prose stay together in a single source of
+truth. Jupytext is still available for optional `.py` ↔ `.ipynb` pairing if
+you prefer cleaner diffs during editing.
 
 ### JupyterLab
 
@@ -212,7 +201,7 @@ Reactive, reproducible notebooks in pure Python:
 pixi run -e marimo marimo-edit
 ```
 
-Marimo notebooks in `marimo_notebooks/` are also stored as `.py` files,
+Marimo notebooks in `marimo_notebooks/` are stored as `.py` files,
 making them diff-friendly and importable as regular Python modules.
 
 ## CI/CD Workflows

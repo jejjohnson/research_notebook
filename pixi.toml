@@ -79,7 +79,6 @@ train = "python scripts/train.py"
 train-zen = "python scripts/train_zen.py"
 evaluate = "python scripts/evaluate.py"
 preprocess = "python scripts/preprocess.py"
-notebooks-to-ipynb = "python scripts/convert_notebooks.py --verbose"
 
 [feature.docs.tasks]
 docs-serve = "myst start"

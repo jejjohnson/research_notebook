@@ -2,8 +2,8 @@ version: 1
 project:
   title: Research Notebook
   authors:
-    - name: Jane Doe
-      affiliation: University of Somewhere
+    - name: Juan Emmanuel Johnson
+      affiliation: TODO
   bibliography:
     - references.bib
   toc:
@@ -15,6 +15,10 @@ project:
     - title: Tutorials
       children:
         - file: docs/tutorials/getting_started
+    - title: Notebooks
+      children:
+        - pattern: notebooks/**/*.ipynb
+        - pattern: notebooks/**/*.md
     - title: API Reference
       children:
         - file: docs/api/reference

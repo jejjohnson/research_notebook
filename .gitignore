@@ -28,8 +28,7 @@ env/
 venv/
 ENV/
 
-# Jupyter Notebooks — stored as Jupytext .py files; .ipynb are generated locally
-*.ipynb
+# Jupyter Notebooks — .ipynb files are committed; only checkpoints are ignored
 .ipynb_checkpoints
 *.ipynb_checkpoints/
 

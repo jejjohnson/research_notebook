@@ -203,7 +203,11 @@ class ParadoxResult:
 # ═════════════════════════════════════════════════════════════════════════════
 
 
-def simulate_paradox(config: FacilityConfig) -> ParadoxResult:
+def simulate_paradox(
+    config: FacilityConfig,
+    *,
+    E_Pd: float | None = None,
+) -> ParadoxResult:
     """Run a single Monte Carlo realisation of the Missing Mass Paradox.
 
     Implements the three-layer stochastic architecture:
@@ -221,6 +225,11 @@ def simulate_paradox(config: FacilityConfig) -> ParadoxResult:
     ----------
     config : FacilityConfig
         Physical scenario parameters.
+    E_Pd : float, optional
+        Pre-computed ``compute_E_Pd(mu, sigma, Q_50, k)`` for this scenario.
+        If ``None`` (default), it is computed inside the call. Pass the cached
+        value when running many MC seeds on the same scenario — it saves a
+        10k-point quadrature per trial.
 
     Returns
     -------
@@ -232,7 +241,8 @@ def simulate_paradox(config: FacilityConfig) -> ParadoxResult:
     Lambda_true = config.Lambda_true
     N_true = int(rng.poisson(lam=Lambda_true))
 
-    E_Pd = compute_E_Pd(config.mu, config.sigma, config.Q_50, config.k)
+    if E_Pd is None:
+        E_Pd = compute_E_Pd(config.mu, config.sigma, config.Q_50, config.k)
 
     if N_true == 0:
         return ParadoxResult(
@@ -330,8 +340,13 @@ def run_scenario_grid(
     """
     results: list[ParadoxResult] = []
     for cfg in configs:
+        # Quadrature for E[P_d] depends only on (mu, sigma, Q_50, k), not on
+        # the seed — compute it once per scenario and reuse across trials.
+        e_pd = compute_E_Pd(cfg.mu, cfg.sigma, cfg.Q_50, cfg.k)
         trials = [
-            simulate_paradox(dataclasses.replace(cfg, seed=cfg.seed + i))
+            simulate_paradox(
+                dataclasses.replace(cfg, seed=cfg.seed + i), E_Pd=e_pd
+            )
             for i in range(n_mc_per_scenario)
         ]
         mmsfs = [t.MMSF for t in trials if np.isfinite(t.MMSF)]

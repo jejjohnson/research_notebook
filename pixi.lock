@@ -12173,18 +12173,19 @@ packages:
 - pypi: ./projects/methane_pod
   name: methane-pod
   version: 0.1.0
-  sha256: 53a3f97f45671817b84c69e42007fa040e48a5c157468a49bed24bc8f76dea89
+  sha256: 62199bc168c15d57d0e6f62dcf5578ca7cc005b7aa399dbc82e9daadfde99923
   requires_dist:
-  - jax>=0.5
-  - jaxlib>=0.5
+  - jax>=0.7,<0.9
+  - jaxlib>=0.7,<0.9
   - equinox>=0.11
   - numpyro>=0.16
   - numpy
   - scipy
-  - matplotlib
-  - pandas
-  - corner ; extra == 'fit'
   - pandas ; extra == 'fit'
+  - corner ; extra == 'fit'
+  - matplotlib ; extra == 'notebooks'
+  - pandas ; extra == 'notebooks'
+  - ipython ; extra == 'notebooks'
   - pytest>=8 ; extra == 'dev'
   - pytest-xdist>=3.5 ; extra == 'dev'
   requires_python: '>=3.12'

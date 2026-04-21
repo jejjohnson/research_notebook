@@ -21,6 +21,8 @@ Convention
 Dependencies: jax, equinox, numpyro
 """
 
+from __future__ import annotations
+
 import jax.numpy as jnp
 import equinox as eqx
 import numpyro
@@ -29,7 +31,7 @@ import numpyro.distributions as dist
 
 # ═════════════════════════════════════════════════════════════════════════════
 # 1. CONSTANT (Homogeneous Poisson)
-# ════════════════════════════════════════════��════════════════════════════════
+# ═════════════════════════════════════════════════════════════════════════════
 
 class ConstantIntensity(eqx.Module):
     """Constant intensity for passive, continuously leaking infrastructure.
@@ -429,7 +431,7 @@ class OperationalScheduleIntensity(eqx.Module):
     lambda_active : float
         Intensity during operational hours [events day⁻¹]. Typical: 3–15.
     lambda_idle : float
-        Intensity during shutdown [events day⁻¹]. Typical: 0.1���1.0.
+        Intensity during shutdown [events day⁻¹]. Typical: 0.1–1.0.
     start_hour : float
         Start of active window [hours 0–24]. Default: 6.0.
     end_hour : float
@@ -556,7 +558,7 @@ class WeibullRenewalIntensity(eqx.Module):
 
 # ═════════════════════════════════════════════════════════════════════════════
 # 8. PERIODIC BATCH VENTING (Impulse Train)
-# ═��═══════════════════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════════════════════
 
 class PeriodicBatchIntensity(eqx.Module):
     """Periodic narrow-pulse intensity for scheduled batch venting.
@@ -1093,7 +1095,7 @@ class LivestockFeedlotIntensity(eqx.Module):
 
 # ═════════════════════════════════════════════════════════════════════════════
 # REGISTRY
-# ═══════════════════════════════════════════════���═════════════════════════════
+# ═════════════════════════════════════════════════════════════════════════════
 
 INTENSITY_REGISTRY = {
     "constant": ConstantIntensity,

@@ -20,16 +20,21 @@ Dependencies: numpy, scipy, jax, numpyro, pandas (for the MCMC runner output).
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import jax
 import jax.numpy as jnp
 import numpy as np
 import numpyro
 import numpyro.distributions as dist
-import pandas as pd
 import scipy
 from jax.scipy.special import erfc
+from jax.scipy.stats import norm as jax_norm
 from numpy.typing import NDArray
 from numpyro.infer import MCMC, NUTS
+
+if TYPE_CHECKING:  # pandas is imported lazily inside run_mcmc
+    import pandas as pd
 
 
 # ── Constants ────────────────────────────────────────────────────────────────
@@ -49,19 +54,31 @@ def lognorm_cdf(x: NDArray, x50: float, s: float) -> NDArray:
     Parameters
     ----------
     x : array_like, shape (N,)
-        Emission rate [kg/hr].
+        Emission rate [kg/hr]. Must be strictly positive.
     x50 : float
-        Median detection rate [kg/hr].
+        Median detection rate [kg/hr]. Must be strictly positive.
     s : float
-        Lognormal width [dimensionless].
+        Lognormal width [dimensionless]. Must be strictly positive.
 
     Returns
     -------
     pod : ndarray, shape (N,)
         Probability of detection ∈ [0, 1].
+
+    Raises
+    ------
+    ValueError
+        If any of ``x``, ``x50``, ``s`` are non-positive.
     """
+    x_arr = np.asarray(x)
+    if np.any(x_arr <= 0.0):
+        raise ValueError("lognorm_cdf: all entries of `x` must be > 0")
+    if not (x50 > 0.0):
+        raise ValueError(f"lognorm_cdf: `x50` must be > 0 (got {x50!r})")
+    if not (s > 0.0):
+        raise ValueError(f"lognorm_cdf: `s` must be > 0 (got {s!r})")
     return 1.0 - 0.5 * scipy.special.erfc(
-        (np.log(x) - np.log(x50)) / (np.sqrt(2.0) * s)
+        (np.log(x_arr) - np.log(x50)) / (np.sqrt(2.0) * s)
     )
 
 
@@ -108,13 +125,12 @@ def pod_powerlaw_model(
     sk = numpyro.sample("sk", dist.Uniform(0.1, 1.5))
 
     sum_log_x = jnp.sum(jnp.log(x_obs))
-    sum_log_q = jnp.sum(
-        jnp.log(
-            1.0 - 0.5 * erfc(
-                (jnp.log(x_obs) - jnp.log(x0)) / (jnp.sqrt(2.0) * sk)
-            )
-        )
-    )
+    # q(x) = Φ((ln x − ln x0)/sk) as a Normal CDF; log-evaluate via
+    # `norm.logcdf` so the far-left tail stays finite instead of underflowing
+    # to −inf for parameter draws with large x0 / small sk (which would
+    # otherwise break NUTS with NaN gradients).
+    u = (jnp.log(x_obs) - jnp.log(x0)) / sk
+    sum_log_q = jnp.sum(jax_norm.logcdf(u))
 
     xi_values = jnp.linspace(jnp.log(x_min), jnp.log(x_max), num_integration_points)
     pod_on_grid = 1.0 - 0.5 * erfc(
@@ -170,6 +186,8 @@ def run_mcmc(
     df_mcmc : pandas.DataFrame, shape (num_samples * num_chains, 3)
         Columns: ``x0`` [kg/hr], ``sk`` [dimensionless], ``alpha`` [dimensionless].
     """
+    import pandas as pd  # lazy — only `run_mcmc` requires pandas
+
     kernel = NUTS(pod_powerlaw_model)
     mcmc = MCMC(
         kernel,

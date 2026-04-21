@@ -38,6 +38,8 @@ Convention
 Dependencies: jax, equinox, numpyro
 """
 
+from __future__ import annotations
+
 import jax.numpy as jnp
 from jax.scipy.special import erf as _jax_erf
 import equinox as eqx
@@ -654,7 +656,7 @@ class VaryingCoefficientPOD(eqx.Module):
 
 # ═════════════════════════════════════════════════════════════════════════════
 # 6. SNR-BASED GLM (Radiometric First-Principles)
-# ═════════���═══════════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════════════════════
 
 class SNRBasedPOD(eqx.Module):
     """GLM on log-SNR: radiometric first-principles detection model.

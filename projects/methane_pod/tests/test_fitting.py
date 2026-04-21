@@ -24,6 +24,17 @@ def test_lognorm_cdf_monotone_and_bounded():
     assert abs(pod[idx] - 0.5) < 0.02
 
 
+def test_lognorm_cdf_rejects_non_positive_inputs():
+    with pytest.raises(ValueError, match=r"`x` must be > 0"):
+        lognorm_cdf(np.array([10.0, 0.0, 20.0]), x50=100.0, s=0.5)
+    with pytest.raises(ValueError, match=r"`x` must be > 0"):
+        lognorm_cdf(np.array([10.0, -1.0]), x50=100.0, s=0.5)
+    with pytest.raises(ValueError, match=r"`x50` must be > 0"):
+        lognorm_cdf(np.array([10.0]), x50=0.0, s=0.5)
+    with pytest.raises(ValueError, match=r"`s` must be > 0"):
+        lognorm_cdf(np.array([10.0]), x50=100.0, s=-0.1)
+
+
 def test_power_law_evaluates():
     x = np.array([10.0, 100.0, 1000.0])
     y = power_law(x, alpha=1.5)

@@ -26,6 +26,8 @@ jobs:
           cache: true
           frozen: true
       - name: Build docs
+        env:
+          BASE_URL: /research_notebook
         run: pixi run -e docs docs-build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

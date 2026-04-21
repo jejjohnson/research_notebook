@@ -17,6 +17,7 @@ jobs:
         with:
           pixi-version: latest
           cache: true
+          locked: false
       - name: Pull DVC data
         run: pixi run dvc pull || echo "DVC pull failed or no remote configured, skipping."
         continue-on-error: true

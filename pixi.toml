@@ -75,7 +75,9 @@ jupyter = "*"
 nbconvert = "*"
 
 [feature.pyrox.pypi-dependencies]
-pyrox = { git = "https://github.com/jejjohnson/pyrox", branch = "main", extras = ["colab", "optax"] }
+# Pinned to a specific commit (rather than branch = "main") so the lockfile
+# has a stable git ref. Bump this when you want a newer pyrox.
+pyrox = { git = "https://github.com/jejjohnson/pyrox", rev = "c122a87544d244192db622731d24b4a648eba853", extras = ["colab", "optax"] }
 # numpyro 0.20.1 declares `jax>=0.7` but its ops/provenance.py still imports
 # `xla_pmap_p`, which JAX removed at the 0.9 line. Clamp below 0.9 so the
 # resolver picks a version whose API matches numpyro's code. Drop this pin

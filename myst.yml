@@ -36,6 +36,28 @@ project:
                 - file: notebooks/pyrox/ensembles/README
                 - file: notebooks/pyrox/ensembles/ensemble_primitives_tutorial
                 - file: notebooks/pyrox/ensembles/ensemble_runner_tutorial
+        - title: coordax
+          children:
+            - file: notebooks/coordax/README
+            - title: Foundations
+              children:
+                - file: notebooks/coordax/foundations/README
+                - file: notebooks/coordax/foundations/01_create_datasets
+                - file: notebooks/coordax/foundations/02_ops_unary_binary
+                - file: notebooks/coordax/foundations/03_ops_coordinates
+                - file: notebooks/coordax/foundations/04_reductions
+            - title: Derivatives
+              children:
+                - file: notebooks/coordax/derivatives/README
+                - file: notebooks/coordax/derivatives/05_finite_difference
+                - file: notebooks/coordax/derivatives/06_spherical_harmonics_derivatives
+                - file: notebooks/coordax/derivatives/07_finite_volume
+            - title: Dynamics
+              children:
+                - file: notebooks/coordax/dynamics/README
+                - file: notebooks/coordax/dynamics/08_ode_integration
+                - file: notebooks/coordax/dynamics/09_ode_parameter_state_estimation
+                - file: notebooks/coordax/dynamics/10_pde_parameter_estimation
     - title: API Reference
       children:
         - file: docs/api/reference

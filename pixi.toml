@@ -88,12 +88,41 @@ jaxlib = ">=0.7,<0.9"
 [feature.pyrox.tasks]
 execute-pyrox = "jupyter nbconvert --to notebook --execute --inplace notebooks/pyrox/gp/*.ipynb notebooks/pyrox/masterclass/*.ipynb notebooks/pyrox/ensembles/*.ipynb --ExecutePreprocessor.timeout=600"
 
+# ---------------------------------------------------------------------------
+# Showcase env: coordax
+# Coordinate-aware JAX arrays. Notebooks 08-10 use diffrax (ODE/PDE solves)
+# and optax + equinox (parameter/state estimation), so those are bundled in
+# alongside coordax itself. No git pin needed — coordax is on PyPI.
+# ---------------------------------------------------------------------------
+[feature.coordax.dependencies]
+python = "3.12.*"
+ipykernel = ">=6.29"
+jupyter = "*"
+nbconvert = "*"
+jupytext = ">=1.16"
+
+[feature.coordax.pypi-dependencies]
+coordax = ">=0.2"
+# coordax unconditionally imports chex at package init (coordax/testing.py),
+# but does not declare it as a runtime dep. Pin it here until coordax fixes
+# the missing declaration or guards the import.
+chex = ">=0.1"
+jax = ">=0.5"
+jaxlib = ">=0.5"
+diffrax = ">=0.5"
+optax = ">=0.2"
+equinox = ">=0.11"
+
+[feature.coordax.tasks]
+execute-coordax = "jupyter nbconvert --to notebook --execute --inplace notebooks/coordax/foundations/*.ipynb notebooks/coordax/derivatives/*.ipynb notebooks/coordax/dynamics/*.ipynb --ExecutePreprocessor.timeout=600"
+
 [environments]
 default = { features = ["dev"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 jupyterlab = { features = ["dev", "jupyterlab"], solve-group = "default" }
 marimo = { features = ["dev", "marimo"], solve-group = "default" }
 pyrox = { features = ["pyrox"], solve-group = "pyrox" }
+coordax = { features = ["coordax"], solve-group = "coordax" }
 
 [tasks]
 test = "pytest -v"

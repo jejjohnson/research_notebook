@@ -28,3 +28,12 @@ notebooks/
 
 Figures render inline via the notebook's own outputs; do not save separate
 PNGs or reference a `docs/images/` directory.
+
+## Current showcases
+
+- [`pyrox/`](./pyrox/README.md) — equinox + NumPyro + JAX probabilistic
+  programming (GP regression/classification, regression masterclass,
+  ensemble methods).
+- [`coordax/`](./coordax/README.md) — coordinate-aware arrays for JAX
+  (foundations, finite-difference and finite-volume derivatives, ODE/PDE
+  integration and parameter estimation).

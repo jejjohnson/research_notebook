@@ -1,9 +1,8 @@
 """Householder QR decomposition of an orthogonal matrix.
 
-Given ``Q ∈ O(d)``, return ``d`` reflector vectors ``v_0, …, v_{d-1}``
-such that the product of Householders ``H_{d-1} … H_1 H_0`` equals
-``Q`` (matching the application order used by
-:class:`gaussianization.gauss_keras.bijectors.Householder`).
+Given ``Q ∈ O(d)``, return ``d`` reflector vectors so that, when fed
+into :class:`gaussianization.gauss_keras.bijectors.Householder`, the
+layer computes ``y = x @ Q`` on batched rows.
 
 The standard Householder QR algorithm produces ``H̃_0, …, H̃_{d-1}``
 with ``H̃_{d-1} … H̃_0 Q = R`` upper-triangular. For an orthogonal
@@ -14,9 +13,11 @@ the right determinant parity we flip one column (any orthonormal basis
 is equivalent up to column signs for the uses IG init puts it to), so
 the decomposition is always exact up to floating point.
 
-Finally, ``Q = H̃_0 H̃_1 … H̃_{d-1}``, so the layer's stored vectors
-(which are applied in the order ``v_0`` first) are
-``[H̃_{d-1}, H̃_{d-2}, …, H̃_0]``.
+The layer applies reflectors on row vectors as
+``y = y @ H_0 @ H_1 @ … @ H_{K-1}``. Since ``Q = H̃_0 H̃_1 … H̃_{d-1}``
+(Householders are self-inverse), setting ``layer.v[j] = v_qr[j]``
+in the same forward QR order makes the layer compute ``x @ Q`` — no
+reversal is needed. The function returns ``v_qr`` accordingly.
 """
 
 from __future__ import annotations

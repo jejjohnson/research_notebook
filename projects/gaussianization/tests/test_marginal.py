@@ -97,6 +97,35 @@ def test_inverse_call_does_not_add_loss():
     assert len(layer.losses) == 0
 
 
+def test_adapt_means_from_quantiles_rejects_non_2d():
+    import pytest
+
+    layer = MixtureCDFGaussianization(num_components=4)
+    with pytest.raises(ValueError, match="shape \\(n, d\\)"):
+        layer.adapt_means_from_quantiles(np.zeros(10, dtype=np.float32))
+    with pytest.raises(ValueError, match="shape \\(n, d\\)"):
+        layer.adapt_means_from_quantiles(np.zeros((2, 3, 4), dtype=np.float32))
+
+
+def test_adapt_means_from_quantiles_handles_single_component():
+    """With num_components=1 the inter-quantile diff is empty; the
+    bandwidth should fall back to the data std rather than NaN."""
+    layer = MixtureCDFGaussianization(num_components=1)
+    rng = np.random.default_rng(0)
+    data = (rng.standard_normal((500, 2)) * 2.0 + 1.0).astype(np.float32)
+    layer.adapt_means_from_quantiles(data)
+    means = _to_numpy(layer.means)
+    log_scales = _to_numpy(layer.log_scales)
+    assert np.all(np.isfinite(means))
+    assert np.all(np.isfinite(log_scales))
+    # Sanity: with d=2, k=1 the single mean per dim is the 0.5 quantile.
+    np.testing.assert_allclose(
+        means[:, 0],
+        [np.quantile(data[:, 0], 0.5), np.quantile(data[:, 1], 0.5)],
+        atol=1e-6,
+    )
+
+
 def test_adapt_means_from_quantiles_sets_means():
     layer = MixtureCDFGaussianization(num_components=5)
     rng = np.random.default_rng(12)

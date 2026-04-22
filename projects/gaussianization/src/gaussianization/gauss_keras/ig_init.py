@@ -24,6 +24,8 @@ this starting point.
 
 from __future__ import annotations
 
+from typing import Any, Callable
+
 import numpy as np
 from scipy.stats import norm
 from sklearn.decomposition import PCA
@@ -50,7 +52,9 @@ __all__ = ["initialize_flow_from_ig"]
 # ------------------------------------------------------------------ #
 
 
-def _fit_gmm_per_dim(y_col, num_components, random_state):
+def _fit_gmm_per_dim(
+    y_col: np.ndarray, num_components: int, random_state: int
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Fit a 1-D diagonal GMM and return ``(logits, means, log_scales)``.
 
     Each returned array has shape ``(num_components,)``.
@@ -70,7 +74,9 @@ def _fit_gmm_per_dim(y_col, num_components, random_state):
     return logits, means, log_scales
 
 
-def _invert_log_scale_clamp(clamp, clamped):
+def _invert_log_scale_clamp(
+    clamp: Callable[[Any], Any], clamped: np.ndarray
+) -> np.ndarray:
     """Compute the raw pre-clamp value so that ``clamp(raw) ≈ clamped``."""
     kind = getattr(clamp, "kind", None)
     if kind == "tanh":
@@ -94,7 +100,12 @@ def _invert_log_scale_clamp(clamp, clamped):
     )
 
 
-def _apply_marginal_numpy(y, logits, means, log_scales):
+def _apply_marginal_numpy(
+    y: np.ndarray,
+    logits: np.ndarray,
+    means: np.ndarray,
+    log_scales: np.ndarray,
+) -> np.ndarray:
     """Per-dim mixture-CDF Gaussianization ``z = Φ⁻¹(F(y))`` in numpy."""
     y = np.asarray(y, dtype=np.float64)
     n, d = y.shape
@@ -112,7 +123,7 @@ def _apply_marginal_numpy(y, logits, means, log_scales):
     return z.astype(np.float32)
 
 
-def _find_last_dense(conditioner):
+def _find_last_dense(conditioner: Any) -> Any:
     import keras
 
     layers = list(getattr(conditioner, "layers", [conditioner]))
@@ -122,7 +133,7 @@ def _find_last_dense(conditioner):
     raise ValueError("No Dense layer found in conditioner")
 
 
-def _is_shared_output(conditioner, d_b, num_components):
+def _is_shared_output(conditioner: Any, d_b: int, num_components: int) -> bool:
     """True if the last Dense emits ``3*K`` (shared) rather than ``3*d_b*K`` (per-dim)."""
     last = _find_last_dense(conditioner)
     out = int(last.kernel.shape[-1])
@@ -137,7 +148,14 @@ def _is_shared_output(conditioner, d_b, num_components):
     )
 
 
-def _pack_bias(logits, means, raw_log_scales, d_b, num_components, shared):
+def _pack_bias(
+    logits: np.ndarray,
+    means: np.ndarray,
+    raw_log_scales: np.ndarray,
+    d_b: int,
+    num_components: int,
+    shared: bool,
+) -> np.ndarray:
     """Flatten mixture params into the last Dense bias vector.
 
     The coupling layer reshapes ``flat -> (batch, 3, d_b, K)`` and splits
@@ -167,7 +185,7 @@ def _pack_bias(logits, means, raw_log_scales, d_b, num_components, shared):
 # ------------------------------------------------------------------ #
 
 
-def _init_fixed_ortho(layer, y):
+def _init_fixed_ortho(layer: FixedOrtho, y: np.ndarray) -> np.ndarray:
     d = y.shape[-1]
     pca = PCA(n_components=d).fit(y)
     q = pca.components_.T  # (d, d); each column is a principal axis
@@ -175,7 +193,7 @@ def _init_fixed_ortho(layer, y):
     return (y @ q).astype(np.float32)
 
 
-def _init_householder(layer, y):
+def _init_householder(layer: Householder, y: np.ndarray) -> np.ndarray:
     d = y.shape[-1]
     pca = PCA(n_components=d).fit(y)
     q = pca.components_.T
@@ -184,7 +202,7 @@ def _init_householder(layer, y):
     return apply_reflectors(v, y).astype(np.float32)
 
 
-def _dim_seed(block_idx, dim_idx, random_state):
+def _dim_seed(block_idx: int, dim_idx: int, random_state: int) -> int:
     """Per-(block, dim) EM seed.
 
     Making the GMM seed depend only on ``(block_idx, dim_idx)`` — not on
@@ -196,7 +214,12 @@ def _dim_seed(block_idx, dim_idx, random_state):
     return int(random_state) + int(block_idx) * 1000 + int(dim_idx)
 
 
-def _init_marginal(layer, y, block_idx, random_state):
+def _init_marginal(
+    layer: MixtureCDFGaussianization,
+    y: np.ndarray,
+    block_idx: int,
+    random_state: int,
+) -> np.ndarray:
     d = y.shape[-1]
     k = layer.num_components
     logits = np.zeros((d, k), dtype=np.float64)
@@ -212,7 +235,12 @@ def _init_marginal(layer, y, block_idx, random_state):
     return _apply_marginal_numpy(y, logits, means, log_scales)
 
 
-def _init_coupling(layer, y, block_idx, random_state):
+def _init_coupling(
+    layer: MixtureCDFCoupling,
+    y: np.ndarray,
+    block_idx: int,
+    random_state: int,
+) -> np.ndarray:
     """Zero the conditioner's final kernel and set bias = GMM fits of y[:, b_idx]."""
     b_idx = layer._b_idx
     d_b = layer.d_b
@@ -270,7 +298,11 @@ def _init_coupling(layer, y, block_idx, random_state):
 # ------------------------------------------------------------------ #
 
 
-def initialize_flow_from_ig(flow, x, random_state=0):
+def initialize_flow_from_ig(
+    flow: GaussianizationFlow,
+    x: np.ndarray,
+    random_state: int = 0,
+) -> np.ndarray:
     """Warm-start a built flow's weights via iterative Gaussianization.
 
     Args:
@@ -279,8 +311,11 @@ def initialize_flow_from_ig(flow, x, random_state=0):
         x: training data of shape ``(n, d)``.
         random_state: base seed for the sklearn GMM EM fits. Each
             per-dim GMM fit uses seed ``random_state + block_idx * 1000
-            + dim_idx``, where ``block_idx`` increments each time a
-            rotation layer (``FixedOrtho`` / ``Householder``) is seen.
+            + dim_idx``, where ``block_idx`` increments from 0 on the
+            first rotation (``FixedOrtho`` / ``Householder``) and then
+            by one each subsequent rotation. If the flow has no
+            rotation before the first marginal/coupling layer,
+            ``block_idx`` is clamped to 0 for that leading transform.
             This matching means a coupling flow and a diagonal flow
             with the same block structure assign *identical* fits to
             the same dim at the same block.
@@ -300,8 +335,7 @@ def initialize_flow_from_ig(flow, x, random_state=0):
             f"x has d={y.shape[-1]} but flow.input_dim={flow.input_dim}"
         )
 
-    block_idx = 0
-    seen_rotation = False
+    block_idx = -1
     for layer in flow.bijector_layers:
         if not layer.built:
             raise RuntimeError(
@@ -310,19 +344,15 @@ def initialize_flow_from_ig(flow, x, random_state=0):
                 "initialize_flow_from_ig so all weights exist."
             )
         if isinstance(layer, FixedOrtho):
-            if seen_rotation:
-                block_idx += 1
-            seen_rotation = True
+            block_idx += 1
             y = _init_fixed_ortho(layer, y)
         elif isinstance(layer, Householder):
-            if seen_rotation:
-                block_idx += 1
-            seen_rotation = True
+            block_idx += 1
             y = _init_householder(layer, y)
         elif isinstance(layer, MixtureCDFGaussianization):
-            y = _init_marginal(layer, y, block_idx, random_state)
+            y = _init_marginal(layer, y, max(block_idx, 0), random_state)
         elif isinstance(layer, MixtureCDFCoupling):
-            y = _init_coupling(layer, y, block_idx, random_state)
+            y = _init_coupling(layer, y, max(block_idx, 0), random_state)
         else:
             raise ValueError(
                 f"initialize_flow_from_ig: unsupported bijector type "

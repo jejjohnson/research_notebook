@@ -123,11 +123,22 @@ class MixtureCDFGaussianization(Bijector):
 
         Places component means at evenly-spaced quantiles of ``x`` per
         dimension so the first forward pass does not collapse to a
-        single component. ``x`` is a ``(n, d)`` numpy-like array.
+        single component.
+
+        Args:
+            x: array-like of shape ``(n, d)``.
+
+        Raises:
+            ValueError: if ``x`` is not 2-D.
         """
         import numpy as np
 
         x = np.asarray(x)
+        if x.ndim != 2:
+            raise ValueError(
+                f"adapt_means_from_quantiles expects x of shape (n, d); "
+                f"got shape {x.shape}"
+            )
         d = x.shape[-1]
         k = self.num_components
         if not self.built:
@@ -137,8 +148,14 @@ class MixtureCDFGaussianization(Bijector):
             [np.quantile(x[:, i], qs) for i in range(d)], axis=0
         ).astype("float32")
         self.means.assign(means)
-        # Set log-scales to a reasonable bandwidth based on inter-quantile spacing.
-        spacing = float(np.mean(np.diff(qs) * (x.std(axis=0).mean())))
+        # Bandwidth from inter-quantile spacing × data std. For ``k == 1``
+        # there is no inter-quantile gap, so fall back to a spacing of 1
+        # (the default log-scale of 0 is kept).
+        data_std = float(x.std(axis=0).mean())
+        if k > 1:
+            spacing = float(np.mean(np.diff(qs)) * data_std)
+        else:
+            spacing = data_std
         self.log_scales.assign(
             self.log_scales.numpy() * 0 + math.log(max(spacing, 0.1))
         )

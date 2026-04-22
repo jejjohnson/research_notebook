@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any, Sequence
+
 import numpy as np
 from keras import ops
 
@@ -17,23 +19,25 @@ from gaussianization.gauss_keras.bijectors.marginal import MixtureCDFGaussianiza
 from gaussianization.gauss_keras.bijectors.rotation import FixedOrtho, Householder
 
 
-def base_nll_loss(_y_true, y_pred):
+def base_nll_loss(_y_true: Any, y_pred: Any) -> Any:
     """Negative log-likelihood under a ``N(0, I)`` base.
 
     The per-layer log-det contributions flow in via ``layer.add_loss``;
     this function only reports ``-E[log p_Z(z)]`` for the final latent.
+    Accepts and returns whatever tensor type the active Keras backend
+    produces (TF / JAX / torch).
     """
     return -ops.mean(ops.sum(norm_log_pdf(y_pred), axis=-1))
 
 
 def make_gaussianization_flow(
-    input_dim,
-    num_blocks=6,
-    num_reflectors=None,
-    num_components=8,
-    pca_init_data=None,
-    mixture_init_data=None,
-):
+    input_dim: int,
+    num_blocks: int = 6,
+    num_reflectors: int | None = None,
+    num_components: int = 8,
+    pca_init_data: np.ndarray | None = None,
+    mixture_init_data: np.ndarray | None = None,
+) -> GaussianizationFlow:
     """Build a ``FixedOrtho? → (Householder → MixtureCDF)×N`` flow.
 
     Args:
@@ -65,16 +69,16 @@ def make_gaussianization_flow(
 
 
 def make_coupling_flow(
-    input_dim,
-    num_blocks=4,
-    num_components=8,
-    hidden=(64, 64),
-    activation="relu",
-    mask=None,
-    shared_mixture=False,
-    include_rotation=True,
-    num_reflectors=None,
-):
+    input_dim: int,
+    num_blocks: int = 4,
+    num_components: int = 8,
+    hidden: Sequence[int] = (64, 64),
+    activation: str = "relu",
+    mask: np.ndarray | Sequence[bool] | None = None,
+    shared_mixture: bool = False,
+    include_rotation: bool = True,
+    num_reflectors: int | None = None,
+) -> GaussianizationFlow:
     """Build a coupling flow with alternating-mask ``MixtureCDFCoupling`` pairs.
 
     Each block is ``[Householder?, MixtureCDFCoupling(m), MixtureCDFCoupling(~m)]``

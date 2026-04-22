@@ -91,6 +91,13 @@ project:
                 - file: projects/plume_simulation/notebooks/les_fvm/00_eulerian_dispersion_derivation
                 - file: projects/plume_simulation/notebooks/les_fvm/01_eulerian_dispersion_l2
                 - file: projects/plume_simulation/notebooks/les_fvm/03_puff_vs_eulerian
+        - title: Gaussianization flows
+          children:
+            - file: projects/gaussianization/README
+            - file: projects/gaussianization/notebooks/01_gaussianization_2d
+            - file: projects/gaussianization/notebooks/02_coupling_flow_2d
+            - file: projects/gaussianization/notebooks/03_iterative_gaussianization_init
+            - file: projects/gaussianization/notebooks/04_coupling_equivalence
     - title: API Reference
       children:
         - file: docs/api/reference

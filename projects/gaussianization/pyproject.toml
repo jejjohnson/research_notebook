@@ -1,0 +1,41 @@
+[project]
+name = "gaussianization"
+version = "0.1.0"
+description = "Gaussianization flows — pure-Keras bijectors and density-estimation building blocks."
+requires-python = ">=3.12"
+# Pure Keras 3 — no jax/equinox/lineax dependency at the library layer.
+# Backend (TF, JAX, or torch) is chosen by the caller via the KERAS_BACKEND
+# environment variable. TensorFlow is the default we test against because
+# it ships alongside keras 3 wheels and has the most mature `add_loss`
+# behaviour.
+dependencies = [
+    "keras>=3.0",
+    "numpy",
+    # Used by ``ig_init.initialize_flow_from_ig`` (PCA + per-dim GMM fits).
+    "scikit-learn>=1.3",
+    # scipy.stats.norm.ppf is used by the numpy-side forward pass that
+    # propagates data through a marginal layer during IG initialisation.
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+# Default backend for tests + notebook execution. Users who want the JAX
+# or torch backends can install those themselves and set KERAS_BACKEND.
+tf = ["tensorflow>=2.16"]
+notebooks = ["matplotlib", "scikit-learn", "seaborn>=0.13", "ipython"]
+dev = ["pytest>=8", "pytest-xdist>=3.5", "tensorflow>=2.16"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gaussianization"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]

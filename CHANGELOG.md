@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.3](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.2...research_notebook-v0.1.3) (2026-04-22)
+
+
+### Features
+
+* **gaussianization:** new sub-project with pure-Keras Gaussianization flows ([#18](https://github.com/jejjohnson/research_notebook/issues/18)) ([0432e3e](https://github.com/jejjohnson/research_notebook/commit/0432e3efc88f410d5cbfdcbc1422a63e8bb347a4))
+* **plume-simulation:** port Eulerian 3-D dispersion (L2) on finitevolX ([#16](https://github.com/jejjohnson/research_notebook/issues/16)) ([fdd67c0](https://github.com/jejjohnson/research_notebook/commit/fdd67c09251cb866a5dc8b3240a83552364aa5c8))
+* **plume-simulation:** port gauss_puff with diffrax-driven time-varying wind ([#14](https://github.com/jejjohnson/research_notebook/issues/14)) ([44a8ef9](https://github.com/jejjohnson/research_notebook/commit/44a8ef9724ec9f988ccaebdddc0828d65cc706a2))
+
+
+### Documentation
+
+* **gaussian-processes:** new sub-project with three SVGP tutorials ([#20](https://github.com/jejjohnson/research_notebook/issues/20)) ([276891f](https://github.com/jejjohnson/research_notebook/commit/276891fa34024ee645a9d072280769b60fddf947))
+* **jupyterbook:** wire gaussianization into TOC + shorten sidebar titles ([#19](https://github.com/jejjohnson/research_notebook/issues/19)) ([8843967](https://github.com/jejjohnson/research_notebook/commit/8843967aac83f27900980d0ddd8eed7d6339de6b))
+
 ## [0.1.2](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.1...research_notebook-v0.1.2) (2026-04-21)
 
 

@@ -66,13 +66,20 @@ plotly = ">=5"
 # ---------------------------------------------------------------------------
 # Showcase env: pyrox
 # Pulls pyrox from its git main + the [colab] and [optax] extras so every
-# notebook under notebooks/pyrox/ can be re-executed end-to-end.
+# notebook under notebooks/pyrox/ and projects/gaussian_processes/notebooks/
+# can be re-executed end-to-end. The latter adds cartopy (Iberian maps in
+# the Kronecker-GEV notebook); the rest of its deps overlap with pyrox's
+# existing transitive closure (matplotlib, scipy via sklearn, optax).
 # ---------------------------------------------------------------------------
 [feature.pyrox.dependencies]
 python = "3.12.*"
 ipykernel = ">=6.29"
 jupyter = "*"
 nbconvert = "*"
+# cartopy pulls geos/proj/shapely via conda-forge — much cleaner than PyPI
+# wheels for the C-library-heavy geospatial stack. Used by
+# projects/gaussian_processes/notebooks/kronecker/01_spain_extremes.ipynb.
+cartopy = ">=0.24"
 
 [feature.pyrox.pypi-dependencies]
 # Pinned to a specific commit (rather than branch = "main") so the lockfile
@@ -87,6 +94,7 @@ jaxlib = ">=0.7,<0.9"
 
 [feature.pyrox.tasks]
 execute-pyrox = "jupyter nbconvert --to notebook --execute --inplace notebooks/pyrox/gp/*.ipynb notebooks/pyrox/masterclass/*.ipynb notebooks/pyrox/ensembles/*.ipynb --ExecutePreprocessor.timeout=600"
+execute-gaussian-processes = "jupyter nbconvert --to notebook --execute --inplace projects/gaussian_processes/notebooks/pyroxgp/*.ipynb projects/gaussian_processes/notebooks/kronecker/*.ipynb --ExecutePreprocessor.timeout=1200"
 
 # ---------------------------------------------------------------------------
 # Showcase env: coordax

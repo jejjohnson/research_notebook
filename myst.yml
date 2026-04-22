@@ -98,6 +98,15 @@ project:
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d
             - file: projects/gaussianization/notebooks/03_iterative_gaussianization_init
             - file: projects/gaussianization/notebooks/04_coupling_equivalence
+        - title: Gaussian processes
+          children:
+            - file: projects/gaussian_processes/README
+            - title: SVGP with pyrox
+              children:
+                - file: projects/gaussian_processes/notebooks/pyroxgp/README
+                - file: projects/gaussian_processes/notebooks/pyroxgp/01_svgp_standard
+                - file: projects/gaussian_processes/notebooks/pyroxgp/02_svgp_spherical_harmonics
+                - file: projects/gaussian_processes/notebooks/pyroxgp/03_svgp_rff_nn
     - title: API Reference
       children:
         - file: docs/api/reference

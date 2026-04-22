@@ -105,8 +105,9 @@ project:
               children:
                 - file: projects/gaussian_processes/notebooks/pyroxgp/README
                 - file: projects/gaussian_processes/notebooks/pyroxgp/01_svgp_standard
-                - file: projects/gaussian_processes/notebooks/pyroxgp/02_svgp_spherical_harmonics
-                - file: projects/gaussian_processes/notebooks/pyroxgp/03_svgp_rff_nn
+                - file: projects/gaussian_processes/notebooks/pyroxgp/02_svgp_batched
+                - file: projects/gaussian_processes/notebooks/pyroxgp/03_svgp_spherical_harmonics
+                - file: projects/gaussian_processes/notebooks/pyroxgp/04_svgp_rff_nn
             - title: Kronecker GPs + non-Gaussian likelihoods
               children:
                 - file: projects/gaussian_processes/notebooks/kronecker/README

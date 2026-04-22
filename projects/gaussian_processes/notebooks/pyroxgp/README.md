@@ -4,13 +4,14 @@ title: SVGP with pyrox
 
 # Sparse variational GPs with pyrox
 
-Three SVGP notebooks, same scaffolding — the only thing that changes between them is **how the inducing distribution is parameterised**.
+Four SVGP notebooks, same scaffolding — each one changes exactly one thing about the setup.
 
-| Notebook | Inducing structure | What you take away |
+| Notebook | What changes | What you take away |
 |---|---|---|
-| [01_svgp_standard](01_svgp_standard.ipynb) | Point-inducing `Z ∈ ℝ^(M×D)` | Canonical Titsias/Hensman SVGP — ELBO, `WhitenedGuide`, inducing-point migration. |
-| [02_svgp_spherical_harmonics](02_svgp_spherical_harmonics.ipynb) | Real spherical harmonics on S² (VISH, Dutordoir 2020) | Diagonal `K_uu`, closed-form Funk–Hecke coefficients, inter-domain feature viewpoint. |
-| [03_svgp_rff_nn](03_svgp_rff_nn.ipynb) | Point-inducing on NN-warped space, kernel ≈ RFF inner-product | Deep kernels, finite-dim RFF projections, when the base RBF isn't expressive enough. |
+| [01_svgp_standard](01_svgp_standard.ipynb) | — (baseline) | Canonical Titsias/Hensman SVGP — ELBO, `WhitenedGuide`, inducing-point migration. |
+| [02_svgp_batched](02_svgp_batched.ipynb) | Full-data ELBO → unbiased mini-batch ELBO | Why you'd reach for SVGP in the first place: `(N/B) · ELL − KL` scaling, wallclock comparison, batch-size sweep. |
+| [03_svgp_spherical_harmonics](03_svgp_spherical_harmonics.ipynb) | Point-inducing `Z ∈ ℝ^(M×D)` → spherical-harmonic basis on S² (VISH, Dutordoir 2020) | Diagonal `K_uu`, closed-form Funk–Hecke coefficients, inter-domain feature viewpoint. O(M) vs O(M³) solve-cost sweep. |
+| [04_svgp_rff_nn](04_svgp_rff_nn.ipynb) | RBF kernel → RFF inner-product on NN-warped input | Deep kernels, finite-dim RFF projections, when the base RBF isn't expressive enough. |
 
 ## Shared ingredients
 

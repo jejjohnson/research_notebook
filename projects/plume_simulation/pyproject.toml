@@ -27,6 +27,10 @@ dependencies = [
 inference = ["numpyro>=0.16"]
 # Pulled in by the notebooks (plots, cartopy-free projections).
 notebooks = ["matplotlib", "ipython"]
+# The hapi_lut sub-package imports HAPI lazily — install this extra (or
+# ``pixi install -e plume-simulation``) to build LUTs. Not required for
+# importing plume_simulation.hapi_lut.
+hapi = ["hitran-api"]
 dev = ["pytest>=8", "pytest-xdist>=3.5", "numpyro>=0.16"]
 
 [build-system]

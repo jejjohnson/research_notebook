@@ -184,9 +184,19 @@ equinox = ">=0.11"
 # git by tag so the lockfile is reproducible — bump when a new tag
 # is released.
 finitevolx = { git = "https://github.com/jejjohnson/finitevolX", tag = "v0.0.41" }
+# hitran-api (HAPI) powers the hapi_lut sub-package: line-by-line Voigt
+# absorption cross-section LUTs. Imported lazily inside the generator, so
+# the rest of plume_simulation does not require it at import time. The
+# hapi_lut notebooks need to download HITRAN line parameters on first run
+# (tens of MB per gas, cached under projects/plume_simulation/data/hitran_cache/).
+hitran-api = "*"
 
 [feature.plume-simulation.tasks]
 execute-plume-simulation = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/*.ipynb projects/plume_simulation/notebooks/gauss_puff/*.ipynb projects/plume_simulation/notebooks/les_fvm/*.ipynb --ExecutePreprocessor.timeout=1200"
+# The hapi_lut notebooks are kept out of the CI-targeted task above because
+# they fetch HITRAN line parameters (network) and write uncommitted .nc LUTs
+# under projects/plume_simulation/data/. Run locally via the task below.
+execute-plume-hapi-lut = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/hapi_lut/*.ipynb --ExecutePreprocessor.timeout=1800"
 test-plume-simulation = "pytest projects/plume_simulation/tests -v -m 'not slow'"
 test-plume-simulation-all = "pytest projects/plume_simulation/tests -v"
 

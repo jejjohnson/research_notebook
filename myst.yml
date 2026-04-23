@@ -112,6 +112,8 @@ project:
               children:
                 - file: projects/gaussian_processes/notebooks/kronecker/README
                 - file: projects/gaussian_processes/notebooks/kronecker/01_spain_extremes
+                - file: projects/gaussian_processes/notebooks/kronecker/02_spain_multiplicative
+                - file: projects/gaussian_processes/notebooks/kronecker/03_spain_nonstationary
     - title: API Reference
       children:
         - file: docs/api/reference

@@ -9,7 +9,7 @@ Worked examples for Gaussian-process models — sparse variational GPs, inter-do
 ## Sub-sections
 
 - [SVGP with pyrox](notebooks/pyroxgp/README.md) — stochastic variational GP regression using [`pyrox.gp`](https://github.com/jejjohnson/pyrox): the standard inducing-point variant, a mini-batched variant, an inter-domain variant with spherical-harmonic inducing features (VISH), and a deep-kernel variant with random Fourier features chained behind a small MLP.
-- [Kronecker GPs + non-Gaussian likelihoods](notebooks/kronecker/README.md) — an additive space × time GP over Spain with a custom `GeneralizedExtremeValue` observation likelihood, using `gaussx.KroneckerSum` + `gaussx.GaussHermiteIntegrator`. Produces 25/100-year return-level maps under current and warming-projected climates.
+- [Kronecker GPs + non-Gaussian likelihoods](notebooks/kronecker/README.md) — three notebooks building from an **additive** space + time GP (`gaussx.KroneckerSum`) → a **multiplicative** variant with a spatially varying warming rate (`gaussx.SumKronecker`) → a **fully non-stationary GEV** (per-location $\sigma(s)$, $\xi(s)$) handled by 3-D Gauss–Hermite ELL. Produces 25/100-year return-level maps, the 2024 $\to$ 2050 warming-shift pattern, and the spatial map of tail-thickness contrast.
 
 ## Running
 

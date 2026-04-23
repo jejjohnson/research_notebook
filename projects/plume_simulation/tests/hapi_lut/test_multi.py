@@ -18,9 +18,18 @@ from plume_simulation.hapi_lut import (
 
 @pytest.fixture
 def stub_hapi(monkeypatch):
+    from pathlib import Path
+
     fake = types.ModuleType("hapi")
-    fake.db_begin = lambda path: None  # noqa: ARG005
-    fake.fetch = lambda *args, **kwargs: None  # noqa: ARG005
+    state: dict[str, Path] = {}
+
+    def db_begin(path):
+        state["cache"] = Path(path)
+
+    def fetch(name, *args, **kwargs):  # noqa: ARG001
+        cache = state["cache"]
+        (cache / f"{name}.data").write_text("stub\n")
+        (cache / f"{name}.header").write_text("stub\n")
 
     def absorptionCoefficient_Voigt(  # noqa: N802
         *, SourceTables, WavenumberGrid, Environment, Diluent, HITRAN_units  # noqa: ARG001
@@ -33,6 +42,8 @@ def stub_hapi(monkeypatch):
         coef = base * (1e-23 + 1e-26 * T + 1e-25 * p) * np.ones_like(nu)
         return nu, coef
 
+    fake.db_begin = db_begin
+    fake.fetch = fetch
     fake.absorptionCoefficient_Voigt = absorptionCoefficient_Voigt
     monkeypatch.setitem(sys.modules, "hapi", fake)
     return fake

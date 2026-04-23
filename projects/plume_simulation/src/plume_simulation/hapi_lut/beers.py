@@ -13,7 +13,7 @@ notebooks. The physics is:
 For plume-enhancement retrievals the differential form is
 
     τ_ratio(ν) = τ_total(ν) / τ_background(ν)
-               = exp[ -α(ν) · L_vert · AMF · (VMR_total - VMR_bg) / VMR_bg ]
+               = exp[ -σ(ν; T, p) · N_total · L_vert · AMF · (VMR_total - VMR_bg) ]
 
 — any factor common to the "plume" and "background" pixel (solar spectrum,
 broadband albedo, aerosol) cancels, leaving the narrow-band gas signature.

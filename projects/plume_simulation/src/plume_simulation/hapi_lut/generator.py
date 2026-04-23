@@ -38,12 +38,16 @@ def default_cache_dir() -> Path:
 
     Resolution order:
       1. ``$HAPI_CACHE_DIR`` if set.
-      2. ``./data/hitran_cache`` relative to the current working directory.
+      2. ``~/.cache/plume_simulation/hitran`` — a per-user cache, so that
+         invoking the generator from anywhere on disk does not leave
+         unignored artefacts in the repository tree. The
+         ``projects/plume_simulation/data/hitran_cache`` path used by the
+         notebooks is always passed explicitly.
     """
     env = os.environ.get(HAPI_CACHE_ENV)
     if env:
         return Path(env).expanduser().resolve()
-    return Path.cwd() / "data" / "hitran_cache"
+    return Path.home() / ".cache" / "plume_simulation" / "hitran"
 
 
 def _init_hapi_cache(cache_dir: Path) -> None:
@@ -62,9 +66,14 @@ def fetch_hitran_data(
     """Fetch HITRAN line parameters for ``gas_config`` into ``cache_dir``.
 
     HAPI writes a ``<GasConfig.name>.data`` + ``.header`` pair under
-    ``cache_dir``. If the files already exist within the requested wavenumber
-    range, HAPI is effectively idempotent but will still re-download; callers
-    who want a true skip should check for existence first.
+    ``cache_dir``. If a cached pair already exists this call no-ops without
+    contacting HITRAN; otherwise the line parameters are downloaded and
+    parsed by HAPI.
+
+    Raises:
+        RuntimeError: if ``fetch()`` raises (e.g. no network, invalid range)
+            *and* no cached pair is already present. The underlying HAPI
+            exception is chained so the network / API error is visible.
 
     Returns:
         The resolved cache directory.
@@ -74,14 +83,20 @@ def fetch_hitran_data(
     cache = Path(cache_dir) if cache_dir is not None else default_cache_dir()
     _init_hapi_cache(cache)
 
+    data_path = cache / f"{gas_config.name}.data"
+    header_path = cache / f"{gas_config.name}.header"
+    already_cached = data_path.exists() and header_path.exists()
+
     logger.info(
-        "Fetching HITRAN %s (M%d I%d, %.1f-%.1f cm^-1)",
+        "Fetching HITRAN %s (M%d I%d, %.1f-%.1f cm^-1)%s",
         gas_config.name,
         gas_config.molecule_id,
         gas_config.isotopologue_id,
         gas_config.nu_min,
         gas_config.nu_max,
+        " [cache hit]" if already_cached else "",
     )
+
     try:
         fetch(
             gas_config.name,
@@ -90,8 +105,27 @@ def fetch_hitran_data(
             gas_config.nu_min,
             gas_config.nu_max,
         )
-    except Exception as exc:  # HAPI raises plain Exceptions; keep loose.
-        logger.info("fetch() returned: %s (data may already be cached)", exc)
+    except Exception as exc:
+        # HAPI raises plain Exceptions on network failures and API errors.
+        # If we have a cached pair we can proceed — otherwise the user sees
+        # a clear failure instead of silently-corrupt LUTs downstream.
+        if not already_cached:
+            raise RuntimeError(
+                f"HITRAN fetch failed for {gas_config.name} "
+                f"(M{gas_config.molecule_id} I{gas_config.isotopologue_id}, "
+                f"{gas_config.nu_min:.1f}-{gas_config.nu_max:.1f} cm^-1) "
+                f"and no cached data was found at {cache}."
+            ) from exc
+        logger.warning(
+            "fetch() raised %s — proceeding with cached %s.",
+            type(exc).__name__, data_path,
+        )
+
+    if not (data_path.exists() and header_path.exists()):
+        raise RuntimeError(
+            f"HITRAN fetch for {gas_config.name} returned without error but "
+            f"no {gas_config.name}.data/.header pair was produced under {cache}."
+        )
     return cache
 
 
@@ -104,7 +138,10 @@ def compute_absorption_lut(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Evaluate σ(ν, T, P) on the full LUT grid.
 
-    Assumes ``fetch_hitran_data`` has already populated the cache.
+    Assumes ``fetch_hitran_data`` has already populated the cache. Fails
+    fast — a HAPI failure at any ``(T, P)`` knot, or any non-finite
+    cross-section in the result, raises rather than leaving silent NaN
+    holes in the LUT.
 
     Args:
         gas_config:   Target gas (molecule + isotopologue + ν range).
@@ -112,12 +149,16 @@ def compute_absorption_lut(
         cache_dir:    Where the fetched HITRAN ``.data/.header`` pair lives.
         progress:     Emit per-(T, P) log lines at INFO.
 
+    Raises:
+        RuntimeError: if ``absorptionCoefficient_Voigt`` raises at any
+            grid knot, or if the returned cross-section contains any
+            non-finite values.
+
     Returns:
         ``(nu_grid, sigma_lut, wavelength_nm)``:
         - ``nu_grid``: wavenumbers [cm⁻¹], shape ``(n_nu,)``
-        - ``sigma_lut``: cross-sections [cm²/molecule], shape ``(n_nu, n_T, n_P)``
-        - ``wavelength_nm``: wavelengths [nm], shape ``(n_nu,)``; NaN for cells
-          where the HAPI call raised (logged at WARNING).
+        - ``sigma_lut``: cross-sections [cm²/molecule], shape ``(n_nu, n_T, n_P)``.
+        - ``wavelength_nm``: wavelengths [nm], shape ``(n_nu,)``.
     """
     from hapi import absorptionCoefficient_Voigt
 
@@ -129,7 +170,7 @@ def compute_absorption_lut(
 
     n_T = len(grid_config.T_grid)
     n_P = len(grid_config.P_grid)
-    sigma_lut = np.full((nu_grid.size, n_T, n_P), np.nan, dtype=np.float64)
+    sigma_lut = np.zeros((nu_grid.size, n_T, n_P), dtype=np.float64)
 
     vmr_nominal = DEFAULT_VMR_NOMINAL.get(gas_config.name, 1e-6)
     diluent = grid_config.get_diluent_for_gas(gas_config.name, vmr_nominal)
@@ -150,12 +191,19 @@ def compute_absorption_lut(
                     Diluent=diluent,
                     HITRAN_units=True,  # cm²/molecule
                 )
-                sigma_lut[:, i_T, i_P] = coef
             except Exception as exc:
-                logger.warning(
-                    "HAPI call failed for %s at T=%.0f P=%.2f: %s",
-                    gas_config.name, T, P, exc,
-                )
+                raise RuntimeError(
+                    f"absorptionCoefficient_Voigt failed for {gas_config.name} "
+                    f"at T={T:.1f} K, p={P:.3f} atm."
+                ) from exc
+            sigma_lut[:, i_T, i_P] = coef
+
+    if not np.all(np.isfinite(sigma_lut)):
+        n_bad = int(np.sum(~np.isfinite(sigma_lut)))
+        raise RuntimeError(
+            f"compute_absorption_lut produced {n_bad} non-finite entries for "
+            f"{gas_config.name}; refusing to return a partial LUT."
+        )
 
     return nu_grid, sigma_lut, wavelength_nm
 

@@ -28,8 +28,8 @@ def create_multi_gas_luts(
     gases: list[str],
     grid_config: LUTGridConfig | None = None,
     *,
+    output_dir: Path | str,
     cache_dir: Path | str | None = None,
-    output_dir: Path | str = "luts",
     force_recompute: bool = False,
 ) -> dict[str, Path]:
     """Build one separate ``<gas>_absorption_lut.nc`` per gas.
@@ -40,8 +40,13 @@ def create_multi_gas_luts(
     Args:
         gases:           List of gas names (e.g. ``['CH4', 'CO2', 'H2O']``).
         grid_config:     Common grid; defaults to ``LUTGridConfig()``.
+        output_dir:      Required. Where to write NetCDF LUTs. No default
+                         is provided to avoid dropping unignored artefacts
+                         into the current working directory; callers should
+                         point this at the project-local git-ignored
+                         ``projects/plume_simulation/data/hapi_lut/`` path
+                         (or an out-of-tree scratch directory).
         cache_dir:       HITRAN cache dir; defaults to ``default_cache_dir()``.
-        output_dir:      Where to write NetCDF LUTs.
         force_recompute: If False, skip gases whose NetCDF already exists.
 
     Returns:
@@ -80,8 +85,8 @@ def create_combined_lut(
     gases: list[str],
     grid_config: LUTGridConfig | None = None,
     *,
+    output_dir: Path | str,
     cache_dir: Path | str | None = None,
-    output_dir: Path | str = "luts",
     filename: str = "combined_atmospheric_lut.nc",
 ) -> Path:
     """Build a single NetCDF with one cross-section variable per gas.
@@ -90,6 +95,10 @@ def create_combined_lut(
     ``[max(nu_min), min(nu_max)]``. All variables therefore live on one
     ``(wavenumber, temperature, pressure)`` coordinate system — convenient
     for matched-filter retrievals where CH₄ and CO₂ share the same SWIR window.
+
+    ``output_dir`` has no default for the same reason as
+    :func:`create_multi_gas_luts` — forcing an explicit path keeps
+    generated artefacts out of the current working directory.
     """
     grid_config = grid_config if grid_config is not None else LUTGridConfig()
     cache = Path(cache_dir) if cache_dir is not None else default_cache_dir()

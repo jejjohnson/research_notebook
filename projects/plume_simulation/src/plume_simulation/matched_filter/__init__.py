@@ -25,7 +25,8 @@ Architecture
   :class:`gaussx.LowRankUpdate`, etc.) so the kernel is single-implementation.
 - **Target signatures** (``target``) — derived from an existing
   :class:`plume_simulation.assimilation.RadianceObservationModel` via
-  :func:`jax.jacfwd`. No duplicate Beer–Lambert code.
+  :func:`jax.jvp` (directional derivatives) or a finite-amplitude secant.
+  No duplicate Beer–Lambert code.
 - **I/O** (``io``) — xarray wrappers for multi-scene workflows.
 """
 

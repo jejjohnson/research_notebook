@@ -40,14 +40,13 @@ def _build_pattern(
         if pattern == "uniform":
             return jnp.ones_like(vmr_field)
         if pattern == "impulse":
-            i, j = (
-                pixel
-                if pixel is not None
-                else (
-                    vmr_field.shape[0] // 2,
-                    vmr_field.shape[1] // 2,
+            h, w = vmr_field.shape
+            i, j = pixel if pixel is not None else (h // 2, w // 2)
+            if not (0 <= i < h and 0 <= j < w):
+                raise ValueError(
+                    f"target: pixel {(i, j)} is out of bounds for vmr_field "
+                    f"shape {vmr_field.shape}."
                 )
-            )
             return jnp.zeros_like(vmr_field).at[i, j].set(1.0)
         raise ValueError(
             f"target: pattern must be 'uniform', 'impulse', or an array; got {pattern!r}."
@@ -68,17 +67,35 @@ def _extract_pixel(
 ) -> Float[Array, "B"]:
     """Pick one pixel spectrum out of a response cube.
 
-    For spatially-uniform patterns we take the scene centre (every pixel sees
-    the same signature). For impulse or custom patterns we return the pixel
-    matching the perturbation location — or the supplied ``pixel`` override.
+    Resolution rules (explicit first):
+
+    1. If ``pixel`` is given, use it directly (after bounds checking).
+    2. Otherwise, for ``pattern='uniform'``, use the scene centre — every
+       pixel sees the same signature so the choice doesn't matter.
+    3. For ``pattern='impulse'``, the impulse location is not available in
+       this helper (it was consumed by ``_build_pattern``), so we also fall
+       back to the scene centre — callers should pass ``pixel`` explicitly
+       when the impulse is off-centre.
+    4. For a custom array pattern, pick the pixel with the largest
+       absolute-value weight (``argmax(|pattern|)``) — the natural choice
+       of a "perturbation location" for an arbitrary 2-D pattern.
     """
     h, w, _ = cube.shape
     if pixel is not None:
         i, j = pixel
-    elif isinstance(pattern, str) and pattern == "impulse":
+    elif isinstance(pattern, str):
+        # 'uniform' → centre (any pixel would do); 'impulse' → centre as
+        # documented default when no pixel override was supplied.
         i, j = h // 2, w // 2
     else:
-        i, j = h // 2, w // 2
+        arr = jnp.asarray(pattern)
+        idx = jnp.argmax(jnp.abs(arr))
+        i = int(idx // w)
+        j = int(idx % w)
+    if not (0 <= i < h and 0 <= j < w):
+        raise ValueError(
+            f"target: pixel {(i, j)} is out of bounds for cube shape ({h}, {w})."
+        )
     return cube[i, j]
 
 

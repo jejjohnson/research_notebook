@@ -236,12 +236,16 @@ def estimate_cov_lowrank(
         n_oversamples=n_oversamples,
         random_state=random_state,
     )
-    # TruncatedSVD(X) computes top-k SVD of X directly, so singular values
-    # are s_i(X); the sample covariance has eigenvalues s_i² / (n_samples - 1).
+    # TruncatedSVD(X) returns the top-k singular values s_i(X). We use MLE
+    # normalization s_i² / n_samples for the covariance eigenvalues so this
+    # path matches the sklearn EmpiricalCovariance / LedoitWolf / OAS paths
+    # in this module (all of which divide by n_samples). Using the unbiased
+    # (n_samples - 1) normalization here would have made matched_filter_snr
+    # and detection_threshold dependent on *which* estimator was chosen.
     svd.fit(Xc)
     V = svd.components_  # shape (rank, n_bands), rows are right singular vectors
     s = svd.singular_values_  # shape (rank,)
-    d = (s**2) / max(n_samples - 1, 1)
+    d = (s**2) / max(n_samples, 1)
     U = jnp.asarray(V.T)  # (n_bands, rank) — spectral directions as columns
     base = lx.DiagonalLinearOperator(
         jnp.asarray(tikhonov * np.ones(n_bands, dtype=float))

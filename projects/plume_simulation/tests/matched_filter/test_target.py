@@ -116,3 +116,28 @@ def test_bad_pattern_name_raises(obs_model_no_optics):
     x_b = jnp.full((4, 4), 1e-6)
     with pytest.raises(ValueError, match="pattern"):
         linear_target_from_obs(obs, x_b, pattern="bogus")  # type: ignore[arg-type]
+
+
+def test_impulse_pixel_out_of_bounds_raises(obs_model_no_optics):
+    """Pixel index outside the VMR field must raise a clear ValueError,
+    not a low-level scatter/indexing error from JAX."""
+    obs = obs_model_no_optics
+    x_b = jnp.full((4, 4), 1e-6)
+    with pytest.raises(ValueError, match="out of bounds"):
+        linear_target_from_obs(obs, x_b, pattern="impulse", pixel=(4, 0))
+    with pytest.raises(ValueError, match="out of bounds"):
+        linear_target_from_obs(obs, x_b, pattern="impulse", pixel=(-1, 2))
+
+
+def test_custom_pattern_extracts_pixel_at_argmax(obs_model_no_optics):
+    """When a custom 2-D pattern is supplied without an explicit ``pixel``,
+    the returned target is read at the pattern's argmax — matching the
+    documented behaviour of :func:`_extract_pixel`."""
+    obs = obs_model_no_optics
+    H, W = 4, 4
+    x_b = jnp.full((H, W), 1e-6)
+    pattern = np.zeros((H, W))
+    pattern[1, 3] = 1.0  # peak at (1, 3)
+    t_auto = linear_target_from_obs(obs, x_b, pattern=pattern)
+    t_explicit = linear_target_from_obs(obs, x_b, pattern=pattern, pixel=(1, 3))
+    np.testing.assert_allclose(np.asarray(t_auto), np.asarray(t_explicit), atol=1e-12)

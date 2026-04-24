@@ -116,13 +116,28 @@ def gmm_cluster_background(
             random_state=random_state,
         )
     labels = gmm.fit_predict(X)
+    # Pre-compute a global (μ, Σ) fallback once so under-populated clusters
+    # get a *consistent* pair — the old code returned the per-cluster mean
+    # paired with a scene-wide Ledoit–Wolf Σ, which biases scores.
+    global_mean = X.mean(axis=0)
+    if cov_estimator == "empirical":
+        global_cov_op = estimate_cov_empirical(arr, mean=global_mean)
+    elif cov_estimator in {"ledoit_wolf", "oas"}:
+        global_cov_op = estimate_cov_shrunk(arr, mean=global_mean, method=cov_estimator)  # type: ignore[arg-type]
+    else:
+        raise ValueError(
+            f"gmm_cluster_background: unknown cov_estimator {cov_estimator!r}."
+        )
     means: list[np.ndarray] = []
     ops: list[LinearOperator] = []
     for k in range(int(labels.max()) + 1):
         mask = labels == k
-        if mask.sum() < 2:  # need at least 2 samples for any covariance
-            means.append(X[mask].mean(axis=0) if mask.any() else X.mean(axis=0))
-            ops.append(estimate_cov_shrunk(arr, method="ledoit_wolf"))
+        if mask.sum() < 2:
+            # Under-populated cluster: return the *same* (μ, Σ) pair for both
+            # attributes so callers that use (means[k], cov_operators[k])
+            # together see a self-consistent global-scene fallback.
+            means.append(global_mean)
+            ops.append(global_cov_op)
             continue
         # Reshape the flat cluster subset into a fake (n_k, 1, n_bands) cube
         # so the cube-shaped estimators accept it without dedicated per-cluster
@@ -131,12 +146,8 @@ def gmm_cluster_background(
         mu_k = X[mask].mean(axis=0)
         if cov_estimator == "empirical":
             cov_op = estimate_cov_empirical(fake_cube, mean=mu_k)
-        elif cov_estimator in {"ledoit_wolf", "oas"}:
-            cov_op = estimate_cov_shrunk(fake_cube, mean=mu_k, method=cov_estimator)  # type: ignore[arg-type]
         else:
-            raise ValueError(
-                f"gmm_cluster_background: unknown cov_estimator {cov_estimator!r}."
-            )
+            cov_op = estimate_cov_shrunk(fake_cube, mean=mu_k, method=cov_estimator)  # type: ignore[arg-type]
         means.append(mu_k)
         ops.append(cov_op)
     return ClusterBackground(

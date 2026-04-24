@@ -57,11 +57,24 @@ def test_welford_empty_stats_raise():
         acc.covariance()
 
 
-def test_streaming_background_returns_operator(rng):
+def test_streaming_background_returns_mle_operator(rng):
+    """Default ``ddof=0`` gives MLE-normalised Σ, matching sklearn /
+    :func:`estimate_cov_empirical` so ``matched_filter_snr`` is
+    estimator-consistent."""
     X = rng.standard_normal((400, 5))
     batches = [X[:200], X[200:]]
     mu, cov_op = streaming_background(iter(batches), n_bands=5)
     np.testing.assert_allclose(mu, X.mean(axis=0), atol=1e-12)
+    Xc = X - X.mean(axis=0)
+    mle_cov = (Xc.T @ Xc) / X.shape[0]
+    np.testing.assert_allclose(np.asarray(cov_op.as_matrix()), mle_cov, atol=1e-12)
+
+
+def test_streaming_background_ddof_one_matches_np_cov(rng):
+    """Opting into ``ddof=1`` recovers the sample-covariance convention
+    that :func:`np.cov` uses."""
+    X = rng.standard_normal((400, 5))
+    _, cov_op = streaming_background([X], n_bands=5, ddof=1)
     np.testing.assert_allclose(
         np.asarray(cov_op.as_matrix()), np.cov(X, rowvar=False), atol=1e-12
     )
@@ -71,4 +84,6 @@ def test_streaming_background_ridge(rng):
     X = rng.standard_normal((400, 5))
     _, cov_op = streaming_background([X], n_bands=5, ridge=0.5)
     M = np.asarray(cov_op.as_matrix())
-    np.testing.assert_allclose(M - 0.5 * np.eye(5), np.cov(X, rowvar=False), atol=1e-12)
+    Xc = X - X.mean(axis=0)
+    mle_cov = (Xc.T @ Xc) / X.shape[0]
+    np.testing.assert_allclose(M - 0.5 * np.eye(5), mle_cov, atol=1e-12)

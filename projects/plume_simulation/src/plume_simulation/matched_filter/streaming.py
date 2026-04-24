@@ -127,6 +127,7 @@ def streaming_background(
     *,
     n_bands: int,
     ridge: float = 0.0,
+    ddof: int = 0,
 ) -> tuple[np.ndarray, LinearOperator]:
     """Streamed ``(μ, Σ)`` from an iterable of batches.
 
@@ -145,12 +146,22 @@ def streaming_background(
         lazy).
     ridge
         Optional diagonal ridge added to the final covariance.
+    ddof
+        Delta degrees of freedom for the covariance denominator:
+        ``M_2 / (n - ddof)``. Defaults to ``0`` (MLE, matches sklearn's
+        ``EmpiricalCovariance``, ``LedoitWolf``, ``OAS`` and our
+        :func:`estimate_cov_lowrank`), so
+        :func:`~plume_simulation.matched_filter.core.matched_filter_snr` and
+        :func:`~plume_simulation.matched_filter.core.detection_threshold`
+        give the same scaling whether the covariance came from a streaming
+        pass or a batch estimator. Set ``ddof=1`` to match ``np.cov`` /
+        sample-covariance conventions instead.
     """
     acc = WelfordAccumulator(n_bands=n_bands)
     for batch in batches:
         acc.update(batch)
     mu = acc.mean()
-    cov = acc.covariance()
+    cov = acc.covariance(ddof=ddof)
     if ridge > 0.0:
         cov = cov + ridge * np.eye(n_bands)
     import jax.numpy as jnp

@@ -22,7 +22,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import einops
 import gaussx as gx
 import jax
 import jax.numpy as jnp
@@ -107,7 +106,10 @@ def apply_image(
     """
     w, target_norm_sq = _precompute_filter(cov_op, target)
     residual = cube - mean
-    scores = einops.einsum(residual, w, "H W B, B -> H W")
+    # Contract the last (spectral) axis with the precomputed filter
+    # direction. jnp.einsum keeps the other two axes intact, matching the
+    # "H W B, B -> H W" einops signature we replaced.
+    scores = jnp.einsum("ijk,k->ij", residual, w)
     return scores / target_norm_sq
 
 

@@ -10,9 +10,12 @@ JAX:
   :func:`xarray.apply_ufunc` so band-last DataArrays produce a score DataArray
   with ``(y, x)`` dims and preserved spatial coordinates. Dask-backed inputs
   are evaluated lazily with chunk-wise parallelism.
-- :func:`open_multi_scene` — thin wrapper around :func:`xarray.open_mfdataset`
-  that concatenates along a user-named scene dim and returns a streaming
-  iterable of ``(n_samples, n_bands)`` batches for feeding into
+- :func:`open_multi_scene` — iterate over a sequence of scene files with
+  :func:`xarray.open_dataset`, yielding ``(n_samples, n_bands)`` numpy
+  batches with ``band_dim`` moved to the last axis. Each dataset is
+  closed as soon as its batch has been yielded (or when the generator
+  is stopped early), so file handles do not leak even when iteration
+  is partial. Feeds naturally into
   :class:`~plume_simulation.matched_filter.streaming.WelfordAccumulator`.
 """
 
@@ -96,48 +99,76 @@ def open_multi_scene(
     *,
     band_dim: str = "band",
     variable: str | None = None,
-    batch_dim: str = "scene",
     **open_kwargs,
 ) -> Iterator[np.ndarray]:
-    """Yield ``(n_pixels, n_bands)`` batches from a glob of NetCDF / Zarr scenes.
+    """Yield ``(n_pixels, n_bands)`` batches from a sequence of scene files.
 
-    Opens with :func:`xarray.open_mfdataset` (Dask-backed, lazy), iterates one
-    scene at a time, and yields a flattened 2-D batch suitable for
+    Iterates one file at a time with :func:`xarray.open_dataset`, closes each
+    dataset as soon as its scene has been yielded (``try/finally``-bracketed
+    so handles are released even if the generator is stopped early), and
+    yields a flattened 2-D numpy batch suitable for
     :class:`~plume_simulation.matched_filter.streaming.WelfordAccumulator.update`.
+
+    Note
+    ----
+    Each yielded batch is a *materialised* numpy array — the current scene's
+    values are loaded eagerly. This is fine for scenes that individually fit
+    in memory (the Welford aggregator's usual operating regime); for truly
+    out-of-core per-scene processing, use the lazy DataArray directly with
+    :func:`apply_image_xarray` (which supports Dask chunks) instead of this
+    helper.
 
     Parameters
     ----------
     paths
         A glob string (e.g. ``"scenes/*.nc"``) or an iterable of paths.
     band_dim
-        Name of the spectral dimension on the stored DataArray.
+        Name of the spectral dimension on the stored DataArray. Does *not*
+        have to be the last axis in the file — each scene is transposed so
+        ``band_dim`` becomes the last axis before flattening.
     variable
-        If the file contains multiple variables, select this one. If ``None``,
+        If a file contains multiple variables, select this one. If ``None``,
         uses the first data variable.
-    batch_dim
-        Name of the concatenation dimension (``open_mfdataset`` parameter).
     **open_kwargs
-        Forwarded to :func:`xarray.open_mfdataset`.
+        Forwarded to :func:`xarray.open_dataset`.
     """
+    import glob as _glob
+
     import xarray as xr
 
-    ds = xr.open_mfdataset(paths, combine="nested", concat_dim=batch_dim, **open_kwargs)
-    if variable is None:
-        var_name = next(iter(ds.data_vars))
-        da = ds[var_name]
-    else:
-        da = ds[variable]
-    if band_dim not in da.dims:
-        raise ValueError(
-            f"open_multi_scene: variable has no dim {band_dim!r}; dims are {da.dims}."
-        )
-    for idx in range(da.sizes[batch_dim]):
-        scene = da.isel({batch_dim: idx}).values
-        if scene.ndim == 3:
-            yield scene.reshape(-1, scene.shape[-1])
-        elif scene.ndim == 2:
-            yield scene
-        else:
-            raise ValueError(
-                f"open_multi_scene: scene at index {idx} has unexpected shape {scene.shape}."
+    if isinstance(paths, str):
+        expanded = sorted(_glob.glob(paths))
+        if not expanded:
+            raise FileNotFoundError(
+                f"open_multi_scene: glob {paths!r} matched zero files."
             )
+    else:
+        expanded = list(paths)
+
+    for path in expanded:
+        ds = xr.open_dataset(path, **open_kwargs)
+        try:
+            if variable is None:
+                var_name = next(iter(ds.data_vars))
+                da = ds[var_name]
+            else:
+                da = ds[variable]
+            if band_dim not in da.dims:
+                raise ValueError(
+                    f"open_multi_scene: variable in {path!r} has no dim "
+                    f"{band_dim!r}; dims are {da.dims}."
+                )
+            # Put band_dim last so the subsequent reshape always targets the
+            # spectral axis — guards against files stored as (band, y, x) or
+            # with any other dim ordering.
+            other_dims = [d for d in da.dims if d != band_dim]
+            da = da.transpose(*other_dims, band_dim)
+            scene = da.values
+            if scene.ndim < 2:
+                raise ValueError(
+                    f"open_multi_scene: scene in {path!r} has unexpected "
+                    f"shape {scene.shape}; need ≥ 2 dims."
+                )
+            yield scene.reshape(-1, scene.shape[-1])
+        finally:
+            ds.close()

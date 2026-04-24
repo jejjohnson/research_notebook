@@ -46,7 +46,7 @@ LRCube = Float[Array, "ny_lr nx_lr n_lambda"]
 # ── Point Spread Function ────────────────────────────────────────────────────
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=False)
 class PointSpreadFunction:
     """2D PSF blur applied independently per spectral channel.
 
@@ -55,11 +55,15 @@ class PointSpreadFunction:
     Jacobian is the operator itself; the adjoint is convolution with the
     180°-flipped kernel (real-valued case).
 
-    The class is ``frozen=True`` and hashed solely on ``id(self)``
-    (``eq=False``, so the default ``object.__hash__`` is retained). That
-    keeps the class hashable for ``jax.jit`` static-arg use while avoiding
-    array-equality comparisons on the cached JAX kernels, which would fail
-    under tracing.
+    The class is ``frozen=True, eq=False`` so the default
+    ``object.__eq__`` (identity comparison) and ``object.__hash__``
+    (``id``-based) are retained. An auto-generated dataclass ``__eq__``
+    would do *element-wise* equality on the ``kernel: np.ndarray`` field
+    — ambiguous in bool context — and the corresponding ``__hash__``
+    would crash because numpy arrays are unhashable. Identity semantics
+    are what ``jax.jit`` static-arg caching actually wants: a PSF
+    instance is re-used as-is or replaced wholesale; it never needs
+    structural equality.
 
     Attributes
     ----------

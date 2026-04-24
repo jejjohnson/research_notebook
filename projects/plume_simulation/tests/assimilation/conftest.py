@@ -75,10 +75,8 @@ def hyperspectral_srf(synthetic_lut):
 @pytest.fixture
 def obs_model_no_optics(synthetic_lut, hyperspectral_srf):
     """Obs operator with no PSF / GSD — fastest path for cost+grad tests."""
-    nu = synthetic_lut["wavenumber"].values
     return RadianceObservationModel.from_lut(
         synthetic_lut,
-        nu_obs=nu,
         srf=hyperspectral_srf,
         T_K=280.0,
         p_atm=1.0,
@@ -91,10 +89,8 @@ def obs_model_no_optics(synthetic_lut, hyperspectral_srf):
 @pytest.fixture
 def obs_model_with_psf(synthetic_lut, hyperspectral_srf):
     """Obs operator with a small Gaussian PSF — used by the dual==primal test."""
-    nu = synthetic_lut["wavenumber"].values
     return RadianceObservationModel.from_lut(
         synthetic_lut,
-        nu_obs=nu,
         srf=hyperspectral_srf,
         T_K=280.0,
         p_atm=1.0,
@@ -108,10 +104,8 @@ def obs_model_with_psf(synthetic_lut, hyperspectral_srf):
 @pytest.fixture
 def obs_model_with_gsd(synthetic_lut, hyperspectral_srf):
     """Obs operator with a 2× GSD downsample for the shape-changing test."""
-    nu = synthetic_lut["wavenumber"].values
     return RadianceObservationModel.from_lut(
         synthetic_lut,
-        nu_obs=nu,
         srf=hyperspectral_srf,
         T_K=280.0,
         p_atm=1.0,

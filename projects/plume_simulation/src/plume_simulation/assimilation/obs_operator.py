@@ -110,7 +110,6 @@ class RadianceObservationModel:
         cls,
         lut: "xr.Dataset",
         *,
-        nu_obs: np.ndarray,
         srf: "SpectralResponseFunction",
         T_K: float,
         p_atm: float,
@@ -124,19 +123,32 @@ class RadianceObservationModel:
         """Build the operator from a HAPI σ(ν,T,P) LUT and an SRF.
 
         Pre-collapses ``σ · N · ΔX · AMF`` into a single ``a(ν)`` vector so the
-        forward call only multiplies by ``ΔVMR`` per pixel. ``nu_obs`` should be
-        the HR wavenumber grid that the SRF was built on (i.e. ``1e7/λ_hr``).
+        forward call only multiplies by ``ΔVMR`` per pixel.
+
+        The HR spectral grid is **taken from the SRF** (``srf.wavelengths_hr_nm``)
+        and converted to wavenumbers for the σ lookup. This is the grid the SRF
+        matrix's columns are indexed by, so the subsequent
+        ``einsum("bl, ijl -> ijb")`` band integration contracts aligned spectral
+        bins by construction. Earlier revisions accepted a separate ``nu_obs``
+        argument; when callers passed a wavenumber-ordered grid while the SRF
+        was wavelength-ordered (common whenever ``wl = 1e7/ν`` was sorted),
+        the einsum silently mixed non-corresponding bins — self-consistent for
+        twin retrievals but physically wrong for anything cross-validated.
         """
         if var not in lut:
             raise KeyError(
                 f"RadianceObservationModel.from_lut: variable {var!r} not in "
                 f"dataset (have {list(lut.data_vars)})."
             )
-        # Same interpolation pattern as radtran.forward — keeps the two paths
-        # numerically consistent.
         import xarray as xr_mod
 
-        nu_da = xr_mod.DataArray(np.asarray(nu_obs, dtype=float), dims=["obs_nu"])
+        # Source-of-truth HR grid: the SRF's own wavelength axis (ascending
+        # by wavelength = descending by wavenumber). Convert to cm⁻¹ for σ
+        # interpolation; keep the wavelength ordering for the output array so
+        # axis l aligns with srf.matrix[:, l].
+        wl_hr_nm = np.asarray(srf.wavelengths_hr_nm, dtype=float)
+        nu_hr = 1e7 / wl_hr_nm
+        nu_da = xr_mod.DataArray(nu_hr, dims=["obs_nu"])
         sigma = lut[var].interp(
             wavenumber=nu_da, temperature=T_K, pressure=p_atm, method="linear"
         )

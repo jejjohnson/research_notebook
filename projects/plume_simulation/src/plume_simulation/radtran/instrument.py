@@ -46,7 +46,7 @@ LRCube = Float[Array, "ny_lr nx_lr n_lambda"]
 # ── Point Spread Function ────────────────────────────────────────────────────
 
 
-@dataclass
+@dataclass(frozen=True)
 class PointSpreadFunction:
     """2D PSF blur applied independently per spectral channel.
 
@@ -55,18 +55,23 @@ class PointSpreadFunction:
     Jacobian is the operator itself; the adjoint is convolution with the
     180°-flipped kernel (real-valued case).
 
+    The class is ``frozen=True`` and hashed solely on ``id(self)``
+    (``eq=False``, so the default ``object.__hash__`` is retained). That
+    keeps the class hashable for ``jax.jit`` static-arg use while avoiding
+    array-equality comparisons on the cached JAX kernels, which would fail
+    under tracing.
+
     Attributes
     ----------
     kernel : np.ndarray
         L1-normalised 2-D kernel, shape ``(kernel_size, kernel_size)``.
-        Stored as numpy for transparent inspection; converted to JAX inside
-        :meth:`apply` / :meth:`adjoint` so the dataclass stays hashable for
-        ``jax.jit`` static-arg purposes.
+        Stored as numpy for transparent inspection; the JAX copies used by
+        :meth:`apply` / :meth:`adjoint` are cached as private fields below.
     """
 
     kernel: np.ndarray
-    _kernel_jax: Array = field(init=False, repr=False)
-    _kernel_adj: Array = field(init=False, repr=False)
+    _kernel_jax: Array = field(init=False, repr=False, compare=False)
+    _kernel_adj: Array = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         k = np.asarray(self.kernel, dtype=np.float64)
@@ -81,9 +86,11 @@ class PointSpreadFunction:
         s = float(k.sum())
         if s == 0.0:
             raise ValueError("PointSpreadFunction: kernel sums to zero; cannot normalise.")
-        self.kernel = k / s
-        self._kernel_jax = jnp.asarray(self.kernel)
-        self._kernel_adj = jnp.asarray(self.kernel[::-1, ::-1])
+        # Frozen dataclass — bypass __setattr__ for derived fields.
+        normalised = k / s
+        object.__setattr__(self, "kernel", normalised)
+        object.__setattr__(self, "_kernel_jax", jnp.asarray(normalised))
+        object.__setattr__(self, "_kernel_adj", jnp.asarray(normalised[::-1, ::-1]))
 
     @classmethod
     def gaussian(
@@ -219,8 +226,18 @@ class GroundSamplingDistance:
         altitude_m: float,
         pixel_size_hr_m: float,
     ) -> "GroundSamplingDistance":
-        """Build a GSD operator from camera + altitude + HR pixel size."""
-        gsd_m_per_px = (sensor_width_mm * altitude_m * 1000.0) / (
+        """Build a GSD operator from camera + altitude + HR pixel size.
+
+        Dimensional analysis:
+
+            GSD [m/px] = (sensor_pixel_size [m/px]) · (altitude [m]) / (focal_length [m])
+                       = (sensor_width_mm / image_width_px) · altitude_m / focal_length_mm
+
+        The ``mm`` units on numerator and denominator cancel, so no unit-conversion
+        factor is needed — the numpy reference snippet we ported from had a spurious
+        ``× 1000`` that inflated every realistic camera's GSD by a factor of 1000.
+        """
+        gsd_m_per_px = (sensor_width_mm * altitude_m) / (
             focal_length_mm * image_width_px
         )
         f = int(round(gsd_m_per_px / pixel_size_hr_m))

@@ -161,16 +161,27 @@ class TestGroundSamplingDistance:
         assert Au.shape == hr_shape
 
     def test_from_optics_recovers_factor(self):
-        # 0.35 mm sensor, 35 mm focal, 1000 px wide, 100 m altitude,
-        # 0.5 m HR pixel → GSD = 1.0 m/px → factor = 2.
+        # 35 mm sensor, 35 mm focal length, 1000 px wide, 2000 m altitude,
+        # 1 m HR pixel → GSD = (35·2000)/(35·1000) = 2 m/px → factor = 2.
         gsd = GroundSamplingDistance.from_optics(
-            sensor_width_mm=0.35,
+            sensor_width_mm=35.0,
             focal_length_mm=35.0,
             image_width_px=1000,
-            altitude_m=100.0,
-            pixel_size_hr_m=0.5,
+            altitude_m=2000.0,
+            pixel_size_hr_m=1.0,
         )
         assert gsd.downsample_factor == 2
+
+    def test_from_optics_sentinel_identity(self):
+        # sensor=focal, altitude=pixel_size×n_px → GSD = pixel_size → factor = 1.
+        gsd = GroundSamplingDistance.from_optics(
+            sensor_width_mm=10.0,
+            focal_length_mm=10.0,
+            image_width_px=500,
+            altitude_m=500.0,
+            pixel_size_hr_m=1.0,
+        )
+        assert gsd.downsample_factor == 1
 
     def test_gradient_flows_through_apply(self):
         gsd = GroundSamplingDistance(downsample_factor=2)

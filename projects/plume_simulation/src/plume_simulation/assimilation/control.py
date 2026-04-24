@@ -34,6 +34,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import gaussx as gx
+import jax
 import jax.numpy as jnp
 import lineax as lx
 
@@ -53,13 +54,13 @@ class IdentityTransform:
     *or* when you want the textbook ``½ δxᵀ B⁻¹ δx`` form for didactic clarity.
     """
 
-    def apply(self, xi):
+    def apply(self, xi: jax.Array) -> jax.Array:
         return xi
 
-    def apply_inverse(self, delta_x):
+    def apply_inverse(self, delta_x: jax.Array) -> jax.Array:
         return delta_x
 
-    def project_gradient(self, g_x):
+    def project_gradient(self, g_x: jax.Array) -> jax.Array:
         return g_x
 
 
@@ -93,11 +94,11 @@ class WhiteningTransform:
         U = gx.cholesky(background)
         return cls(cholesky_op=U)
 
-    def apply(self, xi):
+    def apply(self, xi: jax.Array) -> jax.Array:
         """``ξ → U ξ``."""
         return self.cholesky_op.mv(jnp.asarray(xi))
 
-    def apply_inverse(self, delta_x):
+    def apply_inverse(self, delta_x: jax.Array) -> jax.Array:
         """``δx → U⁻¹ δx`` via :func:`gaussx.solve` for structured dispatch.
 
         ``gaussx.cholesky`` returns operators that preserve their underlying
@@ -108,7 +109,7 @@ class WhiteningTransform:
         """
         return gx.solve(self.cholesky_op, jnp.asarray(delta_x))
 
-    def project_gradient(self, g_x):
+    def project_gradient(self, g_x: jax.Array) -> jax.Array:
         """``∂J/∂ξ = Uᵀ ∂J/∂δx`` — the chain rule for the explicit-cost form.
 
         Not needed when you build the cost in ξ-space and let ``jax.grad``

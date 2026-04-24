@@ -100,12 +100,15 @@ def run_gauss_newton(
     ``residual_fn`` should return a flat residual vector
     ``[B^{-½}(δx); R^{-½}(y - H(x_b + δx))]`` (the "augmented" 3D-Var residual);
     optimistix internally constructs the Jacobian and solves the normal
-    equations using ``linear_solver``.
+    equations ``(JᵀJ) δ = -Jᵀr`` using ``linear_solver``. Pass
+    ``lineax.CG(...)`` for a matrix-free inner solve (useful when the
+    Jacobian has Kronecker / low-rank structure that full Cholesky would
+    materialise), or ``lineax.Cholesky()`` for small dense systems.
     """
     if linear_solver is None:
         linear_solver = lx.AutoLinearSolver(well_posed=None)
     fn = lambda y, _args: residual_fn(y)
-    solver = optx.GaussNewton(rtol=rtol, atol=atol)
+    solver = optx.GaussNewton(rtol=rtol, atol=atol, linear_solver=linear_solver)
     sol = optx.least_squares(fn, solver, initial_state, max_steps=max_steps, throw=False)
     return SolveResult(
         state=np.asarray(sol.value),
@@ -119,7 +122,7 @@ def run_gauss_newton(
 
 def run_dual_psas(
     *,
-    forward_linear_fn: Callable[[jax.Array], jax.Array],
+    forward_fn: Callable[[jax.Array], jax.Array],
     background_op: lx.AbstractLinearOperator,
     obs_inv_variance: float,
     background_state: jax.Array,
@@ -131,27 +134,29 @@ def run_dual_psas(
 ) -> SolveResult:
     """Solve the **dual** 3D-Var system in observation space.
 
-    For a *linear* forward operator ``H'`` the optimum of
-    ``J(δx) = ½ δxᵀ B⁻¹ δx + ½(y - H' δx)ᵀ R⁻¹(y - H' δx)`` (with ``x_b`` as
-    the linearisation point) satisfies
+    For a forward operator that is linear in the state perturbation the
+    optimum of ``J(δx) = ½ δxᵀ B⁻¹ δx + ½(y - H(x_b + δx))ᵀ R⁻¹(y - H(x_b + δx))``
+    satisfies
 
-        (H' B H'ᵀ + R) λ = d,           with d = y − H' · 0 = y − H(x_b)
+        (H' B H'ᵀ + R) λ = d,           with d = y − H(x_b)
         δx̂ = B H'ᵀ λ.
 
-    When ``dim(y) ≪ dim(x)`` this is much cheaper than primal — and it's the
-    estimator that the pixel-wise matched filter approximates.
+    When ``dim(y) ≪ dim(x)`` this is much cheaper than primal — and it's
+    exactly the estimator that the pixel-wise matched filter approximates.
 
     Parameters
     ----------
-    forward_linear_fn : Callable
-        A *linear* forward map ``δx → δy``. In our methane retrieval this is
-        ``RadianceObservationModel.make_forward(linear=True)`` minus its
-        constant ``1`` term, but we extract that from a single Jacobian probe
-        so the user can pass any linear closure.
+    forward_fn : Callable
+        **Full-state forward** ``x → y`` (i.e. the same object returned by
+        :meth:`RadianceObservationModel.make_forward`). For the dual to be
+        correct, ``H`` must be linear in ``δx = x − x_b``. We extract the
+        tangent-linear action by differencing at ``x_b`` once (see
+        ``base_obs`` below) and the adjoint via :func:`jax.vjp`. Callers
+        typically pass ``model.make_forward(linear=True)``.
     background_op : lineax operator
         ``B``.
     obs_inv_variance : float
-        Scalar ``R⁻¹`` (heteroscedastic R can be folded into ``forward_linear_fn``
+        Scalar ``R⁻¹`` (heteroscedastic R can be folded into ``forward_fn``
         at the cost of clarity — keep it scalar for the demo).
     background_state, observation, state_shape
         Self-explanatory.
@@ -162,29 +167,32 @@ def run_dual_psas(
     y = jnp.asarray(observation)
     R_inv = float(obs_inv_variance)
 
-    # Innovation d = y - H(x_b). For a *linear* forward this is y - H' x_b.
-    d = (y - forward_linear_fn(x_b)).reshape(-1)
+    # Evaluate H(x_b) once — used both for the innovation and as the affine
+    # anchor in the tangent-linear probe. Hoisting this out of the matvec
+    # avoids a redundant forward pass per CG iteration.
+    base_obs = forward_fn(x_b)
+    d = (y - base_obs).reshape(-1)
     n_obs = d.size
+    n_state = int(np.prod(state_shape))
 
     def H_op(delta_x_flat: jax.Array) -> jax.Array:
-        """``H' · δx``, accepts/returns flat vectors."""
+        """``H' · δx``: linearity ⇒ ``H(x_b + δx) − H(x_b)`` is exact."""
         delta_x = jnp.reshape(delta_x_flat, state_shape)
-        # Linearity ⇒ H'(x_b + δx) - H'(x_b) = H' δx (no x_b term needed if forward
-        # is truly linear, but keeping it makes the code robust to affine offsets).
-        return (forward_linear_fn(x_b + delta_x) - forward_linear_fn(x_b)).reshape(-1)
+        return (forward_fn(x_b + delta_x) - base_obs).reshape(-1)
+
+    # Build the VJP closure *once*, outside the CG matvec, so every iteration
+    # reuses the traced pullback instead of re-tracing jax.vjp(H_op, 0) each
+    # time.  This is materially faster — was the P2 perf finding in review.
+    _, _Ht_pullback = jax.vjp(H_op, jnp.zeros(n_state))
 
     def Ht_op(lam: jax.Array) -> jax.Array:
-        """``H'ᵀ · λ`` via reverse-mode AD."""
-        _, vjp = jax.vjp(H_op, jnp.zeros(int(np.prod(state_shape))))
-        (out,) = vjp(lam)
+        (out,) = _Ht_pullback(lam)
         return out
 
     def dual_matvec(lam: jax.Array) -> jax.Array:
-        """``(H' B H'ᵀ + R) λ``."""
-        from gaussx import solve as _solve  # noqa: F401 — keep gaussx import path clear
-
+        """``(H' B H'ᵀ + R) λ``, with ``R λ = λ / R_inv`` for scalar R."""
         BHt_lam = background_op.mv(Ht_op(lam))
-        return H_op(BHt_lam) + lam / R_inv  # since R = (1/R_inv) I, R λ = λ / R_inv
+        return H_op(BHt_lam) + lam / R_inv
 
     dual_op = lx.FunctionLinearOperator(
         dual_matvec,

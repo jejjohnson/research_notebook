@@ -37,17 +37,22 @@ def test_chi2_at_truth_is_zero(obs_model_no_optics):
     assert chi2 < 1e-10
 
 
-def test_dfs_finite_and_nonnegative(obs_model_no_optics):
+def test_dfs_zero_in_no_information_limit(obs_model_no_optics):
+    """When the prior dominates (obs infinitely noisy), Hess → B⁻¹ and DFS → 0.
+
+    This is the key regression test: the old implementation computed
+    ``trace(B · Hess)`` which returned ``state_size`` instead of ``0`` in
+    this limit, so the sanity check was systematically biased high.
+    """
     model = obs_model_no_optics
     ny, nx = 3, 3
-    B = build_diagonal_background(1e-12, n_pixels=ny * nx)
+    B = build_diagonal_background(1.0, n_pixels=ny * nx)   # well-scaled prior
     W = WhiteningTransform.from_background(B)
-    truth = jnp.zeros((ny, nx))
-    y = model.forward(truth, linear=False)
+    y = model.forward(jnp.zeros((ny, nx)), linear=False)
     cost = build_cost_xi(
         forward_fn=model.make_forward(linear=False),
         whitening=W,
-        obs_inv_variance=1e6,
+        obs_inv_variance=1e-12,                            # effectively no obs info
         background_state=jnp.zeros((ny, nx)),
         observation=y,
         state_shape=(ny, nx),
@@ -59,8 +64,35 @@ def test_dfs_finite_and_nonnegative(obs_model_no_optics):
         n_probes=8,
     )
     assert np.isfinite(dfs)
-    # DFS is bounded by min(state_dim, n_obs) for a properly-scaled prior.
-    assert dfs >= -1e-6  # numerical tolerance
+    # No observations → posterior == prior → DFS ≈ 0. Hutchinson variance
+    # plus CG tolerance give ~5% of state_size as a comfortable bound.
+    assert abs(dfs) < 0.5
+
+
+def test_dfs_approaches_state_size_in_high_information_limit(obs_model_no_optics):
+    """When obs dominate (prior very loose), Hess → H'ᵀR⁻¹H' and DFS → state_size."""
+    model = obs_model_no_optics
+    ny, nx = 3, 3
+    B = build_diagonal_background(1.0, n_pixels=ny * nx)   # well-scaled prior
+    W = WhiteningTransform.from_background(B)
+    truth = jnp.full((ny, nx), 1e-7)
+    y = model.forward(truth, linear=False)
+    cost = build_cost_xi(
+        forward_fn=model.make_forward(linear=False),
+        whitening=W,
+        obs_inv_variance=1e12,                             # tight observations
+        background_state=jnp.zeros((ny, nx)),
+        observation=y,
+        state_shape=(ny, nx),
+    )
+    dfs = degrees_of_freedom_for_signal(
+        hessian_vector_product=lambda v: cost.hvp(jnp.zeros(ny * nx), v),
+        background_op=B,
+        state_size=ny * nx,
+        n_probes=16,
+    )
+    # Should be close to state_size = 9; allow Hutchinson + CG slack.
+    assert 7.0 < dfs < ny * nx + 0.5
 
 
 def test_posterior_covariance_proxy_runs(obs_model_no_optics):

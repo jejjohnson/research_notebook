@@ -92,7 +92,7 @@ This is the Physical-Space Statistical Analysis System (PSAS) [^cohn1998]. For a
 
 [^cohn1998]: Cohn, S. E., et al. (1998). *Assessing the effects of data selection with the DAO Physical-Space Statistical Analysis System.* Mon. Wea. Rev. **126**, 2913-2926.
 
-> **In code.** [`run_dual_psas`](../../src/plume_simulation/assimilation/solve.py) wraps the dual matrix as a `lineax.FunctionLinearOperator`, tags it symmetric+PSD, and feeds it to `lineax.linear_solve(..., solver=lineax.CG(...))`. The two `H'` and $H'^\top$ applications inside the matvec are `forward_linear_fn` and `jax.vjp` respectively — *no explicit adjoint of the obs operator anywhere in the code.*
+> **In code.** [`run_dual_psas`](../../src/plume_simulation/assimilation/solve.py) wraps the dual matrix as a `lineax.FunctionLinearOperator`, tags it symmetric+PSD, and feeds it to `lineax.linear_solve(..., solver=lineax.CG(...))`. The two `H'` and $H'^\top$ applications inside the matvec are produced by differencing `forward_fn` at `x_b` and by a single hoisted `jax.vjp` respectively — *no explicit adjoint of the obs operator anywhere in the code.*
 
 ### 3.1 The matched filter as a single PSAS step
 
@@ -122,7 +122,7 @@ This is what we use for the obs-term gradient in [eq-J](#eq-J). Concretely, [`bu
 ### 4.2 Tangent-linear (`jax.jvp`)
 
 `jax.jvp(H, (x,), (v,))` computes $H'(x) \cdot v$ in one forward pass without ever forming the Jacobian. Useful for:
-- The dual matvec inside [eq-dual-solution](#eq-dual-solution): one `jvp` per CG iteration (we use this implicitly via `forward_linear_fn` in [`run_dual_psas`](../../src/plume_simulation/assimilation/solve.py)).
+- The dual matvec inside [eq-dual-solution](#eq-dual-solution): one `jvp` per CG iteration (we use this implicitly via `forward_fn` differenced at `x_b` in [`run_dual_psas`](../../src/plume_simulation/assimilation/solve.py)).
 - Hessian-vector products via forward-over-reverse: `jax.jvp(jax.grad(J), (x,), (v,))` returns $\nabla^2 J \cdot v$ at $\mathcal{O}(\text{forward})$ cost. This is what [`Cost.hvp`](../../src/plume_simulation/assimilation/cost.py) does, and it's what feeds the diagnostics in [diagnostics.py](../../src/plume_simulation/assimilation/diagnostics.py).
 
 ### 4.3 Implicit-function adjoint

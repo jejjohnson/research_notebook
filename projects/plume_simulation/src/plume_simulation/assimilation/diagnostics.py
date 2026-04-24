@@ -61,26 +61,49 @@ def degrees_of_freedom_for_signal(
     state_size: int,
     n_probes: int = 32,
     seed: int = 0,
+    cg_rtol: float = 1e-6,
+    cg_atol: float = 1e-10,
+    cg_max_steps: int = 2000,
 ) -> float:
-    """Estimate ``DFS = trace(I − Bₐ B⁻¹) = trace(B Hess B⁻¹) / …`` (linearised).
+    """Estimate ``DFS = trace(I − Bₐ B⁻¹)`` (Rodgers 2000, §2.5).
 
-    For the linear-Gaussian case the averaging kernel is ``A = Bₐ Hess`` and
-    ``DFS = trace(A)`` measures how many independent pieces of information
-    the observations contributed. We estimate the trace via Hutchinson:
+    For the linear-Gaussian case the averaging kernel is ``A = I − Bₐ B⁻¹``
+    and ``DFS = trace(A)`` measures how many independent pieces of information
+    the observations contributed (``DFS = 0`` → no information; ``DFS = N`` →
+    observations fully pin the state). The posterior covariance is the
+    inverse Hessian at the optimum, ``Bₐ ≈ Hess⁻¹``, so each Hutchinson probe
+    needs:
 
-        trace(M) ≈ (1/N) Σₙ zₙᵀ M zₙ,        zₙ ∼ Rademacher.
+    - one ``B⁻¹ z`` via :func:`gaussx.solve` (structured dispatch);
+    - one ``Hess⁻¹ w`` via :func:`lineax.linear_solve` (CG on the HVP).
 
-    Cheap because each probe is a single ``hvp`` plus one ``B⁻¹`` solve.
+    Cost per probe: ``O(n_CG · forward)`` — dominated by the CG solve.
+
+    Earlier versions of this function computed ``trace(B · Hess)``, which is
+    not DFS: in the zero-information limit (``Hess = B⁻¹``) it returns ``N``
+    instead of the correct ``0``. See PR-review thread on diagnostics.py.
     """
+    import gaussx as gx
+
+    # Build a CG-solvable operator for ``Hess⁻¹``.
+    hess_op = lx.FunctionLinearOperator(
+        lambda v: hessian_vector_product(jnp.asarray(v)),
+        input_structure=jax.eval_shape(lambda: jnp.zeros(state_size)),
+        tags=frozenset({lx.symmetric_tag, lx.positive_semidefinite_tag}),
+    )
+    cg_solver = lx.CG(rtol=cg_rtol, atol=cg_atol, max_steps=cg_max_steps)
+
     rng = np.random.default_rng(seed)
     z_batch = rng.choice([-1.0, 1.0], size=(n_probes, state_size))
     total = 0.0
     for z in z_batch:
         z_j = jnp.asarray(z, dtype=jnp.float64)
-        # A z = (B Hess) z — evaluate via two cheap operator applications.
-        Hess_z = hessian_vector_product(z_j)
-        A_z = background_op.mv(Hess_z)
-        total += float(jnp.dot(z_j, A_z))
+        # w = B⁻¹ z     (structured dispatch, cheap for Kronecker / low-rank)
+        w = gx.solve(background_op, z_j)
+        # u = Hess⁻¹ w  (matrix-free CG)
+        u = lx.linear_solve(hess_op, w, solver=cg_solver, throw=False).value
+        # zᵀ (I − Bₐ B⁻¹) z ≈ zᵀ z − zᵀ (Hess⁻¹ B⁻¹) z
+        total += float(jnp.dot(z_j, z_j) - jnp.dot(z_j, u))
     return total / n_probes
 
 

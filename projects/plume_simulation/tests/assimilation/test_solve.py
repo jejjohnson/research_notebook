@@ -87,7 +87,7 @@ def test_dual_psas_matches_primal_for_linear_forward(obs_model_no_optics):
 
     # --- dual PSAS ---
     sol_dual = run_dual_psas(
-        forward_linear_fn=model.make_forward(linear=True),
+        forward_fn=model.make_forward(linear=True),
         background_op=B,
         obs_inv_variance=R_inv,
         background_state=jnp.zeros((ny, nx)),

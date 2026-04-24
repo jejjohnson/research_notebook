@@ -65,6 +65,9 @@ _LAZY_EXPORTS: dict[str, tuple[str, str]] = {
     "forward_taylor_normalized": ("forward", "forward_taylor_normalized"),
     # SRF
     "SpectralResponseFunction": ("srf", "SpectralResponseFunction"),
+    # instrument (PSF + GSD) — JAX-native linear operators
+    "PointSpreadFunction": ("instrument", "PointSpreadFunction"),
+    "GroundSamplingDistance": ("instrument", "GroundSamplingDistance"),
     # nB-LUT / injection
     "NBLookup": ("nb_lut", "NBLookup"),
     "build_nb_lut": ("nb_lut", "build_nb_lut"),
@@ -144,6 +147,10 @@ if TYPE_CHECKING:  # static type checkers: see the symbols as if eagerly importe
         build_nb_lut,
         inject_plume,
         lookup_nb,
+    )
+    from plume_simulation.radtran.instrument import (
+        GroundSamplingDistance,
+        PointSpreadFunction,
     )
     from plume_simulation.radtran.srf import SpectralResponseFunction
     from plume_simulation.radtran.target import (

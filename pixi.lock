@@ -14724,7 +14724,7 @@ packages:
 - pypi: ./projects/plume_simulation
   name: plume-simulation
   version: 0.1.0
-  sha256: 6be80b052685cd6cd0532ca9fcf9139b9f42d8f754409b26c0eca5a4980e72ce
+  sha256: bdc9ad9bf6d7aa8f5e1e73cadd93695af6071ee31ce8a9e694e01ce0279065b1
   requires_dist:
   - jax>=0.7,<0.9
   - jaxlib>=0.7,<0.9
@@ -14734,6 +14734,7 @@ packages:
   - diffrax>=0.6
   - equinox>=0.11
   - finitevolx>=0.0.41
+  - optimistix>=0.0.10
   - numpyro>=0.16 ; extra == 'inference'
   - matplotlib ; extra == 'notebooks'
   - ipython ; extra == 'notebooks'

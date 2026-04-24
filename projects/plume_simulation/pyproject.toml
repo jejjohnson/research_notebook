@@ -39,6 +39,12 @@ dependencies = [
     # the inner linear solvers (CG, Cholesky, AutoLinearSolver), which we
     # also use directly to wire dual / PSAS solutions in solve.py.
     "optimistix>=0.0.10",
+    # scikit-learn powers the matched-filter background estimators
+    # (EmpiricalCovariance / LedoitWolf / OAS, TruncatedSVD for low-rank
+    # covariance, GaussianMixture for cluster backgrounds). The matched
+    # filter itself is pure JAX — sklearn is only used off the gradient
+    # path, so we accept its numpy-first API without autodiff concerns.
+    "scikit-learn>=1.3",
 ]
 
 [project.optional-dependencies]

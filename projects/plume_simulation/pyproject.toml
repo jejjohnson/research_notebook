@@ -20,6 +20,13 @@ dependencies = [
     # Eulerian dispersion sub-model (Advection3D, Diffusion3D, Difference3D,
     # Interpolation3D, boundary-condition atoms, and time steppers).
     "finitevolx>=0.0.41",
+    # gaussx supplies the structured linear-algebra primitives used by the
+    # radtran matched-filter retrieval (LowRankUpdate + gaussx.solve via
+    # Woodbury identity) — keeps the full O(n_bands³) inverse off the hot
+    # path for hyperspectral retrievals. gaussx is not on PyPI yet; the
+    # plume-simulation pixi environment pins it to a git commit. Users
+    # who install this package directly via pip need to install gaussx
+    # separately (e.g. ``pip install git+https://github.com/jejjohnson/gaussx``).
 ]
 
 [project.optional-dependencies]

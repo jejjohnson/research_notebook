@@ -3,6 +3,7 @@
 Submodules:
   - dispersion  — Pasquill-Gifford σ(s) coefficients + shared Briggs dispatch
   - wind        — piecewise-linear WindSchedule + diffrax cumulative integrals
+  - turbulence  — Ornstein-Uhlenbeck sub-grid position disturbances on puff centres
   - puff        — single-puff kernel, evolve_puffs, simulate_puff (xarray)
   - inference   — NumPyro Bayesian inference for Q (constant) and Q_i (random walk)
 
@@ -16,7 +17,7 @@ from __future__ import annotations
 import importlib
 from typing import TYPE_CHECKING
 
-from plume_simulation.gauss_puff import dispersion, puff, wind
+from plume_simulation.gauss_puff import dispersion, puff, turbulence, wind
 from plume_simulation.gauss_puff.dispersion import (
     DISPERSION_SCHEMES,
     PG_DISPERSION_PARAMS,
@@ -36,6 +37,10 @@ from plume_simulation.gauss_puff.puff import (
     release_interval_to_frequency,
     simulate_puff,
     simulate_puff_field,
+)
+from plume_simulation.gauss_puff.turbulence import (
+    OUTurbulence,
+    sample_ou_offsets,
 )
 from plume_simulation.gauss_puff.wind import (
     WindSchedule,
@@ -76,10 +81,12 @@ __all__ = [
     "dispersion",
     "wind",
     "puff",
+    "turbulence",
     "inference",
     "DISPERSION_SCHEMES",
     "PG_DISPERSION_PARAMS",
     "STABILITY_CLASSES",
+    "OUTurbulence",
     "PuffState",
     "WindSchedule",
     "calculate_briggs_dispersion_xyz",
@@ -93,6 +100,7 @@ __all__ = [
     "puff_concentration",
     "puff_concentration_vmap",
     "release_interval_to_frequency",
+    "sample_ou_offsets",
     "simulate_puff",
     "simulate_puff_field",
     "gaussian_puff_model",

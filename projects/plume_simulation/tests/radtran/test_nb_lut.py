@@ -15,7 +15,7 @@ from plume_simulation.radtran.nb_lut import (
 def test_build_nb_lut_starts_at_one(synthetic_lut, swir_srf):
     lut = build_nb_lut(
         synthetic_lut, swir_srf,
-        T_K=280.0, p_atm=1.0, path_length_cm=8.4e5, amf=2.0,
+        T_K=280.0, p_atm=1.0, amf=2.0,
         max_delta_column=100.0, n_grid=501,
     )
     np.testing.assert_allclose(lut.nB[:, 0], 1.0, atol=1e-12)
@@ -24,7 +24,7 @@ def test_build_nb_lut_starts_at_one(synthetic_lut, swir_srf):
 def test_build_nb_lut_monotonically_decreasing(synthetic_lut, swir_srf):
     lut = build_nb_lut(
         synthetic_lut, swir_srf,
-        T_K=280.0, p_atm=1.0, path_length_cm=8.4e5, amf=2.0,
+        T_K=280.0, p_atm=1.0, amf=2.0,
         max_delta_column=50.0, n_grid=201,
     )
     for b in range(lut.n_bands):
@@ -37,7 +37,7 @@ def test_build_nb_lut_B12_absorbs_more_than_B11(synthetic_lut, swir_srf):
     # window. B12 should see more absorption than B11 (1610 nm).
     lut = build_nb_lut(
         synthetic_lut, swir_srf,
-        T_K=280.0, p_atm=1.0, path_length_cm=8.4e5, amf=2.0,
+        T_K=280.0, p_atm=1.0, amf=2.0,
         max_delta_column=100.0, n_grid=501,
     )
     # At the maximum ΔX, the B12 nB is lower (more absorbed) than B11's.
@@ -47,7 +47,7 @@ def test_build_nb_lut_B12_absorbs_more_than_B11(synthetic_lut, swir_srf):
 def test_lookup_nb_clips_out_of_range(synthetic_lut, swir_srf):
     lut = build_nb_lut(
         synthetic_lut, swir_srf,
-        T_K=280.0, p_atm=1.0, path_length_cm=8.4e5, amf=2.0,
+        T_K=280.0, p_atm=1.0, amf=2.0,
         max_delta_column=10.0, n_grid=101,
     )
     plume = np.array([[-5.0, 0.0, 5.0, 20.0]])  # -5 and 20 are outside
@@ -62,7 +62,7 @@ def test_lookup_nb_clips_out_of_range(synthetic_lut, swir_srf):
 def test_lookup_nb_preserves_nans(synthetic_lut, swir_srf):
     lut = build_nb_lut(
         synthetic_lut, swir_srf,
-        T_K=280.0, p_atm=1.0, path_length_cm=8.4e5, amf=2.0,
+        T_K=280.0, p_atm=1.0, amf=2.0,
     )
     plume = np.array([[1.0, np.nan]])
     out = lookup_nb(plume, lut)
@@ -75,7 +75,7 @@ def test_lookup_nb_preserves_nans(synthetic_lut, swir_srf):
 def test_inject_plume_multiplicative(synthetic_lut, swir_srf):
     lut = build_nb_lut(
         synthetic_lut, swir_srf,
-        T_K=280.0, p_atm=1.0, path_length_cm=8.4e5, amf=2.0,
+        T_K=280.0, p_atm=1.0, amf=2.0,
     )
     scene = np.ones((2, 4, 4))  # flat clean scene, two bands
     plume = np.zeros((4, 4))
@@ -90,7 +90,7 @@ def test_inject_plume_multiplicative(synthetic_lut, swir_srf):
 
 def test_inject_plume_rejects_band_mismatch(synthetic_lut, swir_srf):
     lut = build_nb_lut(synthetic_lut, swir_srf, T_K=280.0, p_atm=1.0,
-                      path_length_cm=8.4e5, amf=2.0)
+                      amf=2.0)
     scene = np.ones((3, 4, 4))  # 3-band scene, LUT has 2
     with pytest.raises(ValueError, match="LUT has"):
         inject_plume(scene, np.zeros((4, 4)), lut)
@@ -110,12 +110,12 @@ def test_build_nb_lut_rejects_invalid_grid(synthetic_lut, swir_srf):
     with pytest.raises(ValueError, match="n_grid"):
         build_nb_lut(
             synthetic_lut, swir_srf,
-            T_K=280.0, p_atm=1.0, path_length_cm=8.4e5, amf=2.0,
+            T_K=280.0, p_atm=1.0, amf=2.0,
             n_grid=1,
         )
     with pytest.raises(ValueError, match="max_delta_column"):
         build_nb_lut(
             synthetic_lut, swir_srf,
-            T_K=280.0, p_atm=1.0, path_length_cm=8.4e5, amf=2.0,
+            T_K=280.0, p_atm=1.0, amf=2.0,
             max_delta_column=0.0,
         )

@@ -12,9 +12,9 @@ irradiance have been divided out (differential Beer-Lambert).
 
 Evaluating the integral per pixel is expensive, so we follow the Eucalyptus
 ``radtran()`` trick: pre-tabulate ``nB`` over a 1-D grid of ΔX values, then
-look up per-pixel via nearest-neighbour indexing. A 10-k point LUT covering
-[0, 200] mol/m² costs ~1 ms to build and makes plume injection a single
-array indexing operation over the scene.
+look up per-pixel via piecewise-linear interpolation (``np.interp``). A
+4-k-point LUT covering [0, 200] mol/m² costs ~1 ms to build and makes plume
+injection a single ``np.interp`` call per band.
 
 Public surface
 --------------
@@ -30,7 +30,6 @@ from dataclasses import dataclass
 import numpy as np
 import xarray as xr
 
-from plume_simulation.radtran.config import number_density_cm3
 from plume_simulation.radtran.srf import SpectralResponseFunction
 
 
@@ -84,35 +83,12 @@ class NBLookup:
 # ── LUT construction ────────────────────────────────────────────────────────
 
 
-def _vmr_from_column(
-    delta_column_mol_per_m2: np.ndarray,
-    T_K: float,
-    p_atm: float,
-    path_length_cm: float,
-) -> np.ndarray:
-    """Convert a column enhancement [mol/m²] to a VMR perturbation (dimensionless).
-
-    For a uniform slab of thickness ``L`` at ``(T, p)``:
-        ΔX [mol/m²] = VMR · N_total [molec/cm³] / N_A [molec/mol] · L[cm] · 1e4 [cm²/m²]
-
-    so VMR = ΔX · N_A / (N_total · L · 1e4).
-    """
-    N_total_cm3 = number_density_cm3(p_atm, T_K)  # molec / cm^3
-    N_A = 6.02214076e23
-    return (
-        np.asarray(delta_column_mol_per_m2, dtype=float)
-        * N_A
-        / (N_total_cm3 * path_length_cm * 1e4)
-    )
-
-
 def build_nb_lut(
     ds: xr.Dataset,
     srf: SpectralResponseFunction,
     *,
     T_K: float,
     p_atm: float,
-    path_length_cm: float,
     amf: float,
     max_delta_column: float = 200.0,
     n_grid: int = 4001,
@@ -127,8 +103,12 @@ def build_nb_lut(
         :func:`plume_simulation.hapi_lut.build_lut_dataset`.
     srf : SpectralResponseFunction
         Instrument SRF mapping the LUT wavelength grid to bands.
-    T_K, p_atm, path_length_cm, amf : float
-        Slab atmospheric state.
+    T_K, p_atm : float
+        Slab atmospheric temperature [K] and pressure [atm], at which the
+        cross-section ``σ(λ; T, P)`` is interpolated. ΔX is a column
+        already, so the slab path length does not enter the integrand.
+    amf : float
+        Two-way air-mass factor multiplying the slant column.
     max_delta_column : float
         Upper bound of the ΔX grid [mol/m²]. Default 200.
     n_grid : int
@@ -184,10 +164,6 @@ def build_nb_lut(
     tau_grid = optical_coef[None, :] * delta_column[:, None]  # (n_delta, n_lambda)
     transmittance = np.exp(-tau_grid)  # (n_delta, n_lambda)
     nB = srf.apply(transmittance).T  # (n_bands, n_delta)
-
-    # Reference the unused inputs so linters / tests see the full signature.
-    _ = (T_K, p_atm, path_length_cm)
-
     return NBLookup(delta_column=delta_column, nB=nB, band_names=srf.band_names)
 
 

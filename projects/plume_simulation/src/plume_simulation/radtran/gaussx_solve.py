@@ -45,6 +45,35 @@ else:  # pragma: no cover — runtime wildcard to dodge annotation eval cost.
     LowRankUpdateOp = object
 
 
+# ── gaussx import shim ──────────────────────────────────────────────────────
+
+
+_GAUSSX_INSTALL_HINT = (
+    "plume_simulation.radtran.gaussx_solve requires the `gaussx` package, "
+    "which is not on PyPI. Install it from git:\n"
+    "    pip install 'gaussx @ git+https://github.com/jejjohnson/gaussx'\n"
+    "or activate the project's `plume-simulation` pixi environment "
+    "(``pixi install -e plume-simulation``), which pins gaussx by git "
+    "commit for reproducibility."
+)
+
+
+def _import_gaussx_stack():
+    """Import ``gaussx`` + the ``jax``/``lineax`` pieces this module needs.
+
+    Wrapping the imports here lets us turn any ``ModuleNotFoundError`` into
+    one actionable message instead of three different stack traces depending
+    on which dependency is missing.
+    """
+    try:
+        import gaussx as gx
+        import jax.numpy as jnp
+        import lineax as lx
+    except ModuleNotFoundError as exc:  # pragma: no cover — install-time path
+        raise ModuleNotFoundError(_GAUSSX_INSTALL_HINT) from exc
+    return gx, jnp, lx
+
+
 # ── Covariance operator construction ────────────────────────────────────────
 
 
@@ -78,9 +107,7 @@ def build_lowrank_covariance_operator(
         *same* trimmed pixel stack — avoiding a subtle bias where μ drops
         outliers that Σ's trim step kept.
     """
-    import gaussx as gx
-    import jax.numpy as jnp
-    import lineax as lx
+    gx, jnp, lx = _import_gaussx_stack()
 
     from plume_simulation.radtran.background import (
         _flatten_pixels,
@@ -157,8 +184,7 @@ def matched_filter_pixel_op(
     Computes ``Σ⁻¹ t`` via :func:`gaussx.solve` once (O(B·k) via Woodbury),
     then projects a single pixel's innovation onto it.
     """
-    import gaussx as gx
-    import jax.numpy as jnp
+    gx, jnp, _ = _import_gaussx_stack()
 
     cov_inv_target = np.asarray(gx.solve(cov, jnp.asarray(target)))
     target_norm = float(np.dot(target, cov_inv_target))
@@ -202,8 +228,7 @@ def matched_filter_image_op(
     abundance : np.ndarray
         Pixel-wise retrieval, shape ``radiance.shape`` minus the band axis.
     """
-    import gaussx as gx
-    import jax.numpy as jnp
+    gx, jnp, _ = _import_gaussx_stack()
 
     arr = np.asarray(radiance, dtype=float)
     bands_first = np.moveaxis(arr, band_axis, 0)
@@ -242,8 +267,7 @@ def matched_filter_snr_op(
     Mirrors :func:`plume_simulation.radtran.matched_filter.matched_filter_snr`
     but uses :func:`gaussx.solve` to avoid materialising ``Σ⁻¹``.
     """
-    import gaussx as gx
-    import jax.numpy as jnp
+    gx, jnp, _ = _import_gaussx_stack()
 
     cov_inv_target = np.asarray(gx.solve(cov, jnp.asarray(target)))
     target_norm = float(np.dot(target, cov_inv_target))

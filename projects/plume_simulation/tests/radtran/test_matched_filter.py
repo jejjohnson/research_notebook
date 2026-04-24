@@ -90,7 +90,12 @@ def test_matched_filter_recovers_column_map(synthetic_lut):
     )
 
     geom = dict(T_K=280.0, p_atm=1.0, path_length_cm=8.4e5, amf=2.0)
-    lut = build_nb_lut(synthetic_lut, srf, max_delta_column=20.0, n_grid=1001, **geom)
+    # build_nb_lut doesn't take path_length_cm (ΔX is already a column).
+    lut = build_nb_lut(
+        synthetic_lut, srf,
+        T_K=geom["T_K"], p_atm=geom["p_atm"], amf=geom["amf"],
+        max_delta_column=20.0, n_grid=1001,
+    )
 
     # Clean flat scene (normalised radiance = 1 everywhere).
     ny, nx = 16, 16

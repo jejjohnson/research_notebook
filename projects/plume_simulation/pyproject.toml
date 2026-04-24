@@ -13,6 +13,11 @@ dependencies = [
     "jaxlib>=0.7,<0.9",
     "numpy",
     "xarray",
+    # scipy powers the trimmed-mean / SVD background estimators in
+    # plume_simulation.radtran.background. (jax/diffrax pull scipy
+    # transitively, but declaring it explicitly avoids a fragile load
+    # for users who switch to an alternative jax distribution.)
+    "scipy>=1.11",
     # diffrax + equinox drive the gauss_puff time-varying wind solves.
     "diffrax>=0.6",
     "equinox>=0.11",

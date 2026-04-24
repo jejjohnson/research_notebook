@@ -32,6 +32,13 @@ dependencies = [
     # plume-simulation pixi environment pins it to a git commit. Users
     # who install this package directly via pip need to install gaussx
     # separately (e.g. ``pip install git+https://github.com/jejjohnson/gaussx``).
+    # optimistix powers the variational retrieval module
+    # plume_simulation.assimilation: LBFGS, GaussNewton, LevenbergMarquardt
+    # minimisers plus ImplicitAdjoint / RecursiveCheckpointAdjoint for
+    # gradients through the converged 3D-Var solve. Pulls in lineax for
+    # the inner linear solvers (CG, Cholesky, AutoLinearSolver), which we
+    # also use directly to wire dual / PSAS solutions in solve.py.
+    "optimistix>=0.0.10",
 ]
 
 [project.optional-dependencies]

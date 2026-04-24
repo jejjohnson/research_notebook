@@ -52,6 +52,68 @@ def test_apply_image_xarray_rejects_missing_band_dim(rng):
         )
 
 
+def test_apply_image_xarray_forwards_allow_rechunk(rng):
+    """Even without dask installed, we can verify the kwarg is forwarded
+    to :func:`xarray.apply_ufunc` — the actual rechunking only kicks in
+    on Dask-backed arrays, but the kwarg must be present regardless so
+    chunked inputs work in environments that do have dask."""
+    from unittest.mock import patch
+
+    H, W, B = 4, 5, 6
+    cube_np = rng.standard_normal((H, W, B))
+    target = rng.standard_normal(B)
+    mean = cube_np.reshape(-1, B).mean(axis=0)
+    cov_op = estimate_cov_empirical(cube_np, mean=mean, ridge=1e-6)
+    da = xr.DataArray(cube_np, dims=("y", "x", "band"))
+
+    with patch("xarray.apply_ufunc", wraps=xr.apply_ufunc) as spy:
+        apply_image_xarray(
+            da,
+            mean=mean,
+            cov_op=cov_op,
+            target=target,
+            band_dim="band",
+            dask="allowed",
+        )
+    assert spy.call_count == 1
+    kwargs = spy.call_args.kwargs
+    assert kwargs.get("dask_gufunc_kwargs") == {"allow_rechunk": True}
+
+
+def test_apply_image_xarray_handles_chunked_band_axis(rng):
+    """Zarr/netCDF scenes commonly chunk the spectral axis. The Dask path
+    must tolerate that via ``allow_rechunk=True`` — regression test for a
+    previous ``ValueError: dimension is chunked`` failure on valid inputs."""
+    dask = pytest.importorskip("dask.array")
+    H, W, B = 8, 9, 12
+    cube_np = 1.0 + rng.standard_normal((H, W, B)) * 0.05
+    target = rng.standard_normal(B) * 0.1
+    mean = cube_np.reshape(-1, B).mean(axis=0)
+    cov_op = estimate_cov_empirical(cube_np, mean=mean, ridge=1e-6)
+    # Chunk the band axis into 3 chunks of size 4 — precisely the pattern
+    # that previously tripped the apply_ufunc core-dim check.
+    cube_dask = dask.from_array(cube_np, chunks=((H,), (W,), (4, 4, 4)))
+    da = xr.DataArray(cube_dask, dims=("y", "x", "band"))
+    scores = apply_image_xarray(
+        da, mean=mean, cov_op=cov_op, target=target, band_dim="band"
+    )
+    computed = scores.compute()
+    assert computed.dims == ("y", "x")
+    assert computed.shape == (H, W)
+    # Sanity check: the values must match the unchunked apply_image.
+    import jax.numpy as jnp
+
+    from plume_simulation.matched_filter.core import apply_image
+
+    reference = apply_image(
+        jnp.asarray(cube_np),
+        mean=jnp.asarray(mean),
+        cov_op=cov_op,
+        target=jnp.asarray(target),
+    )
+    np.testing.assert_allclose(computed.values, np.asarray(reference), atol=1e-10)
+
+
 def test_open_multi_scene_respects_band_dim_anywhere(tmp_path, rng):
     """Regression test: files stored as ``(band, y, x)`` must still yield
     ``(n_pixels, n_bands)`` batches with spectra intact. Previously the

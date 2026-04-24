@@ -41,11 +41,64 @@ def _precompute_filter(
     """Return ``(w, tᵀw)`` with ``w = Σ⁻¹ t``.
 
     Caller precomputes these once; every pixel then costs a single dot
-    product against ``w``.
+    product against ``w``. Validates the target energy ``tᵀ Σ⁻¹ t`` so
+    callers get a clear :class:`ValueError` instead of silent NaNs/infs
+    when the target is zero or the covariance is singular/indefinite
+    along the target direction. The check is a no-op under
+    :func:`jax.jit` tracing; users who want the same fail-fast behaviour
+    inside a jit-compiled pipeline should call
+    :func:`validate_mf_inputs` explicitly before jitting.
     """
     w = gx.solve(cov_op, target)
     target_norm_sq = jnp.dot(target, w)
+    _check_target_energy(target, target_norm_sq)
     return w, target_norm_sq
+
+
+def _check_target_energy(
+    target: Float[Array, "B"], target_norm_sq: Float[Array, ""]
+) -> None:
+    """Fail-fast validation — eager only; silently returns under jit tracing."""
+    try:
+        t_max = float(jnp.max(jnp.abs(target)))
+        tnorm_sq_val = float(target_norm_sq)
+    except (
+        jax.errors.TracerArrayConversionError,
+        jax.errors.ConcretizationTypeError,
+    ):
+        return  # traced call: no concrete values to inspect.
+    if t_max == 0.0:
+        raise ValueError(
+            "matched_filter: target signature is all zero — the score "
+            "(x−μ)ᵀΣ⁻¹t / (tᵀΣ⁻¹t) is undefined."
+        )
+    if not tnorm_sq_val > 0.0:
+        raise ValueError(
+            f"matched_filter: target energy tᵀΣ⁻¹t = {tnorm_sq_val!r} is not "
+            "strictly positive. The covariance operator is singular or "
+            "indefinite along the target direction. Add a Tikhonov ridge or "
+            "use a PD estimator such as estimate_cov_shrunk (Ledoit–Wolf)."
+        )
+
+
+def validate_mf_inputs(cov_op: LinearOperator, target: Float[Array, "B"]) -> None:
+    """Public fail-fast check for ``(Σ, t)`` compatibility.
+
+    Runs the same ``tᵀ Σ⁻¹ t > 0`` test that :func:`apply_pixel` and
+    :func:`apply_image` perform automatically, but without the rest of the
+    MF work — useful for catching user errors *before* jitting a pipeline
+    or batching over many pixels.
+
+    Raises
+    ------
+    ValueError
+        If ``target`` is all zero, or if the target energy ``tᵀ Σ⁻¹ t`` is
+        not strictly positive (singular or indefinite covariance along the
+        target direction).
+    """
+    w = gx.solve(cov_op, target)
+    target_norm_sq = jnp.dot(target, w)
+    _check_target_energy(target, target_norm_sq)
 
 
 def apply_pixel(
@@ -140,6 +193,7 @@ def matched_filter_snr(
     """
     w = gx.solve(cov_op, target)
     target_norm_sq = jnp.dot(target, w)
+    _check_target_energy(target, target_norm_sq)
     return jnp.asarray(amplitude) * jnp.sqrt(target_norm_sq)
 
 
@@ -179,4 +233,5 @@ def detection_threshold(
     z = jax.scipy.special.ndtri(1.0 - false_alarm_rate)
     w = gx.solve(cov_op, target)
     target_norm_sq = jnp.dot(target, w)
+    _check_target_energy(target, target_norm_sq)
     return z / jnp.sqrt(target_norm_sq)

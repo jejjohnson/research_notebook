@@ -42,6 +42,7 @@ _LAZY_EXPORTS: dict[str, tuple[str, str]] = {
     "apply_image": ("core", "apply_image"),
     "matched_filter_snr": ("core", "matched_filter_snr"),
     "detection_threshold": ("core", "detection_threshold"),
+    "validate_mf_inputs": ("core", "validate_mf_inputs"),
     # target
     "linear_target_from_obs": ("target", "linear_target_from_obs"),
     "nonlinear_target_from_obs": ("target", "nonlinear_target_from_obs"),
@@ -95,6 +96,7 @@ if TYPE_CHECKING:  # static type checkers see eagerly-imported symbols
         apply_pixel,
         detection_threshold,
         matched_filter_snr,
+        validate_mf_inputs,
     )
     from plume_simulation.matched_filter.io import (
         apply_image_xarray,

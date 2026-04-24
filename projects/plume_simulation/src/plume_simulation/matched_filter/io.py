@@ -58,7 +58,12 @@ def apply_image_xarray(
         Name of the spectral dimension. Default ``'band'``.
     dask
         Forwarded to :func:`xarray.apply_ufunc`:
-        ``'parallelized'`` (default — chunk-wise) or ``'allowed'``.
+        ``'parallelized'`` (default — chunk-wise) or ``'allowed'``. When
+        ``'parallelized'`` is used, the spectral axis is transparently
+        rechunked into a single chunk per block (``allow_rechunk=True``)
+        because the MF kernel takes the full spectrum at each pixel; this
+        lets common zarr/netCDF files with a chunked spectral axis flow
+        through without manual rechunking.
 
     Returns
     -------
@@ -83,6 +88,11 @@ def apply_image_xarray(
         scores = apply_image(flat, mean=mean, cov_op=cov_op, target=target)
         return np.asarray(scores).reshape(arr.shape[:-1])
 
+    # allow_rechunk=True lets xarray merge adjacent chunks along band_dim
+    # into a single chunk per block. Without this, apply_ufunc on a
+    # spectrally-chunked Dask array raises "dimension 'band' is chunked but
+    # the kernel requires it to be contiguous". The MF kernel needs the
+    # full spectrum at each pixel, so rechunking is always safe here.
     return xr.apply_ufunc(
         _kernel,
         cube,
@@ -91,6 +101,7 @@ def apply_image_xarray(
         exclude_dims={band_dim},
         dask=dask,
         output_dtypes=[np.float64],
+        dask_gufunc_kwargs={"allow_rechunk": True},
     )
 
 

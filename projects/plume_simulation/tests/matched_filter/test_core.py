@@ -23,6 +23,7 @@ from plume_simulation.matched_filter.core import (
     apply_pixel,
     detection_threshold,
     matched_filter_snr,
+    validate_mf_inputs,
 )
 
 
@@ -157,3 +158,42 @@ def test_apply_image_runs_under_jit(hyperspectral_scene):
     out = f(cube_jax)
     out2 = f(cube_jax)  # second call shouldn't re-trace
     np.testing.assert_allclose(np.asarray(out), np.asarray(out2))
+
+
+def test_zero_target_raises(rng):
+    """A zero target signature must fail fast with a clear ValueError —
+    regression test for silent NaN/inf scores from ``tᵀΣ⁻¹t = 0``."""
+    B = 5
+    cov_op = lx.DiagonalLinearOperator(jnp.ones(B))
+    target = jnp.zeros(B)
+    pixel = jnp.asarray(rng.standard_normal(B))
+    mean = jnp.zeros(B)
+    with pytest.raises(ValueError, match="target .* all zero"):
+        apply_pixel(pixel, mean=mean, cov_op=cov_op, target=target)
+    with pytest.raises(ValueError, match="target .* all zero"):
+        matched_filter_snr(1.0, cov_op, target)
+    with pytest.raises(ValueError, match="target .* all zero"):
+        detection_threshold(1e-4, cov_op, target)
+    with pytest.raises(ValueError, match="target .* all zero"):
+        validate_mf_inputs(cov_op, target)
+
+
+def test_indefinite_cov_raises():
+    """``tᵀΣ⁻¹t ≤ 0`` must raise — covers singular / indefinite covariances
+    along the target direction."""
+    # Sign-flipped diagonal: tᵀ Σ⁻¹ t = Σ (1/σ_i) t_i² can be negative.
+    B = 4
+    cov_op = lx.DiagonalLinearOperator(jnp.asarray([-1.0, -1.0, -1.0, -1.0]))
+    target = jnp.ones(B)
+    with pytest.raises(ValueError, match="strictly positive"):
+        validate_mf_inputs(cov_op, target)
+    pixel = jnp.zeros(B)
+    with pytest.raises(ValueError, match="strictly positive"):
+        apply_pixel(pixel, mean=jnp.zeros(B), cov_op=cov_op, target=target)
+
+
+def test_validate_mf_inputs_is_a_noop_for_healthy_inputs():
+    B = 6
+    cov_op = lx.DiagonalLinearOperator(jnp.ones(B))
+    target = jnp.ones(B)
+    validate_mf_inputs(cov_op, target)  # must not raise

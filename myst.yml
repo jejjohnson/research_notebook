@@ -97,6 +97,10 @@ project:
                 - file: projects/plume_simulation/notebooks/hapi_lut/01_hapi_lut_ch4
                 - file: projects/plume_simulation/notebooks/hapi_lut/02_hapi_lut_multigas
                 - file: projects/plume_simulation/notebooks/hapi_lut/03_beers_law_with_lut
+            - title: Band integration & matched filter
+              children:
+                - file: projects/plume_simulation/notebooks/radtran/04_srf_band_integration
+                - file: projects/plume_simulation/notebooks/radtran/05_matched_filter_retrieval
         - title: Gaussianization flows
           children:
             - file: projects/gaussianization/README

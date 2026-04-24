@@ -4775,9 +4775,11 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.7-hb78ec9c_6.conda
       - pypi: https://files.pythonhosted.org/packages/71/cc/18245721fa7747065ab478316c7fea7c74777d07f37ae60db2e84f8172e8/beartype-0.22.9-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/6c/48/c42f657f3d6b4d9d9674c9bc48e763d024511ea4cc1d6e0c68c7b4380c43/diffrax-0.7.2-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/2a/09/f8d8f8f31e4483c10a906437b4ce31bdf3d6d417b73fe33f1a8b59e34228/einops-0.8.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/1b/5e/28df919a8d5741a96fe7f56ac19493389f7a3de9c819c7a1ec3b2c557852/equinox-0.13.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/0d/d3/818f9d6ca330f4aa78e618f24dac8a79c5d0825b00e9927c461a23539bb4/finitediffx-0.1.0-py3-none-any.whl
       - pypi: git+https://github.com/jejjohnson/finitevolX?tag=v0.0.41#236b060ae5c7eb2041c4806d33befaad2f227958
+      - pypi: git+https://github.com/jejjohnson/gaussx?rev=fd9a2427#fd9a242730e32caeebcc7e5bd3441bf80e0d053f
       - pypi: https://files.pythonhosted.org/packages/74/d8/4fa0fb59ce8d29cd153496b6e8f92c4fdee070dfc78724daab0008a0fe38/hitran_api-1.3.0.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/a5/cc/64d0fad725570ed6a02f5c7676cbfe3a268bed2fc3b10a74b59425ce6386/hydra_zen-0.16.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b6/d2/65cd40732c412218f71472aa24b037d3f086960c09eb643351edf3f78492/jax-0.8.3-py3-none-any.whl
@@ -4785,6 +4787,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/94/05/3e39d416fb92b2738a76e8265e6bfc5d10542f90a7c32ad1eb831eea3fa3/jaxtyping-0.3.9-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/47/ff/108214af06b6b1259bdd66a7ccb49e370395c648cd2fbfe7872f705d9e40/kernex-0.2.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/80/0c/2ed47112fc1958a0a81c9b015d4e1861953a1ec3a17b081c0180a25ce82c/lineax-0.1.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/47/57/1d8c13471272eee62970c9e84e4dbf5dba1278d415b8c2923e4247289574/matfree-0.5.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/3a/cb/28ce52eb94390dda42599c98ea0204d74799e4d8047a0eb559b6fd648056/ml_dtypes-0.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
       - pypi: https://files.pythonhosted.org/packages/51/c0/00c9809d8b9346eb238a6bbd5f83e846a4ce4503da94a4c08cb7284c325b/multipledispatch-1.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/85/1d/f76ac13d49a7558a4530b002165e76c110e42a81f114708671098b157d8a/numpyro-0.20.1-py3-none-any.whl
@@ -5151,9 +5154,11 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/zstd-1.5.7-hbf9d68e_6.conda
       - pypi: https://files.pythonhosted.org/packages/71/cc/18245721fa7747065ab478316c7fea7c74777d07f37ae60db2e84f8172e8/beartype-0.22.9-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/6c/48/c42f657f3d6b4d9d9674c9bc48e763d024511ea4cc1d6e0c68c7b4380c43/diffrax-0.7.2-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/2a/09/f8d8f8f31e4483c10a906437b4ce31bdf3d6d417b73fe33f1a8b59e34228/einops-0.8.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/1b/5e/28df919a8d5741a96fe7f56ac19493389f7a3de9c819c7a1ec3b2c557852/equinox-0.13.7-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/0d/d3/818f9d6ca330f4aa78e618f24dac8a79c5d0825b00e9927c461a23539bb4/finitediffx-0.1.0-py3-none-any.whl
       - pypi: git+https://github.com/jejjohnson/finitevolX?tag=v0.0.41#236b060ae5c7eb2041c4806d33befaad2f227958
+      - pypi: git+https://github.com/jejjohnson/gaussx?rev=fd9a2427#fd9a242730e32caeebcc7e5bd3441bf80e0d053f
       - pypi: https://files.pythonhosted.org/packages/74/d8/4fa0fb59ce8d29cd153496b6e8f92c4fdee070dfc78724daab0008a0fe38/hitran_api-1.3.0.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/a5/cc/64d0fad725570ed6a02f5c7676cbfe3a268bed2fc3b10a74b59425ce6386/hydra_zen-0.16.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b6/d2/65cd40732c412218f71472aa24b037d3f086960c09eb643351edf3f78492/jax-0.8.3-py3-none-any.whl
@@ -5161,6 +5166,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/94/05/3e39d416fb92b2738a76e8265e6bfc5d10542f90a7c32ad1eb831eea3fa3/jaxtyping-0.3.9-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/47/ff/108214af06b6b1259bdd66a7ccb49e370395c648cd2fbfe7872f705d9e40/kernex-0.2.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/80/0c/2ed47112fc1958a0a81c9b015d4e1861953a1ec3a17b081c0180a25ce82c/lineax-0.1.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/47/57/1d8c13471272eee62970c9e84e4dbf5dba1278d415b8c2923e4247289574/matfree-0.5.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/a8/b8/3c70881695e056f8a32f8b941126cf78775d9a4d7feba8abcb52cb7b04f2/ml_dtypes-0.5.4-cp312-cp312-macosx_10_13_universal2.whl
       - pypi: https://files.pythonhosted.org/packages/51/c0/00c9809d8b9346eb238a6bbd5f83e846a4ce4503da94a4c08cb7284c325b/multipledispatch-1.0.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/85/1d/f76ac13d49a7558a4530b002165e76c110e42a81f114708671098b157d8a/numpyro-0.20.1-py3-none-any.whl
@@ -9093,6 +9099,19 @@ packages:
   size: 364561
   timestamp: 1738926525117
 - pypi: git+https://github.com/jejjohnson/gaussx.git#fd9a242730e32caeebcc7e5bd3441bf80e0d053f
+  name: gaussx
+  version: 0.0.10
+  requires_dist:
+  - jax>=0.4
+  - jaxlib>=0.4
+  - equinox>=0.11
+  - lineax>=0.1.0
+  - matfree>=0.3
+  - jaxtyping>=0.2
+  - einops>=0.8
+  - numpyro>=0.15 ; extra == 'numpyro'
+  requires_python: '>=3.12'
+- pypi: git+https://github.com/jejjohnson/gaussx?rev=fd9a2427#fd9a242730e32caeebcc7e5bd3441bf80e0d053f
   name: gaussx
   version: 0.0.10
   requires_dist:
@@ -14705,12 +14724,13 @@ packages:
 - pypi: ./projects/plume_simulation
   name: plume-simulation
   version: 0.1.0
-  sha256: 46999d0b2fb3960c37c7753da5b75d996f555f29d31199d8429d2878046922ed
+  sha256: 6be80b052685cd6cd0532ca9fcf9139b9f42d8f754409b26c0eca5a4980e72ce
   requires_dist:
   - jax>=0.7,<0.9
   - jaxlib>=0.7,<0.9
   - numpy
   - xarray
+  - scipy>=1.11
   - diffrax>=0.6
   - equinox>=0.11
   - finitevolx>=0.0.41

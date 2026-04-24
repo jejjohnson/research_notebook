@@ -178,6 +178,12 @@ matplotlib = ">=3.8"
 # cumulative-integral solves under the Gaussian puff forward model.
 diffrax = ">=0.6"
 equinox = ">=0.11"
+# gaussx supplies the structured-linear-algebra primitives (LowRankUpdate
+# operator + Woodbury-backed solve) used by the radtran matched-filter
+# retrieval. With a few-hundred-channel hyperspectral target and a rank-16
+# covariance, the operator-based path is ~30× faster than materialising
+# Σ⁻¹ via a dense inverse. Pulled by git commit for lockfile reproducibility.
+gaussx = { git = "https://github.com/jejjohnson/gaussx", rev = "fd9a2427" }
 # finitevolx supplies the Arakawa C-grid FVM operators used by the
 # les_fvm Eulerian dispersion sub-model (3D advection-diffusion of a
 # passive methane tracer under a prescribed wind field). Pulled from
@@ -193,10 +199,12 @@ hitran-api = "*"
 
 [feature.plume-simulation.tasks]
 execute-plume-simulation = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/*.ipynb projects/plume_simulation/notebooks/gauss_puff/*.ipynb projects/plume_simulation/notebooks/les_fvm/*.ipynb --ExecutePreprocessor.timeout=1200"
-# The hapi_lut notebooks are kept out of the CI-targeted task above because
-# they fetch HITRAN line parameters (network) and write uncommitted .nc LUTs
-# under projects/plume_simulation/data/. Run locally via the task below.
+# The hapi_lut and radtran notebooks are kept out of the CI-targeted task
+# above because they depend on the HITRAN line parameters fetched by hapi_lut
+# (network) and the uncommitted .nc LUTs under projects/plume_simulation/data/.
+# Run locally via the tasks below.
 execute-plume-hapi-lut = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/hapi_lut/*.ipynb --ExecutePreprocessor.timeout=1800"
+execute-plume-radtran = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/radtran/*.ipynb --ExecutePreprocessor.timeout=1800"
 test-plume-simulation = "pytest projects/plume_simulation/tests -v -m 'not slow'"
 test-plume-simulation-all = "pytest projects/plume_simulation/tests -v"
 

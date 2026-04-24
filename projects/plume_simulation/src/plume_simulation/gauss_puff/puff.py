@@ -46,6 +46,8 @@ from plume_simulation.gauss_puff.wind import WindSchedule, cumulative_wind_integ
 if TYPE_CHECKING:  # xarray is imported lazily inside simulate_puff
     import xarray as xr
 
+    from plume_simulation.gauss_puff.turbulence import OUTurbulence
+
 
 # ── Release cadence helpers ──────────────────────────────────────────────────
 
@@ -207,6 +209,7 @@ def evolve_puffs(
     current_time: Float[Array, ""],
     source_location: tuple[float, float, float],
     puff_mass: Float[Array, "N"] | float,
+    position_disturbance: tuple[Float[Array, "N"], Float[Array, "N"]] | None = None,
 ) -> PuffState:
     """Advance a puff ensemble to ``current_time`` under a time-varying wind.
 
@@ -230,6 +233,12 @@ def evolve_puffs(
         ``(x, y, z)`` source coordinates [m]. ``z ≥ 0``.
     puff_mass : Float[Array, "N"] or float
         Per-puff mass [kg], or a scalar applied to all puffs.
+    position_disturbance : tuple of Float[Array, "N"], optional
+        Per-puff ``(Δx, Δy)`` offsets [m] applied on top of the wind advection.
+        Intended for OU-process turbulence samples (see
+        :func:`plume_simulation.gauss_puff.turbulence.sample_ou_offsets`),
+        but any caller-provided offset array is accepted. Offsets for
+        not-yet-released puffs are ignored.
 
     Returns
     -------
@@ -257,6 +266,10 @@ def evolve_puffs(
     active = release_times <= current_time
     x = src_x + jnp.where(active, I_u_now - I_u_rel, 0.0)
     y = src_y + jnp.where(active, I_v_now - I_v_rel, 0.0)
+    if position_disturbance is not None:
+        dx_puff, dy_puff = position_disturbance
+        x = x + jnp.where(active, dx_puff, 0.0)
+        y = y + jnp.where(active, dy_puff, 0.0)
     z = jnp.full_like(release_times, src_z)
     s = jnp.where(active, S_now - S_rel, 0.0)
 
@@ -335,6 +348,8 @@ def simulate_puff(
     release_frequency: float = 1.0,
     scheme: str = "pg",
     background_conc: float = 0.0,
+    turbulence: "OUTurbulence | None" = None,
+    turbulence_seed: int | np.random.Generator | None = None,
 ) -> xr.Dataset:
     """Simulate a time-resolved Gaussian-puff dispersion field on a 3-D grid.
 
@@ -369,6 +384,13 @@ def simulate_puff(
         ``'briggs'`` (sharing coefficients with the steady plume model).
     background_conc : float
         Additive background concentration [kg/m³]. Default 0.
+    turbulence : OUTurbulence, optional
+        Ornstein-Uhlenbeck sub-grid turbulence applied as per-puff ``(Δx, Δy)``
+        offsets at release time. Adds realistic meander on top of the
+        wind-driven advection. Defaults to ``None`` (deterministic puffs).
+    turbulence_seed : int or numpy.random.Generator, optional
+        Seed for the OU sampler; required for bit-exact reproducibility
+        when ``turbulence`` is set.
 
     Returns
     -------
@@ -495,6 +517,19 @@ def simulate_puff(
         time_array, wind_speed, wind_direction
     )
 
+    if turbulence is not None:
+        from plume_simulation.gauss_puff.turbulence import sample_ou_offsets
+
+        dx_np, dy_np = sample_ou_offsets(
+            turbulence, np.asarray(release_times), seed=turbulence_seed,
+        )
+        position_disturbance = (
+            jnp.asarray(dx_np, dtype=jnp.float32),
+            jnp.asarray(dy_np, dtype=jnp.float32),
+        )
+    else:
+        position_disturbance = None
+
     concentration = np.zeros((n_t, n_x, n_y, n_z), dtype=np.float32)
     for i_t, t_current in enumerate(time_array):
         puff_state = evolve_puffs(
@@ -503,6 +538,7 @@ def simulate_puff(
             jnp.asarray(float(t_current), dtype=jnp.float32),
             source_location,
             puff_mass,
+            position_disturbance=position_disturbance,
         )
         field_flat = simulate_puff_field(
             (x_flat, y_flat, z_flat),
@@ -541,6 +577,12 @@ def simulate_puff(
             "release_interval": dt_release,
             "n_puffs": n_puffs,
             "background_concentration": background_conc,
+            "ou_sigma_fluctuations": (
+                float(turbulence.sigma_fluctuations) if turbulence else 0.0
+            ),
+            "ou_correlation_time": (
+                float(turbulence.correlation_time) if turbulence else 0.0
+            ),
         },
     )
     ds["concentration"].attrs = {"long_name": "Mass concentration", "units": "kg/m^3"}

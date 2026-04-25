@@ -104,6 +104,7 @@ project:
         - title: Gaussianization flows
           children:
             - file: projects/gaussianization/README
+            - file: projects/gaussianization/survae_flows_proof
             - file: projects/gaussianization/notebooks/01_gaussianization_2d
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d
             - file: projects/gaussianization/notebooks/03_iterative_gaussianization_init

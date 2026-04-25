@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.1.4](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.3...research_notebook-v0.1.4) (2026-04-25)
+
+
+### Features
+
+* **plume-simulation:** band-integrated radtran + matched-filter retrieval ([#24](https://github.com/jejjohnson/research_notebook/issues/24)) ([5e35dcd](https://github.com/jejjohnson/research_notebook/commit/5e35dcd98bdf8f06743a14ee8ec32fca9f6cc5f7))
+* **plume-simulation:** matched-filter suite for hyperspectral methane retrieval ([#26](https://github.com/jejjohnson/research_notebook/issues/26)) ([571116f](https://github.com/jejjohnson/research_notebook/commit/571116f92e4c62d50ad1e2fd54898a7286b33d5f))
+* **plume-simulation:** port HAPI absorption-LUT generator + Beer-Lambert retrieval ([#23](https://github.com/jejjohnson/research_notebook/issues/23)) ([a257687](https://github.com/jejjohnson/research_notebook/commit/a25768761abc8ff2eee5bd47f803b2814eca5a2e))
+* **plume-simulation:** three-d-var methane retrieval (jax + optimistix + gaussx) ([#25](https://github.com/jejjohnson/research_notebook/issues/25)) ([2fca13c](https://github.com/jejjohnson/research_notebook/commit/2fca13c8c16af9e339e81d03001e3ed812f2501e))
+
+
+### Documentation
+
+* add SurVAE flows proof to Gaussianization project ([#27](https://github.com/jejjohnson/research_notebook/issues/27)) ([1d225bf](https://github.com/jejjohnson/research_notebook/commit/1d225bf23fda02b0c12921990f9d75b09f2532e4))
+* **gaussian-processes:** nb 02 multiplicative + nb 03 non-stationary GEV + nb 04 Gaussian copula ([#21](https://github.com/jejjohnson/research_notebook/issues/21)) ([ab83b44](https://github.com/jejjohnson/research_notebook/commit/ab83b44006bc0bf4cefd1a63d3ff3ff3594b7b28))
+* **interpolation:** add SSH reconstruction project (5 derivation notes) ([#29](https://github.com/jejjohnson/research_notebook/issues/29)) ([8b975cc](https://github.com/jejjohnson/research_notebook/commit/8b975ccf8bbaa12e4363187aee36d5b0249cd748))
+
 ## [0.1.3](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.2...research_notebook-v0.1.3) (2026-04-22)
 
 

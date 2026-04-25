@@ -36,6 +36,96 @@ project:
                 - file: notebooks/pyrox/ensembles/README
                 - file: notebooks/pyrox/ensembles/ensemble_primitives_tutorial
                 - file: notebooks/pyrox/ensembles/ensemble_runner_tutorial
+        - title: coordax
+          children:
+            - file: notebooks/coordax/README
+            - title: Foundations
+              children:
+                - file: notebooks/coordax/foundations/README
+                - file: notebooks/coordax/foundations/01_create_datasets
+                - file: notebooks/coordax/foundations/02_ops_unary_binary
+                - file: notebooks/coordax/foundations/03_ops_coordinates
+                - file: notebooks/coordax/foundations/04_reductions
+            - title: Derivatives
+              children:
+                - file: notebooks/coordax/derivatives/README
+                - file: notebooks/coordax/derivatives/05_finite_difference
+                - file: notebooks/coordax/derivatives/06_spherical_harmonics_derivatives
+                - file: notebooks/coordax/derivatives/07_finite_volume
+            - title: Dynamics
+              children:
+                - file: notebooks/coordax/dynamics/README
+                - file: notebooks/coordax/dynamics/08_ode_integration
+                - file: notebooks/coordax/dynamics/09_ode_parameter_state_estimation
+                - file: notebooks/coordax/dynamics/10_pde_parameter_estimation
+    - title: Projects
+      children:
+        - title: Methane PoD
+          children:
+            - file: projects/methane_pod/README
+            - file: projects/methane_pod/notebooks/01_mttpp_theory
+            - file: projects/methane_pod/notebooks/02_intensity_zoo
+            - file: projects/methane_pod/notebooks/03_missing_mass_paradox
+            - file: projects/methane_pod/notebooks/04_intensity_gallery
+            - file: projects/methane_pod/notebooks/05_pod_gallery
+            - file: projects/methane_pod/notebooks/06_stationary_numpyro_mcmc
+            - file: projects/methane_pod/notebooks/07_pod_fitting_mcmc
+            - file: projects/methane_pod/notebooks/08_persistency
+        - title: Plume simulation
+          children:
+            - file: projects/plume_simulation/README
+            - title: Gaussian plume (steady)
+              children:
+                - file: projects/plume_simulation/notebooks/00_gaussian_plume_derivation
+                - file: projects/plume_simulation/notebooks/01_gaussian_plume_forward
+                - file: projects/plume_simulation/notebooks/02_emission_rate_parameter_estimation
+                - file: projects/plume_simulation/notebooks/03_plume_state_estimation
+            - title: Gaussian puff (time-resolved)
+              children:
+                - file: projects/plume_simulation/notebooks/gauss_puff/00_gaussian_puff_derivation
+                - file: projects/plume_simulation/notebooks/gauss_puff/01_gaussian_puff_forward
+                - file: projects/plume_simulation/notebooks/gauss_puff/02_emission_rate_parameter_estimation
+                - file: projects/plume_simulation/notebooks/gauss_puff/03_puff_state_estimation
+            - title: Eulerian dispersion (L2 finite volume)
+              children:
+                - file: projects/plume_simulation/notebooks/les_fvm/00_eulerian_dispersion_derivation
+                - file: projects/plume_simulation/notebooks/les_fvm/01_eulerian_dispersion_l2
+                - file: projects/plume_simulation/notebooks/les_fvm/03_puff_vs_eulerian
+            - title: Beer-Lambert LUT (HAPI)
+              children:
+                - file: projects/plume_simulation/notebooks/hapi_lut/00_hapi_lut_derivation
+                - file: projects/plume_simulation/notebooks/hapi_lut/01_hapi_lut_ch4
+                - file: projects/plume_simulation/notebooks/hapi_lut/02_hapi_lut_multigas
+                - file: projects/plume_simulation/notebooks/hapi_lut/03_beers_law_with_lut
+            - title: Band integration & matched filter
+              children:
+                - file: projects/plume_simulation/notebooks/radtran/04_srf_band_integration
+                - file: projects/plume_simulation/notebooks/radtran/05_matched_filter_retrieval
+        - title: Gaussianization flows
+          children:
+            - file: projects/gaussianization/README
+            - file: projects/gaussianization/survae_flows_proof
+            - file: projects/gaussianization/notebooks/01_gaussianization_2d
+            - file: projects/gaussianization/notebooks/02_coupling_flow_2d
+            - file: projects/gaussianization/notebooks/03_iterative_gaussianization_init
+            - file: projects/gaussianization/notebooks/04_coupling_equivalence
+        - title: Gaussian processes
+          children:
+            - file: projects/gaussian_processes/README
+            - title: SVGP with pyrox
+              children:
+                - file: projects/gaussian_processes/notebooks/pyroxgp/README
+                - file: projects/gaussian_processes/notebooks/pyroxgp/01_svgp_standard
+                - file: projects/gaussian_processes/notebooks/pyroxgp/02_svgp_batched
+                - file: projects/gaussian_processes/notebooks/pyroxgp/03_svgp_spherical_harmonics
+                - file: projects/gaussian_processes/notebooks/pyroxgp/04_svgp_rff_nn
+            - title: Kronecker GPs + non-Gaussian likelihoods
+              children:
+                - file: projects/gaussian_processes/notebooks/kronecker/README
+                - file: projects/gaussian_processes/notebooks/kronecker/01_spain_extremes
+                - file: projects/gaussian_processes/notebooks/kronecker/02_spain_multiplicative
+                - file: projects/gaussian_processes/notebooks/kronecker/03_spain_nonstationary
+                - file: projects/gaussian_processes/notebooks/kronecker/04_spain_copula
     - title: API Reference
       children:
         - file: docs/api/reference

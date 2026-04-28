@@ -28,9 +28,9 @@ Before the hierarchy of methods, it's worth setting down four results that every
 
 For any continuous, shift-invariant, positive-definite kernel `k(x, x') = κ(x − x')` normalized so `κ(0) = 1`:
 
-```
-κ(τ) = ∫ exp(i ωᵀ τ) p(ω) dω
-```
+$$
+\kappa(\tau) = \int \exp(i\, \omega^{\!\top} \tau)\, p(\omega)\, d\omega
+$$
 
 i.e. **`κ` and a probability density `p(ω)` are a Fourier pair**. Positive-definiteness of `κ` is equivalent to non-negativity of `p`.
 
@@ -47,28 +47,29 @@ i.e. **`κ` and a probability density `p(ω)` are a Fourier pair**. Positive-def
 
 Take the real form of the Bochner identity (`κ` is real, so we keep only the cosine):
 
-```
-κ(x − x') = E_{ω ~ p, b ~ U[0, 2π]} [ 2 cos(ωᵀx + b) cos(ωᵀx' + b) ]
-```
+$$
+\kappa(x - x') = \mathbb{E}_{\omega \sim p,\; b \sim U[0, 2\pi]}\!\left[\, 2 \cos(\omega^{\!\top} x + b)\, \cos(\omega^{\!\top} x' + b) \,\right]
+$$
 
 Pull `M` samples `(ωᵢ, bᵢ)`. The MC estimator is the inner product of the feature map
 
-```
-φ(x) = √(2/M) [ cos(ω₁ᵀx + b₁), …, cos(ω_Mᵀx + b_M) ]
-k̂(x, x') = φ(x)ᵀ φ(x')
-```
+$$
+\phi(x) = \sqrt{2/M}\, \bigl[\, \cos(\omega_1^{\!\top} x + b_1),\, \ldots,\, \cos(\omega_M^{\!\top} x + b_M) \,\bigr]
+\quad\Longrightarrow\quad
+\hat k(x, x') = \phi(x)^{\!\top} \phi(x')
+$$
 
 *Sample complexity.* Rahimi & Recht (2008, "Uniform Approximation of Functions with Random Bases") show that on a compact set `X ⊂ ℝ^d` of diameter `R`,
 
-```
-P[ sup_{x, x' ∈ X} |k̂(x, x') − k(x, x')| ≥ ε ] ≤ 2⁸ (σ_p R / ε)² exp(−M ε² / (4(d + 2)))
-```
+$$
+\Pr\!\left[\, \sup_{x, x' \in X}\, \bigl|\hat k(x, x') - k(x, x')\bigr| \geq \varepsilon \,\right] \;\leq\; 2^8 \bigl(\sigma_p R / \varepsilon\bigr)^2 \exp\!\bigl(-M \varepsilon^2 / (4(d + 2))\bigr)
+$$
 
 so to drive uniform error below `ε` with high probability you need
 
-```
-M = O( (d / ε²) log(σ_p R / ε) )
-```
+$$
+M = \mathcal{O}\!\bigl( (d / \varepsilon^2)\, \log(\sigma_p R / \varepsilon) \bigr)
+$$
 
 *Engineering consequence.* `M` scales linearly with input dimension and inverse-squared in the kernel error you tolerate. Doubling the precision quadruples `M`. For SSH on `(lon, lat, t)` (`d = 3`) and 1% kernel error you typically need `M` in the low thousands — well within reach of a JAX dense matmul.
 
@@ -76,15 +77,15 @@ M = O( (d / ε²) log(σ_p R / ε) )
 
 If you put a Gaussian prior on the weights of the random feature model
 
-```
-f(x) = φ(x)ᵀ w,    w ~ N(0, Σ_w)
-```
+$$
+f(x) = \phi(x)^{\!\top} w, \qquad w \sim \mathcal{N}(0, \Sigma_w)
+$$
 
 then `f` is itself a Gaussian process with mean `0` and covariance
 
-```
-Cov(f(x), f(x')) = φ(x)ᵀ Σ_w φ(x')
-```
+$$
+\mathrm{Cov}\bigl(f(x), f(x')\bigr) = \phi(x)^{\!\top} \Sigma_w\, \phi(x')
+$$
 
 Setting `Σ_w = σ_f² I` recovers exactly the RFF kernel scaled by `σ_f²`. So the two views are not analogies — they are the **same model, written in different bases**.
 
@@ -99,13 +100,14 @@ Setting `Σ_w = σ_f² I` recovers exactly the RFF kernel scaled by `σ_f²`. So
 
 For RFF/SSGP with Gaussian likelihood `y = Φ w + ε`, `ε ~ N(0, σ_n²I)`:
 
-```
-Σ_post = (Φᵀ Φ / σ_n² + Σ_w⁻¹)⁻¹              # (M, M)
-μ_post = Σ_post Φᵀ y / σ_n²                     # (M,)
-
-mean(f*)  = φ(x*)ᵀ μ_post
-var(f*)   = φ(x*)ᵀ Σ_post φ(x*) + σ_n²
-```
+$$
+\begin{aligned}
+\Sigma_{\text{post}} &= \bigl(\Phi^{\!\top} \Phi / \sigma_n^2 + \Sigma_w^{-1}\bigr)^{-1} \quad &(M \times M) \\
+\mu_{\text{post}}    &= \Sigma_{\text{post}}\, \Phi^{\!\top} y / \sigma_n^2 \quad &(M,) \\
+\mathbb{E}[f^*]      &= \phi(x^*)^{\!\top} \mu_{\text{post}} \\
+\mathrm{Var}[f^*]    &= \phi(x^*)^{\!\top} \Sigma_{\text{post}}\, \phi(x^*) + \sigma_n^2
+\end{aligned}
+$$
 
 *Engineering consequence.* This is one Cholesky on an `M × M` matrix. You get not just a point prediction, but a full predictive distribution at every test point — gap-filling uncertainty for free. SIREN replaces this entire block with `argmin_w ‖y − Φw‖² + λ‖w‖²` (i.e. ridge regression with a single tuned scalar `λ`), losing the per-point variance and the principled regularization-from-the-prior.
 
@@ -113,12 +115,12 @@ var(f*)   = φ(x*)ᵀ Σ_post φ(x*) + σ_n²
 
 The model evidence (with `Σ_w = σ_f² I`)
 
-```
-log p(y | Ω, σ_f, σ_n)
-   = − ½ yᵀ (σ_f² Φ Φᵀ + σ_n² I)⁻¹ y
-     − ½ log |σ_f² Φ Φᵀ + σ_n² I|
-     − (N/2) log 2π
-```
+$$
+\log p(y \mid \Omega, \sigma_f, \sigma_n)
+  = -\tfrac{1}{2}\, y^{\!\top}\!\bigl(\sigma_f^2\, \Phi \Phi^{\!\top} + \sigma_n^2 I\bigr)^{\!-1}\! y
+    \;-\; \tfrac{1}{2}\, \log \!\bigl|\sigma_f^2\, \Phi \Phi^{\!\top} + \sigma_n^2 I\bigr|
+    \;-\; \tfrac{N}{2}\, \log 2\pi
+$$
 
 decomposes into **data-fit** (first term) plus **complexity penalty** (log-determinant). Optimizing this w.r.t. `Ω` and amplitudes pulls spectral mass onto frequencies that explain `y` — but pays a `log|·|` cost for adding mass at frequencies that don't help. There is no equivalent self-regularizing objective in MSE training of SIREN; ω₀ has to be tuned by hand.
 
@@ -143,24 +145,25 @@ decomposes into **data-fit** (first term) plus **complexity penalty** (log-deter
 
 Rahimi & Recht's RFF is an MC approximation to a shift-invariant kernel via Bochner's theorem:
 
-```
-k(x, y) ≈ φ(x)ᵀφ(y),    φ(x) = √(2/D) [cos(ωᵢᵀx + bᵢ)]
-with ωᵢ ~ p_spectral(ω) = FT[k](ω)
-```
+$$
+k(x, y) \;\approx\; \phi(x)^{\!\top}\phi(y), \qquad \phi(x) = \sqrt{2/D}\, \bigl[\cos(\omega_i^{\!\top} x + b_i)\bigr], \qquad \omega_i \sim p_{\text{spectral}}(\omega) = \mathcal{F}[k](\omega)
+$$
 
 The Sparse Spectrum GP (Lázaro-Gredilla et al. 2010) does the same but **optimizes** the ωᵢ via marginal likelihood. VSSGP puts a full variational distribution q(ω) over the spectral points.
 
 ### SIREN → VSSGP with Box Spectral Prior
 
 A 1-layer SIREN:
-```
-f(x) = W₂ sin(ω₀ W₁ x + b₁)
-```
+
+$$
+f(x) = W_2\, \sin\!\bigl(\omega_0\, W_1\, x + b_1\bigr)
+$$
+
 with `W₁ ~ Uniform(-√(6/n), √(6/n))` is implicitly assuming a spectral prior:
 
-```
-p(ω) ∝ Uniform[-ω₀√(6/n), ω₀√(6/n)]ᵈ
-```
+$$
+p(\omega) \propto \mathrm{Uniform}\!\bigl[-\omega_0 \sqrt{6/n},\; \omega_0 \sqrt{6/n}\bigr]^d
+$$
 
 This is a **box spectral prior** — corresponding to a product sinc kernel. VSSGP would let you:
 1. **Infer** the spectral support instead of heuristically choosing ω₀
@@ -195,9 +198,9 @@ The progression is **decreasing assumptions, increasing cost** — but for spars
 
 In a 1-layer SIREN, `W₁ ~ U(−√(6/n), √(6/n))` and the activation is `sin(ω₀ W₁ x)`. The *effective* spectral measure is
 
-```
-ω_effective = ω₀ · W₁  ⇒  p(ω) = U[ −ω₀√(6/n), +ω₀√(6/n) ]ᵈ
-```
+$$
+\omega_{\text{eff}} = \omega_0 \cdot W_1 \quad\Longrightarrow\quad p(\omega) = U\!\bigl[\,-\omega_0 \sqrt{6/n},\; +\omega_0 \sqrt{6/n}\,\bigr]^d
+$$
 
 — i.e. a `d`-dimensional uniform box. The Fourier dual of a box is a sinc, so SIREN's implicit prior kernel is a **product of sinc functions**. This kernel has the worst-of-both-worlds spectral signature: it puts non-trivial mass on *every* frequency up to ω₀ (no preference for known scales) and **zero** mass beyond ω₀ (cannot represent anything finer-scale than the chosen cutoff). For a geoscience signal where the energy lies in a known narrow band, this is exactly inverted from what you want.
 
@@ -209,17 +212,17 @@ In a 1-layer SIREN, `W₁ ~ U(−√(6/n), √(6/n))` and the activation is `sin
 
 Suppose the signal's true spectral support is a set `B ⊂ ℝᵈ` (e.g. for SSH: a band around `|ω| ∈ [2π/300km, 2π/50km]`, plus a delta at the annual frequency). Define the **useful fraction**
 
-```
-η(p) = ∫_B p(ω) dω
-```
+$$
+\eta(p) = \int_B p(\omega)\, d\omega
+$$
 
 i.e. the probability that a single feature lands in the band where signal lives. Then by linearity of expectation, the expected number of useful features out of `M` is `M_useful = M · η(p)`.
 
 For SIREN's box prior in `d = 3` (lon, lat, t), with ω₀ chosen large enough to cover annual + mesoscale (`ω_max ≈ 2π/50km`), the useful fraction is roughly
 
-```
-η_SIREN ≈ vol(B) / vol([−ω_max, ω_max]³) ≈ 10⁻³–10⁻²
-```
+$$
+\eta_{\text{SIREN}} \;\approx\; \mathrm{vol}(B) \,/\, \mathrm{vol}\!\bigl([-\omega_{\max}, \omega_{\max}]^3\bigr) \;\approx\; 10^{-3}\text{–}10^{-2}
+$$
 
 For a spectral-mixture prior centered on the band, `η_VSSGP → 1` by construction. The implication: **with `M = 1024` features, SIREN gets `~10` features in the right place; VSSGP gets `~1024`**. To match VSSGP's effective resolution, SIREN needs `M_SIREN ≈ M_VSSGP / η`, i.e. **two orders of magnitude wider** at this `d` and band geometry. Capacity isn't free — wider networks cost more flops and overfit harder on sparse data.
 
@@ -237,7 +240,7 @@ This is the cleanest engineering argument: the cost of an uninformative prior is
 
 SIREN's ω₀ is a wild guess at this. VSSGP lets you encode it directly:
 
-```
+```text
 # Informative spectral prior for ocean SSH
 ω ~ MixtureOfGaussians(
     μ₁ = 2π / 200km,   # mesoscale eddy peak
@@ -255,10 +258,7 @@ SIREN was designed for dense, regular signals (images, SDFs). Geoscience data is
 - **Atmosphere**: Radiosonde networks are land-biased, satellite swaths have gaps
 - **Land surface**: Stations clustered around populated areas
 
-SIREN has no principled way to handle this. VSSGP gives:
-```
-posterior predictive:  p(f* | X*, X, y)  — proper uncertainty in gaps
-```
+SIREN has no principled way to handle this. VSSGP gives a posterior predictive `p(f* | X*, X, y)` — proper uncertainty in gaps.
 
 ### Physical Constraints Map to the GP Framework Naturally
 
@@ -296,11 +296,11 @@ MIOST (Multi-scale Inversion of Ocean Surface Topography, Ardhuin et al. 2021; L
 
 A Gabor wavelet `g(x) = exp(i ω₀ᵀx) · w(x − x₀)` with window `w` of width `L_s` has Fourier transform `ĝ(ω) = ŵ(ω − ω₀)` — i.e. a **Gaussian-like bump centred on `ω₀ = 2π/L_s` with bandwidth `~1/L_s`**. So MIOST's wavelet dictionary is, in spectral terms, a sum of Gaussians:
 
-```
-p_MIOST(ω) = Σ_n (variance_n / total_var) · N(ω; 2π/L_s,n, σ_n²)
+$$
+p_{\text{MIOST}}(\omega) = \sum_n \frac{\mathrm{var}_n}{\sum_k \mathrm{var}_k}\; \mathcal{N}\!\bigl(\omega;\; 2\pi/L_{s,n},\; \sigma_n^2\bigr), \qquad \sigma_n \approx (2\pi/L_{s,n}) \cdot 0.3
+$$
 
-with σ_n ≈ (2π/L_s,n) · 0.3   # bandwidth ~30% of centre frequency
-```
+(bandwidth ~30% of the centre frequency).
 
 This is *literally* a spectral mixture prior à la Wilson & Adams (2013), with the centres and weights pre-fitted by the altimetry community.
 
@@ -315,11 +315,11 @@ DYMOST (Ubelmann et al. 2015, 2020) advects the SSH covariance along a Lagrangia
 
 The spectral dual of along-stream stretching is **wavenumber compression in the perpendicular direction**:
 
-```
-Σ_ω(x) = R(θ_flow(x))ᵀ · diag( (2π/L_⊥)², (2π/L_∥)² ) · R(θ_flow(x))
+$$
+\Sigma_\omega(x) = R\!\bigl(\theta_{\text{flow}}(x)\bigr)^{\!\top} \cdot \mathrm{diag}\!\bigl(\,(2\pi/L_\perp)^2,\; (2\pi/L_\parallel)^2 \,\bigr) \cdot R\!\bigl(\theta_{\text{flow}}(x)\bigr)
+$$
 
-# wavenumber covariance is squashed perpendicular to the flow direction
-```
+(wavenumber covariance squashed perpendicular to the flow direction).
 
 In a VSSGP this becomes a **location-conditioned spectral covariance**: instead of a single global `Σ_ω`, sample `ωᵢ` from `N(0, Σ_ω(x_patch))` per patch, where `θ_flow` and `L_⊥/L_∥` come from a low-pass-filtered first-guess (or a climatology like AVISO MDT).
 
@@ -387,7 +387,7 @@ The summary: **MIOST and DYMOST tell you where to put the spectral mass; DUACS t
 
 ### SSH (Sea Surface Height)
 
-```
+```text
 # Spatial: power-law spectral density
 p(ω) ∝ |ω|^{-α},   α ≈ 4–5   (mesoscale range)
 
@@ -411,7 +411,7 @@ y | f ~ N(f(x), σ_n²),    σ_n ~ 0.02–0.05 m
 
 ### SST (Sea Surface Temperature)
 
-```
+```text
 # Temporal — seasonal dominates
 p(ω_t) = w₁ · N(2π/365.25, σ₁)    # annual (dominant)
         + w₂ · N(2π/182.6, σ₂)     # semiannual
@@ -427,7 +427,7 @@ y | f ~ StudentT(f(x), σ², ν),    ν ~ 4–7
 
 ### SSS (Sea Surface Salinity)
 
-```
+```text
 # Temporal
 p(ω_t) = w₁ · N(2π/365.25, σ₁)    # seasonal (precipitation cycle)
         + w₂ · N(0, σ_slow)         # interannual
@@ -445,7 +445,7 @@ y | f ~ StudentT(f(x), σ², ν),    ν ~ 3–5
 
 **Key prior: work in log space.** Chl-a is log-normally distributed across the full range (0.01 to >100 mg/m³).
 
-```
+```text
 # Model log(Chl-a), not Chl-a directly
 g(x) = log(Chl-a(x))
 g ~ VSSGP(0, k)
@@ -477,7 +477,7 @@ log(y) | f ~ N(f(x), σ_n²),    σ_n ~ 0.1–0.3 log₁₀ units
 
 ### The Core SSGP Equation
 
-```
+```text
 k(x, x') ≈ φ(x)ᵀ φ(x')
 
 φ(x) = √(2/M) cos(Ω x + b)
@@ -494,7 +494,7 @@ Batched over N inputs:
 ```
 
 Model is Bayesian linear regression in feature space:
-```
+```text
 w   : (M,)        w ~ N(0, σ_w² I)
 f   : (N,)        f = φ(X) @ w   =  (N, M) @ (M,) → (N,)
 y   : (N,)        y ~ N(f, σ_n² I)
@@ -502,7 +502,7 @@ y   : (N,)        y ~ N(f, σ_n² I)
 
 ### Additive Kernel = Concatenated Feature Maps
 
-```
+```text
 φ(X) = [ φ₁(X) | φ₂(X) | φ₃(X) ]     # (N, M1+M2+M3)
 w    = [ w₁    | w₂    | w₃    ]       # (M1+M2+M3,)
 
@@ -633,7 +633,7 @@ def ssgp_model(X, y, Ω1, Ω2, Ω3):
 
 ### Shape Flow Summary
 
-```
+```text
 X       : (N, 3)          ← lon, lat, t for N observations
 
 Ω1      : (M1, 3)         ← spectral pts, slow component
@@ -664,7 +664,7 @@ Two more results worth having in your back pocket — both engineering-flavored,
 
 The kernel admits a Mercer expansion `k(x, x') = Σᵢ λᵢ ψᵢ(x) ψᵢ(x')` with `λ₁ ≥ λ₂ ≥ …`. Truncating to the top `M` eigenfunctions gives an approximation error
 
-```
+```text
 ‖k − k_M‖² = Σ_{i > M} λᵢ²
 ```
 
@@ -676,7 +676,7 @@ For Bochner-type kernels the spectrum's tail is set by the *smoothness* of the f
 
 For SSGP, differentiating the log-marginal-likelihood w.r.t. a single spectral point `ωᵢ`:
 
-```
+```text
 ∂/∂ωᵢ log p(y | Ω) = (yᵀ A⁻¹ ∂Φ/∂ωᵢ wᵢ_eff) − tr(A⁻¹ ∂Φ/∂ωᵢ Φᵀ)
 ```
 
@@ -772,7 +772,7 @@ The interpolation community routinely under-reports metrics; a single RMSE hides
 
 Standard but necessary:
 
-```
+```text
 RMSE  = sqrt( mean( (ŷ − y_true)² ) )
 MAE   = mean( |ŷ − y_true| )
 bias  = mean( ŷ − y_true )
@@ -793,7 +793,7 @@ Per-variable target (OSSE on Z2 Gulf Stream extension, 1 month, full SWOT-era):
 
 Point methods (RFF-ridge, SIREN) cannot compute these — that's the point.
 
-```
+```text
 NLPD  = − mean( log p(y_true | x*) )
       # for Gaussian: ½ log(2π σ²) + ½ (ŷ − y)² / σ²
 
@@ -814,7 +814,7 @@ CRPS is the headline probabilistic metric — proper, scale-aware, low-dimension
 
 This is where SIREN is *expected* to do badly even at competitive RMSE — it gets the spatial autocorrelation wrong.
 
-```
+```text
 Power spectral density (PSD):
    PSD_pred(k)  = |FFT(ŷ − ⟨ŷ⟩)|²
    PSD_true(k)  = |FFT(y_true − ⟨y_true⟩)|²
@@ -844,7 +844,7 @@ Per-variable target on Z2 (Gulf Stream, OSSE):
 
 For SSH especially, the *derived* quantities matter more than `η` itself — operational users want currents, divergence, and vorticity:
 
-```
+```text
 Geostrophic velocity:
    u_g = − (g/f) ∂η/∂y     v_g = (g/f) ∂η/∂x
    RMSE_u = sqrt( mean( (û − u_drifter)² ) )      # vs GDP drifters
@@ -868,7 +868,7 @@ These metrics are the ones DUACS/MIOST publish — they're how the community acc
 
 #### 6.5.1 SSH — anchor variable, fullest treatment
 
-```
+```text
 Method ladder × 4:    {RFF-ridge, SIREN, SSGP, VSSGP-MIOST-init}
 Region ladder × 4:    {Med, Gulf Stream, N. Atl, Global}
 Time horizon × 3:     {1 month, 3 months, 6 months}
@@ -884,7 +884,7 @@ SWOT ablation × 2:    {nadir-only, nadir + SWOT}
 
 #### 6.5.2 SST — diurnal cycle and fronts
 
-```
+```text
 Method ladder: same 4
 Region: Med + Gulf Stream + Global (skip N. Atl alone — covered)
 Likelihood: Student-T with ν ∈ {3, 5, 7} ablation (cloud-contamination tail)
@@ -897,7 +897,7 @@ Special diagnostic: gradient magnitude F1 score for fronts
 
 #### 6.5.3 SSS — extreme non-stationarity
 
-```
+```text
 Region: Amazon plume (3-week experiment), tropical Atlantic, global
 Special: σ_w(x) field MUST be spatially varying — open-ocean σ_w ≈ 0.5 PSU,
          plume σ_w ≈ 3-5 PSU; flat σ_w fails by construction
@@ -909,7 +909,7 @@ Special: σ_w(x) field MUST be spatially varying — open-ocean σ_w ≈ 0.5 PSU
 
 #### 6.5.4 OC / Chl-a — log-space and bloom dynamics
 
-```
+```text
 Region: N. Atlantic spring bloom (March-May), Arabian Sea (SW monsoon),
         Southern Ocean (austral spring), global
 Transform: log₁₀ — the entire model lives in log space
@@ -950,7 +950,7 @@ For the full method × region × variable × ablation grid: roughly **300–400 
 
 Each variable + region combo produces one results row. Recommended format:
 
-```
+```text
 | Method        | RMSE  | CRPS  | NLPD  | L_eff | RMSE u_g | ECE |
 |---------------|-------|-------|-------|-------|----------|-----|
 | RFF-ridge     | 4.2cm |   —   |   —   | 140km |  9.3cm/s |  —  |

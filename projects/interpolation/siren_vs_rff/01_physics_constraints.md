@@ -170,10 +170,11 @@ For SSH: train on `η`, then derive geostrophic currents post-hoc as `(u_g, v_g)
 
 ### 2E. Data augmentation — derivative observations
 
-Drifter / HF-radar / Doppler-altimetry velocities give `(u_g, v_g)` directly, which by geostrophy is `-(g/f) ∂_y η, (g/f) ∂_x η` — a *linear* functional of `η`. Add these to the training set as derivative observations:
+Drifter / HF-radar / Doppler-altimetry velocities give `(u_g, v_g)` directly, which by geostrophy is `(u_g, v_g) = (-(g/f) ∂_y η, (g/f) ∂_x η)`. Inverting, the derivative observations are `∂_y η = -(f/g) u_g` and `∂_x η = (f/g) v_g` — a *linear* functional of `η`. Add these to the training set as derivative observations, ordered to match what `predict_eta_and_grad` returns (here `(η, ∂_y η, ∂_x η)`):
 
 ```python
-y_augmented = jnp.concatenate([eta_obs, -(f/g) * v_drifter, (f/g) * u_drifter])
+# y_augmented = [η_obs, ∂_y η at drifters, ∂_x η at drifters]
+y_augmented = jnp.concatenate([eta_obs, -(f/g) * u_drifter, (f/g) * v_drifter])
 loss_data = mse(predict_eta_and_grad(x, theta), y_augmented)
 ```
 

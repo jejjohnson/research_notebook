@@ -30,7 +30,7 @@ jobs:
           BASE_URL: /research_notebook
         run: pixi run -e docs docs-build
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _build/html
 

@@ -23,7 +23,7 @@ jobs:
       - name: Run pre-commit autoupdate
         run: pixi run -e default pre-commit autoupdate
 
-      - uses: peter-evans/create-pull-request@v7
+      - uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: update pre-commit hooks"

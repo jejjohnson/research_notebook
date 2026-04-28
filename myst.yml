@@ -112,11 +112,18 @@ project:
         - title: Interpolation (SSH reconstruction)
           children:
             - file: projects/interpolation/README
-            - file: projects/interpolation/notebooks/00_ssh_pathwise_sampling
-            - file: projects/interpolation/notebooks/01_efficient_machinery
-            - file: projects/interpolation/notebooks/02_physics_aware_ssh
-            - file: projects/interpolation/notebooks/03_global_scaling_patches
-            - file: projects/interpolation/notebooks/04_variational_dynamical_priors
+            - title: Pathwise GP for SSH
+              children:
+                - file: projects/interpolation/notebooks/00_ssh_pathwise_sampling
+                - file: projects/interpolation/notebooks/01_efficient_machinery
+                - file: projects/interpolation/notebooks/02_physics_aware_ssh
+                - file: projects/interpolation/notebooks/03_global_scaling_patches
+                - file: projects/interpolation/notebooks/04_variational_dynamical_priors
+            - title: SIREN vs. RFF vs. VSSGP
+              children:
+                - file: projects/interpolation/siren_vs_rff/README
+                - file: projects/interpolation/siren_vs_rff/00_siren_rff_vssgp
+                - file: projects/interpolation/siren_vs_rff/01_physics_constraints
         - title: Gaussian processes
           children:
             - file: projects/gaussian_processes/README

@@ -72,17 +72,32 @@ The five notes cover three different framings of the same SSH-mapping problem:
 
 00–03 stay inside the static-prior GP world: the prior $K$ is a kernel, the inverse problem is linear, and the gaussx/pyrox stack does the work. 04 is a separate framework — a dynamical model replaces $K$, and the SSH community's ~50 years of variational data-assimilation work takes over. The two stacks meet at the boundary: see 04 §8 for two practical hybrid recipes (GP residual after a dynamical first guess; GP warm-start for 4DVarNet).
 
+## Sub-project — neural fields, RFF, and VSSGPs
+
+The five notes above all live inside the **pathwise-GP-for-dense-grids** framing. A separate sub-project, [siren_vs_rff/](siren_vs_rff/README.md), takes the orthogonal angle: *for a function class trained on data and then evaluated, including outside the training footprint, which design wins for geoscience — SIREN, RFF, or VSSGP?*
+
+```{seealso}
+- [siren_vs_rff/00_siren_rff_vssgp](siren_vs_rff/00_siren_rff_vssgp.md) — SIREN and RFF as special cases of VSSGP with degenerate priors; the four-rung hierarchy; spectral-budget argument for why geoscience is the wrong domain for SIREN; per-variable physical priors (SSH / SST / SSS / OC); experiment plan with datasets, metrics, ablations.
+- [siren_vs_rff/01_physics_constraints](siren_vs_rff/01_physics_constraints.md) — the three-axis constraint taxonomy (basis / data / loss) for both methods, with the headline that for out-of-domain prediction the leverage ordering is **Data > Basis > Loss**.
+```
+
+The pathwise notes (00–04) and the SIREN/VSSGP sub-project complement each other: pathwise optimises the *grid-sampling* axis given a fixed kernel; siren_vs_rff optimises the *kernel choice* given a fixed training paradigm.
+
 ## Layout
 
 ```text
 projects/interpolation/
 ├── README.md                                       # this file
-└── notebooks/
-    ├── 00_ssh_pathwise_sampling.md                 # math derivation
-    ├── 01_efficient_machinery.md                   # gaussx + pyrox primitives + wall-clock
-    ├── 02_physics_aware_ssh.md                     # data + kernel knobs (DATA / KERNEL axes)
-    ├── 03_global_scaling_patches.md                # patch decomp via xrpatcher + dask
-    └── 04_variational_dynamical_priors.md          # 3DVar / 4DVar / DYMOST / BFN-QG / 4DVarNet
+├── notebooks/
+│   ├── 00_ssh_pathwise_sampling.md                 # math derivation
+│   ├── 01_efficient_machinery.md                   # gaussx + pyrox primitives + wall-clock
+│   ├── 02_physics_aware_ssh.md                     # data + kernel knobs (DATA / KERNEL axes)
+│   ├── 03_global_scaling_patches.md                # patch decomp via xrpatcher + dask
+│   └── 04_variational_dynamical_priors.md          # 3DVar / 4DVar / DYMOST / BFN-QG / 4DVarNet
+└── siren_vs_rff/
+    ├── README.md                                   # sub-project overview
+    ├── 00_siren_rff_vssgp.md                       # SIREN ↔ RFF ↔ VSSGP unification + experiment plan
+    └── 01_physics_constraints.md                   # basis / data / loss axes for OOD prediction
 ```
 
 No `src/` package yet — these are derivations and pseudocode, not a runnable port. A future iteration of the project would add a `plume_simulation`-style `src/interpolation/` package implementing the patch-decomposition pipeline from 03 against real CMEMS data.

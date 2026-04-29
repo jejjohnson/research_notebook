@@ -163,8 +163,8 @@ clean: ## Remove build artefacts and cache directories
 docs: ## Build documentation with MyST
 	uv run --group docs myst build --html
 
-docs-serve: ## Serve documentation locally
-	uv run --group docs myst start
+docs-serve: ## Serve documentation locally (app on 3000, assets on 3100)
+	uv run --group docs myst start --port 3000 --server-port 3100
 
 docs-deploy: ## Deploy documentation to GitHub Pages
 	uv run --group docs myst build --html

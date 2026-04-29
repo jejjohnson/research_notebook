@@ -1,6 +1,6 @@
 # Tier III — Eulerian finite-volume transport
 
-**Forward model:** full PDE solved on a grid. Uses [`finitevolX`](/home/azureuser/localfiles/finitevolX/) for spatial discretisation and [`spectraldiffx`](/home/azureuser/localfiles/spectraldiffx/) for spectral / periodic-domain operators.
+**Forward model:** full PDE solved on a grid. Uses [`finitevolX`](https://github.com/jejjohnson/finitevolX) for spatial discretisation and [`spectraldiffx`](https://github.com/jejjohnson/spectraldiffx) for spectral / periodic-domain operators.
 
 This is the **gold-standard physics tier**: full mass conservation, arbitrary wind fields, support for chemistry and deposition. Also the most expensive — emulators (Step 3) are essential, not optional.
 
@@ -105,7 +105,7 @@ Linearise around the current iterate `S^k`, solve the linear inner minimisation,
 S^{k+1} = S^k + δS,    δS = argmin_δ J_lin(δS; S^k)
 ```
 
-`J_lin` uses the **tangent linear** of the FV solver, trivially built via `jax.linearize`. Inner solves are quadratic in `δS` → CG or Lanczos via [`gaussx`](/home/azureuser/localfiles/gaussx/). Cuts cost by 1–2 orders of magnitude vs. fully-nonlinear 4D-Var. **This is the default**; full nonlinear is a sanity check.
+`J_lin` uses the **tangent linear** of the FV solver, trivially built via `jax.linearize`. Inner solves are quadratic in `δS` → CG or Lanczos via [`gaussx`](https://github.com/jejjohnson/gaussx). Cuts cost by 1–2 orders of magnitude vs. fully-nonlinear 4D-Var. **This is the default**; full nonlinear is a sanity check.
 
 ### Control-variable transform
 
@@ -115,7 +115,7 @@ Direct optimisation in `S`-space with `B^{-1}` is infeasible — `B` for a 200×
 χ = B^{-1/2}(S − S_b),   optimise J(S(χ)) in χ-space (prior = identity Gaussian)
 ```
 
-`B^{-1/2}` materialised via Matern factorisation in [`gaussx`](/home/azureuser/localfiles/gaussx/) (Kronecker structure for separable correlation). This is the load-bearing trick that makes 4D-Var tractable; should be explicit in `assimilation/control.py` and on the API.
+`B^{-1/2}` materialised via Matern factorisation in [`gaussx`](https://github.com/jejjohnson/gaussx) (Kronecker structure for separable correlation). This is the load-bearing trick that makes 4D-Var tractable; should be explicit in `assimilation/control.py` and on the API.
 
 ### Posterior covariance — three options
 
@@ -123,7 +123,7 @@ Direct optimisation in `S`-space with `B^{-1}` is infeasible — `B` for a 200×
 
 - **Gauss-Newton Hessian inversion.** `P* = (H^T R^{-1} H + B^{-1})^{-1}` evaluated at MAP. Tractable for moderate grids via `gaussx` Krylov.
 - **Laplace around MAP.** Sample from `N(S*, P*)`; cheapest path.
-- **En4D-Var.** Ensemble around MAP gives sample covariance; couples to [`filterax`](/home/azureuser/localfiles/filterax/). Best when the posterior is non-Gaussian.
+- **En4D-Var.** Ensemble around MAP gives sample covariance; couples to [`filterax`](https://github.com/jejjohnson/filterax). Best when the posterior is non-Gaussian.
 
 The posterior export to Tier V.A is via the same adapter pattern as Tier I/II — see the [posterior-export module](#module-layout).
 
@@ -191,7 +191,7 @@ Conditional flow over images vs. score-based diffusion — same trade-off as Tie
 
 - `gauss_flows` is currently 1D-only; 2D coupling layers are a multi-month extension.
 - **Score-based diffusion** is the safer v1 path for the spatial posterior.
-- Context conditioning via FiLM / hypernet primitives in [`pyrox.nn`](/home/azureuser/localfiles/pyrox/) — same pattern as Tier I/II.
+- Context conditioning via FiLM / hypernet primitives in [`pyrox.nn`](https://github.com/jejjohnson/pyrox) — same pattern as Tier I/II.
 
 ---
 
@@ -209,20 +209,20 @@ Conditional flow over images vs. score-based diffusion — same trade-off as Tie
 
 | Step | Concern | Module | Status |
 |------|---------|--------|--------|
-| 1 | FV grid | [`les_fvm/grid.py`](src/plume_simulation/les_fvm/grid.py) | ✓ |
-| 1 | Advection | [`les_fvm/advection.py`](src/plume_simulation/les_fvm/advection.py) | ✓ |
-| 1 | Diffusion | [`les_fvm/diffusion.py`](src/plume_simulation/les_fvm/diffusion.py) | ✓ |
-| 1 | Source injection | [`les_fvm/source.py`](src/plume_simulation/les_fvm/source.py) | ✓ |
-| 1 | Boundary conditions | [`les_fvm/boundary.py`](src/plume_simulation/les_fvm/boundary.py) | ✓ |
-| 1 | Time integration | [`les_fvm/dynamics.py`](src/plume_simulation/les_fvm/dynamics.py), [`simulate.py`](src/plume_simulation/les_fvm/simulate.py) | ✓ |
+| 1 | FV grid | [`les_fvm/grid.py`](../../src/plume_simulation/les_fvm/grid.py) | ✓ |
+| 1 | Advection | [`les_fvm/advection.py`](../../src/plume_simulation/les_fvm/advection.py) | ✓ |
+| 1 | Diffusion | [`les_fvm/diffusion.py`](../../src/plume_simulation/les_fvm/diffusion.py) | ✓ |
+| 1 | Source injection | [`les_fvm/source.py`](../../src/plume_simulation/les_fvm/source.py) | ✓ |
+| 1 | Boundary conditions | [`les_fvm/boundary.py`](../../src/plume_simulation/les_fvm/boundary.py) | ✓ |
+| 1 | Time integration | [`les_fvm/dynamics.py`](../../src/plume_simulation/les_fvm/dynamics.py), [`simulate.py`](../../src/plume_simulation/les_fvm/simulate.py) | ✓ |
 | 1 | Eddy diffusivity (MO + Smagorinsky) | `plume_simulation.les_fvm.diffusivity` | ☐ |
 | 1 | Column + AK pipeline | reuse `gauss_plume.observation` from Tier I | ☐ |
-| 2 | Cost function (3-term) | [`assimilation/cost.py`](src/plume_simulation/assimilation/cost.py) | 🚧 |
+| 2 | Cost function (3-term) | [`assimilation/cost.py`](../../src/plume_simulation/assimilation/cost.py) | 🚧 |
 | 2 | Likelihoods + spatial priors | `plume_simulation.assimilation.likelihoods` | ☐ |
-| 2 | Control vector + transform | [`assimilation/control.py`](src/plume_simulation/assimilation/control.py) | 🚧 |
-| 2 | Incremental 4D-Var solver | [`assimilation/solve.py`](src/plume_simulation/assimilation/solve.py) | 🚧 |
-| 2 | Background (`S_b`, `c_b`, BC scaling) | [`assimilation/background.py`](src/plume_simulation/assimilation/background.py) | 🚧 |
-| 2 | Diagnostics | [`assimilation/diagnostics.py`](src/plume_simulation/assimilation/diagnostics.py) | 🚧 |
+| 2 | Control vector + transform | [`assimilation/control.py`](../../src/plume_simulation/assimilation/control.py) | 🚧 |
+| 2 | Incremental 4D-Var solver | [`assimilation/solve.py`](../../src/plume_simulation/assimilation/solve.py) | 🚧 |
+| 2 | Background (`S_b`, `c_b`, BC scaling) | [`assimilation/background.py`](../../src/plume_simulation/assimilation/background.py) | 🚧 |
+| 2 | Diagnostics | [`assimilation/diagnostics.py`](../../src/plume_simulation/assimilation/diagnostics.py) | 🚧 |
 | 2 | Posterior covariance (Hessian / Laplace / En4D-Var) | `plume_simulation.assimilation.posterior` | ☐ |
 | 2 | Posterior export → Tier V | `plume_simulation.assimilation.posterior_export` | ☐ |
 | 3 | Emulator (UNet / GNN / FNO) | `plume_simulation.les_fvm.emulator` | ☐ |

@@ -93,7 +93,7 @@ The likelihood is load-bearing for MCMC convergence. Don't leave it to "default 
 
 - **MAP estimation:** `jax.grad(log_posterior)` → L-BFGS or Adam. Convergence in <1s for a single overpass.
 - **MCMC:** NumPyro NUTS over `(Q, x₀, H_eff, ū, θ_wind, c_bg)` jointly. Forward pass is ~µs, so 10k samples is seconds. Keep `ū`, `θ_wind` as inference variables (with tight met priors) so their posterior contracts can be diagnosed downstream.
-- **Linear-Gaussian special case:** if observations are linear in `c` (column-integrated XCH₄ with a fixed AK) and only `Q` is free with all geometry fixed, the posterior over `Q` is analytically tractable — exact Bayesian inversion via [`gaussx`](/home/azureuser/localfiles/gaussx/). Useful as a sanity check on the NUTS implementation.
+- **Linear-Gaussian special case:** if observations are linear in `c` (column-integrated XCH₄ with a fixed AK) and only `Q` is free with all geometry fixed, the posterior over `Q` is analytically tractable — exact Bayesian inversion via [`gaussx`](https://github.com/jejjohnson/gaussx). Useful as a sanity check on the NUTS implementation.
 
 ### `Q / ū` identifiability — corrected
 
@@ -147,7 +147,7 @@ This commitment matters because it pins the architecture (CNN-style backbones ov
 
 ### Conditioning on context
 
-The predictor is **not** observation-only. At inference time we know `context = (facility_lat_lon, ū_met, θ_wind_met, stability_class, L_met)`. The clean way to wire this in is feature-wise modulation of the summary network — the FiLM / hypernet conditioning primitives being built in [`pyrox.nn`](/home/azureuser/localfiles/pyrox/) (see the [conditioning module plan](/home/azureuser/.claude/plans/wiggly-enchanting-thimble.md)).
+The predictor is **not** observation-only. At inference time we know `context = (facility_lat_lon, ū_met, θ_wind_met, stability_class, L_met)`. The clean way to wire this in is feature-wise modulation of the summary network — the FiLM / hypernet conditioning primitives being built in [`pyrox.nn`](https://github.com/jejjohnson/pyrox).
 
 ```
 summary  = CNN(y_patch)               # observation features
@@ -180,16 +180,16 @@ Training dataset is **free**: simulate millions of plume configurations in secon
 
 | Step | Concern | Module | Status |
 |------|---------|--------|--------|
-| 1 | Plume forward | [`gauss_plume/plume.py`](src/plume_simulation/gauss_plume/plume.py) | ✓ |
-| 1 | Puff forward | [`gauss_puff/puff.py`](src/plume_simulation/gauss_puff/puff.py) | ✓ |
+| 1 | Plume forward | [`gauss_plume/plume.py`](../../src/plume_simulation/gauss_plume/plume.py) | ✓ |
+| 1 | Puff forward | [`gauss_puff/puff.py`](../../src/plume_simulation/gauss_puff/puff.py) | ✓ |
 | 1 | Plume rise (Briggs) | `gauss_plume.plume_rise` | ☐ |
-| 1 | Stability + dispersion | [`gauss_plume/dispersion.py`](src/plume_simulation/gauss_plume/dispersion.py) | 🚧 partial |
-| 1 | Puff turbulence | [`gauss_puff/turbulence.py`](src/plume_simulation/gauss_puff/turbulence.py) | ✓ |
-| 1 | Column + AK pipeline | `gauss_plume.observation` | ☐ — links to [`assimilation/obs_operator.py`](src/plume_simulation/assimilation/obs_operator.py) |
+| 1 | Stability + dispersion | [`gauss_plume/dispersion.py`](../../src/plume_simulation/gauss_plume/dispersion.py) | 🚧 partial |
+| 1 | Puff turbulence | [`gauss_puff/turbulence.py`](../../src/plume_simulation/gauss_puff/turbulence.py) | ✓ |
+| 1 | Column + AK pipeline | `gauss_plume.observation` | ☐ — links to [`assimilation/obs_operator.py`](../../src/plume_simulation/assimilation/obs_operator.py) |
 | 1 | Background `c_bg` loader | `plume_simulation.priors.background` | ☐ |
 | 2 | Likelihoods + priors | `gauss_plume.likelihoods` | ☐ |
-| 2 | Plume MAP/MCMC | [`gauss_plume/inference.py`](src/plume_simulation/gauss_plume/inference.py) | ✓ |
-| 2 | Puff inference | [`gauss_puff/inference.py`](src/plume_simulation/gauss_puff/inference.py) | ✓ |
+| 2 | Plume MAP/MCMC | [`gauss_plume/inference.py`](../../src/plume_simulation/gauss_plume/inference.py) | ✓ |
+| 2 | Puff inference | [`gauss_puff/inference.py`](../../src/plume_simulation/gauss_puff/inference.py) | ✓ |
 | 2 | Posterior export → Tier V | `gauss_plume.posterior_export` (mark-likelihood adapter for [V.A](06a_instantaneous.md)) | ☐ |
 | 3 | Plume emulator | `gauss_plume.emulator` | ☐ |
 | 4 | Emulator-based MCMC | wired in `inference.py` once emulator exists | ☐ |

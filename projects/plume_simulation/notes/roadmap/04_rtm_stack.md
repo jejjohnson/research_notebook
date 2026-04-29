@@ -48,7 +48,7 @@ SWIR aerosol scattering is the leading systematic for methane retrievals over br
 
 HAPI is **not JAX-traceable** (NumPy + cached database lookups). The architectural choice is explicit:
 
-- **Path A — pre-tabulate, JAX-trace.** HAPI generates `σ(ν, T, p)` lookup tables offline; runtime `forward.py` interpolates inside `jax.jit`. This is what [`hapi_lut/`](src/plume_simulation/hapi_lut/) already implements. Default for v1.
+- **Path A — pre-tabulate, JAX-trace.** HAPI generates `σ(ν, T, p)` lookup tables offline; runtime `forward.py` interpolates inside `jax.jit`. This is what [`hapi_lut/`](../../src/plume_simulation/hapi_lut/) already implements. Default for v1.
 - **Path B — `jax.pure_callback` with custom VJP.** Wrap HAPI calls in a callback when needed inside differentiable code. Use only for cross-section sensitivities not pre-tabulated.
 
 Document the chosen path on every forward-RT helper. `jax.jacobian` "exactly" works only on Path A; on Path B, the VJP is whatever you wrote.
@@ -200,7 +200,7 @@ Different spectral resolutions (TROPOMI ~1000 ch, EMIT ~285 ch, GHGSat hyperspec
 
 ### Context conditioning
 
-`prior_atm = (T(z), p(z), q_H2O(z))` from the [met field](00_prerequisites.md#metfield-schema) and `geometry = (SZA, VZA, RAA)` from L1 metadata. Wire in via FiLM / hypernet primitives in [`pyrox.nn`](/home/azureuser/localfiles/pyrox/) — same pattern as Tiers I/II/III.
+`prior_atm = (T(z), p(z), q_H2O(z))` from the [met field](00_prerequisites.md#metfield-schema) and `geometry = (SZA, VZA, RAA)` from L1 metadata. Wire in via FiLM / hypernet primitives in [`pyrox.nn`](https://github.com/jejjohnson/pyrox) — same pattern as Tiers I/II/III.
 
 ### Posterior over the spatial profile
 
@@ -227,21 +227,21 @@ SBC is necessary but not sufficient — the *specific* requirement is that the p
 
 | Step | Concern | Module | Status |
 |------|---------|--------|--------|
-| 1 | HAPI Beer-Lambert (clear-sky, two-way) | [`hapi_lut/beers.py`](src/plume_simulation/hapi_lut/beers.py) | ✓ — **add** two-way path if not already |
-| 1 | LUT generator | [`hapi_lut/generator.py`](src/plume_simulation/hapi_lut/generator.py) | ✓ |
-| 1 | LUT config | [`hapi_lut/config.py`](src/plume_simulation/hapi_lut/config.py) | ✓ |
-| 1 | Multi-gas LUT | [`hapi_lut/multi.py`](src/plume_simulation/hapi_lut/multi.py) | ✓ |
+| 1 | HAPI Beer-Lambert (clear-sky, two-way) | [`hapi_lut/beers.py`](../../src/plume_simulation/hapi_lut/beers.py) | ✓ — **add** two-way path if not already |
+| 1 | LUT generator | [`hapi_lut/generator.py`](../../src/plume_simulation/hapi_lut/generator.py) | ✓ |
+| 1 | LUT config | [`hapi_lut/config.py`](../../src/plume_simulation/hapi_lut/config.py) | ✓ |
+| 1 | Multi-gas LUT | [`hapi_lut/multi.py`](../../src/plume_simulation/hapi_lut/multi.py) | ✓ |
 | 1 | Factorised LUT (gas × surf × scatt) | `plume_simulation.hapi_lut.factorised` | ☐ |
-| 1 | Forward RTM | [`radtran/forward.py`](src/plume_simulation/radtran/forward.py) | 🚧 |
-| 1 | Spectral response (SRF) | [`radtran/srf.py`](src/plume_simulation/radtran/srf.py) | ✓ |
-| 1 | Instrument model | [`radtran/instrument.py`](src/plume_simulation/radtran/instrument.py) | ✓ |
-| 1 | Background atmosphere | [`radtran/background.py`](src/plume_simulation/radtran/background.py) | ✓ |
-| 1 | Target gas spec | [`radtran/target.py`](src/plume_simulation/radtran/target.py) | ✓ |
+| 1 | Forward RTM | [`radtran/forward.py`](../../src/plume_simulation/radtran/forward.py) | 🚧 |
+| 1 | Spectral response (SRF) | [`radtran/srf.py`](../../src/plume_simulation/radtran/srf.py) | ✓ |
+| 1 | Instrument model | [`radtran/instrument.py`](../../src/plume_simulation/radtran/instrument.py) | ✓ |
+| 1 | Background atmosphere | [`radtran/background.py`](../../src/plume_simulation/radtran/background.py) | ✓ |
+| 1 | Target gas spec | [`radtran/target.py`](../../src/plume_simulation/radtran/target.py) | ✓ |
 | 1 | Surface model — SWIR (albedo / BRDF) | `plume_simulation.radtran.surface_swir` | ☐ |
 | 1 | Surface model — TIR (emissivity) | `plume_simulation.radtran.surface_tir` | ☐ |
 | 1 | Aerosol / scattering coupling (v2) | `plume_simulation.radtran.scattering` | ☐ |
-| — | Matched filter (detection) | [`radtran/matched_filter.py`](src/plume_simulation/radtran/matched_filter.py), [`matched_filter/`](src/plume_simulation/matched_filter/) | ✓ |
-| — | gaussx-based linear solve | [`radtran/gaussx_solve.py`](src/plume_simulation/radtran/gaussx_solve.py) | ✓ |
+| — | Matched filter (detection) | [`radtran/matched_filter.py`](../../src/plume_simulation/radtran/matched_filter.py), [`matched_filter/`](../../src/plume_simulation/matched_filter/) | ✓ |
+| — | gaussx-based linear solve | [`radtran/gaussx_solve.py`](../../src/plume_simulation/radtran/gaussx_solve.py) | ✓ |
 | 2 | Optimal-estimation iterative loop | `plume_simulation.radtran.retrieval` | ☐ — clarify scope vs. `gaussx_solve.py` (linear solve only there) |
 | 2 | Quality flags + screening | `plume_simulation.radtran.quality` | ☐ |
 | 2 | Information-content diagnostics | `plume_simulation.radtran.diagnostics` | ☐ |

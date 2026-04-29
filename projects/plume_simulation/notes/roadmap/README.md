@@ -73,9 +73,9 @@ Module-level status is tracked per tier. Quick overview:
 
 - **Tier I — Gaussian:** ✓ plume + puff forward models, ✓ MAP/MCMC inversion. Emulator + amortized predictor not yet started.
 - **Tier II — Lagrangian:** ☐ not started. No `gauss_flows`-style trajectory module yet.
-- **Tier III — Eulerian FV:** 🚧 [`les_fvm`](src/plume_simulation/les_fvm/) advection/diffusion/dynamics implemented; [`assimilation`](src/plume_simulation/assimilation/) cost/control/solve scaffolding present. 4D-Var loop not wired end-to-end.
-- **RTM stack:** 🚧 [`hapi_lut`](src/plume_simulation/hapi_lut/) LUT generator + Beer-Lambert in place; [`radtran`](src/plume_simulation/radtran/) instrument/SRF/forward modules present; [`matched_filter`](src/plume_simulation/matched_filter/) detection pipeline in place. Optimal-estimation retrieval not wired; neural RTM not started.
+- **Tier III — Eulerian FV:** 🚧 [`les_fvm`](../../src/plume_simulation/les_fvm/) advection/diffusion/dynamics implemented; [`assimilation`](../../src/plume_simulation/assimilation/) cost/control/solve scaffolding present. 4D-Var loop not wired end-to-end.
+- **RTM stack:** 🚧 [`hapi_lut`](../../src/plume_simulation/hapi_lut/) LUT generator + Beer-Lambert in place; [`radtran`](../../src/plume_simulation/radtran/) instrument/SRF/forward modules present; [`matched_filter`](../../src/plume_simulation/matched_filter/) detection pipeline in place. Optimal-estimation retrieval not wired; neural RTM not started.
 - **Tier IV — Coupled:** ☐ not started. Awaiting Tier I + RTM completion before assembling the coupled forward.
-- **Tier V — Population & forecasting:** 🚧 standalone [`methane_pod`](projects/methane_pod/) library is feature-complete (intensity catalog, POD catalog, paradox simulator, NUTS fitter, synthetic-data validation). Missing: cross-tier adapter that turns Tier I–IV per-event posteriors into TMTPP mark likelihoods; real-data CSV ingestion; multi-satellite fusion. See [Tier V index](06_tier5_population.md).
+- **Tier V — Population & forecasting:** 🚧 standalone [`methane_pod`](../../../methane_pod/) library is feature-complete (intensity catalog, POD catalog, paradox simulator, NUTS fitter, synthetic-data validation). Missing: cross-tier adapter that turns Tier I–IV per-event posteriors into TMTPP mark likelihoods; real-data CSV ingestion; multi-satellite fusion. See [Tier V index](06_tier5_population.md).
 
 See each tier page for module-level breakdown.

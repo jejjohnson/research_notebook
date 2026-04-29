@@ -47,7 +47,7 @@ p(detected_i | f, λ, P_d)  ≈  (1/S) Σ_s  P_d(Q_i^{(s)}) · f(Q_i^{(s)}) / π
 
 with `π_per-event(Q)` the **per-event prior** used at Tier I–IV. The ratio `f / π_per-event` is the importance weight that re-points the per-event posterior at the population mark distribution. **Without this re-weighting the population fit double-counts the per-event prior** — biased posterior on `f`, biased total-mass estimate.
 
-This is the central math of cross-tier inference. Currently the prototype in [`methane_pod.fitting`](projects/methane_pod/src/methane_pod/fitting.py) summarises per-event posteriors to point estimates before the population fit, side-stepping the importance correction. Formalising this is the v1 deliverable for [`06a_instantaneous.md`](06a_instantaneous.md).
+This is the central math of cross-tier inference. Currently the prototype in [`methane_pod.fitting`](../../../methane_pod/src/methane_pod/fitting.py) summarises per-event posteriors to point estimates before the population fit, side-stepping the importance correction. Formalising this is the v1 deliverable for [`06a_instantaneous.md`](06a_instantaneous.md).
 
 ---
 
@@ -107,7 +107,7 @@ v1 assumes independence and screens at the catalog stage (collapse near-coincide
 
 ## Module layout — depend on `methane_pod`, don't absorb it
 
-`plumax` depends on the standalone [`methane_pod`](projects/methane_pod/) package (pinned `methane_pod >= 0.1, < 0.2` for v1); the population-scale code is not re-implemented. Rationale:
+`plumax` depends on the standalone [`methane_pod`](../../../methane_pod/) package (pinned `methane_pod >= 0.1, < 0.2` for v1); the population-scale code is not re-implemented. Rationale:
 
 - `methane_pod` has its own audience (point-process methodologists), test suite, release cadence.
 - `plumax` consumes it through a thin adapter that materialises Tier I–IV posteriors as inputs to `methane_pod.fitting`.
@@ -115,16 +115,16 @@ v1 assumes independence and screens at the catalog stage (collapse near-coincide
 
 | Concern | Module | Status |
 |---------|--------|--------|
-| Intensity registry `λ(t)` | [`methane_pod.intensity`](projects/methane_pod/src/methane_pod/intensity.py) | library ✓ (13 kernels) |
-| POD registry `P_d(·)` | [`methane_pod.pod_functions`](projects/methane_pod/src/methane_pod/pod_functions.py) | library ✓ (10 models) |
-| Missing-mass MC simulator | [`methane_pod.paradox`](projects/methane_pod/src/methane_pod/paradox.py) | library ✓ |
-| NUTS fitter | [`methane_pod.fitting`](projects/methane_pod/src/methane_pod/fitting.py) | library ✓; **importance-correction integration ☐** |
+| Intensity registry `λ(t)` | [`methane_pod.intensity`](../../../methane_pod/src/methane_pod/intensity.py) | library ✓ (13 kernels) |
+| POD registry `P_d(·)` | [`methane_pod.pod_functions`](../../../methane_pod/src/methane_pod/pod_functions.py) | library ✓ (10 models) |
+| Missing-mass MC simulator | [`methane_pod.paradox`](../../../methane_pod/src/methane_pod/paradox.py) | library ✓ |
+| NUTS fitter | [`methane_pod.fitting`](../../../methane_pod/src/methane_pod/fitting.py) | library ✓; **importance-correction integration ☐** |
 | Per-event posterior summariser | `plume_simulation.population.adapter.summariser` | ☐ |
 | Per-event prior recall (`π_per-event` lookup) | `plume_simulation.population.adapter.prior_recall` | ☐ — required for importance weighting |
 | Importance-weight calculator | `plume_simulation.population.adapter.importance` | ☐ |
 | Multi-satellite POD union | `plume_simulation.population.adapter.pod_union` | ☐ |
 | Catalog schema (CSV / parquet) | `plume_simulation.population.adapter.schema` | ☐ |
-| Real-data CSV ingestion | `plume_simulation.population.ingest` | ☐ (placeholder in [`07_pod_fitting_mcmc.md`](projects/methane_pod/notebooks/07_pod_fitting_mcmc.md)) |
+| Real-data CSV ingestion | `plume_simulation.population.ingest` | ☐ (placeholder in [`07_pod_fitting_mcmc.md`](../../../methane_pod/notebooks/07_pod_fitting_mcmc.md)) |
 | Population SBC harness | `plume_simulation.population.validation.sbc` | ☐ |
 | Importance-weight ESS diagnostic | `plume_simulation.population.validation.iw_ess` | ☐ |
 | Per-event-prior swap-out test | `plume_simulation.population.validation.prior_swap` | ☐ |
@@ -144,11 +144,11 @@ This isn't a coincidence — it's why `plumax`'s tier structure works: the same 
 
 ## Status snapshot
 
-- **Theory.** TMTPP foundations and the missing-mass paradox are written up in [`methane_pod/notebooks/01_mttpp_theory`](projects/methane_pod/notebooks/01_mttpp_theory.md) and [`03_missing_mass_paradox`](projects/methane_pod/notebooks/03_missing_mass_paradox.ipynb).
+- **Theory.** TMTPP foundations and the missing-mass paradox are written up in [`methane_pod/notebooks/01_mttpp_theory`](../../../methane_pod/notebooks/01_mttpp_theory.md) and [`03_missing_mass_paradox`](../../../methane_pod/notebooks/03_missing_mass_paradox.ipynb).
 - **`methane_pod` library:** ✓ — intensity, POD, paradox simulator, NUTS fitter all implemented.
 - **Cross-tier integration:** ☐ — per-event posteriors enter the population fit as point estimates (no importance correction). Tier V's main code deliverable.
-- **Synthetic validation.** [`06_stationary_numpyro_mcmc`](projects/methane_pod/notebooks/06_stationary_numpyro_mcmc.ipynb) recovers POD parameters on synthetic data without the soft-observation layer.
-- **Real-data fit.** [`07_pod_fitting_mcmc`](projects/methane_pod/notebooks/07_pod_fitting_mcmc.md) is a placeholder; needs IMEO + Tanager CSV ingestion.
+- **Synthetic validation.** [`06_stationary_numpyro_mcmc`](../../../methane_pod/notebooks/06_stationary_numpyro_mcmc.ipynb) recovers POD parameters on synthetic data without the soft-observation layer.
+- **Real-data fit.** [`07_pod_fitting_mcmc`](../../../methane_pod/notebooks/07_pod_fitting_mcmc.md) is a placeholder; needs IMEO + Tanager CSV ingestion.
 
 ---
 

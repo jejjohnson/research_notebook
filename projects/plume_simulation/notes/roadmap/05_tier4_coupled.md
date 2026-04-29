@@ -112,8 +112,8 @@ Per-instrument quality flags from the RTM stack flow into the coupled forward. *
 Three paths, mirroring Tier III:
 
 - **Laplace around MAP** — cheapest, default for Tier I+L2 fusion.
-- **Gauss-Newton Hessian** via Krylov / [`gaussx`](/home/azureuser/localfiles/gaussx/) — used when posterior is approximately Gaussian and tractable.
-- **Ensemble (En-EKI / En-4D-Var)** via [`filterax`](/home/azureuser/localfiles/filterax/) — required when the posterior is non-Gaussian (multi-modal across `n_sources`, heavy-tailed `Q`).
+- **Gauss-Newton Hessian** via Krylov / [`gaussx`](https://github.com/jejjohnson/gaussx) — used when posterior is approximately Gaussian and tractable.
+- **Ensemble (En-EKI / En-4D-Var)** via [`filterax`](https://github.com/jejjohnson/filterax) — required when the posterior is non-Gaussian (multi-modal across `n_sources`, heavy-tailed `Q`).
 
 Posterior export to Tier V.A is via the same adapter pattern as Tiers I/II/III.
 
@@ -164,7 +164,7 @@ Sample the joint `(met regime, source configuration, scene class, viewing geomet
 
 ## (4) Emulator-based inference
 
-Use the coupled (or stacked) emulator in EKI ([`filterax`](/home/azureuser/localfiles/filterax/)) or gradient-based inversion. Real-time capable.
+Use the coupled (or stacked) emulator in EKI ([`filterax`](https://github.com/jejjohnson/filterax)) or gradient-based inversion. Real-time capable.
 
 - **Adjoint validation:** emulator-autodiff gradient ≈ physics-stack gradient on a held-out set. Same hard test as Tiers III and RTM — failure means the inversion is biased even when forward predictions look fine.
 - **Posterior validation:** posterior from coupled-emulator inversion ≈ posterior from end-to-end physics inversion (Step 2).
@@ -188,7 +188,7 @@ Input is a *list* of per-instrument observation tuples — same pattern as Tier 
 
 - **Per-instrument summary networks** (TROPOMI 5 km vs. EMIT 60 m vs. Tanager 30 m vs. GHGSat hyperspectral need different encoders).
 - **Transport tier as categorical context.** `transport_tier_id ∈ {I, II, III}` conditions the posterior head — the predictor is one model that handles all tiers, not three separate models.
-- **Met + tier conditioning** wired in via FiLM / hypernet primitives in [`pyrox.nn`](/home/azureuser/localfiles/pyrox/) — same pattern as Tiers I/II/III.
+- **Met + tier conditioning** wired in via FiLM / hypernet primitives in [`pyrox.nn`](https://github.com/jejjohnson/pyrox) — same pattern as Tiers I/II/III.
 
 ### Trans-dimensional output
 
@@ -229,7 +229,7 @@ Simulate millions of `(source config, multi-instrument overpass)` pairs spanning
 | 1 | Quality-flag aggregator | `plume_simulation.coupled.quality` | ☐ |
 | 1 | Q(t) stochastic-process model (OU / GP) | `plume_simulation.coupled.q_dynamics` | ☐ |
 | 1 | Trans-dimensional source-count handling | `plume_simulation.coupled.k_sources` | ☐ |
-| 2 | End-to-end inversion | reuse [`assimilation/`](src/plume_simulation/assimilation/) with composed `forward` | ☐ |
+| 2 | End-to-end inversion | reuse [`assimilation/`](../../src/plume_simulation/assimilation/) with composed `forward` | ☐ |
 | 2 | Posterior covariance (Laplace / Hessian / EnKF) | reuse Tier III's posterior modules | ☐ |
 | 2 | Posterior export → Tier V | `plume_simulation.coupled.posterior_export` | ☐ |
 | 3 | Stacked emulator runtime | `plume_simulation.coupled.stacked_emulator` | ☐ |
@@ -245,7 +245,7 @@ The `coupled` subpackage doesn't exist yet; this is the proposed shape. It's the
 ## Validation strategy
 
 - **Composition correctness.** Apply identity AK, identity RTM, single-instrument list → coupled forward should equal the bare transport forward. Cheap, catches plumbing bugs.
-- **Linear-conditional-Gaussian limit.** Tier I + linear AK + Gaussian noise → conditional posterior `p(Q | x₀, ū, θ_wind, c_bg)` is closed-form via [`gaussx`](/home/azureuser/localfiles/gaussx/). Compare end-to-end JAX inversion to the closed-form result. (Note: only `Q` is linear; the joint over `(x₀, ū, …)` is nonlinear — phrase the test as conditional, not joint.)
+- **Linear-conditional-Gaussian limit.** Tier I + linear AK + Gaussian noise → conditional posterior `p(Q | x₀, ū, θ_wind, c_bg)` is closed-form via [`gaussx`](https://github.com/jejjohnson/gaussx). Compare end-to-end JAX inversion to the closed-form result. (Note: only `Q` is linear; the joint over `(x₀, ū, …)` is nonlinear — phrase the test as conditional, not joint.)
 - **Synthetic-truth recovery.** Simulate a known multi-instrument overpass through the full pipeline → run inversion → recover within reported posterior uncertainty. Stratify by instrument count (1, 2, 3+) — fusion benefit should be quantifiable.
 - **Cross-instrument hold-out.** Invert with `N − 1` instruments, predict the held-out instrument's observations from the source posterior + coupled forward, compare predicted to actual. Catches multi-instrument fusion bugs and exposes the value of fusion vs. single-instrument inversion.
 - **Cross-tier consistency.** Run inversion with Tier I, II, III transports on the same observations under stationary met conditions. Posteriors should overlap within stated uncertainty. Catches systematic biases between transport tiers and confirms the fusion harness is tier-agnostic.

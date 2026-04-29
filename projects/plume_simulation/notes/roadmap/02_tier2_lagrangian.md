@@ -95,13 +95,13 @@ q* = q_a · exp(B_log F̃^T (F̃ B_log F̃^T + R)^{-1} (y − F̃ q_a))
 P* = B_log − B_log F̃^T (F̃ B_log F̃^T + R)^{-1} F̃ B_log
 ```
 
-with `F̃ = diag(q_a) F` (the linearised Jacobian). Identical structure to the equations [`gaussx`](/home/azureuser/localfiles/gaussx/) is built around.
+with `F̃ = diag(q_a) F` (the linearised Jacobian). Identical structure to the equations [`gaussx`](https://github.com/jejjohnson/gaussx) is built around.
 
 ### Scaling beyond moderate grids
 
 - "≲10k cells × ≲1k obs" is the dense-solver limit. Beyond that:
   - **Krylov + structure-aware solves** via `gaussx` (Kronecker-Matern, low-rank `F`). Pushes direct solves to ~100k cells with sufficient sparsity.
-  - **Ensemble Kalman Inversion (EKI):** ensemble of forward trajectories → ensemble-based `∂c/∂Q`. Plug into [`filterax`](/home/azureuser/localfiles/filterax/); couple with `vardaX` for the variational version.
+  - **Ensemble Kalman Inversion (EKI):** ensemble of forward trajectories → ensemble-based `∂c/∂Q`. Plug into [`filterax`](https://github.com/jejjohnson/filterax); couple with `vardaX` for the variational version.
   - **MCMC over `log q(x)`:** expensive but exact. Use only when EKI is suspected biased.
 
 ---
@@ -142,8 +142,8 @@ When fusing across instruments, each observation tensor carries its own AK and f
 
 ### Conditional flow architecture
 
-- Posterior over `log q(x)` is a *spatial field* — natural fit for a conditional flow over images. **Caveat:** [`gauss_flows`](/home/azureuser/localfiles/gauss_flows/) is currently 1D-supported. Either extend `gauss_flows` to 2D coupling layers (multi-month effort) or fall back to score-based / diffusion posterior. Score-based is the safer path for v1.
-- Context conditioning via FiLM / hypernet primitives in [`pyrox.nn`](/home/azureuser/localfiles/pyrox/) — same pattern as Tier I.
+- Posterior over `log q(x)` is a *spatial field* — natural fit for a conditional flow over images. **Caveat:** [`gauss_flows`](https://github.com/jejjohnson/gauss_flows) is currently 1D-supported. Either extend `gauss_flows` to 2D coupling layers (multi-month effort) or fall back to score-based / diffusion posterior. Score-based is the safer path for v1.
+- Context conditioning via FiLM / hypernet primitives in [`pyrox.nn`](https://github.com/jejjohnson/pyrox) — same pattern as Tier I.
 
 ---
 
@@ -166,9 +166,9 @@ When fusing across instruments, each observation tensor carries its own AK and f
 | 1 | Turbulence parameterisation (σ_ij, τ_L) | `plume_simulation.lagrangian.turbulence` | ☐ |
 | 1 | Column + AK pipeline | reuse `gauss_plume.observation` from Tier I | ☐ |
 | 2 | Likelihoods + spatial priors | `plume_simulation.lagrangian.likelihoods` | ☐ |
-| 2 | Linear inversion (Gaussian / lognormal) | reuse [`assimilation/solve.py`](src/plume_simulation/assimilation/solve.py) with `F̃` injected | ☐ |
-| 2 | Krylov / structure-aware solver | dispatch to [`gaussx`](/home/azureuser/localfiles/gaussx/) | dependency |
-| 2 | EKI | [`filterax`](/home/azureuser/localfiles/filterax/) (external) | dependency |
+| 2 | Linear inversion (Gaussian / lognormal) | reuse [`assimilation/solve.py`](../../src/plume_simulation/assimilation/solve.py) with `F̃` injected | ☐ |
+| 2 | Krylov / structure-aware solver | dispatch to [`gaussx`](https://github.com/jejjohnson/gaussx) | dependency |
+| 2 | EKI | [`filterax`](https://github.com/jejjohnson/filterax) (external) | dependency |
 | 2 | Posterior export → Tier V | `plume_simulation.lagrangian.posterior_export` | ☐ |
 | 3 | Footprint emulator | `plume_simulation.lagrangian.emulator` | ☐ |
 | 5 | Field predictor (per instrument) | `plume_simulation.lagrangian.predictor` | ☐ |

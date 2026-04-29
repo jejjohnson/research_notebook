@@ -2,7 +2,7 @@
 
 **Question:** Given the inverted intensity `λ(t)` from Tier V.B, when will the next emission event happen, and what's the probability of an event during a specified window?
 
-This is the **operational layer** — what an LDAR (Leak Detection and Repair) crew or a satellite-tasking dispatcher actually consumes. The full derivations of each metric live in [`methane_pod/notebooks/08_persistency`](projects/methane_pod/notebooks/08_persistency.md); this page summarises the metrics and how they slot into the `plumax` API.
+This is the **operational layer** — what an LDAR (Leak Detection and Repair) crew or a satellite-tasking dispatcher actually consumes. The full derivations of each metric live in [`methane_pod/notebooks/08_persistency`](../../../methane_pod/notebooks/08_persistency.md); this page summarises the metrics and how they slot into the `plumax` API.
 
 ---
 
@@ -68,7 +68,7 @@ P_occur = occurrence_probability(intensity, t1=8.0, t2=12.0,
 # → array of shape (n_samples,) in [0, 1]
 ```
 
-The metric functions take an intensity callable (any of the 13 `equinox` modules from [`methane_pod.intensity`](projects/methane_pod/src/methane_pod/intensity.py)), a query window, and a posterior sample of the intensity's parameters. They return posterior samples of the metric — full UQ propagation, no point estimates.
+The metric functions take an intensity callable (any of the 13 `equinox` modules from [`methane_pod.intensity`](../../../methane_pod/src/methane_pod/intensity.py)), a query window, and a posterior sample of the intensity's parameters. They return posterior samples of the metric — full UQ propagation, no point estimates.
 
 ---
 
@@ -76,7 +76,7 @@ The metric functions take an intensity callable (any of the 13 `equinox` modules
 
 | Concern | Module | Status |
 |---------|--------|--------|
-| Intensity functions | [`methane_pod.intensity`](projects/methane_pod/src/methane_pod/intensity.py) | ✓ |
+| Intensity functions | [`methane_pod.intensity`](../../../methane_pod/src/methane_pod/intensity.py) | ✓ |
 | Wait-time / occurrence / cumulative metrics | `plume_simulation.population.persistency` | ☐ |
 | Posterior-aware metric wrappers | same module | ☐ |
 | Operational dashboard / report templates | out of scope for `plumax`; lives in `plumax-deploy` (future) | — |

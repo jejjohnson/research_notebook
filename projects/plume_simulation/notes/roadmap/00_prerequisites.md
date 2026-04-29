@@ -38,7 +38,7 @@ Maps surface observations (wind speed, cloud cover, time-of-day, solar elevation
 
 - Reference: Turner (1970), Briggs (1973) updates.
 - Output: per-grid-cell stability class as int (0–5) or one-hot.
-- Status: partially implemented in [`gauss_plume/dispersion.py`](src/plume_simulation/gauss_plume/dispersion.py).
+- Status: partially implemented in [`gauss_plume/dispersion.py`](../../src/plume_simulation/gauss_plume/dispersion.py).
 - **Sunset note:** PG is Tier-I scaffolding. Once Tier II/III are operational, MO similarity supersedes it. Don't add features to PG beyond what Tier I needs.
 
 ### Monin-Obukhov similarity
@@ -117,7 +117,7 @@ Applies the satellite averaging kernel to a model column:
 
 where `x` is the model state (CH₄ mixing-ratio profile), `x_a` is the prior used in the L2 retrieval, `h` is the column-averaging weighting, and `AK` is the satellite-product averaging kernel matrix. Needed by Tiers II–IV when comparing to L2 XCH₄ products instead of L1 radiances.
 
-- Status: scaffold in [`assimilation/obs_operator.py`](src/plume_simulation/assimilation/obs_operator.py).
+- Status: scaffold in [`assimilation/obs_operator.py`](../../src/plume_simulation/assimilation/obs_operator.py).
 - **Provider design:** one `Instrument` registry that returns `(AK, x_a, h)` keyed on instrument name. Single hook avoids per-tier branching.
 
 ---

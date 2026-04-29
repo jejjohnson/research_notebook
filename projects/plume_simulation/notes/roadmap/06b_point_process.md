@@ -2,7 +2,7 @@
 
 **Generative model:** events arrive in time according to an intensity `λ(t)`, each carries a mark `Q ~ f(Q)`, and each is observed with probability `P_d(Q; satellite)`. The "thinned marked temporal point process" (TMTPP) is the mathematical object on which everything else at Tier V is built.
 
-The full mathematical derivation lives in [`methane_pod/notebooks/01_tmtpp_theory`](projects/methane_pod/notebooks/01_tmtpp_theory.md). This page gives the architectural view: the components, their interfaces, and where they plug into the rest of `plumax`.
+The full mathematical derivation lives in [`methane_pod/notebooks/01_mttpp_theory`](../../../methane_pod/notebooks/01_mttpp_theory.md). This page gives the architectural view: the components, their interfaces, and where they plug into the rest of `plumax`.
 
 **Units convention:** everything in SI internally — `Q` in kg/s, time in seconds. Catalog ingestion (06a) normalises to SI; rendering layers convert to operational units (t/h, kg/h) on display.
 
@@ -12,7 +12,7 @@ The full mathematical derivation lives in [`methane_pod/notebooks/01_tmtpp_theor
 
 ### Temporal — `λ(t)` (events / second)
 
-The intensity function tells you how rapidly events arrive at time `t`. Examples from the catalogue in [`02_intensity_zoo.md`](projects/methane_pod/notebooks/02_intensity_zoo.md):
+The intensity function tells you how rapidly events arrive at time `t`. Examples from the catalogue in [`02_intensity_zoo.md`](../../../methane_pod/notebooks/02_intensity_zoo.md):
 
 - **Constant** `λ(t) = λ₀` — homogeneous Poisson; baseline.
 - **Diurnal** `λ(t) = λ₀ + A sin(2πt/T_day + φ)` — solar-heated tank cycles.
@@ -21,7 +21,7 @@ The intensity function tells you how rapidly events arrive at time `t`. Examples
 - **Hawkes** `λ(t) = μ + Σ α exp(−β(t−t_i))` — self-exciting; explicit branching, captures event-driven clustering.
 - **Log-Gaussian Cox process** `log λ(t) ~ GP(μ, K)` — stochastic intensity; captures environmentally-driven clustering (compressor cycles, weather windows) without the branching structure of Hawkes.
 
-13 deterministic / Hawkes kernels currently implemented in [`methane_pod.intensity`](projects/methane_pod/src/methane_pod/intensity.py); LGCP is the v1.5 next kernel — it's the natural model when clustering is environmental rather than self-exciting.
+13 deterministic / Hawkes kernels currently implemented in [`methane_pod.intensity`](../../../methane_pod/src/methane_pod/intensity.py); LGCP is the v1.5 next kernel — it's the natural model when clustering is environmental rather than self-exciting.
 
 Each kernel is an `equinox.Module` exposing the same `__call__(t) → λ` and `sample_priors()` interface. Adding a new kernel is a one-file PR.
 
@@ -63,7 +63,7 @@ k_inst    ~ LogNormal(log k_published,    σ_k_published²)
 
 This is the middle ground between (a) hard-coding published values (biased when those are uncertain) and (b) full joint inference (cleanest but identifiability concern with `λ`). v2 promotes to joint inference when basin data warrants.
 
-10 POD models currently in [`methane_pod.pod_functions`](projects/methane_pod/src/methane_pod/pod_functions.py), described visually in [`05_pod_gallery`](projects/methane_pod/notebooks/05_pod_gallery.ipynb). Variants:
+10 POD models currently in [`methane_pod.pod_functions`](../../../methane_pod/src/methane_pod/pod_functions.py), described visually in [`05_pod_gallery`](../../../methane_pod/notebooks/05_pod_gallery.ipynb). Variants:
 
 - **Hill** — operational standard.
 - **Varying-coefficient Hill** — `Q_50 = g(albedo, SZA, scene_class)`.
@@ -102,7 +102,7 @@ log L_point = Σ_i [ log λ(t_i) + log f(Q_i) + log P_d(Q_i) ]
             − ∫₀^T λ(t) · ∫ P_d(Q) · f(Q) dQ dt
 ```
 
-This is the form currently implemented in [`methane_pod.fitting.pod_powerlaw_model`](projects/methane_pod/src/methane_pod/fitting.py). It's the **simplification**, not the canonical form — explicit regime selection per [06a § Regime selection rule](06a_instantaneous.md#regime-selection-rule) decides when it's safe to use.
+This is the form currently implemented in [`methane_pod.fitting.pod_powerlaw_model`](../../../methane_pod/src/methane_pod/fitting.py). It's the **simplification**, not the canonical form — explicit regime selection per [06a § Regime selection rule](06a_instantaneous.md#regime-selection-rule) decides when it's safe to use.
 
 ### Numerical stability of the integrated thinned-rate term
 
@@ -143,14 +143,14 @@ Both have library support; the choice is driven by the scientific question, not 
 
 | Concern | Module | Status |
 |---------|--------|--------|
-| Intensity registry — deterministic + Hawkes | [`methane_pod.intensity`](projects/methane_pod/src/methane_pod/intensity.py) | ✓ (13 kernels) |
+| Intensity registry — deterministic + Hawkes | [`methane_pod.intensity`](../../../methane_pod/src/methane_pod/intensity.py) | ✓ (13 kernels) |
 | Intensity registry — log-Gaussian Cox process | `methane_pod.intensity.lgcp` | ☐ — v1.5 |
 | Mark registry | `methane_pod.marks` (currently inline in `fitting`) | 🚧 — power-law only; lognormal, lognormal-Pareto, mixture-of-lognormals pending |
-| POD models `P_d(·)` (Hill + variants) | [`methane_pod.pod_functions`](projects/methane_pod/src/methane_pod/pod_functions.py) | ✓ (10 models) |
+| POD models `P_d(·)` (Hill + variants) | [`methane_pod.pod_functions`](../../../methane_pod/src/methane_pod/pod_functions.py) | ✓ (10 models) |
 | POD time-of-day binning (v1 time-varying POD) | `methane_pod.pod_functions.tod_binned` | ☐ |
 | POD continuous `P_d(Q, t)` (v2) | `methane_pod.pod_functions.continuous_t` | ☐ |
 | Hierarchical POD calibration prior | `methane_pod.pod_functions.calibration_prior` | ☐ |
-| TMTPP likelihood — point regime | [`methane_pod.fitting.pod_powerlaw_model`](projects/methane_pod/src/methane_pod/fitting.py) | ✓ |
+| TMTPP likelihood — point regime | [`methane_pod.fitting.pod_powerlaw_model`](../../../methane_pod/src/methane_pod/fitting.py) | ✓ |
 | TMTPP likelihood — full importance-corrected regime | `methane_pod.fitting.tmtpp_iw` | ☐ — consumes [`population.adapter.importance`](06a_instantaneous.md#module-layout) |
 | Numerical integration helpers (log-space Gauss-Hermite, Pareto IS) | `methane_pod.fitting.integrate` | ☐ |
 | Hawkes / self-exciting kernel | `methane_pod.intensity.hawkes` | ☐ — beyond the existing kernels |
@@ -161,7 +161,7 @@ Both have library support; the choice is driven by the scientific question, not 
 ## Validation strategy
 
 - **Likelihood gradient.** `jax.grad` matches finite differences within tolerance. Cheap unit test.
-- **Synthetic recovery — Point regime.** Already in [`06_stationary_numpyro_mcmc`](projects/methane_pod/notebooks/06_stationary_numpyro_mcmc.ipynb) for power-law mark.
+- **Synthetic recovery — Point regime.** Already in [`06_stationary_numpyro_mcmc`](../../../methane_pod/notebooks/06_stationary_numpyro_mcmc.ipynb) for power-law mark.
 - **Synthetic recovery — Full regime with importance correction.** Generate per-event posteriors with a known `π_per-event`, fit population, recover `(λ*, f*, P_d*)` within reported posterior. Mirrors the importance-correction round trip from [06a § Validation](06a_instantaneous.md#validation-strategy).
 - **SBC — point.** Across 1000 simulated populations, per-parameter rank statistics uniform.
 - **SBC — soft observation.** Same SBC but with the soft-observation layer (per-event posteriors as input). Validates the cross-tier inference end-to-end.

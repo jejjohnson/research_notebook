@@ -8,7 +8,7 @@ This is the **inventory-grade output** of `plumax` — the number that gets repo
 
 ## The missing-mass paradox
 
-The full Monte Carlo proof is in [`methane_pod/notebooks/03_missing_mass_paradox`](projects/methane_pod/notebooks/03_missing_mass_paradox.ipynb). The result, in one sentence:
+The full Monte Carlo proof is in [`methane_pod/notebooks/03_missing_mass_paradox`](../../../methane_pod/notebooks/03_missing_mass_paradox.ipynb). The result, in one sentence:
 
 > A POD-thinned plume catalog simultaneously **overestimates the average emission rate** (because it oversamples big leaks) and **underestimates the total emitted mass** (because it misses many small leaks).
 
@@ -61,7 +61,7 @@ This is the most important validation set in the whole tier — without it, the 
 - **MC ground truth (bias direction).** Reproduce the qualitative result of the paradox notebook: simulate a known `(λ*, f*, P_d*)`, compute `M_true` exactly, and check that the corrected estimator recovers `M_true` while `M_naive` is biased low.
 - **MC ground truth (calibration).** Across 1000 replicates of the previous test, the 95% credible interval on `M_total` should contain `M_true` ~95% of the time.
 - **Per-satellite sensitivity.** Same population, two different `P_d` (e.g. GHGSat-floor vs. TROPOMI-floor) → corrected estimator should give the same `M_total` posterior. The naive estimator gives wildly different `M_naive`. This is the test that *proves* the correction is doing its job.
-- **Real-data benchmark.** Once [`07_pod_fitting_mcmc`](projects/methane_pod/notebooks/07_pod_fitting_mcmc.md) lands with IMEO + Tanager data, compare the corrected total for a well-studied basin (Permian) to published bottom-up inventories (EPA GHGI, GHGRP) and to top-down inverse-modelling estimates (Lu et al., Sherwin et al.). They will disagree; the question is whether the corrected estimator is *closer* to the top-down number than the naive one.
+- **Real-data benchmark.** Once [`07_pod_fitting_mcmc`](../../../methane_pod/notebooks/07_pod_fitting_mcmc.md) lands with IMEO + Tanager data, compare the corrected total for a well-studied basin (Permian) to published bottom-up inventories (EPA GHGI, GHGRP) and to top-down inverse-modelling estimates (Lu et al., Sherwin et al.). They will disagree; the question is whether the corrected estimator is *closer* to the top-down number than the naive one.
 
 ---
 
@@ -69,8 +69,8 @@ This is the most important validation set in the whole tier — without it, the 
 
 | Concern | Module | Status |
 |---------|--------|--------|
-| Missing-mass MC simulator | [`methane_pod.paradox`](projects/methane_pod/src/methane_pod/paradox.py) | ✓ (NumPy) |
-| Posterior fit | [`methane_pod.fitting`](projects/methane_pod/src/methane_pod/fitting.py) | ✓ (synthetic); 🚧 (real data) |
+| Missing-mass MC simulator | [`methane_pod.paradox`](../../../methane_pod/src/methane_pod/paradox.py) | ✓ (NumPy) |
+| Posterior fit | [`methane_pod.fitting`](../../../methane_pod/src/methane_pod/fitting.py) | ✓ (synthetic); 🚧 (real data) |
 | `M_total` estimator + uncertainty | `plume_simulation.population.totals` | ☐ |
 | Per-satellite calibration loader | `plume_simulation.population.satellite_pod` | ☐ |
 | Multi-satellite fusion | `plume_simulation.population.fusion` | ☐ |
@@ -95,5 +95,5 @@ Open: whether to model **which** satellite detected each event (categorical mark
 
 - **Mass vs. mass-rate.** `M_total(T)` is mass. Most published inventories report mass-rate (Tg / yr). The conversion is `M_total / T`, but `T` for a satellite catalog is fuzzy — what's the effective observing time when satellites overpass intermittently? Document the convention.
 - **Spatial aggregation.** Currently temporal-only. Aggregating `M_total` over a basin requires either a spatial point process (cleaner) or stratifying the sources by facility class and combining (operational shortcut). v1: stratification; v2: spatial CGS / Cox process.
-- **POD parameter sources.** Per-satellite POD parameters can come from (a) fits in [`methane_pod`](projects/methane_pod/) on a held-out catalog, (b) published values from Varon et al. / Cusworth et al., or (c) joint inference with the population. Each has trade-offs around identifiability.
+- **POD parameter sources.** Per-satellite POD parameters can come from (a) fits in [`methane_pod`](../../../methane_pod/) on a held-out catalog, (b) published values from Varon et al. / Cusworth et al., or (c) joint inference with the population. Each has trade-offs around identifiability.
 - **Reporting cadence.** Inventories are annual; satellites are daily-ish. How do we smooth the `M_total` time series? Rolling 30-day window? Bayesian time-series prior on `λ(t)`?

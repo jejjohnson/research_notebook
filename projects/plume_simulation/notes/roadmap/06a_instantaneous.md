@@ -166,8 +166,8 @@ Same physical leak detected by multiple satellites → multiple catalog rows. v1
 
 | Concern | Module | Status |
 |---------|--------|--------|
-| Per-event posterior (Tier I) | [`gauss_plume.inference`](src/plume_simulation/gauss_plume/inference.py) | ✓ — needs to emit `per_event_prior_logpdf` |
-| Per-event posterior (Tier II/III) | [`assimilation.solve`](src/plume_simulation/assimilation/solve.py) | 🚧 |
+| Per-event posterior (Tier I) | [`gauss_plume.inference`](../../src/plume_simulation/gauss_plume/inference.py) | ✓ — needs to emit `per_event_prior_logpdf` |
+| Per-event posterior (Tier II/III) | [`assimilation.solve`](../../src/plume_simulation/assimilation/solve.py) | 🚧 |
 | Per-event posterior export adapter | tier-specific `posterior_export` modules | ☐ |
 | Per-event payload summariser | `plume_simulation.population.adapter.summariser` | ☐ |
 | Per-event prior recall | `plume_simulation.population.adapter.prior_recall` | ☐ |

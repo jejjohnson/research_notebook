@@ -105,9 +105,12 @@ $$
 \Sigma_{\text{post}} &= \bigl(\Phi^{\!\top} \Phi / \sigma_n^2 + \Sigma_w^{-1}\bigr)^{-1} \quad &(M \times M) \\
 \mu_{\text{post}}    &= \Sigma_{\text{post}}\, \Phi^{\!\top} y / \sigma_n^2 \quad &(M,) \\
 \mathbb{E}[f^*]      &= \phi(x^*)^{\!\top} \mu_{\text{post}} \\
-\mathrm{Var}[f^*]    &= \phi(x^*)^{\!\top} \Sigma_{\text{post}}\, \phi(x^*) + \sigma_n^2
+\mathrm{Var}[f^*]    &= \phi(x^*)^{\!\top} \Sigma_{\text{post}}\, \phi(x^*) \\
+\mathrm{Var}[y^*]    &= \mathrm{Var}[f^*] + \sigma_n^2
 \end{aligned}
 $$
+
+(`Var[f*]` is the latent function variance — what you use for CRPS / NLPD on the underlying field; `Var[y*]` adds the observation-noise term and is what you use when comparing predictions to noisy held-out measurements.)
 
 *Engineering consequence.* This is one Cholesky on an `M × M` matrix. You get not just a point prediction, but a full predictive distribution at every test point — gap-filling uncertainty for free. SIREN replaces this entire block with `argmin_w ‖y − Φw‖² + λ‖w‖²` (i.e. ridge regression with a single tuned scalar `λ`), losing the per-point variance and the principled regularization-from-the-prior.
 
@@ -366,8 +369,11 @@ def patch_prior(x_patch):
     weights = jnp.array([0.35, 0.45, 0.20])  # variance shares
 
     # DYMOST-style anisotropy
+    # Spectral covariance scales like (2π/L)², and r_patch = L_∥/L_⊥ ≥ 1, so
+    # the parallel axis carries 1/r² *less* wavenumber variance than the
+    # perpendicular axis (the field varies more rapidly across-stream).
     R = rotation(θ_patch)
-    Σ_ω = R.T @ jnp.diag([1.0, r_patch**2]) @ R
+    Σ_ω = R.T @ jnp.diag([1.0, 1.0 / r_patch**2]) @ R   # [⊥, ∥]
 
     return centres, weights, Σ_ω, σ_patch
 

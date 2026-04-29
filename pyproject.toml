@@ -1,6 +1,6 @@
 [project]
 name = "research_notebook"
-version = "0.1.4"
+version = "0.1.5"
 description = "Research notebook — source code for experiments and notes."
 requires-python = ">=3.12"
 dependencies = []

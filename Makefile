@@ -180,7 +180,7 @@ docs-deploy: ## Deploy documentation to GitHub Pages
 LAB_ROOT ?= .
 LAB_PORT ?= 8888
 
-lab: ## Launch JupyterLab — ROOT=<path> (default: .) PORT=<n> (default: 8888)
+lab: ## Launch JupyterLab — LAB_ROOT=<path> (default: .) LAB_PORT=<n> (default: 8888)
 	@printf "$(YELLOW)>>> Clearing stale processes on ports $(LAB_PORT) and 3001...$(RESET)\n"
 	-@fuser -k $(LAB_PORT)/tcp 2>/dev/null || true
 	-@fuser -k 3001/tcp 2>/dev/null || true

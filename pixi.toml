@@ -39,17 +39,35 @@ mystmd = "*"
 [feature.jupyterlab.dependencies]
 jupyterlab = ">=4"
 ipykernel = ">=6.29"
+# ── git / diff / format ──────────────────────────────────────────────────────
 jupyterlab-git = "*"
+nbdime = "*"
+black = ">=24"
+isort = ">=5"
+# ── language server (LSP) ────────────────────────────────────────────────────
 jupyterlab-lsp = "*"
 jupyter-lsp = "*"
 python-lsp-server = "*"
+# ── interactive widgets & plotting ───────────────────────────────────────────
 jupyterlab-myst = "*"
 ipywidgets = ">=8"
-nbdime = "*"
+ipympl = ">=0.9"          # %matplotlib widget — interactive matplotlib figures
+plotly = ">=5"            # interactive charts; rendered by jupyterlab-plotly
+# ── resource monitoring ──────────────────────────────────────────────────────
+jupyter-resource-usage = "*"   # CPU / RAM badge in status bar
 
 [feature.jupyterlab.pypi-dependencies]
+# ── code quality ─────────────────────────────────────────────────────────────
 jupyterlab-code-formatter = "*"
 jupyterlab-spellchecker = "*"
+pylsp-ruff = "*"               # ruff plugin for python-lsp-server (lint + fix)
+# ── productivity ─────────────────────────────────────────────────────────────
+jupyterlab-execute-time = "*"  # shows execution time below each cell
+jupyterlab-vim = "*"           # vim keybindings
+# ── inspection ───────────────────────────────────────────────────────────────
+lckr-jupyterlab-variableinspector = "*"   # variable inspector panel
+# ── notebook metadata ────────────────────────────────────────────────────────
+watermark = "*"                # %watermark magic: package versions + hw info
 
 [feature.marimo.dependencies]
 marimo = "*"
@@ -234,7 +252,8 @@ docs-serve = "myst start"
 docs-build = "myst build --html"
 
 [feature.jupyterlab.tasks]
-lab = "jupyter lab"
+# Forward port 8888 in VS Code SSH (Ports panel) then open http://localhost:8888
+lab = "jupyter lab --no-browser --port 8888 --NotebookApp.token='' --NotebookApp.password=''"
 
 [feature.marimo.tasks]
 marimo-edit = "marimo edit"

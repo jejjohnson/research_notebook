@@ -175,10 +175,18 @@ docs-deploy: ## Deploy documentation to GitHub Pages
 ##@ Notebooks
 # ===========================================================================
 
-lab: ## Launch JupyterLab on port 8888 — forward the port in VS Code SSH then open http://localhost:8888
-	@printf "$(YELLOW)>>> Starting JupyterLab (port 8888)...$(RESET)\n"
-	@printf "$(BLUE)    Forward port 8888 in VS Code SSH → open http://localhost:8888$(RESET)\n"
-	pixi run -e jupyterlab lab
+LAB_ROOT ?= .
+LAB_PORT ?= 8888
+
+lab: ## Launch JupyterLab — ROOT=<path> (default: .) PORT=<n> (default: 8888)
+	@printf "$(YELLOW)>>> Starting JupyterLab (port $(LAB_PORT), root: $(LAB_ROOT))...$(RESET)\n"
+	@printf "$(BLUE)    Forward port $(LAB_PORT) in VS Code SSH → open http://localhost:$(LAB_PORT)$(RESET)\n"
+	pixi run -e jupyterlab jupyter lab \
+		--no-browser \
+		--port=$(LAB_PORT) \
+		--notebook-dir="$(LAB_ROOT)" \
+		--NotebookApp.token='' \
+		--NotebookApp.password=''
 
 # ===========================================================================
 ##@ GitHub helpers

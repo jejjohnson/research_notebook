@@ -7,162 +7,232 @@ project:
     - references.bib
     - methane.bib
   toc:
-    - file: docs/index
+    - file: docs/index.md
     - title: Notes
       children:
-        - file: docs/notes/background
-        - file: docs/notes/methods
+        - file: docs/notes/background.md
+        - file: docs/notes/methods.md
     - title: Tutorials
       children:
-        - file: docs/tutorials/getting_started
+        - file: docs/tutorials/getting_started.md
     - title: Notebooks
       children:
-        - file: notebooks/README
+        - file: notebooks/README.md
         - title: pyrox
           children:
-            - file: notebooks/pyrox/README
-            - title: GP regression & classification
-              children:
-                - file: notebooks/pyrox/gp/README
-                - file: notebooks/pyrox/gp/exact_gp_regression
-                - file: notebooks/pyrox/gp/latent_gp_classification
+            - file: notebooks/pyrox/README.md
             - title: Regression masterclass
               children:
-                - file: notebooks/pyrox/masterclass/README
-                - file: notebooks/pyrox/masterclass/regression_masterclass_treeat
-                - file: notebooks/pyrox/masterclass/regression_masterclass_pyrox_sample
-                - file: notebooks/pyrox/masterclass/regression_masterclass_parameterized
-            - title: Ensemble methods
-              children:
-                - file: notebooks/pyrox/ensembles/README
-                - file: notebooks/pyrox/ensembles/ensemble_primitives_tutorial
-                - file: notebooks/pyrox/ensembles/ensemble_runner_tutorial
+                - file: notebooks/pyrox/masterclass/README.md
+                - file: notebooks/pyrox/masterclass/regression_masterclass_treeat.ipynb
+                - file: notebooks/pyrox/masterclass/regression_masterclass_pyrox_sample.ipynb
+                - file: notebooks/pyrox/masterclass/regression_masterclass_parameterized.ipynb
         - title: coordax
           children:
-            - file: notebooks/coordax/README
+            - file: notebooks/coordax/README.md
             - title: Foundations
               children:
-                - file: notebooks/coordax/foundations/README
-                - file: notebooks/coordax/foundations/01_create_datasets
-                - file: notebooks/coordax/foundations/02_ops_unary_binary
-                - file: notebooks/coordax/foundations/03_ops_coordinates
-                - file: notebooks/coordax/foundations/04_reductions
+                - file: notebooks/coordax/foundations/README.md
+                - file: notebooks/coordax/foundations/01_create_datasets.ipynb
+                - file: notebooks/coordax/foundations/02_ops_unary_binary.ipynb
+                - file: notebooks/coordax/foundations/03_ops_coordinates.ipynb
+                - file: notebooks/coordax/foundations/04_reductions.ipynb
             - title: Derivatives
               children:
-                - file: notebooks/coordax/derivatives/README
-                - file: notebooks/coordax/derivatives/05_finite_difference
-                - file: notebooks/coordax/derivatives/06_spherical_harmonics_derivatives
-                - file: notebooks/coordax/derivatives/07_finite_volume
+                - file: notebooks/coordax/derivatives/README.md
+                - file: notebooks/coordax/derivatives/05_finite_difference.ipynb
+                - file: notebooks/coordax/derivatives/06_spherical_harmonics_derivatives.ipynb
+                - file: notebooks/coordax/derivatives/07_finite_volume.ipynb
             - title: Dynamics
               children:
-                - file: notebooks/coordax/dynamics/README
-                - file: notebooks/coordax/dynamics/08_ode_integration
-                - file: notebooks/coordax/dynamics/09_ode_parameter_state_estimation
-                - file: notebooks/coordax/dynamics/10_pde_parameter_estimation
+                - file: notebooks/coordax/dynamics/README.md
+                - file: notebooks/coordax/dynamics/08_ode_integration.ipynb
+                - file: notebooks/coordax/dynamics/09_ode_parameter_state_estimation.ipynb
+                - file: notebooks/coordax/dynamics/10_pde_parameter_estimation.ipynb
     - title: Projects
       children:
         - title: Methane PoD
           children:
-            - file: projects/methane_pod/README
-            - file: projects/methane_pod/notebooks/01_mttpp_theory
-            - file: projects/methane_pod/notebooks/02_intensity_zoo
-            - file: projects/methane_pod/notebooks/03_missing_mass_paradox
-            - file: projects/methane_pod/notebooks/04_intensity_gallery
-            - file: projects/methane_pod/notebooks/05_pod_gallery
-            - file: projects/methane_pod/notebooks/06_stationary_numpyro_mcmc
-            - file: projects/methane_pod/notebooks/07_pod_fitting_mcmc
-            - file: projects/methane_pod/notebooks/08_persistency
+            - file: projects/methane_pod/README.md
+            - file: projects/methane_pod/notebooks/01_mttpp_theory.md
+            - file: projects/methane_pod/notebooks/02_intensity_zoo.md
+            - file: projects/methane_pod/notebooks/03_missing_mass_paradox.ipynb
+            - file: projects/methane_pod/notebooks/04_intensity_gallery.ipynb
+            - file: projects/methane_pod/notebooks/05_pod_gallery.ipynb
+            - file: projects/methane_pod/notebooks/06_stationary_numpyro_mcmc.ipynb
+            - file: projects/methane_pod/notebooks/07_pod_fitting_mcmc.md
+            - file: projects/methane_pod/notebooks/08_persistency.md
         - title: Plume simulation
           children:
-            - file: projects/plume_simulation/README
+            - file: projects/plume_simulation/README.md
             - title: Notes
               children:
-                - file: projects/plume_simulation/notes/satellites
-                - file: projects/plume_simulation/notes/roadmap
+                - file: projects/plume_simulation/notes/satellites.ipynb
+                - file: projects/plume_simulation/notes/roadmap.md
                 - title: Roadmap detail
                   children:
-                    - file: projects/plume_simulation/notes/roadmap/README
-                    - file: projects/plume_simulation/notes/roadmap/00_prerequisites
-                    - file: projects/plume_simulation/notes/roadmap/01_tier1_gaussian
-                    - file: projects/plume_simulation/notes/roadmap/02_tier2_lagrangian
-                    - file: projects/plume_simulation/notes/roadmap/03_tier3_eulerian
-                    - file: projects/plume_simulation/notes/roadmap/04_rtm_stack
-                    - file: projects/plume_simulation/notes/roadmap/05_tier4_coupled
-                    - file: projects/plume_simulation/notes/roadmap/06_tier5_population
-                    - file: projects/plume_simulation/notes/roadmap/06a_instantaneous
-                    - file: projects/plume_simulation/notes/roadmap/06b_point_process
-                    - file: projects/plume_simulation/notes/roadmap/06c_persistency
-                    - file: projects/plume_simulation/notes/roadmap/06d_total_emission
+                    - file: projects/plume_simulation/notes/roadmap/README.md
+                    - file: projects/plume_simulation/notes/roadmap/00_prerequisites.md
+                    - file: projects/plume_simulation/notes/roadmap/01_tier1_gaussian.md
+                    - file: projects/plume_simulation/notes/roadmap/02_tier2_lagrangian.md
+                    - file: projects/plume_simulation/notes/roadmap/03_tier3_eulerian.md
+                    - file: projects/plume_simulation/notes/roadmap/04_rtm_stack.md
+                    - file: projects/plume_simulation/notes/roadmap/05_tier4_coupled.md
+                    - file: projects/plume_simulation/notes/roadmap/06_tier5_population.md
+                    - file: projects/plume_simulation/notes/roadmap/06a_instantaneous.md
+                    - file: projects/plume_simulation/notes/roadmap/06b_point_process.md
+                    - file: projects/plume_simulation/notes/roadmap/06c_persistency.md
+                    - file: projects/plume_simulation/notes/roadmap/06d_total_emission.md
             - title: Gaussian plume (steady)
               children:
-                - file: projects/plume_simulation/notebooks/00_gaussian_plume_derivation
-                - file: projects/plume_simulation/notebooks/01_gaussian_plume_forward
-                - file: projects/plume_simulation/notebooks/02_emission_rate_parameter_estimation
-                - file: projects/plume_simulation/notebooks/03_plume_state_estimation
+                - file: projects/plume_simulation/notebooks/00_gaussian_plume_derivation.md
+                - file: projects/plume_simulation/notebooks/01_gaussian_plume_forward.ipynb
+                - file: projects/plume_simulation/notebooks/02_emission_rate_parameter_estimation.ipynb
+                - file: projects/plume_simulation/notebooks/03_plume_state_estimation.ipynb
             - title: Gaussian puff (time-resolved)
               children:
-                - file: projects/plume_simulation/notebooks/gauss_puff/00_gaussian_puff_derivation
-                - file: projects/plume_simulation/notebooks/gauss_puff/01_gaussian_puff_forward
-                - file: projects/plume_simulation/notebooks/gauss_puff/02_emission_rate_parameter_estimation
-                - file: projects/plume_simulation/notebooks/gauss_puff/03_puff_state_estimation
+                - file: projects/plume_simulation/notebooks/gauss_puff/00_gaussian_puff_derivation.md
+                - file: projects/plume_simulation/notebooks/gauss_puff/01_gaussian_puff_forward.ipynb
+                - file: projects/plume_simulation/notebooks/gauss_puff/02_emission_rate_parameter_estimation.ipynb
+                - file: projects/plume_simulation/notebooks/gauss_puff/03_puff_state_estimation.ipynb
             - title: Eulerian dispersion (L2 finite volume)
               children:
-                - file: projects/plume_simulation/notebooks/les_fvm/00_eulerian_dispersion_derivation
-                - file: projects/plume_simulation/notebooks/les_fvm/01_eulerian_dispersion_l2
-                - file: projects/plume_simulation/notebooks/les_fvm/03_puff_vs_eulerian
+                - file: projects/plume_simulation/notebooks/les_fvm/00_eulerian_dispersion_derivation.md
+                - file: projects/plume_simulation/notebooks/les_fvm/01_eulerian_dispersion_l2.ipynb
+                - file: projects/plume_simulation/notebooks/les_fvm/03_puff_vs_eulerian.ipynb
             - title: Beer-Lambert LUT (HAPI)
               children:
-                - file: projects/plume_simulation/notebooks/hapi_lut/00_hapi_lut_derivation
-                - file: projects/plume_simulation/notebooks/hapi_lut/01_hapi_lut_ch4
-                - file: projects/plume_simulation/notebooks/hapi_lut/02_hapi_lut_multigas
-                - file: projects/plume_simulation/notebooks/hapi_lut/03_beers_law_with_lut
+                - file: projects/plume_simulation/notebooks/hapi_lut/00_hapi_lut_derivation.md
+                - file: projects/plume_simulation/notebooks/hapi_lut/01_hapi_lut_ch4.ipynb
+                - file: projects/plume_simulation/notebooks/hapi_lut/02_hapi_lut_multigas.ipynb
+                - file: projects/plume_simulation/notebooks/hapi_lut/03_beers_law_with_lut.ipynb
             - title: Band integration & matched filter
               children:
-                - file: projects/plume_simulation/notebooks/radtran/04_srf_band_integration
-                - file: projects/plume_simulation/notebooks/radtran/05_matched_filter_retrieval
+                - file: projects/plume_simulation/notebooks/radtran/04_srf_band_integration.ipynb
+                - file: projects/plume_simulation/notebooks/radtran/05_matched_filter_retrieval.ipynb
         - title: Gaussianization flows
           children:
-            - file: projects/gaussianization/README
-            - file: projects/gaussianization/survae_flows_proof
-            - file: projects/gaussianization/notebooks/01_gaussianization_2d
-            - file: projects/gaussianization/notebooks/02_coupling_flow_2d
-            - file: projects/gaussianization/notebooks/03_iterative_gaussianization_init
-            - file: projects/gaussianization/notebooks/04_coupling_equivalence
+            - file: projects/gaussianization/README.md
+            - file: projects/gaussianization/survae_flows_proof.md
+            - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
+            - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb
+            - file: projects/gaussianization/notebooks/03_iterative_gaussianization_init.ipynb
+            - file: projects/gaussianization/notebooks/04_coupling_equivalence.ipynb
         - title: Interpolation (SSH reconstruction)
           children:
-            - file: projects/interpolation/README
+            - file: projects/interpolation/README.md
             - title: Pathwise GP for SSH
               children:
-                - file: projects/interpolation/notebooks/00_ssh_pathwise_sampling
-                - file: projects/interpolation/notebooks/01_efficient_machinery
-                - file: projects/interpolation/notebooks/02_physics_aware_ssh
-                - file: projects/interpolation/notebooks/03_global_scaling_patches
-                - file: projects/interpolation/notebooks/04_variational_dynamical_priors
+                - file: projects/interpolation/notebooks/00_ssh_pathwise_sampling.md
+                - file: projects/interpolation/notebooks/01_efficient_machinery.md
+                - file: projects/interpolation/notebooks/02_physics_aware_ssh.md
+                - file: projects/interpolation/notebooks/03_global_scaling_patches.md
+                - file: projects/interpolation/notebooks/04_variational_dynamical_priors.md
             - title: SIREN vs. RFF vs. VSSGP
               children:
-                - file: projects/interpolation/siren_vs_rff/README
-                - file: projects/interpolation/siren_vs_rff/00_siren_rff_vssgp
-                - file: projects/interpolation/siren_vs_rff/01_physics_constraints
+                - file: projects/interpolation/siren_vs_rff/README.md
+                - file: projects/interpolation/siren_vs_rff/00_siren_rff_vssgp.md
+                - file: projects/interpolation/siren_vs_rff/01_physics_constraints.md
         - title: Gaussian processes
           children:
-            - file: projects/gaussian_processes/README
-            - title: SVGP with pyrox
+            - file: projects/gaussian_processes/README.md
+            - title: "00 — Foundations"
               children:
-                - file: projects/gaussian_processes/notebooks/pyroxgp/README
-                - file: projects/gaussian_processes/notebooks/pyroxgp/01_svgp_standard
-                - file: projects/gaussian_processes/notebooks/pyroxgp/02_svgp_batched
-                - file: projects/gaussian_processes/notebooks/pyroxgp/03_svgp_spherical_harmonics
-                - file: projects/gaussian_processes/notebooks/pyroxgp/04_svgp_rff_nn
-            - title: Kronecker GPs + non-Gaussian likelihoods
+                - file: projects/gaussian_processes/notebooks/00_foundations/bayesian_updates.ipynb
+                - file: projects/gaussian_processes/notebooks/00_foundations/conditional_distributions.ipynb
+                - file: projects/gaussian_processes/notebooks/00_foundations/sugar_ops.ipynb
+                - file: projects/gaussian_processes/notebooks/00_foundations/exponential_family.ipynb
+                - file: projects/gaussian_processes/notebooks/00_foundations/differentiating_solve.ipynb
+            - title: "01 — Structured Operators"
               children:
-                - file: projects/gaussian_processes/notebooks/kronecker/README
-                - file: projects/gaussian_processes/notebooks/kronecker/01_spain_extremes
-                - file: projects/gaussian_processes/notebooks/kronecker/02_spain_multiplicative
-                - file: projects/gaussian_processes/notebooks/kronecker/03_spain_nonstationary
-                - file: projects/gaussian_processes/notebooks/kronecker/04_spain_copula
+                - file: projects/gaussian_processes/notebooks/01_operators/basics.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/operator_zoo.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/kronecker_eigen.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/woodbury_solve.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/implicit_kernel.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/solver_strategies.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/solver_comparison.ipynb
+            - title: "02 — Kernels"
+              children:
+                - file: projects/gaussian_processes/notebooks/02_kernels/spectral_kernel_models.ipynb
+                - file: projects/gaussian_processes/notebooks/02_kernels/multioutput_gp.ipynb
+            - title: "03 — Exact GP Regression"
+              children:
+                - file: projects/gaussian_processes/notebooks/03_exact_gp/kernel_regression.ipynb
+                - file: projects/gaussian_processes/notebooks/03_exact_gp/exact_gp_regression.ipynb
+                - file: projects/gaussian_processes/notebooks/03_exact_gp/exact_gp_regression_pyrox.ipynb
+                - file: projects/gaussian_processes/notebooks/03_exact_gp/conditioning.ipynb
+                - file: projects/gaussian_processes/notebooks/03_exact_gp/love_crossval.ipynb
+            - title: "04 — Structured GPs"
+              children:
+                - file: projects/gaussian_processes/notebooks/04_structured_gp/gp_2d_grid.ipynb
+                - file: projects/gaussian_processes/notebooks/04_structured_gp/structured_gp.ipynb
+            - title: "05 — Approximations & Scalability"
+              children:
+                - file: projects/gaussian_processes/notebooks/05_approximations/kernel_approximations.ipynb
+                - file: projects/gaussian_processes/notebooks/05_approximations/kernel_approximation.ipynb
+                - file: projects/gaussian_processes/notebooks/05_approximations/random_fourier_features.ipynb
+                - file: projects/gaussian_processes/notebooks/05_approximations/sparse_variational_gp.ipynb
+                - file: projects/gaussian_processes/notebooks/05_approximations/whitened_svgp.ipynb
+            - title: "06 — Non-Conjugate Likelihoods"
+              children:
+                - file: projects/gaussian_processes/notebooks/06_nongaussian/latent_gp_classification.ipynb
+                - file: projects/gaussian_processes/notebooks/06_nongaussian/latent_gp_classification_pyrox.ipynb
+                - file: projects/gaussian_processes/notebooks/06_nongaussian/advanced_gp_laplace.ipynb
+                - file: projects/gaussian_processes/notebooks/06_nongaussian/advanced_gp_gauss_newton.ipynb
+                - file: projects/gaussian_processes/notebooks/06_nongaussian/advanced_gp_qn.ipynb
+                - file: projects/gaussian_processes/notebooks/06_nongaussian/advanced_gp_pl.ipynb
+                - file: projects/gaussian_processes/notebooks/06_nongaussian/advanced_gp_ep.ipynb
+                - file: projects/gaussian_processes/notebooks/06_nongaussian/expectation_propagation.ipynb
+                - file: projects/gaussian_processes/notebooks/06_nongaussian/natural_gradient_vi.ipynb
+            - title: "07 — State-Space GPs"
+              children:
+                - file: projects/gaussian_processes/notebooks/07_statespace/markov_gp_sde_kernels.ipynb
+                - file: projects/gaussian_processes/notebooks/07_statespace/markov_gp_kalman.ipynb
+                - file: projects/gaussian_processes/notebooks/07_statespace/markov_gp_training.ipynb
+                - file: projects/gaussian_processes/notebooks/07_statespace/markov_gp_nongauss.ipynb
+                - file: projects/gaussian_processes/notebooks/07_statespace/sparse_markov_gp.ipynb
+                - file: projects/gaussian_processes/notebooks/07_statespace/kalman_filter.ipynb
+                - file: projects/gaussian_processes/notebooks/07_statespace/parallel_kalman.ipynb
+                - file: projects/gaussian_processes/notebooks/07_statespace/ensemble_kalman.ipynb
+            - title: "08 — Sampling & Pathwise"
+              children:
+                - file: projects/gaussian_processes/notebooks/08_sampling/gp_pathwise.ipynb
+                - file: projects/gaussian_processes/notebooks/08_sampling/gp_pathwise_numpyro.ipynb
+            - title: "09 — Uncertainty Propagation"
+              children:
+                - file: projects/gaussian_processes/notebooks/09_uq/uncertainty_propagation.ipynb
+                - file: projects/gaussian_processes/notebooks/09_uq/uncertain_gp_inputs.ipynb
+            - title: "10 — PPL Integration"
+              children:
+                - file: projects/gaussian_processes/notebooks/10_ppl/numpyro_gp.ipynb
+                - file: projects/gaussian_processes/notebooks/10_ppl/numpyro_precision.ipynb
+            - title: "11 — Ensembles"
+              children:
+                - file: projects/gaussian_processes/notebooks/11_ensembles/ensemble_primitives_tutorial.ipynb
+                - file: projects/gaussian_processes/notebooks/11_ensembles/ensemble_runner_tutorial.ipynb
+            - title: "12 — Data Pipelines"
+              children:
+                - file: projects/gaussian_processes/notebooks/12_data/spatiotemporal_preprocessing.ipynb
+            - title: "13 — Applied Case Studies"
+              children:
+                - title: SVGP on climate data
+                  children:
+                    - file: projects/gaussian_processes/notebooks/13_applied/svgp_climate/README.md
+                    - file: projects/gaussian_processes/notebooks/13_applied/svgp_climate/01_svgp_standard.ipynb
+                    - file: projects/gaussian_processes/notebooks/13_applied/svgp_climate/02_svgp_batched.ipynb
+                    - file: projects/gaussian_processes/notebooks/13_applied/svgp_climate/03_svgp_spherical_harmonics.ipynb
+                    - file: projects/gaussian_processes/notebooks/13_applied/svgp_climate/04_svgp_rff_nn.ipynb
+                - title: Spatial extremes (Spain temperature)
+                  children:
+                    - file: projects/gaussian_processes/notebooks/13_applied/spatial_extremes/README.md
+                    - file: projects/gaussian_processes/notebooks/13_applied/spatial_extremes/01_spain_extremes.ipynb
+                    - file: projects/gaussian_processes/notebooks/13_applied/spatial_extremes/02_spain_multiplicative.ipynb
+                    - file: projects/gaussian_processes/notebooks/13_applied/spatial_extremes/03_spain_nonstationary.ipynb
+                    - file: projects/gaussian_processes/notebooks/13_applied/spatial_extremes/04_spain_copula.ipynb
     - title: API Reference
       children:
-        - file: docs/api/reference
+        - file: docs/api/reference.md
 site:
   template: book-theme
   title: Research Notebook

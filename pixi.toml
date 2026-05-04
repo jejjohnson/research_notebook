@@ -53,8 +53,13 @@ jupyterlab-myst = "*"
 ipywidgets = ">=8"
 ipympl = ">=0.9"          # %matplotlib widget — interactive matplotlib figures
 plotly = ">=5"            # interactive charts
-# ── resource monitoring ──────────────────────────────────────────────────────
-jupyter-resource-usage = "*"   # CPU / RAM badge in status bar
+# ── resource & GPU monitoring ────────────────────────────────────────────────
+jupyter-resource-usage = "*"      # CPU / RAM panel + status bar badge
+jupyterlab-nvdashboard = "*"      # NVIDIA GPU utilisation / memory dashboard
+# ── dask ─────────────────────────────────────────────────────────────────────
+dask = "*"                        # core dask (arrays, dataframes, delayed)
+distributed = "*"                 # dask distributed scheduler
+dask-labextension = "*"           # task stream, progress, worker memory panels
 # ── geospatial widgets & extensions ──────────────────────────────────────────
 ipyleaflet = ">=0.19"    # interactive Leaflet map widget (pan, zoom, layers)
 folium = ">=0.18"        # Leaflet maps rendered to static HTML in cells
@@ -74,6 +79,9 @@ jupyterlab-geojson = "*"       # renders .geojson files as interactive maps in t
 lckr-jupyterlab-variableinspector = "*"   # variable inspector panel
 # ── notebook metadata ────────────────────────────────────────────────────────
 watermark = "*"                # %watermark magic: package versions + hw info
+# ── AI assistant ─────────────────────────────────────────────────────────────
+jupyter-ai = "*"               # chat panel + %%ai magic; supports Claude via langchain-anthropic
+langchain-anthropic = "*"      # Anthropic/Claude backend for jupyter-ai
 
 [feature.marimo.dependencies]
 marimo = "*"

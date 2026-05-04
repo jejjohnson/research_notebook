@@ -56,6 +56,7 @@ RESET  := \033[0m
 # ---------------------------------------------------------------------------
 .PHONY: help install lint format typecheck test test-cov \
 	precommit build clean version docs docs-serve docs-deploy \
+	lab \
 	init gh-labels gh-sub gh-block gh-show
 
 .DEFAULT_GOAL := help
@@ -169,6 +170,15 @@ docs-serve: ## Serve documentation locally (app on 3000, assets on 3100)
 docs-deploy: ## Deploy documentation to GitHub Pages
 	uv run --group docs myst build --html
 	uv run --group docs ghp-import -n -p _build/html
+
+# ===========================================================================
+##@ Notebooks
+# ===========================================================================
+
+lab: ## Launch JupyterLab on port 8888 — forward the port in VS Code SSH then open http://localhost:8888
+	@printf "$(YELLOW)>>> Starting JupyterLab (port 8888)...$(RESET)\n"
+	@printf "$(BLUE)    Forward port 8888 in VS Code SSH → open http://localhost:8888$(RESET)\n"
+	pixi run -e jupyterlab lab
 
 # ===========================================================================
 ##@ GitHub helpers

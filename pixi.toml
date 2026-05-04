@@ -58,8 +58,10 @@ jupyter-resource-usage = "*"   # CPU / RAM badge in status bar
 # ── geospatial widgets & extensions ──────────────────────────────────────────
 ipyleaflet = ">=0.19"    # interactive Leaflet map widget (pan, zoom, layers)
 folium = ">=0.18"        # Leaflet maps rendered to static HTML in cells
-leafmap = ">=0.40"       # high-level geo analysis built on ipyleaflet
+leafmap = ">=0.40"       # high-level geo analysis + STAC browsing on ipyleaflet
 pydeck = ">=0.9"         # deck.gl WebGL tile + point-cloud maps
+jupytergis = ">=0.5"     # QGIS-style layer panel, reads .qgz/.jGIS, collaborative editing
+keplergl = ">=0.3"       # GPU-accelerated large point-cloud + temporal visualization
 
 [feature.jupyterlab.pypi-dependencies]
 # ── code quality ─────────────────────────────────────────────────────────────

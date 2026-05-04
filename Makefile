@@ -179,6 +179,9 @@ LAB_ROOT ?= .
 LAB_PORT ?= 8888
 
 lab: ## Launch JupyterLab — ROOT=<path> (default: .) PORT=<n> (default: 8888)
+	@printf "$(YELLOW)>>> Clearing stale processes on ports $(LAB_PORT) and 3001...$(RESET)\n"
+	-@fuser -k $(LAB_PORT)/tcp 2>/dev/null || true
+	-@fuser -k 3001/tcp 2>/dev/null || true
 	@printf "$(YELLOW)>>> Starting JupyterLab (port $(LAB_PORT), root: $(LAB_ROOT))...$(RESET)\n"
 	@printf "$(BLUE)    Forward port $(LAB_PORT) in VS Code SSH → open http://localhost:$(LAB_PORT)$(RESET)\n"
 	pixi run -e jupyterlab jupyter lab \

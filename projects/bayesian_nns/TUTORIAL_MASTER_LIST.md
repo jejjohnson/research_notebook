@@ -2,7 +2,7 @@
 
 A reconciled, exhaustive curriculum for the **Bayesian deep learning** half of the suite. Covers basis-function / linear-model regression as the foundation, neural fields / implicit neural representations / NeRFs, and Bayesian neural networks proper.
 
-> Pure-GP tutorials live in [`gp_tutorial_master_list.md`](gp_tutorial_master_list.md). Cross-listed items (RFF, deep kernels, last-layer-Bayes, BLR) are flagged 🔁.
+> Pure-GP tutorials live in [`../gaussian_processes/TUTORIAL_MASTER_LIST.md`](../gaussian_processes/TUTORIAL_MASTER_LIST.md). Cross-listed items (RFF, deep kernels, last-layer-Bayes, BLR) are flagged 🔁.
 
 **Legend** — Source columns:
 - `G` = exists in gaussx (`docs/notebooks/<name>`)

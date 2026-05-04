@@ -2,7 +2,7 @@
 
 A reconciled, exhaustive curriculum spanning what currently exists in **gaussx**, **pyrox**, and **research_notebook**, plus gaps surfaced from the gaussx + pyrox public APIs, open GitHub issues, and pyrox `design_docs/`. Goal: the most complete GP tutorial sequence we could ship.
 
-> Bayesian NN / NeRF / basis-function-regression tutorials live in [`bnn_tutorial_master_list.md`](bnn_tutorial_master_list.md). Cross-listed items (RFF, deep kernels, BLR, last-layer-Bayes) are flagged 🔁.
+> Bayesian NN / NeRF / basis-function-regression tutorials live in [`../bayesian_nns/TUTORIAL_MASTER_LIST.md`](../bayesian_nns/TUTORIAL_MASTER_LIST.md). Cross-listed items (RFF, deep kernels, BLR, last-layer-Bayes) are flagged 🔁.
 
 **Legend** — Source columns:
 - `G` = exists in gaussx (`docs/notebooks/<name>`)

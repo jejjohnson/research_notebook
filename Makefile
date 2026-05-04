@@ -165,6 +165,8 @@ docs: ## Build documentation with MyST
 	uv run --group docs myst build --html
 
 docs-serve: ## Serve documentation locally (app on 3000, assets on 3100)
+	-@fuser -k 3000/tcp 2>/dev/null || true
+	-@fuser -k 3100/tcp 2>/dev/null || true
 	uv run --group docs myst start --port 3000 --server-port 3100
 
 docs-deploy: ## Deploy documentation to GitHub Pages

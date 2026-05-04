@@ -275,7 +275,7 @@ evaluate = "python scripts/evaluate.py"
 preprocess = "python scripts/preprocess.py"
 
 [feature.docs.tasks]
-docs-serve = "myst start"
+docs-serve = "myst start --port 3000 --server-port 3100"
 docs-build = "myst build --html"
 
 [feature.jupyterlab.tasks]

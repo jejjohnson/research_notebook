@@ -60,6 +60,17 @@ jupyterlab-nvdashboard = "*"      # NVIDIA GPU utilisation / memory dashboard
 dask = "*"                        # core dask (arrays, dataframes, delayed)
 distributed = "*"                 # dask distributed scheduler
 dask-labextension = "*"           # task stream, progress, worker memory panels
+# ── data stack (marimo-compatible) ───────────────────────────────────────────
+duckdb = ">=1"            # in-process analytical SQL
+polars = ">=1"            # fast dataframes
+pyarrow = "*"             # columnar memory + parquet I/O
+altair = ">=5"            # declarative Vega-Lite charts
+anywidget = "*"           # custom widget protocol (used by marimo + others)
+# ── dashboarding & linked plots ───────────────────────────────────────────────
+holoviews = ">=1.19"      # declarative linked interactive plots (hvPlot backend)
+geoviews = ">=1.12"       # geographic HoloViews — choropleth, tiles, projections
+panel = ">=1.4"           # reactive dashboarding; HoloViews / GeoViews server
+hvplot = ">=0.10"         # high-level .hvplot() API over pandas/xarray/polars
 # ── geospatial widgets & extensions ──────────────────────────────────────────
 ipyleaflet = ">=0.19"    # interactive Leaflet map widget (pan, zoom, layers)
 folium = ">=0.18"        # Leaflet maps rendered to static HTML in cells
@@ -68,6 +79,8 @@ jupytergis = ">=0.5"     # QGIS-style layer panel, reads .qgz/.jGIS, collaborati
 keplergl = ">=0.3"       # GPU-accelerated large point-cloud + temporal visualization
 
 [feature.jupyterlab.pypi-dependencies]
+# ── data stack ───────────────────────────────────────────────────────────────
+vegafusion = {version = ">=2", extras = ["embed"]}  # server-side Vega-Lite transforms for Altair
 # ── code quality ─────────────────────────────────────────────────────────────
 jupyterlab-code-formatter = "*"
 jupyterlab-spellchecker = "*"

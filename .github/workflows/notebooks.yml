@@ -5,6 +5,7 @@ on:
     paths:
       - 'notebooks/**'
       - 'docs/**/*.ipynb'
+      - 'projects/**/*.ipynb'
 
 permissions:
   contents: read
@@ -24,8 +25,10 @@ jobs:
           pixi run -e jupyterlab python - <<'PY'
           import pathlib, sys, nbformat
           failed = []
-          for nb in list(pathlib.Path("notebooks").rglob("*.ipynb")) + list(
-              pathlib.Path("docs").rglob("*.ipynb")
+          for nb in (
+              list(pathlib.Path("notebooks").rglob("*.ipynb"))
+              + list(pathlib.Path("docs").rglob("*.ipynb"))
+              + list(pathlib.Path("projects").rglob("*.ipynb"))
           ):
               try:
                   nbformat.validate(nbformat.read(nb, as_version=4))

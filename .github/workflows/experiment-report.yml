@@ -30,6 +30,6 @@ jobs:
           pixi run dvc status >> report.md || echo "DVC status unavailable." >> report.md
         continue-on-error: true
       - name: Comment on PR
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           path: report.md

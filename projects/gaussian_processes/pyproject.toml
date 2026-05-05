@@ -20,7 +20,9 @@ dependencies = [
 
 [project.optional-dependencies]
 # Pulled in by the notebooks (plots, IPython display).
-notebooks = ["matplotlib", "ipython", "ipykernel>=6.29"]
+# `seaborn` is required by gaussian_quantities.ipynb for the joint+marginal
+# KDE comparison of forward-vs-reverse KL fits.
+notebooks = ["matplotlib", "seaborn>=0.13", "ipython", "ipykernel>=6.29"]
 dev = ["pytest>=8", "pytest-xdist>=3.5"]
 
 [build-system]
@@ -30,10 +32,4 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/gaussian_processes"]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-v"
-filterwarnings = [
-    "ignore::DeprecationWarning",
-    "ignore::UserWarning",
-]
+# No pytest config: this subproject is notebook-only, no test suite yet.

@@ -28,9 +28,9 @@ A reconciled, exhaustive curriculum spanning what currently exists in **gaussx**
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.1 | The Multivariate Gaussian: density, sampling, conditioning | — | 🧱 | **GAP** — pedagogical entry |
-| 0.2 | `MultivariateNormal` & `MultivariateNormalPrecision` distribution API | — | 🧱 | **GAP** |
-| 0.3 | Quadratic forms, entropy, KL between Gaussians | — | 🧱 | **GAP** — api: `gaussian_entropy`, `dist_kl_divergence`, `kl_standard_normal`, `quadratic_form` |
+| 0.1 | [The Multivariate Gaussian: density, sampling, conditioning](notebooks/00_foundations/multivariate_gaussian.ipynb) | R `multivariate_gaussian` | 🧱 | pedagogical entry — three sampling routes, marginal & Schur conditioning, jitter |
+| 0.2 | [`MultivariateNormal` & `MultivariateNormalPrecision` distribution API](notebooks/00_foundations/mvn_distribution_api.ipynb) | R `mvn_distribution_api` | 🧱 | covariance vs precision parameterisation, GMRF / banded Λ, round-trip equivalence |
+| 0.3 | [Quadratic forms, entropy, KL between Gaussians](notebooks/00_foundations/gaussian_quantities.ipynb) | R `gaussian_quantities` | 🧱 | api: `gaussian_entropy`, `dist_kl_divergence`, `kl_standard_normal`, `quadratic_form`, `gaussian_expected_log_lik` — extended to cover score, cross-entropy, expected log-likelihood, mutual information, mini-ELBO |
 
 ### 0.B — Parameterizations
 

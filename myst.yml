@@ -136,8 +136,12 @@ project:
         - title: Gaussian processes
           children:
             - file: projects/gaussian_processes/README.md
+            - file: projects/gaussian_processes/TUTORIAL_MASTER_LIST.md
             - title: "00 — Foundations"
               children:
+                - file: projects/gaussian_processes/notebooks/00_foundations/multivariate_gaussian.ipynb
+                - file: projects/gaussian_processes/notebooks/00_foundations/mvn_distribution_api.ipynb
+                - file: projects/gaussian_processes/notebooks/00_foundations/gaussian_quantities.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/bayesian_updates.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/conditional_distributions.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/sugar_ops.ipynb

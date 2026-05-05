@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.5](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.4...research_notebook-v0.1.5) (2026-05-05)
+
+
+### Features
+
+* **gaussian-processes:** consolidate GP notebooks into structured project ([#39](https://github.com/jejjohnson/research_notebook/issues/39)) ([21fc7d0](https://github.com/jejjohnson/research_notebook/commit/21fc7d0970ca31aec4daf45fff1626bb33764264))
+* **jupyterlab:** bells-and-whistles JupyterLab environment with geo, dask, AI, and dashboarding ([#40](https://github.com/jejjohnson/research_notebook/issues/40)) ([9778bfe](https://github.com/jejjohnson/research_notebook/commit/9778bfec333b3fa1fb29302efe43f41556d7e3cb))
+
+
+### Documentation
+
+* **interpolation:** fix anisotropy scaling and Var[f*] labelling ([#37](https://github.com/jejjohnson/research_notebook/issues/37)) ([ae95dde](https://github.com/jejjohnson/research_notebook/commit/ae95ddecac6b58196fc01fb4459860c9323ff436))
+* plume simulation roadmap notes + satellites + methane bib ([#36](https://github.com/jejjohnson/research_notebook/issues/36)) ([c7e7e5c](https://github.com/jejjohnson/research_notebook/commit/c7e7e5c00d8dc972fe1907d2ea6fb6016e6b5f07))
+
 ## [0.1.4](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.3...research_notebook-v0.1.4) (2026-04-28)
 
 

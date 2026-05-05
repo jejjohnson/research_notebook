@@ -53,9 +53,9 @@ A reconciled, exhaustive curriculum spanning what currently exists in **gaussx**
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.6 | Bayesian updates from scratch (sequential conjugate) | G `bayesian_updates` | 🧱 | |
-| 0.7 | Conditional distributions & Schur complement | G `conditional_distributions`, G `sugar_ops` | 🧱 | merge candidates |
-| 0.8 | Structured MVN sampling dispatch | — | 🧱 | **GAP** — gh:gaussx#78 |
+| 0.6 | [Bayesian updates from scratch (sequential conjugate)](notebooks/00_foundations/bayesian_updates.ipynb) | R `bayesian_updates` | 🧱 | natural-form addition recursion, batch = sequential = any order, GP regression as single application |
+| 0.7 | [Conditional distributions & Schur complement](notebooks/00_foundations/conditional_distributions.ipynb) | R `conditional_distributions` | 🧱 | api: `gaussx.conditional`, `schur_complement`, `conditional_variance`, `cov_transform`; GP regression as joint conditioning |
+| 0.8 | [Structured MVN sampling dispatch](notebooks/00_foundations/structured_sampling.ipynb) | R `structured_sampling` | 🧱 | api: `gaussx.cholesky`, `gaussx.sqrt`; dispatch on Diagonal / Kronecker / BlockDiag / BlockTriDiag; LowRank additive sampling; fast-sampling tracking issues [gaussx#168](https://github.com/jejjohnson/gaussx/issues/168) (Toeplitz), [#169](https://github.com/jejjohnson/gaussx/issues/169) (KroneckerSum), [#170](https://github.com/jejjohnson/gaussx/issues/170) (SumKronecker) |
 
 ### 0.D — Numerical Mechanics
 

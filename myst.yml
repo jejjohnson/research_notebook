@@ -146,6 +146,7 @@ project:
                 - file: projects/gaussian_processes/notebooks/00_foundations/joseph_form_update.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/bayesian_updates.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/conditional_distributions.ipynb
+                - file: projects/gaussian_processes/notebooks/00_foundations/structured_sampling.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/sugar_ops.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/exponential_family.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/differentiating_solve.ipynb

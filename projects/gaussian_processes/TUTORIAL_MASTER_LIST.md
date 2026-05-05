@@ -87,13 +87,12 @@ A reconciled, exhaustive curriculum spanning what currently exists in **gaussx**
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 1.1 | Operator basics: Kronecker, BlockDiag, LowRankUpdate, Diagonal | G `basics`, G `operator_zoo` | 🧱 | merge candidates |
-| 1.2 | Sum/Product/Scaled lazy operator algebra | — | 🧱 | **GAP** — `_lazy_algebra` |
-| 1.3 | KroneckerSum vs SumKronecker (additive structure) | — | 🧱 | **GAP** |
-| 1.4 | Toeplitz operators for stationary time series | — | 🧱 | **GAP** — api: `Toeplitz` |
-| 1.5 | Block tri-diagonal operators (Kalman precision form) | — | 🧱 | **GAP** — api: `BlockTriDiag`, `LowerBlockTriDiag`, `UpperBlockTriDiag` |
-| 1.6 | Masked operators for missing data | — | 🧱 | **GAP** — api: `MaskedOperator` |
-| 1.7 | Structural tags & isinstance dispatch | — | 🧱 | **GAP** — `_tags.py` |
+| 1.1 | Operator basics + structural tags & dispatch (Dense, Diagonal, Kronecker, BlockDiag, LowRankUpdate; tag inventory; isinstance dispatch; bring-your-own-operator Circulant demo) | G `operator_basics` | 🧱 | ✅ merged 1.1+1.7; replaces former `basics`/`operator_zoo` stubs |
+| 1.2 | Lazy operator algebra (Sum, Scaled, Product) | G `lazy_algebra` | 🧱 | ✅ |
+| 1.3 | KroneckerSum vs SumKronecker (additive vs superposed) | G `kronecker_sum_vs_sum_kronecker` | 🧱 | ✅ |
+| 1.4 | Toeplitz operators for stationary 1-D / 2-D grids | G `toeplitz` | 🧱 | ✅ |
+| 1.5 | BlockTriDiag (Markov / Kalman precision form) + Lower/Upper variants | G `block_tridiag` | 🧱 | ✅ |
+| 1.6 | MaskedOperator for missing data on a structured grid (MVN / Toeplitz / Kron / BlockTriDiag bases) | G `masked_operator` | 🧱 | ✅ |
 
 ### 1.B — Matrix Identities & Decompositions
 

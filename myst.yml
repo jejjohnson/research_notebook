@@ -155,8 +155,12 @@ project:
                 - file: projects/gaussian_processes/notebooks/00_foundations/exponential_family.ipynb
             - title: "01 — Structured Operators"
               children:
-                - file: projects/gaussian_processes/notebooks/01_operators/basics.ipynb
-                - file: projects/gaussian_processes/notebooks/01_operators/operator_zoo.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/operator_basics.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/lazy_algebra.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/kronecker_sum_vs_sum_kronecker.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/toeplitz.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/block_tridiag.ipynb
+                - file: projects/gaussian_processes/notebooks/01_operators/masked_operator.ipynb
                 - file: projects/gaussian_processes/notebooks/01_operators/kronecker_eigen.ipynb
                 - file: projects/gaussian_processes/notebooks/01_operators/woodbury_solve.ipynb
                 - file: projects/gaussian_processes/notebooks/01_operators/implicit_kernel.ipynb

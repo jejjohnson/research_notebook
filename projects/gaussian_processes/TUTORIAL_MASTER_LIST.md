@@ -37,12 +37,10 @@ A reconciled, exhaustive curriculum spanning what currently exists in **gaussx**
 **Key equations / models:**
 - Natural parameters: $\eta_1 = \Sigma^{-1}\mu$, $\eta_2 = -\tfrac{1}{2}\Sigma^{-1}$
 - Expectation parameters: $m_1 = \mu$, $m_2 = \Sigma + \mu\mu^\top$
-- Joseph-form covariance update: $P^+ = (I-KH)\,P\,(I-KH)^\top + KRK^\top$ (numerically stable)
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
 | 0.4 | [Three parameterizations: mean-cov ↔ natural ↔ expectation](notebooks/00_foundations/natural_parameters.ipynb) | R `natural_parameters` | 🧱 | api: `mean_cov_to_natural`, `natural_to_mean_cov`, `natural_to_expectation`, `expectation_to_natural`, `damped_natural_update` — round-trip identities, conjugate update as natural-form addition, moment matching, damped VI/EP primitive, use-case map across the curriculum |
-| 0.5 | [Joseph-form covariance update](notebooks/00_foundations/joseph_form_update.ipynb) | R `joseph_form_update` | 🧱 | four equivalent covariance updates (standard / symmetric / information / Joseph), float32 stress test, connection to natural-parameter addition |
 
 ### 0.C — Bayesian Updates & Conditioning
 
@@ -60,17 +58,20 @@ A reconciled, exhaustive curriculum spanning what currently exists in **gaussx**
 ### 0.D — Numerical Mechanics
 
 **Key equations / models:**
+- Joseph-form covariance update: $P^+ = (I-KH)\,P\,(I-KH)^\top + KRK^\top$ (PSD-preserving)
 - Cholesky: $A = LL^\top$, $\log|A| = 2\sum_i \log L_{ii}$
 - Implicit diff through `solve`: $\partial_\theta x = A^{-1}(\partial_\theta b - (\partial_\theta A)\,x)$
+- Jacobi's formula: $\partial_\theta \log|A| = \mathrm{tr}(A^{-1}\partial_\theta A)$
 - Jitter / safe Cholesky: $A + \epsilon I$, doubling $\epsilon$ until SPD
-- Stable RBF: $k(x,x') = \sigma^2\exp(-\tfrac{1}{2\ell^2}\|x-x'\|^2)$ via log-sum-exp on squared distances
+- Stable squared distances: mixed-precision $\|x-z\|^2$ to avoid catastrophic cancellation
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.9 | Cholesky, log-det, trace primitives tour | — | 🧱 | **GAP** |
-| 0.10 | Differentiating through `solve` (implicit diff) | G `differentiating_solve` | 🧱 | |
-| 0.11 | Numerical stability: `add_jitter`, `safe_cholesky`, condition number | — | 🧱 | **GAP** — api: gaussx `_linalg` |
-| 0.12 | Stable RBF & squared distances | — | 🧱 | **GAP** — api: `stable_rbf_kernel`, `stable_squared_distances` |
+| 0.5 | [Joseph-form covariance update](notebooks/00_foundations/joseph_form_update.ipynb) | R `joseph_form_update` | 🧱 | four equivalent covariance updates (standard / symmetric / information / Joseph), float32 stress test, connection to natural-parameter addition; **preservation** counterpart to 0.11's **recovery** tools |
+| 0.9 | [Cholesky, log-det, trace primitives tour](notebooks/00_foundations/cholesky_logdet_trace.ipynb) | R `cholesky_logdet_trace` | 🧱 | api: `gaussx.cholesky`, `gaussx.logdet`, `gaussx.trace`, `gaussx.diag` — closed-form identities / compute / storage tables, theoretical-order plots, Hutchinson stochastic trace |
+| 0.10 | [Differentiating through `solve`](notebooks/00_foundations/differentiating_solve.ipynb) | R `differentiating_solve` | 🧱 | implicit-function-theorem JVP/VJP via lineax, Jacobi's formula for `logdet` gradients, GP marginal-likelihood ascent in one `jax.grad` call |
+| 0.11 | [Numerical stability: jitter, safe Cholesky, condition number](notebooks/00_foundations/numerical_stability.ipynb) | R `numerical_stability` | 🧱 | api: `gaussx.add_jitter`, `gaussx.safe_cholesky` — condition-number diagnostic, bias–stability U-curve trade-off, float32 stress; jitter as **recovery** vs Joseph as **preservation** |
+| 0.12 | [Stable RBF & squared distances](notebooks/00_foundations/stable_rbf_distances.ipynb) | R `stable_rbf_distances` | 🧱 | api: `gaussx.stable_rbf_kernel`, `gaussx.stable_squared_distances` — mixed-precision recipe, catastrophic cancellation, three-stage robustness pipeline (stable distances → jitter / safe Cholesky → Joseph form) |
 
 ## Part 1 — Structured Linear Operators
 

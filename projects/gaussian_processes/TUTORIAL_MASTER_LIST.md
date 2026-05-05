@@ -41,8 +41,8 @@ A reconciled, exhaustive curriculum spanning what currently exists in **gaussx**
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.4 | Mean-cov ↔ natural parameter conversions | G `exponential_family` | 🧱 | |
-| 0.5 | Joseph-form covariance update (standalone) | — | 🧱 | **GAP** — currently buried in `ensemble_kalman` |
+| 0.4 | [Three parameterizations: mean-cov ↔ natural ↔ expectation](notebooks/00_foundations/natural_parameters.ipynb) | R `natural_parameters` | 🧱 | api: `mean_cov_to_natural`, `natural_to_mean_cov`, `natural_to_expectation`, `expectation_to_natural`, `damped_natural_update` — round-trip identities, conjugate update as natural-form addition, moment matching, damped VI/EP primitive, use-case map across the curriculum |
+| 0.5 | [Joseph-form covariance update](notebooks/00_foundations/joseph_form_update.ipynb) | R `joseph_form_update` | 🧱 | four equivalent covariance updates (standard / symmetric / information / Joseph), float32 stress test, connection to natural-parameter addition |
 
 ### 0.C — Bayesian Updates & Conditioning
 

@@ -185,13 +185,11 @@ lab: ## Launch JupyterLab — LAB_ROOT=<path> (default: .) LAB_PORT=<n> (default
 	-@fuser -k $(LAB_PORT)/tcp 2>/dev/null || true
 	-@fuser -k 3001/tcp 2>/dev/null || true
 	@printf "$(YELLOW)>>> Starting JupyterLab (port $(LAB_PORT), root: $(LAB_ROOT))...$(RESET)\n"
-	@printf "$(BLUE)    Forward port $(LAB_PORT) in VS Code SSH → open http://localhost:$(LAB_PORT)$(RESET)\n"
+	@printf "$(BLUE)    Forward port $(LAB_PORT) in VS Code SSH → open the URL printed below$(RESET)\n"
 	pixi run -e jupyterlab jupyter lab \
 		--no-browser \
 		--port=$(LAB_PORT) \
-		--notebook-dir="$(LAB_ROOT)" \
-		--NotebookApp.token='' \
-		--NotebookApp.password=''
+		--notebook-dir="$(LAB_ROOT)"
 
 # ===========================================================================
 ##@ GitHub helpers

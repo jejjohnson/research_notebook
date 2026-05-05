@@ -279,8 +279,10 @@ docs-serve = "myst start --port 3000 --server-port 3100"
 docs-build = "myst build --html"
 
 [feature.jupyterlab.tasks]
-# Forward port 8888 in VS Code SSH (Ports panel) then open http://localhost:8888
-lab = "jupyter lab --no-browser --port 8888 --NotebookApp.token='' --NotebookApp.password=''"
+# Forward port 8888 in VS Code SSH (Ports panel), then open the URL printed
+# on stdout — Jupyter's default token-based auth stays enabled. To disable
+# auth for a trusted local-only setup, run with --NotebookApp.token='' opt-in.
+lab = "jupyter lab --no-browser --port 8888"
 
 [feature.marimo.tasks]
 marimo-edit = "marimo edit"

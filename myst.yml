@@ -142,6 +142,8 @@ project:
                 - file: projects/gaussian_processes/notebooks/00_foundations/multivariate_gaussian.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/mvn_distribution_api.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/gaussian_quantities.ipynb
+                - file: projects/gaussian_processes/notebooks/00_foundations/natural_parameters.ipynb
+                - file: projects/gaussian_processes/notebooks/00_foundations/joseph_form_update.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/bayesian_updates.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/conditional_distributions.ipynb
                 - file: projects/gaussian_processes/notebooks/00_foundations/sugar_ops.ipynb

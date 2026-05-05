@@ -39,17 +39,62 @@ mystmd = "*"
 [feature.jupyterlab.dependencies]
 jupyterlab = ">=4"
 ipykernel = ">=6.29"
+# ── git / diff / format ──────────────────────────────────────────────────────
 jupyterlab-git = "*"
+nbdime = "*"
+black = ">=24"
+isort = ">=5"
+# ── language server (LSP) ────────────────────────────────────────────────────
 jupyterlab-lsp = "*"
 jupyter-lsp = "*"
 python-lsp-server = "*"
+# ── interactive widgets & plotting ───────────────────────────────────────────
 jupyterlab-myst = "*"
 ipywidgets = ">=8"
-nbdime = "*"
+ipympl = ">=0.9"          # %matplotlib widget — interactive matplotlib figures
+plotly = ">=5"            # interactive charts
+# ── resource & GPU monitoring ────────────────────────────────────────────────
+jupyter-resource-usage = "*"      # CPU / RAM panel + status bar badge
+jupyterlab-nvdashboard = "*"      # NVIDIA GPU utilisation / memory dashboard
+# ── dask ─────────────────────────────────────────────────────────────────────
+dask = "*"                        # core dask (arrays, dataframes, delayed)
+distributed = "*"                 # dask distributed scheduler
+dask-labextension = "*"           # task stream, progress, worker memory panels
+# ── data stack (marimo-compatible) ───────────────────────────────────────────
+duckdb = ">=1"            # in-process analytical SQL
+polars = ">=1"            # fast dataframes
+pyarrow = "*"             # columnar memory + parquet I/O
+altair = ">=5"            # declarative Vega-Lite charts
+anywidget = "*"           # custom widget protocol (used by marimo + others)
+# ── dashboarding & linked plots ───────────────────────────────────────────────
+holoviews = ">=1.19"      # declarative linked interactive plots (hvPlot backend)
+geoviews = ">=1.12"       # geographic HoloViews — choropleth, tiles, projections
+panel = ">=1.4"           # reactive dashboarding; HoloViews / GeoViews server
+hvplot = ">=0.10"         # high-level .hvplot() API over pandas/xarray/polars
+# ── geospatial widgets & extensions ──────────────────────────────────────────
+ipyleaflet = ">=0.19"    # interactive Leaflet map widget (pan, zoom, layers)
+folium = ">=0.18"        # Leaflet maps rendered to static HTML in cells
+leafmap = ">=0.40"       # high-level geo analysis + STAC browsing on ipyleaflet
+jupytergis = ">=0.5"     # QGIS-style layer panel, reads .qgz/.jGIS, collaborative editing
+keplergl = ">=0.3"       # GPU-accelerated large point-cloud + temporal visualization
 
 [feature.jupyterlab.pypi-dependencies]
+# ── data stack ───────────────────────────────────────────────────────────────
+vegafusion = {version = ">=2", extras = ["embed"]}  # server-side Vega-Lite transforms for Altair
+# ── code quality ─────────────────────────────────────────────────────────────
 jupyterlab-code-formatter = "*"
 jupyterlab-spellchecker = "*"
+python-lsp-ruff = "*"          # ruff plugin for python-lsp-server (lint + fix)
+# ── productivity ─────────────────────────────────────────────────────────────
+jupyterlab-execute-time = "*"  # shows execution time below each cell
+jupyterlab-geojson = "*"       # renders .geojson files as interactive maps in the file browser
+# ── inspection ───────────────────────────────────────────────────────────────
+lckr-jupyterlab-variableinspector = "*"   # variable inspector panel
+# ── notebook metadata ────────────────────────────────────────────────────────
+watermark = "*"                # %watermark magic: package versions + hw info
+# ── AI assistant ─────────────────────────────────────────────────────────────
+jupyter-ai = "*"               # chat panel + %%ai magic; supports Claude via langchain-anthropic
+langchain-anthropic = "*"      # Anthropic/Claude backend for jupyter-ai
 
 [feature.marimo.dependencies]
 marimo = "*"
@@ -230,11 +275,14 @@ evaluate = "python scripts/evaluate.py"
 preprocess = "python scripts/preprocess.py"
 
 [feature.docs.tasks]
-docs-serve = "myst start"
+docs-serve = "myst start --port 3000 --server-port 3100"
 docs-build = "myst build --html"
 
 [feature.jupyterlab.tasks]
-lab = "jupyter lab"
+# Forward port 8888 in VS Code SSH (Ports panel), then open the URL printed
+# on stdout — Jupyter's default token-based auth stays enabled. To disable
+# auth for a trusted local-only setup, run with --NotebookApp.token='' opt-in.
+lab = "jupyter lab --no-browser --port 8888"
 
 [feature.marimo.tasks]
 marimo-edit = "marimo edit"

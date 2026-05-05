@@ -56,6 +56,7 @@ RESET  := \033[0m
 # ---------------------------------------------------------------------------
 .PHONY: help install lint format typecheck test test-cov \
 	precommit build clean version docs docs-serve docs-deploy \
+	lab \
 	init gh-labels gh-sub gh-block gh-show
 
 .DEFAULT_GOAL := help
@@ -164,11 +165,31 @@ docs: ## Build documentation with MyST
 	uv run --group docs myst build --html
 
 docs-serve: ## Serve documentation locally (app on 3000, assets on 3100)
+	-@fuser -k 3000/tcp 2>/dev/null || true
+	-@fuser -k 3100/tcp 2>/dev/null || true
 	uv run --group docs myst start --port 3000 --server-port 3100
 
 docs-deploy: ## Deploy documentation to GitHub Pages
 	uv run --group docs myst build --html
 	uv run --group docs ghp-import -n -p _build/html
+
+# ===========================================================================
+##@ Notebooks
+# ===========================================================================
+
+LAB_ROOT ?= .
+LAB_PORT ?= 8888
+
+lab: ## Launch JupyterLab — LAB_ROOT=<path> (default: .) LAB_PORT=<n> (default: 8888)
+	@printf "$(YELLOW)>>> Clearing stale processes on ports $(LAB_PORT) and 3001...$(RESET)\n"
+	-@fuser -k $(LAB_PORT)/tcp 2>/dev/null || true
+	-@fuser -k 3001/tcp 2>/dev/null || true
+	@printf "$(YELLOW)>>> Starting JupyterLab (port $(LAB_PORT), root: $(LAB_ROOT))...$(RESET)\n"
+	@printf "$(BLUE)    Forward port $(LAB_PORT) in VS Code SSH → open the URL printed below$(RESET)\n"
+	pixi run -e jupyterlab jupyter lab \
+		--no-browser \
+		--port=$(LAB_PORT) \
+		--notebook-dir="$(LAB_ROOT)"
 
 # ===========================================================================
 ##@ GitHub helpers

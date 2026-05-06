@@ -62,38 +62,45 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
   - 6.E — Expectation Propagation
   - 6.F — Bayesian linear regression & non-standard outputs
   - 6.G — Aggregate Bayesian methods
-- **Part 7 — Markov / State-Space GPs**
-  - 7.A — Foundations
-  - 7.B — SDE kernel zoo
-  - 7.C — Markov GP workflows
-  - 7.D — Parallel & scalable filtering
-  - 7.E — Nonlinear filtering
-  - 7.F — Ensemble methods
-  - 7.G — Steady-state & structured-Gaussian surfaces
-  - 7.H — Non-conjugate temporal case studies
-- **Part 8 — Sampling, Pathwise, Conditioning**
-  - 8.A — Pathwise sampling
-  - 8.B — Matheron's-rule conditioning
-- **Part 9 — Uncertainty Propagation & UQ**
-  - 9.A — Foundations
-  - 9.B — Uncertain inputs
-  - 9.C — Analytic moments
-  - 9.D — BGPLVM
-  - 9.E — Special integrators & quantiles
-- **Part 10 — Probabilistic Programming Integration**
-  - 10.A — gaussx + NumPyro
-  - 10.B — pyrox patterns
-  - 10.C — Hierarchical & sampling
-- **Part 11 — Ensembles**
-- **Part 12 — Data Pipelines**
-- **Part 13 — Applied Case Studies *(research_notebook)***
-  - 13.A — Spatial extremes
-  - 13.B — SVGP applied
-  - 13.C — Geophysics & emulation
-  - 13.D — Optimization & decision
-  - 13.E — Causal & event data
-  - 13.F — Practical
-- **Part 14 — Metrics & Calibration**
+- **Part 7 — Spectral GPs**
+  - 7.A — Spectral foundations
+  - 7.B — Spectral kernel models
+  - 7.C — Random Fourier features
+  - 7.D — Hilbert-space methods
+  - 7.E — Variational spectral methods
+  - 7.F — Spherical / periodic spectral
+- **Part 8 — Markov / State-Space GPs**
+  - 8.A — Foundations
+  - 8.B — SDE kernel zoo
+  - 8.C — Markov GP workflows
+  - 8.D — Parallel & scalable filtering
+  - 8.E — Nonlinear filtering
+  - 8.F — Ensemble methods
+  - 8.G — Steady-state & structured-Gaussian surfaces
+  - 8.H — Non-conjugate temporal case studies
+- **Part 9 — Sampling, Pathwise, Conditioning**
+  - 9.A — Pathwise sampling
+  - 9.B — Matheron's-rule conditioning
+- **Part 10 — Uncertainty Propagation & UQ**
+  - 10.A — Foundations
+  - 10.B — Uncertain inputs
+  - 10.C — Analytic moments
+  - 10.D — BGPLVM
+  - 10.E — Special integrators & quantiles
+- **Part 11 — Probabilistic Programming Integration**
+  - 11.A — gaussx + NumPyro
+  - 11.B — pyrox patterns
+  - 11.C — Hierarchical & sampling
+- **Part 12 — Ensembles**
+- **Part 13 — Data Pipelines**
+- **Part 14 — Applied Case Studies *(research_notebook)***
+  - 14.A — Spatial extremes
+  - 14.B — SVGP applied
+  - 14.C — Geophysics & emulation
+  - 14.D — Optimization & decision
+  - 14.E — Causal & event data
+  - 14.F — Practical
+- **Part 15 — Metrics & Calibration**
 
 ---
 
@@ -255,20 +262,18 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
 | 2.4 | Stationary vs non-stationary kernels | — | 🧱 | **GAP** |
 | 2.13 | Pytree kernel composition — sum / product / scaled as pytrees | — | 🧱 | **GAP** — canonical JAX pattern, important for gaussx/pyrox users |
 
-### 2.B — Spectral & deep kernels
+### 2.B — Deep kernels
+
+Spectral kernels (Bochner / Spectral Mixture) live in **Part 7 — Spectral GPs**. This subsection covers neural-network-warped kernels only.
 
 **Key equations / models:**
-- Bochner: stationary $k(\tau) = \int e^{i\omega^\top\tau} S(\omega)\,d\omega$
-- Spectral mixture (Wilson 2013): $S(\omega) = \sum_q w_q\,\mathcal{N}(\omega; \mu_q, \Sigma_q)$
 - Deep kernel: $k_\theta(x,x') = k_{\mathrm{base}}(\phi_\theta(x), \phi_\theta(x'))$
 - ArcCosine-$n$ (Cho & Saul 2009): $k_n(x,x') = \tfrac{1}{\pi}\|x\|^n\|x'\|^n J_n(\theta)$, NN-correspondence
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 2.5 | Spectral kernels — visual guide | P `spectral_kernel_models` | 🧱 🔁 | |
 | 2.6 | Deep kernels (NN-warped inputs) | R `pyroxgp/04_svgp_rff_nn` | 🌉 🔁 | |
 | 2.7 | ArcCosine kernel (NN-correspondence) | — | 🧱 🔁 | **GAP** — dd:features/gp/gpflow.md |
-| 2.14 | Spectral Mixture (SM) kernel fitting — auto-discover periodicity from data (Wilson & Adams 2013) | — | 🔬 | **GAP** — visualise learned spectral components |
 
 ### 2.C — Multi-output kernels
 
@@ -282,15 +287,9 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
 | 2.8 | Multi-output: LMC, ICM, OILMM | P `multioutput_gp` | 🧱 | |
 | 2.9 | OILMM mechanics: project / back-project | — | 🧱 | **GAP** — api: `oilmm_project`, `oilmm_back_project` |
 
-### 2.D — Spherical / localized kernels
+### 2.D — Spherical / localized kernels *(moved)*
 
-**Key equations / models:**
-- Spherical harmonics: $Y_{\ell m}$ on $S^2$, zonal kernels $k(x,x') = \sum_\ell a_\ell P_\ell(x^\top x')$
-- Spherical Slepian: solve $\int_R Y^*_{\ell m}Y_{\ell'm'}\,d\Omega \cdot c = \lambda c$ to maximize energy in region $R$
-
-| # | Tutorial | Source | Scope | Refs / Notes |
-|---|----------|--------|-------|--------------|
-| 2.10 | Slepian Positional Encodings (spherical, localized) | — | 🧱 🔁 | **GAP** — gh:pyrox#125 |
+Spherical / harmonic / Slepian kernels are now grouped under **Part 7.F — Spherical / periodic spectral**, where they sit alongside the full spectral toolkit (Bochner, RFF, HSGP). Riemannian / graph kernels remain in 2.F.
 
 ### 2.E — Kernel-based statistics & utilities
 
@@ -432,19 +431,9 @@ GPs whose covariance has direct algebraic structure (Kronecker, Toeplitz, grid, 
 
 GPs that scale to large N via inducing points, random features, or iterative solvers — distinct from Part 4 in that the structure is *imposed* rather than inherent to the data geometry.
 
-### 5.A — Random features
+### 5.A — Random features *(moved)*
 
-**Key equations / models:**
-- RFF (Rahimi & Recht 2007): $\phi(x) = \sqrt{2/D}\cos(\omega^\top x + b)$, $\omega\sim S(\omega)$, $k(x,x') \approx \phi(x)^\top\phi(x')$
-- SSGP / VSSGP: BLR in RFF space, hierarchical / variational priors over $\omega$
-- Nyström: $K \approx K_{nm}K_{mm}^{-1}K_{mn}$, rank-$m$ approximation
-- FastFood: $W = SHG\Pi HB$ — structured frequency matrix, $O(D\log d)$ matvec
-
-| # | Tutorial | Source | Scope | Refs / Notes |
-|---|----------|--------|-------|--------------|
-| 5.1 | Random Fourier Features → SSGP → VSSGP | P `random_fourier_features` | 🧱 🔁 | |
-| 5.2 | Kernel approximations: Nyström vs RFF | G `kernel_approximations`, P `kernel_approximation` | 🧱 | **DUP** — pick one home |
-| 5.3 | FastFood structured random features | — | 🧱 | **GAP** — gh:gaussx#62 |
+Random Fourier Features, Nyström, and FastFood live under **Part 7.C — Random Fourier features**. This subsection is intentionally empty in Part 5 — the inducing-point / variational story (5.B–5.E) does not depend on RFF derivations, only on the spectral approximation result they deliver.
 
 ### 5.B — Inducing-point fundamentals
 
@@ -464,22 +453,18 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 | 5.9 | Mini-batched SVGP / stochastic VI | R `pyroxgp/02_svgp_batched` | 🔬 | |
 | 5.10 | Full SVGP tutorial — 6 guide families incl. orthogonal decoupled | — | 🧱 | **GAP** — dd:examples/gp/svgp_numpyro.py |
 | 5.19 | Collapsed vs uncollapsed SVGP — explicit comparison of Titsias vs Hensman objectives, bias/variance tradeoff | — | 🧱 | **GAP** — pedagogical |
-| 5.20 | Online sparse GP (Csató & Opper 2002) — sequential Bayesian update of inducing set without full retraining | — | 🔬 | **GAP** — complements streaming filter tutorial 7.33 |
+| 5.20 | Online sparse GP (Csató & Opper 2002) — sequential Bayesian update of inducing set without full retraining | — | 🔬 | **GAP** — complements streaming filter tutorial 8.33 |
 
 ### 5.C — Inter-domain features
 
+Inter-domain features that are *fundamentally spectral* (VFF, VISH, Laplacian eigenfunctions) live under **Part 7.E — Variational spectral methods** and **Part 7.F — Spherical / periodic spectral**. This subsection now covers only the generic decoupled-basis pattern.
+
 **Key equations / models:**
 - Inter-domain inducing variables: $u_j = \langle f, g_j \rangle_\mathcal{H}$ for chosen basis $\{g_j\}$
-- VFF (Hensman 2018): Fourier basis on $[a,b]$, $K_{uu}$ diagonal, $O(NM)$
-- VISH (Dutordoir 2020): spherical harmonics on $S^2$, Funk–Hecke gives diagonal $K_{uu}$
-- Laplacian eigenfns: $-\Delta\phi_j = \lambda_j \phi_j$ on manifold/graph; $S(\lambda_j)$ from kernel spectral density
 - Decoupled: separate basis for posterior mean (large) and covariance (small)
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 5.11 | VISH — Variational Inducing Spherical Harmonics | R `pyroxgp/03_svgp_spherical_harmonics` | 🔬 | gh:pyrox#49 |
-| 5.12 | VFF — Variational Fourier Features (bounded interval, diagonal K_uu) | — | 🧱 | **GAP** — gh:pyrox#49, dd:features/gp/inducing_features.md |
-| 5.13 | Laplacian-eigenfunction inducing features (manifolds, graphs) | — | 🧱 | **GAP** — gh:pyrox#49 |
 | 5.14 | Decoupled inter-domain features (mixed spatial + spectral) | — | 🧱 | **GAP** — gh:pyrox#49 |
 
 ### 5.D — Iterative-solver scaling
@@ -613,9 +598,100 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 |---|----------|--------|-------|--------------|
 | 6.22 | R-INLA port — integrated nested Laplace approximation | — | 🌉 | **GAP** — gh:gaussx#155 |
 
-## Part 7 — Markov / State-Space GPs
+## Part 7 — Spectral GPs
 
-### 7.A — Foundations
+Spectral methods unify several threads from earlier parts: stationary kernels via Bochner's theorem (extending 2.A), spectral kernel families (former 2.B), random-feature approximations (former 5.A), and spectral inducing-feature methods (subset of former 5.C). This part collects them with a coherent through-line: *every stationary kernel is the Fourier transform of a positive measure, and every approximation in this part is a clever way of sampling, parameterizing, or projecting that measure*.
+
+### 7.A — Spectral foundations
+
+**Key equations / models:**
+- Bochner's theorem: stationary $k(\tau) = \int_{\mathbb{R}^d} e^{i\omega^\top\tau}\,S(\omega)\,d\omega$ with $S \geq 0$ a finite measure (the *power spectral density*).
+- Wiener–Khinchin: covariance $\leftrightarrow$ spectral density via Fourier transform; Toeplitz–circulant duality on a regular grid (pairs with 1.4).
+- Karhunen–Loève expansion: $f(x) = \sum_j \sqrt{\lambda_j}\,\xi_j\,\phi_j(x)$, $\xi_j \sim \mathcal{N}(0,1)$, $(\lambda_j, \phi_j)$ eigenpairs of the kernel integral operator.
+- Mercer's theorem: $k(x,x') = \sum_j \lambda_j \phi_j(x)\phi_j(x')$, basis for the spectral representations in 7.D and 7.E.
+- Sampling theorem connection: bandlimited prior + grid spacing $\Delta x < \pi/\omega_{\max}$ → no aliasing in Toeplitz / FFT matvec.
+
+| # | Tutorial | Source | Scope | Refs / Notes |
+|---|----------|--------|-------|--------------|
+| 7.1 | Bochner's theorem — stationary kernels as Fourier transforms of spectral densities | — | 🧱 | **GAP** — pedagogical anchor for the rest of Part 7 |
+| 7.2 | Wiener–Khinchin & power spectral density estimation — covariance ↔ spectrum, periodogram, Welch | — | 🧱 | **GAP** — connects 1.4 Toeplitz–FFT machinery to spectrum estimation |
+| 7.3 | Karhunen–Loève expansion — eigenpairs of the kernel integral operator | — | 🧱 | **GAP** — bridge to Mercer / HSGP |
+| 7.4 | Sampling theorem & aliasing — bandlimited priors on regular grids | — | 🧱 | **GAP** — practical guidance for Toeplitz/Kronecker setups |
+
+### 7.B — Spectral kernel models
+
+**Key equations / models:**
+- Spectral mixture (Wilson & Adams 2013): $S(\omega) = \sum_q w_q\,\mathcal{N}(\omega; \mu_q, \Sigma_q)$ — closed-form $k(\tau)$ via inverse FT.
+- Spectral mixture product (multi-D): outer product of 1-D SM along each axis.
+- Sparse spectrum kernel (Lázaro-Gredilla 2010): finite mixture of point masses in $S(\omega)$.
+
+| # | Tutorial | Source | Scope | Refs / Notes |
+|---|----------|--------|-------|--------------|
+| 7.5 | Spectral kernels — visual guide | P `spectral_kernel_models` | 🧱 🔁 | *moved from 2.5* |
+| 7.6 | Spectral Mixture (SM) kernel fitting — auto-discover periodicity from data (Wilson & Adams 2013) | — | 🔬 | **GAP** — visualise learned spectral components; *moved from 2.14* |
+| 7.7 | Sparse spectrum kernel — point-mass spectral approximation | — | 🧱 | **GAP** |
+
+### 7.C — Random Fourier features
+
+**Key equations / models:**
+- RFF (Rahimi & Recht 2007): $\phi(x) = \sqrt{2/D}\cos(\omega^\top x + b)$, $\omega\sim S(\omega)$, $k(x,x') \approx \phi(x)^\top\phi(x')$.
+- SSGP / VSSGP: Bayesian linear regression in RFF space; hierarchical / variational priors over $\omega$.
+- Nyström: $K \approx K_{nm}K_{mm}^{-1}K_{mn}$, rank-$m$ approximation; data-dependent counterpart to RFF.
+- FastFood: $W = SHG\Pi HB$ — structured frequency matrix, $O(D\log d)$ matvec.
+- Orthogonal random features: $\omega_i$ drawn from a uniform measure on the sphere (variance reduction).
+
+| # | Tutorial | Source | Scope | Refs / Notes |
+|---|----------|--------|-------|--------------|
+| 7.8 | Random Fourier Features → SSGP → VSSGP | P `random_fourier_features` | 🧱 🔁 | *moved from 5.1* |
+| 7.9 | Kernel approximations: Nyström vs RFF | G `kernel_approximations`, P `kernel_approximation` | 🧱 | **DUP** — pick one home; *moved from 5.2* |
+| 7.10 | FastFood structured random features | — | 🧱 | **GAP** — gh:gaussx#62; *moved from 5.3* |
+| 7.11 | Orthogonal random features (ORF) — variance reduction over vanilla RFF | — | 🧱 | **GAP** |
+
+### 7.D — Hilbert-space methods
+
+**Key equations / models:**
+- Hilbert-space GP (Solin & Särkkä 2020): on a bounded domain $\Omega$ with Dirichlet boundary, Laplacian eigenpairs $(\lambda_j, \phi_j)$ give $k(x,x') \approx \sum_{j=1}^M S(\sqrt{\lambda_j})\,\phi_j(x)\phi_j(x')$ — diagonalized prior, $O(NM + M^3)$ inference.
+- Periodic kernel via truncated Fourier series: orthonormal basis on $[0, 2\pi]$.
+- Convergence of HSGP to exact GP as $M \to \infty$ for stationary kernels (Mercer rate).
+
+| # | Tutorial | Source | Scope | Refs / Notes |
+|---|----------|--------|-------|--------------|
+| 7.12 | Hilbert-space GP (HSGP, Solin–Särkkä) — Laplace-eigenbasis spectral approximation | — | 🧱 | **GAP** — heavy use in Bayesian time-series / NumPyro contrib |
+| 7.13 | Periodic kernel via truncated Fourier basis — exact spectral representation | — | 🧱 | **GAP** |
+| 7.14 | HSGP convergence diagnostics — error vs $M$, boundary-effect calibration | — | 🧱 | **GAP** |
+
+### 7.E — Variational spectral methods
+
+**Key equations / models:**
+- Variational Fourier Features (Hensman 2018): $u_j = \int f(x)\cos(j\pi x/L)\,dx$ on $[-L,L]$ → diagonal $K_{uu}$, $O(NM)$.
+- Inter-domain spectral inducing variables: choose basis $\{g_j\}$ to be eigenfunctions of the kernel operator → diagonalized $K_{uu}$.
+- Variational Sparse Spectrum GP (VSSGP, Gal & Turner 2015): variational distribution over RFF frequencies.
+
+| # | Tutorial | Source | Scope | Refs / Notes |
+|---|----------|--------|-------|--------------|
+| 7.15 | Variational Fourier Features (VFF, Hensman 2018) — Fourier basis on bounded intervals, diagonal $K_{uu}$ | — | 🧱 | **GAP** — *moved from 5.12*; gh:pyrox#49, dd:features/gp/inducing_features.md |
+| 7.16 | Laplacian-eigenfunction inducing features (manifolds, graphs) | — | 🧱 | **GAP** — *moved from 5.13*; gh:pyrox#49 |
+| 7.17 | VSSGP — variational distribution over RFF frequencies (Gal & Turner 2015) | — | 🔬 | **GAP** — natural next step after 7.8 |
+
+### 7.F — Spherical / periodic spectral
+
+**Key equations / models:**
+- Spherical harmonics on $S^2$: $Y_{\ell m}$ orthonormal eigenfunctions of the Laplacian; zonal kernels $k(x,x') = \sum_\ell a_\ell P_\ell(x^\top x')$.
+- Funk–Hecke: convolution of zonal function with spherical-harmonic basis is diagonal in $\ell$.
+- Variational Inducing Spherical Harmonics (VISH, Dutordoir 2020): inducing variables = spherical-harmonic projections; diagonal $K_{uu}$.
+- Spherical Slepian: solve $\int_R Y^*_{\ell m}Y_{\ell'm'}\,d\Omega \cdot c = \lambda c$ to maximize energy in region $R$.
+- Fourier features on the torus / circle: periodic boundary conditions → exact spectral kernel.
+
+| # | Tutorial | Source | Scope | Refs / Notes |
+|---|----------|--------|-------|--------------|
+| 7.18 | VISH — Variational Inducing Spherical Harmonics | R `pyroxgp/03_svgp_spherical_harmonics` | 🔬 | *moved from 5.11*; gh:pyrox#49 |
+| 7.19 | Slepian positional encodings (spherical, localized) | — | 🧱 🔁 | *moved from 2.10*; **GAP** — gh:pyrox#125 |
+| 7.20 | Fourier features on the torus / circle — periodic BC, exact spectral kernel | — | 🧱 | **GAP** |
+| 7.21 | Zonal spectral kernels on $S^2$ — Funk–Hecke diagonalization | — | 🧱 | **GAP** |
+
+## Part 8 — Markov / State-Space GPs
+
+### 8.A — Foundations
 
 **Key equations / models:**
 - Discrete SSM: $x_{k+1} = A_k x_k + w_k$, $y_k = H_k x_k + v_k$, $w_k\sim\mathcal{N}(0,Q_k)$, $v_k\sim\mathcal{N}(0,R_k)$
@@ -626,13 +702,13 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.1 | Kalman filter + RTS smoother (pure SSM) | G `kalman_filter` | 🧱 | |
-| 7.2 | SSM ↔ natural / expectation parameterizations | — | 🧱 | **GAP** — api: `ssm_to_naturals`, `naturals_to_ssm`, `expectations_to_ssm` |
-| 7.3 | Pairwise marginals & sites | — | 🧱 | **GAP** — api: `pairwise_marginals`, `GaussianSites`, `sites_to_precision` |
-| 7.4 | SDE autocovariance & process noise | — | 🧱 | **GAP** — api: `sde_autocovariance`, `process_noise_covariance` |
-| 7.5 | Joseph-form Kalman update standalone | — | 🧱 | **GAP** |
+| 8.1 | Kalman filter + RTS smoother (pure SSM) | G `kalman_filter` | 🧱 | |
+| 8.2 | SSM ↔ natural / expectation parameterizations | — | 🧱 | **GAP** — api: `ssm_to_naturals`, `naturals_to_ssm`, `expectations_to_ssm` |
+| 8.3 | Pairwise marginals & sites | — | 🧱 | **GAP** — api: `pairwise_marginals`, `GaussianSites`, `sites_to_precision` |
+| 8.4 | SDE autocovariance & process noise | — | 🧱 | **GAP** — api: `sde_autocovariance`, `process_noise_covariance` |
+| 8.5 | Joseph-form Kalman update standalone | — | 🧱 | **GAP** |
 
-### 7.B — SDE kernel zoo
+### 8.B — SDE kernel zoo
 
 **Key equations / models:**
 - LTI SDE: $dx = Fx\,dt + L\,dW$, observation $f(t) = Hx(t)$
@@ -643,11 +719,11 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.6 | Matérn kernels in state-space form | P `markov_gp_sde_kernels` | 🧱 | |
-| 7.7 | Full SDE kernel zoo: Periodic, QuasiPeriodic, Cosine, Constant, Sum, Product, Subband Matérn | — | 🧱 | **GAP** — api: gaussx `_ssm` SDE kernels |
-| 7.8 | SDE linearization & drift-KL helpers | — | 🧱 | **GAP** — gh:gaussx#70 |
+| 8.6 | Matérn kernels in state-space form | P `markov_gp_sde_kernels` | 🧱 | |
+| 8.7 | Full SDE kernel zoo: Periodic, QuasiPeriodic, Cosine, Constant, Sum, Product, Subband Matérn | — | 🧱 | **GAP** — api: gaussx `_ssm` SDE kernels |
+| 8.8 | SDE linearization & drift-KL helpers | — | 🧱 | **GAP** — gh:gaussx#70 |
 
-### 7.C — Markov GP workflows
+### 8.C — Markov GP workflows
 
 **Key equations / models:**
 - Marginal log-likelihood: $\log p(y) = \sum_k \log\mathcal{N}(y_k; H\bar x_k, S_k)$ from filter pass
@@ -657,13 +733,13 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.9 | Markov GP with Kalman filtering | P `markov_gp_kalman` | 🧱 | |
-| 7.10 | Markov GP hyperparameter training | P `markov_gp_training` | 🧱 | |
-| 7.11 | Non-Gaussian Markov GP | P `markov_gp_nongauss` | 🧱 | |
-| 7.12 | Sparse variational Markov GP | P `sparse_markov_gp` | 🧱 | |
-| 7.13 | KalmanGuide — Bayes-Newton via pseudo-observations + RTS | — | 🧱 | **GAP** — dd:features/gp/variational_families.md |
+| 8.9 | Markov GP with Kalman filtering | P `markov_gp_kalman` | 🧱 | |
+| 8.10 | Markov GP hyperparameter training | P `markov_gp_training` | 🧱 | |
+| 8.11 | Non-Gaussian Markov GP | P `markov_gp_nongauss` | 🧱 | |
+| 8.12 | Sparse variational Markov GP | P `sparse_markov_gp` | 🧱 | |
+| 8.13 | KalmanGuide — Bayes-Newton via pseudo-observations + RTS | — | 🧱 | **GAP** — dd:features/gp/variational_families.md |
 
-### 7.D — Parallel & scalable filtering
+### 8.D — Parallel & scalable filtering
 
 **Key equations / models:**
 - Parallel scan (Särkkä & García-Fernández 2021): associative op $\otimes$ on $(A_k, b_k)$ pairs, $O(\log N)$ depth
@@ -673,12 +749,12 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.14 | Parallel / batched Kalman filter | G `parallel_kalman` | 🌉 | |
-| 7.15 | Square-root parallel Kalman filter / RTS | — | 🧱 | **GAP** — gh:gaussx#165 |
-| 7.16 | SpInGP — sparse parallel-in-time GP | — | 🧱 | **GAP** — api: `spingp_log_likelihood`, `spingp_posterior` |
-| 7.17 | Mean-field block-diagonal Kalman filter | — | 🧱 | **GAP** — gh:gaussx#29 |
+| 8.14 | Parallel / batched Kalman filter | G `parallel_kalman` | 🌉 | |
+| 8.15 | Square-root parallel Kalman filter / RTS | — | 🧱 | **GAP** — gh:gaussx#165 |
+| 8.16 | SpInGP — sparse parallel-in-time GP | — | 🧱 | **GAP** — api: `spingp_log_likelihood`, `spingp_posterior` |
+| 8.17 | Mean-field block-diagonal Kalman filter | — | 🧱 | **GAP** — gh:gaussx#29 |
 
-### 7.E — Nonlinear filtering
+### 8.E — Nonlinear filtering
 
 **Key equations / models:**
 - EKF: linearize $f, h$ around $\hat x$ via Jacobian
@@ -688,13 +764,13 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.18 | Nonlinear Gaussian Filter (UKF/EKF generalization) | — | 🧱 | **GAP** — gh:gaussx#161 |
-| 7.19 | Extended Kalman Smoother (Taylor(1)) | — | 🧱 | **GAP** — dd:examples/gp/integration_detail.md |
-| 7.20 | Unscented Kalman Smoother (PL + SigmaPoints + Kalman) | — | 🧱 | **GAP** — dd:examples/gp/integration_detail.md |
-| 7.21 | Cubature Kalman Smoother | — | 🧱 | **GAP** — dd:examples/gp/integration_detail.md |
-| 7.22 | Innovation cov as structured `LowRankUpdate` | — | 🧱 | **GAP** — gh:gaussx#164 |
+| 8.18 | Nonlinear Gaussian Filter (UKF/EKF generalization) | — | 🧱 | **GAP** — gh:gaussx#161 |
+| 8.19 | Extended Kalman Smoother (Taylor(1)) | — | 🧱 | **GAP** — dd:examples/gp/integration_detail.md |
+| 8.20 | Unscented Kalman Smoother (PL + SigmaPoints + Kalman) | — | 🧱 | **GAP** — dd:examples/gp/integration_detail.md |
+| 8.21 | Cubature Kalman Smoother | — | 🧱 | **GAP** — dd:examples/gp/integration_detail.md |
+| 8.22 | Innovation cov as structured `LowRankUpdate` | — | 🧱 | **GAP** — gh:gaussx#164 |
 
-### 7.F — Ensemble methods
+### 8.F — Ensemble methods
 
 **Key equations / models:**
 - EnKF analysis: $X^a = X^f + P_e H^\top (HP_eH^\top + R)^{-1}(Y - HX^f)$, $P_e = \tfrac{1}{J-1}(X^f - \bar X^f)(X^f - \bar X^f)^\top$
@@ -703,10 +779,10 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.23 | Ensemble Kalman Filter on Lorenz-63 | G `ensemble_kalman` | 🔬 | |
-| 7.24 | Bessel-corrected EnKF + `ensemble_kalman_gain` | — | 🌉 | **GAP** — gh:gaussx#127 |
+| 8.23 | Ensemble Kalman Filter on Lorenz-63 | G `ensemble_kalman` | 🔬 | |
+| 8.24 | Bessel-corrected EnKF + `ensemble_kalman_gain` | — | 🌉 | **GAP** — gh:gaussx#127 |
 
-### 7.G — Steady-state & structured-Gaussian surfaces
+### 8.G — Steady-state & structured-Gaussian surfaces
 
 **Key equations / models:**
 - DARE: $P = APA^\top + Q - APH^\top(HPH^\top+R)^{-1}HPA^\top$ → unique SPD solution
@@ -715,12 +791,12 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.25 | Infinite-horizon Kalman & DARE | — | 🧱 | **GAP** — api: `infinite_horizon_filter/smoother`, `dare` |
-| 7.26 | DARE via Optimistix fixed-point + implicit diff | — | 🧱 | **GAP** — gh:gaussx#97 |
-| 7.27 | MarkovGaussian structured surface | — | 🧱 | **GAP** — gh:gaussx#76 |
-| 7.28 | Spatiotemporal SDE GPs | — | 🔬 | **GAP** |
+| 8.25 | Infinite-horizon Kalman & DARE | — | 🧱 | **GAP** — api: `infinite_horizon_filter/smoother`, `dare` |
+| 8.26 | DARE via Optimistix fixed-point + implicit diff | — | 🧱 | **GAP** — gh:gaussx#97 |
+| 8.27 | MarkovGaussian structured surface | — | 🧱 | **GAP** — gh:gaussx#76 |
+| 8.28 | Spatiotemporal SDE GPs | — | 🔬 | **GAP** |
 
-### 7.H — Non-conjugate temporal case studies
+### 8.H — Non-conjugate temporal case studies
 
 **Key equations / models:**
 - Laplace + Kalman: iterate site moments $(\mu_k, \tau_k)$ via Newton on each $p(y_k\mid f_k)$, run filter+smoother per iteration
@@ -731,16 +807,16 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.29 | GP classification with Laplace + Kalman | — | 🧱 | **GAP** — dd:examples/gp/state_space.md |
-| 7.30 | Poisson counts with EP + Kalman | — | 🧱 | **GAP** — dd:examples/gp/state_space.md |
-| 7.31 | Changepoint detection via additive temporal GPs | — | 🌉 | **GAP** — dd:examples/gp/state_space.md |
-| 7.32 | Latent temporal GP in a BHM | — | 🌉 | **GAP** — dd:examples/gp/state_space.md |
-| 7.33 | Online / streaming GP (filter-only mode) | — | 🌉 | **GAP** — dd:examples/gp/state_space.md |
-| 7.34 | Non-LTI temporal model via `numpyro.scan` | — | 🧱 | **GAP** — dd:examples/gp/state_space.md |
+| 8.29 | GP classification with Laplace + Kalman | — | 🧱 | **GAP** — dd:examples/gp/state_space.md |
+| 8.30 | Poisson counts with EP + Kalman | — | 🧱 | **GAP** — dd:examples/gp/state_space.md |
+| 8.31 | Changepoint detection via additive temporal GPs | — | 🌉 | **GAP** — dd:examples/gp/state_space.md |
+| 8.32 | Latent temporal GP in a BHM | — | 🌉 | **GAP** — dd:examples/gp/state_space.md |
+| 8.33 | Online / streaming GP (filter-only mode) | — | 🌉 | **GAP** — dd:examples/gp/state_space.md |
+| 8.34 | Non-LTI temporal model via `numpyro.scan` | — | 🧱 | **GAP** — dd:examples/gp/state_space.md |
 
-## Part 8 — Sampling, Pathwise, Conditioning
+## Part 9 — Sampling, Pathwise, Conditioning
 
-### 8.A — Pathwise sampling
+### 9.A — Pathwise sampling
 
 **Key equations / models:**
 - Pathwise (Wilson 2020): $f^*(x) = \underbrace{\sum_i w_i\phi_i(x)}_\text{prior basis} + \underbrace{k(x,X)\beta}_\text{update}$ with $\beta = (K+\sigma^2 I)^{-1}(y - \Phi w - \epsilon)$
@@ -748,11 +824,11 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 8.1 | Pathwise GP posterior sampling (Wilson 2020) | P `gp_pathwise` | 🧱 | |
-| 8.2 | Pathwise sampling with NumPyro | P `gp_pathwise_numpyro` | 🧱 | |
-| 8.3 | Decoupled sampling for SVGP | — | 🧱 | **GAP** |
+| 9.1 | Pathwise GP posterior sampling (Wilson 2020) | P `gp_pathwise` | 🧱 | |
+| 9.2 | Pathwise sampling with NumPyro | P `gp_pathwise_numpyro` | 🧱 | |
+| 9.3 | Decoupled sampling for SVGP | — | 🧱 | **GAP** |
 
-### 8.B — Matheron's-rule conditioning
+### 9.B — Matheron's-rule conditioning
 
 **Key equations / models:**
 - Matheron's rule: $f\mid y \stackrel{d}{=} f + K_*(K+\sigma^2 I)^{-1}(y - f(X) - \epsilon)$ where $f, \epsilon$ are independent prior samples
@@ -760,12 +836,12 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 8.4 | Matheron's-rule conditioning by sampling | — | 🧱 | **GAP** — gh:gaussx#77 |
-| 8.5 | Partitioned joint conditional sampling | — | 🧱 | **GAP** — gh:gaussx#79 |
+| 9.4 | Matheron's-rule conditioning by sampling | — | 🧱 | **GAP** — gh:gaussx#77 |
+| 9.5 | Partitioned joint conditional sampling | — | 🧱 | **GAP** — gh:gaussx#79 |
 
-## Part 9 — Uncertainty Propagation & UQ
+## Part 10 — Uncertainty Propagation & UQ
 
-### 9.A — Foundations
+### 10.A — Foundations
 
 **Key equations / models:**
 - Moment matching: match $\mathbb{E}[g(x)]$ and $\mathrm{Var}[g(x)]$ for $x\sim\mathcal{N}(\mu,\Sigma)$
@@ -775,10 +851,10 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 9.1 | Moment matching, unscented transform, linearization | — | 🧱 | **GAP** |
-| 9.2 | Gauss–Hermite quadrature for ELL | — | 🧱 | **GAP** — used in R kronecker series |
+| 10.1 | Moment matching, unscented transform, linearization | — | 🧱 | **GAP** |
+| 10.2 | Gauss–Hermite quadrature for ELL | — | 🧱 | **GAP** — used in R kronecker series |
 
-### 9.B — Uncertain inputs
+### 10.B — Uncertain inputs
 
 **Key equations / models:**
 - GP at uncertain $x^*\sim\mathcal{N}(\mu_*,\Sigma_*)$: $\mathbb{E}[f^*] = \mathbb{E}_{x^*}[m(x^*)]$, $\mathrm{Var}[f^*] = \mathbb{E}[v(x^*)] + \mathrm{Var}[m(x^*)]$
@@ -786,11 +862,11 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 9.3 | Uncertainty propagation through nonlinear functions | G `uncertainty_propagation` | 🌉 | |
-| 9.4 | GPs with uncertain inputs (PILCO-style) | G `uncertain_gp_inputs` | 🔬 | |
-| 9.5 | Multi-step-ahead PILCO autoregressive forecasting | — | 🔬 | **GAP** — dd:examples/gp/integration_detail.md |
+| 10.3 | Uncertainty propagation through nonlinear functions | G `uncertainty_propagation` | 🌉 | |
+| 10.4 | GPs with uncertain inputs (PILCO-style) | G `uncertain_gp_inputs` | 🔬 | |
+| 10.5 | Multi-step-ahead PILCO autoregressive forecasting | — | 🔬 | **GAP** — dd:examples/gp/integration_detail.md |
 
-### 9.C — Analytic moments
+### 10.C — Analytic moments
 
 **Key equations / models:**
 - Ψ-statistics for RBF (Titsias & Lawrence 2010):
@@ -801,11 +877,11 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 9.6 | Ψ-statistics & exact RBF closed form for uncertain inputs | — | 🧱 | **GAP** — api: `compute_psi_statistics`, `AnalyticalPsiStatistics` |
-| 9.7 | Uncertain SVGP / VGP prediction (sigma-point + analytic) | — | 🧱 | **GAP** — api: `uncertain_svgp_predict`, `uncertain_vgp_predict` |
-| 9.8 | Cost / mean / gradient expectations under Gaussian inputs | — | 🧱 | **GAP** — api: `cost_expectation`, `mean_expectation`, `gradient_expectation` |
+| 10.6 | Ψ-statistics & exact RBF closed form for uncertain inputs | — | 🧱 | **GAP** — api: `compute_psi_statistics`, `AnalyticalPsiStatistics` |
+| 10.7 | Uncertain SVGP / VGP prediction (sigma-point + analytic) | — | 🧱 | **GAP** — api: `uncertain_svgp_predict`, `uncertain_vgp_predict` |
+| 10.8 | Cost / mean / gradient expectations under Gaussian inputs | — | 🧱 | **GAP** — api: `cost_expectation`, `mean_expectation`, `gradient_expectation` |
 
-### 9.D — BGPLVM
+### 10.D — BGPLVM
 
 **Key equations / models:**
 - Bayesian GPLVM: $X\sim q(X)$, $Y = f(X)+\epsilon$, marginalize via Ψ-statistics
@@ -813,11 +889,11 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 9.9 | Bayesian GPLVM with uncertain inputs | — | 🔬 | **GAP** — api: `uncertain_bgplvm_predict` |
-| 9.12 | GP-LVM (Lawrence 2004) — unsupervised manifold learning vs BGPLVM; Bayesian nonlinear PCA vs PCA/UMAP | — | 🔬 | **GAP** — distinct from 9.9 (Bayesian extension) |
-| 9.13 | Supervised GPLVM — classification via latent GP representation | — | 🔬 | **GAP** |
+| 10.9 | Bayesian GPLVM with uncertain inputs | — | 🔬 | **GAP** — api: `uncertain_bgplvm_predict` |
+| 10.12 | GP-LVM (Lawrence 2004) — unsupervised manifold learning vs BGPLVM; Bayesian nonlinear PCA vs PCA/UMAP | — | 🔬 | **GAP** — distinct from 9.9 (Bayesian extension) |
+| 10.13 | Supervised GPLVM — classification via latent GP representation | — | 🔬 | **GAP** |
 
-### 9.E — Special integrators & quantiles
+### 10.E — Special integrators & quantiles
 
 **Key equations / models:**
 - Mixture quantile root-find: solve $\sum_k \pi_k F_k(q) = \alpha$ via Brent / Optimistix
@@ -825,13 +901,13 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 9.10 | Mixture-quantile root-finder | — | 🧱 | **GAP** — gh:gaussx#121 |
-| 9.11 | Custom integrator: importance-weighted MC for rare events | — | 🧱 | **GAP** — dd:examples/gp/integration_detail.md |
-| 9.14 | GP quadrature / Bayesian cubature — $\int f(x)p(x)\,dx$ with GP prior on $f$; Bayesian numerical integration | — | 🔬 | **GAP** |
+| 10.10 | Mixture-quantile root-finder | — | 🧱 | **GAP** — gh:gaussx#121 |
+| 10.11 | Custom integrator: importance-weighted MC for rare events | — | 🧱 | **GAP** — dd:examples/gp/integration_detail.md |
+| 10.14 | GP quadrature / Bayesian cubature — $\int f(x)p(x)\,dx$ with GP prior on $f$; Bayesian numerical integration | — | 🔬 | **GAP** |
 
-## Part 10 — Probabilistic Programming Integration
+## Part 11 — Probabilistic Programming Integration
 
-### 10.A — gaussx + NumPyro
+### 11.A — gaussx + NumPyro
 
 **Key equations / models:**
 - `numpyro.factor("gp", log_p)` with `log_p = log_marginal_likelihood`
@@ -839,10 +915,10 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 10.1 | GP regression with NumPyro + gaussx | G `numpyro_gp` | 🧱 | |
-| 10.2 | Bayesian linear regression in precision form | G `numpyro_precision` | 🧱 🔁 | |
+| 11.1 | GP regression with NumPyro + gaussx | G `numpyro_gp` | 🧱 | |
+| 11.2 | Bayesian linear regression in precision form | G `numpyro_precision` | 🧱 🔁 | |
 
-### 10.B — pyrox patterns
+### 11.B — pyrox patterns
 
 **Key equations / models:**
 - Pattern 1 — `eqx.tree_at(model, replace, sampled_values)`
@@ -851,9 +927,9 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 10.3 | Three-pattern regression masterclass: tree_at / pyrox_sample / Parameterized | P `regression_masterclass_treeat`, `_pyrox_sample`, `_parameterized` | 🧱 🔁 | |
+| 11.3 | Three-pattern regression masterclass: tree_at / pyrox_sample / Parameterized | P `regression_masterclass_treeat`, `_pyrox_sample`, `_parameterized` | 🧱 🔁 | |
 
-### 10.C — Hierarchical & sampling
+### 11.C — Hierarchical & sampling
 
 **Key equations / models:**
 - Hierarchical: $\theta_g \sim p(\theta_g)$, $\theta_l \sim p(\theta_l\mid\theta_g)$, $y\sim p(y\mid\theta_l)$
@@ -861,10 +937,10 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 10.4 | Hierarchical / multi-task GPs in NumPyro | — | 🌉 | **GAP** |
-| 10.5 | MCMC for GP hyperparameters (NUTS) | — | 🧱 | **GAP** |
+| 11.4 | Hierarchical / multi-task GPs in NumPyro | — | 🌉 | **GAP** |
+| 11.5 | MCMC for GP hyperparameters (NUTS) | — | 🧱 | **GAP** |
 
-## Part 11 — Ensembles
+## Part 12 — Ensembles
 
 **Key equations / models:**
 - Ensemble predictive: $\hat p(y\mid x) = \tfrac{1}{E}\sum_e p(y\mid x, \theta_e)$
@@ -872,10 +948,10 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 11.1 | Ensemble primitives — three ways | P `ensemble_primitives_tutorial` | 🧱 | |
-| 11.2 | EnsembleMAP & EnsembleVI runners | P `ensemble_runner_tutorial` | 🧱 | |
+| 12.1 | Ensemble primitives — three ways | P `ensemble_primitives_tutorial` | 🧱 | |
+| 12.2 | EnsembleMAP & EnsembleVI runners | P `ensemble_runner_tutorial` | 🧱 | |
 
-## Part 12 — Data Pipelines
+## Part 13 — Data Pipelines
 
 **Key equations / models:**
 - Spatial encoding: lat/lon ↔ Cartesian unit-vector on $S^2$
@@ -884,12 +960,12 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 12.1 | Spatiotemporal preprocessing (geo + time + pandas) | P `spatiotemporal_preprocessing` | 🧱 | |
-| 12.2 | Loading climate data: xarray, zarr, ERA5 | — | 🔬 | **GAP** |
+| 13.1 | Spatiotemporal preprocessing (geo + time + pandas) | P `spatiotemporal_preprocessing` | 🧱 | |
+| 13.2 | Loading climate data: xarray, zarr, ERA5 | — | 🔬 | **GAP** |
 
-## Part 13 — Applied Case Studies *(research_notebook)*
+## Part 14 — Applied Case Studies *(research_notebook)*
 
-### 13.A — Spatial extremes
+### 14.A — Spatial extremes
 
 **Key equations / models:**
 - GEV CDF: $G(z;\mu,\sigma,\xi) = \exp\!\big({-}(1+\xi(z-\mu)/\sigma)^{-1/\xi}\big)$
@@ -901,14 +977,14 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 13.1 | Kronecker GP + GEV likelihood (Spain extremes) | R `kronecker/01_spain_extremes` | 🔬 | |
-| 13.2 | Kronecker-multiplicative GP (spatial warming rates) | R `kronecker/02_spain_multiplicative` | 🔬 | |
-| 13.3 | Non-stationary GEV (location-dependent tails) | R `kronecker/03_spain_nonstationary` | 🔬 | |
-| 13.4 | Gaussian copula spatial dependence | R `kronecker/04_spain_copula` | 🔬 | |
-| 13.5 | BHM with GEV + spatial GPs (methane / precipitation extremes) | — | 🔬 | **GAP** — dd:examples/gp/moments.md |
-| 13.6 | Temporal extremes: GEV with time-varying μ(t), σ(t), ξ(t) | — | 🔬 | **GAP** — dd:examples/gp/state_space.md |
+| 14.1 | Kronecker GP + GEV likelihood (Spain extremes) | R `kronecker/01_spain_extremes` | 🔬 | |
+| 14.2 | Kronecker-multiplicative GP (spatial warming rates) | R `kronecker/02_spain_multiplicative` | 🔬 | |
+| 14.3 | Non-stationary GEV (location-dependent tails) | R `kronecker/03_spain_nonstationary` | 🔬 | |
+| 14.4 | Gaussian copula spatial dependence | R `kronecker/04_spain_copula` | 🔬 | |
+| 14.5 | BHM with GEV + spatial GPs (methane / precipitation extremes) | — | 🔬 | **GAP** — dd:examples/gp/moments.md |
+| 14.6 | Temporal extremes: GEV with time-varying μ(t), σ(t), ξ(t) | — | 🔬 | **GAP** — dd:examples/gp/state_space.md |
 
-### 13.B — SVGP applied
+### 14.B — SVGP applied
 
 **Key equations / models:**
 - Mini-batch ELBO: $\hat{\mathcal{L}} = \tfrac{N}{B}\sum_{i\in\mathcal{B}}\mathbb{E}_{q(f_i)}[\log p(y_i\mid f_i)] - \mathrm{KL}(q(u)\Vert p(u))$
@@ -916,9 +992,9 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 13.7 | SVGP on real climate data (large-N) | R `pyroxgp/01–04` | 🔬 | could split: standard / batched / SH / deep-kernel |
+| 14.7 | SVGP on real climate data (large-N) | R `pyroxgp/01–04` | 🔬 | could split: standard / batched / SH / deep-kernel |
 
-### 13.C — Geophysics & emulation
+### 14.C — Geophysics & emulation
 
 **Key equations / models:**
 - GP emulator: $f_\text{sim}(\theta) \approx \mathcal{GP}$ trained on simulator outputs
@@ -927,14 +1003,14 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 13.8 | GP for ocean / SST / sea-level extremes | — | 🔬 | **GAP** |
-| 13.9 | GP emulator for a numerical model | — | 🔬 | **GAP** |
-| 13.10 | GP + somax — spatially smooth GP priors for ocean parameters | — | 🔬 | **GAP** — dd:examples/integration.md |
-| 13.11 | GP + ekalmX/vardax — learned GP dynamics for DA | — | 🔬 | **GAP** — dd:examples/integration.md |
-| 13.16 | Multi-fidelity GP (Kennedy & O'Hagan 2000) — fuse cheap (coarse) + expensive (fine) simulators via autoregressive GP | — | 🔬 | **GAP** |
-| 13.17 | ABC-GP emulator — use GP surrogate to bypass expensive likelihood; sample $\theta$ via ABC with GP-matched summary statistics | — | 🔬 | **GAP** |
+| 14.8 | GP for ocean / SST / sea-level extremes | — | 🔬 | **GAP** |
+| 14.9 | GP emulator for a numerical model | — | 🔬 | **GAP** |
+| 14.10 | GP + somax — spatially smooth GP priors for ocean parameters | — | 🔬 | **GAP** — dd:examples/integration.md |
+| 14.11 | GP + ekalmX/vardax — learned GP dynamics for DA | — | 🔬 | **GAP** — dd:examples/integration.md |
+| 14.16 | Multi-fidelity GP (Kennedy & O'Hagan 2000) — fuse cheap (coarse) + expensive (fine) simulators via autoregressive GP | — | 🔬 | **GAP** |
+| 14.17 | ABC-GP emulator — use GP surrogate to bypass expensive likelihood; sample $\theta$ via ABC with GP-matched summary statistics | — | 🔬 | **GAP** |
 
-### 13.D — Optimization & decision
+### 14.D — Optimization & decision
 
 **Key equations / models:**
 - Expected Improvement: $\alpha_\mathrm{EI}(x) = \mathbb{E}[\max(0, f^* - y(x))] = (f^*-\mu)\Phi(z) + \sigma\phi(z)$, $z = (f^*-\mu)/\sigma$
@@ -942,15 +1018,15 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 13.12 | Bayesian optimization with GPs (Expected Improvement) | — | 🔬 | **GAP** — dd:examples/gp/integration_detail.md |
-| 13.18 | GP-UCB acquisition — Upper Confidence Bound $\alpha_\mathrm{UCB}(x) = \mu(x) + \beta\sigma(x)$ | — | 🔬 | **GAP** |
-| 13.19 | Probability of Improvement (PI) — simpler BO baseline alongside EI | — | 🔬 | **GAP** |
-| 13.20 | Thompson sampling for BO — use pathwise posterior sampling (connects to 8.1) | — | 🔬 | **GAP** |
-| 13.21 | Multi-objective BO — Pareto front approximation via GP surrogates | — | 🔬 | **GAP** — relevant for simulator calibration |
-| 13.22 | GP for contextual bandits — GP reward model with online UCB/Thompson updates | — | 🔬 | **GAP** — connects BO and online learning |
-| 13.23 | Optimal experimental design — sensor placement via mutual information maximisation $I(f; y_\mathcal{S})$ | — | 🔬 | **GAP** |
+| 14.12 | Bayesian optimization with GPs (Expected Improvement) | — | 🔬 | **GAP** — dd:examples/gp/integration_detail.md |
+| 14.18 | GP-UCB acquisition — Upper Confidence Bound $\alpha_\mathrm{UCB}(x) = \mu(x) + \beta\sigma(x)$ | — | 🔬 | **GAP** |
+| 14.19 | Probability of Improvement (PI) — simpler BO baseline alongside EI | — | 🔬 | **GAP** |
+| 14.20 | Thompson sampling for BO — use pathwise posterior sampling (connects to 9.1) | — | 🔬 | **GAP** |
+| 14.21 | Multi-objective BO — Pareto front approximation via GP surrogates | — | 🔬 | **GAP** — relevant for simulator calibration |
+| 14.22 | GP for contextual bandits — GP reward model with online UCB/Thompson updates | — | 🔬 | **GAP** — connects BO and online learning |
+| 14.23 | Optimal experimental design — sensor placement via mutual information maximisation $I(f; y_\mathcal{S})$ | — | 🔬 | **GAP** |
 
-### 13.E — Causal & event data
+### 14.E — Causal & event data
 
 **Key equations / models:**
 - Counterfactual GP: condition $f$ on hypothetical intervention $\mathrm{do}(x=x')$
@@ -958,20 +1034,20 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 13.13 | Causal inference / counterfactual GPs | — | 🔬 | **GAP** |
-| 13.14 | Marked temporal point process + GP intensity (seismology, methane plumes) | — | 🔬 | **GAP** — dd:examples/gp/moments.md |
+| 14.13 | Causal inference / counterfactual GPs | — | 🔬 | **GAP** |
+| 14.14 | Marked temporal point process + GP intensity (seismology, methane plumes) | — | 🔬 | **GAP** — dd:examples/gp/moments.md |
 
-### 13.F — Practical
+### 14.F — Practical
 
 **Key equations / models:**
 - Masked likelihood: $\log p(y_\mathrm{obs}\mid f_\mathrm{obs})$, automatic imputation of $f_\mathrm{miss}$ via posterior
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 13.15 | Missing data / partial observations with masked likelihood | — | 🌉 | **GAP** — dd:examples/gp/moments.md |
-| 13.24 | Covariate-shift GP — importance-weighted marginal likelihood for train/test distribution mismatch | — | 🔬 | **GAP** |
+| 14.15 | Missing data / partial observations with masked likelihood | — | 🌉 | **GAP** — dd:examples/gp/moments.md |
+| 14.24 | Covariate-shift GP — importance-weighted marginal likelihood for train/test distribution mismatch | — | 🔬 | **GAP** |
 
-## Part 14 — Metrics & Calibration
+## Part 15 — Metrics & Calibration
 
 **Key equations / models:**
 - NLPD: $-\tfrac{1}{N}\sum_i \log p(y_i\mid x_i)$ → decomposes into calibration + sharpness
@@ -982,10 +1058,10 @@ GPs that scale to large N via inducing points, random features, or iterative sol
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 14.1 | NLPD decomposition: calibration + sharpness | — | 🧱 | **GAP** — dd:features/gp/metrics.md |
-| 14.2 | Expected Calibration Error (ECE) & coverage diagnostics | — | 🧱 | **GAP** |
-| 14.3 | Continuous Ranked Probability Score (CRPS) | — | 🧱 | **GAP** |
-| 14.4 | RMSE / MAE / R² / interval width | — | 🧱 | **GAP** |
+| 15.1 | NLPD decomposition: calibration + sharpness | — | 🧱 | **GAP** — dd:features/gp/metrics.md |
+| 15.2 | Expected Calibration Error (ECE) & coverage diagnostics | — | 🧱 | **GAP** |
+| 15.3 | Continuous Ranked Probability Score (CRPS) | — | 🧱 | **GAP** |
+| 15.4 | RMSE / MAE / R² / interval width | — | 🧱 | **GAP** |
 
 ---
 

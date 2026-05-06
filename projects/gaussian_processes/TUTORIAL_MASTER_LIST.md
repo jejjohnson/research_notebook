@@ -16,6 +16,87 @@ A reconciled, exhaustive curriculum spanning what currently exists in **gaussx**
 
 ---
 
+## Curriculum at a glance
+
+A bird's-eye view of the parts and their subparts. Skim this first to orient; the detailed per-tutorial tables live below.
+
+- **Part 0 — Linear Algebra & Gaussian Foundations**
+  - 0.A — The Multivariate Gaussian
+  - 0.B — Parameterizations
+  - 0.C — Bayesian Updates & Conditioning
+  - 0.D — Numerical Mechanics
+- **Part 1 — Structured Linear Operators**
+  - 1.A — Operator Zoo (catalog)
+  - 1.B — Matrix Identities & Decompositions
+  - 1.C — Matrix-Free / Implicit
+  - 1.D — Solvers
+  - 1.E — Trace, Log-Det, Roots
+- **Part 2 — Kernels**
+  - 2.A — Standard kernels
+  - 2.B — Spectral & deep kernels
+  - 2.C — Multi-output kernels
+  - 2.D — Spherical / localized kernels
+  - 2.E — Kernel-based statistics & utilities
+  - 2.F — Non-Euclidean & operator-valued kernels
+- **Part 3 — Exact GP Regression**
+  - 3.A — Foundations
+  - 3.B — Diagnostics
+  - 3.C — Heteroscedastic noise
+  - 3.D — High-level API
+  - 3.E — Constrained & Physics-informed GPs
+- **Part 4 — Structured GPs**
+  - 4.A — Kronecker GPs
+  - 4.B — Grid / Toeplitz GPs
+  - 4.C — Sparse-precision (mesh / GMRF)
+- **Part 5 — Approximations & Scalability**
+  - 5.A — Random features
+  - 5.B — Inducing-point fundamentals
+  - 5.C — Inter-domain features
+  - 5.D — Iterative-solver scaling
+  - 5.E — Deep GPs
+- **Part 6 — Non-Conjugate Likelihoods & Inference**
+  - 6.A — Likelihood & integrator zoos
+  - 6.B — Classification
+  - 6.C — Newton / Gauss-Newton family
+  - 6.D — Variational inference
+  - 6.E — Expectation Propagation
+  - 6.F — Bayesian linear regression & non-standard outputs
+  - 6.G — Aggregate Bayesian methods
+- **Part 7 — Markov / State-Space GPs**
+  - 7.A — Foundations
+  - 7.B — SDE kernel zoo
+  - 7.C — Markov GP workflows
+  - 7.D — Parallel & scalable filtering
+  - 7.E — Nonlinear filtering
+  - 7.F — Ensemble methods
+  - 7.G — Steady-state & structured-Gaussian surfaces
+  - 7.H — Non-conjugate temporal case studies
+- **Part 8 — Sampling, Pathwise, Conditioning**
+  - 8.A — Pathwise sampling
+  - 8.B — Matheron's-rule conditioning
+- **Part 9 — Uncertainty Propagation & UQ**
+  - 9.A — Foundations
+  - 9.B — Uncertain inputs
+  - 9.C — Analytic moments
+  - 9.D — BGPLVM
+  - 9.E — Special integrators & quantiles
+- **Part 10 — Probabilistic Programming Integration**
+  - 10.A — gaussx + NumPyro
+  - 10.B — pyrox patterns
+  - 10.C — Hierarchical & sampling
+- **Part 11 — Ensembles**
+- **Part 12 — Data Pipelines**
+- **Part 13 — Applied Case Studies *(research_notebook)***
+  - 13.A — Spatial extremes
+  - 13.B — SVGP applied
+  - 13.C — Geophysics & emulation
+  - 13.D — Optimization & decision
+  - 13.E — Causal & event data
+  - 13.F — Practical
+- **Part 14 — Metrics & Calibration**
+
+---
+
 ## Part 0 — Linear Algebra & Gaussian Foundations
 
 ### 0.A — The Multivariate Gaussian

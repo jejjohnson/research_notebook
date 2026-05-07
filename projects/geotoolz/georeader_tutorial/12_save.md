@@ -189,7 +189,7 @@ save.save_cog(
 )
 ```
 
-**Stream a large lazy reader to cloud storage without ever materialising in full:**
+**Save a lazy reader to cloud storage:**
 
 ```python
 save.save_cog(
@@ -198,7 +198,7 @@ save.save_cog(
 )
 ```
 
-The function does call `.load()` internally (step 1 of section 4), so this still allocates the full array briefly — the "without ever materialising" claim above is wrong as the module currently stands. For genuinely streaming I/O on truly huge files, fall back to manually iterating windows and calling `dataset.write(window=...)` per chunk.
+`save_cog` calls `data_save.load()` internally (step 1 of section 4), so the full scene is materialised in memory before the file is written and uploaded. This is fine for scenes that fit in RAM; for genuinely huge scenes that don't, this function is the wrong tool — use a manual window-loop pattern instead, opening the destination dataset with `rasterio.open(path, "w", **profile)` and calling `dataset.write(arr, window=...)` per chunk so that no buffer ever holds the full output.
 
 ---
 

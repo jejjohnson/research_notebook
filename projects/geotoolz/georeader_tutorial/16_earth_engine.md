@@ -156,7 +156,7 @@ ee.Authenticate()  # browser flow first time, cached afterwards
 ee.Initialize(project="my-gcp-project")
 ```
 
-The `[ee]` extra (`pip install georeader-spaceml[ee]`) installs `earthengine-api`. Without it, importing `readers.ee_image` raises `ImportError`.
+Install `georeader-spaceml` with the `[ee]` extra to pull in `earthengine-api`. Without it, importing `readers.ee_image` raises `ImportError`. In this repo the relevant install commands are `pixi add georeader-spaceml[ee]` or `uv add 'georeader-spaceml[ee]'` per the project's [CONTRIBUTING.md](../../../CONTRIBUTING.md) tooling conventions.
 
 The credentials live in `~/.config/earthengine/credentials` (managed by `ee.Authenticate()`); the module doesn't add its own credential file like EMIT does.
 

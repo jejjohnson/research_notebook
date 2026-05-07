@@ -1,5 +1,5 @@
 
-# Target API for Geostationary Satellites in `georeader`
+# Geostationary readers
 
 > **Design Report (v3)** — design for GOES-R ABI, MSG SEVIRI, MTG-FCI, and Himawari AHI readers in [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader).
 

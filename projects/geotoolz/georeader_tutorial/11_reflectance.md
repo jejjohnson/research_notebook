@@ -1,4 +1,4 @@
-# Chapter 11 — `reflectance.py`: radiometry, SRFs, and irradiance
+# Ch. 11 — `reflectance`
 
 > **Module:** `georeader/reflectance.py` (971 LOC, 97 box-drawing characters — third densest in the package)
 > **Role:** convert satellite imagery between physically meaningful radiometric quantities — radiance, top-of-atmosphere (ToA) reflectance, and band-integrated irradiance. Where the package crosses from "geospatial bookkeeping" into actual physics.

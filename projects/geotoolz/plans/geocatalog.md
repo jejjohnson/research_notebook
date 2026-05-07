@@ -1,5 +1,5 @@
 
-# Dataset-builder snippets — design report for georeader integration
+# Dataset builder (Phase 1)
 
 > **Scope:** evaluating the `remote_sensing/dataset*.py`, `sampler.py`, `operations.py`, and `rasterio_utils.py` files in [`jejjohnson/jej_vc_snippets`](https://github.com/jejjohnson/jej_vc_snippets) for promotion into [`jejjohnson/georeader`](https://github.com/jejjohnson/georeader).
 >

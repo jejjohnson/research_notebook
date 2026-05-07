@@ -1,4 +1,4 @@
-# Target API for MODIS and Curvilinear Whisk-Broom Sensors in `georeader`
+# MODIS / curvilinear readers
 
 > **Design Report** — design for MODIS, VIIRS, and related curvilinear-geolocation readers in [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader). Companion to the geostationary readers design.
 

@@ -1,4 +1,4 @@
-# Chapter 10 — `vectorize.py`: rasters → vectors
+# Ch. 10 — `vectorize`
 
 > **Module:** `georeader/vectorize.py` (370 LOC)
 > **Role:** the inverse of [Chapter 9](09_rasterize.md). Extract polygon geometries from binary raster masks. Standard tool for converting segmentation outputs and classification rasters back to GIS-friendly vector formats.
@@ -155,7 +155,7 @@ The post-processing helper for when you already have a polygon and want to:
 - **Apply an affine** (e.g., the polygon came from `get_polygons(..., transform=None)` and you now have a transform).
 - **Reproject between CRSs** (e.g., raster is UTM, you want WGS84 polygons for a GeoJSON).
 
-Source: [vectorize.py:271](../../../../tmp/georeader_src/georeader/vectorize.py#L271).
+Source: [vectorize.py:271](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/vectorize.py#L271).
 
 ---
 

@@ -1,5 +1,5 @@
 
-# Reader reconciliation — `RasterioReader`, `LazyCOGReader`, `AsyncGeoTIFFReader`
+# Reader reconciliation
 
 > **Scope:** rough class-level signatures showing how the three readers share one metadata surface and split into sync vs async read interfaces. Same level of granularity as the `GeoSlice` / `GeoCatalog` design sketches — types and method shapes, not full implementations.
 >

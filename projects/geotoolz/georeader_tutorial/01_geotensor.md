@@ -1,4 +1,4 @@
-# Chapter 1 — `geotensor.py`: the numpy-subclass `GeoTensor`
+# Ch. 1 — `geotensor`
 
 > **Module:** `georeader/geotensor.py` (2532 LOC)
 > **Branch:** `feature/geotensor_npapi` — this module *is* the headline change of that branch.
@@ -120,7 +120,7 @@ The mechanics behind this — three numpy hooks doing the heavy lifting:
 | `__array_ufunc__` | called on every ufunc (`np.add`, `np.sqrt`, …) | Strips inputs to plain ndarrays, applies the ufunc, re-wraps the output as a `GeoTensor` with metadata copied from the first `GeoTensor` input. |
 | `__getitem__` | called on `gt[...]` | Standard ndarray slice, then **rewrites `transform`** if the spatial axes (last two) were sliced — origin shifts by `start * res`, resolution rescales by `step`. |
 
-The aggregation case (`.mean()`, `.sum(axis=0)`) returns a scalar or lower-dim array; a *spatial* reduction usually returns a plain ndarray because the result no longer has a meaningful transform. (See `_preserved_spatial` at [geotensor.py:385](../../../../tmp/georeader_src/georeader/geotensor.py#L385).)
+The aggregation case (`.mean()`, `.sum(axis=0)`) returns a scalar or lower-dim array; a *spatial* reduction usually returns a plain ndarray because the result no longer has a meaningful transform. (See `_preserved_spatial` at [geotensor.py:385](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/geotensor.py#L385).)
 
 ---
 
@@ -167,7 +167,7 @@ Standard dimension names for 3D GeoTensor (C, H, W):
 - `gt.isel({"band": [3, 2, 1]})` — pick + reorder bands (RGB from S2 BGR)
 - `gt.isel({"x": slice(0, 100, 2), "y": slice(0, 100, 2)})` — 2× downsample (rewrites `res`)
 
-Source: [geotensor.py:1330](../../../../tmp/georeader_src/georeader/geotensor.py#L1330).
+Source: [geotensor.py:1330](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/geotensor.py#L1330).
 
 ---
 
@@ -217,7 +217,7 @@ Window extends beyond data:     boundless=True:      boundless=False:
 
 `boundless=True` (the default for `RasterioReader` reads in georeader) is the right choice for tiled inference: every chip comes back with the requested shape, so batches stack cleanly. `boundless=False` is useful when you want to *know* you're at an edge.
 
-Source: [geotensor.py:2227](../../../../tmp/georeader_src/georeader/geotensor.py#L2227).
+Source: [geotensor.py:2227](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/geotensor.py#L2227).
 
 ---
 
@@ -244,8 +244,8 @@ Grouped roughly by lifecycle:
 
 **Construction / I/O**
 - `GeoTensor(values, transform, crs, fill_value_default=0, attrs=None)` — primary constructor
-- `GeoTensor.load_file(path, ...)` — read a whole file into memory ([geotensor.py:2064](../../../../tmp/georeader_src/georeader/geotensor.py#L2064))
-- `GeoTensor.load_bytes(data, ...)` — read from a bytes buffer ([geotensor.py:2132](../../../../tmp/georeader_src/georeader/geotensor.py#L2132))
+- `GeoTensor.load_file(path, ...)` — read a whole file into memory ([geotensor.py:2064](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/geotensor.py#L2064))
+- `GeoTensor.load_bytes(data, ...)` — read from a bytes buffer ([geotensor.py:2132](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/geotensor.py#L2132))
 - `to_json()` / `from_json(d)` — JSON round-trip of metadata
 
 **Properties**
@@ -299,7 +299,7 @@ The downside to be aware of: spatial reductions (e.g., `gt.sum(axis=(-2,-1))`) d
 
 ## 12. Sharp edges
 
-- **Same-extent rule for binary ops.** `gt1 + gt2` raises if the transforms or shapes don't match (see `same_extent` and the `__add__` body at [geotensor.py:625](../../../../tmp/georeader_src/georeader/geotensor.py#L625)). Reproject first, don't try to "broadcast" across spatial extent.
+- **Same-extent rule for binary ops.** `gt1 + gt2` raises if the transforms or shapes don't match (see `same_extent` and the `__add__` body at [geotensor.py:625](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/geotensor.py#L625)). Reproject first, don't try to "broadcast" across spatial extent.
 - **`fill_value_default` is metadata, not a mask.** It's used by `read_from_window(boundless=True)`, `validmask()`, `invalidmask()`, and `pad`. It does *not* turn arithmetic into masked arithmetic — `gt + 1` still adds 1 to nodata pixels.
 - **Spatial slicing must use `slice`, not lists.** `gt.isel({"x": [0, 5, 10]})` is rejected; the resulting raster wouldn't be regularly sampled and the transform wouldn't be definable.
 - **`crs` is whatever rasterio accepts.** EPSG int, EPSG string, WKT, or `pyproj.CRS`. The class doesn't normalise — be consistent within a pipeline.

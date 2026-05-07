@@ -1,7 +1,6 @@
-# georeader tutorial — module catalog
+# Module catalog
 
-> **Source:** `spaceml-org/georeader` @ branch `feature/geotensor_npapi`, commit `f0d92f0`
-> **Cloned to:** `/tmp/georeader_src` (re-clone if removed)
+> **Source:** [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader/tree/f0d92f0) @ branch `feature/geotensor_npapi`, commit [`f0d92f0`](https://github.com/spaceml-org/georeader/tree/f0d92f0)
 > **Goal:** a module-by-module tutorial that captures the package's capabilities **and preserves all ASCII diagrams** before they're cleaned up downstream.
 
 The package is ~20k LOC across 17 top-level files + 14 reader modules. ~1100 lines of box-drawing ASCII art are scattered across docstrings — this is the doc treasure we're rescuing.

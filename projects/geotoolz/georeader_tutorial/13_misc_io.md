@@ -1,4 +1,4 @@
-# Chapter 13 — `io.py`, `dataarray.py`, `plot.py`: smaller utilities
+# Ch. 13 — utilities
 
 > **Modules:**
 > - `georeader/io.py` (113 LOC) — NetCDF safe-open

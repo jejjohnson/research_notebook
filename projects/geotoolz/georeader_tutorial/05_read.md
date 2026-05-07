@@ -1,4 +1,4 @@
-# Chapter 5 — `read.py`: the high-level reading API
+# Ch. 5 — `read`
 
 > **Module:** `georeader/read.py` (1967 LOC, the densest module in the package — 123 box-drawing characters across the docstring)
 > **Role:** the public face of georeader. Most users start here. Six "specify the AOI in the form most natural to your problem" entry points, plus reprojection / resampling / grid-matching.
@@ -179,7 +179,7 @@ The `resize` function is the resolution-only sibling — same CRS, same origin, 
 
 ## 6. The eight-step `read_reproject` walkthrough
 
-The implementation of `read_reproject` ([read.py:1348](../../../../tmp/georeader_src/georeader/read.py#L1348)) is annotated with eight numbered banner-comments inside the function body. They're not a single ASCII diagram, but they're the clearest map of how reprojection actually works in this package — worth preserving.
+The implementation of `read_reproject` ([read.py:1348](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/read.py#L1348)) is annotated with eight numbered banner-comments inside the function body. They're not a single ASCII diagram, but they're the clearest map of how reprojection actually works in this package — worth preserving.
 
 ```text
 ─────────────────────────────────────────────────────────────────────────

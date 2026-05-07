@@ -1,4 +1,4 @@
-# Chapter 6 — `slices.py`: tiling generators for tiled processing
+# Ch. 6 — `slices`
 
 > **Module:** `georeader/slices.py` (404 LOC)
 > **Role:** divide a raster into tiles. Three diagrams cover the *what* (overlap vs not), the *vocabulary* (Python `slice` vs `rasterio.windows.Window`), and the *what-do-I-do-at-the-edge* problem. Three public functions: `create_slices`, `create_windows`, plus the dict↔window converters.

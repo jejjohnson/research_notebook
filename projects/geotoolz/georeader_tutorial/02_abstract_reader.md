@@ -1,4 +1,4 @@
-# Chapter 2 — `abstract_reader.py`: the type protocols
+# Ch. 2 — `abstract_reader`
 
 > **Module:** `georeader/abstract_reader.py` (257 LOC)
 > **Role:** the duck-typing contract that lets `GeoTensor` (in-memory) and `RasterioReader` (lazy on-disk) be passed interchangeably to every function in the package.
@@ -90,15 +90,15 @@ The base class deliberately raises `NotImplementedError` for `dtype`, `dims`, an
 
 The whole file is short enough to read in one sitting. Key landmarks:
 
-- **`GeoDataBase`** — [abstract_reader.py:147](../../../../tmp/georeader_src/georeader/abstract_reader.py#L147). Pure `Protocol` with `transform`, `crs`, `shape` and computed `width`/`height`. No `load`. Any class that has these three attrs satisfies it without inheriting (structural typing via `typing.Protocol`).
+- **`GeoDataBase`** — [abstract_reader.py:147](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/abstract_reader.py#L147). Pure `Protocol` with `transform`, `crs`, `shape` and computed `width`/`height`. No `load`. Any class that has these three attrs satisfies it without inheriting (structural typing via `typing.Protocol`).
 
-- **`FakeGeoData`** — [abstract_reader.py:169](../../../../tmp/georeader_src/georeader/abstract_reader.py#L169). A `@dataclass` placeholder used for window/bounds math when you don't want to allocate the array. Three fields: `crs`, `transform`, `shape` (optional). Used heavily inside `read.py` to do "what window would I read?" calculations before deciding whether to actually fetch bytes.
+- **`FakeGeoData`** — [abstract_reader.py:169](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/abstract_reader.py#L169). A `@dataclass` placeholder used for window/bounds math when you don't want to allocate the array. Three fields: `crs`, `transform`, `shape` (optional). Used heavily inside `read.py` to do "what window would I read?" calculations before deciding whether to actually fetch bytes.
 
-- **`GeoData`** — [abstract_reader.py:188](../../../../tmp/georeader_src/georeader/abstract_reader.py#L188). The full reader interface. Defines `load(boundless=True)`, `read_from_window(window, boundless)`, plus the derived `bounds` / `res` / `footprint` / `values` (which delegates to `load`).
+- **`GeoData`** — [abstract_reader.py:188](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/abstract_reader.py#L188). The full reader interface. Defines `load(boundless=True)`, `read_from_window(window, boundless)`, plus the derived `bounds` / `res` / `footprint` / `values` (which delegates to `load`).
 
-- **`AbstractGeoData = GeoData`** — [abstract_reader.py:249](../../../../tmp/georeader_src/georeader/abstract_reader.py#L249). Back-compat alias.
+- **`AbstractGeoData = GeoData`** — [abstract_reader.py:249](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/abstract_reader.py#L249). Back-compat alias.
 
-- **`same_extent(geo1, geo2, precision=1e-3)`** — [abstract_reader.py:252](../../../../tmp/georeader_src/georeader/abstract_reader.py#L252). The canonical "are these two rasters geographically interchangeable" check: transform-almost-equal, CRS-compare, last-two-dims-equal. Used by `GeoTensor`'s binary arithmetic and by `mosaic` / `read` before broadcasting operations.
+- **`same_extent(geo1, geo2, precision=1e-3)`** — [abstract_reader.py:252](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/abstract_reader.py#L252). The canonical "are these two rasters geographically interchangeable" check: transform-almost-equal, CRS-compare, last-two-dims-equal. Used by `GeoTensor`'s binary arithmetic and by `mosaic` / `read` before broadcasting operations.
 
 ---
 

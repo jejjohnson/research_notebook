@@ -1,4 +1,4 @@
-# RS / cloud-native geospatial stack — tools, layers, and how they fit together
+# RS cloud-native stack
 
 > **Scope:** a rundown of `obstore`, `RasterioReader`, `async-geotiff`, `lazy-cogs`, `georeader`, `geotoolz`, `titiler`, and `lonboard` — what each is for, how they depend on one another, and which combinations match common workflows. Assumes `geotoolz` is built per its design report (composable Operator library on `GeoTensor`).
 >

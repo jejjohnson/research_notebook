@@ -1,4 +1,4 @@
-# Chapter 18 — `readers/{scihubcopernicus_query, download_pv_product, query_utils, tileserver, download_utils}.py`: catalog query & download helpers
+# Ch. 18 — query & download
 
 > **Modules** (all small):
 > - `query_utils.py` (80 LOC) — generic spatial-overlap helpers

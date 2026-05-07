@@ -1,4 +1,4 @@
-# Chapter 9 — `rasterize.py`: vectors → rasters
+# Ch. 9 — `rasterize`
 
 > **Module:** `georeader/rasterize.py` (438 LOC)
 > **Role:** burn vector geometries (polygons, lines, GeoDataFrames) into raster grids aligned to an existing `GeoData`. The standard tool for building masks, segmentation labels, and ROI maps from GIS-flavoured data.

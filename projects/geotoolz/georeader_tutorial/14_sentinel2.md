@@ -1,4 +1,4 @@
-# Chapter 14 — `readers/S2_SAFE_reader.py`: Sentinel-2 SAFE products
+# Ch. 14 — Sentinel-2
 
 > **Module:** `georeader/readers/S2_SAFE_reader.py` (1845 LOC — the largest file in the package)
 > **Role:** read Sentinel-2 imagery in the official SAFE product format. Both Level-1C (top-of-atmosphere reflectance) and Level-2A (atmospherically-corrected surface reflectance) are supported, from local folders or Google Cloud's free public bucket.
@@ -104,19 +104,19 @@ S2Image                    # base class — do not instantiate directly
 └── S2ImageL2A             # L2A-specific: SCL band, no B10
 ```
 
-`S2Image` lives at [S2_SAFE_reader.py:295](../../../../tmp/georeader_src/georeader/readers/S2_SAFE_reader.py#L295). It implements the `GeoData` protocol (Chapter 2 §3) plus S2-specific machinery:
+`S2Image` lives at [S2_SAFE_reader.py:295](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L295). It implements the `GeoData` protocol (Chapter 2 §3) plus S2-specific machinery:
 
 - Granule discovery: walking the SAFE folder to find per-band JP2 paths.
 - Multi-resolution band alignment: each band has its native resolution; `out_res=` selects the output grid and bands at other native resolutions get resampled internally.
 - XML metadata parsing for sun/view angles, processing baseline, and per-band offsets.
 - Window focus delegation: `set_window` propagates to all underlying `RasterioReader`s for each JP2.
 
-`S2ImageL1C` ([S2_SAFE_reader.py:1000](../../../../tmp/georeader_src/georeader/readers/S2_SAFE_reader.py#L1000)) adds:
+`S2ImageL1C` ([S2_SAFE_reader.py:1000](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1000)) adds:
 
 - The B10 cirrus band.
-- DN-to-radiance conversion via `DN_to_radiance(s2obj, dn_data)` ([S2_SAFE_reader.py:1534](../../../../tmp/georeader_src/georeader/readers/S2_SAFE_reader.py#L1534)) — uses the per-band `solar_irradiance` and `quantification_value` constants from `MTD_MSIL1C.xml`.
+- DN-to-radiance conversion via `DN_to_radiance(s2obj, dn_data)` ([S2_SAFE_reader.py:1534](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1534)) — uses the per-band `solar_irradiance` and `quantification_value` constants from `MTD_MSIL1C.xml`.
 
-`S2ImageL2A` ([S2_SAFE_reader.py:918](../../../../tmp/georeader_src/georeader/readers/S2_SAFE_reader.py#L918)) adds:
+`S2ImageL2A` ([S2_SAFE_reader.py:918](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L918)) adds:
 
 - The Scene Classification Layer (SCL) — a 20 m raster of integer class codes (0=NoData, 1=Saturated, 2=DarkArea, 3=CloudShadow, 4=Vegetation, 5=BareSoil, 6=Water, 7=Unclassified, 8=CloudMediumProb, 9=CloudHighProb, 10=ThinCirrus, 11=Snow). Useful for masking without running a separate cloud detector.
 
@@ -159,7 +159,7 @@ def s2loader(
 )
 ```
 
-Located at [S2_SAFE_reader.py:1603](../../../../tmp/georeader_src/georeader/readers/S2_SAFE_reader.py#L1603). The factory you should use 95% of the time:
+Located at [S2_SAFE_reader.py:1603](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1603). The factory you should use 95% of the time:
 
 - Detects whether the folder is L1C or L2A from the SAFE name (the second path segment encodes `MSIL1C` vs `MSIL2A`).
 - Returns the appropriate subclass.
@@ -175,7 +175,7 @@ Both wrap `s2loader` after extracting the SAFE path from the feature's assets.
 
 ## 7. The Google Cloud public bucket
 
-`gs://gcp-public-data-sentinel-2/` (constant: `FULL_PATH_PUBLIC_BUCKET_SENTINEL_2`) is a free, no-auth-required mirror of the entire Sentinel-2 archive. The `s2_public_bucket_path(...)` function ([S2_SAFE_reader.py:1739](../../../../tmp/georeader_src/georeader/readers/S2_SAFE_reader.py#L1739)) constructs paths from `(tile_number_field, datetime, processing_baseline)` — useful when you have a SAFE name from a catalog query and need to turn it into a `gs://` URL.
+`gs://gcp-public-data-sentinel-2/` (constant: `FULL_PATH_PUBLIC_BUCKET_SENTINEL_2`) is a free, no-auth-required mirror of the entire Sentinel-2 archive. The `s2_public_bucket_path(...)` function ([S2_SAFE_reader.py:1739](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1739)) constructs paths from `(tile_number_field, datetime, processing_baseline)` — useful when you have a SAFE name from a catalog query and need to turn it into a `gs://` URL.
 
 The standard "load any S2 scene from anywhere" recipe:
 
@@ -195,7 +195,7 @@ The lazy access pattern matches what you'd get with a single-file `RasterioReade
 
 ## 8. SRF reading
 
-`read_srf(s2obj=None, mission=None, ...)` ([S2_SAFE_reader.py:1411](../../../../tmp/georeader_src/georeader/readers/S2_SAFE_reader.py#L1411)) returns a `pd.DataFrame` with the **published S2 SRFs** — wavelength index, one column per band — exactly as ESA distributes them. Use this for the spectral-binning recipe in [Chapter 11 §8](11_reflectance.md):
+`read_srf(s2obj=None, mission=None, ...)` ([S2_SAFE_reader.py:1411](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1411)) returns a `pd.DataFrame` with the **published S2 SRFs** — wavelength index, one column per band — exactly as ESA distributes them. Use this for the spectral-binning recipe in [Chapter 11 §8](11_reflectance.md):
 
 ```python
 srf_df = read_srf(mission="S2A")            # or pass s2obj

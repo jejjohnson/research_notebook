@@ -1,4 +1,4 @@
-# Chapter 16 — `readers/ee_image.py` + helpers: Google Earth Engine
+# Ch. 16 — Earth Engine
 
 > **Modules:**
 > - `georeader/readers/ee_image.py` (539 LOC)
@@ -88,15 +88,15 @@ This pattern handles arbitrary AOI sizes — the only practical limit is memory 
 | `export_image_getpixels(asset_id, ...)` | direct-asset export via `ee.data.getPixels` (when you have the asset ID, not a computed image) |
 | `export_cube(query, geometry, ...)` | time-series export — returns `(T, C, H, W)` `GeoTensor` |
 
-`export_image` is the one you'll use 95% of the time. Source: [ee_image.py:223](../../../../tmp/georeader_src/georeader/readers/ee_image.py#L223).
+`export_image` is the one you'll use 95% of the time. Source: [ee_image.py:223](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/ee_image.py#L223).
 
-`export_cube` ([ee_image.py:392](../../../../tmp/georeader_src/georeader/readers/ee_image.py#L392)) is built on top — accepts a GeoDataFrame of (acquisition_date, asset_id) rows, exports each row as a 3D image, and stacks them along a new time axis.
+`export_cube` ([ee_image.py:392](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/ee_image.py#L392)) is built on top — accepts a GeoDataFrame of (acquisition_date, asset_id) rows, exports each row as a 3D image, and stacks them along a new time axis.
 
 ---
 
 ## 4. The split helper
 
-`split_bounds(bounds) → list[bounds]` ([ee_image.py:211](../../../../tmp/georeader_src/georeader/readers/ee_image.py#L211)) does the quadrant split:
+`split_bounds(bounds) → list[bounds]` ([ee_image.py:211](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/ee_image.py#L211)) does the quadrant split:
 
 ```text
    bounds = (minx, miny, maxx, maxy)
@@ -115,7 +115,7 @@ Always 4-way split (not adaptive based on aspect ratio). Adequate for the typica
 
 When you download S2 from GEE asking for 10 m resolution, GEE upsamples the 20 m and 60 m bands using **nearest neighbour**. That produces ugly blocky bands at 10 m — not what you want.
 
-`interpolate_20mbands_s2ee(geotensor, ...)` ([ee_image.py:476](../../../../tmp/georeader_src/georeader/readers/ee_image.py#L476)) post-processes the result by re-resampling the affected bands with **bicubic** interpolation. The result looks like a real 10 m image rather than blocky pixels.
+`interpolate_20mbands_s2ee(geotensor, ...)` ([ee_image.py:476](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/ee_image.py#L476)) post-processes the result by re-resampling the affected bands with **bicubic** interpolation. The result looks like a real 10 m image rather than blocky pixels.
 
 This isn't a bug in this module — it's a quirk of GEE's S2 ingestion. The workaround is the kind of detail that takes you an afternoon to find on the GEE forum; having it as a one-line call makes the module pay for itself.
 

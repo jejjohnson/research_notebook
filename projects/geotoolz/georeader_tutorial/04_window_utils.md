@@ -1,4 +1,4 @@
-# Chapter 4 — `window_utils.py`: pixel ↔ geographic coordinate math
+# Ch. 4 — `window_utils`
 
 > **Module:** `georeader/window_utils.py` (1471 LOC, the second-densest in diagrams)
 > **Role:** the math underneath everything else in the package. Windows, bounds, transforms, rounding, padding, polygon reprojection. Reading these utilities once is the cheapest way to understand why the higher-level `read.py` API is shaped the way it is.
@@ -264,7 +264,7 @@ Given two windows:
 
 The reader then reads the slice from disk and applies `np.pad` (or its own `fill_value_default`-aware equivalent) to produce a full-size array. CNN inference at scene edges relies entirely on this — every chip comes back the requested shape, with off-edge regions filled with nodata.
 
-Source: [window_utils.py:599](../../../../tmp/georeader_src/georeader/window_utils.py#L599).
+Source: [window_utils.py:599](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/window_utils.py#L599).
 
 ---
 
@@ -281,7 +281,7 @@ The companion to `pad_window` for inference pipelines: when you've read a tile *
 
 The reference is Huang et al. (2018) — the standard tile-and-stitch recipe. Used by ml4floods and similar segmentation pipelines built on georeader.
 
-Source: [window_utils.py:1256](../../../../tmp/georeader_src/georeader/window_utils.py#L1256).
+Source: [window_utils.py:1256](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/window_utils.py#L1256).
 
 ---
 

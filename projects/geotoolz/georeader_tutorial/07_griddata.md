@@ -1,4 +1,4 @@
-# Chapter 7 — `griddata.py`: irregular-grid interpolation and GLT orthorectification
+# Ch. 7 — `griddata`
 
 > **Module:** `georeader/griddata.py` (617 LOC)
 > **Role:** the onramp for **curvilinear sensors** — pushbroom imagers, swath scanners, and any sensor that gives you per-pixel `lons` and `lats` rather than a clean affine transform. Where `read.py` ends and EMIT / PRISMA / EnMAP / MODIS / VIIRS begin.
@@ -219,7 +219,7 @@ georreference(glt: GeoTensor, data: NDArray,
 
 Speed scales with output pixel count and band count, not with input scene size. A 285-band EMIT scene orthorectifies in seconds vs minutes for `cubic` interpolation.
 
-Source: [griddata.py:473](../../../../tmp/georeader_src/georeader/griddata.py#L473).
+Source: [griddata.py:473](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/griddata.py#L473).
 
 ---
 

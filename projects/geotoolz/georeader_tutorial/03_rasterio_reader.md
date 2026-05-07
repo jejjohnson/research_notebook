@@ -1,4 +1,4 @@
-# Chapter 3 — `rasterio_reader.py`: the lazy file-backed reader
+# Ch. 3 — `rasterio_reader`
 
 > **Module:** `georeader/rasterio_reader.py` (1630 LOC)
 > **Role:** the canonical `GeoData` implementation. Wraps `rasterio` to give you a `GeoTensor`-shaped interface over a file (local, S3, GCS, Azure, HTTP) **without** reading the bytes until you ask.
@@ -80,7 +80,7 @@ Two modes worth distinguishing:
 - **`stack=True` (default, time-as-axis).** Result `dims = ("time", "band", "y", "x")`. This is what you almost always want for time-series analysis. `isel({"time": 0})` returns a (C, H, W) reader pointing at one file.
 - **`stack=False` (concat along bands).** Result `(T*C, H, W)`. Useful when files are *band groups* of a single observation rather than time steps — e.g., S2 SAFE where each band is its own JP2 and there's no time meaning to the file list.
 
-Validation is strict: `__init__` checks CRS / transform / shape match across files unless you opt out via `allow_different_shape=True`. The check only relaxes shape — CRS and transform mismatches always raise. (See [rasterio_reader.py:301](../../../../tmp/georeader_src/georeader/rasterio_reader.py#L301).)
+Validation is strict: `__init__` checks CRS / transform / shape match across files unless you opt out via `allow_different_shape=True`. The check only relaxes shape — CRS and transform mismatches always raise. (See [rasterio_reader.py:301](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/rasterio_reader.py#L301).)
 
 ---
 
@@ -119,7 +119,7 @@ Validation is strict: `__init__` checks CRS / transform / shape match across fil
 - All subsequent `read()` / `read_from_window()` / `isel()` calls are **relative to the focused window** — you can hand a focused reader to a function that doesn't know about windowing and it will Just Work on the sub-region.
 - Overlapping window scans become a loop of `set_window` + `load()` without ever computing nested coordinate offsets in user code.
 
-The non-mutating sister is `read_from_window(window, boundless=True)` ([rasterio_reader.py:654](../../../../tmp/georeader_src/georeader/rasterio_reader.py#L654)) which returns a *new reader* with the focus applied — preferred for parallel pipelines where mutating shared state is awkward.
+The non-mutating sister is `read_from_window(window, boundless=True)` ([rasterio_reader.py:654](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/rasterio_reader.py#L654)) which returns a *new reader* with the focus applied — preferred for parallel pipelines where mutating shared state is awkward.
 
 ---
 
@@ -171,7 +171,7 @@ reader.isel({"time": [0, 2], "band": [1, 2, 3]})
 
 Same dim-name vocabulary as `GeoTensor.isel` (Chapter 1 §6) but with `"time"` admitted for stacked multi-file readers. Returns a *new reader* — still lazy. Spatial dims (`"x"`, `"y"`) accept slices and rewrite the focus window.
 
-The internal mechanism: `isel` returns a copied reader with `indexes` adjusted (band selection), `paths` filtered (time selection), and `window_focus` updated (spatial slice). Nothing reads. Source: [rasterio_reader.py:739](../../../../tmp/georeader_src/georeader/rasterio_reader.py#L739).
+The internal mechanism: `isel` returns a copied reader with `indexes` adjusted (band selection), `paths` filtered (time selection), and `window_focus` updated (spatial slice). Nothing reads. Source: [rasterio_reader.py:739](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/rasterio_reader.py#L739).
 
 ---
 

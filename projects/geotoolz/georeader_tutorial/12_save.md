@@ -1,4 +1,4 @@
-# Chapter 12 — `save.py`: writing GeoTensors to disk and to COGs
+# Ch. 12 — `save`
 
 > **Module:** `georeader/save.py` (586 LOC; the empty `save_cog.py` is a deprecated stub)
 > **Role:** the export side. Take a `GeoTensor` (or anything `GeoData`-shaped), write it to disk as a tiled GeoTIFF or a Cloud-Optimized GeoTIFF (COG). Handles cloud-storage destinations (`gs://`, `s3://`, `az://`) transparently.
@@ -131,7 +131,7 @@ The "no overviews" variant. Same profile, same compression, same tiling, but ski
 - You're producing intermediate files that get re-read locally.
 - You'll add overviews later via `gdaladdo` once the file is finalised.
 
-Source: [save.py:163 (`save_tiled_geotiff`)](../../../../tmp/georeader_src/georeader/save.py#L163), [save.py:327 (`save_cog`)](../../../../tmp/georeader_src/georeader/save.py#L327).
+Source: [save.py:163 (`save_tiled_geotiff`)](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/save.py#L163), [save.py:327 (`save_cog`)](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/save.py#L327).
 
 ---
 

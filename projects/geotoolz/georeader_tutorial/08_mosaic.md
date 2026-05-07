@@ -1,4 +1,4 @@
-# Chapter 8 — `mosaic.py`: combining rasters into composites
+# Ch. 8 — `mosaic`
 
 > **Module:** `georeader/mosaic.py` (450 LOC)
 > **Role:** turn N partially-overlapping `GeoData` sources into a single seamless `GeoTensor`. Reprojects, resamples, and fills nodata gaps from later rasters in the list.
@@ -167,7 +167,7 @@ A few non-obvious points:
 - **`resampling=cubic_spline` is the default.** Same caveat as `read.py` — flip to `Resampling.nearest` when mosaicking categorical data (cloud masks, class labels).
 - **The "first raster wins" defaults** (CRS, dtype, nodata) make the call short for "give me everything in raster1's coordinate system." Override only when you have a reason — passing inconsistent dtype across rasters can silently truncate values during the first reproject step.
 
-Source: [mosaic.py:159](../../../../tmp/georeader_src/georeader/mosaic.py#L159).
+Source: [mosaic.py:159](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/mosaic.py#L159).
 
 ---
 

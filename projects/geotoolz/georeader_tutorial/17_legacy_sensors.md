@@ -1,4 +1,4 @@
-# Chapter 17 — `readers/{spotvgt,probav}_image_operational.py`: legacy sensors
+# Ch. 17 — legacy sensors
 
 > **Modules:**
 > - `georeader/readers/spotvgt_image_operational.py` (389 LOC)
@@ -60,12 +60,12 @@ Used internally by both readers — saves repeating the calibration boilerplate 
 
 ## 4. SPOT VGT: `SpotVGT`
 
-The single class is at [spotvgt_image_operational.py:65](../../../../tmp/georeader_src/georeader/readers/spotvgt_image_operational.py#L65). Standard layout:
+The single class is at [spotvgt_image_operational.py:65](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/spotvgt_image_operational.py#L65). Standard layout:
 
 - Detects band files in the SPOT VGT product folder via filename regex.
 - Parses acquisition date / sensor / processing version from the filename.
 - Aligns the per-band GeoTIFFs onto a common WGS84 grid.
-- Provides cloud-masking helpers via `sm_cloud_mask(sm, mask_undefined=False)` ([spotvgt_image_operational.py:365](../../../../tmp/georeader_src/georeader/readers/spotvgt_image_operational.py#L365)) — extracts cloud / cloud-shadow / land-water flags from the SM (Status Map) bit-encoded raster.
+- Provides cloud-masking helpers via `sm_cloud_mask(sm, mask_undefined=False)` ([spotvgt_image_operational.py:365](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/spotvgt_image_operational.py#L365)) — extracts cloud / cloud-shadow / land-water flags from the SM (Status Map) bit-encoded raster.
 - `mask_only_sm(sm)` is a more aggressive variant — drops anything not pristine clear sky.
 
 ### SM bit decoding
@@ -89,11 +89,11 @@ The SPOT VGT Status Map encodes 8 flags in one byte. The functions decode bits l
 
 ## 5. Proba-V: `ProbaV`, `ProbaVRadiometry`, `ProbaVSM`
 
-The Proba-V hierarchy is more elaborate ([probav_image_operational.py](../../../../tmp/georeader_src/georeader/readers/probav_image_operational.py)):
+The Proba-V hierarchy is more elaborate ([probav_image_operational.py](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/probav_image_operational.py)):
 
-- **`ProbaV`** ([line 64](../../../../tmp/georeader_src/georeader/readers/probav_image_operational.py#L64)) — base reader for the 4-band imagery.
-- **`ProbaVRadiometry`** ([line 507](../../../../tmp/georeader_src/georeader/readers/probav_image_operational.py#L507)) — subclass that loads ToA reflectance directly (handles per-band gain/offset internally).
-- **`ProbaVSM`** ([line 590](../../../../tmp/georeader_src/georeader/readers/probav_image_operational.py#L590)) — subclass that exposes the Status Map for cloud / shadow / quality.
+- **`ProbaV`** ([line 64](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/probav_image_operational.py#L64)) — base reader for the 4-band imagery.
+- **`ProbaVRadiometry`** ([line 507](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/probav_image_operational.py#L507)) — subclass that loads ToA reflectance directly (handles per-band gain/offset internally).
+- **`ProbaVSM`** ([line 590](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/probav_image_operational.py#L590)) — subclass that exposes the Status Map for cloud / shadow / quality.
 
 The Status Map decoder functions `sm_cloud_mask` and `mask_only_sm` are duplicated between the two modules — same names, same logic, different bit conventions. Proba-V's SM is a different format than VGT's despite both coming from VITO; the readers can't share decoder code.
 

@@ -1,4 +1,4 @@
-# Chapter 15 — `readers/{emit,prisma,enmap}.py`: the hyperspectral trio
+# Ch. 15 — hyperspectral
 
 > **Modules:**
 > - `georeader/readers/emit.py` (1102 LOC)

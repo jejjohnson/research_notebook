@@ -1,4 +1,4 @@
-# Dataset-builder snippets — Phase 2 design report (DuckDB backend)
+# Dataset builder (Phase 2 — DuckDB)
 
 > **Scope:** adding a DuckDB-backed catalog backend, GeoParquet-as-artifact, and SQL-native cross-catalog operations to the [`jejjohnson/georeader`](https://github.com/jejjohnson/georeader) `catalog` module proposed in Phase 1.
 >

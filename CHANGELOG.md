@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.1.6](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.5...research_notebook-v0.1.6) (2026-05-07)
+
+
+### Features
+
+* **gp-tutorials:** bayesian updates / conditioning / structured sampling (0.6 / 0.7 / 0.8) ([#49](https://github.com/jejjohnson/research_notebook/issues/49)) ([454ff3f](https://github.com/jejjohnson/research_notebook/commit/454ff3f3b70c469c0c87ba1a5e9935d01ba8c701))
+* **gp-tutorials:** foundations trio — multivariate Gaussian, MVN API, closed-form quantities ([#41](https://github.com/jejjohnson/research_notebook/issues/41)) ([6fbdc5d](https://github.com/jejjohnson/research_notebook/commit/6fbdc5d7d4e167f30bea0847739ca30f5428aefc))
+* **gp-tutorials:** numerical mechanics quartet (0.9 / 0.10 / 0.11 / 0.12) + Joseph reorg ([#50](https://github.com/jejjohnson/research_notebook/issues/50)) ([b333680](https://github.com/jejjohnson/research_notebook/commit/b333680ef8233717b92565aae2fac69a70934b5c))
+* **gp-tutorials:** operator zoo (1.1-1.6) + dispatch system ([#51](https://github.com/jejjohnson/research_notebook/issues/51)) ([97f0fc3](https://github.com/jejjohnson/research_notebook/commit/97f0fc3fb7b92bd320dcba5185db3dd14257eab6))
+* **gp-tutorials:** parameterizations duo (0.4 natural params, 0.5 Joseph form) + grid-pollution fix ([#48](https://github.com/jejjohnson/research_notebook/issues/48)) ([925d09d](https://github.com/jejjohnson/research_notebook/commit/925d09d585fc49267cb0672596aa87f82f885b78))
+
+
+### Bug Fixes
+
+* **ci:** bump pyrox env to jax&gt;=0.10 / numpyro&gt;=0.21 ([a5db72b](https://github.com/jejjohnson/research_notebook/commit/a5db72bbfc04a1973420c532ea933842e3c18849))
+
+
+### Documentation
+
+* **gp-tutorials:** add at-a-glance TOC to master list ([#52](https://github.com/jejjohnson/research_notebook/issues/52)) ([f3dbe1e](https://github.com/jejjohnson/research_notebook/commit/f3dbe1eef556c23aa3e86be3b7f9175db01bb434))
+
 ## [0.1.5](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.4...research_notebook-v0.1.5) (2026-05-05)
 
 

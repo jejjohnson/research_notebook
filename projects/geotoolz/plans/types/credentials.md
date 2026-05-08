@@ -137,10 +137,11 @@ stateDiagram-v2
 
 ## Constraints
 
-- **Process-wide env vars are GDAL's contract.** The `Credential` Protocol's `apply(...)` method has to set `os.environ[...]` for the GDAL-VSI path to pick up. There's no way around the env-var dance for that path; the design just makes it less painful.
-- **Per-reader isolation is only available in the fsspec and opener paths.** The GDAL-VSI path is fundamentally process-global. A reader using GDAL-VSI can have a `credential=` kwarg, but that just sets env vars at open time — two simultaneous readers with two different credentials still conflict at the env-var layer.
-- **Refresh logic lives at the reader layer**, not in the `Credential` itself. The `Credential` knows *how* to refresh (`refresh()` method); the reader decides *when* (e.g., on 401 retry). This split keeps the credential testable in isolation.
-- **The today-pattern can't break.** Existing `os.environ['AZURE_STORAGE_*'] = ...` code keeps working.
+- **Env vars are GDAL's contract.** GDAL reads cloud credentials from environment variables — there's no per-call credential argument in libcurl's GDAL integration. The package crosses that boundary in two ways: `Credential.apply_to_os_environ()` mutates `os.environ` (the today-pattern, set globals at startup) and `Credential.apply(env)` returns a fresh dict the reader merges into `rasterio.Env(**env)` (per-call, per-reader isolation). Both ultimately feed GDAL's libcurl through the env-var mechanism; they differ only in whether the env scope is process-global or per-call.
+- **`apply()` is pure; `apply_to_os_environ()` mutates.** The Protocol design uses two methods so callers can choose. Per-reader isolation in `RasterioReader(credential=...)` uses `apply()` and merges into the local `rasterio.Env(...)` — no `os.environ` mutation, no global-state collisions between readers in one process.
+- **Per-reader isolation works on every bytes path.** GDAL-VSI gets a per-call env dict via `rasterio.Env(**apply(env))`. fsspec gets credentials inside its filesystem constructor. Custom openers close over their own credential. None of these touch `os.environ`.
+- **Refresh logic lives at the reader layer**, not in the `Credential` itself. The `Credential` knows *how* to refresh (`refresh()` method, which may also be invoked internally by `apply()` if the credential's TTL is near-expiry); the reader decides *when* to retry on a 401 (one refresh + one retry, then propagate). This split keeps the credential testable in isolation.
+- **The today-pattern can't break.** Existing `os.environ['AZURE_STORAGE_*'] = ...` code keeps working — `RasterioReader()` without a `credential=` kwarg inherits from `os.environ` exactly as today.
 
 ---
 

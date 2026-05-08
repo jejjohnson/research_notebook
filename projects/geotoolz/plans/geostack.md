@@ -26,7 +26,8 @@ This file owns the visual ecosystem map (the layered diagram, the strategy-compa
 | Topic | Full design |
 |---|---|
 | Reader Protocol surface; `RasterioReader` refactor | [`georeader/reader_protocol.md`](georeader/reader_protocol.md) |
-| `LazyCOGReader` + `ByteStore` Protocol + adapters | [`georeader/reader_lazy_cog.md`](georeader/reader_lazy_cog.md) |
+| `LazyCOGReader` (sync, COG-only, GDAL-free) | [`georeader/reader_lazy_cog.md`](georeader/reader_lazy_cog.md) |
+| `ByteStore` Protocol + `ObstoreByteStore` / `FsspecByteStore` adapters | [`types/bytestore.md`](types/bytestore.md) |
 | `AsyncGeoTIFFReader` + `AsyncReader` Protocol | [`georeader/reader_async_geotiff.md`](georeader/reader_async_geotiff.md) |
 | `geotoolz` operator library | [`geotoolz/geotoolz.md`](geotoolz/geotoolz.md) |
 | `GeoCatalog` + builders + DuckDB backend | [`geodatabase/`](geodatabase/) |

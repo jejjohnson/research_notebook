@@ -141,7 +141,7 @@ flowchart TD
 ## The `ByteStore` Protocol
 
 ```python
-from typing import Iterator, Protocol
+from typing import AsyncIterator, Iterator, Protocol
 
 
 class ByteStore(Protocol):
@@ -174,7 +174,7 @@ class ByteStore(Protocol):
 
     # listing
     def list(self, prefix: str = "") -> Iterator[str]: ...
-    async def list_async(self, prefix: str = "") -> Iterator[str]: ...
+    async def list_async(self, prefix: str = "") -> AsyncIterator[str]: ...
 ```
 
 `get_ranges` is the load-bearing method — fetch N byte ranges from one object in one parallel call. obstore implements this natively (with optional coalescing of close-by ranges); fsspec doesn't, so its adapter falls back to `asyncio.gather` over single-range fetches.

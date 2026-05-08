@@ -353,7 +353,7 @@ For deterministic pipelines, sort `slices` by `(slice_.bounds, slice_.interval.l
 
 | Design | How it touches `GeoSlice` |
 |---|---|
-| [Geodatabase / `geocatalog.md`](../geodatabase/geocatalog.md) | `GeoCatalog.query(slice: GeoSlice)` consumes one. Catalog rows + `iter_rows()` is what the samplers iterate. |
+| [Geodatabase / `geocatalog.md`](../geodatabase/geocatalog.md) | `GeoCatalog.query(slice_: GeoSlice)` consumes one. Catalog rows + `iter_rows()` is what the samplers iterate. |
 | [Geodatabase / `geoduckdb.md`](../geodatabase/geoduckdb.md) | DuckDB cursor iteration into the samplers; catalog produces lazy row stream, samplers reservoir-sample. |
 | [Reader reconciliation](../georeader/README.md) | `SyncReader.read_geoslice(slice)` and `AsyncReader.read_geoslice(slice)` are the canonical loader entry points. |
 | [`geotoolz.md`](../geotoolz/geotoolz.md) | `geotoolz.sampling.GridSampler` wraps `grid_sampler`. `geotoolz.inference.ApplyToChips` consumes the iterator and uses `stitch` for the inverse step. The Stitch operator in geotoolz is a direct re-export. |

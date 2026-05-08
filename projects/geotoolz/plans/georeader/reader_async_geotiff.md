@@ -30,7 +30,7 @@ Today, `georeader` has no async story. Users wanting async reads either roll the
 The design reuses the `ByteStore` Protocol from [`types/bytestore.md`](../types/bytestore.md) and everything from [Issue 2](reader_lazy_cog.md) that's not sync-specific (COG header parsing, `_tiles_for_window` math, decompression dispatch). The only async-specific work is:
 
 - Header fetch happens in an async classmethod (`open(...)`).
-- Read methods are coroutines that `await self._store.get_ranges_async(...)`.
+- Read methods are coroutines that issue per-tile `await self._store.get_range_async(...)` calls inside `asyncio.gather(...)` for parallel fetch. (`get_ranges_async` for store-level coalescing is a possible alternative — see [Open question §5](#5-per-tile-get_range_async-vs-store-level-get_ranges_async).)
 - A `max_concurrent_tiles` semaphore caps the fan-out per call.
 
 ---
@@ -138,12 +138,12 @@ class AsyncReader(_ReaderMeta, Protocol):
         target_resolution: tuple[float, float] | None = None,
         target_crs: pyproj.CRS | str | None = None,
     ) -> GeoTensor: ...
-    async def read_geoslice(self, slice: GeoSlice) -> GeoTensor: ...
+    async def read_geoslice(self, slice_: GeoSlice) -> GeoTensor: ...
     async def load(self) -> GeoTensor: ...
     async def aclose(self) -> None: ...
 
     async def __aenter__(self) -> "AsyncReader": ...
-    async def __aexit__(self, *exc) -> None: ...
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> bool | None: ...
 ```
 
 Mirrors `SyncReader` (Issue 1) on every method name; only the `await` keyword diverges. Downstream code in `geotoolz` accepts `SyncReader` or `AsyncReader` and branches on which is in use — see [parent §High-level shape](README.md#high-level-shape).
@@ -237,10 +237,16 @@ class AsyncGeoTIFFReader(AsyncReader):
                 )
 
         bytes_list = await asyncio.gather(*[_fetch(t) for t in tiles])
-        return self._decompress_and_assemble(bytes_list, tiles, window)
+        out = self._decompress_and_assemble(bytes_list, tiles, window)  # ndarray
+        return GeoTensor(
+            values=out,
+            transform=self._header.window_transform(window),
+            crs=self._header.crs,
+            fill_value_default=self._header.nodata,
+        )
 
     async def read_bounds(self, bounds, *, target_resolution=None, target_crs=None) -> GeoTensor: ...
-    async def read_geoslice(self, slice: GeoSlice) -> GeoTensor: ...
+    async def read_geoslice(self, slice_: GeoSlice) -> GeoTensor: ...
     async def load(self) -> GeoTensor:
         """Fetches every tile in parallel. Use sparingly."""
         ...
@@ -250,7 +256,7 @@ class AsyncGeoTIFFReader(AsyncReader):
         if self._header is None:
             await self._fetch_header()
         return self
-    async def __aexit__(self, *exc) -> None: ...
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> bool | None: ...
 ```
 
 ---
@@ -330,3 +336,5 @@ In addition to the [parent design's open questions](README.md#open-questions):
 2. **Sync `__init__` + async `open(...)` vs always-async open.** Some libraries (e.g., `httpx.AsyncClient`) allow a sync `__init__` that defers expensive setup. The current proposal does this — `__init__` is cheap, `open(...)` does the IFD fetch. Alternative: always require `await open(...)` and make `__init__` private. The user-facing API is roughly the same; the internal state-machine is simpler with the always-async-open path but the existing pattern is more familiar from other libraries.
 3. **`run_in_executor` shim for sync ByteStore adapters.** If `FsspecByteStore` is given a non-async-capable backend, its `get_range_async` can fall back to `loop.run_in_executor(None, ...)` to wrap the sync read. This is part of `FsspecByteStore`'s adapter spec in [`types/bytestore.md`](../types/bytestore.md); just calling out that `AsyncGeoTIFFReader` works against any `ByteStore` regardless of whether the backend is natively async.
 4. **Trio / anyio support.** The proposal uses `asyncio.gather` and `asyncio.Semaphore` directly. Wrapping in `anyio` for trio compatibility is straightforward but adds a dependency. Recommendation: stay asyncio-only for v1; add anyio later if there's demand.
+
+5. **Per-tile `get_range_async` vs store-level `get_ranges_async`.** The current proposal uses per-tile `get_range_async` calls inside `asyncio.gather(...)` so the `max_concurrent_tiles` semaphore can wrap each individual fetch. The alternative is a single `await self._store.get_ranges_async(url, [(o, l), ...])` call that lets the store (e.g., `obstore`) do its own coalescing of close-by ranges and parallelism control. **Tentative pick: per-tile + semaphore** for v1 (explicit, debuggable, and lets us cap concurrency precisely). Switch to store-level if benchmarking shows obstore's coalescing meaningfully outperforms manual gather on real workloads.

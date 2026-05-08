@@ -73,7 +73,7 @@ The georeader-side types that *aren't* here, and why:
 - **`GeoTensor`** — already a real implemented type in `georeader/geotensor.py`; documented in [Tutorial Ch. 1](../../georeader_tutorial/01_geotensor.md). No design doc needed.
 - **`GeoData` / `GeoDataBase` / `_ReaderMeta` / `SyncReader` / `AsyncReader`** — all live in [Reader reconciliation](../georeader/README.md) because they're the subject of that design, not just incidental to it.
 - **`GeoCatalog` Protocol** — lives in [Geodatabase](../geodatabase/README.md) for the same reason.
-- **`ByteStore`** — lives in [`reader_lazy_cog.md`](../georeader/reader_lazy_cog.md) for the same reason.
+- **`ByteStore`** — first lived in `reader_lazy_cog.md` because that's where it was first needed; now extracted to [`bytestore.md`](bytestore.md) since `AsyncGeoTIFFReader` reuses it. Listed in "Current designs" below.
 
 If a type starts in another design and grows into something multiple designs reference, **promote it here** — the cleanup is the same shape as the GeoSlice promotion that motivated this directory.
 

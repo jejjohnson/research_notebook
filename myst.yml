@@ -112,6 +112,8 @@ project:
                 - file: projects/plume_simulation/notebooks/radtran/05_matched_filter_retrieval.ipynb
         - title: geotoolz
           children:
+            - file: projects/geotoolz/geostack_notes.md
+            - file: projects/geotoolz/operational_attribution.md
             - title: Plans
               children:
                 - title: geotoolz

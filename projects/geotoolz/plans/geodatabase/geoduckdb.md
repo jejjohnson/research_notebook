@@ -866,3 +866,37 @@ What I'd defer to Phase 3:
 - A web UI for catalog inspection.
 
 If we get §6 + §7 right, Phase 2 turns the catalog from "a Python object you build at the start of every script" into "a file you build once, version, share, and query lazily from anywhere." That's the upgrade.
+
+---
+
+## Open questions, gotchas, and warnings
+
+The DuckDB-on-GeoParquet path is sound; concerns to manage actively.
+
+### DuckDB `spatial` extension version pinning
+
+The `spatial` extension is pre-1.0 in DuckDB; behaviours change between versions. GeoParquet 1.1 bbox-column predicate pushdown specifically lands at **DuckDB ≥ 1.1**. **Mitigation:** pin `duckdb >= 1.1` (and a known-good spatial-extension pin) in package metadata; add a CI matrix that tests on the latest DuckDB once it crosses 1.0 final. Don't lower the pin even if a user asks — silent query-plan regressions are the worst kind of bug.
+
+### `httpfs` extension and credentials
+
+Reading S3 / GCS / Azure GeoParquet from cloud needs the `httpfs` extension configured with the right credentials. DuckDB's secret API differs from `obstore` / `fsspec` patterns. **Mitigation:** define the `Credential` ↔ DuckDB-secret bridge in the [`Credential`](../types/credentials.md) design (cross-link), so users don't configure auth twice (once for georeader readers, once for DuckDB).
+
+### Concurrent reads/writes from multiple processes
+
+DuckDB on a single GeoParquet file is **read-safe** across processes. Write-safe only under specific patterns:
+- **Append-only** (new row groups in new files, then a manifest concat) — safe.
+- **In-place mutation** (rewrite the file under existing reads) — not safe across concurrent writers; you need an external lock or a Delta-Lake-style manifest.
+
+Phase 2 of `GeoCatalog` should default to the append-only pattern; document the trade-off if/when a concurrent-writer use case shows up.
+
+### GeoParquet 1.1 writer support
+
+DuckDB's GeoParquet *write* path is newer than the read path. Round-trip test (write with DuckDB, read with `geopandas.read_parquet`, check bbox column survives + CRS metadata is preserved) before promising the writer in v0.1. Cross-link [`geocatalog.md` §10.2](geocatalog.md#102-geoparquet-11-writer-adoption-is-uneven).
+
+### Bit-rot risk
+
+Most users will stay on Phase 1 (GeoPandas in-memory) for the 90% case; Phase 2 won't see organic exercise until someone hits 10⁶+ rows. **Risk:** the Phase 2 code paths regress without being noticed. **Mitigation:** maintain a multi-million-row CI fixture from v0.1; gate Phase 2 release behind one real Phase 2 user.
+
+### `ST_Transform` is slow per row
+
+DuckDB's `ST_Transform` requires PROJ data and is expensive when called per row. Hence the §4 design choice to write all GeoParquet in EPSG:4326 and store native CRS as a column for round-trip — reproject at write time, not at query time. **Footgun for users who skip this convention:** a multi-CRS catalog with `ST_Transform` in the WHERE clause will be 100× slower than a 4326-canonical catalog. Document loudly.

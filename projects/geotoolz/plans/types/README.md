@@ -106,3 +106,17 @@ When a candidate becomes a real design, it lands here as a sibling to `geoslice.
 - **One file per type family.** A "type family" can include a small number of closely-coupled types — e.g., `GeoSlice` plus the three samplers and `stitch` that produce/consume it — but not unrelated types stuffed together for filing convenience.
 - **Same design-doc skeleton as the other designs:** Status / Scope / Motivation / Goals / Non-goals / Constraints / The type itself / Connections to other designs / Open questions / Alternatives.
 - **Keep concrete enough to implement.** The whole point of pulling a type out is that it gets the same attention as a subsystem — meaning a real Protocol or dataclass spec, not a sketch.
+
+---
+
+## Open questions, gotchas, and warnings
+
+The cross-cutting types are the load-bearing ones — when they're wrong, every downstream design ripples. Things to watch:
+
+- **`Credential.apply()` per-call vs `apply_to_os_environ()` mutation.** The design distinguishes pure (returns a dict) vs mutating (writes `os.environ`) modes. Per-reader isolation only works if every reader consumes the per-call dict; the env-var mode is a backwards-compat hatch, not the recommended path. Audit each reader on the reconciliation path to make sure it accepts the per-call dict.
+- **`ByteStore` adapter parity.** `ObstoreByteStore` and `FsspecByteStore` must handle the same edge cases (large range reads, retries on transient failures, token-expiry refresh). Run the same Protocol-conformance test suite against both.
+- **`GeoSlice` time-axis convention.** `GeoSlice.interval` is a `pd.Interval`; the slice can be spatial-only (no interval) or spatial+temporal. Document the discriminated-union behaviour clearly so samplers and stitchers don't trip over the optional time dimension.
+- **Sampler API stability.** `random_geo_sampler` / `grid_geo_sampler` are bigger than they look — they couple `GeoSlice`, the catalog, and the inference loop. Treat their signatures as v0.1 public API; bump `_v2` if the shape needs to change rather than mutating in place.
+- **`stitch_predictions` reduction semantics.** Average vs first-write-wins vs max-vote — pick a default, document the alternatives, expose a `method=` knob. Without this, every user reinvents stitching.
+- **DuckDB credential bridge.** Reading cloud GeoParquet from DuckDB needs `httpfs` configured with credentials. The `Credential` Protocol should provide a `to_duckdb_secret()` adapter so users don't configure auth twice. Out-of-scope for v0.1, in-scope for the geodatabase Phase 2 design — flag the dependency.
+- **Future-candidate types are not commitments.** `Operator` Protocol, `Chip`/`Window`, `Sensor`/`Mission` are listed for orientation. Each lands here only when a second design references it. Resist promoting speculative types — they're cheap to add later, expensive to retract.

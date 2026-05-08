@@ -1,4 +1,19 @@
-# Ch. 14 — Sentinel-2
+---
+title: Sentinel-2
+subject: georeader tutorial
+subtitle: Sentinel-2 SAFE products (L1C and L2A)
+short_title: Ch. 14 — Sentinel-2
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, sentinel2
+---
 
 > **Module:** `georeader/readers/S2_SAFE_reader.py` (1845 LOC — the largest file in the package)
 > **Role:** read Sentinel-2 imagery in the official SAFE product format. Both Level-1C (top-of-atmosphere reflectance) and Level-2A (atmospherically-corrected surface reflectance) are supported, from local folders or Google Cloud's free public bucket.

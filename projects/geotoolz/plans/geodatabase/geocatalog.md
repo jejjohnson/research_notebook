@@ -1,5 +1,19 @@
-
-# Dataset builder (Phase 1)
+---
+title: GeoCatalog (Phase 1)
+subject: geodatabase design
+subtitle: In-memory GeoDataFrame with R-tree + IntervalIndex
+short_title: Phase 1
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, geodatabase, catalog, geopandas
+---
 
 > **Scope:** evaluating the `remote_sensing/dataset*.py`, `sampler.py`, `operations.py`, and `rasterio_utils.py` files in [`jejjohnson/jej_vc_snippets`](https://github.com/jejjohnson/jej_vc_snippets) for promotion into [`jejjohnson/georeader`](https://github.com/jejjohnson/georeader).
 >
@@ -106,6 +120,68 @@ The concrete value-add over TorchGeo is therefore:
 2. Backend-agnostic same-shape index for raster / xarray / vector.
 3. Explicit set algebra (intersect / union) at the catalog level.
 4. No torch in the core path.
+
+---
+
+## 3.3 Primer for newcomers
+
+> **ELI5.** An R-tree is a **russian-doll of bounding boxes** — each big box knows what smaller boxes it contains. To find files in your area, you only open the boxes that overlap your area, never the rest. Combined with a similar trick for time, queries answer in milliseconds even over thousands of files.
+
+### `gpd.GeoDataFrame` (geopandas)
+
+**What it is.** A `pandas.DataFrame` subclass with a `geometry` column holding Shapely geometries (Polygon, MultiPolygon, Point, LineString). Each row is a feature; rows behave like dataframe rows; the geometry column gets spatial-aware operations.
+
+**How it works.** `gpd.GeoDataFrame({"path": [...], "date": [...], "geometry": [Polygon(...), ...]})` — same constructor pattern as a regular DataFrame, but the `geometry` column is special-cased. Geopandas wraps Shapely (Python bindings to GEOS, the C library) plus pyproj (CRS handling) plus rtree (spatial indexing) plus fiona (file I/O). All the heavy lifting is in C; the Python layer is convenient bookkeeping.
+
+**What this means for us.** Phase 1's catalog is *literally* a GeoDataFrame plus an `IntervalIndex` for time. Builders read each file's bounds via `WarpedVRT` (lazy reprojection that doesn't read pixels), assemble those into geometries, and stick the result in a gdf. Queries leverage geopandas's existing R-tree + Shapely operations. No new spatial-data-structure code.
+
+### R-tree + IntervalIndex (the indices)
+
+**What it is.** Two indices stacked: an **R-tree** for "find rows whose `geometry` overlaps this bbox" and an **IntervalIndex** for "find rows whose `interval` overlaps this date range." Combined, they answer spatiotemporal queries in `O(log n + k)`.
+
+**How it works.** Geopandas builds the R-tree on first access via the `gdf.sindex` property — backed by libspatialindex's R-tree implementation in C. Pandas builds the IntervalIndex when you attach intervals via `gdf = gdf.set_index(pd.IntervalIndex.from_arrays(start, end, closed='both'))`. A combined query is `gdf[gdf.index.overlaps(query_interval)].cx[xmin:xmax, ymin:ymax]` — first the time filter, then the spatial filter.
+
+**What this means for us.** A catalog of 10k tile×date rows answers "files overlapping this AOI in June 2023" in sub-millisecond. The index is built lazily (first query pays the construction cost), so importing a Phase 1 catalog is fast even if you never query it. Beyond ~10⁵ rows the gdf's row-iteration overhead dominates and you should switch to Phase 2 (DuckDB).
+
+```{mermaid}
+flowchart TD
+    Root[Root bbox: world]
+    Root --> N1[Node A: Europe]
+    Root --> N2[Node B: Africa]
+    Root --> N3[Node C: Americas]
+    N1 --> L1[file 1.tif]
+    N1 --> L2[file 2.tif]
+    N2 --> L3[file 3.tif]
+    N2 --> L4[file 4.tif]
+    N3 --> L5[file 5.tif]
+
+    Q[Query bbox in Europe] -.->|overlaps| N1
+    Q -.->|skipped| N2
+    Q -.->|skipped| N3
+```
+
+### Set algebra over catalogs
+
+**What it is.** Catalogs support `query`, `intersect`, and `union` operations that produce new catalogs — like set operations on indexed file collections. Lets you compose "data I have" with "data I want" without writing custom join code per workflow.
+
+**How it works.** `intersect(catalog_A, catalog_B)` walks pairs of geometries (using the R-tree to skip non-intersecting pairs), computes per-pair `(geom_A ∩ geom_B, max(start_A, start_B), min(end_A, end_B))`, drops empty intersections. `union` is the opposite — concatenate, then optionally dedupe. `query` is "intersect with a single-row catalog" — the AOI is a one-row catalog with one geometry and one interval.
+
+**What this means for us.** Pairing imagery with labels (raster × vector across two backends), building cross-sensor catalogs (S2 + Landsat for change detection), filtering to "files that have all three of (S2, EnMAP, ERA5)" — all expressible as catalog set algebra, not bespoke pandas joins each time. Same shape carries to Phase 2 where it's SQL `INTERSECT` / `UNION` under the hood.
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant A as catalog_A (S2)
+    participant B as catalog_B (labels)
+    participant Out as result
+
+    User->>A: intersect(B)
+    A->>A: gpd.overlay(A, B, intersection)<br/>spatial filter via R-tree
+    A->>A: temporal: max(starts), min(ends)
+    A->>A: drop empty intersections
+    A-->>Out: paired catalog
+    Note over Out: rows where (geom_A ∩ geom_B)<br/>and time intervals overlap
+```
 
 ---
 

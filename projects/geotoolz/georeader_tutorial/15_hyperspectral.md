@@ -1,4 +1,19 @@
-# Ch. 15 — hyperspectral
+---
+title: Hyperspectral
+subject: georeader tutorial
+subtitle: EMIT, PRISMA, EnMAP readers
+short_title: Ch. 15 — Hyperspectral
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, emit, prisma, enmap
+---
 
 > **Modules:**
 > - `georeader/readers/emit.py` (1102 LOC)

@@ -1,4 +1,19 @@
-# Issue 1 — Protocol surface + `RasterioReader` refactor
+---
+title: Reader Protocol
+subject: georeader design
+subtitle: "`_ReaderMeta` / `SyncReader` Protocols + `RasterioReader` refactor"
+short_title: Protocol
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, georeader, protocol, refactor
+---
 
 > **Parent:** [README.md](README.md)
 > **Scope:** lock the Protocol surface every reader honours; refactor the existing `RasterioReader` and `GeoData` / `GeoDataBase` to conform.
@@ -11,6 +26,88 @@
 The two new readers (`LazyCOGReader`, `AsyncGeoTIFFReader`) need a shared interface to slot into. The existing `RasterioReader` and the `GeoData` / `GeoDataBase` Protocols in `abstract_reader.py` are close to that shape but not aligned. This issue lands the Protocol surface and brings the existing reader into compliance — without breaking any current caller.
 
 Done before Issues 2 and 3 because they implement against the Protocols this issue defines.
+
+---
+
+## Primer for newcomers
+
+> **ELI5.** A Python Protocol is like a **job description**: if you can do the listed tasks, you're qualified — regardless of which company you trained at. Three different reader classes can fill the same "reader" job because they all do the listed tasks (have the right methods), even though they're built completely differently inside.
+
+### Python Protocols (the typing kind)
+
+**What it is.** A `typing.Protocol` is a class that lists method signatures and attributes — and any other class with the same shape satisfies it, without needing to inherit. It's how Python expresses "if it walks like a duck and quacks like a duck, it's a duck" with type-checker support.
+
+**How it works.** Define `class Foo(Protocol): def bar(self) -> int: ...`. Any class with a `bar() -> int` method is now a `Foo`, no `class MyClass(Foo)` declaration required. Add `@runtime_checkable` to make `isinstance(x, Foo)` work at runtime too. The static type-checker (`mypy` / `ty`) verifies conformance at the call site.
+
+**What this means for us.** The three reader classes — `RasterioReader`, `LazyCOGReader`, `AsyncGeoTIFFReader` — don't share a base class. They each satisfy `_ReaderMeta` (and `SyncReader` or `AsyncReader`) structurally. User code typed `def f(reader: SyncReader)` accepts any of them with no isinstance checks. This is the seam that makes the readers swappable — same interface, three completely independent implementations.
+
+```{mermaid}
+classDiagram
+    class _ReaderMeta {
+        <<Protocol>>
+        crs
+        transform
+        bounds
+        shape
+        dtype
+        nodata
+    }
+    class SyncReader {
+        <<Protocol>>
+        read_window()
+        read_bounds()
+        load()
+    }
+    class AsyncReader {
+        <<Protocol>>
+        async read_window()
+        async read_bounds()
+        async load()
+    }
+    class RasterioReader
+    class LazyCOGReader
+    class AsyncGeoTIFFReader
+
+    _ReaderMeta <|-- SyncReader
+    _ReaderMeta <|-- AsyncReader
+    SyncReader <.. RasterioReader : satisfies
+    SyncReader <.. LazyCOGReader : satisfies
+    AsyncReader <.. AsyncGeoTIFFReader : satisfies
+```
+
+### The metadata-vs-read split
+
+**What it is.** Every reader has cheap metadata (CRS, transform, shape, dtype) and expensive bytes (the actual pixel data). The Protocol design splits these into two layers: `_ReaderMeta` (metadata only) and `SyncReader` (`_ReaderMeta` + read methods).
+
+**How it works.** A reader's `__init__` reads only the file header — enough to populate `crs` / `transform` / `shape` / etc. That's the `_ReaderMeta` surface. Calling `read_window(window)` fetches actual pixel bytes; that's the `SyncReader` surface on top. The split exists because many functions (window math, bounds queries, intersection checks) only need metadata and shouldn't pay I/O cost.
+
+**What this means for us.** `FakeGeoData` (an existing class in `abstract_reader.py`) is a `_ReaderMeta`-only object — it carries metadata for window calculations without owning data. After this refactor, that pattern is formalised as the Protocol layer. Functions that take `_ReaderMeta` are guaranteed I/O-free; functions that take `SyncReader` may issue reads.
+
+### The three bytes paths in `RasterioReader`
+
+**What it is.** `RasterioReader` wraps `rasterio.open(...)`, which delegates to GDAL. Underneath GDAL is some library that fetches the actual bytes. The refactor exposes three options.
+
+**How it works.** Three constructor knobs:
+
+- **`opener=None`, `fs=None`** (default): GDAL VSI uses libcurl in C. Fastest sync option, no Python in the byte-fetching loop. Works for `s3://`, `gs://`, `az://`, `https://`.
+- **`fs=fsspec_filesystem`**: GDAL calls back into a Python file-like object via fsspec for each byte range. Slower (Python ↔ C trip per range) but covers backends GDAL doesn't speak natively (FTP, SFTP, GitHub).
+- **`opener=callable`**: same shape as fsspec but with a user-supplied callback. Lets advanced users wire in obstore or custom HTTP clients.
+
+A small helper, `_resolve_open_kwargs`, is the only Python code that knows which path is active.
+
+```{mermaid}
+flowchart TD
+    Start[RasterioReader<br/>__init__]
+    Start --> Q{opener=? fs=?}
+    Q -->|both None default| GDAL[GDAL VSI<br/>libcurl in C]
+    Q -->|fs=fsspec_fs| Fsspec[Python file-like<br/>via fsspec]
+    Q -->|opener=callable| Custom[Python adapter<br/>e.g. obstore-aware]
+    GDAL --> Cloud[(S3 / GCS / Azure / HTTP)]
+    Fsspec --> Cloud
+    Custom --> Cloud
+```
+
+**What this means for us.** Most users land on the default and never think about it. Users who need a niche backend (custom auth, MinIO endpoint, GitHub-hosted fixtures) flip `fs=` and keep the rest of their pipeline unchanged. Users who want maximum cloud throughput skip `RasterioReader` entirely and use [`LazyCOGReader`](reader_lazy_cog.md) or [`AsyncGeoTIFFReader`](reader_async_geotiff.md).
 
 ---
 
@@ -184,39 +281,9 @@ class RasterioReader(SyncReader):
     # already pass it; the new no-arg load() is what SyncReader requires.
 ```
 
-### Inside `RasterioReader` — the three bytes paths
+### The three bytes paths
 
-```text
-              ┌──────────────────────┐
-              │   RasterioReader     │
-              │   __init__(...)      │
-              └──────────┬───────────┘
-                         │
-              ┌──────────┼──────────────────┐
-              ▼          ▼                  ▼
-       opener=None  opener=fs.open   opener=<custom>
-       fs=None      (or fs=…)        (e.g. obstore-aware)
-            │              │                   │
-            ▼              ▼                   ▼
-       ┌──────────┐ ┌──────────────┐ ┌──────────────────┐
-       │ GDAL VSI │ │ Python       │ │ Python adapter   │
-       │ (libcurl)│ │ file-like    │ │ over obstore     │
-       │  in C    │ │ via fsspec   │ │ get_range        │
-       └────┬─────┘ └──────┬───────┘ └────────┬─────────┘
-            │              │                  │
-            └──────────────┴──────────────────┘
-                           │
-                           ▼
-                  S3 / GCS / Azure / …
-```
-
-| Path | Trigger | Bytes fetched by | Speed | Driver coverage |
-|---|---|---|---|---|
-| **GDAL VSI** | `opener=None`, `fs=None` (default) | libcurl inside GDAL | fastest sync option | every GDAL driver |
-| **fsspec** | `fs=fsspec_fs` or `opener=fs.open` | Python file-like via fsspec; GDAL calls back per range | slower (Python ↔ C trip per range) | every GDAL driver, Python boundary added |
-| **obstore** (custom callback) | `opener=<callback wrapping obstore.get_range>` | Python adapter over `obstore.ObjectStore` | similar to fsspec — same Python ↔ C bottleneck | every GDAL driver, but only for what obstore can serve |
-
-`_resolve_open_kwargs` is the only Python code that knows which path is active. After it returns, GDAL takes over.
+The `opener=` / `fs=` knobs route bytes through one of three paths: GDAL VSI (default, fastest), fsspec (for niche backends), or a custom obstore callback. The diagram and per-path comparison table live in [`geostack.md` §"What's actually inside `RasterioReader`"](../geostack.md#whats-actually-inside-rasterioreader). `_resolve_open_kwargs` (above) is the only Python code that knows which path is active; after it returns, GDAL takes over.
 
 ### Usage examples
 
@@ -244,6 +311,18 @@ def obstore_opener(path: str, mode: str) -> "BinaryIO":
     ...
 reader = RasterioReader("s3://bucket/scene.tif", opener=obstore_opener)
 ```
+
+### Credential handling across the three paths
+
+The refactor doesn't change the existing GDAL-VSI credential pattern. It does add two paths where credentials can live in user objects rather than process env vars — useful for tests, multi-account isolation in one process, and refreshable tokens. Where credentials live in each path:
+
+| Path | Credential locus |
+|---|---|
+| **GDAL VSI** (`opener=None`, `fs=None`; default) | Process environment variables (`AWS_*`, `GOOGLE_APPLICATION_CREDENTIALS`, `AZURE_STORAGE_*`). Set once at app startup via `os.environ[...] = ...` or via a config-file helper like `mars_data_ops.fs_access_from_config(...)`. The today-pattern documented in [Tutorial Ch. 3 §9](../../georeader_tutorial/03_rasterio_reader.md). |
+| **fsspec** (`fs=fsspec_fs`) | The `fs` object's construction — `fsspec.filesystem("s3", key=..., secret=...)`. Per-reader, no env vars needed. Multi-account isolation comes free: two readers with two `fs` instances see two credential sets. |
+| **opener=callable** | Whatever the callable closes over. Most flexible, most user-managed; this is where refreshable-token implementations would live until the package ships a typed credential surface. |
+
+A typed `Credential` Protocol that unifies these three paths is proposed separately in [`plans/types/credentials.md`](../types/credentials.md). The wiring on `RasterioReader` (`credential=` kwarg, refresh-on-401, auto-rewrite for SAS fallback) is in [`reader_rasterio.md`](reader_rasterio.md). Both designs are downstream of this refactor — Issue 1 just needs to not paint into a corner that prevents them.
 
 ---
 

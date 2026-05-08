@@ -1,4 +1,19 @@
-# Module catalog
+---
+title: Module catalog
+subject: georeader tutorial
+subtitle: What this tutorial covers, by source module
+short_title: Catalog
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader
+---
 
 > **Source:** [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader/tree/f0d92f0) @ branch `feature/geotensor_npapi`, commit [`f0d92f0`](https://github.com/spaceml-org/georeader/tree/f0d92f0)
 > **Goal:** a module-by-module tutorial that captures the package's capabilities **and preserves all ASCII diagrams** before they're cleaned up downstream.

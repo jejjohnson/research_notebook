@@ -1,4 +1,19 @@
-# Dataset builder (Phase 2 — DuckDB)
+---
+title: DuckDB backend (Phase 2)
+subject: geodatabase design
+subtitle: "DuckDB + GeoParquet for 10⁶+ row catalogs"
+short_title: Phase 2
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, geodatabase, duckdb, geoparquet
+---
 
 > **Scope:** adding a DuckDB-backed catalog backend, GeoParquet-as-artifact, and SQL-native cross-catalog operations to the [`jejjohnson/georeader`](https://github.com/jejjohnson/georeader) `catalog` module proposed in Phase 1.
 >
@@ -121,6 +136,75 @@ The framing: **DuckDB doesn't replace Phase 1, it extends the working envelope b
 - **Plain `gpd.read_parquet` + Python.** What Phase 1 already gives via `from_geoparquet`. Fine until you need joins or analytics at scale.
 
 The unique slot DuckDB occupies: **zero-server, single-file, parallel, SQL, with native Parquet + spatial**. Nothing else hits all five.
+
+---
+
+## 3.4 Primer for newcomers
+
+> **ELI5.** GeoParquet is like a **phone book for spatial data** — alphabetised columns of data with bbox info on every page. DuckDB is the librarian who can read the bbox info to *skip 99% of pages* when you ask "who's in Madagascar?" — without ever opening those pages. The combination scales to millions of files because it never reads what it doesn't need.
+
+### DuckDB: an embedded SQL database
+
+**What it is.** DuckDB is a SQL database that runs in-process — no server, no daemon. Think SQLite, but column-oriented and tuned for analytics (OLAP) rather than transactional workloads. Open-source, fast, with a `spatial` extension that adds GIS functions.
+
+**How it works.** `import duckdb; con = duckdb.connect()` gives you a SQL engine in your Python process. Queries run against tables (in-memory), Parquet files (read directly without import), or a persistent on-disk database. The `spatial` extension adds `ST_Intersects`, `ST_Contains`, `GEOMETRY` types — basically PostGIS in an embedded engine.
+
+**What this means for us.** Phase 2 stores catalogs as GeoParquet on disk (or in cloud storage); DuckDB reads them lazily. Queries are vanilla SQL: `SELECT path FROM catalog WHERE ST_Intersects(geometry, AOI) AND date BETWEEN '2023-01-01' AND '2023-12-31'`. No daemon, no schema migrations, no driver dance — it's a Python import.
+
+### GeoParquet 1.1 + bbox-column predicate pushdown
+
+**What it is.** **GeoParquet** is a spec for storing geometry columns inside Apache Parquet files. **Predicate pushdown** is the database-engine optimisation that lets a query skip reading rows that obviously can't match. **GeoParquet 1.1** adds an optional `bbox` column that makes spatial predicate pushdown work for cloud-hosted Parquet.
+
+**How it works.** Parquet stores data in row-groups (typically ~10⁵ rows each), each with min/max statistics per column. A query like `WHERE date > '2023-06-01'` skips row-groups whose date max is < 2023-06-01 without reading them. Adding a per-row `bbox` column (four floats: `xmin`, `ymin`, `xmax`, `ymax`) extends this to spatial predicates: `ST_Intersects(geometry, AOI)` translates to `bbox.xmin < AOI.xmax AND bbox.xmax > AOI.xmin AND ...`, which uses Parquet's column statistics. Now a 1M-row catalog answers a small-AOI query by reading ~10⁵ rows of bbox data, not all 1M geometries.
+
+**What this means for us.** A Phase 2 catalog hosted on S3 can be queried with sub-second latency for the typical AOI-bounded workload, even at multi-million row scales — without downloading the full catalog. The catalog *itself* becomes a queryable cloud artifact, not a thing you download to use.
+
+```{mermaid}
+flowchart TD
+    Q["SELECT path FROM catalog<br/>WHERE ST_Intersects(geom, AOI)<br/>AND date BETWEEN ..."]
+    Q --> Plan[DuckDB planner: rewrite to bbox<br/>column predicates + date predicates]
+    Plan --> RG{For each Parquet<br/>row group}
+    RG -->|bbox min/max overlaps AOI<br/>and date range matches| Read[read row group<br/>decode geometries]
+    RG -->|no overlap| Skip[skipped — never touched]
+    Read --> Filter[apply ST_Intersects<br/>on the read rows]
+    Filter --> Result[matching paths]
+```
+
+### Lazy queries / cursors
+
+**What it is.** A *cursor* is a query handle that yields rows on demand, rather than materialising the whole result set up front. Standard database concept; the difference between `SELECT * FROM big_table` returning 10M rows in memory vs streaming them.
+
+**How it works.** DuckDB returns query results lazily by default — `con.execute("SELECT ...")` returns a relation object that hasn't fetched anything yet. `.fetchall()` materialises; `.fetchmany(N)` streams N at a time; `.arrow()` returns an Arrow stream that downstream consumers (sampler, loader) can iterate without ever holding the full result.
+
+**What this means for us.** A `random_sampler` over a 10M-row catalog doesn't need to load 10M rows into Python — it iterates the cursor and reservoir-samples without ever materialising. Same for `grid_sampler` walking tiles in a continent-scale catalog. The streaming cursor is what makes Phase 2 the right tool above 10⁵ rows.
+
+```{mermaid}
+sequenceDiagram
+    participant App
+    participant DB as DuckDBGeoCatalog
+    participant Sampler as random_sampler
+    participant Loader
+
+    App->>DB: query(bbox, time)
+    DB-->>App: lazy relation (no rows fetched)
+    App->>Sampler: random_sampler(catalog, n=100k)
+    loop reservoir sampling
+        Sampler->>DB: fetchmany(N)
+        DB-->>Sampler: N rows
+        Sampler->>Sampler: reservoir update
+    end
+    Sampler-->>App: 100k GeoSlices
+    App->>Loader: read_geoslice(sl)
+    Loader-->>App: GeoTensor
+```
+
+### Streaming construction
+
+**What it is.** Building a catalog one shard at a time without ever holding the full catalog in memory — needed when the catalog is too big to fit (e.g., the full Sentinel-2 archive is ~10⁷ scenes).
+
+**How it works.** Two patterns. **Append-to-Parquet:** write rows in chunks to a growing Parquet file; the writer holds only the current chunk. **DuckDB INSERT INTO:** create a table, insert rows in chunks, export to Parquet at the end; DuckDB handles its own paging. The Phase 2 builders use the first pattern (append-to-Parquet) because it doesn't require DuckDB during construction — just a Parquet writer.
+
+**What this means for us.** Catalog builders that scan millions of files don't OOM partway through. Each shard is a small append; the final Parquet file is what users query against. Without streaming, Phase 2's "10⁶+ row catalog" claim wouldn't survive contact with reality at the build step.
 
 ---
 

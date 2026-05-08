@@ -1,4 +1,19 @@
-# Ch. 11 — `reflectance`
+---
+title: reflectance
+subject: georeader tutorial
+subtitle: Radiometry, SRFs, and irradiance
+short_title: Ch. 11 — Reflectance
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, radiometry, srf
+---
 
 > **Module:** `georeader/reflectance.py` (971 LOC, 97 box-drawing characters — third densest in the package)
 > **Role:** convert satellite imagery between physically meaningful radiometric quantities — radiance, top-of-atmosphere (ToA) reflectance, and band-integrated irradiance. Where the package crosses from "geospatial bookkeeping" into actual physics.

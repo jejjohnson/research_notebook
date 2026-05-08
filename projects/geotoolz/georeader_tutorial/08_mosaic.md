@@ -1,4 +1,19 @@
-# Ch. 8 — `mosaic`
+---
+title: mosaic
+subject: georeader tutorial
+subtitle: Combining rasters into composites
+short_title: Ch. 8 — Mosaic
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, mosaic
+---
 
 > **Module:** `georeader/mosaic.py` (450 LOC)
 > **Role:** turn N partially-overlapping `GeoData` sources into a single seamless `GeoTensor`. Reprojects, resamples, and fills nodata gaps from later rasters in the list.

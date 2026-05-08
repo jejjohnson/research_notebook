@@ -1,4 +1,19 @@
-# Ch. 4 — `window_utils`
+---
+title: window_utils
+subject: georeader tutorial
+subtitle: Pixel ↔ geographic coordinate math
+short_title: Ch. 4 — Windows
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, window
+---
 
 > **Module:** `georeader/window_utils.py` (1471 LOC, the second-densest in diagrams)
 > **Role:** the math underneath everything else in the package. Windows, bounds, transforms, rounding, padding, polygon reprojection. Reading these utilities once is the cheapest way to understand why the higher-level `read.py` API is shaped the way it is.

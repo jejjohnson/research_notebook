@@ -1,8 +1,37 @@
-# RS cloud-native stack
+---
+title: RS cloud-native stack
+subject: Ecosystem map
+subtitle: obstore, georeader, geotoolz, titiler, lonboard — and how they fit
+short_title: Stack
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: reference, ecosystem, stack
+---
 
-> **Scope:** a rundown of `obstore`, `RasterioReader`, `async-geotiff`, `lazy-cogs`, `georeader`, `geotoolz`, `titiler`, and `lonboard` — what each is for, how they depend on one another, and which combinations match common workflows. Assumes `geotoolz` is built per its design report (composable Operator library on `GeoTensor`).
+> **Scope:** a rundown of `obstore`, `RasterioReader`, `async-geotiff`, `lazy-cogs`, `georeader`, `geotoolz`, `titiler`, and `lonboard` — what each is for, how they depend on one another, and which combinations match common workflows.
 >
-> **Status:** reference document, not a design proposal.
+> **Status:** reference document, not a design proposal. Companion to the per-design documents in [`georeader/`](georeader/), [`geotoolz/`](geotoolz/), [`geodatabase/`](geodatabase/), [`readers/`](readers/), and [`types/`](types/) — read this first to orient on the ecosystem, then dive into a specific design when you want the full spec.
+
+## Where each topic is fully specified
+
+This file owns the visual ecosystem map (the layered diagram, the strategy-comparison tables, the bytes-paths triage diagram, the end-to-end flows). For the deep design of any one tool, follow the pointer:
+
+| Topic | Full design |
+|---|---|
+| Reader Protocol surface; `RasterioReader` refactor | [`georeader/reader_protocol.md`](georeader/reader_protocol.md) |
+| `LazyCOGReader` + `ByteStore` Protocol + adapters | [`georeader/reader_lazy_cog.md`](georeader/reader_lazy_cog.md) |
+| `AsyncGeoTIFFReader` + `AsyncReader` Protocol | [`georeader/reader_async_geotiff.md`](georeader/reader_async_geotiff.md) |
+| `geotoolz` operator library | [`geotoolz/geotoolz.md`](geotoolz/geotoolz.md) |
+| `GeoCatalog` + builders + DuckDB backend | [`geodatabase/`](geodatabase/) |
+| `GeoSlice` + samplers + stitch | [`types/geoslice.md`](types/geoslice.md) |
+| Per-sensor readers (geostationary, MODIS, …) | [`readers/`](readers/) |
 
 ---
 
@@ -79,59 +108,25 @@ Bottom-up dependency direction. Anything above can call anything below; nothing 
 
 ### 2. `RasterioReader` (file reading — sync, in `georeader`)
 
-**What it is.** The default sync reader in `georeader`. Wraps `rasterio.open` with lazy-but-windowed semantics: opening the file is cheap (header + metadata only); calling `.load()` or reading a window via `read.read_from_bounds(...)` triggers the actual pixel fetch. Lives in `georeader/rasterio_reader.py`.
+**What it is.** The default sync reader in `georeader`. Wraps `rasterio.open` with lazy-but-windowed semantics. Universal driver coverage (every GDAL format), GDAL/VSI for cloud paths by default, fresh-per-read for process-safety. The right answer ~90% of the time.
 
-**Why it matters.** This is where 90% of users land by default, because (a) GDAL is the universal raster reader (handles every driver, every CRS quirk, every weird sensor product), (b) it works with both local files and cloud URLs out of the box via GDAL's VSI virtual file system (`/vsis3/`, `/vsigs/`, `/vsicurl/`), and (c) it's what every existing tutorial, notebook, and downstream tool expects.
-
-**Key surface.**
-
-- `RasterioReader(filepath, indexes=None, ...)` — opens lazily.
-- `.load()` — read all configured bands into a `GeoTensor`.
-- `.read_from_window(window)` — read a sub-window.
-- Composed with `georeader.read.read_from_bounds(reader, bounds, ...)` for the bbox-driven path.
-- Opens the file fresh on every `read()` call (process-safe; pickleable for parallel workers).
-
-**Deps.** `rasterio`, `GDAL`, `numpy`, `shapely`, `pyproj`. No async runtime.
-
-**Use cases.**
-
-- Single-scene workflows (RGB visualisation, NDVI, save COG).
-- Anything with non-COG drivers: `RasterioReader` reads ENVI HDR, NetCDF subdatasets, JPEG2000 (Sentinel-2 SAFE), HDF5 (EnMAP, EMIT), GRIB. async-geotiff and lazy-cogs are TIFF-only.
-- Local-disk batch jobs where async I/O wouldn't help.
-- Workflows where rasterio's CRS handling, masked-array support, or per-driver creation options matter (warping, COG profile generation, etc.).
-
-**Talks to.** Below: `rasterio` + `GDAL`, which by default uses GDAL's own libcurl-based VSI handlers (`/vsis3/`, `/vsigs/`, `/vsiaz/`, `/vsicurl/`) for cloud paths — **no Python in the byte-fetching loop**. Optionally delegates to `fsspec` or `obstore` via rasterio's `opener=` parameter when the user passes a custom file opener (see [§ "What's actually inside `RasterioReader`"](#whats-actually-inside-rasterioreader)). Above: produces `GeoTensor`s consumed by `geotoolz`, `titiler` (via `rio-tiler` which is also rasterio-based), and any user code holding a `georeader` object.
+**See:** [`georeader/reader_protocol.md`](georeader/reader_protocol.md) for the full design (Protocol surface, `opener=`/`fs=` knobs, three-bytes-paths triage); [Tutorial Ch. 3](../georeader_tutorial/03_rasterio_reader.md) for the current implementation.
 
 ### 3. `async-geotiff` (file reading — async, external)
 
-**What it is.** An async GeoTIFF / COG reader. Reads tiles via HTTP range requests, parses TIFF IFDs concurrently, returns numpy arrays. By DevSeed.
+**What it is.** An async GeoTIFF / COG reader. Tiles fetched via HTTP range requests through `obstore`; TIFF IFDs parsed concurrently; no GDAL. By DevSeed. The basis for georeader's planned `AsyncGeoTIFFReader`.
 
-**Why it matters.** GDAL is sync and process-bound. For workloads that need to fan out 1000 simultaneous tile reads (e.g. tile servers, hyper-parallel batch inference), an async reader avoids the thread-per-request overhead and exploits HTTP/2 multiplexing through `obstore`.
+**Why it matters.** Lights up workloads where many tile reads happen simultaneously (tile servers, hyper-parallel batch inference) — `asyncio.gather(*[read_window(w) for w in 1000_windows])` avoids thread-per-request overhead and exploits HTTP/2 multiplexing.
 
-**Deps.** `obstore` for transport. No GDAL.
-
-**Use cases.**
-
-- Tile-server backends fetching arbitrary COG tiles fast.
-- Batch processing where the bottleneck is "how many tiles per second can I pull from S3."
-- ML dataloaders that want async over thread-pooled rasterio.
-
-**Talks to.** `obstore` below. `georeader` above — `georeader.RasterioReader` is the sync reader, but a sibling `AsyncGeoTIFFReader` (or just direct `async-geotiff` calls) lands data into `GeoTensor` for the rest of the stack.
+**See:** [`georeader/reader_async_geotiff.md`](georeader/reader_async_geotiff.md) for the full design.
 
 ### 4. `lazy-cogs` (file reading — lazy, external)
 
-**What it is.** Lazy COG access — open a COG without reading data; tiles are fetched only when sliced. Conceptually similar to what `rioxarray.open_rasterio(chunks=...)` does with dask, but lighter.
+**What it is.** Lazy COG access — open a COG without reading data; tiles are fetched only when sliced. Pure-Python TIFF parsing; transport via `obstore` or `fsspec`. The basis for georeader's planned `LazyCOGReader`.
 
-**Why it matters.** For workflows that touch many COGs but only read a small spatial subset each (catalog-driven processing, sampler-driven ML), eager reads are wasteful. Lazy access defers I/O until a slice is requested, then makes one HTTP range request for exactly the tiles the slice covers.
+**Why it matters.** For workflows that touch many COGs but only read a small spatial subset each (catalog-driven processing, sampler-driven ML), eager reads are wasteful. "100k random chips across 50k COGs" goes from infeasible to seconds.
 
-**Deps.** Typically `obstore` (or `fsspec`) for transport; pure-Python TIFF parsing for the header.
-
-**Use cases.**
-
-- "I have 50k COGs in S3, extract a 256×256 chip from each at coords X." Without laziness this is impossible; with it, it's seconds.
-- Stacking timeseries where you fetch only the bbox you care about across all timesteps.
-
-**Talks to.** Same shape as `async-geotiff`. The two overlap conceptually — you can think of `async-geotiff` as the async-first reader and `lazy-cogs` as the lazy-first abstraction; in practice they often fold into each other in user code.
+**See:** [`georeader/reader_lazy_cog.md`](georeader/reader_lazy_cog.md) for the full design (IFD parsing, tile-fetch math, decompression dispatch, `ByteStore` Protocol).
 
 ### 5. `georeader` (substrate)
 
@@ -159,11 +154,7 @@ Bottom-up dependency direction. Anything above can call anything below; nothing 
 
 **Why it matters.** Without it, every RS pipeline is bespoke glue code. With it, `Sequential([MaskClouds(...), TOAToBOA(...), NDVI(...)])` — declared in YAML or Python.
 
-**Deps.** Hard: `numpy`, `scipy`, `scikit-image`, `scikit-learn`, `georeader`. Optional: `torch` / `jax` (via `ModelOp`), `hydra-zen`, `xrpatcher`.
-
-**Use cases.** Single-tile pipelines, tiled inference (`ApplyToChips`), catalog-driven processing (`CatalogPipeline`), Hydra-config workflows, sensor-specific presets.
-
-**Talks to.** Below: consumes `GeoTensor` from `georeader`; reaches into `georeader.catalog` for the `CatalogPipeline` operator. Above: produces `GeoTensor` outputs that get saved as COGs (which `titiler` / `lonboard` then read).
+**See:** [`geotoolz/README.md`](geotoolz/README.md) for the navigation entry; [`geotoolz/geotoolz.md`](geotoolz/geotoolz.md) for the full design report (architecture, 12-module surface, end-to-end examples, `xr_toolz` coexistence).
 
 ### 7. `titiler` (serving)
 
@@ -245,27 +236,7 @@ A practical rule:
   lazy-cogs  async-geotiff
 ```
 
-In `geotoolz`, this maps to a `reader_class=` argument on `ApplyToChips` / `CatalogPipeline` — the pipeline definition stays the same regardless of which reader actually fetches bytes:
-
-```python
-# Default — sync rasterio, fine for local or small jobs
-geotoolz.catalog_ops.CatalogPipeline(catalog, op)
-
-# Many cloud COGs in parallel
-geotoolz.catalog_ops.CatalogPipeline(
-    catalog, op,
-    reader_class=georeader.AsyncGeoTIFFReader,
-    n_concurrent=64,
-)
-
-# Random chips across many cloud COGs
-geotoolz.sampling.RandomSampler(
-    catalog, chip_size=(256, 256), length=100_000,
-    reader_class=georeader.LazyCOGReader,
-)
-```
-
-The reader is a strategy; the rest of the pipeline doesn't care.
+All three are interchangeable behind one Protocol surface — pipelines accept a `reader_class=` argument and the rest of the code is unchanged. See [`georeader/README.md`](georeader/README.md) for the protocol surface that makes them swappable, and [`georeader/reader_protocol.md`](georeader/reader_protocol.md) for the refactor that locks it in.
 
 ---
 
@@ -311,29 +282,7 @@ A practical rule:
 
 The two coexist comfortably. New code paths in `async-geotiff` and `lazy-cogs` default to `obstore`; older code paths in `geopandas`, `pandas`, `xarray`, and `zarr ≤ 2` go through `fsspec`. `georeader.GeoCatalog` uses `obstore` for its parquet round-trip when reading remote catalogs because that's the hot path; but it can fall back to `fsspec` for niche storage.
 
-In `geotoolz` / `georeader`, this maps to a `store=` argument that any reader accepts:
-
-```python
-# Default — auto-pick obstore for s3://, gs://, az://, http(s)://; fsspec otherwise
-reader = georeader.LazyCOGReader("s3://bucket/scene.tif")
-
-# Explicit obstore
-from obstore.store import S3Store
-reader = georeader.LazyCOGReader(
-    "scene.tif",
-    store=ObstoreByteStore(S3Store("bucket")),
-)
-
-# Explicit fsspec — when you need a niche backend
-import fsspec
-fs = fsspec.filesystem("github", org="foo", repo="bar")
-reader = georeader.LazyCOGReader(
-    "path/to/scene.tif",
-    store=FsspecByteStore(fs),
-)
-```
-
-The reader doesn't care which transport actually fetches the bytes — both satisfy the same `ByteStore` Protocol (see the API reconciliation file).
+Both transports satisfy the same `ByteStore` Protocol — readers take a `store=` argument and don't care which is plugged in. See [`georeader/reader_lazy_cog.md`](georeader/reader_lazy_cog.md) §`ByteStore` for the Protocol that abstracts both, plus the `ObstoreByteStore` / `FsspecByteStore` adapter sketches and the `open_store(url)` factory.
 
 ---
 
@@ -370,39 +319,12 @@ The main diagram shows `RasterioReader` going through `GDAL / VSI`. That's the *
 | **`opener=fs.open`** (fsspec) | Python file-like via fsspec; GDAL calls back into Python for each byte range. Slower than VSI because of the Python ↔ C trip per range. | Niche backends GDAL doesn't natively support (FTP, SFTP, GitHub, custom auth flows), or when the rest of the pipeline already holds an fsspec filesystem and re-using it simplifies the auth story. |
 | **`opener=<custom obstore callback>`** | Python adapter wrapping `obstore.ObjectStore.get_range`, given to GDAL via `opener=`. | Possible in principle. In practice you'd bypass `RasterioReader` entirely and use `lazy-cogs` or `async-geotiff` directly — they're already that path, without GDAL in between. |
 
-### What this really means
+Two takeaways from the diagram:
 
-- **`RasterioReader` *can* fetch cloud bytes without fsspec or obstore.** Its default path is GDAL's native HTTP client (libcurl in C). That's been true since well before fsspec or obstore existed.
-- **GDAL VSI does real range requests.** When `RasterioReader.read_window(...)` is called on a cloud COG, GDAL issues `GET .../scene.tif Range: bytes=N-M` for exactly the tiles needed. This is why a single-file workflow on a 1 GB COG only downloads the few KB you actually read.
-- **The `opener=` escape hatch is for niche cases.** If GDAL's vsicurl works, use it — it's faster than fsspec-via-opener. If you need an unusual backend (FTP, GitHub, custom HTTP auth), `opener=fs.open` lets you reuse fsspec's coverage without leaving rasterio.
-- **For "thousands of parallel reads" or "millions of small chip fetches", you want a different reader, not a fancy opener.** That's where `async-geotiff` and `lazy-cogs` exist — they skip GDAL entirely.
+- **`RasterioReader` can fetch cloud bytes without fsspec or obstore.** GDAL's vsicurl (libcurl in C) is the default and is faster than the Python-ish alternatives for general use. Use the `opener=` escape hatch only for niche backends or shared-auth scenarios.
+- **For thousands of parallel reads or millions of small chip fetches, a different reader is the right answer** — that's where `async-geotiff` and `lazy-cogs` shine, skipping GDAL entirely.
 
-### How `georeader` exposes this
-
-`RasterioReader` accepts the opener as a kwarg, typically through `rio_open_kwargs` or a top-level convenience like `fs=`:
-
-```python
-# Default — GDAL VSI handles s3://
-reader = georeader.RasterioReader("s3://bucket/scene.tif")
-
-# Force fsspec routing (e.g. for an S3-compatible endpoint with custom auth)
-import fsspec
-fs = fsspec.filesystem(
-    "s3",
-    endpoint_url="https://my-minio:9000",
-    key=...,
-    secret=...,
-)
-reader = georeader.RasterioReader(
-    "s3://bucket/scene.tif",
-    rio_open_kwargs={"opener": fs.open},
-)
-
-# Or via a georeader-level shortcut, if surfaced:
-reader = georeader.RasterioReader("s3://bucket/scene.tif", fs=fs)
-```
-
-The reader's surface is identical regardless — same `.load()`, `.read_from_window(...)`, same `GeoTensor` output. Only the bytes path underneath changes.
+For the `opener=` / `fs=` constructor knobs and the refactor that wires them in, see [`georeader/reader_protocol.md`](georeader/reader_protocol.md) §"`RasterioReader` refactor".
 
 ---
 

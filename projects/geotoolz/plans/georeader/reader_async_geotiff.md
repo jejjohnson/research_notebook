@@ -1,7 +1,22 @@
-# Issue 3 — `AsyncGeoTIFFReader`
+---
+title: AsyncGeoTIFFReader
+subject: georeader design
+subtitle: Async COG reader for high-concurrency fan-out
+short_title: AsyncGeoTIFF
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, georeader, async, cog
+---
 
 > **Parent:** [README.md](README.md)
-> **Depends on:** [Issue 1](reader_protocol.md) (Protocols) + [Issue 2](reader_lazy_cog.md) (`ByteStore`, COG-parsing helpers).
+> **Depends on:** [Issue 1](reader_protocol.md) (Protocols) + [`types/bytestore.md`](../types/bytestore.md) (`ByteStore` Protocol) + [Issue 2](reader_lazy_cog.md) (COG-parsing helpers).
 > **Scope:** an async, COG-only reader for high-concurrency fan-out workloads — tile servers, web maps, async ML inference services.
 
 ---
@@ -12,11 +27,86 @@ Sync I/O is fine when you have one read at a time. For workloads where many read
 
 Today, `georeader` has no async story. Users wanting async reads either roll their own or pull in an external library with a different API. This issue adds `AsyncGeoTIFFReader` — same metadata surface as the sync readers, async read methods.
 
-The design reuses everything from [Issue 2](reader_lazy_cog.md) that's not sync-specific: COG header parsing, `_tiles_for_window` math, decompression dispatch, the `ByteStore` Protocol. The only async-specific work is:
+The design reuses the `ByteStore` Protocol from [`types/bytestore.md`](../types/bytestore.md) and everything from [Issue 2](reader_lazy_cog.md) that's not sync-specific (COG header parsing, `_tiles_for_window` math, decompression dispatch). The only async-specific work is:
 
 - Header fetch happens in an async classmethod (`open(...)`).
 - Read methods are coroutines that `await self._store.get_ranges_async(...)`.
 - A `max_concurrent_tiles` semaphore caps the fan-out per call.
+
+---
+
+## Primer for newcomers
+
+> **ELI5.** Sync code is like **waiting in line at one cashier** — you can't do anything else until your turn finishes. Async code is like **leaving your order at 25 different counters** and collecting the results as they're ready. Same hardware; far more food per unit time when each order is mostly waiting.
+
+### `async` / `await` basics
+
+**What it is.** Python's `async def` defines a *coroutine* — a function that can pause itself with `await` and let other coroutines run on the same thread until the awaited operation completes. It's not threading; it's cooperative multitasking inside one event loop.
+
+**How it works.** When you call `result = await some_async_function()`, the runtime suspends the current coroutine until `some_async_function()` finishes, then resumes with the result. While suspended, the event loop runs other ready coroutines. Async only helps when the work is I/O-bound — waiting on network, disk, etc. — because that's when there's idle time to fill.
+
+**What this means for us.** Cloud raster reads are dominated by network round-trips. With `async`, one process can have hundreds of `read_window(...)` calls in flight concurrently, all sharing one OS thread. The CPython GIL doesn't get in the way because nobody's computing — they're all waiting on HTTP. Same hardware; far more throughput; far simpler than thread pools.
+
+### `asyncio.gather` and parallel awaits
+
+**What it is.** `asyncio.gather(coro1, coro2, coro3, ...)` runs multiple coroutines concurrently and returns when all finish (or one raises). It's the canonical way to issue many parallel I/O operations in one call.
+
+**How it works.** Each argument is a coroutine that hasn't started yet (`some_async_func(arg)` without `await`). `gather(...)` schedules them all on the event loop, lets them run interleaved, and collects their results into a list in input order. If any raises, `gather` propagates the exception (or you can pass `return_exceptions=True` to collect them).
+
+**What this means for us.** `AsyncGeoTIFFReader.read_window(...)` decomposes a window into N tiles, builds N coroutines (one per range request), and `await asyncio.gather(...)` fetches them in parallel. Tile-server workloads can additionally do `await asyncio.gather(*[reader.read_window(w) for w in 1000_windows])` for outer parallelism — concurrent reads across many readers.
+
+```{mermaid}
+gantt
+    title 25 tile reads — sync vs async
+    dateFormat X
+    axisFormat %Lms
+    section Sync
+    tile 1 :s1, 0, 50
+    tile 2 :s2, after s1, 50
+    tile 3 :s3, after s2, 50
+    ... :s4, after s3, 1100
+    tile 25 :s25, after s4, 50
+    section Async (asyncio.gather)
+    tile 1 :a1, 0, 50
+    tile 2 :a2, 0, 50
+    tile 3 :a3, 0, 50
+    ... :a4, 0, 50
+    tile 25 :a25, 0, 50
+```
+
+### Semaphores (concurrency limits)
+
+**What it is.** An `asyncio.Semaphore(N)` is a counter that lets at most N coroutines proceed at once; the rest wait. Standard concurrency primitive.
+
+**How it works.** `async with semaphore:` blocks the coroutine until the counter has room, increments it, runs the block, decrements on exit. Used to cap concurrent operations regardless of how many you've launched.
+
+**What this means for us.** Without a cap, `read_window(window)` for a window covering 100 tiles would issue 100 parallel HTTP requests — possibly exhausting connection pools or hitting rate limits. `max_concurrent_tiles=32` (default) wraps each fetch in `async with sem:` so at most 32 are in flight per call. Outer fan-out (across `read_window` calls from 100 concurrent users) is also bounded by the surrounding framework's concurrency (FastAPI / aiohttp request handlers).
+
+### Async classmethod for construction
+
+**What it is.** Python's `__init__` *can't* be an `async def`. There's no `__ainit__` magic method. So when initialisation requires async work (fetching the COG IFD over HTTP), the convention is a classmethod `open(...)` that's `async`.
+
+**How it works.** `__init__` does cheap synchronous setup (store the URL, the credential, allocate state). The user calls `await Cls.open(url)`, which constructs an instance via `__init__` and then runs the async setup before returning the fully-initialised reader. Same pattern used by `aiohttp.ClientSession`, `asyncpg.connect`, etc.
+
+**What this means for us.** Users write `reader = await AsyncGeoTIFFReader.open("s3://bucket/scene.tif")` instead of `reader = AsyncGeoTIFFReader(...)`. The reader's `crs` / `transform` / etc. don't work until `open()` has been awaited — accessing them earlier raises `RuntimeError("Reader not opened")`. Slight cost in clarity; major win in not faking sync APIs over async work.
+
+```{mermaid}
+sequenceDiagram
+    participant App
+    participant Cls as AsyncGeoTIFFReader
+    participant Init as __init__
+    participant Header as _fetch_header
+
+    App->>Cls: await open(url)
+    Cls->>Init: __init__(url)
+    Init-->>Cls: instance (no header yet)
+    Note over Cls: header is None — calling .crs raises
+    Cls->>Header: await _fetch_header()
+    Header-->>Cls: COGHeader cached
+    Cls-->>App: ready instance
+    App->>App: reader.crs ✓
+    App->>App: await reader.read_window(w)
+```
 
 ---
 
@@ -30,7 +120,7 @@ The design reuses everything from [Issue 2](reader_lazy_cog.md) that's not sync-
 6. **Async context-manager** — `__aenter__` / `__aexit__`.
 7. **Tests** — open + read a real COG asynchronously; concurrent fan-out across N windows.
 
-This issue does **not** ship new transport infrastructure — it imports `ByteStore`, `ObstoreByteStore`, `FsspecByteStore`, `open_store` from [Issue 2](reader_lazy_cog.md). It also imports the COG header parsing and tile-fetch math from the shared module created there (see [parent open question #3](README.md#open-questions)).
+This issue does **not** ship new transport infrastructure — it imports `ByteStore`, `ObstoreByteStore`, `FsspecByteStore`, `open_store` from [`types/bytestore.md`](../types/bytestore.md). It also imports the COG header parsing and tile-fetch math from the shared module created in [Issue 2](reader_lazy_cog.md) (see [parent open question #2](README.md#open-questions)).
 
 ---
 
@@ -203,8 +293,8 @@ This issue is small because most of the work is shared:
 
 | Component | Source | Used for |
 |---|---|---|
-| `ByteStore` Protocol + adapters | [Issue 2](reader_lazy_cog.md) | byte fetching |
-| `open_store(url)` factory | [Issue 2](reader_lazy_cog.md) | auto-pick transport |
+| `ByteStore` Protocol + adapters | [`types/bytestore.md`](../types/bytestore.md) | byte fetching |
+| `open_store(url)` factory | [`types/bytestore.md`](../types/bytestore.md) | auto-pick transport |
 | COG header parser | shared `_cog_helpers.py` (Issue 2) | IFD walk, `COGHeader` dataclass |
 | `_tiles_for_window` math | shared `_cog_helpers.py` (Issue 2) | window → tile-spec list |
 | Decompression dispatch | shared `_cog_helpers.py` (Issue 2) | per-tile decode |
@@ -228,7 +318,7 @@ Roughly ~150–200 LOC of new code on top of Issue 2's helpers.
 - Concurrent fan-out: `await asyncio.gather(*[reader.read_window(w) for w in windows])` for 100 windows from one reader instance completes without errors and faster than the sync equivalent.
 - `max_concurrent_tiles` semaphore is honoured — verifiable by mocking `store.get_range_async` to count concurrent invocations.
 - `async with await AsyncGeoTIFFReader.open(...)` context-manager works.
-- Reusing `ByteStore` from Issue 2 — no duplication of transport code.
+- Reusing `ByteStore` from [`types/bytestore.md`](../types/bytestore.md) — no duplication of transport code.
 
 ---
 
@@ -238,5 +328,5 @@ In addition to the [parent design's open questions](README.md#open-questions):
 
 1. **`AsyncReader` Protocol location.** Currently planned for this issue, but could move to Issue 1 if there's any chance of an *async-conformant* `RasterioReader` shim landing later (e.g., `RasterioReader.read_window_async` that runs the sync read in a threadpool). See [parent open question](README.md#open-questions).
 2. **Sync `__init__` + async `open(...)` vs always-async open.** Some libraries (e.g., `httpx.AsyncClient`) allow a sync `__init__` that defers expensive setup. The current proposal does this — `__init__` is cheap, `open(...)` does the IFD fetch. Alternative: always require `await open(...)` and make `__init__` private. The user-facing API is roughly the same; the internal state-machine is simpler with the always-async-open path but the existing pattern is more familiar from other libraries.
-3. **`run_in_executor` shim for sync ByteStore adapters.** If `FsspecByteStore` is given a non-async-capable backend, its `get_range_async` can fall back to `loop.run_in_executor(None, ...)` to wrap the sync read. This is implemented in Issue 2's `FsspecByteStore`; just calling out that `AsyncGeoTIFFReader` works against any `ByteStore` regardless of whether the backend is natively async.
+3. **`run_in_executor` shim for sync ByteStore adapters.** If `FsspecByteStore` is given a non-async-capable backend, its `get_range_async` can fall back to `loop.run_in_executor(None, ...)` to wrap the sync read. This is part of `FsspecByteStore`'s adapter spec in [`types/bytestore.md`](../types/bytestore.md); just calling out that `AsyncGeoTIFFReader` works against any `ByteStore` regardless of whether the backend is natively async.
 4. **Trio / anyio support.** The proposal uses `asyncio.gather` and `asyncio.Semaphore` directly. Wrapping in `anyio` for trio compatibility is straightforward but adds a dependency. Recommendation: stay asyncio-only for v1; add anyio later if there's demand.

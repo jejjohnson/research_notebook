@@ -1,4 +1,19 @@
-# Ch. 17 — legacy sensors
+---
+title: Legacy sensors
+subject: georeader tutorial
+subtitle: SPOT VGT and Proba-V
+short_title: Ch. 17 — Legacy
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, spot, probav
+---
 
 > **Modules:**
 > - `georeader/readers/spotvgt_image_operational.py` (389 LOC)

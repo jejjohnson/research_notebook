@@ -1,4 +1,19 @@
-# Geodatabase: catalog + storage
+---
+title: Geodatabase
+subject: geodatabase design
+subtitle: Catalog Protocol with in-memory and DuckDB backends
+short_title: Geodatabase
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, geodatabase, catalog, geoparquet
+---
 
 > **Status:** design proposal — split into two phases (Phase 1 + Phase 2 below).
 > **Scope:** the long-term shape of the catalog layer in `georeader`. A single `GeoCatalog` Protocol with two backends — an in-memory GeoDataFrame (Phase 1) and a DuckDB-backed GeoParquet store (Phase 2) — that share the same query API and the same `GeoSlice` unit of work.
@@ -29,6 +44,77 @@ Three pressures make a unified catalog layer worth doing now:
 3. **Catalogs need to be portable artifacts.** A pickled GeoDataFrame is fragile across versions. A serialised GeoParquet file is the emerging standard for portable spatial tables, queryable directly by DuckDB / GDAL / pandas / geopandas without ceremony. Making the Phase 2 backend GeoParquet-native turns the catalog itself into a shareable artifact.
 
 The status quo can absorb each of these one at a time, but the three concerns are coupled — making the catalog SQL-native and making it portable are the same change. A two-phase plan (in-memory first, scale-aware second) lets the design land incrementally without forcing a SQL dependency on small-scale users.
+
+---
+
+## Primer for newcomers
+
+> **ELI5.** A geocatalog is like a **library card catalog for satellite files**: each card lists where the file is, what area it covers, and when it was taken. Searching for *"all files over Madagascar in June 2023"* becomes flipping through index cards, not opening every book.
+
+### What's a "geocatalog"?
+
+**What it is.** A *queryable index over geospatial files* — a table where each row describes one file and records its bbox, time interval, CRS, and path. Given a query like "files overlapping AOI X between dates Y and Z," the catalog returns the matching paths fast without opening any of the files.
+
+**How it works.** Each row carries a `geometry` column (a polygon — typically each file's bbox in some CRS) and time columns (start/end). A spatial index over `geometry` and a time index over the dates lets queries skip non-matching rows without scanning the table. The result is "STAC, but local and Pythonic" — same idea (a file index), different shape (in-process Python instead of a JSON API).
+
+**What this means for us.** Today, every project that wants to scale beyond "open one file at a time" rolls its own catalog. This design promotes the pattern into `georeader` as a single shape: one Protocol, two backends (in-memory for ≤10⁵ rows, DuckDB for larger / persistent), three builders (raster / xarray / vector). Downstream code (`geotoolz.catalog_ops.CatalogPipeline`) consumes the Protocol, indifferent to which backend is in use.
+
+```{mermaid}
+flowchart LR
+    Files[10k files in S3] --> Build[build_raster_catalog]
+    Build --> Cat[GeoCatalog]
+    Cat --> Q[query bbox + time]
+    Q --> Hits[matching paths]
+    Hits --> Loader[loader.read_geoslice]
+    Loader --> GT[GeoTensor]
+```
+
+### R-tree spatial index
+
+**What it is.** An R-tree is a tree-shaped data structure that organises geometric objects (boxes, polygons) so that "find all objects intersecting this query box" runs in `O(log n + k)` instead of `O(n)`. Standard data structure for spatial queries.
+
+**How it works.** The tree's leaves are the actual geometries; each internal node holds a bounding box that contains all of its children. To answer "what intersects this query box," you descend only into branches whose bounding boxes overlap — pruning whole subtrees in one comparison. `geopandas` builds an R-tree lazily on first spatial query; you don't construct it manually.
+
+**What this means for us.** Phase 1's `InMemoryGeoCatalog` uses geopandas's `gdf.cx[xmin:xmax, ymin:ymax]` accessor, which uses the R-tree under the hood. For a catalog of 10k tiles, queries are sub-millisecond. R-tree size is `O(n)`; the in-memory backend hits a wall around 10⁵–10⁶ rows because the gdf itself becomes painful, not because the index does.
+
+### IntervalIndex (temporal)
+
+**What it is.** A pandas `IntervalIndex` is the time-axis equivalent of an R-tree — given a query interval, it returns all stored intervals that overlap, fast.
+
+**How it works.** Each row in the catalog has a `pd.Interval(start, end, closed='both')`. Putting them into an `IntervalIndex` lets you call `.overlaps(query_interval)` and get a boolean mask in `O(log n + k)` time. Combined with the R-tree spatial filter, a `query(bbox, time)` is two index probes intersected.
+
+**What this means for us.** Time-aware catalog queries don't have to scan the full row list — even with a year of daily files (~365 rows per tile × N tiles) the temporal filter takes microseconds. The same `IntervalIndex` shape carries through Phase 2's DuckDB backend (as `bbox` + `start_time` + `end_time` columns with predicate pushdown).
+
+### GeoParquet + DuckDB
+
+**What it is.** **GeoParquet** is the emerging standard for storing spatial tables as Parquet files (binary columnar format) with geometry columns encoded in WKB. **DuckDB** is an embedded SQL database (think SQLite, but column-oriented and analytics-tuned) with a `spatial` extension that reads GeoParquet natively.
+
+**How it works.** Build a catalog as a GeoParquet file once (`gdf.to_parquet("catalog.parquet")`). Open it as a DuckDB table, write SQL queries against it: `SELECT path FROM catalog WHERE ST_Intersects(geometry, AOI) AND date BETWEEN ...`. DuckDB pushes the spatial predicate down to the Parquet reader so most of the file is never read.
+
+**What this means for us.** Phase 2 unlocks 10⁶+ row catalogs that don't fit in RAM, plus the catalog itself becomes a portable artifact you can share or query from another tool (pandas, geopandas, GDAL all read GeoParquet). The Protocol surface is unchanged from Phase 1; only the backend changes.
+
+```{mermaid}
+classDiagram
+    class GeoCatalog {
+        <<Protocol>>
+        query()
+        intersect()
+        union()
+        iter_slices()
+    }
+    class InMemoryGeoCatalog {
+        gpd.GeoDataFrame
+        IntervalIndex + R-tree
+        ~10⁵ rows in-RAM
+    }
+    class DuckDBGeoCatalog {
+        DuckDB + GeoParquet
+        spatial extension
+        10⁶+ rows on-disk
+    }
+    GeoCatalog <|.. InMemoryGeoCatalog : Phase 1
+    GeoCatalog <|.. DuckDBGeoCatalog : Phase 2
+```
 
 ---
 

@@ -1,8 +1,23 @@
-# Issue 2 — `LazyCOGReader` + `ByteStore`
+---
+title: LazyCOGReader
+subject: georeader design
+subtitle: Sync, COG-only, GDAL-free reader
+short_title: LazyCOG
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, georeader, cog, lazy
+---
 
 > **Parent:** [README.md](README.md)
-> **Depends on:** [Issue 1](reader_protocol.md) — `SyncReader` Protocol.
-> **Scope:** a sync, COG-only reader that skips GDAL; the `ByteStore` Protocol that makes it agnostic between `obstore` and `fsspec`.
+> **Depends on:** [Issue 1](reader_protocol.md) — `SyncReader` Protocol; [`types/bytestore.md`](../types/bytestore.md) — `ByteStore` Protocol.
+> **Scope:** a sync, COG-only reader that skips GDAL.
 
 ---
 
@@ -16,7 +31,89 @@ This issue adds `LazyCOGReader` — same `SyncReader` interface as `RasterioRead
 - Reads issue exactly the range requests for the COG tiles overlapping the requested region; obstore can coalesce close-by ranges into a single HTTP/2 multiplexed call.
 - No GDAL state, no PROJ init per call, no Python ↔ C trip per range.
 
-`ByteStore` ships in this issue because it's first needed here. [Issue 3](reader_async_geotiff.md) reuses it for `AsyncGeoTIFFReader`.
+The `ByteStore` Protocol that abstracts obstore vs fsspec is specified separately in [`types/bytestore.md`](../types/bytestore.md). `LazyCOGReader` consumes it; [Issue 3 (`AsyncGeoTIFFReader`)](reader_async_geotiff.md) consumes the same Protocol.
+
+---
+
+## Primer for newcomers
+
+> **ELI5.** A COG is a satellite image organised like a **paper atlas**: a table of contents at the front, then a grid of small page-tiles. To read your area of interest, you flip to the table of contents (a few KB), look up which pages cover it, and jump straight to those pages. You never flip through the rest of the atlas.
+
+### What's a COG (Cloud Optimized GeoTIFF)?
+
+**What it is.** A COG is a regular GeoTIFF organised so that an HTTP client can fetch *just the parts it needs* with byte-range requests. Same `.tif` extension; different on-disk layout.
+
+**How it works.** A standard TIFF stores its metadata (the IFDs — Image File Directories — see below) at the *end* of the file, so to read anything you have to download the tail first. A COG flips this: header at the start, then the image data organised as small tiles (typically 256×256 or 512×512 pixels, each independently compressed). To read a 1024×1024 window from a 1 GB COG, you fetch the header (~few KB), look up which tiles overlap your window, and issue one HTTP range request per tile (or one batched parallel request). No need to download the whole file.
+
+**What this means for us.** COGs are the dominant cloud-native raster format because they make "read a small bbox from a huge file in S3" tractable. `LazyCOGReader` exists to exploit this layout without going through GDAL's overhead. For files that aren't COGs (legacy GeoTIFFs, JP2, NetCDF) you fall back to `RasterioReader`.
+
+### TIFF IFDs and tile offsets
+
+**What it is.** An IFD (Image File Directory) is the TIFF format's metadata block — a list of tags describing one image (its width, height, dtype, compression, and *where the pixel data lives in the file*). A COG has one IFD per resolution level (full-res + each overview).
+
+**How it works.** Each IFD has two arrays of interest: `TileOffsets` (the byte offset of each tile in the file) and `TileByteCounts` (the byte length of each tile). Together they tell you "tile (i, j) of resolution level k starts at byte N and is L bytes long." Given a window, the reader computes which (i, j) tiles overlap, looks up their offsets/lengths, and issues range reads for exactly those bytes.
+
+**What this means for us.** Parsing the IFD chain on `__init__` is what makes the rest of the read flow possible. Tile-fetching code is small (~50 lines of math) once you have the IFD; the rest of `LazyCOGReader` is the IFD parser plus per-tile decompression.
+
+```{mermaid}
+sequenceDiagram
+    participant App
+    participant Reader as LazyCOGReader
+    participant Store as ByteStore
+    participant Cloud as S3
+
+    Note over App,Cloud: __init__ — parse IFD (one-time, few KB)
+    App->>Reader: LazyCOGReader(url)
+    Reader->>Store: get_range(0, 16384)
+    Store->>Cloud: GET Range bytes 0-16383
+    Cloud-->>Store: header bytes
+    Store-->>Reader: bytes
+    Note over Reader: parse TIFF magic + IFD chain<br/>cache tile_offsets[], tile_byte_counts[]
+
+    Note over App,Cloud: read_window — fetch overlapping tiles
+    App->>Reader: read_window(w)
+    Note over Reader: compute (i,j) tiles overlapping w
+    Reader->>Store: get_ranges([(o1,l1), (o2,l2), ...])
+    Store->>Cloud: parallel range requests (HTTP/2)
+    Cloud-->>Store: tile bytes
+    Store-->>Reader: list[bytes]
+    Note over Reader: decompress + paste into output
+    Reader-->>App: GeoTensor
+```
+
+### HTTP range requests
+
+**What it is.** An HTTP request with a `Range: bytes=N-M` header asks the server for *just* bytes N through M of the resource, not the whole thing. Every modern object store (S3, GCS, Azure, plain HTTPS) honours this.
+
+**How it works.** Standard HTTP feature, supported since HTTP/1.1. The server responds with `206 Partial Content` and just the requested bytes. With HTTP/2 (which obstore uses), many concurrent ranges can multiplex over one TCP connection — fetching 25 tiles in parallel costs not much more than fetching one.
+
+**What this means for us.** A `LazyCOGReader.read_window(...)` for a 1024×1024 area on a 1 GB COG might fetch ~6 MB across 25 tiles in one parallel call. The other 994 MB is never read. This is what makes "100k random chips across 50k COGs" feasible in seconds rather than infeasible at all.
+
+### Compression dispatch
+
+**What it is.** COG tiles are individually compressed — typically with DEFLATE (zlib), LZW, JPEG, or Zstd. The reader has to decompress each tile after fetching its bytes.
+
+**How it works.** Each IFD has a `Compression` tag (an integer code: `8` = DEFLATE, `5` = LZW, `7` = JPEG, `50000` = Zstd, etc.). The reader dispatches on this code to the right decoder — `zlib.decompress`, `imagecodecs.lzw_decode`, etc. After decompression, each tile is a small numpy array that gets pasted into the output window.
+
+**What this means for us.** The compression code is fixed once per IFD (so the dispatch happens once per file at open, not per tile), and `imagecodecs` handles all the common codecs in C. Compression-dispatch isn't a performance bottleneck; the network is.
+
+```{mermaid}
+flowchart TD
+    Start[tile bytes + Compression tag]
+    Start --> Q{Compression code}
+    Q -->|1| None[np.frombuffer + reshape]
+    Q -->|8| Deflate[zlib.decompress]
+    Q -->|5| LZW[imagecodecs.lzw_decode]
+    Q -->|7| JPEG[imagecodecs.jpeg_decode]
+    Q -->|34925| LZMA[lzma.decompress]
+    Q -->|50000 / 50001| Zstd[imagecodecs.zstd_decode]
+    None --> Out[tile ndarray]
+    Deflate --> Out
+    LZW --> Out
+    JPEG --> Out
+    LZMA --> Out
+    Zstd --> Out
+```
 
 ---
 
@@ -27,11 +124,9 @@ This issue adds `LazyCOGReader` — same `SyncReader` interface as `RasterioRead
 3. **Tile fetching** — `_tiles_for_window` math, `_decompress_and_assemble`.
 4. **Compression dispatch** — DEFLATE / LZW / JPEG / Zstd / LZMA / none via `imagecodecs`.
 5. **Best-effort reprojection** — `read_bounds(target_crs=...)` via `scipy.ndimage.map_coordinates` or `skimage.transform.warp` (no GDAL).
-6. **`ByteStore` Protocol** in `georeader/bytestore.py` — sync + async pairs for `get` / `get_range` / `get_ranges` / `put` / `list`.
-7. **`ObstoreByteStore` adapter** — wraps `obstore.ObjectStore`.
-8. **`FsspecByteStore` adapter** — wraps `fsspec.AbstractFileSystem`.
-9. **`open_store(url, prefer="auto")` factory** — auto-pick based on URL scheme.
-10. **`__getitem__` numpy-style sugar** on `LazyCOGReader`.
+6. **`__getitem__` numpy-style sugar** on `LazyCOGReader`.
+
+The `ByteStore` Protocol + `ObstoreByteStore` / `FsspecByteStore` adapters + `open_store(url)` factory are specified in [`types/bytestore.md`](../types/bytestore.md) and ship as part of that work. This issue depends on them but doesn't own them.
 
 ---
 
@@ -250,211 +345,13 @@ The trade is intentional: skip GDAL for speed and concurrency-friendliness, acce
 
 ---
 
-## `ByteStore` Protocol
+## Transport via `ByteStore`
 
-```python
-from typing import Iterator, Protocol
+`LazyCOGReader` accepts a `store: ByteStore | None = None` constructor kwarg. The `ByteStore` Protocol — its sync + async method pairs, the `ObstoreByteStore` and `FsspecByteStore` adapters, and the `open_store(url, prefer="auto")` factory — is specified separately in [`types/bytestore.md`](../types/bytestore.md) since it's also consumed by [`AsyncGeoTIFFReader`](reader_async_geotiff.md) and conceivably by any future raw-byte-shaped reader.
 
+When `store=None`, `LazyCOGReader` calls `open_store(url, prefer="auto")` — obstore for `s3://` / `gs://` / `az://` / `http(s)://` / `file://` / `memory://`, fsspec for niche backends (`ftp://`, `sftp://`, `github://`, …). Override via `store=` to force a specific transport or to inject pre-configured credentials.
 
-class ByteStore(Protocol):
-    """Unified byte-store API. Both obstore.ObjectStore and fsspec
-    AbstractFileSystem can satisfy this via thin adapters.
-
-    Every method comes in sync + async pairs. Adapter implementations
-    can leave one pair as best-effort (e.g. fsspec's async path is
-    only fast on async-capable backends like s3fs / gcsfs / adlfs)."""
-
-    # whole-object reads
-    def get(self, key: str) -> bytes: ...
-    async def get_async(self, key: str) -> bytes: ...
-
-    # range reads — the hot path for COG tile fetches
-    def get_range(self, key: str, offset: int, length: int) -> bytes: ...
-    async def get_range_async(self, key: str, offset: int, length: int) -> bytes: ...
-
-    # parallel range reads — the BIG win for tile fan-out
-    def get_ranges(
-        self, key: str, ranges: list[tuple[int, int]],
-    ) -> list[bytes]: ...
-    async def get_ranges_async(
-        self, key: str, ranges: list[tuple[int, int]],
-    ) -> list[bytes]: ...
-
-    # writes
-    def put(self, key: str, data: bytes) -> None: ...
-    async def put_async(self, key: str, data: bytes) -> None: ...
-
-    # listing
-    def list(self, prefix: str = "") -> Iterator[str]: ...
-    async def list_async(self, prefix: str = "") -> Iterator[str]: ...
-```
-
-`get_ranges` is the load-bearing method — fetch N byte ranges from one object in one parallel call. obstore implements this natively (with optional coalescing of close-by ranges); fsspec doesn't, so its adapter falls back to `asyncio.gather` over single-range fetches.
-
----
-
-## `ObstoreByteStore` — wraps `obstore.ObjectStore`
-
-```python
-class ObstoreByteStore(ByteStore):
-    """Wrap an obstore.ObjectStore as a ByteStore.
-
-    Async path is the native one — sync methods are thin wrappers that
-    block on the async path via the obstore sync runtime.
-    """
-    _store: "obstore.ObjectStore"
-
-    def __init__(self, store: "obstore.ObjectStore"):
-        self._store = store
-
-    @classmethod
-    def from_url(cls, url: str, **kwargs) -> "ObstoreByteStore":
-        """Auto-pick the right obstore backend from URL scheme:
-        s3:// → S3Store, gs:// → GCSStore, az:// → AzureStore,
-        http(s):// → HTTPStore, file:// → LocalStore, memory:// → MemoryStore."""
-        ...
-
-    # whole object
-    def get(self, key: str) -> bytes:
-        return self._store.get(key).bytes()
-    async def get_async(self, key: str) -> bytes:
-        result = await self._store.get_async(key)
-        return await result.bytes_async()
-
-    # single range
-    def get_range(self, key: str, offset: int, length: int) -> bytes:
-        return self._store.get_range(key, offset, length).bytes()
-    async def get_range_async(self, key: str, offset: int, length: int) -> bytes:
-        result = await self._store.get_range_async(key, offset, length)
-        return await result.bytes_async()
-
-    # parallel ranges — obstore's get_ranges is native; coalesces close ranges
-    def get_ranges(self, key, ranges):
-        return [b.bytes() for b in self._store.get_ranges(key, ranges)]
-    async def get_ranges_async(self, key, ranges):
-        results = await self._store.get_ranges_async(key, ranges)
-        return [await r.bytes_async() for r in results]
-
-    # writes
-    def put(self, key, data): self._store.put(key, data)
-    async def put_async(self, key, data): await self._store.put_async(key, data)
-
-    # listing
-    def list(self, prefix=""):
-        for entry in self._store.list(prefix=prefix):
-            yield entry.path
-    async def list_async(self, prefix=""):
-        async for entry in self._store.list_async(prefix=prefix):
-            yield entry.path
-```
-
----
-
-## `FsspecByteStore` — wraps `fsspec.AbstractFileSystem`
-
-```python
-class FsspecByteStore(ByteStore):
-    """Wrap an fsspec filesystem as a ByteStore.
-
-    Sync methods always work. Async methods require an async-capable
-    filesystem (constructed with asynchronous=True or a backend that
-    supports it like s3fs / adlfs / gcsfs). Parallel ranges have no
-    native fsspec equivalent — the adapter falls back to asyncio.gather
-    over single-range fetches, which is throughput-limited by the
-    backend."""
-    _fs: "fsspec.AbstractFileSystem"
-    _root: str                                       # bucket / container prefix
-
-    def __init__(self, fs: "fsspec.AbstractFileSystem", root: str = ""):
-        self._fs = fs
-        self._root = root.rstrip("/")
-
-    @classmethod
-    def from_url(cls, url: str, **kwargs) -> "FsspecByteStore":
-        """Build via fsspec.url_to_fs(url)."""
-        ...
-
-    def _path(self, key: str) -> str:
-        return f"{self._root}/{key}" if self._root else key
-
-    # whole object
-    def get(self, key: str) -> bytes:
-        return self._fs.cat_file(self._path(key))
-    async def get_async(self, key: str) -> bytes:
-        return await self._fs._cat_file(self._path(key))
-
-    # single range
-    def get_range(self, key: str, offset: int, length: int) -> bytes:
-        with self._fs.open(self._path(key), "rb") as f:
-            f.seek(offset)
-            return f.read(length)
-    async def get_range_async(self, key: str, offset: int, length: int) -> bytes:
-        return await self._fs._cat_file(
-            self._path(key), start=offset, end=offset + length,
-        )
-
-    # parallel ranges — no native parallel; serial fallback for sync,
-    # asyncio.gather for async (effective only on async-capable backends)
-    def get_ranges(self, key, ranges):
-        with self._fs.open(self._path(key), "rb") as f:
-            out = []
-            for offset, length in ranges:
-                f.seek(offset)
-                out.append(f.read(length))
-            return out
-    async def get_ranges_async(self, key, ranges):
-        return await asyncio.gather(*[
-            self.get_range_async(key, o, l) for (o, l) in ranges
-        ])
-
-    # writes
-    def put(self, key, data):
-        with self._fs.open(self._path(key), "wb") as f:
-            f.write(data)
-    async def put_async(self, key, data):
-        await self._fs._pipe_file(self._path(key), data)
-
-    # listing
-    def list(self, prefix=""):
-        return iter(self._fs.ls(self._path(prefix)))
-    async def list_async(self, prefix=""):
-        for p in await self._fs._ls(self._path(prefix)):
-            yield p
-```
-
----
-
-## Unified factory
-
-```python
-def open_store(
-    url: str,
-    *,
-    prefer: Literal["obstore", "fsspec", "auto"] = "auto",
-    **backend_kwargs,
-) -> ByteStore:
-    """Build a ByteStore for the given URL.
-
-    Selection:
-      "auto"   — obstore for s3:// / gs:// / az:// / http(s):// / file:// / memory://;
-                 fsspec for any other scheme (ftp://, sftp://, github://, …).
-      "obstore" — force obstore; raise if backend not supported.
-      "fsspec" — force fsspec; useful when the rest of the pipeline expects an
-                 fsspec-shaped object (zarr 2, geopandas, etc.).
-    """
-    ...
-```
-
----
-
-## Transport strategy axis
-
-| Backend | Hot-path throughput | Niche backends | Sync API | Ecosystem fit |
-|---|---|---|---|---|
-| `ObstoreByteStore` | very high (HTTP/2, parallel ranges) | S3, GCS, Azure, HTTP, file, memory | sync helpers, async-native | new code (zarr 3, async-geotiff, lazy-cogs) |
-| `FsspecByteStore` | moderate (per-backend) | everything (FTP, SFTP, GitHub, Dropbox, …) | sync-native, async on capable backends | older code (pandas, xarray, geopandas, zarr ≤ 2) |
-
-Same `ByteStore` protocol, same reader code, two transports underneath. The split is **breadth vs throughput**: pick obstore for hot paths over major clouds, pick fsspec when you need a niche backend.
+For the obstore-vs-fsspec comparison (HTTP backend, async story, install footprint, ecosystem fit) and the decision tree, see [`geostack.md` §"`obstore` vs `fsspec` compared"](../geostack.md#obstore-vs-fsspec-compared).
 
 ---
 
@@ -465,8 +362,7 @@ Same `ByteStore` protocol, same reader code, two transports underneath. The spli
 - `read_window(window)` returns a `GeoTensor` matching `RasterioReader.read_window(window)` for the same file (within float tolerance per resampling method).
 - `read_bounds(bounds, target_crs=...)` works for the most common reprojection (UTM ↔ Web Mercator, UTM ↔ EPSG:4326).
 - Tile-fetch latency: a 1024×1024 read from a 1 GB COG completes in seconds (target: < 5 s on a typical home connection, dominated by network).
-- `ByteStore`, `ObstoreByteStore`, `FsspecByteStore`, `open_store` exported from `georeader.bytestore`.
-- `LazyCOGReader("s3://...")` works via auto-picked obstore; `LazyCOGReader("ftp://...")` works via fsspec.
+- `LazyCOGReader("s3://...")` works via auto-picked obstore; `LazyCOGReader("ftp://...")` works via fsspec (both via `ByteStore`).
 
 ---
 
@@ -474,7 +370,7 @@ Same `ByteStore` protocol, same reader code, two transports underneath. The spli
 
 In addition to the [parent design's open questions](README.md#open-questions):
 
-1. **COG helpers location.** This issue ships `_tiles_for_window`, decompression dispatch, and IFD parsing. [Issue 3](reader_async_geotiff.md) reuses them. See parent open question #3 — the working assumption is shared `_cog_helpers.py` module, with `LazyCOGReader` and `AsyncGeoTIFFReader` both importing.
+1. **COG helpers location.** This issue ships `_tiles_for_window`, decompression dispatch, and IFD parsing. [Issue 3](reader_async_geotiff.md) reuses them. See parent open question #2 — the working assumption is shared `_cog_helpers.py` module, with `LazyCOGReader` and `AsyncGeoTIFFReader` both importing.
 2. **Reprojection fallback choice.** scipy vs skimage vs custom. Both are in the dependency tree elsewhere in the package; either works.
 3. **`load()` discouragement strength.** The docstring says "Discouraged — use RasterioReader if you want the whole file." Should this raise a `UserWarning`, or stay docstring-only?
 4. **Index validation.** Today's `RasterioReader` uses 1-based indexes (rasterio convention). Should `LazyCOGReader` follow that, or use 0-based (numpy convention)? Following rasterio is less surprising for downstream `geotoolz` operators that already pass band indices.

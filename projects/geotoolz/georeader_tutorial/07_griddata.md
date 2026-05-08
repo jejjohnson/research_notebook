@@ -1,4 +1,19 @@
-# Ch. 7 — `griddata`
+---
+title: griddata
+subject: georeader tutorial
+subtitle: Irregular-grid interpolation and GLT orthorectification
+short_title: Ch. 7 — Griddata
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, griddata
+---
 
 > **Module:** `georeader/griddata.py` (617 LOC)
 > **Role:** the onramp for **curvilinear sensors** — pushbroom imagers, swath scanners, and any sensor that gives you per-pixel `lons` and `lats` rather than a clean affine transform. Where `read.py` ends and EMIT / PRISMA / EnMAP / MODIS / VIIRS begin.

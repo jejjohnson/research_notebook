@@ -1,4 +1,19 @@
-# `GeoSlice` and the sampler / stitch family
+---
+title: GeoSlice
+subject: Core types
+subtitle: Unit of work between catalog, sampler, loader, operator
+short_title: GeoSlice
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, types, sampler, geoslice
+---
 
 > **Parent:** [README.md](README.md) — Core types.
 > **Status:** design proposal. Promoted from the [Geodatabase Phase 1](../geodatabase/geocatalog.md) writeup, where it was treated as a footnote despite being the unit of work flowing between three layers.
@@ -27,6 +42,63 @@ Three reasons this deserves its own design doc rather than a section inside the 
 2. **The math is non-trivial and easy to get wrong.** Random-sampler weighting has a documented bias when tile sizes are heterogeneous. Grid-sampler stride math has subtle edge-case behaviour at the trailing row/column. Stitch's four reduction modes (`average` / `max` / `first` / `last`) each have different ordering semantics. Putting it all in one place makes it auditable.
 
 3. **`GeoSlice` overlaps with two other concepts** — `rasterio.windows.Window` (pixel-space rectangle) and `slices.create_windows` (chunking generator). Reconciling the three is a design decision in its own right, not a footnote in another doc.
+
+---
+
+## Primer for newcomers
+
+> **ELI5.** A `GeoSlice` is a **delivery slip**: it says where (bbox), when (time), at what zoom (resolution), and in what coordinate system (CRS). The catalog writes the slip; the loader reads it; whoever's in between never has to ask "wait, which file did this come from?" — the slip has everything they need.
+
+### Frozen dataclasses (immutability)
+
+**What it is.** A `@dataclass(frozen=True)` is a Python class with auto-generated `__init__` / `__repr__` / `__eq__` *and* a guarantee that its attributes can't be mutated after construction. Trying to assign a new value to a field raises `FrozenInstanceError`.
+
+**How it works.** The `@dataclass` decorator inspects type annotations and synthesises the constructor. `frozen=True` adds `__setattr__` and `__delattr__` overrides that raise. The instance is also hashable by default (because nothing can change), which lets you use it as a dict key or set member.
+
+**What this means for us.** `GeoSlice` is frozen so that once constructed, it can be passed across function boundaries, stored in caches, used as a dict key for "slices I've already processed," etc. Code that wants to *change* a slice creates a new one (`dataclasses.replace(slice_, bounds=new_bounds)`) — explicit by design. Mutable units of work flowing between layers are a recipe for bugs.
+
+### `pd.Interval` and `IntervalIndex`
+
+**What it is.** A `pd.Interval(start, end, closed='both')` is pandas's typed representation of a time range. Combined into an `IntervalIndex`, you get fast "find all rows whose interval overlaps this query interval" queries — the temporal counterpart to a spatial R-tree.
+
+**How it works.** Each interval is an immutable object with a `closed` policy (`'both'`, `'left'`, `'right'`, `'neither'`). Standard set ops (`overlaps`, `contains`) are vectorised at the IntervalIndex level. Scales cleanly: 10k intervals → microseconds per query. Same primitive used inside catalogs to filter by time.
+
+**What this means for us.** `GeoSlice.interval` is a `pd.Interval`, not a `(tmin, tmax)` tuple, because the catalog stores intervals the same way and "does this slice's interval overlap any catalog row?" is a single function call (no manual min/max gymnastics). Convention is `closed='both'` everywhere — both endpoints inclusive.
+
+### `pyproj.CRS` (vs string EPSG codes)
+
+**What it is.** `pyproj.CRS` is a typed CRS object that knows its EPSG code, WKT representation, axis order, datum shifts, and reprojection rules. Compared to a bare `"EPSG:4326"` string, it carries semantic information.
+
+**How it works.** Constructed from `"EPSG:32630"`, a WKT string, or a `pyproj.CRS.from_epsg(32630)` call. Carries methods for axis-order checking, transformation parameter lookup, and "is this CRS equivalent to that one" comparisons. Reprojection to/from another CRS goes through `pyproj.Transformer`.
+
+**What this means for us.** `GeoSlice.crs` is a `pyproj.CRS`, not a string, so two slices in slightly different CRS representations (e.g., `EPSG:32630` vs full WKT for the same UTM zone) can be compared sensibly. The package's `compare_crs(a, b)` helper does the right thing across the various forms.
+
+### "Unit of work" between layers
+
+**What it is.** A small, immutable, self-contained value that flows from a *producer* (catalog, sampler) to a *consumer* (loader, operator) across a function boundary, carrying everything the consumer needs to do its job — no further reference to the producer required.
+
+**How it works.** `GeoSlice` has four fields: `bounds` (where in space), `interval` (when in time), `resolution` (at what pixel size), `crs` (in which coordinate system). That's enough for a loader to fetch a chip without consulting the catalog or the sampler again. The producer hands you a slice; you do whatever; you hand the result downstream. No hidden state.
+
+**What this means for us.** The pattern decouples layers cleanly. A `random_sampler` doesn't know which loader will consume the slice; a `read_geoslice(slice)` method doesn't know whether the slice came from a sampler, a manual user query, or a JSON config. Same `GeoSlice` shape; many producers and consumers; no coupling beyond the type.
+
+```{mermaid}
+sequenceDiagram
+    participant Cat as GeoCatalog
+    participant Sampler as grid_sampler
+    participant Reader
+    participant Op as Operator
+    participant Stitch
+
+    Cat->>Sampler: iter_rows()
+    loop per chip
+        Sampler-->>Reader: GeoSlice<br/>(bounds, time, res, crs)
+        Reader->>Reader: open file at slice.bounds
+        Reader-->>Op: GeoTensor
+        Op-->>Stitch: prediction
+    end
+    Stitch->>Stitch: combine slices + predictions
+    Stitch-->>Cat: stitched GeoTensor
+```
 
 ---
 

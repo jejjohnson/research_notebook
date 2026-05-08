@@ -1,4 +1,19 @@
-# Ch. 1 — `geotensor`
+---
+title: GeoTensor
+subject: georeader tutorial
+subtitle: The numpy ndarray subclass with geospatial metadata
+short_title: Ch. 1 — GeoTensor
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, geotensor, numpy
+---
 
 > **Module:** `georeader/geotensor.py` (2532 LOC)
 > **Branch:** `feature/geotensor_npapi` — this module *is* the headline change of that branch.

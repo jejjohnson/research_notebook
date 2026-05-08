@@ -1,4 +1,19 @@
-# geotoolz
+---
+title: geotoolz
+subject: geotoolz design
+subtitle: Operator-composition library overview
+short_title: geotoolz
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, geotoolz, operators, remote-sensing
+---
 
 > **Status:** design proposal — full report in [`geotoolz.md`](geotoolz.md).
 > **Scope:** a composable Operator library for remote sensing, sitting on top of `georeader.GeoTensor`. Sibling to `xr_toolz`, targeted at a different community and a different substrate.

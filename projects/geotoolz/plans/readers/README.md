@@ -1,4 +1,19 @@
-# Sensor readers
+---
+title: Sensor readers
+subject: Sensor readers
+subtitle: Per-sensor reader designs in georeader
+short_title: Sensor readers
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, readers, sensors
+---
 
 > **Status:** index of per-sensor reader designs.
 > **Scope:** the design of the *reader classes* for specific sensor families being migrated into `georeader` from `rs_tools`. Each per-sensor design specifies the file format, metadata parsing, calibration, and how the reader fits into one of `georeader`'s existing patterns (S2-style affine `GeoData`, or PRISMA-style raw-arrays-plus-`lons`/`lats`).

@@ -1,4 +1,19 @@
-# Ch. 16 — Earth Engine
+---
+title: Earth Engine
+subject: georeader tutorial
+subtitle: GEE integration with recursive tile splitting
+short_title: Ch. 16 — Earth Engine
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, gee
+---
 
 > **Modules:**
 > - `georeader/readers/ee_image.py` (539 LOC)

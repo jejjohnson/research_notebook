@@ -1,4 +1,19 @@
-# Ch. 6 — `slices`
+---
+title: slices
+subject: georeader tutorial
+subtitle: Tiling generators for chunked processing
+short_title: Ch. 6 — Slices
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, slices, tiling
+---
 
 > **Module:** `georeader/slices.py` (404 LOC)
 > **Role:** divide a raster into tiles. Three diagrams cover the *what* (overlap vs not), the *vocabulary* (Python `slice` vs `rasterio.windows.Window`), and the *what-do-I-do-at-the-edge* problem. Three public functions: `create_slices`, `create_windows`, plus the dict↔window converters.

@@ -1,5 +1,19 @@
-
-# `geotoolz` — design report
+---
+title: geotoolz design report
+subject: geotoolz design
+subtitle: Composable Operator library on top of GeoTensor
+short_title: Design report
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, geotoolz, operators, remote-sensing
+---
 
 > **Scope:** a composable Operator library for remote sensing — preprocess, infer, and evaluate satellite imagery on top of `georeader.GeoTensor`. Sibling to `xr_toolz`, targeted at a different community and a different substrate. Functions, classes, and presets, all RS-shaped.
 >

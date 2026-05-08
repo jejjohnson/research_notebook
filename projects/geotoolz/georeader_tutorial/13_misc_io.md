@@ -1,4 +1,19 @@
-# Ch. 13 — utilities
+---
+title: utilities
+subject: georeader tutorial
+subtitle: "`io`, `dataarray`, `plot` — the connective tissue"
+short_title: Ch. 13 — Utilities
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, io
+---
 
 > **Modules:**
 > - `georeader/io.py` (113 LOC) — NetCDF safe-open

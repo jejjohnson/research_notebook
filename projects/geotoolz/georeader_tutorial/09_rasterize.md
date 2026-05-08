@@ -1,4 +1,19 @@
-# Ch. 9 — `rasterize`
+---
+title: rasterize
+subject: georeader tutorial
+subtitle: Vectors → rasters
+short_title: Ch. 9 — Rasterize
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, rasterize
+---
 
 > **Module:** `georeader/rasterize.py` (438 LOC)
 > **Role:** burn vector geometries (polygons, lines, GeoDataFrames) into raster grids aligned to an existing `GeoData`. The standard tool for building masks, segmentation labels, and ROI maps from GIS-flavoured data.

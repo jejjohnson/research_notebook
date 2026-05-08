@@ -1,4 +1,19 @@
-# Ch. 2 — `abstract_reader`
+---
+title: abstract_reader
+subject: georeader tutorial
+subtitle: "The type protocols (`GeoData`, `GeoDataBase`)"
+short_title: Ch. 2 — Protocol
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, protocol
+---
 
 > **Module:** `georeader/abstract_reader.py` (257 LOC)
 > **Role:** the duck-typing contract that lets `GeoTensor` (in-memory) and `RasterioReader` (lazy on-disk) be passed interchangeably to every function in the package.

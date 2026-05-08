@@ -1,4 +1,19 @@
-# Ch. 5 — `read`
+---
+title: read
+subject: georeader tutorial
+subtitle: High-level reading API
+short_title: Ch. 5 — Read
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, read, reproject
+---
 
 > **Module:** `georeader/read.py` (1967 LOC, the densest module in the package — 123 box-drawing characters across the docstring)
 > **Role:** the public face of georeader. Most users start here. Six "specify the AOI in the form most natural to your problem" entry points, plus reprojection / resampling / grid-matching.

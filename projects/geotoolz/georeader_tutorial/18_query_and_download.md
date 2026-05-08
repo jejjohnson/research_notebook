@@ -1,4 +1,19 @@
-# Ch. 18 — query & download
+---
+title: Query & download
+subject: georeader tutorial
+subtitle: Catalog query and download helpers
+short_title: Ch. 18 — Query
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, query, download
+---
 
 > **Modules** (all small):
 > - `query_utils.py` (80 LOC) — generic spatial-overlap helpers

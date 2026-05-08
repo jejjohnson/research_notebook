@@ -300,7 +300,7 @@ Each phase uses the **identical** operator graph from §4.5. What changes is the
 import geotoolz as gz
 import plumax as px
 import xrtoolz as xr_t
-from geocatalog import GeoCatalog
+from georeader.catalog import GeoCatalog  # per `plans/geodatabase/` — module lives under georeader
 
 # 1. Build / load a small catalog around the event
 catalog = GeoCatalog.from_basin_crawl(basin="permian", year=2024)

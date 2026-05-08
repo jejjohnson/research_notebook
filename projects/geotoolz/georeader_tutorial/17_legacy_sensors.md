@@ -1,4 +1,19 @@
-# Ch. 17 — legacy sensors
+---
+title: Legacy sensors
+subject: georeader tutorial
+subtitle: SPOT VGT and Proba-V
+short_title: Ch. 17 — Legacy
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, spot, probav
+---
 
 > **Modules:**
 > - `georeader/readers/spotvgt_image_operational.py` (389 LOC)
@@ -154,7 +169,7 @@ Including them in this tutorial preserves the catalog completeness, but you can 
 
 ## 10. Connection to `geotoolz`
 
-Neither sensor has a dedicated preset in [`geotoolz.md`](../plans/geotoolz.md). Proba-V and SPOT VGT are unlikely to grow new operators because they're discontinued. They'd live in `geotoolz.presets.legacy` if ever — a `presets.legacy.PROBAV_NDVI` operator would be `Sequential([ProbaVRadiometry.load(), MaskClouds(via SM), NDVI(red_idx=1, nir_idx=2)])`. Trivial to implement, but rare enough that no-one's asked.
+Neither sensor has a dedicated preset in [`geotoolz.md`](../plans/geotoolz/geotoolz.md). Proba-V and SPOT VGT are unlikely to grow new operators because they're discontinued. They'd live in `geotoolz.presets.legacy` if ever — a `presets.legacy.PROBAV_NDVI` operator would be `Sequential([ProbaVRadiometry.load(), MaskClouds(via SM), NDVI(red_idx=1, nir_idx=2)])`. Trivial to implement, but rare enough that no-one's asked.
 
 The general lesson: **operators are sensor-agnostic; readers are sensor-specific**. As long as a sensor's reader returns a `GeoData` with band semantics that match a downstream operator's `red_idx=` / `nir_idx=` arguments, the operator works without any sensor-specific code.
 

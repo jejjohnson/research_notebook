@@ -1,4 +1,19 @@
-# Ch. 8 — `mosaic`
+---
+title: mosaic
+subject: georeader tutorial
+subtitle: Combining rasters into composites
+short_title: Ch. 8 — Mosaic
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, mosaic
+---
 
 > **Module:** `georeader/mosaic.py` (450 LOC)
 > **Role:** turn N partially-overlapping `GeoData` sources into a single seamless `GeoTensor`. Reprojects, resamples, and fills nodata gaps from later rasters in the list.
@@ -220,7 +235,7 @@ The module docstring promises four functions; the source defines one. This is wo
 - If you read the docstring expecting a `rasters_reduction` for temporal compositing, **it doesn't exist**. You'd implement it yourself using `np.nanmedian` over a stacked-time `GeoTensor` (Chapter 1 §9 covers `GeoTensor.stack`).
 - The `pad_add_rasters` helper would have been useful for aligning rasters of different shapes prior to stacking; the workaround is `read_reproject_like` per raster against a common reference.
 
-This is one of the loose ends downstream `geotoolz.compositing` fills in — `MeanComposite`, `MedianComposite`, `MaxNDVIComposite`, `CloudFreeComposite` (the [geotoolz.md plan §1.2](../plans/geotoolz.md)) are the operator-form versions of what the docstring here describes but doesn't implement.
+This is one of the loose ends downstream `geotoolz.compositing` fills in — `MeanComposite`, `MedianComposite`, `MaxNDVIComposite`, `CloudFreeComposite` (the [geotoolz.md plan §1.2](../plans/geotoolz/geotoolz.md)) are the operator-form versions of what the docstring here describes but doesn't implement.
 
 For now, a hand-rolled temporal reduction looks like:
 
@@ -249,7 +264,7 @@ That's six lines you'd otherwise expect to be `mosaic.rasters_reduction(readers,
 
 ## 10. Connection to `geotoolz.compositing`
 
-The [geotoolz.md plan §1.2](../plans/geotoolz.md) lists `compositing` as one of the v0.2 modules with four operators: `MedianComposite`, `MaxNDVIComposite`, `CloudFreeComposite`, `MeanComposite`. Mapping to this module:
+The [geotoolz.md plan §1.2](../plans/geotoolz/geotoolz.md) lists `compositing` as one of the v0.2 modules with four operators: `MedianComposite`, `MaxNDVIComposite`, `CloudFreeComposite`, `MeanComposite`. Mapping to this module:
 
 | `geotoolz` operator | Maps to `mosaic.spatial_mosaic` how |
 |---|---|

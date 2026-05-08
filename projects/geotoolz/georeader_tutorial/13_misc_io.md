@@ -1,4 +1,19 @@
-# Ch. 13 — utilities
+---
+title: utilities
+subject: georeader tutorial
+subtitle: "`io`, `dataarray`, `plot` — the connective tissue"
+short_title: Ch. 13 — Utilities
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, io
+---
 
 > **Modules:**
 > - `georeader/io.py` (113 LOC) — NetCDF safe-open
@@ -42,7 +57,7 @@ This is the function that makes the EMIT / PRISMA / EnMAP readers work cleanly a
 
 ## 2. `dataarray.py` — the xarray bridge
 
-Four functions that translate between `GeoTensor` and `xr.DataArray`. This is the substrate seam between georeader and `xr_toolz` (the climate-side sibling library — see [`geotoolz.md` §10](../plans/geotoolz.md)).
+Four functions that translate between `GeoTensor` and `xr.DataArray`. This is the substrate seam between georeader and `xr_toolz` (the climate-side sibling library — see [`geotoolz.md` §10](../plans/geotoolz/geotoolz.md)).
 
 ### The four functions
 
@@ -139,7 +154,7 @@ The pattern they share: **delegate to a well-maintained external library, paper 
 These three modules don't have direct `geotoolz` operators wrapping them, but each shows up indirectly:
 
 - **`io.safe_open_netcdf`** — used inside the curvilinear-sensor readers (EMIT, PRISMA, EnMAP). When `geotoolz.presets.emit.EMIT_METHANE_MF` runs `georeader.readers.emit.load(scene_path)`, it's `safe_open_netcdf` underneath.
-- **`dataarray.toDataArray` / `fromDataArray`** — the `geotoolz`/`xr_toolz` substrate-bridge example in [`geotoolz.md` §10.4](../plans/geotoolz.md) is literally these two functions. They keep the libraries decoupled while still letting users compose pipelines across substrates.
+- **`dataarray.toDataArray` / `fromDataArray`** — the `geotoolz`/`xr_toolz` substrate-bridge example in [`geotoolz.md` §10.4](../plans/geotoolz/geotoolz.md) is literally these two functions. They keep the libraries decoupled while still letting users compose pipelines across substrates.
 - **`plot.show`** — `geotoolz.radiometry` viz operators (`PercentileClip → Gamma → MinMax → S2_L2A_RGB`) produce visualisation-shaped `GeoTensor`s; the natural last step is `plot.show(...)` for inline display in notebooks.
 
 Next chapter: [14_sentinel2.md](14_sentinel2.md) — the Sentinel-2 SAFE reader (1845 LOC, the largest single file in the package).

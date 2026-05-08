@@ -1,4 +1,19 @@
-# Ch. 1 — `geotensor`
+---
+title: GeoTensor
+subject: georeader tutorial
+subtitle: The numpy ndarray subclass with geospatial metadata
+short_title: Ch. 1 — GeoTensor
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, geotensor, numpy
+---
 
 > **Module:** `georeader/geotensor.py` (2532 LOC)
 > **Branch:** `feature/geotensor_npapi` — this module *is* the headline change of that branch.
@@ -290,7 +305,7 @@ Grouped roughly by lifecycle:
 Three concrete wins for the operator-composition layer:
 
 1. **Operators stop unwrapping.** Pre-redesign code looked like `out = my_func(gt.values); return GeoTensor(out, gt.transform, gt.crs, ...)`. Now it's `return my_func(gt)` — the ufunc protocol carries the metadata for free.
-2. **scikit-image / scipy.ndimage interop is half-free.** Anything that goes through ufuncs round-trips automatically. Functions that don't (`skimage.transform.resize`, `scipy.ndimage.uniform_filter`) need a small `preserve_subclass` decorator at the Tier B layer — see [geotoolz.md §5.2](../plans/geotoolz.md).
+2. **scikit-image / scipy.ndimage interop is half-free.** Anything that goes through ufuncs round-trips automatically. Functions that don't (`skimage.transform.resize`, `scipy.ndimage.uniform_filter`) need a small `preserve_subclass` decorator at the Tier B layer — see [geotoolz.md §5.2](../plans/geotoolz/geotoolz.md).
 3. **Time becomes a first-class axis** without inventing a new container. 4D `(T, C, H, W)` is just an ndarray shape; `GeoTensor.stack` builds it; numpy reductions slice it.
 
 The downside to be aware of: spatial reductions (e.g., `gt.sum(axis=(-2,-1))`) drop to a plain ndarray because the result has no transform. Operators that want to keep a `GeoTensor`-shaped result for *non-spatial* reductions must wrap the output explicitly via `gt.array_as_geotensor(...)`.

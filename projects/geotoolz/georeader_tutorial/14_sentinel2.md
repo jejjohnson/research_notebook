@@ -1,4 +1,19 @@
-# Ch. 14 — Sentinel-2
+---
+title: Sentinel-2
+subject: georeader tutorial
+subtitle: Sentinel-2 SAFE products (L1C and L2A)
+short_title: Ch. 14 — Sentinel-2
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, sentinel2
+---
 
 > **Module:** `georeader/readers/S2_SAFE_reader.py` (1845 LOC — the largest file in the package)
 > **Role:** read Sentinel-2 imagery in the official SAFE product format. Both Level-1C (top-of-atmosphere reflectance) and Level-2A (atmospherically-corrected surface reflectance) are supported, from local folders or Google Cloud's free public bucket.
@@ -259,7 +274,7 @@ The DataFrame uses the canonical band naming (`B01`, `B02`, ..., `B12`) so it li
 
 ## 11. Connection to `geotoolz`
 
-The whole `presets.s2` block in [`geotoolz.md` §1.2](../plans/geotoolz.md) sits on top of this module:
+The whole `presets.s2` block in [`geotoolz.md` §1.2](../plans/geotoolz/geotoolz.md) sits on top of this module:
 
 - **`presets.s2.S2_L2A_RGB(brightness=...)`** — `Sequential([s2.isel(["B04","B03","B02"]), ToFloat32, PercentileClip, Gamma])`. Loads via `s2loader`, picks RGB bands, normalises.
 - **`presets.s2.S2_L2A_NDVI(...)`** — `Sequential([s2.load(), MaskClouds(scl_band), NDVI(red_idx=2, nir_idx=3)])`. Uses the SCL band for cloud masking — a free pass thanks to L2A.

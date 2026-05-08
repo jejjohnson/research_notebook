@@ -1,4 +1,19 @@
-# Ch. 2 — `abstract_reader`
+---
+title: abstract_reader
+subject: georeader tutorial
+subtitle: "The type protocols (`GeoData`, `GeoDataBase`)"
+short_title: Ch. 2 — Protocol
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, protocol
+---
 
 > **Module:** `georeader/abstract_reader.py` (257 LOC)
 > **Role:** the duck-typing contract that lets `GeoTensor` (in-memory) and `RasterioReader` (lazy on-disk) be passed interchangeably to every function in the package.
@@ -9,7 +24,7 @@
 
 Anything with `transform`, `crs`, `shape` is **`GeoDataBase`**. Anything that *additionally* knows how to materialise its data (`values`, `load()`, `read_from_window()`) is **`GeoData`** (alias `AbstractGeoData`). Most of `georeader.read`, `georeader.window_utils`, `georeader.mosaic` etc. type-annotate against these protocols, so the same function body works on either substrate.
 
-This is the seam that the [`georeader.md` plan](../plans/georeader.md) wants to widen — make `RasterioReader`, `LazyCOGReader`, and `AsyncGeoTIFFReader` all honour the same protocol, then user code does `reader_class=...` strategy injection.
+This is the seam that the [Reader reconciliation design](../plans/georeader/README.md) wants to widen — make `RasterioReader`, `LazyCOGReader`, and `AsyncGeoTIFFReader` all honour the same protocol, then user code does `reader_class=...` strategy injection.
 
 ---
 

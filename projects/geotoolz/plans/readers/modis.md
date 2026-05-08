@@ -1,4 +1,19 @@
-# MODIS / curvilinear readers
+---
+title: MODIS / curvilinear readers
+subject: Sensor readers
+subtitle: MODIS, VIIRS, AVHRR, Sentinel-3 OLCI / SLSTR
+short_title: MODIS
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, readers, modis, viirs
+---
 
 > **Design Report** — design for MODIS, VIIRS, and related curvilinear-geolocation readers in [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader). Companion to the geostationary readers design.
 

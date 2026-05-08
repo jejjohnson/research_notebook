@@ -1,5 +1,19 @@
-
-# Geostationary readers
+---
+title: Geostationary readers
+subject: Sensor readers
+subtitle: GOES, MSG, MTG, Himawari readers
+short_title: Geostationary
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: design, readers, goes, seviri
+---
 
 > **Design Report (v3)** — design for GOES-R ABI, MSG SEVIRI, MTG-FCI, and Himawari AHI readers in [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader).
 

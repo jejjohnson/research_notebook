@@ -1,4 +1,19 @@
-# Ch. 3 — `rasterio_reader`
+---
+title: rasterio_reader
+subject: georeader tutorial
+subtitle: The lazy file-backed reader
+short_title: Ch. 3 — RasterioReader
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, rasterio
+---
 
 > **Module:** `georeader/rasterio_reader.py` (1630 LOC)
 > **Role:** the canonical `GeoData` implementation. Wraps `rasterio` to give you a `GeoTensor`-shaped interface over a file (local, S3, GCS, Azure, HTTP) **without** reading the bytes until you ask.
@@ -204,7 +219,145 @@ This is also the right tool for "should I load this whole scene to decide if it'
 
 Internal helper `_get_rio_options_path(path)` (and the module-level `_vsi_path` in `geotensor.py`) translate user-friendly URIs to VSI form. Credentials come from `rio_env_options` or from environment (`AWS_*`, `GOOGLE_APPLICATION_CREDENTIALS`, etc.) — same as plain rasterio.
 
-The [`georeader.md` plan](../plans/georeader.md) is about widening this seam: `LazyCOGReader` and the async-obstore reader plug in here as alternative implementations of the same interface, swapping GDAL VSI for direct HTTP-range / obstore reads. That's the unification work.
+### GDAL options: `RIO_ENV_OPTIONS_DEFAULT`
+
+The package ships a sensible-default GDAL configuration applied to every read:
+
+```python
+# georeader/geotensor.py:140-150
+RIO_ENV_OPTIONS_DEFAULT = dict(
+    GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES="YES",
+    GDAL_CACHEMAX=2_000_000_000,
+    GDAL_HTTP_MULTIPLEX="YES",
+)
+```
+
+What each does:
+
+- **`GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR"`** — don't list the bucket directory when opening one file. Critical for cloud reads: without it, opening a single COG can trigger a full `LIST` of the bucket, which is slow and may not even be permitted.
+- **`GDAL_HTTP_MERGE_CONSECUTIVE_RANGES="YES"`** — when reading a window that spans multiple adjacent tiles, merge their byte-range requests into one HTTP call.
+- **`GDAL_CACHEMAX=2_000_000_000`** — 2 GB process-wide block cache. Speeds up repeated reads of the same tiles within one process.
+- **`GDAL_HTTP_MULTIPLEX="YES"`** — enable HTTP/2 multiplexing for parallel range requests over one connection.
+
+Override via the `rio_env_options=` kwarg on the constructor when defaults aren't right (rare) or when you need to add specific options like `AWS_REQUEST_PAYER="requester"`.
+
+### How `RasterioReader` applies them
+
+Every open goes through a `rasterio.Env(...)` context wrapping the configured options:
+
+```python
+# georeader/rasterio_reader.py:301-326
+with rasterio.Env(**self._get_rio_options_path(paths[0])):
+    with rasterio.open(paths[0], "r", overview_level=overview_level) as src:
+        ...
+```
+
+GDAL is configured once per `rasterio.open` call via the env context manager, and **credentials are picked up from `os.environ` at the moment the context is entered**. This is the seam that makes the next subsection's pattern work.
+
+### Credentials: env-var-first
+
+The mental model:
+
+> **GDAL reads credentials from process environment variables.** The pattern is to **set the env vars once at app startup**, then construct `RasterioReader` instances anywhere with no per-call credential threading. The reader's `rasterio.Env(...)` wrap inherits whatever's in `os.environ` at the moment of open.
+
+Per-cloud env vars GDAL recognises:
+
+| Cloud | Required | Optional |
+|---|---|---|
+| **AWS** | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | `AWS_SESSION_TOKEN`, `AWS_REGION`, `AWS_REQUEST_PAYER=requester` |
+| **GCS** | `GOOGLE_APPLICATION_CREDENTIALS` (path to JSON) | — |
+| **Azure** | `AZURE_STORAGE_ACCOUNT` + one of: `AZURE_STORAGE_SAS_TOKEN`, `AZURE_STORAGE_CONNECTION_STRING`, `AZURE_STORAGE_ACCESS_TOKEN` | — |
+
+The rest of this section walks through the three Azure modes the package's downstream users (`marsml`, `mars_data_ops`) actually use.
+
+### Azure auth modes
+
+#### Mode 1 — SAS token / connection string / account name
+
+The simplest case: the credentials are static strings, and we set them as env vars before any reader is constructed.
+
+```python
+# mars_data_ops/utils/filesystem.py:800-818
+if set_env_variables:
+    if connection_string is not None:
+        os.environ['AZURE_STORAGE_CONNECTION_STRING'] = connection_string
+    if sas_token is not None:
+        os.environ['AZURE_STORAGE_SAS_TOKEN'] = sas_token
+    if account_name is not None:
+        os.environ['AZURE_STORAGE_ACCOUNT'] = account_name
+```
+
+Three orthogonal env vars; setting any combination of them is fine — GDAL's preference order is connection string first (most specific), then SAS, then implicit auth via `AZURE_STORAGE_ACCOUNT` alone (anonymous read).
+
+#### Mode 2 — Managed identity
+
+When running inside Azure compute (VMs, AKS pods, Functions, etc.), there's no static credential — the platform mints a short-lived bearer token via the IMDS endpoint. We fetch the token via `azure.identity.DefaultAzureCredential` and hand it to GDAL as an env var:
+
+```python
+# mars_data_ops/utils/filesystem.py:765-789
+credential = (
+    DefaultAzureCredential(managed_identity_client_id=client_id)
+    if client_id else DefaultAzureCredential()
+)
+token = credential.get_token('https://storage.azure.com/.default').token
+os.environ['AZURE_STORAGE_ACCOUNT'] = account_name
+os.environ['AZURE_STORAGE_ACCESS_TOKEN'] = token
+```
+
+**Sharp edge:** the token typically expires in ~1 hour. This snippet calls `get_token(...)` *once* at startup. If a long-running process tries to read after expiry, GDAL gets a 401 with no refresh path. For pipelines that run longer than the token TTL, refresh logic is the user's responsibility today — see the [`reader_rasterio.md` proposal](../plans/georeader/reader_rasterio.md) for what an opinionated solution would look like.
+
+#### Mode 3 — HTTPS with embedded SAS fallback
+
+GDAL's `AZURE_STORAGE_SAS_TOKEN` env var doesn't always kick in for paths that don't go through the canonical `az://` form. The fallback is to rewrite the path as an HTTPS URL with the SAS token embedded as a query string:
+
+```python
+# mars_data_ops/utils/filesystem.py:336-358
+def pathasroothttps(self, path: str) -> str:
+    path_https = path.replace(self.root, self.root_https())
+    if self.sas_token is not None:
+        sep = '&' if '?' in path_https else '?'
+        path_https += f"{sep}{self.sas_token.lstrip('?')}"
+    return path_https
+```
+
+Now `RasterioReader(pathasroothttps(p))` reads `https://account.blob.core.windows.net/container/blob?sv=...&sig=...` directly — GDAL treats it as a vanilla `/vsicurl/` URL and the embedded SAS is the auth.
+
+Use this when env-var auth misbehaves (the most common case is non-canonical paths that GDAL doesn't recognise as Azure).
+
+### Config-file entry point
+
+Wrapping the three modes is a config-file entry point that app code calls once at startup:
+
+```python
+# mars_data_ops/utils/filesystem.py:539-614
+def fs_access_from_config(config, use_managed_identity=False, configdet='filesystem'):
+    account_name = config.get('azure.storage', 'AZURE_STORAGE_ACCOUNT')
+    sas_token = config.get('azure.storage', 'AZURE_STORAGE_SAS_TOKEN', fallback=None)
+    connection_string = config.get(
+        'azure.storage', 'AZURE_STORAGE_CONNECTION_STRING', fallback=None,
+    )
+    return config_storage_access(
+        account_name, root=root,
+        use_managed_identity=use_managed_identity,
+        sas_token=sas_token,
+        connection_string=connection_string,
+    )
+```
+
+The implementation (`filesystem.py:617-703`) walks an explicit priority order: **managed identity → connection string → SAS** — first one set wins.
+
+### The canonical flow (TL;DR)
+
+End-to-end, the production pattern looks like this:
+
+1. App calls `fs_access_from_config(config)` → reads the `[azure.storage]` section.
+2. `config_storage_access(...)` sets `AZURE_STORAGE_*` env vars (or fetches a bearer token via `DefaultAzureCredential` for managed identity and sets `AZURE_STORAGE_ACCESS_TOKEN`).
+3. Code reads rasters via `RasterioReader(...)` from anywhere in the codebase. The reader wraps `rasterio.open` in `rasterio.Env(**RIO_ENV_OPTIONS_DEFAULT)` per call.
+4. GDAL picks credentials up from the process env — **no per-call credential threading needed**.
+5. **Fallback** when env-var auth misbehaves: `pathasroothttps(path)` builds an HTTPS URL with the SAS token embedded as a query string and `RasterioReader` reads that directly.
+
+The [Reader reconciliation design](../plans/georeader/README.md) is about widening this seam: [`LazyCOGReader`](../plans/georeader/reader_lazy_cog.md) and [`AsyncGeoTIFFReader`](../plans/georeader/reader_async_geotiff.md) plug in here as alternative implementations of the same interface, swapping GDAL VSI for direct HTTP-range / obstore reads. The credential pattern stays env-var-first for the GDAL-VSI default; the new paths each have their own credential locus — see [`reader_protocol.md` §"Credential handling"](../plans/georeader/reader_protocol.md). For a proposal that would reduce the env-var-soup ergonomics with a typed `Credential` Protocol, see [`plans/types/credentials.md`](../plans/types/credentials.md).
 
 ---
 

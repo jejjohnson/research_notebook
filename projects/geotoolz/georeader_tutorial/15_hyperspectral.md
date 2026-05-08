@@ -1,4 +1,19 @@
-# Ch. 15 — hyperspectral
+---
+title: Hyperspectral
+subject: georeader tutorial
+subtitle: EMIT, PRISMA, EnMAP readers
+short_title: Ch. 15 — Hyperspectral
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, emit, prisma, enmap
+---
 
 > **Modules:**
 > - `georeader/readers/emit.py` (1102 LOC)
@@ -324,7 +339,7 @@ All three return a 3-band `GeoTensor` ready for `plot.show`. The interfaces deli
 
 ### C — Spectral binning to S2 bands
 
-(Common to all three; used by `presets.enmap.ENMAP_TO_S2_BANDS` from the [`geotoolz` plan](../plans/geotoolz.md)):
+(Common to all three; used by `presets.enmap.ENMAP_TO_S2_BANDS` from the [`geotoolz` plan](../plans/geotoolz/geotoolz.md)):
 
 ```python
 from georeader.readers.S2_SAFE_reader import read_srf
@@ -364,13 +379,13 @@ This recipe works identically for PRISMA and EMIT — the readers expose `wavele
 
 ## 8. Connection to `geotoolz`
 
-The hyperspectral operators in [`geotoolz.md`](../plans/geotoolz.md) consume `GeoTensor`s produced by these readers:
+The hyperspectral operators in [`geotoolz.md`](../plans/geotoolz/geotoolz.md) consume `GeoTensor`s produced by these readers:
 
 - **`hyperspectral.MatchedFilter(target_spectrum, axis=0)`** — works on any of the three (post-orthorectification). Standard Reed-Yu detector.
 - **`hyperspectral.ACEDetector` / `RXDetector` / `LinearUnmixing`** — same.
 - **`presets.emit.EMIT_METHANE_MF`** — relies on EMIT's GLT speed: read once, MF many times.
 - **`presets.enmap.ENMAP_TO_S2_BANDS`** — uses the SRF binning recipe (§6C above) for cross-sensor compatibility.
 
-The split-object pattern in `geotoolz` ([Ch §4 of geotoolz.md](../plans/geotoolz.md)) is especially relevant here: compute the scene mean / covariance / endmember spectrum once (slow), then apply per-band detectors fast. The hyperspectral cube is the canonical case where state-as-artifact pays off.
+The split-object pattern in `geotoolz` ([Ch §4 of geotoolz.md](../plans/geotoolz/geotoolz.md)) is especially relevant here: compute the scene mean / covariance / endmember spectrum once (slow), then apply per-band detectors fast. The hyperspectral cube is the canonical case where state-as-artifact pays off.
 
 Next chapter: [16_earth_engine.md](16_earth_engine.md) — Google Earth Engine integration (export tile splitting and parallel download).

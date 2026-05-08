@@ -1,4 +1,19 @@
-# Ch. 12 — `save`
+---
+title: save
+subject: georeader tutorial
+subtitle: Writing GeoTensors to COGs
+short_title: Ch. 12 — Save
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, cog, save
+---
 
 > **Module:** `georeader/save.py` (586 LOC; the empty `save_cog.py` is a deprecated stub)
 > **Role:** the export side. Take a `GeoTensor` (or anything `GeoData`-shaped), write it to disk as a tiled GeoTIFF or a Cloud-Optimized GeoTIFF (COG). Handles cloud-storage destinations (`gs://`, `s3://`, `az://`) transparently.

@@ -1,4 +1,19 @@
-# Ch. 10 — `vectorize`
+---
+title: vectorize
+subject: georeader tutorial
+subtitle: Rasters → vectors
+short_title: Ch. 10 — Vectorize
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, vectorize
+---
 
 > **Module:** `georeader/vectorize.py` (370 LOC)
 > **Role:** the inverse of [Chapter 9](09_rasterize.md). Extract polygon geometries from binary raster masks. Standard tool for converting segmentation outputs and classification rasters back to GIS-friendly vector formats.
@@ -216,7 +231,7 @@ For applications that need exact round-trips (e.g., test fixtures), pass `tolera
 
 ## 9. Connection to `geotoolz`
 
-Two operators in [`geotoolz.md`](../plans/geotoolz.md) wrap this module:
+Two operators in [`geotoolz.md`](../plans/geotoolz/geotoolz.md) wrap this module:
 
 - **`postprocess.PolygonsFromMask(min_area=..., tolerance=...)`** — a terminal operator that converts the final `(H, W)` boolean output of a `Sequential` to a list of polygons. Useful as the last step of a `[Sequential(model + threshold + PolygonsFromMask)]` pipeline.
 - **`catalog_ops.WriteGeoJSON(...)`** — write polygons (with optional attributes) to disk per-tile during catalog processing. Internal call: `get_polygons(...)` + `gpd.GeoDataFrame(...)` + `to_file(...)`.

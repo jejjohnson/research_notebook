@@ -1,4 +1,19 @@
-# Ch. 16 — Earth Engine
+---
+title: Earth Engine
+subject: georeader tutorial
+subtitle: GEE integration with recursive tile splitting
+short_title: Ch. 16 — Earth Engine
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations:
+      - UNEP
+      - IMEO
+      - MARS
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: tutorial, georeader, gee
+---
 
 > **Modules:**
 > - `georeader/readers/ee_image.py` (539 LOC)
@@ -198,7 +213,7 @@ The credentials live in `~/.config/earthengine/credentials` (managed by `ee.Auth
 
 ## 10. Connection to `geotoolz`
 
-GEE doesn't have a dedicated wrapper in [`geotoolz.md`](../plans/geotoolz.md), but it shows up as a substrate alternative:
+GEE doesn't have a dedicated wrapper in [`geotoolz.md`](../plans/geotoolz/geotoolz.md), but it shows up as a substrate alternative:
 
 - **Catalog discovery via `ee_query`** is a sibling to `geotoolz.catalog_ops.CatalogPipeline(catalog, op).run()` from the geotoolz plan. The two could converge: `ee_query.query_*` produces a GeoDataFrame; `CatalogPipeline` consumes a `GeoCatalog`. A small adapter would let `geotoolz.catalog_ops` operate on GEE-discovered scenes directly.
 - **`export_cube` is the GEE analogue of `RasterioReader([paths], stack=True)`** — both produce `(T, C, H, W)`. Operators that consume time-stacks (e.g., `geotoolz.compositing.MedianComposite`) work on either substrate without modification.

@@ -267,7 +267,7 @@ For exact hulls use `shapely.MultiPoint(zip(lons.ravel(), lats.ravel())).convex_
 - **EMIT** (NASA, ISS) — ships a GLT in the L1B product. `georeader.readers.emit.load(...)` calls `georreference(glt, radiance)`. Fast.
 - **PRISMA** (ASI) — ships per-pixel `(lons, lats)` but no GLT. `georeader.readers.prisma.load(...)` calls `read_to_crs(...)`. Slow but unavoidable.
 - **EnMAP** (DLR) — same pattern as PRISMA. Per-pixel coords, interpolation on read.
-- **MODIS, VIIRS** (planned in [`modis.md`](../plans/modis.md)) — same pattern as PRISMA, with extra wrinkles (bowtie pixel duplicates, antimeridian crossing for polar orbits).
+- **MODIS, VIIRS** (planned in [`modis.md`](../plans/readers/modis.md)) — same pattern as PRISMA, with extra wrinkles (bowtie pixel duplicates, antimeridian crossing for polar orbits).
 
 The `geotoolz` plan is to keep this division: GLT-equipped sensors get the fast path, everyone else gets cubic interpolation. The `griddata` module is the substrate; the readers are the per-sensor wrappers.
 

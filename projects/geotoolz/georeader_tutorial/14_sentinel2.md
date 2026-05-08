@@ -259,7 +259,7 @@ The DataFrame uses the canonical band naming (`B01`, `B02`, ..., `B12`) so it li
 
 ## 11. Connection to `geotoolz`
 
-The whole `presets.s2` block in [`geotoolz.md` §1.2](../plans/geotoolz.md) sits on top of this module:
+The whole `presets.s2` block in [`geotoolz.md` §1.2](../plans/geotoolz/geotoolz.md) sits on top of this module:
 
 - **`presets.s2.S2_L2A_RGB(brightness=...)`** — `Sequential([s2.isel(["B04","B03","B02"]), ToFloat32, PercentileClip, Gamma])`. Loads via `s2loader`, picks RGB bands, normalises.
 - **`presets.s2.S2_L2A_NDVI(...)`** — `Sequential([s2.load(), MaskClouds(scl_band), NDVI(red_idx=2, nir_idx=3)])`. Uses the SCL band for cloud masking — a free pass thanks to L2A.

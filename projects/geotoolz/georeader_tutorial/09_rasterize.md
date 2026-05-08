@@ -200,7 +200,7 @@ The `exterior_pixel_coords` function still has its uses (custom drawing, vertex-
 
 ## 9. Connection to `geotoolz`
 
-Two operators in [`geotoolz.md`](../plans/geotoolz.md) lean on this module:
+Two operators in [`geotoolz.md`](../plans/geotoolz/geotoolz.md) lean on this module:
 
 - **`cloud.ApplyMask(mask)`** — when the mask is geometry-shaped (e.g., AOI polygon), `ApplyMask` rasterises before applying. The user passes a `Polygon`, the operator handles the burn.
 - **`catalog_ops.WriteCOG(write_polygon=...)`** — clipping output to a polygon footprint at write time. Rasterise the polygon to a mask, multiply, write.

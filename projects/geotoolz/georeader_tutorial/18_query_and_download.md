@@ -143,11 +143,11 @@ The output is in **Web Mercator**, not the native CRS of the satellite imagery y
 
 ## 9. Connection to `geotoolz`
 
-The discovery layer is **explicitly out of scope** for `geotoolz` per [`geotoolz.md` §1.3](../plans/geotoolz.md):
+The discovery layer is **explicitly out of scope** for `geotoolz` per [`geotoolz.md` §1.3](../plans/geotoolz/geotoolz.md):
 
 > **Not `georeader`.** No I/O, no CRS plumbing, no reader classes, no catalog construction. Those are `georeader`'s job.
 
-But there's a clean handoff: `geotoolz.catalog_ops.CatalogPipeline(catalog, op).run()` (from [§1.2 of the plan](../plans/geotoolz.md)) consumes a `georeader.catalog.GeoCatalog` — which (per [`geocatalog.md`](../plans/geocatalog.md) and [`geoduckdb.md`](../plans/geoduckdb.md)) is a planned addition to georeader that would unify all the per-collection query modules in this chapter.
+But there's a clean handoff: `geotoolz.catalog_ops.CatalogPipeline(catalog, op).run()` (from [§1.2 of the plan](../plans/geotoolz/geotoolz.md)) consumes a `georeader.catalog.GeoCatalog` — which (per the [Geodatabase design](../plans/geodatabase/README.md)) is a planned addition to georeader that would unify all the per-collection query modules in this chapter.
 
 The future state, per the plans:
 

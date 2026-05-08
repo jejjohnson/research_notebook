@@ -268,7 +268,7 @@ s2_equivalent = reflectance.transform_to_srf(emit_radiance, s2_srf, wavelengths=
 s2_E = reflectance.integrated_irradiance(pd.DataFrame(s2_srf, index=emit_wavelengths))
 ```
 
-This is the "spectral response binning" preset that the [`geotoolz.md` plan](../plans/geotoolz.md) mentions for `presets.enmap.ENMAP_TO_S2_BANDS` — same pattern, applied to EnMAP data.
+This is the "spectral response binning" preset that the [`geotoolz.md` plan](../plans/geotoolz/geotoolz.md) mentions for `presets.enmap.ENMAP_TO_S2_BANDS` — same pattern, applied to EnMAP data.
 
 ---
 
@@ -292,7 +292,7 @@ This is the "spectral response binning" preset that the [`geotoolz.md` plan](../
 
 ## 11. Connection to `geotoolz`
 
-Three concrete operator-shapes from [`geotoolz.md`](../plans/geotoolz.md) wrap functions in this module:
+Three concrete operator-shapes from [`geotoolz.md`](../plans/geotoolz/geotoolz.md) wrap functions in this module:
 
 - **`correction.TOAToBOA(sun_zenith=..., atmosphere=...)`** — wraps `radiance_to_reflectance` plus an atmospheric correction step. The radiance→ToA part is what this module already does.
 - **`radiometry.SRFBin(target_centres, target_fwhm)`** — wraps `srf` + `transform_to_srf` to take a hyperspectral cube and bin it to a target sensor's bands. The basis for the `EnMAP → S2` and `EMIT → S2` preset operators.

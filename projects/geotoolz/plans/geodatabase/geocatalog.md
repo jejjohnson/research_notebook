@@ -52,12 +52,7 @@ All operate at the index level, never opening a file.
 
 ### 1.4 The sampler / inference layer
 
-`sampler.py` is the ML-glue:
-
-- `GeoSlice` dataclass = `(xmin, xmax, ymin, ymax, tmin, tmax, x_res, y_res, crs)` is the unit of work passed between samplers and loaders.
-- `random_geo_sampler` and `grid_geo_sampler` are factory functions that return zero-arg callables yielding `GeoSlice` iterators.
-- `run_inference_with_grid_sampler` ties sampler → loader → model → stitcher into one call.
-- `stitch_predictions` reverses the chip operation (`average` / `max` / `first` / `last` over overlaps).
+`sampler.py` is the ML-glue: a `GeoSlice` dataclass + `random_geo_sampler` / `grid_geo_sampler` / `stitch_predictions` factories. The catalog is what the samplers iterate; the slices flow downstream into loaders and operators. Detailed design — dataclass invariants, sampling math, stitch reductions — lives in [`types/geoslice.md`](../types/geoslice.md). This document only covers how the catalog feeds the samplers.
 
 ### 1.5 Auxiliary
 
@@ -174,53 +169,9 @@ valid = maxt >= mint
 
 The result's `IntervalIndex` is built from those two arrays with `closed='both'`.
 
-### 4.5 Random-sampler weighting
+### 4.5 Sampler and stitch math
 
-Tiles big enough to contain a chip are kept. Each surviving tile gets weight proportional to its area:
-
-$$
-w_i = \frac{(x_{\max,i} - x_{\min,i}) \cdot (y_{\max,i} - y_{\min,i})}{\sum_j A_j}
-$$
-
-A tile is drawn with `numpy.random.Generator.choice(p=w)`, then a chip is placed uniformly inside the tile:
-
-```python
-x_offset = uniform(0, tile_width  - chip_width)
-y_offset = uniform(0, tile_height - chip_height)
-```
-
-The timestamp is sampled uniformly (in seconds) inside the tile's interval and assigned to both `tmin` and `tmax`.
-
-> **Bias to flag.** This weighting pushes samples *toward* large tiles. Fine for uniform-density imagery; biased for tiled mosaics with one giant tile and many small ones. Worth exposing `weight={'area','uniform'}`.
-
-### 4.6 Grid-sampler stride math
-
-For each tile of size `(W, H)` and chip `(w, h)` with stride `(s_x, s_y)`:
-
-$$
-n_{\text{cols}} = \left\lceil \frac{W - w}{s_x} \right\rceil + 1, \qquad
-n_{\text{rows}} = \left\lceil \frac{H - h}{s_y} \right\rceil + 1
-$$
-
-Final-row/column chips are clipped against tile bounds (the chip is *shifted*, not truncated, to keep chip size exact). Total chip count = sum over tiles. This matches the standard sliding-window convention used by `xrpatcher` / `xbatcher`.
-
-### 4.7 Prediction stitching
-
-For overlapping predictions, the four supported reductions on the output grid are:
-
-| Method | Update rule |
-| --- | --- |
-| `average` | `out += pred; counts += 1; out /= max(counts, 1)` |
-| `max`     | `out = np.maximum(out, pred)` |
-| `first`   | write only where `counts == 0`, then increment counts |
-| `last`    | unconditional overwrite |
-
-Pixel placement uses the output transform implicit in `(xmin, ymax, x_res, y_res)`:
-
-```python
-col = int((geoslice.xmin - xmin) / x_res)
-row = int((ymax - geoslice.ymax) / y_res)   # y-flip: rows count from north downward
-```
+Random-sampler weighting (area-weighted tile selection + uniform chip placement), grid-sampler stride math, and the four stitch-reduction modes (`average` / `max` / `first` / `last`) are specified in [`types/geoslice.md`](../types/geoslice.md). Those primitives consume what this catalog produces but aren't catalog-specific — see that document for invariants and edge cases.
 
 ---
 
@@ -232,9 +183,9 @@ row = int((ymax - geoslice.ymax) / y_res)   # y-flip: rows count from north down
 | `load_and_merge_rasters_spatial` | Heavy overlap with `mosaic.py` — both do windowed reads + `rasterio.merge`. The snippet adds the index-driven query layer on top. |
 | `load_xarray_datasets*` | New territory; georeader doesn't really do xarray reads end-to-end. `dataarray.py` exists as a thin GeoTensor↔DataArray bridge; this would extend that. |
 | `load_and_rasterize_vectors*` | Overlaps `rasterize.py`. The snippet adds index-driven file selection and per-task label conventions. |
-| `sampler.py` / `GeoSlice` | New. But `GeoSlice` overlaps conceptually with `slices.py` and with `window_utils.py`'s window descriptors. Reconcile or alias. |
-| `run_inference_with_grid_sampler` | Could compose `read.read_from_bounds` instead of inlining `rasterio.merge` logic. |
-| `stitch_predictions` | New; nothing equivalent in georeader. |
+| `sampler.py` / `GeoSlice` | Promoted to its own design — see [`types/geoslice.md`](../types/geoslice.md), which reconciles `GeoSlice` with `rasterio.windows.Window` and `slices.py`. |
+| `run_inference_with_grid_sampler` | Cut. The model loop belongs at the operator layer ([`geotoolz.inference.ApplyToChips`](../geotoolz/geotoolz.md)), not in georeader. |
+| `stitch_predictions` | Specified in [`types/geoslice.md`](../types/geoslice.md). |
 | `query` / `intersect` / `union` | New. Set algebra over a GeoDataFrame catalog — clean fit as a new module. |
 | `rasterio_utils.py` | Keep only `get_tags` / `print_all_metadata` and fold into existing readers. The xarray-tagging half should not live here; it's ad-hoc rioxarray plumbing. |
 
@@ -259,29 +210,20 @@ georeader/
 │   ├── xarray.py               # build_xarray_catalog + xarray loaders   [extra: xarray]
 │   ├── vector.py               # build_vector_catalog + rasterizers
 │   └── ops.py                  # query, intersect, union
-├── samplers/                   # NEW (or part of catalog/)
+├── samplers/                   # NEW — see types/geoslice.md design
 │   ├── __init__.py
-│   ├── geoslice.py             # GeoSlice (or reuse slices.py)
-│   ├── random.py
-│   ├── grid.py
-│   └── stitch.py
+│   ├── geoslice.py             # GeoSlice dataclass
+│   ├── random.py               # random_sampler
+│   ├── grid.py                 # grid_sampler
+│   └── stitch.py               # stitch
 └── ...                         # existing modules unchanged
 ```
 
 ### 6.2 Core types
 
+`GeoSlice` is specified in [`types/geoslice.md`](../types/geoslice.md). The catalog imports and re-exports it for convenience.
+
 ```python
-@dataclass(frozen=True)
-class GeoSlice:
-    bounds: tuple[float, float, float, float]   # (xmin, ymin, xmax, ymax)
-    interval: pd.Interval                       # closed='both'
-    resolution: tuple[float, float]             # (x_res, y_res)
-    crs: pyproj.CRS
-
-    @property
-    def shape(self) -> tuple[int, int]: ...     # (h, w)
-
-
 class GeoCatalog:
     """Thin wrapper around a GeoDataFrame with IntervalIndex + geometry."""
     gdf: gpd.GeoDataFrame
@@ -372,39 +314,7 @@ The shift from `dict[str, np.ndarray]` to `GeoTensor` is the single biggest clea
 
 ### 6.5 Samplers
 
-```python
-def random_sampler(
-    catalog: GeoCatalog,
-    chip_size: tuple[int, int],
-    *,
-    length: int | None = None,
-    roi: shapely.Polygon | None = None,
-    toi: pd.Interval | None = None,
-    units: Literal["pixels", "crs"] = "pixels",
-    seed: int | None = None,
-    weight: Literal["area", "uniform"] = "area",   # NEW: address §4.5 bias
-) -> Iterator[GeoSlice]: ...
-
-
-def grid_sampler(
-    catalog: GeoCatalog,
-    chip_size: tuple[int, int],
-    *,
-    stride: tuple[int, int] | None = None,
-    roi: shapely.Polygon | None = None,
-    toi: pd.Interval | None = None,
-    units: Literal["pixels", "crs"] = "pixels",
-) -> Iterator[GeoSlice]: ...
-
-
-def stitch(
-    predictions: Sequence[np.ndarray],
-    slices: Sequence[GeoSlice],
-    *,
-    method: Literal["average", "max", "first", "last"] = "average",
-    roi: shapely.Polygon | None = None,
-) -> GeoTensor: ...                          # carry CRS through
-```
+`random_sampler`, `grid_sampler`, and `stitch` are specified in [`types/geoslice.md`](../types/geoslice.md) — including signatures, area-weighting math, stride math, and the four stitch reduction modes. From the catalog's perspective the only API touchpoint is that all three accept a `GeoCatalog` and consume `iter_rows()` / `query()` to find tiles.
 
 ### 6.6 What I'd cut
 

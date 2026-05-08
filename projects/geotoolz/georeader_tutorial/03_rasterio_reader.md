@@ -204,7 +204,7 @@ This is also the right tool for "should I load this whole scene to decide if it'
 
 Internal helper `_get_rio_options_path(path)` (and the module-level `_vsi_path` in `geotensor.py`) translate user-friendly URIs to VSI form. Credentials come from `rio_env_options` or from environment (`AWS_*`, `GOOGLE_APPLICATION_CREDENTIALS`, etc.) — same as plain rasterio.
 
-The [`georeader.md` plan](../plans/georeader.md) is about widening this seam: `LazyCOGReader` and the async-obstore reader plug in here as alternative implementations of the same interface, swapping GDAL VSI for direct HTTP-range / obstore reads. That's the unification work.
+The [Reader reconciliation design](../plans/georeader/README.md) is about widening this seam: [`LazyCOGReader`](../plans/georeader/reader_lazy_cog.md) and [`AsyncGeoTIFFReader`](../plans/georeader/reader_async_geotiff.md) plug in here as alternative implementations of the same interface, swapping GDAL VSI for direct HTTP-range / obstore reads. That's the unification work.
 
 ---
 

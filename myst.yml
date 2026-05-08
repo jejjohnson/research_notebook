@@ -115,7 +115,12 @@ project:
             - title: Plans
               children:
                 - file: projects/geotoolz/plans/geotoolz.md
-                - file: projects/geotoolz/plans/georeader.md
+                - title: Reader reconciliation
+                  children:
+                    - file: projects/geotoolz/plans/georeader/README.md
+                    - file: projects/geotoolz/plans/georeader/reader_protocol.md
+                    - file: projects/geotoolz/plans/georeader/reader_lazy_cog.md
+                    - file: projects/geotoolz/plans/georeader/reader_async_geotiff.md
                 - file: projects/geotoolz/plans/geocatalog.md
                 - file: projects/geotoolz/plans/geoduckdb.md
                 - file: projects/geotoolz/plans/geostack.md

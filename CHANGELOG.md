@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.7](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.6...research_notebook-v0.1.7) (2026-05-08)
+
+
+### Documentation
+
+* **geotoolz:** add design plans and georeader tutorial ([#53](https://github.com/jejjohnson/research_notebook/issues/53)) ([3fe916a](https://github.com/jejjohnson/research_notebook/commit/3fe916aca2c05f3598d7403270cb7574d3e4443f))
+* **geotoolz:** motivation rewrite, operational-attribution success story, two-tier model ([#56](https://github.com/jejjohnson/research_notebook/issues/56)) ([463d332](https://github.com/jejjohnson/research_notebook/commit/463d3320e7cd84b8fc8b07bd668b73da54536307))
+* **geotoolz:** split reader-reconciliation plan into 4 files ([#55](https://github.com/jejjohnson/research_notebook/issues/55)) ([6bcb18c](https://github.com/jejjohnson/research_notebook/commit/6bcb18caebc02f93454c33a94f41c9068207cb16))
+
 ## [0.1.6](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.5...research_notebook-v0.1.6) (2026-05-07)
 
 

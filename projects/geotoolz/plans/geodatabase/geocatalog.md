@@ -850,3 +850,38 @@ What needs work before promotion to a public georeader API:
 - [ ] Decide if `GeoSlice` should reuse / extend `georeader.slices.py` or be a new sibling — I'd reuse and extend.
 
 If you do those six things, this becomes a real `georeader.catalog` module — the dataset-collection layer that georeader is currently missing — without bloating the dependency footprint.
+
+---
+
+## 10. Open questions, gotchas, and warnings
+
+The Phase 1 / Phase 2 design is sound; several execution-level concerns deserve flags.
+
+### 10.1 Cross-CRS query footgun
+
+The catalog stores all geometries in a uniform target CRS (Phase 1 default: source CRS preserved per-row but reprojected for query; Phase 2 convention from `geoduckdb.md` §4: write all GeoParquet in EPSG:4326). Users querying `WHERE ST_Intersects(geom, AOI)` with AOI in a non-target CRS get **silently empty results** — no error, just no rows. **Mitigation:** provide a `query` helper that takes `(aoi: shapely.Geometry, aoi_crs: pyproj.CRS)` and projects internally before passing to the underlying engine. Make this the canonical path; the raw `gdf.cx[...]` / SQL paths assume the AOI is already in catalog CRS.
+
+### 10.2 GeoParquet 1.1 writer adoption is uneven
+
+`geopandas.to_parquet` defaults to GeoParquet 1.0; the per-row bbox column for predicate pushdown requires **GeoParquet 1.1**, which means an explicit `version="1.1"` flag (or whatever the geopandas writer uses) and a `geopandas` version pin. DuckDB's GeoParquet *write* path is newer than its read path. **Mitigation:** pin `geopandas >= 0.14` (or whatever first-shipped 1.1 writer) and `duckdb >= 1.1` explicitly in the package metadata; add a CI test that round-trips a small catalog through `to_geoparquet` → disk → `from_geoparquet` and verifies the bbox column survives.
+
+### 10.3 Phase 2 risk of bit-rot
+
+Most users will stay on Phase 1 (GeoPandas + IntervalIndex) for the 90% case. Phase 2 (DuckDB) won't get exercised unless someone hits the 10⁶+-row threshold. **Risk:** untested code paths on the upgrade. **Mitigation:** gate the Phase 2 release behind one real Phase 2 user (a multi-million-row catalog from your own work, or a community case study); add a multi-million-row CI fixture if no organic user emerges within v0.2.
+
+### 10.4 `schema_version` column is reserved, not used yet
+
+GeoParquet schemas evolve. Reserve a `schema_version` column from v0.1 so future migrations are tractable; current Phase 1 schema is de facto v0; bump to v1 the first time we change anything substantive (e.g. add a `n_timesteps` column). Document the migration runbook so this doesn't turn into tribal knowledge.
+
+### 10.5 Concurrent write semantics
+
+Phase 1 (GeoPandas in memory) is single-writer. Phase 2 (DuckDB on a shared GeoParquet) is **read-safe** across processes; **write-safe only if you treat Parquet as append-only** (new row groups in new files, not in-place mutation). Document the recommended write pattern; users coordinating multiple crawlers will trip over this.
+
+### 10.6 IntervalIndex edge cases
+
+`pd.IntervalIndex` with `closed="both"` handles overlapping intervals fine, but **back-to-back intervals** (one ends at `t`, next starts at `t`) double-count at the boundary. For sub-daily satellite data this rarely matters; for daily/hourly products it does. Decide on `closed="left"` vs `closed="both"` and stick with it; document the choice.
+
+### 10.7 Adapter scope
+
+The plan mentions STAC read/write adapters and a `GeoDataset` torch adapter. Each adapter is a small library on its own — STAC has its own metadata model that doesn't round-trip cleanly to a GeoDataFrame in all cases (collections vs items, asset-level metadata). **Scope honestly:** v0.1 ships `to_geoparquet` / `from_geoparquet` round-trip; STAC and torch adapters are v0.2+. Don't promise adapters that aren't built.
+

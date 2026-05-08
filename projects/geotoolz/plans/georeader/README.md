@@ -263,3 +263,18 @@ Once these designs are implemented, the existing tutorial chapters need updates:
 - New chapters can be added for `LazyCOGReader` and `AsyncGeoTIFFReader` once those land — both natural successors to Ch. 3.
 
 The tutorial today describes the **current** package state; updates land alongside each issue's implementation, not before.
+
+---
+
+## Open questions, gotchas, and warnings
+
+The reconciliation is mostly low-risk — pieces exist, the work is plumbing. A few things to manage actively:
+
+- **`feature/geotensor_npapi` merge timing is critical-path** for `geotoolz`. The ndarray-subclass `GeoTensor` with `__array_ufunc__` underpins `geotoolz`'s two-tier model. If the branch stalls upstream, downstream blocks. Track the upstream merge as a v0.1 release blocker; contingency is to vendor `GeoTensor` in `geotoolz` until upstream catches up.
+- **`__array_function__` (NEP-18) coverage.** `__array_ufunc__` covers ufuncs only; `np.fft.*`, `np.linalg.*`, `np.einsum`, `np.percentile` go through `__array_function__`. Verify `GeoTensor` implements both protocols, or document which numpy submodules strip the subclass. Add a CI test that round-trips metadata through every numpy submodule the readers and downstream operators touch.
+- **ndarray subclass survival across third-party libraries.** `GeoTensor` survives numpy + scipy + skimage + matplotlib. It does **not** survive PyTorch (`torch.from_numpy` strips), JAX (`jnp.asarray` strips), or Dask without explicit `meta=` plumbing. Document this boundary in the user docs so consumers don't assume the subclass flows everywhere.
+- **Async ↔ sync boundary.** `AsyncReader` returns awaitables; downstream sync code (Operators, batch loops) needs `asyncio.run()` per call, which costs an event loop per invocation. `geotoolz` will need to pick a strategy (`AsyncOperator` family, or restrict async to the `CatalogPipeline` boundary) — see [`geotoolz.md` §11.2](../geotoolz/geotoolz.md#112-implementation-gotchas-test-these-in-ci). Worth coordinating before v0.1.
+- **Sensor-reader scope reduction for v0.1.** [`readers/`](../readers/) lists ABI, SEVIRI Native, MTG-FCI, Himawari-AHI HSD, SEVIRI HRIT, MODIS, VIIRS. Each "hard" sensor (irregular file formats, bowtie distortion) is 1–2 weeks *with full product spec access*. **Recommendation:** ship MODIS + ABI as v0.1 sensor proofs; defer SEVIRI / MTG / Himawari to v0.5+ unless an active user has a concrete need.
+- **Credential per-reader isolation.** The `Credential` design (`apply()` returning a dict, no global env-var mutation) only works if every reader is updated to consume the per-call dict instead of reading from `os.environ`. Backwards-compat path: legacy `apply_to_os_environ()` is provided but discouraged. Audit each reader on the way through reconciliation.
+- **`ByteStore` adapter parity.** `ObstoreByteStore` and `FsspecByteStore` need to handle the same set of edge cases: large range reads (>64 MB), retries on transient HTTP failures, presigned-URL token expiry. Cross-adapter test parity (same test suite run against both adapters) catches drift.
+- **Per-sensor public bucket helpers** are user-friendly but couple `georeader` to specific cloud-bucket layouts that providers can change without notice (Sentinel-2 on AWS moved twice). Pin reader behaviour to a documented bucket convention; add a smoke test that fails loudly if a bucket layout changes.

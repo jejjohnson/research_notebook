@@ -40,15 +40,30 @@ keywords: design, geotoolz, operators, remote-sensing
 
 A composable Operator library targeted at remote sensing. Sibling to `xr_toolz` at the architectural level; orthogonal at the substrate level.
 
-### 1.1 The three-tier model (borrowed verbatim from `xr_toolz` D11)
+### 1.1 The two-tier model
+
+`geotoolz` ships **two tiers**, where `xr_toolz` ships three. The collapse is possible because `GeoTensor` is an `np.ndarray` *subclass* with `__array_ufunc__` / `__array_finalize__` — it transparently carries metadata through ufuncs, slicing, copies, and views. The intermediate "tensor function" tier `xr_toolz` needs (because `xarray.DataArray` is *composition* over an ndarray, not a subclass) collapses into the Array tier here.
 
 | Tier | Location | Input | Output | Coordinate semantics |
 | --- | --- | --- | --- | --- |
-| **A — Array** | `geotoolz.<module>._src.array` | `np.ndarray` | `np.ndarray` | `axis=` |
-| **B — Tensor** | `geotoolz.<module>._src.tensor` | `GeoTensor` | `GeoTensor` (or terminal type) | `axis=`, with `dims`-aware helpers |
-| **C — Operator** | `geotoolz.<module>` (public) | `GeoTensor` (or two for multi-input) | `GeoTensor` / scalar / `Figure` | constructor `axis=` / `band=` |
+| **A — Array (primitive)** | `geotoolz.<module>._src.array` | `Float[ndarray, "..."]` (jaxtyped) | `Float[ndarray, "..."]` | `axis=` |
+| **B — Operator** | `geotoolz.<module>` (public) | `GeoTensor` (or two for multi-input) | `GeoTensor` / scalar / `Figure` | constructor `axis=` / `band=` |
 
-Tier A is private, ufunc-pure where possible. Tier B does the `GeoTensor`-subclass dance for non-ufunc upstream calls (skimage / scipy.ndimage). Tier C carries config, composes via `Sequential` and `Graph`.
+**Tier A — primitives.** Pure `np.ndarray → np.ndarray` functions, jaxtyped at the signature so callers see `Float[ndarray, "*batch bands H W"]`. Ufunc-pure where possible; for non-ufunc upstream calls (`skimage`, `scipy.ndimage`, `sklearn`) primitives return a plain `ndarray` — **no subclass dance inside the primitive**. Semi-public: importable, jaxtyped, documented, but the canonical user-facing surface is the Operator.
+
+**Tier B — Operators.** The carrier-aware boundary. There are **three cases** an Operator's `_apply` may need to handle, and each has a distinct pattern:
+
+1. **Shape-preserving + ufunc-pure** (e.g. `NDVI`, `Mask`, arithmetic, slicing): delegate straight to the primitive. `__array_ufunc__` round-trips the metadata automatically — `_apply` is one line.
+2. **Shape-preserving + non-ufunc** (e.g. `LeeSpeckle` via `scipy.ndimage`, `MaskFromQABits` via boolean ops, classification via `sklearn.predict`): strip → run → re-wrap. `out = primitive(np.asarray(gt)); return gt._wrap(out)`. One line of dance per Operator that needs it.
+3. **Shape- or metadata-changing** (`Resize`, `Regrid`, `Pansharpen`, multi-input fusion across CRSs, dim-reducing ops like `MeanComposite`): the primitive returns a plain `ndarray` and the Operator **constructs a fresh `GeoTensor`** with a *new* `transform` / `crs` / `dims`. `_wrap` does **not** apply — `_wrap` preserves metadata, but the metadata is precisely what changes here. Use `georeader`'s `GeoTensor` constructor directly.
+
+Operators carry config (Hydra-friendly) and compose via `Sequential` and `Graph`. The three cases are not exotic edge cases — Case 3 covers most of `compositing`, `pansharpen`, `sampling`, and any reprojection-flavoured op. Treat all three as first-class patterns from day one.
+
+**Why two tiers, not three.** `xr_toolz` has a middle "tensor function" tier because lifting `DataArray ↔ ndarray` is real work (extract `.values`, run, re-attach `.coords` / `.dims`). For `GeoTensor` that work collapses to `gt._wrap(out)` — one line at the Operator boundary. A dedicated tier-of-functions for that one line would be ceremony without value.
+
+**What jaxtyping does (and doesn't) buy us.** Tier A's `Float[ndarray, "..."]` annotations communicate *shape contracts* — IDE-visible, optional runtime-checkable, lower barrier than typing every primitive against `GeoTensor`. They do **not** communicate georef-awareness. The Operator type signature (`GeoTensor → GeoTensor`) remains the canonical place where georef-awareness is asserted. Primitives are "discipline plus jaxtyping"; Operators are "the typed contract".
+
+**Tests.** Tier A for analytic ground truth (math is right on numpy arrays, shapes match jaxtyping); Tier B for config round-trip + GeoTensor metadata propagation. No middle tier means no third place to test.
 
 ### 1.2 Module surface
 
@@ -77,7 +92,7 @@ Twelve modules, organised by RS workflow stage. Roughly 80 Operators in steady s
 
 - **Not `xr_toolz`.** Different substrate (`GeoTensor` vs `xr.Dataset`). Different audience. Same architectural patterns, separately implemented.
 - **Not `georeader`.** No I/O, no CRS plumbing, no reader classes, no catalog construction. Those are `georeader`'s job. `geotoolz` consumes `GeoTensor`s and produces `GeoTensor`s.
-- **Not a numpy primitives library.** Tier A primitives live inside `_src/array.py` per module — internal. If someone wants pure-numpy NDVI without operators, `from geotoolz.indices._src.array import ndvi_array` works, but the public surface is the Operator.
+- **Not a numpy primitives library.** Tier A primitives live inside `_src/array.py` per module — semi-public (importable, jaxtyped, documented), but the **canonical** surface is the Operator. `from geotoolz.indices._src.array import ndvi` works for users who want pure-numpy + jaxtyping; `gz.indices.NDVI(...)(gt)` is what most users will write. Primitives are "discipline + shape contracts"; Operators are "the typed georef-aware contract".
 - **Not framework-coupled.** `ModelOp` doesn't import torch / JAX / sklearn — it duck-types via `getattr(model, "predict")` or `model(arr)`. Optional `[ml]` extra for torch/sklearn presets if needed.
 - **Not a kitchen sink.** Curated. RS-shaped. Sensor presets are pinned to product versions to bound the maintenance surface.
 
@@ -168,33 +183,101 @@ These small differences add up. Sharing across libraries would mean both diverge
 
 ## 4. Mathematics
 
-### 4.1 The three-tier delegation chain (worked example: `NDVI`)
+### 4.1 The two-tier delegation chain (worked examples: `NDVI`, `LeeSpeckle`)
+
+**Ufunc-pure case (the common one).** `NDVI` is arithmetic — closed under ufuncs — so the Operator delegates straight to the jaxtyped primitive and `__array_ufunc__` handles the GeoTensor wrap automatically:
 
 ```python
-# Tier A — array
-def ndvi_array(arr, *, axis, red_idx, nir_idx, eps=1e-6):
+import numpy as np
+from numpy import ndarray
+from jaxtyping import Float
+
+# Tier A — array primitive (jaxtyped, semi-public)
+def ndvi(
+    arr: Float[ndarray, "*batch bands H W"],
+    *, axis: int, red_idx: int, nir_idx: int, eps: float = 1e-6,
+) -> Float[ndarray, "*batch H W"]:
     take = lambda i: np.take(arr, i, axis=axis)
     return (take(nir_idx) - take(red_idx)) / (take(nir_idx) + take(red_idx) + eps)
 
-# Tier B — tensor
-def ndvi_tensor(gt, *, axis=0, red_idx, nir_idx, eps=1e-6):
-    """Returns a GeoTensor of shape gt.shape with the band axis collapsed."""
-    return ndvi_array(gt, axis=axis, red_idx=red_idx, nir_idx=nir_idx, eps=eps)
-    # Closed under ufuncs → GeoTensor metadata round-trips automatically.
-
-# Tier C — operator
+# Tier B — operator
 class NDVI(Operator):
     def __init__(self, *, red_idx, nir_idx, axis=0, eps=1e-6):
         self.red_idx, self.nir_idx, self.axis, self.eps = red_idx, nir_idx, axis, eps
-    def _apply(self, gt):
-        return ndvi_tensor(gt, axis=self.axis, red_idx=self.red_idx,
-                           nir_idx=self.nir_idx, eps=self.eps)
+    def _apply(self, gt: GeoTensor) -> GeoTensor:
+        # Ufunc-pure primitive: GeoTensor metadata round-trips automatically
+        # via __array_ufunc__ / __array_finalize__. Pass the GeoTensor straight in.
+        return ndvi(gt, axis=self.axis, red_idx=self.red_idx,
+                    nir_idx=self.nir_idx, eps=self.eps)
     def get_config(self):
         return {"red_idx": self.red_idx, "nir_idx": self.nir_idx,
                 "axis": self.axis, "eps": self.eps}
 ```
 
-The Operator carries config (Hydra-friendly), delegates to the Tensor function, which delegates to the Array function. **No logic duplicated.** Tests target whichever tier is most informative — usually Tier A for analytic ground truth + Tier C for config round-trip.
+The Operator carries config (Hydra-friendly) and delegates straight to the primitive. **No middle tier, no logic duplicated.**
+
+**Non-ufunc case.** Anything that calls `scipy.ndimage`, `skimage`, or `sklearn` strips the GeoTensor subclass — those upstream libraries call `np.asarray()` internally. The Operator's `_apply` is the wrap boundary:
+
+```python
+from scipy.ndimage import uniform_filter
+
+# Tier A — non-ufunc primitive (jaxtyped, returns plain ndarray)
+def lee_speckle(
+    arr: Float[ndarray, "*batch H W"], *, window: int,
+) -> Float[ndarray, "*batch H W"]:
+    mean = uniform_filter(arr, size=window)
+    var  = uniform_filter(arr ** 2, size=window) - mean ** 2
+    noise_var = float(var.mean())
+    weight = var / (var + noise_var + 1e-12)
+    return mean + weight * (arr - mean)
+
+# Tier B — operator handles the strip / run / wrap dance explicitly
+class LeeSpeckle(Operator):
+    def __init__(self, *, window: int = 7): self.window = window
+    def _apply(self, gt: GeoTensor) -> GeoTensor:
+        out = lee_speckle(np.asarray(gt), window=self.window)  # plain ndarray
+        return gt._wrap(out)                                    # one-line re-wrap
+    def get_config(self): return {"window": self.window}
+```
+
+The wrap is one line, lives in exactly one place per Operator, never propagates upstream.
+
+**Shape- or metadata-changing case.** When the output's shape, transform, or CRS differs from the input — the third case from §1.1 — `_wrap` does **not** apply. The Operator constructs a fresh `GeoTensor`:
+
+```python
+from skimage.transform import resize as _skimage_resize
+
+# Tier A — shape-changing primitive (jaxtyped, returns plain ndarray)
+def resize(
+    arr: Float[ndarray, "*batch H W"],
+    *, target_shape: tuple[int, int], order: int = 1,
+) -> Float[ndarray, "*batch Hp Wp"]:
+    """Bilinear resample. Output spatial dims differ from input."""
+    return _skimage_resize(arr, target_shape, order=order, preserve_range=True)
+
+# Tier B — operator constructs a fresh GeoTensor with a new transform
+class Resize(Operator):
+    def __init__(self, *, target_shape: tuple[int, int], order: int = 1):
+        self.target_shape, self.order = target_shape, order
+    def _apply(self, gt: GeoTensor) -> GeoTensor:
+        out = resize(np.asarray(gt), target_shape=self.target_shape, order=self.order)
+        # New transform = old transform * scale, where scale comes from the resample factor.
+        # `georeader` provides the GeoTensor constructor; concrete API depends on the
+        # final georeader 2.0 surface, but the shape is "build a fresh carrier from
+        # (array, transform, crs, fill_value)".
+        sy = gt.shape[-2] / self.target_shape[0]
+        sx = gt.shape[-1] / self.target_shape[1]
+        new_transform = gt.transform * gt.transform.scale(sx, sy)
+        return GeoTensor(
+            values=out, transform=new_transform, crs=gt.crs,
+            fill_value_default=gt.fill_value_default,
+        )
+    def get_config(self): return {"target_shape": self.target_shape, "order": self.order}
+```
+
+Same shape applies to `Pansharpen` (changes spatial resolution to the pan grid), `Regrid` (changes CRS + transform), `MeanComposite` over time (drops the time axis from `dims`), and any multi-input fusion that lands on a target grid. The Operator owns the metadata construction; `georeader` provides the constructor; primitives stay numpy-typed.
+
+**Tests.** Tier A for analytic ground truth (math is right on numpy arrays, shapes match jaxtyping). Tier B for config round-trip *and* GeoTensor metadata propagation (transform, CRS, fill_value preserved through both ufunc-pure and non-ufunc operators).
 
 ### 4.2 The dual-mode `Operator.__call__` (Graph mode)
 
@@ -269,7 +352,7 @@ $$
 \mathrm{R}'_{h,w} = \mathrm{R}_{h,w} \cdot \frac{\mathrm{P}_{h,w}}{\mathrm{R}_{h,w} + \mathrm{G}_{h,w} + \mathrm{B}_{h,w} + \epsilon}
 $$
 
-Resamples the multispectral bands to the pan grid first (via `skimage.transform.resize` through the Tier B `preserve_subclass` wrapper), then applies the per-channel ratio. Same pattern for Gram-Schmidt and HCS, different math.
+Resamples the multispectral bands to the pan grid first (via `skimage.transform.resize` — a non-ufunc, shape-changing call wrapped at the Operator boundary, where the Operator constructs a fresh `GeoTensor` with the pan-grid transform), then applies the per-channel ratio. Same pattern for Gram-Schmidt and HCS, different math.
 
 ### 4.8 Lee speckle filter (SAR)
 
@@ -287,11 +370,11 @@ with `ȳ`, `σ_y²` from a sliding window, `σ_n²` an estimate of speckle noise
 
 ### 5.1 `georeader` — primary substrate
 
-`geotoolz` operators take and return `GeoTensor`. `__array_ufunc__` handles metadata round-trips for ufunc-y operations; the Tier B layer handles non-ufunc upstream calls via `preserve_subclass`. **Zero changes required to `georeader`.**
+`geotoolz` operators take and return `GeoTensor`. `__array_ufunc__` handles metadata round-trips for ufunc-pure operations transparently; for non-ufunc upstream calls (`skimage`, `scipy.ndimage`, `sklearn`), the Operator's `_apply` does the strip / run / `_wrap` dance at the Operator boundary. **Zero changes required to `georeader`.**
 
 ### 5.2 `numpy / scipy / scikit-image / scikit-learn` — compute
 
-All Tier A primitives. `geotoolz` consumes; never re-implements. Hard deps.
+All Tier A primitives consume `np.ndarray` (jaxtyped) and return `np.ndarray`. `geotoolz` consumes the upstream libraries; never re-implements. Hard deps.
 
 ### 5.3 `xrpatcher` — chip extraction (optional)
 
@@ -330,8 +413,8 @@ geotoolz/
 │   │       ├── operator.py       # Operator base, __call__ dual-mode, get_config
 │   │       ├── sequential.py     # Sequential, __or__ pipe sugar
 │   │       ├── graph.py          # Graph, Input, Node, topological sort
-│   │       └── utils.py          # preserve_subclass decorator, axis helpers
-│   ├── radiometry/{__init__.py, _src/{array.py, tensor.py, operators.py}}
+│   │       └── utils.py          # axis helpers, jaxtyping shape helpers
+│   ├── radiometry/{__init__.py, _src/{array.py, operators.py}}
 │   ├── correction/...            # TOAToBOA, DarkObjectSubtraction, Py6S
 │   ├── indices/...               # NDVI, NDWI, MNDWI, NDMI, EVI, SAVI, BSI, NormalizedDifference, AppendIndex
 │   ├── cloud/...                 # MaskClouds, MaskFromQABits, ApplyMask, CloudSEN12
@@ -344,7 +427,7 @@ geotoolz/
 │   ├── catalog_ops/...           # CatalogPipeline, WriteCOG, WriteParquet
 │   └── presets/
 │       ├── s2.py, landsat.py, emit.py, enmap.py, modis.py
-└── tests/                        # mirroring src/, one test_<tier>.py per module
+└── tests/                        # mirroring src/, test_array.py + test_operators.py per module
 ```
 
 ### 6.2 The Operator base class (the ~80 LOC core)
@@ -505,14 +588,14 @@ Five hard deps. Everything else opt-in.
 
 ### 6.8 Versioning and stability
 
-Pre-1.0 (`0.x`). Operator constructor signatures are the public surface. Internal Tier A/B can change freely. Sensor presets are pinned with version suffixes (`S2_L2A_RGB_v1`) so users can stay on an old preset across breaking sensor changes.
+Pre-1.0 (`0.x`). Operator constructor signatures are the public surface. Tier A primitive signatures are *semi-public* — jaxtyping annotations document the shape contract, but signatures may evolve until 1.0. Sensor presets are pinned with version suffixes (`S2_L2A_RGB_v1`) so users can stay on an old preset across breaking sensor changes.
 
 ---
 
 ## 7. Sharp edges
 
 1. **Don't share `Operator` with `xr_toolz`.** They diverge on call signature and chip semantics. The 300-LOC duplication is cheaper than the coordination tax.
-2. **`GeoTensor` subclass round-trip discipline.** For non-ufunc upstream calls (skimage, scipy.ndimage, sklearn), use the `preserve_subclass` decorator at the Tier B layer. For shape-changing operations (resize, zoom), the wrapper returns a plain ndarray and the Operator wraps a fresh `GeoTensor` with the new transform — `georeader` provides the construction.
+2. **`GeoTensor` subclass round-trip discipline.** For non-ufunc upstream calls (skimage, scipy.ndimage, sklearn), the **Operator's `_apply`** does the wrap — `out = primitive(np.asarray(gt)); return gt._wrap(out)`. One line per Operator that needs it; never inside the Tier A primitive. For shape-changing operations (resize, zoom, regridding), the primitive returns a plain ndarray and the Operator constructs a fresh `GeoTensor` with the new transform — `georeader` provides the construction helpers. **Footgun to document:** users importing primitives directly from `_src/array` get a plain `ndarray` back when the primitive is non-ufunc, even if they passed a `GeoTensor`. Per-primitive docstrings should mark "ufunc-pure" vs "non-ufunc" so the behaviour at primitive level is predictable.
 3. **Time-axis convention.** GeoTensor's `dims` may be `("time", "band", "y", "x")` or `("band", "time", "y", "x")` depending on how it was loaded. **Operators take `axis=` (int), never assume time is at axis 0.** The user passes `axis=` to match their tensor.
 4. **Multi-input arity is positional.** `CloudFreeComposite()(imagery, mask)` — the first GeoTensor is the imagery, the second is the mask. Document per Operator. Don't do `(image=..., mask=...)` keyword form; mixing positional and keyword args in `__call__` makes the dual-mode dispatch (eager vs graph) fragile.
 5. **`Sequential` strict on intermediate types.** Every step except the last must return a `GeoTensor`. Terminal ops (`WriteCOG`, viz operators) are allowed only at the end. Sequential validates and raises a clear `TypeError`.
@@ -691,7 +774,7 @@ gz.catalog_ops.CatalogPipeline(
 ).run()
 ```
 
-`CatalogPipeline` is a Tier C Operator that wraps the catalog iteration. The actual catalog (build / query / persistence) lives in `georeader.catalog`.
+`CatalogPipeline` is a Tier B Operator that wraps the catalog iteration. The actual catalog (build / query / persistence) lives in `georeader.catalog`.
 
 ### 8.7 Composition patterns
 
@@ -764,8 +847,8 @@ What needs to happen to ship v0.1:
 - [ ] Cut the new repo. `src/` layout, five hard deps.
 - [ ] Re-implement the composition core: `Operator`, `Sequential`, `Graph`, `Input`, `Node`, `Tap`. Borrow patterns from `xr_toolz`; ~300 LOC; no shared dep.
 - [ ] Author the v0.1 modules: `radiometry`, `indices`, `cloud`, `sampling`, `inference`, plus the core. ~25 Operators. **2 weeks.**
-- [ ] One `_src/{array, tensor, operators}.py` per module — preserves the three-tier discipline from day one.
-- [ ] `preserve_subclass` decorator + `GeoTensor` round-trip tests.
+- [ ] One `_src/{array, operators}.py` per module — preserves the two-tier discipline from day one. Tier A primitives jaxtyped (`jaxtyping >= 0.2`) at the signature.
+- [ ] Per-Operator `_wrap` discipline (Operators handle non-ufunc primitive output explicitly) + `GeoTensor` round-trip tests covering both ufunc-pure and non-ufunc primitives.
 - [ ] Hydra-zen smoke tests (every Operator's `get_config()` round-trips through `builds()`).
 - [ ] One end-to-end example notebook per category in §8 (six notebooks).
 
@@ -800,16 +883,20 @@ For users with both substrates: install both. Conversion between substrates is `
 
 ### 10.2 Shared architectural patterns
 
-Both libraries follow:
+Most architecture is shared; **the tier model is the one place they diverge**.
 
-- **Three-tier model** (Array → Tensor → Operator).
-- **Split-object pattern for stateful operations** (calculate state → apply state).
-- **Dual-mode `__call__`** (eager vs Graph-symbolic).
-- **Sequential and Graph composition.**
-- **`get_config()` for Hydra round-trip.**
-- **No framework deps in core; ML via duck-typed `ModelOp`.**
+| Pattern | `geotoolz` | `xr_toolz` |
+| --- | --- | --- |
+| **Tier model** | **Two-tier** (Array → Operator) | **Three-tier** (Array → DataArray → Operator) |
+| Split-object pattern for stateful operations | ✓ | ✓ |
+| Dual-mode `__call__` (eager vs Graph-symbolic) | ✓ | ✓ |
+| `Sequential` and `Graph` composition | ✓ | ✓ |
+| `get_config()` for Hydra round-trip | ✓ | ✓ |
+| No framework deps in core; ML via duck-typed `ModelOp` | ✓ | ✓ |
 
-The pattern docs live once (in `xr_toolz` or in a third "design conventions" doc); each library's own docs reference them. Code is independent.
+**Why the tier asymmetry.** `GeoTensor` is an `np.ndarray` *subclass* with `__array_ufunc__` — the wrap from `ndarray` back to the carrier is one line (`gt._wrap(out)`) and lives at the Operator boundary. `xarray.DataArray` is *composition* over an ndarray — lifting `DataArray ↔ ndarray` requires `.values` extraction and explicit `.coords`/`.dims` re-attach, real enough work to deserve its own tier. The substrate dictates the tier count; both libraries land on the same pattern *given their substrate*.
+
+The shared pattern docs live once (in `xr_toolz` or in a third "design conventions" doc); each library's own docs reference them and call out their tier-count specialisation. Code is independent.
 
 ### 10.3 What does NOT cross-pollinate
 
@@ -838,3 +925,58 @@ A short doc page in each library: "I have *X* data, should I use this library or
 ### 10.6 The endpoint
 
 Two libraries, two communities, one shared substrate library underneath, one shared design vocabulary on top. Each library focused, each community served, no awkward unifying compromise. **That's the right shape, and that's the recommendation.**
+
+---
+
+## 11. Open questions, gotchas, and risks
+
+The architecture is sound; several execution-level concerns deserve flags. None are blockers; all are things to manage actively. Strategic risks first, implementation gotchas second, scope honesty third.
+
+### 11.1 Strategic risks
+
+**`georeader 2.0` (`feature/geotensor_npapi`) is critical-path.** The two-tier model assumes the ndarray-subclass `GeoTensor` with `__array_ufunc__` lands cleanly upstream. If that branch stalls, `geotoolz` blocks — the wrap discipline depends on it. Track the merge as a blocker on v0.1; if it slips, the contingency is to ship `geotoolz` against a vendored `GeoTensor` until upstream catches up.
+
+**`coordax` is research-grade.** The future-work JAX path leans on `coordax` (NeuralGCM, Google), which is early and has no stability commitment. Pin known-good versions; spike before committing the JAX path; have a fallback (`equinox` + `jaxtyping` directly, reinventing the small bit of labelled-array machinery you actually need). Treat the JAX path as **v0.5+**, not v0.1, until coordax stabilises.
+
+**80-operator scope vs roadmap pace.** v0.1–v0.4 budgets ~2 months for ~80 operators at ~1.5 day/operator quality. Realistic estimate is 5–6 months at 1 FTE; if it's a side project, double the timeline. **Mitigation:** cut sensor presets to v0.5+ for low-priority sensors (Himawari-AHI HSD, MTG-FCI, SEVIRI-HRIT); ship MODIS + ABI as the v0.1 sensor proofs and let the rest accumulate as need arises.
+
+**Sensor preset maintenance is a forever commitment.** ESA / NASA / EUMETSAT product specs change every 1–2 years; each change spawns a new `_v2` preset. Budget ~5–10 preset bumps/year as steady-state maintenance, not one-time dev cost. Document a version-bump runbook so this doesn't become tribal knowledge.
+
+### 11.2 Implementation gotchas (test these in CI)
+
+**`__array_function__` (NEP-18) coverage in `GeoTensor`.** `__array_ufunc__` covers ufuncs only. Functions like `np.fft.fft2`, `np.linalg.svd`, `np.einsum`, `np.percentile`, and many `np.linalg.*` go through `__array_function__`, not `__array_ufunc__`. Verify `GeoTensor` implements both, or document which numpy submodules strip the subclass. Add a CI test that round-trips metadata through every numpy module the operators touch (`fft`, `linalg`, basic ufuncs, reductions, indexing).
+
+**`gt._wrap(out)` semantic edge cases.** Spec the rule per case so 80 operators don't each invent their own:
+- **Scalar output** (`tensor.mean()`): wrap into 0-d GeoTensor with original transform, or return scalar?
+- **Dim-reducing output** (`tensor.max(axis=-1)`): preserve transform but drop the axis from `dims`?
+- **Multi-input with divergent metadata** (`composite(image, mask)` where mask has no transform): which input's metadata wins?
+- **Boolean indexing** (`tensor[tensor > 0]`): returns 1-D, transform meaningless. Disallow at Operator level?
+
+Pick rules now; document in a `_wrap` design-doc entry that the Operator authors reference.
+
+**ndarray subclass fragility outside numpy.** `GeoTensor` survives numpy + scipy + skimage + matplotlib. It does **not** survive PyTorch (`torch.from_numpy` strips it), JAX (`jnp.asarray` strips it), or Dask without explicit `meta=` plumbing. This bounds the "GeoTensor flows everywhere" mental model — outside numpy-land, conversion is **explicit**. Document the supported boundary in the `GeoTensor` user docs.
+
+**Async ↔ sync Operator boundary.** `Operator._apply` is sync; the async readers (`AsyncGeoTIFFReader`, the `AsyncReader` Protocol) are async. Mixing them inside `_apply` means `asyncio.run()` per Operator call — one event loop per invocation, expensive at batch scale. Pick a design before v0.1: (a) introduce an `AsyncOperator` family with `async def _apply` and an `AsyncSequential` runner; (b) restrict async to the `CatalogPipeline` boundary (sync operators on already-fetched data, async only at the read step — probably the cleanest); (c) sync wrapper that reuses an event loop across calls.
+
+**Pickling discipline for production.** "Operator graph as FastAPI handler" depends on pickling working. `@dataclass`-shaped operators pickle fine; lambdas, closures, unbound methods break silently. Add a CI test that pickles every example operator graph in §8 and unpickles cleanly. If the test ever fails, the failing example is the bug.
+
+**Three-cases-not-two for `_apply`.** §1.1 / §4.1 lay out the three cases (ufunc-pure, non-ufunc shape-preserving, shape/metadata-changing). The third covers most of `compositing`, `pansharpen`, `sampling`, and any reprojection-flavoured op. Treat it as first-class from day one — shape-changing operators construct a fresh `GeoTensor`, they don't `_wrap`.
+
+### 11.3 Scope honesty
+
+**`_src` privacy is fuzzy.** Currently semi-public ("importable, jaxtyped, documented"). Users will import primitives directly and hit subclass-stripping for non-ufunc primitives. Decide before v0.1:
+- **(a)** Make `_src` truly private (single-underscore module names, "do not import" docstrings, optional `__all__` enforcement). Cleanest.
+- **(b)** Expose primitives at a deliberate public namespace (`geotoolz.indices.array.ndvi`). Honest but doubles the API surface.
+- **(c)** Keep the current "semi-public" path and document per-primitive ufunc-pure vs non-ufunc behaviour. Maximum footgun risk.
+
+**Recommendation:** (a) for v0.1; promote to (b) only if real users ask for primitives as a first-class import path.
+
+**Array-API compliance for primitives.** True backend-agnostic primitives use the [array-API standard](https://data-apis.org/array-api/) (`xp.add`, not `np.add`), portable across numpy / JAX / PyTorch. Current primitives use `np.*` directly — JAX requires rewrites. **Cost-now-or-later trade-off:** factoring through array-API at v0.1 is small (some primitives become slightly less readable); doing it as a v0.5 retrofit is expensive. If the JAX path matters, eat the cost now.
+
+**`ModelOp` is inference-only.** Duck-typed `__call__` works for inference across torch / JAX / sklearn. It does *not* unify training (different optimizers, gradient APIs, loss surfaces, batch semantics). State this explicitly in `ModelOp` docs so users don't expect a training abstraction.
+
+**"Same operator everywhere" has limits.** Holds for: numpy, Dask-orchestrated batch, distributed JAX, FastAPI, Airflow, Ray. Does *not* hold for: Sedona/Spark (different paradigm — would need SQL emission), streaming engines (Flink/Beam, not streaming-aware), edge inference (`ModelOp` ships the model, not the operator graph). Keep the in-scope vs out-of-scope list explicit in the public motivation doc ([`geostack_notes.md`](../../geostack_notes.md) "Honest research-to-prod scope").
+
+**Aggregate learning curve.** Two-layer ladder + jaxtyping + Hydra-zen + GeoTensor wrap discipline + dual-mode `__call__` + split-object stateful pattern + sensor presets is more than the "Keras simple" pitch suggests. Tutorial gallery (§8) should introduce concepts one at a time, not in a single kitchen-sink example. *"What you need to know to write your first NDVI pipeline" → "What you need to know to ship a Hydra-driven catalog inference run"* — a curriculum, not a manual.
+
+**Sub-pickle interop risks.** `Sequential` exported as ONNX, used as a `torch.utils.data.Dataset`, tracked by `mlflow` — these are integration questions that *will* come up. Scope which integrations are first-class vs out-of-scope before v0.1, even if the answer is "first-class only mlflow at v0.4, the rest is user-driven".

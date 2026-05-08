@@ -285,3 +285,19 @@ A 10⁷-row catalog can't fit in RAM during build. Options:
 - **[`geostack.md`](../geostack.md)** — situates the catalog layer in the broader ecosystem (where DuckDB sits relative to titiler / lonboard / obstore).
 
 The catalog layer sits between the reader layer (substrate) and the operator layer (composition). Each side talks to the other through `GeoSlice` — the catalog produces them, the reader+operator consume them.
+
+---
+
+## Open questions, gotchas, and warnings
+
+The unifying GeoCatalog design is sound; cross-cutting concerns to track:
+
+- **Cross-CRS query footgun.** Catalogs are canonicalised to one CRS (Phase 2: EPSG:4326). User AOIs in another CRS silently return no rows. Mitigation lives in [`geocatalog.md` §10.1](geocatalog.md#101-cross-crs-query-footgun) — provide a CRS-aware query helper as the canonical path.
+- **GeoParquet 1.1 writer adoption is uneven** across `geopandas` and `duckdb-spatial`. Pin known-good versions; add a round-trip CI test. See [`geocatalog.md` §10.2](geocatalog.md#102-geoparquet-11-writer-adoption-is-uneven) and [`geoduckdb.md` Open questions](geoduckdb.md#geoparquet-11-writer-support).
+- **Phase 2 risk of bit-rot** if no real user emerges past 10⁶ rows. Gate Phase 2 release behind one real user or a multi-million-row CI fixture. See [`geocatalog.md` §10.3](geocatalog.md#103-phase-2-risk-of-bit-rot).
+- **`schema_version` column** reserved from v0.1; bump on first substantive schema change.
+- **Adapter scope honesty.** v0.1 ships `to_geoparquet` / `from_geoparquet` round-trip; STAC and torch adapters are v0.2+. Don't promise adapters that aren't built.
+- **Concurrent writes** are safe under append-only patterns, not under in-place mutation. Document the recommended write pattern when multi-writer use cases emerge.
+- **`ST_Transform` in WHERE clauses is slow.** The §4-style "store all geometries in 4326, native CRS as a column" convention exists exactly to avoid this. Loud documentation, not a code-level fix.
+
+The full lists live per-doc: [`geocatalog.md` §10](geocatalog.md#10-open-questions-gotchas-and-warnings) for Phase 1; [`geoduckdb.md` Open questions](geoduckdb.md#open-questions-gotchas-and-warnings) for Phase 2.

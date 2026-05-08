@@ -36,7 +36,7 @@ The full design report is [`geotoolz.md`](geotoolz.md). It runs through the arch
 | § | Topic |
 |---|---|
 | 0 | Inputs the design draws on (`xr_toolz` patterns, `georeader` substrate, `jej_vc_snippets` empirical vocabulary) |
-| 1 | Inventory — three-tier model (Array / Tensor / Operator), 12 module surface (radiometry, indices, cloud, compositing, sampling, inference, ...) |
+| 1 | Inventory — two-tier model (jaxtyped Array primitives → Operator), 12 module surface (radiometry, indices, cloud, compositing, sampling, inference, ...). The collapse from xr_toolz's three tiers is possible because `GeoTensor` is an `np.ndarray` subclass with `__array_ufunc__`. |
 | 2 | User story — five personas, the goal arc from "load S2 → mask clouds → NDVI → save COG" to "Hydra-YAML pipeline" |
 | 3 | Motivation — why a separate library (not extending `xr_toolz`), why re-implement the composition core, comparison with TorchGeo / xarray-spatial / stackstac |
 | 4 | Mathematics — Operator delegation chain, dual-mode `__call__` (eager vs Graph), split-object stateful pattern, sampler stride, compositing reductions, matched filter, pansharpening, Lee speckle |
@@ -64,12 +64,19 @@ The full design report is [`geotoolz.md`](geotoolz.md). It runs through the arch
 
 ## Open questions
 
-The full design report flags twelve sharp edges in §7 and a smaller set of architectural questions in §3 and §10. The ones most worth surfacing here:
+The full design report flags twelve sharp edges in §7, architectural questions in §3 and §10, and a comprehensive risks/gotchas section in §11. The ones most worth surfacing here:
 
 1. **`Operator` base class — shared with `xr_toolz` or re-implemented?** The current decision (§0) is to re-implement (~300 LOC, freedom to specialise). Worth revisiting if a third sibling library appears.
 2. **Hydra-zen as a hard dep or extra?** §6 currently scopes it to an optional `[hydra]` extra. Some users want it as a baseline.
 3. **`presets/legacy/` for SPOT VGT and Proba-V?** §1.2 doesn't list them. [Tutorial Ch. 17](../../georeader_tutorial/17_legacy_sensors.md) suggests they'd live there if added.
-4. **Async operator support.** The current `Operator` base class is sync. An `AsyncOperator` for use with [`AsyncGeoTIFFReader`](../georeader/reader_async_geotiff.md) is plausible but not designed.
+4. **Async operator support.** The current `Operator` base class is sync. An `AsyncOperator` for use with [`AsyncGeoTIFFReader`](../georeader/reader_async_geotiff.md) is plausible but not designed. **Pick a design before v0.1** — see §11.2.
+5. **`coordax` stability for the JAX path.** The future-work JAX bridge depends on `coordax` (NeuralGCM, research-grade). Spike before committing the v0.5 work; have a fallback (equinox + jaxtyping directly).
+6. **`georeader 2.0` (`feature/geotensor_npapi`) merge timing.** The two-tier model assumes the ndarray-subclass GeoTensor lands. If it stalls, geotoolz blocks.
+7. **`_src` privacy decision.** Primitives are currently "semi-public" — likely a footgun for non-ufunc primitives passed `GeoTensor` inputs. Decide truly-private vs deliberately-public namespace (§11.3 recommends truly-private for v0.1).
+8. **Sensor preset scope reduction for v0.1.** 80 operators in 4 months is tight. Recommendation: cut Himawari-AHI HSD, MTG-FCI, SEVIRI-HRIT to v0.5+; ship MODIS + ABI as v0.1 sensor proofs.
+9. **Array-API compliance from day one or as a retrofit?** If JAX path matters, factoring primitives through the array-API standard at v0.1 is cheap; v0.5 retrofit is expensive. See §11.3.
+
+The full risks/gotchas list lives in [`geotoolz.md` §11](geotoolz.md#11-open-questions-gotchas-and-risks) — covers strategic risks, implementation gotchas to test in CI, and scope honesty.
 
 ---
 

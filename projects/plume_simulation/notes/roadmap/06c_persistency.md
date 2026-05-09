@@ -1,50 +1,96 @@
+---
+title: "Tier V.C — Persistency"
+short_title: "Tier V.C — Persistency"
+subject: "plumax — operational forecasting layer"
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations: [UNEP, IMEO, MARS]
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: [persistency, wait time, occurrence probability, dispatch, LDAR, Hawkes, methane forecast]
+---
+
 # Tier V.C — Persistency
 
-**Question:** Given the inverted intensity `λ(t)` from Tier V.B, when will the next emission event happen, and what's the probability of an event during a specified window?
+**Question:** Given the inverted intensity $\lambda(t)$ from Tier V.B, when will the next emission event happen, and what's the probability of an event during a specified window?
 
 This is the **operational layer** — what an LDAR (Leak Detection and Repair) crew or a satellite-tasking dispatcher actually consumes. The full derivations of each metric live in [`methane_pod/notebooks/08_persistency`](../../../methane_pod/notebooks/08_persistency.md); this page summarises the metrics and how they slot into the `plumax` API.
 
 ---
 
+(vc-four-metrics)=
 ## The four operational metrics
 
-### 1. Expected wait time `E[Δt | t₀]`
+(vc-wait-time)=
+### 1. Expected wait time $\mathbb{E}[\Delta t \mid t_0]$
 
-How long after time `t₀` until the next event?
+How long after time $t_0$ until the next event?
 
-- **Homogeneous** (`λ ≡ λ₀`): `E[Δt] = 1 / λ₀` — memoryless; doesn't depend on when you start.
-- **Inhomogeneous**: `E[Δt | t₀] = ∫_{t₀}^∞ exp(−∫_{t₀}^t λ(u) du) dt` — depends on starting clock; for a diurnal source, vastly different at noon vs. midnight.
+```{math}
+:label: eq-vc-wait-homogeneous
+\mathbb{E}[\Delta t] \;=\; \frac{1}{\lambda_0} \qquad \text{(homogeneous Poisson; memoryless)}
+```
 
-**Operational use.** Dispatch decisions: arrive during a high-`λ` window and the next event is imminent (worth waiting); arrive during a low-`λ` window and you'd waste hours. Drives MARS-style dispatch suppression during dormant cycles.
+```{math}
+:label: eq-vc-wait-inhomogeneous
+\mathbb{E}[\Delta t \mid t_0] \;=\; \int_{t_0}^{\infty} \exp\!\left(-\int_{t_0}^{t} \lambda(u)\, \mathrm{d}u\right) \mathrm{d}t \qquad \text{(inhomogeneous; depends on starting clock)}
+```
 
-### 2. Probability of occurrence `P(N(t₁, t₂) ≥ 1)`
+For a diurnal source, vastly different at noon vs. midnight.
 
-What's the chance of at least one event in `[t₁, t₂]`?
+**Operational use.** Dispatch decisions: arrive during a high-$\lambda$ window and the next event is imminent (worth waiting); arrive during a low-$\lambda$ window and you'd waste hours. Drives MARS-style dispatch suppression during dormant cycles.
 
-- **Homogeneous**: `1 − exp(−λ₀ · (t₂ − t₁))`.
-- **Inhomogeneous**: `1 − exp(−∫_{t₁}^{t₂} λ(t) dt)`.
+(vc-occurrence)=
+### 2. Probability of occurrence $\mathbb{P}\!\bigl(N(t_1, t_2) \geq 1\bigr)$
+
+What's the chance of at least one event in $[t_1, t_2]$?
+
+```{math}
+:label: eq-vc-occurrence-homogeneous
+\mathbb{P}\!\bigl(N(t_1, t_2) \geq 1\bigr) \;=\; 1 - \exp\!\bigl(-\lambda_0\, (t_2 - t_1)\bigr) \qquad \text{(homogeneous)}
+```
+
+```{math}
+:label: eq-vc-occurrence-inhomogeneous
+\mathbb{P}\!\bigl(N(t_1, t_2) \geq 1\bigr) \;=\; 1 - \exp\!\left(-\int_{t_1}^{t_2} \lambda(t)\, \mathrm{d}t\right) \qquad \text{(inhomogeneous)}
+```
 
 **Operational use.** "Wrench-turning" probability. If a maintenance window is 4 hours, what's the chance the leak shows itself during that window? Drives whether to schedule the visit.
 
-### 3. Conditional intensity given prior detection `λ(t | last detect)`
+(vc-conditional-intensity)=
+### 3. Conditional intensity given prior detection $\lambda(t \mid t_\text{prev})$
 
-For a source with a known recent detection at `t_prev`, what's the posterior intensity going forward?
+For a source with a known recent detection at $t_\text{prev}$, what's the posterior intensity going forward?
 
-For Poisson processes (no memory): unchanged. For Hawkes / self-exciting processes: bumped — `λ(t | t_prev) = μ + α · exp(−β·(t − t_prev))` — captures the empirical observation that super-emitters "cluster".
+For Poisson processes (no memory): unchanged. For Hawkes / self-exciting processes: bumped —
 
-**Operational use.** Prioritisation: a source with a recent detection is *more* likely to repeat-emit in the next 24 h. Re-task a high-resolution satellite (GHGSat, Carbon Mapper) on top of a TROPOMI alert.
+```{math}
+:label: eq-vc-hawkes-bump
+\lambda(t \mid t_\text{prev}) \;=\; \mu + \alpha\, \exp\!\bigl(-\beta(t - t_\text{prev})\bigr)
+```
 
-### 4. Cumulative event count `E[N(0, T)]` and credible bounds
+— captures the empirical observation that super-emitters "cluster".
 
-Expected number of events in `[0, T]`, with credible interval from the posterior on `λ`.
+**Operational use.** Prioritisation: a source with a recent detection is *more* likely to repeat-emit in the next 24 h. Re-task a high-resolution satellite (GHGSat {cite:p}`ghgsat`, Carbon Mapper {cite:p}`carbon_mapper`) on top of a TROPOMI alert {cite:p}`s5p_tropomi`.
 
-- **Homogeneous**: `λ₀ · T`.
-- **Inhomogeneous**: `Λ(T) = ∫₀^T λ(t) dt`.
+(vc-cumulative-count)=
+### 4. Cumulative event count $\mathbb{E}[N(0, T)]$ and credible bounds
+
+Expected number of events in $[0, T]$, with credible interval from the posterior on $\lambda$.
+
+```{math}
+:label: eq-vc-cumulative
+\mathbb{E}[N(0, T)] \;=\; \Lambda(T) \;=\; \int_{0}^{T} \lambda(t)\, \mathrm{d}t
+```
+
+(Homogeneous: $\lambda_0 \cdot T$.)
 
 **Operational use.** Annual reporting, regulatory compliance. "How many emission events should we expect this year at this facility class, with 95% credible interval?"
 
 ---
 
+(vc-api)=
 ## API shape
 
 A thin wrapper around `methane_pod.intensity`:
@@ -72,31 +118,59 @@ The metric functions take an intensity callable (any of the 13 `equinox` modules
 
 ---
 
+(vc-modules)=
 ## Module layout
 
-| Concern | Module | Status |
-|---------|--------|--------|
-| Intensity functions | [`methane_pod.intensity`](../../../methane_pod/src/methane_pod/intensity.py) | ✓ |
-| Wait-time / occurrence / cumulative metrics | `plume_simulation.population.persistency` | ☐ |
-| Posterior-aware metric wrappers | same module | ☐ |
-| Operational dashboard / report templates | out of scope for `plumax`; lives in `plumax-deploy` (future) | — |
+```{list-table} Tier V.C module layout — concern, target module, status.
+:label: tbl-vc-modules
+:header-rows: 1
 
-The integral over `λ(t)` in the wait-time formula is closed-form for a few intensity choices (constant, exponential decay) and otherwise needs `jax.scipy.integrate` or a fixed quadrature. Worth wrapping once and reusing across metrics.
+* - Concern
+  - Module
+  - Status
+* - Intensity functions
+  - [`methane_pod.intensity`](../../../methane_pod/src/methane_pod/intensity.py)
+  - ✓
+* - Wait-time / occurrence / cumulative metrics
+  - `plume_simulation.population.persistency`
+  - ☐
+* - Posterior-aware metric wrappers
+  - same module
+  - ☐
+* - Operational dashboard / report templates
+  - out of scope for `plumax`; lives in `plumax-deploy` (future)
+  - —
+```
+
+The integral over $\lambda(t)$ in the wait-time formula is closed-form for a few intensity choices (constant, exponential decay) and otherwise needs `jax.scipy.integrate` or a fixed quadrature. Worth wrapping once and reusing across metrics.
 
 ---
 
+(vc-validation)=
 ## Validation strategy
 
-- **Homogeneous limit.** For constant `λ`, all four metrics have closed-form formulas; the implementation should match to machine precision.
-- **MC self-consistency.** Sample `n` event times from a known `λ(t)` via thinning, compute the empirical wait time / occurrence frequency, compare to the closed-form metric. Tests both the metric implementation and the simulator.
-- **Posterior coverage.** For a synthetic source with known `λ_true(t)`, the 95% credible interval on `E[Δt]` should contain the truth ~95% of the time across replicates.
-- **Diurnal sanity.** A solar-heated tank with peak `λ` at 14:00 should have `E[Δt | 14:00] ≪ E[Δt | 02:00]`. Numerical sanity check, not a formal test, but catches sign errors.
+- **Homogeneous limit.** For constant $\lambda$, all four metrics have closed-form formulas; the implementation should match to machine precision.
+- **MC self-consistency.** Sample $n$ event times from a known $\lambda(t)$ via thinning, compute the empirical wait time / occurrence frequency, compare to the closed-form metric. Tests both the metric implementation and the simulator.
+- **Posterior coverage.** For a synthetic source with known $\lambda_\text{true}(t)$, the 95% credible interval on $\mathbb{E}[\Delta t]$ should contain the truth ~95% of the time across replicates.
+- **Diurnal sanity.** A solar-heated tank with peak $\lambda$ at 14:00 should have $\mathbb{E}[\Delta t \mid 14{:}00] \ll \mathbb{E}[\Delta t \mid 02{:}00]$. Numerical sanity check, not a formal test, but catches sign errors.
 
 ---
 
+(vc-open-questions)=
 ## Open questions
 
-- **What's "the" intensity?** A point estimate (posterior mean) or the full posterior over `λ` parameters? Operational dashboards may want the former; researchers want the latter. The API returns posterior samples by default; downstream summarisation is the caller's choice.
-- **Hawkes vs Poisson default.** Hawkes is more physically faithful for super-emitters but doubles the parameter count and complicates the wait-time integral. Default to Poisson with a Hawkes opt-in?
-- **Cross-source independence.** Persistency metrics are per-source. Aggregating up to "expected events across a basin in 24h" requires the spatial / population point process from Tier V.B's open questions. Out of scope for v1.
-- **Action thresholds.** Wait-time and occurrence probability become operational only with a threshold (e.g. "dispatch if `P(occur) > 0.7`"). Where do thresholds live? Probably in the dashboard, not in `plumax` core.
+:::{attention} What's "the" intensity?
+A point estimate (posterior mean) or the full posterior over $\lambda$ parameters? Operational dashboards may want the former; researchers want the latter. The API returns posterior samples by default; downstream summarisation is the caller's choice.
+:::
+
+:::{attention} Hawkes vs Poisson default
+Hawkes is more physically faithful for super-emitters but doubles the parameter count and complicates the wait-time integral. Default to Poisson with a Hawkes opt-in?
+:::
+
+:::{attention} Cross-source independence
+Persistency metrics are per-source. Aggregating up to "expected events across a basin in 24h" requires the spatial / population point process from Tier V.B's open questions. Out of scope for v1.
+:::
+
+:::{attention} Action thresholds
+Wait-time and occurrence probability become operational only with a threshold (e.g. "dispatch if $\mathbb{P}(\text{occur}) > 0.7$"). Where do thresholds live? Probably in the dashboard, not in `plumax` core.
+:::

@@ -595,7 +595,7 @@ The full risks tracker for the underlying libraries lives in their own design do
 - [Tier I — Gaussian family](../plume_simulation/notes/roadmap/01_tier1_gaussian.md) — the v1 forward model used in §4.5.
 - [Tier IV — Coupled end-to-end](../plume_simulation/notes/roadmap/05_tier4_coupled.md) — the multi-instrument fusion that this demo's v1 target maps onto.
 - [RTM stack](../plume_simulation/notes/roadmap/04_rtm_stack.md) — the AK / radiative-transfer pieces.
-- [Satellite catalog notes](../plume_simulation/notes/satellites.ipynb) — the per-instrument target list this demo selects from.
+- [Satellite catalog notes](../plume_simulation/notes/satellites.md) — the per-instrument target list this demo selects from.
 
 ### Unified-stack design docs
 

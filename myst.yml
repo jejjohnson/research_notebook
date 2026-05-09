@@ -6,6 +6,15 @@ project:
   bibliography:
     - references.bib
     - methane.bib
+  numbering:
+    enumerator: "(%s)"
+    headings: false
+    figure:
+      enabled: true
+    equation:
+      enabled: true
+    table:
+      enabled: true
   toc:
     - file: docs/index.md
     - title: Notes
@@ -67,7 +76,7 @@ project:
             - file: projects/plume_simulation/README.md
             - title: Notes
               children:
-                - file: projects/plume_simulation/notes/satellites.ipynb
+                - file: projects/plume_simulation/notes/satellites.md
                 - file: projects/plume_simulation/notes/roadmap.md
                 - title: Roadmap detail
                   children:

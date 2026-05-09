@@ -1,3 +1,16 @@
+---
+title: "`plumax` — Roadmap & Architecture"
+short_title: "plumax roadmap"
+subject: "plumax — top-level pointer"
+authors:
+  - name: J. Emmanuel Johnson
+    affiliations: [UNEP, IMEO, MARS]
+    orcid: 0000-0002-6739-0053
+    email: jemanjohnson34@gmail.com
+license: CC-BY-4.0
+keywords: [plumax, methane, plume simulation, retrieval, source identification, emission estimation, roadmap]
+---
+
 # `plumax` — Roadmap & Architecture
 
 > Mathematical models for plume simulation, methane retrieval, source identification, and emission estimation.
@@ -24,11 +37,12 @@ The detailed roadmap now lives in [`roadmap/`](roadmap/README.md), one file per 
 
 ---
 
+(roadmap-cycle)=
 ## The cycle, in one diagram
 
 Every tier in `plumax` follows the same six-step loop:
 
-```
+```text
 Simple model → model-based inference → emulator
             → emulator-based inference → amortized predictor → improve
 ```

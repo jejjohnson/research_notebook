@@ -23,7 +23,7 @@ keywords: design, georeader, protocol, refactor
 
 ## Why this issue exists
 
-The two new readers (`LazyCOGReader`, `AsyncGeoTIFFReader`) need a shared interface to slot into. The existing `RasterioReader` and the `GeoData` / `GeoDataBase` Protocols in `abstract_reader.py` are close to that shape but not aligned. This issue lands the Protocol surface and brings the existing reader into compliance — without breaking any current caller.
+The new reader (`AsyncGeoTIFFReader`) needs a shared interface to slot into. The existing `RasterioReader` and the `GeoData` / `GeoDataBase` Protocols in `abstract_reader.py` are close to that shape but not aligned. This issue lands the Protocol surface and brings the existing reader into compliance — without breaking any current caller. The same Protocol leaves room for future readers (sync raw-byte readers, sensor-specific readers) without further refactoring.
 
 Done before Issues 2 and 3 because they implement against the Protocols this issue defines.
 
@@ -39,7 +39,7 @@ Done before Issues 2 and 3 because they implement against the Protocols this iss
 
 **How it works.** Define `class Foo(Protocol): def bar(self) -> int: ...`. Any class with a `bar() -> int` method is now a `Foo`, no `class MyClass(Foo)` declaration required. Add `@runtime_checkable` to make `isinstance(x, Foo)` work at runtime too. The static type-checker (`mypy` / `ty`) verifies conformance at the call site.
 
-**What this means for us.** The three reader classes — `RasterioReader`, `LazyCOGReader`, `AsyncGeoTIFFReader` — don't share a base class. They each satisfy `_ReaderMeta` (and `SyncReader` or `AsyncReader`) structurally. User code typed `def f(reader: SyncReader)` accepts any of them with no isinstance checks. This is the seam that makes the readers swappable — same interface, three completely independent implementations.
+**What this means for us.** The reader classes — `RasterioReader` (sync, GDAL-backed) and `AsyncGeoTIFFReader` (async, GDAL-free), plus any future sensor-specific or raw-byte readers — don't share a base class. They each satisfy `_ReaderMeta` (and `SyncReader` or `AsyncReader`) structurally. User code typed `def f(reader: SyncReader)` accepts any conforming reader with no isinstance checks. This is the seam that makes the readers swappable — same interface, independent implementations.
 
 ```{mermaid}
 classDiagram
@@ -65,13 +65,11 @@ classDiagram
         async load()
     }
     class RasterioReader
-    class LazyCOGReader
     class AsyncGeoTIFFReader
 
     _ReaderMeta <|-- SyncReader
     _ReaderMeta <|-- AsyncReader
     SyncReader <.. RasterioReader : satisfies
-    SyncReader <.. LazyCOGReader : satisfies
     AsyncReader <.. AsyncGeoTIFFReader : satisfies
 ```
 
@@ -107,7 +105,7 @@ flowchart TD
     Custom --> Cloud
 ```
 
-**What this means for us.** Most users land on the default and never think about it. Users who need a niche backend (custom auth, MinIO endpoint, GitHub-hosted fixtures) flip `fs=` and keep the rest of their pipeline unchanged. Users who want maximum cloud throughput skip `RasterioReader` entirely and use [`LazyCOGReader`](reader_lazy_cog.md) or [`AsyncGeoTIFFReader`](reader_async_geotiff.md).
+**What this means for us.** Most users land on the default and never think about it. Users who need a niche backend (custom auth, MinIO endpoint, GitHub-hosted fixtures) flip `fs=` and keep the rest of their pipeline unchanged. Users who want maximum cloud throughput skip `RasterioReader` entirely and use [`AsyncGeoTIFFReader`](reader_async_geotiff.md).
 
 ---
 
@@ -176,7 +174,7 @@ Generalises today's `GeoDataBase` (3 properties) into the full 10-property surfa
 
 ```python
 class SyncReader(_ReaderMeta, Protocol):
-    """Sync read interface — RasterioReader and LazyCOGReader."""
+    """Sync read interface — RasterioReader (and any future sync reader)."""
 
     def read_window(self, window: Window) -> GeoTensor: ...
     def read_bounds(
@@ -194,9 +192,9 @@ class SyncReader(_ReaderMeta, Protocol):
     def __exit__(self, exc_type, exc_val, exc_tb) -> bool | None: ...
 ```
 
-Method shapes match `LazyCOGReader` (Issue 2) so user code can swap concrete readers without changing call sites. `read_bounds` accepts optional `target_resolution=` and `target_crs=` because cross-CRS reads are common; readers that can't reproject (or can but slowly) document the cost in their docstring.
+Method shapes are the canonical sync reader surface; any future sync reader follows them so user code can swap concrete readers without changing call sites. `read_bounds` accepts optional `target_resolution=` and `target_crs=` because cross-CRS reads are common; readers that can't reproject (or can but slowly) document the cost in their docstring.
 
-`close` and the context-manager methods are required by the Protocol but tolerate no-ops — `LazyCOGReader.close()` is a no-op because `obstore` pools connections.
+`close` and the context-manager methods are required by the Protocol but tolerate no-ops — readers backed by `obstore` (which pools connections) typically implement `close()` as a no-op.
 
 ---
 
@@ -305,7 +303,7 @@ reader = RasterioReader(
 )
 
 # obstore via custom callable — possible but rarely the right tool;
-# at this point you'd use LazyCOGReader or AsyncGeoTIFFReader instead
+# at this point you'd use AsyncGeoTIFFReader instead
 def obstore_opener(path: str, mode: str) -> "BinaryIO":
     """Return a file-like wrapping obstore range fetches."""
     ...

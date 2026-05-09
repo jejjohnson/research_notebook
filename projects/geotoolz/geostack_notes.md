@@ -228,7 +228,7 @@ The same six layers repeat across all three stacks; only the row contents change
 |---|---|---|---|
 | **Storage** | COG | Zarr · HDF5 · NetCDF | GeoParquet · PostgreSQL · FlatGeobuf |
 | **Transport** | `obstore` · GDAL/VSI | `obstore` · `kerchunk` | `obstore` · GDAL/VSI |
-| **Readers** | `RasterioReader` · `async-geotiff` · `lazy-cogs` · `rio-tiler` | `zarr-python` · `icechunk` · `kerchunk` | `pyogrio` · `PostGIS` · `SedonaDB` |
+| **Readers** | `RasterioReader` · `async-geotiff` · `rio-tiler` | `zarr-python` · `icechunk` · `kerchunk` · `lazycogs` | `pyogrio` · `PostGIS` · `SedonaDB` |
 | **Substrate** | `GeoTensor` · `GeoSlice` (`georeader`) | `DataArray` · `Dataset` · chunks (`xarray`) | `GeoArrow` · `GeoDataFrame` |
 | **Compute** | **`geotoolz`** | **`xrtoolz`** | `DuckDB` · `PostGIS` · `SedonaDB` |
 | **Viz** | `lonboard` · `titiler` · `terracotta` | `lonboard` · Holoviz · Datashader | `lonboard` · Felt |
@@ -276,13 +276,12 @@ The same six layers repeat across all three stacks; only the row contents change
 
 **Transport — [`obstore`](https://github.com/developmentseed/obstore) and [GDAL/VSI](https://gdal.org/user/virtual_file_systems.html).** Two parallel paths into cloud storage. **`obstore`** is a Python wrapper around the Rust [`object_store`](https://docs.rs/object_store/) crate — it speaks S3, GCS, Azure Blob, and HTTP natively, dispatches concurrent range requests, and benchmarks 2–5× faster than `fsspec`-based alternatives for byte-range workloads. **GDAL/VSI** is the C++ "Virtual File System" baked into GDAL (`vsis3://`, `vsigs://`, `vsicurl://` etc.), which is what `rasterio` uses by default — mature, ubiquitous, but synchronous, and configured through environment variables (`AWS_*`, `GDAL_HTTP_*`). *Advantage: `obstore` for new async pipelines, GDAL/VSI for the long tail of formats GDAL already understands.*
 
-**Readers — `RasterioReader`, [`async-tiff`](https://github.com/developmentseed/async-tiff), [`rio-tiler`](https://github.com/cogeotiff/rio-tiler), `lazy-cogs`.** This is where bytes become arrays.
+**Readers — `RasterioReader`, [`async-tiff`](https://github.com/developmentseed/async-tiff), [`rio-tiler`](https://github.com/cogeotiff/rio-tiler).** This is where bytes become arrays.
 - **`RasterioReader`** — `rasterio`/GDAL-backed, synchronous, the workhorse. Supports every format GDAL does, not just COG. When you just want to open a file and read pixels, this is it.
 - **`async-tiff`** — pure-Rust async COG reader. Parses IFDs and dispatches concurrent tile fetches through `object_store`. No GDAL dependency. Optimised for many-small-tiles workloads (web tile servers, parallel scene processing).
 - **`rio-tiler`** — handles web-tile coordinate math: given an XYZ tile coordinate, compute the COG pixel window, read it, resample to 256×256, encode as PNG/JPEG.
-- **`lazy-cogs`** — slice-on-access logic. Maps out a COG's tile structure without reading any pixels; reads are deferred until the slice is materialised.
 
-*Advantage: pick the reader that matches your concurrency model — sync for scripts, async for servers, lazy for chained pipelines.*
+*Advantage: pick the reader that matches your concurrency model — sync for scripts, async for high-concurrency servers and batch fan-out.*
 
 **Substrate — [`georeader`](https://github.com/spaceml-org/georeader).** A small object model that lets every reader hand back the same shape of object, so downstream code doesn't care which reader produced it.
 - **`GeoTensor`** — an N-D array (numpy `ndarray` subclass) carrying its CRS and affine transform, so coordinate-aware ops never lose georeferencing.
@@ -356,8 +355,9 @@ sequenceDiagram
                 └─────┬──────────────┬──────────────┬────┘
                       │              │              │
               ┌───────▼─────┐ ┌──────▼──────┐ ┌─────▼──────┐
-   READERS   →│    Zarr     │ │  Icechunk   │ │  lazy-     │
-              │ (Standard)  │ │ (Versioned) │ │  cogs      │
+   READERS   →│    Zarr     │ │  Icechunk   │ │ stackstac /│
+              │ (Standard)  │ │ (Versioned) │ │ odc-stac / │
+              │             │ │             │ │ lazycogs   │
               └──────┬──────┘ └──────┬──────┘ └─────┬──────┘
                      │               │              │
               ┌──────▼───────────────▼──────┐       │
@@ -386,12 +386,13 @@ sequenceDiagram
 
 **Virtualisation — [`kerchunk`](https://github.com/fsspec/kerchunk) / [VirtualiZarr](https://github.com/zarr-developers/VirtualiZarr).** A clever trick for the legacy formats: scan an HDF5/NetCDF file once, record the byte offsets of every chunk into a small JSON or Parquet "reference file", then expose that reference as a virtual Zarr store. Readers see a Zarr; under the hood `obstore` is doing range reads into the original HDF5. *Advantage: no rewriting of petabytes of legacy data — you get cloud-native access patterns for free.*
 
-**Readers — [`zarr-python`](https://github.com/zarr-developers/zarr-python), [`Icechunk`](https://icechunk.io/), `lazy-cogs`.**
+**Readers — [`zarr-python`](https://github.com/zarr-developers/zarr-python), [`Icechunk`](https://icechunk.io/), [`stackstac`](https://stackstac.readthedocs.io/) / [`odc-stac`](https://odc-stac.readthedocs.io/), [`lazycogs`](https://github.com/developmentseed/lazycogs).**
 - **`zarr-python`** — the canonical Zarr reader. Recently (Zarr v3) gained a Rust-backed obstore-aware backend.
 - **`Icechunk`** — Earthmover's transactional, version-controlled storage engine on top of Zarr. Adds Git-like snapshots, atomic commits, and time-travel to climate datasets — critical when you're updating a global temperature cube nightly and need rollback semantics.
-- **`lazy-cogs`** — used here in reverse, to expose stacks of COGs as virtual coordinates so an Xarray user can treat them as a single cube.
+- **`stackstac` / `odc-stac`** — the established pattern for "take a STAC item collection, expose it as a spatially-aligned `xarray.DataArray`". GDAL/rasterio under the hood.
+- **`lazycogs`** — DevSeed's Rust-native answer to the same pattern. Same surface (a lazy `(band, time, y, x)` `xarray.DataArray` from a STAC-geoparquet collection of COGs), but the I/O stack is `async-geotiff` + `obstore` + `rustac` (DuckDB on stac-geoparquet) — no GDAL. **Independently validates the GeoCatalog Phase 2 design** by using the same `stac-geoparquet` + DuckDB pattern for catalog discovery.
 
-*Advantage: `zarr-python` for vanilla cubes, `Icechunk` when you need ACID-like guarantees on a writable cube.*
+*Advantage: `zarr-python` for vanilla cubes, `Icechunk` when you need ACID-like guarantees on a writable cube, `stackstac` / `odc-stac` for STAC-driven cube assembly via GDAL, `lazycogs` for the same pattern with a Rust-native I/O stack and STAC-geoparquet predicate pushdown.*
 
 **Substrate — [`xarray`](https://docs.xarray.dev/).** The de-facto Python model for labelled N-D arrays.
 - **`DataArray`** — a single N-D array with named dimensions and labelled coordinates (e.g. *temperature* at specific *lat*, *lon*, *time*).
@@ -576,14 +577,15 @@ Stars mark where my libraries plug in. Read it from the top: a user wants someth
 
 ### 1. Modernising `georeader` *(reconciliation, not invention)*
 
-`georeader` already gives us a clean object model: **`GeoTensor`** (georeferenced array), **`GeoSlice`** (declarative crop), and a small reader surface anchored on **`RasterioReader`**. What it doesn't yet have is a *protocol* — a shared shape every reader can satisfy — which means newer readers (async, lazy) reinvent the substrate every time.
+`georeader` already gives us a clean object model: **`GeoTensor`** (georeferenced array), **`GeoSlice`** (declarative crop), and a small reader surface anchored on **`RasterioReader`**. What it doesn't yet have is a *protocol* — a shared shape every reader can satisfy — which means async / GDAL-free readers reinvent the substrate every time.
 
 **What plugs in.**
-- **[`async-tiff`](https://github.com/developmentseed/async-tiff)** — pure-Rust async COG reader. Drops in as `AsyncGeoTIFFReader` behind a shared `AsyncReader` Protocol.
-- **`lazy-cogs`** — lazy slice-on-access logic. Drops in as `LazyCOGReader`, GDAL-free.
-- **[`obstore`](https://github.com/developmentseed/obstore)** — the byte mover for both, abstracted behind a `ByteStore` Protocol so `fsspec` users aren't locked out.
+- **[`async-tiff`](https://github.com/developmentseed/async-tiff)** — pure-Rust async COG reader. Drops in as `AsyncGeoTIFFReader` behind a shared `AsyncReader` Protocol. Owns the COG-parsing primitives (IFD walk, tile-fetch math, decompression) in a private module that future raw-byte readers can reuse.
+- **[`obstore`](https://github.com/developmentseed/obstore)** — the byte mover, abstracted behind a `ByteStore` Protocol so `fsspec` users aren't locked out.
 
-**What falls out for free.** A unified **`Reader` Protocol** (`SyncReader` + `AsyncReader` surfaces, anchored on a small `_ReaderMeta` metaclass); cross-cutting types (`GeoSlice`, `Credential`, `ByteStore`) extracted to a shared home in [`plans/types/`](plans/types/) instead of being buried in whichever subsystem first needed them; existing `RasterioReader` keeps doing what it does well; new async/lazy readers stop re-inventing the carrier.
+**What falls out for free.** A unified **`Reader` Protocol** (`SyncReader` + `AsyncReader` surfaces, anchored on a small `_ReaderMeta` metaclass); cross-cutting types (`GeoSlice`, `Credential`, `ByteStore`) extracted to a shared home in [`plans/types/`](plans/types/) instead of being buried in whichever subsystem first needed them; existing `RasterioReader` keeps doing what it does well; the new async reader stops re-inventing the carrier.
+
+> **What about `lazycogs`?** [`developmentseed/lazycogs`](https://github.com/developmentseed/lazycogs) is excellent — but it returns `xarray.DataArray`, not `GeoTensor`, so it belongs in **Stack B (Dense / xarray)** above as a STAC-driven peer of `stackstac` / `odc-stac`. A sync GDAL-free `GeoTensor` reader for `geotoolz` was floated and deferred to v0.5+ (no clear customer that `RasterioReader` + `AsyncGeoTIFFReader` don't already cover); see [`plans/georeader/README.md` open question §3](plans/georeader/README.md).
 
 **Sensor-specific readers built on the same Protocol.** Once the Reader Protocol stabilises, per-sensor readers slot in without re-inventing the substrate — each handles its own quirks (`+proj=geos` affines, bowtie distortion, irregular file formats) but emits the same `GeoTensor` carrier:
 

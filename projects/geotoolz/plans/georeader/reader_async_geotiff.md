@@ -16,8 +16,8 @@ keywords: design, georeader, async, cog
 ---
 
 > **Parent:** [README.md](README.md)
-> **Depends on:** [Issue 1](reader_protocol.md) (Protocols) + [`types/bytestore.md`](../types/bytestore.md) (`ByteStore` Protocol) + [Issue 2](reader_lazy_cog.md) (COG-parsing helpers).
-> **Scope:** an async, COG-only reader for high-concurrency fan-out workloads — tile servers, web maps, async ML inference services.
+> **Depends on:** [Issue 1](reader_protocol.md) (Protocols) + [`types/bytestore.md`](../types/bytestore.md) (`ByteStore` Protocol).
+> **Scope:** an async, COG-only reader for high-concurrency fan-out workloads — tile servers, web maps, async ML inference services. Owns the COG-parsing primitives (IFD walk, tile-fetch math, decompression dispatch) in a private `_cog_helpers.py` module so future raw-byte readers can reuse them.
 
 ---
 
@@ -27,7 +27,7 @@ Sync I/O is fine when you have one read at a time. For workloads where many read
 
 Today, `georeader` has no async story. Users wanting async reads either roll their own or pull in an external library with a different API. This issue adds `AsyncGeoTIFFReader` — same metadata surface as the sync readers, async read methods.
 
-The design reuses the `ByteStore` Protocol from [`types/bytestore.md`](../types/bytestore.md) and everything from [Issue 2](reader_lazy_cog.md) that's not sync-specific (COG header parsing, `_tiles_for_window` math, decompression dispatch). The only async-specific work is:
+The design reuses the `ByteStore` Protocol from [`types/bytestore.md`](../types/bytestore.md) and ships its own COG-parsing primitives (header walking, `_tiles_for_window` math, decompression dispatch) in a private `_cog_helpers.py` module. The async-specific work is small:
 
 - Header fetch happens in an async classmethod (`open(...)`).
 - Read methods are coroutines that issue per-tile `await self._store.get_range_async(...)` calls inside `asyncio.gather(...)` for parallel fetch. (`get_ranges_async` for store-level coalescing is a possible alternative — see [Open question §5](#5-per-tile-get_range_async-vs-store-level-get_ranges_async).)
@@ -120,7 +120,7 @@ sequenceDiagram
 6. **Async context-manager** — `__aenter__` / `__aexit__`.
 7. **Tests** — open + read a real COG asynchronously; concurrent fan-out across N windows.
 
-This issue does **not** ship new transport infrastructure — it imports `ByteStore`, `ObstoreByteStore`, `FsspecByteStore`, `open_store` from [`types/bytestore.md`](../types/bytestore.md). It also imports the COG header parsing and tile-fetch math from the shared module created in [Issue 2](reader_lazy_cog.md) (see [parent open question #2](README.md#open-questions)).
+This issue does **not** ship new transport infrastructure — it imports `ByteStore`, `ObstoreByteStore`, `FsspecByteStore`, `open_store` from [`types/bytestore.md`](../types/bytestore.md). The COG header parsing and tile-fetch math live in a private `_cog_helpers.py` module owned by this reader; future raw-byte-shaped readers can import from there if they need the same primitives.
 
 ---
 
@@ -201,10 +201,10 @@ class AsyncGeoTIFFReader(AsyncReader):
     # internal
     async def _fetch_header(self) -> None:
         """One or two async range requests to pull and parse the TIFF IFDs.
-        Reuses the shared COG parser from Issue 2's _cog_helpers module."""
+        Uses the COG parser from the private _cog_helpers module."""
         ...
     def _tiles_for_window(self, window: Window) -> list["TileSpec"]:
-        """Same math as LazyCOGReader; imported from shared _cog_helpers."""
+        """Tile-fetch math from _cog_helpers."""
         ...
     def _decompress_and_assemble(
         self,
@@ -212,7 +212,7 @@ class AsyncGeoTIFFReader(AsyncReader):
         tiles: list["TileSpec"],
         window: Window,
     ) -> np.ndarray:
-        """Same dispatch as LazyCOGReader; imported from shared _cog_helpers."""
+        """Per-tile decompression dispatch from _cog_helpers."""
         ...
 
     # metadata — sync after .open() has been awaited
@@ -293,26 +293,27 @@ For tile-server workloads where 1000 client requests fan out to 1000 reader call
 
 ---
 
-## Reuse of `LazyCOGReader` infrastructure
+## Module layout
 
-This issue is small because most of the work is shared:
+This issue ships its own COG-parsing primitives in a private module so future raw-byte readers can reuse them:
 
 | Component | Source | Used for |
 |---|---|---|
 | `ByteStore` Protocol + adapters | [`types/bytestore.md`](../types/bytestore.md) | byte fetching |
 | `open_store(url)` factory | [`types/bytestore.md`](../types/bytestore.md) | auto-pick transport |
-| COG header parser | shared `_cog_helpers.py` (Issue 2) | IFD walk, `COGHeader` dataclass |
-| `_tiles_for_window` math | shared `_cog_helpers.py` (Issue 2) | window → tile-spec list |
-| Decompression dispatch | shared `_cog_helpers.py` (Issue 2) | per-tile decode |
+| COG header parser | private `_cog_helpers.py` (this issue) | IFD walk, `COGHeader` dataclass |
+| `_tiles_for_window` math | private `_cog_helpers.py` (this issue) | window → tile-spec list |
+| Decompression dispatch | private `_cog_helpers.py` (this issue) | per-tile decode |
 
-The only original code in this issue is:
+The original code in this issue is:
 
 - `AsyncReader` Protocol declaration.
+- `_cog_helpers.py` — IFD walk, `COGHeader`, `_tiles_for_window`, decompression dispatch.
 - `AsyncGeoTIFFReader.__init__` / `open` / async read methods.
 - `asyncio.Semaphore` concurrency cap.
 - Async context-manager.
 
-Roughly ~150–200 LOC of new code on top of Issue 2's helpers.
+Roughly ~400 LOC total (~150–200 of which is the COG-parsing helpers, the rest is the async reader proper).
 
 ---
 
@@ -320,7 +321,7 @@ Roughly ~150–200 LOC of new code on top of Issue 2's helpers.
 
 - `AsyncGeoTIFFReader` instances satisfy `AsyncReader` per static type-check.
 - `await AsyncGeoTIFFReader.open("s3://...")` returns a fully initialised reader; metadata properties work after open.
-- `await reader.read_window(window)` returns a `GeoTensor` matching `LazyCOGReader.read_window(window)` (same file, same window).
+- `await reader.read_window(window)` returns a `GeoTensor` numerically matching `RasterioReader.read_window(window)` for the same file and window (within rounding).
 - Concurrent fan-out: `await asyncio.gather(*[reader.read_window(w) for w in windows])` for 100 windows from one reader instance completes without errors and faster than the sync equivalent.
 - `max_concurrent_tiles` semaphore is honoured — verifiable by mocking `store.get_range_async` to count concurrent invocations.
 - `async with await AsyncGeoTIFFReader.open(...)` context-manager works.

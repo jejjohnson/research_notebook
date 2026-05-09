@@ -16,7 +16,7 @@ keywords: design, types, transport, obstore
 ---
 
 > **Parent:** [README.md](README.md) — Core types.
-> **Status:** design proposal. Promoted from [`georeader/reader_lazy_cog.md`](../georeader/reader_lazy_cog.md), where it was the transport layer for one specific reader despite being a cross-cutting Protocol consumed by every COG reader and (potentially) future readers that need raw range-read access.
+> **Status:** design proposal. Extracted as a cross-cutting Protocol because [`AsyncGeoTIFFReader`](../georeader/reader_async_geotiff.md) consumes it for COG tile reads, and any future raw-byte-shaped reader (sync or async) will too. Lives here rather than buried inside one reader's design doc.
 > **Scope:** the `ByteStore` Protocol that abstracts cloud byte access, plus the `ObstoreByteStore` and `FsspecByteStore` adapters and the `open_store(url)` factory.
 
 ---
@@ -25,7 +25,7 @@ keywords: design, types, transport, obstore
 
 A `ByteStore` is a small Protocol exposing object-store-shaped byte access — `get`, `get_range`, `get_ranges`, `put`, `list` — in both sync and async forms. Two adapters implement it: `ObstoreByteStore` wraps the Rust-backed `obstore.ObjectStore` (HTTP/2, native parallel ranges, ~10× throughput on cloud reads); `FsspecByteStore` wraps any `fsspec.AbstractFileSystem` (universal backend coverage including FTP, SFTP, GitHub, Dropbox).
 
-Readers that fetch bytes directly (`LazyCOGReader`, `AsyncGeoTIFFReader`, future raw-byte-shaped readers) accept a `store=` kwarg typed against this Protocol. Same reader code, two transports underneath; the only thing that differs is which compiled artefact handles `GET /bucket/key Range: bytes=offset-end`.
+Readers that fetch bytes directly (`AsyncGeoTIFFReader`, future raw-byte-shaped readers) accept a `store=` kwarg typed against this Protocol. Same reader code, two transports underneath; the only thing that differs is which compiled artefact handles `GET /bucket/key Range: bytes=offset-end`.
 
 `open_store(url)` is the unified factory — auto-picks obstore for major clouds, falls back to fsspec for niche backends, with explicit `prefer="obstore"` / `prefer="fsspec"` overrides for the cases where the user wants to force one.
 
@@ -37,9 +37,9 @@ Three pressures make a typed transport surface worth doing:
 
 1. **Two real cloud-byte libraries with overlapping scope but different shapes.** `obstore` is async-native, Rust-backed, fast, and covers the major clouds (S3 / GCS / Azure / HTTP). `fsspec` is sync-native, Python, slower per call, and covers *everything* (including FTP, SFTP, GitHub, Dropbox, and a long tail of niche backends). Code that needs to read bytes shouldn't care which is in use; it should care about the bytes.
 
-2. **Multiple readers need the same abstraction.** [`LazyCOGReader`](../georeader/reader_lazy_cog.md) (sync) and [`AsyncGeoTIFFReader`](../georeader/reader_async_geotiff.md) (async) both fetch COG tiles via range requests. Without `ByteStore`, each reader either hardcodes one transport (loses flexibility) or reimplements the dispatch (duplicates code). Future readers that work with raw byte streams will face the same choice.
+2. **More than one reader will need the same abstraction.** [`AsyncGeoTIFFReader`](../georeader/reader_async_geotiff.md) fetches COG tiles via range requests; future raw-byte-shaped readers (sync facades, alternative format readers, sensor-specific COG variants) face the same transport choice. Without `ByteStore`, each reader either hardcodes one transport (loses flexibility) or reimplements the dispatch (duplicates code).
 
-3. **The Credential × ByteStore boundary needs an explicit answer.** [`credentials.md`](credentials.md) is the typed credential surface for the GDAL-VSI path. The fsspec and obstore paths carry credentials inside their `fs` / `store` constructors. When users want to swap credentials for a `LazyCOGReader`, they construct a new `ByteStore`. Making `ByteStore` a first-class Protocol surfaces this design choice rather than burying it in one reader's design doc.
+3. **The Credential × ByteStore boundary needs an explicit answer.** [`credentials.md`](credentials.md) is the typed credential surface for the GDAL-VSI path. The fsspec and obstore paths carry credentials inside their `fs` / `store` constructors. When users want to swap credentials for an `AsyncGeoTIFFReader`, they construct a new `ByteStore`. Making `ByteStore` a first-class Protocol surfaces this design choice rather than burying it in one reader's design doc.
 
 The pattern mirrors the credentials extraction: a Protocol that abstracts a process-level concern (transport, auth) for the reader layer, with a small set of concrete implementations and a factory.
 
@@ -55,7 +55,7 @@ The pattern mirrors the credentials extraction: a Protocol that abstracts a proc
 
 **How it works.** Client sends `GET /bucket/key.tif` with `Range: bytes=0-16383`. Server responds `206 Partial Content` and the requested bytes. Multiple range requests can be issued in parallel; HTTP/2 (used by obstore's Rust HTTP client) multiplexes them over one TCP connection. This is what makes "read 25 tiles from a 1 GB COG" cost ~6 MB and one round-trip's worth of latency, not 1 GB.
 
-**What this means for us.** The whole point of `ByteStore.get_range(...)` and `ByteStore.get_ranges(...)` is to translate user-friendly "I want this chunk of this object" into HTTP range requests. Adapters (obstore, fsspec) do the translation; readers (`LazyCOGReader`, `AsyncGeoTIFFReader`) issue the calls. Without range requests, none of this works — you'd be downloading whole files.
+**What this means for us.** The whole point of `ByteStore.get_range(...)` and `ByteStore.get_ranges(...)` is to translate user-friendly "I want this chunk of this object" into HTTP range requests. Adapters (obstore, fsspec) do the translation; readers (`AsyncGeoTIFFReader`, plus any future raw-byte readers) issue the calls. Without range requests, none of this works — you'd be downloading whole files.
 
 ```{mermaid}
 sequenceDiagram
@@ -95,7 +95,7 @@ sequenceDiagram
 
 **How it works.** `ObstoreByteStore`'s native shape is async — sync methods are thin wrappers that block on `obstore.get_range_async(...)` via a sync runtime. `FsspecByteStore`'s native shape is sync — async methods only run truly async on backends constructed with `asynchronous=True` (like `s3fs`, `gcsfs`, `adlfs`); on synchronous backends they fall back to running the sync call in an executor.
 
-**What this means for us.** `LazyCOGReader` (sync) calls `store.get_ranges(...)`. `AsyncGeoTIFFReader` (async) calls `await store.get_ranges_async(...)`. Same Protocol, two access patterns. The async path is the high-throughput path for tile-server-shaped workloads; the sync path is the "I just want one chip" path. Both paths exist on every adapter — you don't lose async support by picking fsspec, you just get a slower async (per-backend).
+**What this means for us.** `AsyncGeoTIFFReader` calls `await store.get_ranges_async(...)`; a future sync raw-byte reader (or sync facade over `AsyncGeoTIFFReader`) would call `store.get_ranges(...)`. Same Protocol, two access patterns. The async path is the high-throughput path for tile-server-shaped workloads; the sync path is the "I just want one chip" path. Both paths exist on every adapter — you don't lose async support by picking fsspec, you just get a slower async (per-backend).
 
 ```{mermaid}
 flowchart TD
@@ -132,9 +132,9 @@ flowchart TD
 ## Constraints
 
 - **`get_ranges` is the load-bearing method.** Fetch N byte ranges from one object in one parallel call. obstore implements this natively (with optional coalescing of close-by ranges); fsspec doesn't, so its adapter falls back to `asyncio.gather` over single-range fetches. Performance differences flow from this.
-- **Sync methods always work.** Even when the underlying transport is async-native (obstore), sync methods are provided as thin wrappers blocking on the async path. Reader code that's sync (`LazyCOGReader`) doesn't have to know.
+- **Sync methods always work.** Even when the underlying transport is async-native (obstore), sync methods are provided as thin wrappers blocking on the async path. Sync reader code (e.g. a future sync facade over `AsyncGeoTIFFReader`) doesn't have to know.
 - **Async methods may be best-effort.** `FsspecByteStore.*_async` methods only run truly async on backends constructed with `asynchronous=True` (s3fs, gcsfs, adlfs). Other backends serialise inside `asyncio.gather`. Documented at the adapter level.
-- **`open_store(url)` makes a sensible default.** Users who don't want to think about which transport is in use should be able to write `LazyCOGReader("s3://bucket/scene.tif")` and get the right thing.
+- **`open_store(url)` makes a sensible default.** Users who don't want to think about which transport is in use should be able to write `AsyncGeoTIFFReader("s3://bucket/scene.tif")` and get the right thing.
 
 ---
 
@@ -340,28 +340,6 @@ def open_store(
 Every reader that fetches bytes directly takes an optional `store: ByteStore | None = None`. If `None`, the reader calls `open_store(url)` internally:
 
 ```python
-class LazyCOGReader(SyncReader):
-    def __init__(
-        self,
-        path_or_url: str,
-        indexes: int | Sequence[int] | None = None,
-        *,
-        store: ByteStore | None = None,
-    ):
-        self.path_or_url = path_or_url
-        self._store = store or open_store(path_or_url, prefer="auto")
-        # ...
-
-    def read_window(self, window):
-        tiles = self._tiles_for_window(window)
-        # one call into the unified protocol — adapter handles obstore vs fsspec
-        tile_bytes = self._store.get_ranges(
-            self.path_or_url,
-            [(t.offset, t.length) for t in tiles],
-        )
-        return self._decompress_and_assemble(tile_bytes, tiles, window)
-
-
 class AsyncGeoTIFFReader(AsyncReader):
     def __init__(
         self,
@@ -371,17 +349,21 @@ class AsyncGeoTIFFReader(AsyncReader):
         store: ByteStore | None = None,
         max_concurrent_tiles: int = 32,
     ):
-        # same as above, async path
-        ...
+        self.path_or_url = path_or_url
+        self._store = store or open_store(path_or_url, prefer="auto")
+        # ...
 
     async def read_window(self, window):
         tiles = self._tiles_for_window(window)
+        # one call into the unified protocol — adapter handles obstore vs fsspec
         tile_bytes = await self._store.get_ranges_async(
             self.path_or_url,
             [(t.offset, t.length) for t in tiles],
         )
         return self._decompress_and_assemble(tile_bytes, tiles, window)
 ```
+
+A future sync raw-byte reader (or sync facade over `AsyncGeoTIFFReader`) follows the same shape, calling `self._store.get_ranges(...)` instead of `await self._store.get_ranges_async(...)` — the Protocol carries both surfaces.
 
 The reader code knows nothing about which transport is active. It calls `self._store.get_ranges(...)` and the adapter does the right thing.
 
@@ -391,8 +373,7 @@ The reader code knows nothing about which transport is active. It calls `self._s
 
 | Design | How it touches `ByteStore` |
 |---|---|
-| [`georeader/reader_lazy_cog.md`](../georeader/reader_lazy_cog.md) | `LazyCOGReader` accepts `store: ByteStore | None`. Sync path; defaults to `open_store(url, prefer="auto")`. |
-| [`georeader/reader_async_geotiff.md`](../georeader/reader_async_geotiff.md) | `AsyncGeoTIFFReader` accepts the same `store=`. Async path; uses `store.get_range_async` / `store.get_ranges_async` under `asyncio.gather`. |
+| [`georeader/reader_async_geotiff.md`](../georeader/reader_async_geotiff.md) | `AsyncGeoTIFFReader` accepts `store: ByteStore | None`. Async path; uses `store.get_range_async` / `store.get_ranges_async` under `asyncio.gather`. Defaults to `open_store(url, prefer="auto")`. |
 | [`georeader/reader_protocol.md`](../georeader/reader_protocol.md) | `RasterioReader`'s opener-path triage (`fs=`, `opener=`) is a related but distinct seam — it routes bytes through GDAL's callback API rather than through a `ByteStore`. The two coexist; `RasterioReader` doesn't currently accept a `ByteStore`. |
 | [`credentials.md`](credentials.md) | Credential × ByteStore overlap — see §"Open question 1" below. |
 | [`geostack.md`](../geostack.md) §"`obstore` vs `fsspec` compared" | The ecosystem-level comparison table that frames *why* both transports coexist. Read first to orient on the trade-off; this design is the typed surface that abstracts it. |
@@ -406,9 +387,9 @@ The reader code knows nothing about which transport is active. It calls `self._s
 Both Protocols touch authentication. The split today:
 
 - `Credential` ([`credentials.md`](credentials.md)) is for the **GDAL-VSI path** in `RasterioReader`. It applies env vars to a `rasterio.Env(...)` context. GDAL's libcurl handles HTTP.
-- `ByteStore` (this doc) is for the **`LazyCOGReader` / `AsyncGeoTIFFReader` paths**. Credentials live inside the `ObstoreByteStore`'s `obstore.S3Store(access_key=..., secret_key=...)` or the `FsspecByteStore`'s `fsspec.filesystem("s3", key=..., secret=...)`.
+- `ByteStore` (this doc) is for the **`AsyncGeoTIFFReader` path** (and any future raw-byte reader). Credentials live inside the `ObstoreByteStore`'s `obstore.S3Store(access_key=..., secret_key=...)` or the `FsspecByteStore`'s `fsspec.filesystem("s3", key=..., secret=...)`.
 
-When a user wants to swap credentials for a `LazyCOGReader`, they construct a new `ByteStore`. When for a `RasterioReader`, they pass `credential=`. The two surfaces don't currently interoperate — and probably shouldn't, since the underlying transports are different.
+When a user wants to swap credentials for an `AsyncGeoTIFFReader`, they construct a new `ByteStore`. When for a `RasterioReader`, they pass `credential=`. The two surfaces don't currently interoperate — and probably shouldn't, since the underlying transports are different.
 
 But there's a cleaner shape: a `Credential` could *produce* a `ByteStore` (e.g., `aws_credential.to_obstore_s3_store(bucket="...")`) so users have one credential surface that flows through both reader families. **Tentative pick:** add a small set of `to_*_store()` helpers on `Credential` subclasses; document that the GDAL-VSI path uses `apply()` and the byte-fetch path uses `to_*_store()`. Don't unify the two Protocols.
 
@@ -418,11 +399,11 @@ Currently typed as `Protocol` (compile-time only). Making it `@runtime_checkable
 
 ### 3. Should `ByteStore` carry a default key?
 
-Many `LazyCOGReader` use cases construct one reader per file; the URL is stored on the reader and passed to every `store.get_ranges(self.path_or_url, ...)`. Could `ByteStore` carry an optional default `key=` so the reader doesn't repeat itself? Probably overkill — explicit is fine; the duplication is minor.
+Many `AsyncGeoTIFFReader` use cases construct one reader per file; the URL is stored on the reader and passed to every `store.get_ranges_async(self.path_or_url, ...)`. Could `ByteStore` carry an optional default `key=` so the reader doesn't repeat itself? Probably overkill — explicit is fine; the duplication is minor.
 
 ### 4. `put` and `list` — needed for read-only readers?
 
-`LazyCOGReader` and `AsyncGeoTIFFReader` only call `get_range` / `get_ranges`. The Protocol includes `put` and `list` because the abstraction is general, but read-only consumers won't use them. Leaving them in keeps the Protocol useful for catalog-style writers. Adapters that don't support `put` can raise; the Protocol shape doesn't have to change.
+`AsyncGeoTIFFReader` only calls `get_range_async` / `get_ranges_async`. The Protocol includes `put` and `list` because the abstraction is general, but read-only consumers won't use them. Leaving them in keeps the Protocol useful for catalog-style writers. Adapters that don't support `put` can raise; the Protocol shape doesn't have to change.
 
 ### 5. URL scheme detection in `open_store(prefer="auto")`
 

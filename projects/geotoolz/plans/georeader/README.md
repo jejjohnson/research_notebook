@@ -25,7 +25,7 @@ keywords: design, georeader, reader, protocol
 
 Today, `georeader` ships one reader (`RasterioReader`) with a sync, GDAL-backed interface that's worked well for years. As the package's audience grows into cloud-native and async-first workloads, it needs to grow alongside — without breaking the call sites that already use it.
 
-This design proposes **one shared metadata surface and two read interfaces** (sync and async) that all current and future readers honour. The existing `RasterioReader` is refactored to conform; two new readers (`LazyCOGReader`, `AsyncGeoTIFFReader`) are added; a `ByteStore` abstraction unifies cloud byte access across `obstore` and `fsspec`. Downstream code branches only on sync-vs-async, never on which concrete reader class is in use.
+This design proposes **one shared metadata surface and two read interfaces** (sync and async) that all current and future readers honour. The existing `RasterioReader` is refactored to conform; one new reader (`AsyncGeoTIFFReader`) is added for high-concurrency GDAL-free reads; a `ByteStore` abstraction unifies cloud byte access across `obstore` and `fsspec`. Downstream code branches only on sync-vs-async, never on which concrete reader class is in use.
 
 The work splits into three issues that can be reviewed independently.
 
@@ -88,7 +88,7 @@ gantt
 
 **How it works.** Three options ship today: **GDAL VSI** (libcurl in C, default for `RasterioReader`), **obstore** (Rust core, fast for parallel ranges), and **fsspec** (Python, broadest backend coverage). They differ in throughput, async support, and which clouds they speak.
 
-**What this means for us.** A single reader class can run on different bytes paths. `RasterioReader` defaults to VSI but the refactor in [Issue 1](reader_protocol.md) lets you swap to fsspec via `fs=` or to obstore via `opener=`. The new readers (`LazyCOGReader`, `AsyncGeoTIFFReader`) skip GDAL entirely and use obstore directly. Your call which trade-off matches the workload — see [`geostack.md` §"`obstore` vs `fsspec` compared"](../geostack.md#obstore-vs-fsspec-compared) for the comparison.
+**What this means for us.** A single reader class can run on different bytes paths. `RasterioReader` defaults to VSI but the refactor in [Issue 1](reader_protocol.md) lets you swap to fsspec via `fs=` or to obstore via `opener=`. The new reader (`AsyncGeoTIFFReader`) skips GDAL entirely and uses obstore directly. Your call which trade-off matches the workload — see [`geostack.md` §"`obstore` vs `fsspec` compared"](../geostack.md#obstore-vs-fsspec-compared) for the comparison.
 
 ```{mermaid}
 flowchart TD
@@ -96,8 +96,7 @@ flowchart TD
     Q1 -->|JP2 / NetCDF / HDF5 / GRIB| RR[RasterioReader<br/>full GDAL coverage]
     Q1 -->|TIFF / COG| Q2{Cloud-heavy fan-out?}
     Q2 -->|No, single scenes| RR
-    Q2 -->|Yes, sync code| LC[LazyCOGReader<br/>obstore lazy reads]
-    Q2 -->|Yes, async / tile server| AG[AsyncGeoTIFFReader<br/>asyncio.gather]
+    Q2 -->|Yes, async / tile server| AG[AsyncGeoTIFFReader<br/>asyncio.gather + obstore]
 ```
 
 ### Python Protocols
@@ -106,7 +105,7 @@ flowchart TD
 
 **How it works.** Define a `Protocol` with the surface you want; any class that has the right attributes satisfies it automatically (no `class MyReader(SyncReader)` needed). With `@runtime_checkable`, `isinstance(x, Protocol)` works at runtime too.
 
-**What this means for us.** The reader Protocols (`_ReaderMeta`, `SyncReader`, `AsyncReader`) let `RasterioReader`, `LazyCOGReader`, and `AsyncGeoTIFFReader` all be passed to the same function with no shared base class — they just satisfy the Protocol structurally. Same shape; three implementations; no inheritance hierarchy.
+**What this means for us.** The reader Protocols (`_ReaderMeta`, `SyncReader`, `AsyncReader`) let `RasterioReader` and `AsyncGeoTIFFReader` (and any future sensor-specific or raw-byte reader) be passed to the same function with no shared base class — they just satisfy the Protocol structurally. Same shape; independent implementations; no inheritance hierarchy.
 
 ---
 
@@ -115,18 +114,18 @@ flowchart TD
 - **Define a single metadata surface.** Every reader (current and future) exposes the same `crs` / `transform` / `bounds` / `shape` / `count` / `width` / `height` / `dtype` / `nodata` / `res` properties via a `_ReaderMeta` Protocol.
 - **Define two read interfaces.** `SyncReader` and `AsyncReader` both build on `_ReaderMeta`; the only divergence is whether read methods return a `GeoTensor` or a `Coroutine[GeoTensor]`.
 - **Refactor `RasterioReader` and `GeoData`** to conform to the new Protocols without breaking existing callers.
-- **Add `LazyCOGReader`** — sync, COG-only, no GDAL — for fast cloud reads with reduced per-call overhead.
 - **Add `AsyncGeoTIFFReader`** — async, COG-only, no GDAL — for high-concurrency fan-out.
-- **Share a `ByteStore` abstraction** so `LazyCOGReader` and `AsyncGeoTIFFReader` stay agnostic between `obstore` and `fsspec`.
+- **Share a `ByteStore` abstraction** so `AsyncGeoTIFFReader` (and any future raw-byte reader) stays agnostic between `obstore` and `fsspec`.
 
 ---
 
 ## Non-goals
 
-- **Replacing GDAL.** `RasterioReader` stays the default. The new readers are specialisations, not replacements.
-- **Reimplementing reprojection in pure Python.** `LazyCOGReader.read_bounds(target_crs=...)` falls back to scipy/skimage warping; it doesn't replicate GDAL's CRS-fix long tail.
+- **Replacing GDAL.** `RasterioReader` stays the default. The new reader is a specialisation, not a replacement.
+- **Reimplementing reprojection in pure Python.** `AsyncGeoTIFFReader.read_bounds(target_crs=...)` falls back to scipy/skimage warping; it doesn't replicate GDAL's CRS-fix long tail.
 - **Async-by-default for the existing reader.** `RasterioReader` stays sync; users wanting async use `AsyncGeoTIFFReader`.
-- **Universal format support in the new readers.** `LazyCOGReader` and `AsyncGeoTIFFReader` are TIFF/COG-only. JP2, NetCDF, HDF5, GRIB, ENVI continue to route through `RasterioReader`.
+- **Universal format support in the new reader.** `AsyncGeoTIFFReader` is TIFF/COG-only. JP2, NetCDF, HDF5, GRIB, ENVI continue to route through `RasterioReader`.
+- **A sync GDAL-free GeoTensor reader for v0.1.** Speculative, no clear customer; `RasterioReader` covers sync, `AsyncGeoTIFFReader` covers GDAL-free. If a real workload emerges later we'll add a sync sibling (or a sync facade over `AsyncGeoTIFFReader`); see open question §3 below.
 - **Replacing `obstore` or `fsspec`.** The `ByteStore` Protocol is a thin compatibility shim, not a new transport library.
 
 ---
@@ -142,18 +141,17 @@ flowchart TD
 
 ## High-level shape
 
-Three readers, one shared metadata surface, two read interfaces:
+Two readers, one shared metadata surface, two read interfaces:
 
 | Reader | Lives in | Sync / async | Transport | Driver coverage |
 |---|---|---|---|---|
 | `RasterioReader` | `georeader` | sync | GDAL / VSI | every GDAL driver |
-| `LazyCOGReader` | `georeader` | sync API, lazy semantics | `obstore` / `fsspec` | TIFF / COG only |
 | `AsyncGeoTIFFReader` | `georeader` | async | `obstore` / `fsspec` | TIFF / COG only |
 
-The metadata properties and the `read_window` / `read_bounds` / `read_geoslice` / `load` method names are identical across all three. The only divergence is whether reads are sync or async.
+The metadata properties and the `read_window` / `read_bounds` / `read_geoslice` / `load` method names are identical across both. The only divergence is whether reads are sync or async.
 
 ```python
-# Sync path — RasterioReader or LazyCOGReader
+# Sync path — RasterioReader
 def apply_to_chip(reader: SyncReader, slice_: GeoSlice, op: Operator) -> GeoTensor:
     with reader as r:
         gt = r.read_geoslice(slice_)
@@ -171,26 +169,24 @@ geotoolz.catalog_ops.CatalogPipeline(
     catalog,
     op,
     reader_class=georeader.RasterioReader,         # sync default
-    # reader_class=georeader.LazyCOGReader,         # sync, lazy-on-open
     # reader_class=georeader.AsyncGeoTIFFReader,    # async, fan-out
 )
 ```
 
-Same metadata surface, same `read_*` method names, three different bytes paths underneath. The only tax on swapping is `await` — which is unavoidable as long as the cloud HTTP world is fundamentally async. For the side-by-side strategy comparison (open cost, read cost, concurrency, driver coverage), see the [stack-level overview in `geostack.md`](../geostack.md#the-three-readers-compared).
+Same metadata surface, same `read_*` method names, two different bytes paths underneath. The only tax on swapping is `await` — which is unavoidable as long as the cloud HTTP world is fundamentally async. For the side-by-side strategy comparison (open cost, read cost, concurrency, driver coverage), see the [stack-level overview in `geostack.md`](../geostack.md#the-three-readers-compared).
 
 ---
 
 ## Sub-designs
 
-The work splits into three independently reviewable issues:
+The work splits into two independently reviewable issues:
 
 | # | Sub-design | Owns |
 |---|---|---|
 | 1 | [`reader_protocol.md`](reader_protocol.md) | `_ReaderMeta` + `SyncReader` Protocols; `RasterioReader` refactor with `opener=`/`fs=` knobs and the three-bytes-paths triage; `GeoData` / `GeoDataBase` alignment; `GeoTensor` Protocol conformance; tutorial chapter updates (02, 03). |
-| 2 | [`reader_lazy_cog.md`](reader_lazy_cog.md) | `LazyCOGReader` class; IFD parsing; tile-fetch math; compression dispatch. |
-| 3 | [`reader_async_geotiff.md`](reader_async_geotiff.md) | `AsyncReader` Protocol; `AsyncGeoTIFFReader` class; async `open(...)` classmethod; `asyncio.gather`-based parallel tile fetch; `max_concurrent_tiles` semaphore. |
+| 2 | [`reader_async_geotiff.md`](reader_async_geotiff.md) | `AsyncReader` Protocol; `AsyncGeoTIFFReader` class; async `open(...)` classmethod; `asyncio.gather`-based parallel tile fetch; `max_concurrent_tiles` semaphore; private `_cog_helpers.py` (IFD walk, `_tiles_for_window`, decompression dispatch). |
 
-The transport layer (`ByteStore` Protocol + `ObstoreByteStore` / `FsspecByteStore` adapters + `open_store(url)` factory) is specified separately in [`types/bytestore.md`](../types/bytestore.md) since it's consumed by both Issue 2 and Issue 3 and conceivably by future raw-byte-shaped readers.
+The transport layer (`ByteStore` Protocol + `ObstoreByteStore` / `FsspecByteStore` adapters + `open_store(url)` factory) is specified separately in [`types/bytestore.md`](../types/bytestore.md) since it's consumed by Issue 2 and conceivably by future raw-byte-shaped readers.
 
 Each sub-design is sized to be a single PR with a focused review.
 
@@ -205,15 +201,13 @@ Issue 1 (protocols + RasterioReader refactor)
 types/bytestore.md (ByteStore Protocol + adapters)
    │
    ▼
-Issue 2 (LazyCOGReader)  ←──┬── independent (both consume ByteStore)
-                             │
-Issue 3 (AsyncGeoTIFFReader) ┘── shares COG-parsing helpers with Issue 2
+Issue 2 (AsyncGeoTIFFReader, owns _cog_helpers.py)
 ```
 
-- **Issue 1 lands first.** It locks the Protocol surface that 2 and 3 implement.
-- **`types/bytestore.md` lands next** (or alongside Issue 1) — defines the transport seam both COG readers need.
-- **Issues 2 and 3 can proceed in parallel** after the above. Issue 3 has a soft dependency on Issue 2 for the shared COG-parsing helpers (see open question #2 below).
-- **No issue is blocking on the others' user-visible API.** The Protocol surface is locked in Issue 1; the transport surface is locked in `types/bytestore.md`; Issues 2 and 3 are pure implementations.
+- **Issue 1 lands first.** It locks the Protocol surface that Issue 2 implements.
+- **`types/bytestore.md` lands next** (or alongside Issue 1) — defines the transport seam Issue 2 consumes.
+- **Issue 2 is a single focused PR**: the async reader, the COG-parsing primitives in a private `_cog_helpers.py`, and the `asyncio.gather`-driven tile fetch.
+- **No issue is blocking on the others' user-visible API.** The Protocol surface is locked in Issue 1; the transport surface is locked in `types/bytestore.md`; Issue 2 is a pure implementation.
 
 ---
 
@@ -235,19 +229,21 @@ The proposal in this design implies caching the open handle for the lifetime of 
 
 ### 2. Where COG IFD parsing + tile math + decompression lives
 
-Both `LazyCOGReader` and `AsyncGeoTIFFReader` need the same logic (IFD walk, `_tiles_for_window`, decompression dispatch). Three options:
+Only one reader (`AsyncGeoTIFFReader`) currently needs IFD walking, `_tiles_for_window`, and decompression dispatch — but it's not unlikely a future reader (sync facade, sensor-specific COG variant, format-extending reader) will want the same primitives.
 
-- **Duplicate** — small (~150 LOC) but invites sync/async drift.
-- **Shared internal `_cog_helpers.py` module** — one source of truth, both readers import.
-- **`LazyCOGReader` exports the helpers** — `AsyncGeoTIFFReader` imports from it. Couples the two readers more tightly than necessary.
+**Tentative pick: a private `_cog_helpers.py` module owned by `AsyncGeoTIFFReader`'s package directory.** If a future reader needs to import from it, the path is `from georeader._cog_helpers import ...` — explicit and stable. No need to promote it to `types/` until a second concrete consumer lands.
 
-**Tentative pick: shared `_cog_helpers.py`** — cleaner than duplication, doesn't couple the two readers.
+### 3. A sync GDAL-free GeoTensor reader (deferred)
+
+Earlier drafts of this design proposed a `LazyCOGReader` — a sync, GDAL-free, COG-only `GeoTensor` reader. It was originally pitched as a wrapper around the [`developmentseed/lazycogs`](https://github.com/developmentseed/lazycogs) library, which turned out to return `xarray.DataArray` (not `GeoTensor`) and to be properly part of the `xrtoolz` / dense-cube stack — see the `geostack_notes.md` discussion for that re-routing.
+
+The sync GDAL-free GeoTensor workload itself is plausible (notebooks, FastAPI sync handlers, batch scripts), but **doesn't yet have a clear customer** that `RasterioReader` (sync, GDAL) and `AsyncGeoTIFFReader` (async, GDAL-free) don't already cover between them. If a real workload emerges, the cheapest path is a sync facade that wraps `AsyncGeoTIFFReader` with `asyncio.run(...)` for one-call use cases; the more expensive path is a from-scratch sync IFD reader. **Decide if and when.**
 
 ---
 
 ## Alternatives considered
 
-- **Don't unify; let `lazy-cogs` and `async-geotiff` stay external libraries with different shapes.** Rejected: forces downstream code (`geotoolz`, ML pipelines) to special-case which library is in use, which is exactly the coordination tax the reconciliation removes.
+- **Don't unify; let `async-geotiff` stay an external library with a different shape.** Rejected: forces downstream code (`geotoolz`, ML pipelines) to special-case which library is in use, which is exactly the coordination tax the reconciliation removes. *(`lazycogs` was previously named here as a parallel external library; on closer inspection it's `xarray`-shaped, so it belongs in the `xrtoolz` discussion rather than this one — see [`geostack_notes.md`](../../geostack_notes.md).)*
 - **Make the existing `RasterioReader` async-by-default with sync wrappers.** Rejected: too disruptive to existing callers, and the GDAL ecosystem isn't async-friendly underneath; the wrapper would be sync-pretending-to-be-async.
 - **Use `rio-tiler` / `terracotta` as the COG reader.** Rejected: those are higher-level — they bake in tile-server assumptions and color/visualisation logic. The COG reader proposed here is a substrate, not a tile server.
 - **Adopt `kerchunk` / `zarr`-shaped lazy access.** Rejected: incompatible with the rasterio-native `Window` and `Affine` API surface that the rest of `georeader` is built on. Could be added as a separate reader later.
@@ -260,7 +256,7 @@ Once these designs are implemented, the existing tutorial chapters need updates:
 
 - [Ch. 2 — `abstract_reader`](../../georeader_tutorial/02_abstract_reader.md) — describe `_ReaderMeta` / `SyncReader` / `AsyncReader` Protocols alongside (or replacing) the current `GeoData` / `GeoDataBase` description.
 - [Ch. 3 — `rasterio_reader`](../../georeader_tutorial/03_rasterio_reader.md) — describe the `opener=` / `fs=` constructor knobs and the three-bytes-paths triage.
-- New chapters can be added for `LazyCOGReader` and `AsyncGeoTIFFReader` once those land — both natural successors to Ch. 3.
+- A new chapter can be added for `AsyncGeoTIFFReader` once it lands — a natural successor to Ch. 3.
 
 The tutorial today describes the **current** package state; updates land alongside each issue's implementation, not before.
 

@@ -25,7 +25,7 @@ keywords: design, types, credentials, auth
 
 Today, credentials for `RasterioReader` flow through process environment variables. The pattern works (GDAL picks them up automatically) but every project that uses `georeader` re-implements the env-var setup logic — `mars_data_ops/utils/filesystem.py` is ~800 lines of "read from a config file, set the right env vars, optionally fetch a managed-identity token first." The duplication is real and the surface is awkward.
 
-This design proposes a typed `Credential` Protocol with concrete subclasses per cloud / auth mode, plus a `from_config(...)` helper for the config-file pattern. Readers (`RasterioReader`, future `LazyCOGReader`, future `AsyncGeoTIFFReader`) accept a `credential=` kwarg that applies the credential's env vars (or, in the fsspec / opener paths, threads the credential through the relevant constructor) without forcing global state.
+This design proposes a typed `Credential` Protocol with concrete subclasses per cloud / auth mode, plus a `from_config(...)` helper for the config-file pattern. Readers (`RasterioReader`, future `AsyncGeoTIFFReader`) accept a `credential=` kwarg that applies the credential's env vars (or, in the fsspec / opener paths, threads the credential through the relevant constructor) without forcing global state.
 
 The today-pattern (set env vars once, construct readers anywhere) keeps working — the proposed `Credential` is opt-in. Users who don't construct one get GDAL's existing env-var behaviour for free.
 
@@ -398,8 +398,8 @@ The fsspec path (`fs=fsspec_fs`) and the opener path (`opener=callable`) take cr
 | [Tutorial Ch. 3 §9](../../georeader_tutorial/03_rasterio_reader.md) | The today-pattern that this design replaces. Reading Ch. 3 first is the right way to understand what env-var-soup looks like in practice. |
 | [`reader_protocol.md`](../georeader/reader_protocol.md) §"Credential handling" | Articulates where credentials live in each of the three bytes paths. This Protocol is the typed surface for the GDAL-VSI path; the other two paths use their own native credential objects. |
 | [`reader_rasterio.md`](../georeader/reader_rasterio.md) | Wires `credential=` into the `RasterioReader` refactor; specifies refresh-on-401 retry, SAS-fallback path-rewriting, and multi-account isolation. |
-| [Reader reconciliation](../georeader/README.md) | All three readers (`RasterioReader`, future `LazyCOGReader`, future `AsyncGeoTIFFReader`) accept a `credential=` kwarg. Different paths consume it differently; same Protocol surface. |
-| [`bytestore.md`](bytestore.md) | The transport surface for `LazyCOGReader` / `AsyncGeoTIFFReader`. Carries credentials inside the underlying `obstore.ObjectStore` or `fsspec.AbstractFileSystem` constructor. The `Credential` × `ByteStore` boundary — and possible `to_*_store()` bridge helpers — is documented in [`bytestore.md` §"Credential × ByteStore overlap"](bytestore.md#1-credential-x-bytestore-overlap). |
+| [Reader reconciliation](../georeader/README.md) | Both readers (`RasterioReader`, future `AsyncGeoTIFFReader`) accept a `credential=` kwarg. Different paths consume it differently; same Protocol surface. |
+| [`bytestore.md`](bytestore.md) | The transport surface for `AsyncGeoTIFFReader` (and any future raw-byte reader). Carries credentials inside the underlying `obstore.ObjectStore` or `fsspec.AbstractFileSystem` constructor. The `Credential` × `ByteStore` boundary — and possible `to_*_store()` bridge helpers — is documented in [`bytestore.md` §"Credential × ByteStore overlap"](bytestore.md#1-credential-x-bytestore-overlap). |
 
 ---
 

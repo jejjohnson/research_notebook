@@ -1,7 +1,7 @@
 ---
 title: AsyncGeoTIFFReader
 subject: georeader design
-subtitle: Async COG reader for high-concurrency fan-out
+subtitle: Thin adapter over `developmentseed/async-geotiff`
 short_title: AsyncGeoTIFF
 authors:
   - name: J. Emmanuel Johnson
@@ -12,12 +12,13 @@ authors:
     orcid: 0000-0002-6739-0053
     email: jemanjohnson34@gmail.com
 license: CC-BY-4.0
-keywords: design, georeader, async, cog
+keywords: design, georeader, async, cog, async-geotiff
 ---
 
 > **Parent:** [README.md](README.md)
-> **Depends on:** [Issue 1](reader_protocol.md) (Protocols) + [`types/bytestore.md`](../types/bytestore.md) (`ByteStore` Protocol) + [Issue 2](reader_lazy_cog.md) (COG-parsing helpers).
-> **Scope:** an async, COG-only reader for high-concurrency fan-out workloads — tile servers, web maps, async ML inference services.
+> **Depends on:** [Issue 1](reader_protocol.md) — adds an `AsyncGeoData` Protocol that mirrors today's `GeoData` with `async` read methods.
+> **Status:** **revised 2026-05-09** — collapsed from a "build a COG reader from scratch" design (~400 LOC, private `_cog_helpers.py`, semaphore policy) into a thin adapter (~80 LOC) over [`developmentseed/async-geotiff`](https://github.com/developmentseed/async-geotiff). See §"Why the rewrite" below.
+> **Scope:** an async, COG-only reader for high-concurrency fan-out workloads — tile servers, web maps, async ML inference services. Wraps `async_geotiff.GeoTIFF`; translates async-geotiff's `Window` / `RasterArray` into our `Window` / `GeoTensor`.
 
 ---
 
@@ -25,13 +26,48 @@ keywords: design, georeader, async, cog
 
 Sync I/O is fine when you have one read at a time. For workloads where many reads happen concurrently (a tile server fielding 1000 simultaneous tile requests, an async ML service that fans out across hundreds of windows from one process), async-native fetching is the right shape — `asyncio.gather(*[reader.read_window(w) for w in windows])` becomes a one-line concurrency primitive.
 
-Today, `georeader` has no async story. Users wanting async reads either roll their own or pull in an external library with a different API. This issue adds `AsyncGeoTIFFReader` — same metadata surface as the sync readers, async read methods.
+Today, `georeader` has no async story. Users wanting async reads either roll their own or pull in an external library with a different API. This issue adds `AsyncGeoTIFFReader` — same metadata surface as `RasterioReader`, async read methods.
 
-The design reuses the `ByteStore` Protocol from [`types/bytestore.md`](../types/bytestore.md) and everything from [Issue 2](reader_lazy_cog.md) that's not sync-specific (COG header parsing, `_tiles_for_window` math, decompression dispatch). The only async-specific work is:
+We do **not** rebuild any of the COG plumbing. [`async-geotiff`](https://github.com/developmentseed/async-geotiff) (DevSeed, ~50★, last updated 2026-05-09) already ships:
 
-- Header fetch happens in an async classmethod (`open(...)`).
-- Read methods are coroutines that issue per-tile `await self._store.get_range_async(...)` calls inside `asyncio.gather(...)` for parallel fetch. (`get_ranges_async` for store-level coalescing is a possible alternative — see [Open question §5](#5-per-tile-get_range_async-vs-store-level-get_ranges_async).)
-- A `max_concurrent_tiles` semaphore caps the fan-out per call.
+- `await GeoTIFF.open(path, store=...)` — async constructor, fetches and parses the IFD chain.
+- `geotiff.transform`, `geotiff.crs`, `geotiff.overviews[i]`, `overview.read(window=...)`.
+- IFD walk, GeoKey parsing, GDAL metadata.
+- Per-tile range fetch, decompression, assembly into a `(bands, height, width)` ndarray.
+- **Request coalescing for adjacent tiles** (in the Rust `async-tiff` core).
+- **CPU-bound decoding off the event loop** (Rust thread pool).
+- Decompressors: Deflate, JPEG, JPEG2000, LERC, LERC_DEFLATE, LERC_ZSTD, LZMA, LZW, WebP, ZSTD.
+- Cloud transport: accepts any [`obspec.AsyncStore`](https://github.com/developmentseed/obspec) — including `obstore.S3Store`, `GCSStore`, `AzureStore`, `HTTPStore`, `LocalStore`.
+
+Our reader is therefore a **thin adapter**: instantiate `GeoTIFF.open`, expose its metadata behind our `GeoDataBase`-shaped property surface, translate windows on the way in and `RasterArray → GeoTensor` on the way out. Roughly 80 LOC.
+
+---
+
+## Why the rewrite
+
+The earlier draft of this doc proposed:
+
+- A private `_cog_helpers.py` module with COG header parsing, `_tiles_for_window` math, decompression dispatch (~150–200 LOC).
+- An `asyncio.Semaphore`-based `max_concurrent_tiles` policy.
+- A custom `ByteStore` Protocol consumed via `await self._store.get_range_async(...)` inside `asyncio.gather(...)`.
+- ~400 LOC total.
+
+On review (2026-05-09), every one of those concerns is already solved upstream:
+
+| Concern | Where it lives in async-geotiff |
+|---|---|
+| IFD walk, GeoKey parsing | `async_geotiff/_geotiff.py` + `_crs.py` + `_gdal_metadata.py` |
+| Window → tile coords + tile fetch math | `async_geotiff/_read.py` |
+| Per-tile range fetch + decompression | `async_geotiff/_fetch.py` (delegates to Rust `async-tiff`) |
+| Tile assembly into ndarray | `async_geotiff/_read.py::assemble_tiles()` |
+| Overviews | `geotiff.overviews[]` |
+| Request coalescing | Rust `async-tiff` core, automatic |
+| Concurrency / fan-out control | Rust thread pool + obspec backend's connection pool |
+| Decompressor coverage | Deflate, JPEG, JPEG2000, LERC*, LZMA, LZW, WebP, ZSTD |
+
+A pure-Python reimplementation would be slower, less correct (decompression dispatch is fiddly), and would drift from upstream. The right call is to depend on `async-geotiff` and write the smallest possible adapter on top of it.
+
+The custom `ByteStore` Protocol also evaporated in the same rewrite — see [`types/bytestore.md`](../types/bytestore.md). We pass `obspec.AsyncStore` straight through.
 
 ---
 
@@ -51,9 +87,9 @@ The design reuses the `ByteStore` Protocol from [`types/bytestore.md`](../types/
 
 **What it is.** `asyncio.gather(coro1, coro2, coro3, ...)` runs multiple coroutines concurrently and returns when all finish (or one raises). It's the canonical way to issue many parallel I/O operations in one call.
 
-**How it works.** Each argument is a coroutine that hasn't started yet (`some_async_func(arg)` without `await`). `gather(...)` schedules them all on the event loop, lets them run interleaved, and collects their results into a list in input order. If any raises, `gather` propagates the exception (or you can pass `return_exceptions=True` to collect them).
+**How it works.** Each argument is a coroutine that hasn't started yet. `gather(...)` schedules them all on the event loop, lets them run interleaved, and collects their results into a list in input order.
 
-**What this means for us.** `AsyncGeoTIFFReader.read_window(...)` decomposes a window into N tiles, builds N coroutines (one per range request), and `await asyncio.gather(...)` fetches them in parallel. Tile-server workloads can additionally do `await asyncio.gather(*[reader.read_window(w) for w in 1000_windows])` for outer parallelism — concurrent reads across many readers.
+**What this means for us.** A *single* `read_window(...)` is just one `await` on async-geotiff (the parallelism inside it is in the Rust core). The interesting `gather(...)` is at the *outer* layer — `await asyncio.gather(*[reader.read_window(w) for w in 1000_windows])` for tile-server-shaped workloads.
 
 ```{mermaid}
 gantt
@@ -74,257 +110,278 @@ gantt
     tile 25 :a25, 0, 50
 ```
 
-### Semaphores (concurrency limits)
-
-**What it is.** An `asyncio.Semaphore(N)` is a counter that lets at most N coroutines proceed at once; the rest wait. Standard concurrency primitive.
-
-**How it works.** `async with semaphore:` blocks the coroutine until the counter has room, increments it, runs the block, decrements on exit. Used to cap concurrent operations regardless of how many you've launched.
-
-**What this means for us.** Without a cap, `read_window(window)` for a window covering 100 tiles would issue 100 parallel HTTP requests — possibly exhausting connection pools or hitting rate limits. `max_concurrent_tiles=32` (default) wraps each fetch in `async with sem:` so at most 32 are in flight per call. Outer fan-out (across `read_window` calls from 100 concurrent users) is also bounded by the surrounding framework's concurrency (FastAPI / aiohttp request handlers).
-
 ### Async classmethod for construction
 
 **What it is.** Python's `__init__` *can't* be an `async def`. There's no `__ainit__` magic method. So when initialisation requires async work (fetching the COG IFD over HTTP), the convention is a classmethod `open(...)` that's `async`.
 
-**How it works.** `__init__` does cheap synchronous setup (store the URL, the credential, allocate state). The user calls `await Cls.open(url)`, which constructs an instance via `__init__` and then runs the async setup before returning the fully-initialised reader. Same pattern used by `aiohttp.ClientSession`, `asyncpg.connect`, etc.
+**How it works.** `__init__` does cheap synchronous setup (store the URL, the credential, allocate state). The user calls `await Cls.open(url)`, which constructs an instance via `__init__` and then runs the async setup before returning the fully-initialised reader. Same pattern used by `aiohttp.ClientSession`, `asyncpg.connect`, and `async_geotiff.GeoTIFF` itself.
 
-**What this means for us.** Users write `reader = await AsyncGeoTIFFReader.open("s3://bucket/scene.tif")` instead of `reader = AsyncGeoTIFFReader(...)`. The reader's `crs` / `transform` / etc. don't work until `open()` has been awaited — accessing them earlier raises `RuntimeError("Reader not opened")`. Slight cost in clarity; major win in not faking sync APIs over async work.
+**What this means for us.** Users write `reader = await AsyncGeoTIFFReader.open("s3://bucket/scene.tif")`. The reader's `crs` / `transform` / etc. don't work until `open()` has been awaited — accessing them earlier raises `RuntimeError("Reader not opened")`. Slight cost in clarity; major win in not faking sync APIs over async work.
 
 ```{mermaid}
 sequenceDiagram
     participant App
     participant Cls as AsyncGeoTIFFReader
-    participant Init as __init__
-    participant Header as _fetch_header
+    participant AGT as async_geotiff.GeoTIFF
+    participant Store as obspec.AsyncStore
 
-    App->>Cls: await open(url)
-    Cls->>Init: __init__(url)
-    Init-->>Cls: instance (no header yet)
-    Note over Cls: header is None — calling .crs raises
-    Cls->>Header: await _fetch_header()
-    Header-->>Cls: COGHeader cached
-    Cls-->>App: ready instance
-    App->>App: reader.crs ✓
-    App->>App: await reader.read_window(w)
+    App->>Cls: await open(url, store=...)
+    Cls->>Cls: __init__ (cheap)
+    Cls->>AGT: await GeoTIFF.open(url, store=store)
+    AGT->>Store: range request — IFD bytes
+    Store-->>AGT: bytes
+    AGT-->>Cls: GeoTIFF instance
+    Cls-->>App: ready AsyncGeoTIFFReader
+    App->>Cls: reader.crs ✓
+    App->>Cls: await reader.read_window(w)
+    Cls->>AGT: await overview.read(window=...)
+    AGT->>Store: parallel range requests (Rust core)
+    Store-->>AGT: bytes
+    AGT-->>Cls: RasterArray
+    Cls-->>App: GeoTensor
 ```
 
 ---
 
 ## Deliverables
 
-1. **`AsyncReader` Protocol** in `georeader/abstract_reader.py` — extends `_ReaderMeta` with async read methods. (Could move to Issue 1; landing here for now to avoid scope creep there.)
-2. **`AsyncGeoTIFFReader` class** in `georeader/async_geotiff_reader.py`.
-3. **Async classmethod `open(...)`** — fetches the IFD chain via `await store.get_range_async(...)`.
-4. **Async read methods** — `read_window`, `read_bounds`, `read_geoslice`, `load`.
-5. **`max_concurrent_tiles` semaphore** — caps parallel range requests per call.
-6. **Async context-manager** — `__aenter__` / `__aexit__`.
-7. **Tests** — open + read a real COG asynchronously; concurrent fan-out across N windows.
+1. **`AsyncGeoData` Protocol** in `georeader/abstract_reader.py` — mirrors today's `GeoData` with async read methods. Defined in [Issue 1](reader_protocol.md).
+2. **`AsyncGeoTIFFReader` class** in `georeader/async_geotiff_reader.py` (~80 LOC).
+3. **`async open(...)` classmethod** — wraps `await async_geotiff.GeoTIFF.open(path, store=...)`.
+4. **Async read methods** — `read_window`, `read_bounds`, `read_geoslice`, `load`. Each is one or two lines of adapter code over `async-geotiff`.
+5. **Two small translators** — `Window ↔ async_geotiff.Window` and `RasterArray → GeoTensor`.
+6. **Optional `geotoolz.io.open_store(url)`** — see [`types/bytestore.md`](../types/bytestore.md). Builds an `obstore` backend from the URL scheme; if the user passes their own `obspec.AsyncStore` we use it as-is.
+7. **Async context-manager** — `__aenter__` / `__aexit__`. `aclose` is a no-op (obstore pools its own connections; async-geotiff has no resource to release).
+8. **Tests** — open + read a real COG asynchronously; concurrent fan-out across N windows; numerical equivalence vs `RasterioReader.read_window` for the same file/window within rounding.
 
-This issue does **not** ship new transport infrastructure — it imports `ByteStore`, `ObstoreByteStore`, `FsspecByteStore`, `open_store` from [`types/bytestore.md`](../types/bytestore.md). It also imports the COG header parsing and tile-fetch math from the shared module created in [Issue 2](reader_lazy_cog.md) (see [parent open question #2](README.md#open-questions)).
-
----
-
-## `AsyncReader` Protocol
-
-```python
-class AsyncReader(_ReaderMeta, Protocol):
-    """Async read interface — AsyncGeoTIFFReader."""
-
-    async def read_window(self, window: Window) -> GeoTensor: ...
-    async def read_bounds(
-        self,
-        bounds: tuple[float, float, float, float],
-        *,
-        target_resolution: tuple[float, float] | None = None,
-        target_crs: pyproj.CRS | str | None = None,
-    ) -> GeoTensor: ...
-    async def read_geoslice(self, slice_: GeoSlice) -> GeoTensor: ...
-    async def load(self) -> GeoTensor: ...
-    async def aclose(self) -> None: ...
-
-    async def __aenter__(self) -> "AsyncReader": ...
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> bool | None: ...
-```
-
-Mirrors `SyncReader` (Issue 1) on every method name; only the `await` keyword diverges. Downstream code in `geotoolz` accepts `SyncReader` or `AsyncReader` and branches on which is in use — see [parent §High-level shape](README.md#high-level-shape).
+This issue does **not** ship: a custom byte-store Protocol, a `_cog_helpers.py` module, a semaphore-based concurrency cap, decompression dispatch, IFD parsing, or tile-fetch math. All of that is in `async-geotiff`.
 
 ---
 
-## `AsyncGeoTIFFReader` class
+## `AsyncGeoTIFFReader` class — full sketch
 
 ```python
-class AsyncGeoTIFFReader(AsyncReader):
-    """Async COG reader (TIFF/COG only, no GDAL).
+from __future__ import annotations
 
-    Open is async because the IFD fetch is async. After open, every read
-    method dispatches `len(tiles)` parallel range requests via obstore and
-    awaits all of them before assembling the array. Designed for high
-    concurrency — e.g. a tile server fetching 1000 windows concurrently.
+from typing import TYPE_CHECKING
+
+import numpy as np
+from async_geotiff import GeoTIFF, RasterArray
+from async_geotiff import Window as AGTWindow
+from rasterio.windows import Window
+
+from georeader.abstract_reader import AsyncGeoData
+from georeader.geotensor import GeoTensor
+from geotoolz.io import open_store
+
+if TYPE_CHECKING:
+    import obspec
+    import pyproj
+    from rasterio import Affine
+
+
+class AsyncGeoTIFFReader(AsyncGeoData):
+    """Async COG reader. Thin adapter over async_geotiff.GeoTIFF.
+
+    Use for high-concurrency fan-out (tile servers, async ML inference
+    services). For one-off sync reads, use RasterioReader instead.
+
+    Open is async because the IFD fetch is async. After open, every
+    metadata property is sync; every read method is a coroutine that
+    delegates to async-geotiff (which uses a Rust thread pool for
+    decoding and obspec for transport).
     """
-    path_or_url: str
-    indexes: tuple[int, ...] | None
-    _store: ByteStore
-    _header: "COGHeader | None"                      # populated after .open()
-    _max_concurrent_tiles: int
 
     def __init__(
         self,
         path_or_url: str,
-        indexes: int | Sequence[int] | None = None,
         *,
-        store: ByteStore | None = None,
-        max_concurrent_tiles: int = 32,
-    ):
+        store: "obspec.AsyncStore | None" = None,
+        overview_level: int = 0,
+    ) -> None:
         """Cheap. Does NOT fetch the header — call .open() first."""
         self.path_or_url = path_or_url
-        self.indexes = _normalise_indexes(indexes)
-        self._store = store or open_store(path_or_url, prefer="auto")
-        self._header = None
-        self._max_concurrent_tiles = max_concurrent_tiles
+        self._store = store or open_store(path_or_url)
+        self._overview_level = overview_level
+        self._geotiff: GeoTIFF | None = None
 
     @classmethod
     async def open(
         cls,
         path_or_url: str,
-        indexes: int | Sequence[int] | None = None,
         *,
-        store: ByteStore | None = None,
-        max_concurrent_tiles: int = 32,
+        store: "obspec.AsyncStore | None" = None,
+        overview_level: int = 0,
     ) -> "AsyncGeoTIFFReader":
-        """Async constructor: build instance, fetch and parse the IFD chain.
-        Most users call this rather than __init__."""
-        self = cls(path_or_url, indexes, store=store,
-                   max_concurrent_tiles=max_concurrent_tiles)
-        await self._fetch_header()
+        """Async constructor. Most users call this rather than __init__."""
+        self = cls(path_or_url, store=store, overview_level=overview_level)
+        self._geotiff = await GeoTIFF.open(path_or_url, store=self._store)
         return self
 
-    # internal
-    async def _fetch_header(self) -> None:
-        """One or two async range requests to pull and parse the TIFF IFDs.
-        Reuses the shared COG parser from Issue 2's _cog_helpers module."""
-        ...
-    def _tiles_for_window(self, window: Window) -> list["TileSpec"]:
-        """Same math as LazyCOGReader; imported from shared _cog_helpers."""
-        ...
-    def _decompress_and_assemble(
-        self,
-        tile_bytes: list[bytes],
-        tiles: list["TileSpec"],
-        window: Window,
-    ) -> np.ndarray:
-        """Same dispatch as LazyCOGReader; imported from shared _cog_helpers."""
-        ...
+    # ------------------------------------------------------------------ metadata
+    def _require_open(self) -> GeoTIFF:
+        if self._geotiff is None:
+            raise RuntimeError(
+                "Reader not opened — call `await AsyncGeoTIFFReader.open(...)`",
+            )
+        return self._geotiff
 
-    # metadata — sync after .open() has been awaited
     @property
-    def crs(self) -> pyproj.CRS:
-        """Raises RuntimeError if .open() hasn't been awaited yet."""
-        if self._header is None:
-            raise RuntimeError("Reader not opened — call AsyncGeoTIFFReader.open(...)")
-        return self._header.crs
-    # ... (the rest of _ReaderMeta surface)
+    def _overview(self):
+        return self._require_open().overviews[self._overview_level]
 
-    # reads — same shape as the sync readers, but coroutines
+    @property
+    def crs(self) -> "pyproj.CRS":
+        return self._require_open().crs
+
+    @property
+    def transform(self) -> "Affine":
+        return self._overview.transform
+
+    @property
+    def shape(self) -> tuple[int, int, int]:
+        ovr = self._overview
+        # async-geotiff doesn't expose band count separately on the overview;
+        # take it from the primary IFD samples-per-pixel.
+        count = self._require_open().ifd.samples_per_pixel
+        return (count, ovr.height, ovr.width)
+
+    @property
+    def dtype(self) -> np.dtype:
+        # one cheap probe — async-geotiff exposes this on its IFD.
+        return np.dtype(self._require_open().ifd.dtype)
+
+    @property
+    def fill_value_default(self):
+        return self._require_open().nodata
+
+    # ... bounds / res / footprint inherited from AsyncGeoData defaults
+
+    # --------------------------------------------------------------------- reads
     async def read_window(self, window: Window) -> GeoTensor:
-        tiles = self._tiles_for_window(window)
-        # parallel fetch with concurrency cap
-        sem = asyncio.Semaphore(self._max_concurrent_tiles)
+        arr: RasterArray = await self._overview.read(
+            window=_to_agt_window(window),
+        )
+        return _rasterarray_to_geotensor(arr, fill_value=self.fill_value_default)
 
-        async def _fetch(t):
-            async with sem:
-                return await self._store.get_range_async(
-                    self.path_or_url, t.offset, t.length,
-                )
+    async def read_bounds(
+        self,
+        bounds: tuple[float, float, float, float],
+        *,
+        target_resolution: tuple[float, float] | None = None,
+        target_crs: "pyproj.CRS | str | None" = None,
+    ) -> GeoTensor:
+        if target_crs is not None or target_resolution is not None:
+            raise NotImplementedError(
+                "AsyncGeoTIFFReader.read_bounds does not warp or resample. "
+                "Read in the native CRS, then call georeader.read.read_reproject_like "
+                "(or wrap with RasterioReader for WarpedVRT-based on-the-fly warping). "
+                "See plans/georeader/reader_async_geotiff.md open question §1.",
+            )
+        from georeader import window_utils
+        win = window_utils.window_from_bounds(self, bounds)
+        return await self.read_window(win)
 
-        bytes_list = await asyncio.gather(*[_fetch(t) for t in tiles])
-        out = self._decompress_and_assemble(bytes_list, tiles, window)  # ndarray
-        return GeoTensor(
-            values=out,
-            transform=self._header.window_transform(window),
-            crs=self._header.crs,
-            fill_value_default=self._header.nodata,
+    async def read_geoslice(self, slice_) -> GeoTensor:
+        return await self.read_bounds(slice_.bounds)
+
+    async def load(self) -> GeoTensor:
+        ovr = self._overview
+        return await self.read_window(
+            Window(col_off=0, row_off=0, width=ovr.width, height=ovr.height),
         )
 
-    async def read_bounds(self, bounds, *, target_resolution=None, target_crs=None) -> GeoTensor: ...
-    async def read_geoslice(self, slice_: GeoSlice) -> GeoTensor: ...
-    async def load(self) -> GeoTensor:
-        """Fetches every tile in parallel. Use sparingly."""
-        ...
+    # -------------------------------------------------------------- lifecycle
+    async def aclose(self) -> None:
+        # obstore pools its own connections; async-geotiff has no
+        # explicit resource to release. No-op.
+        pass
 
-    async def aclose(self) -> None: ...               # no-op; obstore is pooled
     async def __aenter__(self) -> "AsyncGeoTIFFReader":
-        if self._header is None:
-            await self._fetch_header()
+        if self._geotiff is None:
+            self._geotiff = await GeoTIFF.open(self.path_or_url, store=self._store)
         return self
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> bool | None: ...
+
+    async def __aexit__(self, *exc) -> None:
+        await self.aclose()
+
+
+# ---- adapters ------------------------------------------------------------
+
+def _to_agt_window(w: Window) -> AGTWindow:
+    return AGTWindow(
+        col_off=int(w.col_off),
+        row_off=int(w.row_off),
+        width=int(w.width),
+        height=int(w.height),
+    )
+
+
+def _rasterarray_to_geotensor(
+    arr: RasterArray,
+    *,
+    fill_value=None,
+) -> GeoTensor:
+    """Map async-geotiff's RasterArray onto our GeoTensor.
+
+    RasterArray.data is (bands, height, width). If a mask is present,
+    apply it: substitute fill_value where mask is False.
+    """
+    data = arr.data
+    if arr.mask is not None and fill_value is not None:
+        # mask=True means valid; broadcast across the band axis.
+        invalid = np.broadcast_to(~arr.mask, data.shape)
+        data = np.where(invalid, fill_value, data)
+    return GeoTensor(
+        values=data,
+        transform=arr.transform,
+        crs=arr._geotiff.crs,
+        fill_value_default=fill_value,
+    )
 ```
 
----
-
-## Why an async classmethod for open
-
-`AsyncGeoTIFFReader.__init__` is sync and cheap — it stores the URL, the store, and the indexes, but does **not** fetch any bytes. The IFD fetch happens in `await AsyncGeoTIFFReader.open(...)` because:
-
-- IFD fetch requires an `await store.get_range_async(...)` call.
-- `__init__` can't be async in Python — there's no `__ainit__`.
-- Workarounds (event-loop hacks, lazy initialisation on first read) are worse than the explicit two-step pattern.
-
-The accepted Python idiom for "async constructor" is `cls.open(...)` as a classmethod; this is what `aiohttp.ClientSession`, `asyncpg.connect`, etc. all use. Documented prominently so users don't trip on the "I instantiated it but `.crs` raises" failure mode.
+That's the whole reader. Roughly 80 LOC counting blank lines and helpers. The interesting work is two adapters; the rest is property passthrough.
 
 ---
 
-## Concurrency control — `max_concurrent_tiles`
+## What we are *not* doing (anti-goals)
 
-Without a cap, `read_window(window)` could issue dozens to hundreds of parallel range requests, exhausting connection pools or rate-limiting on the cloud side. The semaphore caps fan-out per call:
+These are explicitly out of scope — pulling them in would either reinvent async-geotiff functionality or rebuild the GDAL warping layer in a context where rasterio already exists.
 
-```python
-sem = asyncio.Semaphore(self._max_concurrent_tiles)
-
-async def _fetch(t):
-    async with sem:
-        return await self._store.get_range_async(self.path_or_url, t.offset, t.length)
-
-bytes_list = await asyncio.gather(*[_fetch(t) for t in tiles])
-```
-
-Default `max_concurrent_tiles=32` is a sensible starting point — enough parallelism for the common case (`read_window` of a 1024×1024 area pulling ~25 tiles), conservative enough that fan-out across N concurrent `read_window` calls doesn't OOM.
-
-For tile-server workloads where 1000 client requests fan out to 1000 reader calls each pulling 25 tiles, the *outer* concurrency is also bounded by `aiohttp` / FastAPI's request-handler pool — the inner reader semaphore prevents a single request from monopolising the connection pool.
+- **Reprojection / warping in `read_bounds(target_crs=...)`.** async-geotiff has the same non-goal. Users wanting cross-CRS reads either (a) read native + post-process via `georeader.read.read_reproject_like`, or (b) use `RasterioReader` (which has WarpedVRT integration). The async-reader path raises on `target_crs!=None` for v1; revisit per [open question §1](#1-async-warp-revisit-later).
+- **Resampling in `read_bounds(target_resolution=...)`.** Same reasoning. async-geotiff's overview ladder is what we expose; downsampling between overview levels happens in a sync post-step via existing `georeader` functions.
+- **Auto overview selection.** Caller picks `overview_level` (default 0 = full-res). `geotoolz` can layer "pick the smallest overview ≥ requested resolution" on top later — this is a one-screen helper, not reader plumbing.
+- **A custom byte-store Protocol.** See [`types/bytestore.md`](../types/bytestore.md).
+- **A semaphore for `max_concurrent_tiles`.** async-tiff's Rust core handles intra-call coalescing; obstore's connection pool bounds outer concurrency. Adding our own semaphore competes with both. If a benchmark shows us getting hammered, revisit.
+- **Decompression dispatch.** async-tiff already covers Deflate, JPEG, JPEG2000, LERC, LERC_DEFLATE, LERC_ZSTD, LZMA, LZW, WebP, ZSTD. If a sensor we care about uses something exotic, that's a per-issue workaround, not a reason to fork.
 
 ---
 
-## Reuse of `LazyCOGReader` infrastructure
+## Module layout
 
-This issue is small because most of the work is shared:
+| Component | Source |
+|---|---|
+| `obspec.AsyncStore` Protocol | external — [`developmentseed/obspec`](https://github.com/developmentseed/obspec) |
+| `obstore.S3Store` / `GCSStore` / `AzureStore` / ... | external — [`developmentseed/obstore`](https://github.com/developmentseed/obstore) |
+| `GeoTIFF.open`, `Overview.read`, `RasterArray` | external — [`developmentseed/async-geotiff`](https://github.com/developmentseed/async-geotiff) |
+| `open_store(url)` factory | `geotoolz/io.py` (~30 LOC) |
+| `AsyncGeoData` Protocol | `georeader/abstract_reader.py` (added in [Issue 1](reader_protocol.md), ~30 LOC) |
+| `AsyncGeoTIFFReader` adapter | `georeader/async_geotiff_reader.py` (~80 LOC) |
+| `_to_agt_window` / `_rasterarray_to_geotensor` | colocated with the reader (small private helpers) |
 
-| Component | Source | Used for |
-|---|---|---|
-| `ByteStore` Protocol + adapters | [`types/bytestore.md`](../types/bytestore.md) | byte fetching |
-| `open_store(url)` factory | [`types/bytestore.md`](../types/bytestore.md) | auto-pick transport |
-| COG header parser | shared `_cog_helpers.py` (Issue 2) | IFD walk, `COGHeader` dataclass |
-| `_tiles_for_window` math | shared `_cog_helpers.py` (Issue 2) | window → tile-spec list |
-| Decompression dispatch | shared `_cog_helpers.py` (Issue 2) | per-tile decode |
-
-The only original code in this issue is:
-
-- `AsyncReader` Protocol declaration.
-- `AsyncGeoTIFFReader.__init__` / `open` / async read methods.
-- `asyncio.Semaphore` concurrency cap.
-- Async context-manager.
-
-Roughly ~150–200 LOC of new code on top of Issue 2's helpers.
+The original code in this issue is the ~80-LOC adapter and its two helpers. Everything else is dependencies.
 
 ---
 
 ## Acceptance criteria
 
-- `AsyncGeoTIFFReader` instances satisfy `AsyncReader` per static type-check.
-- `await AsyncGeoTIFFReader.open("s3://...")` returns a fully initialised reader; metadata properties work after open.
-- `await reader.read_window(window)` returns a `GeoTensor` matching `LazyCOGReader.read_window(window)` (same file, same window).
+- `AsyncGeoTIFFReader` instances satisfy `AsyncGeoData` per static type-check.
+- `await AsyncGeoTIFFReader.open("s3://...")` returns a fully initialised reader; metadata properties work after open and raise `RuntimeError` before.
+- `await reader.read_window(window)` returns a `GeoTensor` numerically matching `RasterioReader.read_window(window)` for the same file and window (within rounding).
 - Concurrent fan-out: `await asyncio.gather(*[reader.read_window(w) for w in windows])` for 100 windows from one reader instance completes without errors and faster than the sync equivalent.
-- `max_concurrent_tiles` semaphore is honoured — verifiable by mocking `store.get_range_async` to count concurrent invocations.
+- `read_bounds(target_crs=...)` / `read_bounds(target_resolution=...)` raise `NotImplementedError` with a message pointing at `read_reproject_like` or `RasterioReader`.
 - `async with await AsyncGeoTIFFReader.open(...)` context-manager works.
-- Reusing `ByteStore` from [`types/bytestore.md`](../types/bytestore.md) — no duplication of transport code.
+- Reader passes a user-supplied `obspec.AsyncStore` straight through to `async_geotiff.GeoTIFF.open(...)` — no wrapping, no Protocol of our own.
 
 ---
 
@@ -332,9 +389,28 @@ Roughly ~150–200 LOC of new code on top of Issue 2's helpers.
 
 In addition to the [parent design's open questions](README.md#open-questions):
 
-1. **`AsyncReader` Protocol location.** Currently planned for this issue, but could move to Issue 1 if there's any chance of an *async-conformant* `RasterioReader` shim landing later (e.g., `RasterioReader.read_window_async` that runs the sync read in a threadpool). See [parent open question](README.md#open-questions).
-2. **Sync `__init__` + async `open(...)` vs always-async open.** Some libraries (e.g., `httpx.AsyncClient`) allow a sync `__init__` that defers expensive setup. The current proposal does this — `__init__` is cheap, `open(...)` does the IFD fetch. Alternative: always require `await open(...)` and make `__init__` private. The user-facing API is roughly the same; the internal state-machine is simpler with the always-async-open path but the existing pattern is more familiar from other libraries.
-3. **`run_in_executor` shim for sync ByteStore adapters.** If `FsspecByteStore` is given a non-async-capable backend, its `get_range_async` can fall back to `loop.run_in_executor(None, ...)` to wrap the sync read. This is part of `FsspecByteStore`'s adapter spec in [`types/bytestore.md`](../types/bytestore.md); just calling out that `AsyncGeoTIFFReader` works against any `ByteStore` regardless of whether the backend is natively async.
-4. **Trio / anyio support.** The proposal uses `asyncio.gather` and `asyncio.Semaphore` directly. Wrapping in `anyio` for trio compatibility is straightforward but adds a dependency. Recommendation: stay asyncio-only for v1; add anyio later if there's demand.
+### 1. Async warp — revisit later
 
-5. **Per-tile `get_range_async` vs store-level `get_ranges_async`.** The current proposal uses per-tile `get_range_async` calls inside `asyncio.gather(...)` so the `max_concurrent_tiles` semaphore can wrap each individual fetch. The alternative is a single `await self._store.get_ranges_async(url, [(o, l), ...])` call that lets the store (e.g., `obstore`) do its own coalescing of close-by ranges and parallelism control. **Tentative pick: per-tile + semaphore** for v1 (explicit, debuggable, and lets us cap concurrency precisely). Switch to store-level if benchmarking shows obstore's coalescing meaningfully outperforms manual gather on real workloads.
+[`async-geotiff` explicitly says no warp / resample / overview-pick.](https://github.com/developmentseed/async-geotiff#anti-features) Their guidance is "load with async-geotiff, then warp via `rasterio.MemoryFile`". For v1 we raise on `target_crs!=None`. If a real customer materialises (e.g. an async tile server that needs Web-Mercator output from a UTM source), the options are:
+
+- (a) post-process inside `read_bounds`: fetch native, then warp via `rasterio.warp` in a thread (`loop.run_in_executor`). Adds GDAL back into the async dependency cone, which partly defeats the point.
+- (b) document the two-step pattern (`reader.read_bounds(...)` → `georeader.read.read_reproject_like(...)`) and let the user own the post-step.
+- (c) build a `WarpedAsyncGeoTIFFReader` wrapper that composes (a). Keeps the surface clean but ships the GDAL dep regardless.
+
+Tentative pick: stay at "raise" for v1, document (b) in the error message, revisit when a customer asks. **Tagged for later discussion** (per the 2026-05-09 review).
+
+### 2. Overview selection
+
+`overview_level: int = 0` is a constructor arg today (full-res by default). Adding a `request_resolution` shortcut that picks the smallest overview ≥ that resolution is a 10-line helper; could live on the reader or as a free function in `geotoolz`. Not blocking.
+
+### 3. Async iteration over many readers (one per file)
+
+Tile-server workloads often have one COG per scene and N concurrent client requests. The natural shape is `await asyncio.gather(*[AsyncGeoTIFFReader.open(p) for p in paths])` for setup, then per-request reads against a cached pool of opened readers. Caching strategy (LRU? per-process? shared across workers?) is **not** in this issue — it's an application-level concern. Just calling out so we don't accidentally bake in a single-reader-per-call assumption.
+
+### 4. `path_or_url` typing on the Protocol
+
+`AsyncGeoData` (defined in Issue 1) inherits from `GeoData`, which doesn't currently mandate `path_or_url`. We only need it on the concrete reader for diagnostics / repr. Don't lift it onto the Protocol.
+
+### 5. Pinned vs floating `async-geotiff` version
+
+`async-geotiff` is at v0.1+ and pre-1.0; the API may shift. Pin a minor range in `pyproject.toml` (`async-geotiff>=0.1,<0.2`) and bump deliberately. Document the bump policy in `geotoolz`'s release notes when we cut v0.1.

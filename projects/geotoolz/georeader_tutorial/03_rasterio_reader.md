@@ -357,7 +357,7 @@ End-to-end, the production pattern looks like this:
 4. GDAL picks credentials up from the process env — **no per-call credential threading needed**.
 5. **Fallback** when env-var auth misbehaves: `pathasroothttps(path)` builds an HTTPS URL with the SAS token embedded as a query string and `RasterioReader` reads that directly.
 
-The [Reader reconciliation design](../plans/georeader/README.md) is about widening this seam: [`LazyCOGReader`](../plans/georeader/reader_lazy_cog.md) and [`AsyncGeoTIFFReader`](../plans/georeader/reader_async_geotiff.md) plug in here as alternative implementations of the same interface, swapping GDAL VSI for direct HTTP-range / obstore reads. The credential pattern stays env-var-first for the GDAL-VSI default; the new paths each have their own credential locus — see [`reader_protocol.md` §"Credential handling"](../plans/georeader/reader_protocol.md). For a proposal that would reduce the env-var-soup ergonomics with a typed `Credential` Protocol, see [`plans/types/credentials.md`](../plans/types/credentials.md).
+The [Reader reconciliation design](../plans/georeader/README.md) is about widening this seam: [`AsyncGeoTIFFReader`](../plans/georeader/reader_async_geotiff.md) plugs in here as an alternative implementation of the same interface, swapping GDAL VSI for direct HTTP-range / obstore reads. The credential pattern stays env-var-first for the GDAL-VSI default; the new path has its own credential locus — see [`reader_protocol.md` §"Credential handling"](../plans/georeader/reader_protocol.md). For a proposal that would reduce the env-var-soup ergonomics with a typed `Credential` Protocol, see [`plans/types/credentials.md`](../plans/types/credentials.md).
 
 ---
 

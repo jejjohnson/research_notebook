@@ -24,7 +24,7 @@ keywords: tutorial, georeader, protocol
 
 Anything with `transform`, `crs`, `shape` is **`GeoDataBase`**. Anything that *additionally* knows how to materialise its data (`values`, `load()`, `read_from_window()`) is **`GeoData`** (alias `AbstractGeoData`). Most of `georeader.read`, `georeader.window_utils`, `georeader.mosaic` etc. type-annotate against these protocols, so the same function body works on either substrate.
 
-This is the seam that the [Reader reconciliation design](../plans/georeader/README.md) wants to widen — make `RasterioReader`, `LazyCOGReader`, and `AsyncGeoTIFFReader` all honour the same protocol, then user code does `reader_class=...` strategy injection.
+This is the seam that the [Reader reconciliation design](../plans/georeader/README.md) wants to widen — make `RasterioReader` and `AsyncGeoTIFFReader` (and any future sensor-specific or raw-byte reader) all honour the same protocol, then user code does `reader_class=...` strategy injection.
 
 ---
 

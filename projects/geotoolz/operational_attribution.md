@@ -192,7 +192,7 @@ The most concrete user-visible payoff. Today's per-project ingest replaced with 
 | `WRF` / `ERA5` (NetCDF / GRIB met) | `xarray.open_dataset(...)` per project | `xrtoolz` reader emitting `MetField` as a `coordax.Dataset` (per [`plumax/00_prerequisites.md`](../plume_simulation/notes/roadmap/00_prerequisites.md#metfield-schema)) |
 | `inventory` (EDGAR / GFEI / EPA) | Per-project, often a single CSV import | Vector reader emitting a `GeoDataFrame`-typed prior on `q_a` |
 
-Cross-cutting: `Credential` and `ByteStore` Protocols (per [`plans/types/`](plans/types/)) handle auth and transport for all of them.
+Cross-cutting: `Credential` (typed Protocol per [`plans/types/credentials.md`](plans/types/credentials.md)) handles auth; cloud byte transport for the async path is delegated to upstream [`obspec`](https://github.com/developmentseed/obspec) — not a Protocol of our own — see [`plans/types/bytestore.md`](plans/types/bytestore.md).
 
 ### 4.4 Discovery — `GeoCatalog`
 
@@ -416,7 +416,7 @@ async def attribute(req: AttributionRequest) -> AttributionResponse:
         instruments=req.instruments,
     )
 
-    # 2. Resolve inputs (async via the AsyncReader Protocol)
+    # 2. Resolve inputs (async via the AsyncGeoData Protocol)
     inputs = await resolve_inputs_async(overpasses, req)
 
     # 3. Same graph, called as the request handler
@@ -442,7 +442,7 @@ async def attribute(req: AttributionRequest) -> AttributionResponse:
 **What this validates:**
 
 - The "marquee pitch" — *the same operator graph runs in research and production* — actually delivers. The `attribution_graph` object in the FastAPI handler is the *same Python object* you'd import in a notebook.
-- Async readers (`AsyncReader` Protocol from [`plans/georeader/`](plans/georeader/)) integrate cleanly with FastAPI's async stack.
+- Async readers (`AsyncGeoData` Protocol from [`plans/georeader/`](plans/georeader/)) integrate cleanly with FastAPI's async stack.
 - Response payload includes complete provenance — every overpass URL, met source, prior version, operator graph hash — making each attribution audit-able.
 
 **Estimated effort.** ~1 week after Phase 2. Most of the work is the FastAPI scaffolding and async-reader plumbing; the graph and inference are unchanged.
@@ -580,7 +580,7 @@ The full risks tracker for the underlying libraries lives in their own design do
 ### 10.5 Open questions to settle before v1
 
 - **Where does `ApplyAK` live — `geotoolz` or `plumax`?** Current proposal: in `geotoolz` (it's a generic operator over averaging-kernel-bearing observations), with the per-instrument AK schema registry in `plumax`. Could go the other way.
-- **Async at the graph boundary or per-Operator?** Phase 3 uses async I/O via `AsyncReader`; the graph itself is sync. Open per [`geotoolz.md` §11.2](plans/geotoolz/geotoolz.md#112-implementation-gotchas-test-these-in-ci). Decision affects FastAPI throughput.
+- **Async at the graph boundary or per-Operator?** Phase 3 uses async I/O via `AsyncGeoData`; the graph itself is sync. Open per [`geotoolz.md` §11.2](plans/geotoolz/geotoolz.md#112-implementation-gotchas-test-these-in-ci). Decision affects FastAPI throughput.
 - **`coordax` for `MetField` from day one?** The plumax roadmap leans yes ([prerequisites open questions](../plume_simulation/notes/roadmap/00_prerequisites.md#open-questions)). If `coordax` proves unstable per [geotoolz.md §11.1](plans/geotoolz/geotoolz.md#111-strategic-risks), fall back to plain xarray.
 - **Global vs basin catalogs.** Phase 1 fits ≤10⁵ overpasses, which covers a basin × multi-year window. A *global* catalog (every TROPOMI / EMIT / GHGSat overpass, multi-year) is Phase 2 territory. Decide per-deployment.
 
@@ -604,7 +604,7 @@ The full risks tracker for the underlying libraries lives in their own design do
 - [Geocatalog design](plans/geodatabase/) — Phase 1 GeoPandas + Phase 2 DuckDB.
 - [Georeader reconciliation](plans/georeader/) — `Reader` Protocol, async, sensor-specific readers.
 - [Per-sensor reader designs](plans/readers/) — geostationary + polar-orbiting.
-- [Cross-cutting types](plans/types/) — `GeoSlice`, `Credential`, `ByteStore`.
+- [Cross-cutting types](plans/types/) — `GeoSlice`, `Credential`; `bytestore.md` is a passthrough note for upstream `obspec`.
 
 ### External
 

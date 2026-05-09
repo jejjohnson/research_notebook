@@ -1,7 +1,7 @@
 ---
 title: Reader Protocol
 subject: georeader design
-subtitle: "`_ReaderMeta` / `SyncReader` Protocols + `RasterioReader` refactor"
+subtitle: "Add `AsyncGeoData` Protocol; widen `RasterioReader` bytes paths"
 short_title: Protocol
 authors:
   - name: J. Emmanuel Johnson
@@ -16,22 +16,45 @@ keywords: design, georeader, protocol, refactor
 ---
 
 > **Parent:** [README.md](README.md)
-> **Scope:** lock the Protocol surface every reader honours; refactor the existing `RasterioReader` and `GeoData` / `GeoDataBase` to conform.
-> **Status:** ready to implement once the open questions in the [parent](README.md#open-questions) are decided.
+> **Status:** **revised 2026-05-09** — collapsed from a "build a parallel `_ReaderMeta` / `SyncReader` / `AsyncReader` taxonomy" design into "keep today's `GeoData` / `GeoDataBase`; add only `AsyncGeoData`". See §"Why the rewrite" below.
+> **Scope:** add a single new Protocol (`AsyncGeoData`) so [`AsyncGeoTIFFReader`](reader_async_geotiff.md) has a typed seam to slot into. Optionally widen [`RasterioReader`](reader_rasterio.md) with `opener=` / `fs=` / `rio_open_kwargs=` knobs to expose its three bytes paths. Don't redefine the metadata surface; today's `GeoDataBase` and `GeoData` already do that.
 
 ---
 
 ## Why this issue exists
 
-The two new readers (`LazyCOGReader`, `AsyncGeoTIFFReader`) need a shared interface to slot into. The existing `RasterioReader` and the `GeoData` / `GeoDataBase` Protocols in `abstract_reader.py` are close to that shape but not aligned. This issue lands the Protocol surface and brings the existing reader into compliance — without breaking any current caller.
+`AsyncGeoTIFFReader` (the new async COG reader; see [Issue 2](reader_async_geotiff.md)) needs a typed Protocol to satisfy. Today's `GeoData` / `GeoDataBase` Protocols cover the *sync* surface — properties + sync `load(boundless=True)` + sync `read_from_window(window, boundless)`. We need an async mirror for the new reader.
 
-Done before Issues 2 and 3 because they implement against the Protocols this issue defines.
+That's the entire ambition of this issue: add `AsyncGeoData`. The earlier draft also proposed adding `_ReaderMeta` and `SyncReader` Protocols *alongside* `GeoData` / `GeoDataBase` and renaming the surface — that scope has been removed (see §"Why the rewrite").
+
+A second, smaller scope item is widening `RasterioReader`'s constructor with `opener=` / `fs=` / `rio_open_kwargs=` knobs so users can route bytes through GDAL VSI / fsspec / a custom callback explicitly. This is genuinely additive — no method renames, no Protocol churn — and lets `RasterioReader` remain the canonical sync reader without forcing users to monkey-patch `rasterio.Env` to reach niche backends.
+
+---
+
+## Why the rewrite
+
+The earlier draft of this doc proposed a parallel taxonomy:
+
+- `_ReaderMeta` Protocol (10 properties + `path_or_url` + `indexes`).
+- `SyncReader` Protocol (extends `_ReaderMeta` + sync read methods).
+- `AsyncReader` Protocol (extends `_ReaderMeta` + async read methods, optionally lifted to Issue 1).
+- "Keep `GeoData` / `GeoDataBase` as back-compat aliases."
+
+On review (2026-05-09), three problems:
+
+1. **Two names for every concept.** Every property would have a `GeoDataBase`-shaped name and a `_ReaderMeta`-shaped name. We'd explain back-compat in every doc forever.
+2. **Most of `_ReaderMeta` is already in `GeoData` / `GeoDataBase`.** `crs`, `transform`, `shape`, `width`, `height` are in `GeoDataBase`; `bounds`, `res`, `dtype`, `fill_value_default` are in `GeoData` (with default implementations on top of the required three). The only genuinely new fields proposed (`path_or_url`, `indexes`) are *reader-construction details* that leak file-backed-reader concerns onto an abstract surface — `GeoTensor` shouldn't have to fake them.
+3. **Async is the only real gap.** Today's Protocols have no async surface. That's the actual problem.
+
+So: drop `_ReaderMeta` and `SyncReader` from the plan. Add `AsyncGeoData` (mirror of `GeoData` with `async` read methods). Document the `opener=` / `fs=` constructor widening for `RasterioReader` separately as an additive change.
+
+If we want a clean rename later (`GeoData` → `SyncReader`, `GeoDataBase` → `ReaderMeta`), that's a one-line deprecation alias upstream in `spaceml-org/georeader` proper — *not* a parallel layer in our plan. Out of scope for this issue.
 
 ---
 
 ## Primer for newcomers
 
-> **ELI5.** A Python Protocol is like a **job description**: if you can do the listed tasks, you're qualified — regardless of which company you trained at. Three different reader classes can fill the same "reader" job because they all do the listed tasks (have the right methods), even though they're built completely differently inside.
+> **ELI5.** A Python Protocol is like a **job description**: if you can do the listed tasks, you're qualified — regardless of which company you trained at. Today, `GeoData` is the sync-reader job description. We're adding `AsyncGeoData` as the async-reader job description. `RasterioReader` keeps doing the sync job; `AsyncGeoTIFFReader` shows up to do the async one.
 
 ### Python Protocols (the typing kind)
 
@@ -39,59 +62,60 @@ Done before Issues 2 and 3 because they implement against the Protocols this iss
 
 **How it works.** Define `class Foo(Protocol): def bar(self) -> int: ...`. Any class with a `bar() -> int` method is now a `Foo`, no `class MyClass(Foo)` declaration required. Add `@runtime_checkable` to make `isinstance(x, Foo)` work at runtime too. The static type-checker (`mypy` / `ty`) verifies conformance at the call site.
 
-**What this means for us.** The three reader classes — `RasterioReader`, `LazyCOGReader`, `AsyncGeoTIFFReader` — don't share a base class. They each satisfy `_ReaderMeta` (and `SyncReader` or `AsyncReader`) structurally. User code typed `def f(reader: SyncReader)` accepts any of them with no isinstance checks. This is the seam that makes the readers swappable — same interface, three completely independent implementations.
+**What this means for us.** `RasterioReader` (sync, GDAL-backed) satisfies `GeoData` today. `AsyncGeoTIFFReader` (async, GDAL-free) satisfies `AsyncGeoData` after this issue. User code typed `def f(reader: AsyncGeoData)` accepts any conforming async reader — no isinstance checks, no shared base class. This is the seam that makes the two readers swappable per workload.
 
 ```{mermaid}
 classDiagram
-    class _ReaderMeta {
+    class GeoDataBase {
         <<Protocol>>
         crs
         transform
-        bounds
         shape
-        dtype
-        nodata
+        width
+        height
     }
-    class SyncReader {
+    class GeoData {
         <<Protocol>>
-        read_window()
-        read_bounds()
-        load()
+        load(boundless)
+        read_from_window(window, boundless)
+        values
+        bounds, res, dtype
+        fill_value_default
     }
-    class AsyncReader {
+    class AsyncGeoData {
         <<Protocol>>
+        async load()
         async read_window()
         async read_bounds()
-        async load()
     }
     class RasterioReader
-    class LazyCOGReader
+    class GeoTensor
     class AsyncGeoTIFFReader
 
-    _ReaderMeta <|-- SyncReader
-    _ReaderMeta <|-- AsyncReader
-    SyncReader <.. RasterioReader : satisfies
-    SyncReader <.. LazyCOGReader : satisfies
-    AsyncReader <.. AsyncGeoTIFFReader : satisfies
+    GeoDataBase <|-- GeoData
+    GeoDataBase <|-- AsyncGeoData
+    GeoData <.. RasterioReader : satisfies
+    GeoData <.. GeoTensor : satisfies
+    AsyncGeoData <.. AsyncGeoTIFFReader : satisfies
 ```
 
 ### The metadata-vs-read split
 
-**What it is.** Every reader has cheap metadata (CRS, transform, shape, dtype) and expensive bytes (the actual pixel data). The Protocol design splits these into two layers: `_ReaderMeta` (metadata only) and `SyncReader` (`_ReaderMeta` + read methods).
+**What it is.** Every reader has cheap metadata (CRS, transform, shape, dtype) and expensive bytes (the actual pixel data). The Protocol design splits these into two layers: `GeoDataBase` (metadata only) and `GeoData` / `AsyncGeoData` (`GeoDataBase` + read methods).
 
-**How it works.** A reader's `__init__` reads only the file header — enough to populate `crs` / `transform` / `shape` / etc. That's the `_ReaderMeta` surface. Calling `read_window(window)` fetches actual pixel bytes; that's the `SyncReader` surface on top. The split exists because many functions (window math, bounds queries, intersection checks) only need metadata and shouldn't pay I/O cost.
+**How it works.** A reader's `__init__` (or `await open(...)` for async) reads only the file header — enough to populate `crs` / `transform` / `shape` / etc. That's the `GeoDataBase` surface. Calling `read_from_window(window)` or `await read_window(window)` fetches actual pixel bytes; that's the `GeoData` / `AsyncGeoData` layer on top. The split exists because many functions (window math, bounds queries, intersection checks) only need metadata and shouldn't pay I/O cost.
 
-**What this means for us.** `FakeGeoData` (an existing class in `abstract_reader.py`) is a `_ReaderMeta`-only object — it carries metadata for window calculations without owning data. After this refactor, that pattern is formalised as the Protocol layer. Functions that take `_ReaderMeta` are guaranteed I/O-free; functions that take `SyncReader` may issue reads.
+**What this means for us.** `FakeGeoData` (an existing dataclass in `abstract_reader.py`) is a `GeoDataBase`-only object — it carries metadata for window calculations without owning data. Functions typed `data: GeoDataBase` are guaranteed I/O-free; functions typed `data: GeoData` may issue sync reads; functions typed `data: AsyncGeoData` may issue async reads.
 
 ### The three bytes paths in `RasterioReader`
 
-**What it is.** `RasterioReader` wraps `rasterio.open(...)`, which delegates to GDAL. Underneath GDAL is some library that fetches the actual bytes. The refactor exposes three options.
+**What it is.** `RasterioReader` wraps `rasterio.open(...)`, which delegates to GDAL. Underneath GDAL is some library that fetches the actual bytes. The optional widening exposes three options.
 
 **How it works.** Three constructor knobs:
 
 - **`opener=None`, `fs=None`** (default): GDAL VSI uses libcurl in C. Fastest sync option, no Python in the byte-fetching loop. Works for `s3://`, `gs://`, `az://`, `https://`.
 - **`fs=fsspec_filesystem`**: GDAL calls back into a Python file-like object via fsspec for each byte range. Slower (Python ↔ C trip per range) but covers backends GDAL doesn't speak natively (FTP, SFTP, GitHub).
-- **`opener=callable`**: same shape as fsspec but with a user-supplied callback. Lets advanced users wire in obstore or custom HTTP clients.
+- **`opener=callable`**: same shape as fsspec but with a user-supplied callback. Lets advanced users wire in custom HTTP clients.
 
 A small helper, `_resolve_open_kwargs`, is the only Python code that knows which path is active.
 
@@ -101,106 +125,121 @@ flowchart TD
     Start --> Q{opener=? fs=?}
     Q -->|both None default| GDAL[GDAL VSI<br/>libcurl in C]
     Q -->|fs=fsspec_fs| Fsspec[Python file-like<br/>via fsspec]
-    Q -->|opener=callable| Custom[Python adapter<br/>e.g. obstore-aware]
+    Q -->|opener=callable| Custom[Python adapter]
     GDAL --> Cloud[(S3 / GCS / Azure / HTTP)]
     Fsspec --> Cloud
     Custom --> Cloud
 ```
 
-**What this means for us.** Most users land on the default and never think about it. Users who need a niche backend (custom auth, MinIO endpoint, GitHub-hosted fixtures) flip `fs=` and keep the rest of their pipeline unchanged. Users who want maximum cloud throughput skip `RasterioReader` entirely and use [`LazyCOGReader`](reader_lazy_cog.md) or [`AsyncGeoTIFFReader`](reader_async_geotiff.md).
+**What this means for us.** Most users land on the default and never think about it. Users who need a niche backend (custom auth, MinIO endpoint, GitHub-hosted fixtures) flip `fs=` and keep the rest of their pipeline unchanged. Users who want maximum cloud throughput skip `RasterioReader` entirely and use [`AsyncGeoTIFFReader`](reader_async_geotiff.md), which routes through `obstore` (no GDAL).
 
 ---
 
 ## Deliverables
 
-1. **`_ReaderMeta` Protocol** — 10-property metadata surface, in `georeader/abstract_reader.py`.
-2. **`SyncReader` Protocol** — extends `_ReaderMeta` with sync read methods.
-3. **`RasterioReader` refactor** — implements `SyncReader`; adds `opener=` / `fs=` / `rio_open_kwargs=` constructor knobs and the bytes-path triage.
-4. **`GeoData` / `GeoDataBase` alignment** — current Protocols stay (back-compat); they're redefined as `SyncReader` / `_ReaderMeta` aliases or supersets.
-5. **`GeoTensor` Protocol conformance** — `GeoTensor` already morally satisfies `_ReaderMeta`; declare it formally so the type-checker agrees.
-6. **Tutorial updates** — [Ch. 2](../../georeader_tutorial/02_abstract_reader.md) and [Ch. 3](../../georeader_tutorial/03_rasterio_reader.md) reflect the new surface.
+### Required
 
-`AsyncReader` is **deliberately not** in this issue — it lives in [Issue 3](reader_async_geotiff.md). Defining it here would force scope creep into a refactor that's otherwise sync-only.
+1. **`AsyncGeoData` Protocol** — added to `georeader/abstract_reader.py`. Mirrors `GeoData`'s sync surface with `async` read methods. ~30 LOC.
+2. **`GeoTensor` Protocol conformance check** — `GeoTensor` already satisfies `GeoData` morally; add a static-type-check confirming this so the type-checker agrees. (No code change to `GeoTensor` expected.)
+3. **Tutorial update** — [Ch. 2](../../georeader_tutorial/02_abstract_reader.md) gains a small section describing `AsyncGeoData` alongside the existing `GeoData` / `GeoDataBase` writeup.
+
+### Optional (additive — bundle if convenient, otherwise defer)
+
+4. **`RasterioReader` constructor widening** — add `opener=`, `fs=`, `rio_open_kwargs=` keyword-only knobs. No breaking changes; defaults reproduce today's behaviour. See §"`RasterioReader` widening" below.
+5. **Tutorial update for the bytes-path triage** — [Ch. 3](../../georeader_tutorial/03_rasterio_reader.md) gains a section on the three bytes paths if (4) lands.
+
+What this issue does **not** ship:
+
+- A `_ReaderMeta` Protocol. Today's `GeoDataBase` already plays this role.
+- A `SyncReader` Protocol. Today's `GeoData` already plays this role.
+- A rename of `GeoData` / `GeoDataBase`. If we want one, do it upstream in `spaceml-org/georeader` proper as a separate PR with deprecation aliases — not as a parallel layer in our plan.
+- New `path_or_url` / `indexes` fields on the abstract surface. Those are reader-construction details; they live on the concrete reader classes only.
 
 ---
 
-## `_ReaderMeta` Protocol
+## `AsyncGeoData` Protocol
 
 ```python
-from typing import Protocol, Sequence
+from typing import Optional, Protocol, Union
+
 import numpy as np
-import pyproj
-from rasterio import Affine
-from rasterio.windows import Window
+import rasterio
+import rasterio.windows
+from shapely.geometry import Polygon
+
+from georeader.abstract_reader import GeoDataBase
 from georeader.geotensor import GeoTensor
-from georeader.geoslice import GeoSlice
 
 
-class _ReaderMeta(Protocol):
-    """Metadata surface shared by every georeader reader.
+class AsyncGeoData(GeoDataBase, Protocol):
+    """Async mirror of :class:`GeoData`.
 
-    All properties are cheap after construction (header-only). Subclasses
-    decide *when* the header is fetched — eagerly in __init__ (sync readers)
-    or via an async classmethod (async readers).
+    Concrete async readers (today: :class:`AsyncGeoTIFFReader`) satisfy
+    this Protocol. User code typed against ``AsyncGeoData`` accepts any
+    conforming async reader without isinstance checks.
+
+    Inherits the metadata surface (``transform``, ``crs``, ``shape``,
+    ``width``, ``height``) from :class:`GeoDataBase`. Adds async read
+    methods + the same derived properties (``bounds``, ``res``,
+    ``dtype``, ``fill_value_default``, ``footprint``) as
+    :class:`GeoData`.
     """
-    path_or_url: str
-    indexes: tuple[int, ...] | None        # bands to read; None = all
 
-    @property
-    def crs(self) -> pyproj.CRS: ...
-    @property
-    def transform(self) -> Affine: ...
-    @property
-    def bounds(self) -> tuple[float, float, float, float]: ...   # (xmin, ymin, xmax, ymax)
-    @property
-    def shape(self) -> tuple[int, int, int]: ...                  # (count, height, width)
-    @property
-    def count(self) -> int: ...
-    @property
-    def height(self) -> int: ...
-    @property
-    def width(self) -> int: ...
-    @property
-    def dtype(self) -> np.dtype: ...
-    @property
-    def nodata(self) -> float | None: ...
-    @property
-    def res(self) -> tuple[float, float]: ...                     # (x_res, y_res)
-```
+    async def load(self, boundless: bool = True) -> GeoTensor:
+        raise NotImplementedError
 
-Generalises today's `GeoDataBase` (3 properties) into the full 10-property surface a downstream consumer needs to know about a raster *without* reading any pixels. Anything satisfying `_ReaderMeta` can be passed to `window_from_bounds`, `figure_out_transform`, `same_extent`, or any of the other coordinate-math helpers in [`window_utils`](../../georeader_tutorial/04_window_utils.md).
-
----
-
-## `SyncReader` Protocol
-
-```python
-class SyncReader(_ReaderMeta, Protocol):
-    """Sync read interface — RasterioReader and LazyCOGReader."""
-
-    def read_window(self, window: Window) -> GeoTensor: ...
-    def read_bounds(
+    async def read_from_window(
         self,
-        bounds: tuple[float, float, float, float],
-        *,
-        target_resolution: tuple[float, float] | None = None,
-        target_crs: pyproj.CRS | str | None = None,
-    ) -> GeoTensor: ...
-    def read_geoslice(self, slice_: GeoSlice) -> GeoTensor: ...
-    def load(self) -> GeoTensor: ...
-    def close(self) -> None: ...
+        window: rasterio.windows.Window,
+        boundless: bool = True,
+    ) -> Union["AsyncGeoData", GeoTensor]:
+        raise NotImplementedError
 
-    def __enter__(self) -> "SyncReader": ...
-    def __exit__(self, exc_type, exc_val, exc_tb) -> bool | None: ...
+    @property
+    def res(self) -> tuple[float, float]:
+        from georeader import window_utils
+        return window_utils.res(self.transform)
+
+    @property
+    def dtype(self):
+        raise NotImplementedError
+
+    @property
+    def fill_value_default(self):
+        raise NotImplementedError
+
+    @property
+    def bounds(self) -> tuple[float, float, float, float]:
+        from georeader import window_utils
+        return window_utils.window_bounds(
+            rasterio.windows.Window(
+                row_off=0, col_off=0,
+                height=self.shape[-2], width=self.shape[-1],
+            ),
+            self.transform,
+        )
+
+    def footprint(self, crs: Optional[str] = None) -> Polygon:
+        from georeader import window_utils
+        pol = window_utils.window_polygon(
+            rasterio.windows.Window(
+                row_off=0, col_off=0,
+                height=self.shape[-2], width=self.shape[-1],
+            ),
+            self.transform,
+        )
+        if (crs is None) or window_utils.compare_crs(self.crs, crs):
+            return pol
+        return window_utils.polygon_to_crs(pol, self.crs, crs)
 ```
 
-Method shapes match `LazyCOGReader` (Issue 2) so user code can swap concrete readers without changing call sites. `read_bounds` accepts optional `target_resolution=` and `target_crs=` because cross-CRS reads are common; readers that can't reproject (or can but slowly) document the cost in their docstring.
+Note that `AsyncGeoData.values` is **not** present (unlike `GeoData.values`, which materialises sync via `self.load()`). An async-equivalent would have to be a coroutine, but properties can't be async. Callers that want the array call `await reader.load()` explicitly. Documenting this in the Protocol docstring is enough.
 
-`close` and the context-manager methods are required by the Protocol but tolerate no-ops — `LazyCOGReader.close()` is a no-op because `obstore` pools connections.
+The `footprint`, `res`, `bounds` properties are duplicated from `GeoData` because Python Protocols don't compose default implementations cleanly through inheritance. Concrete readers can override; the defaults match `GeoData`'s behaviour.
 
 ---
 
-## `RasterioReader` refactor
+## `RasterioReader` widening *(optional — bundle if convenient)*
 
 The existing class today has constructor:
 
@@ -210,27 +249,26 @@ RasterioReader(paths, allow_different_shape=False, window_focus=None,
                overview_level=None, check=True, rio_env_options=None)
 ```
 
-It stays. New keyword-only knobs are added; the new methods are added alongside the existing ones:
+It stays. New keyword-only knobs are added:
 
 ```python
-class RasterioReader(SyncReader):
+class RasterioReader(GeoData):
     """Sync, GDAL-backed reader. The default in georeader.
 
-    Reads happen via rasterio.open(...).read(window=...). The bytes path *under*
-    the rasterio call has three modes — see "Inside RasterioReader" below:
+    Reads happen via rasterio.open(...).read(window=...). The bytes
+    path *under* the rasterio call has three modes — see the docstring
+    on the new keyword-only ``opener`` / ``fs`` / ``rio_open_kwargs``
+    args, and the per-path comparison table in
+    plans/geostack.md §"What's actually inside RasterioReader".
 
       1. opener=None and fs=None  → GDAL VSI (libcurl in C); the default.
-                                     Cloud paths /vsis3/, /vsigs/, /vsiaz/, /vsicurl/.
+                                     Cloud paths /vsis3/, /vsigs/, /vsiaz/.
       2. opener=callable          → GDAL calls the callable for each byte range.
       3. fs=fsspec_filesystem     → shortcut: equivalent to opener=fs.open.
 
-    On-the-fly reprojection in read_bounds() is done via rasterio.warp.WarpedVRT.
+    On-the-fly reprojection in read_bounds() is done via
+    rasterio.warp.WarpedVRT.
     """
-    path_or_url: str                                      # alias for paths[0] when single
-    indexes: tuple[int, ...] | None
-    _opener: "Callable[[str, str], BinaryIO] | None"
-    _fs: "fsspec.AbstractFileSystem | None"
-    _rio_open_kwargs: dict
 
     def __init__(
         self,
@@ -252,38 +290,11 @@ class RasterioReader(SyncReader):
             kwargs["opener"] = self._fs.open
         # else: no opener key → rasterio uses GDAL VSI for cloud paths
         return kwargs
-
-    # metadata — straight passthrough to rasterio dataset attrs
-    @property
-    def crs(self) -> pyproj.CRS: ...
-    # ... (the rest of _ReaderMeta surface)
-
-    # new sync-reader methods
-    def read_window(self, window: Window) -> GeoTensor:
-        """ds.read(indexes=..., window=...) → GeoTensor with windowed transform."""
-        ...
-    def read_bounds(self, bounds, *, target_resolution=None, target_crs=None) -> GeoTensor:
-        """Wrap in WarpedVRT if target_crs differs from native; window the
-        VRT to the requested bounds; read."""
-        ...
-    def read_geoslice(self, slice: GeoSlice) -> GeoTensor:
-        """Convenience: read_bounds(slice_.bounds, target_resolution=slice_.resolution,
-                                    target_crs=slice_.crs)."""
-        ...
-    def load(self) -> GeoTensor: ...
-    def close(self) -> None: ...
-    def __enter__(self) -> "RasterioReader": ...
-    def __exit__(self, exc_type, exc_val, exc_tb) -> bool | None: ...
-
-    # back-compat — existing methods kept, possibly delegating to the new ones
-    def read_from_window(self, window, boundless: bool = True): ...      # existing
-    # load() with the existing boundless= behaviour stays valid for callers that
-    # already pass it; the new no-arg load() is what SyncReader requires.
 ```
 
 ### The three bytes paths
 
-The `opener=` / `fs=` knobs route bytes through one of three paths: GDAL VSI (default, fastest), fsspec (for niche backends), or a custom obstore callback. The diagram and per-path comparison table live in [`geostack.md` §"What's actually inside `RasterioReader`"](../geostack.md#whats-actually-inside-rasterioreader). `_resolve_open_kwargs` (above) is the only Python code that knows which path is active; after it returns, GDAL takes over.
+The `opener=` / `fs=` knobs route bytes through one of three paths: GDAL VSI (default, fastest), fsspec (for niche backends), or a custom obstore-aware callback. The diagram and per-path comparison table live in [`geostack.md` §"What's actually inside `RasterioReader`"](../geostack.md#whats-actually-inside-rasterioreader). `_resolve_open_kwargs` (above) is the only Python code that knows which path is active; after it returns, GDAL takes over.
 
 ### Usage examples
 
@@ -304,17 +315,14 @@ reader = RasterioReader(
     rio_open_kwargs={"opener": fs.open},
 )
 
-# obstore via custom callable — possible but rarely the right tool;
-# at this point you'd use LazyCOGReader or AsyncGeoTIFFReader instead
-def obstore_opener(path: str, mode: str) -> "BinaryIO":
-    """Return a file-like wrapping obstore range fetches."""
-    ...
-reader = RasterioReader("s3://bucket/scene.tif", opener=obstore_opener)
+# For high-concurrency async fan-out, skip RasterioReader entirely
+# and use AsyncGeoTIFFReader (which routes through obstore + async-tiff).
+reader = await AsyncGeoTIFFReader.open("s3://bucket/scene.tif")
 ```
 
 ### Credential handling across the three paths
 
-The refactor doesn't change the existing GDAL-VSI credential pattern. It does add two paths where credentials can live in user objects rather than process env vars — useful for tests, multi-account isolation in one process, and refreshable tokens. Where credentials live in each path:
+The widening doesn't change the existing GDAL-VSI credential pattern. It does add two paths where credentials can live in user objects rather than process env vars — useful for tests, multi-account isolation in one process, and refreshable tokens. Where credentials live in each path:
 
 | Path | Credential locus |
 |---|---|
@@ -322,30 +330,7 @@ The refactor doesn't change the existing GDAL-VSI credential pattern. It does ad
 | **fsspec** (`fs=fsspec_fs`) | The `fs` object's construction — `fsspec.filesystem("s3", key=..., secret=...)`. Per-reader, no env vars needed. Multi-account isolation comes free: two readers with two `fs` instances see two credential sets. |
 | **opener=callable** | Whatever the callable closes over. Most flexible, most user-managed; this is where refreshable-token implementations would live until the package ships a typed credential surface. |
 
-A typed `Credential` Protocol that unifies these three paths is proposed separately in [`plans/types/credentials.md`](../types/credentials.md). The wiring on `RasterioReader` (`credential=` kwarg, refresh-on-401, auto-rewrite for SAS fallback) is in [`reader_rasterio.md`](reader_rasterio.md). Both designs are downstream of this refactor — Issue 1 just needs to not paint into a corner that prevents them.
-
----
-
-## `GeoData` / `GeoDataBase` alignment
-
-The current Protocols in `abstract_reader.py`:
-
-- `GeoDataBase` — `transform`, `crs`, `shape`, `width`, `height` (3 required + 2 derived).
-- `GeoData` (= `AbstractGeoData`) — adds `values`, `load(boundless=True)`, `read_from_window(window, boundless)`, `bounds`, `res`, `dtype`, `dims`, `fill_value_default`, `footprint(crs=None)`.
-
-After this issue:
-
-- `GeoDataBase` continues to exist as an alias for the relevant subset of `_ReaderMeta` (or a strict back-compat Protocol).
-- `GeoData` continues to exist as a superset of `SyncReader` (it has extra methods: `footprint`, `read_from_window`, etc.). New code should prefer `SyncReader`; existing code keeps working.
-- `AbstractGeoData = GeoData` continues to be exported for back-compat.
-
-Concretely:
-
-- No method is removed.
-- No method's signature changes.
-- Two new Protocols (`_ReaderMeta`, `SyncReader`) are *added*; existing types satisfy them by structural typing without changes.
-
-This ensures every current caller of `GeoData` keeps working.
+A typed `Credential` Protocol that unifies these three paths is proposed separately in [`plans/types/credentials.md`](../types/credentials.md). The wiring on `RasterioReader` (`credential=` kwarg, refresh-on-401, auto-rewrite for SAS fallback) is in [`reader_rasterio.md`](reader_rasterio.md). Both designs are downstream of this issue — Issue 1 just needs to not paint into a corner that prevents them.
 
 ---
 
@@ -354,36 +339,22 @@ This ensures every current caller of `GeoData` keeps working.
 `GeoTensor` already exposes:
 
 - `crs`, `transform`, `bounds`, `shape`, `dtype`, `res` — directly.
-- `nodata` — as `fill_value_default` (a property alias may be added).
-- `count`, `height`, `width` — as derived properties.
-- `read_from_window`, `load` — already implemented (Ch. 1 §10).
+- `fill_value_default` — directly.
+- `width`, `height` — as derived properties.
+- `read_from_window`, `load` — already implemented (Tutorial Ch. 1 §10).
 
-Declaring `GeoTensor` as `_ReaderMeta`-conformant is a typing-only change. May need to add a `path_or_url` attribute (e.g., `None` or a synthetic identifier) and an `indexes` attribute to satisfy the Protocol exactly.
-
----
-
-## Tutorial updates
-
-After this issue lands:
-
-- **[Ch. 2](../../georeader_tutorial/02_abstract_reader.md)** — describes `_ReaderMeta` / `SyncReader` Protocols. The current `GeoDataBase` / `GeoData` description stays as the back-compat layer (with a note that new code should prefer the new Protocols).
-- **[Ch. 3](../../georeader_tutorial/03_rasterio_reader.md)** — adds a new section on the `opener=` / `fs=` constructor knobs and the three-bytes-paths triage. Cross-links to the parent design doc.
-
-Tutorial updates land alongside the implementation PR for this issue, not before — the tutorial follows the package state.
+Declaring `GeoTensor` as `GeoData`-conformant is a typing-only change. May need a small alignment if the type-checker objects to one signature; otherwise no code change.
 
 ---
 
 ## Acceptance criteria
 
-- `_ReaderMeta` and `SyncReader` Protocols exported from `georeader.abstract_reader`.
-- `RasterioReader` instances satisfy `SyncReader` per static type-check (mypy / ty).
-- `GeoTensor` instances satisfy `_ReaderMeta` per static type-check.
+- `AsyncGeoData` Protocol exported from `georeader.abstract_reader`.
+- [`AsyncGeoTIFFReader`](reader_async_geotiff.md) instances satisfy `AsyncGeoData` per static type-check.
+- `GeoTensor` instances satisfy `GeoData` per static type-check.
 - All existing tests pass without modification.
-- New tests for `RasterioReader.read_window`, `read_bounds(target_crs=...)`, `read_geoslice`, `load()`.
-- New test for `RasterioReader("s3://...", fs=fsspec_fs)` opening successfully.
-- New test for `RasterioReader("s3://...", opener=obstore_opener)` opening successfully.
-- `GeoData` / `GeoDataBase` Protocols continue to be exported and import-compatible.
-- Tutorial Ch. 2 and Ch. 3 updated.
+- Tutorial Ch. 2 updated with an `AsyncGeoData` section.
+- (If §"`RasterioReader` widening" is bundled): new tests for `RasterioReader("s3://...", fs=fsspec_fs)` and `RasterioReader("s3://...", opener=callable)`; Tutorial Ch. 3 updated.
 
 ---
 
@@ -391,6 +362,18 @@ Tutorial updates land alongside the implementation PR for this issue, not before
 
 In addition to the [parent design's open questions](README.md#open-questions), this issue should resolve:
 
-1. **`path_or_url` on multi-file readers.** Today's `RasterioReader` accepts `paths: list[str]` for time stacks. The Protocol expects `path_or_url: str`. Options: expose `paths[0]` as `path_or_url`, or relax the Protocol to `str | list[str]`.
-2. **`indexes` type.** Today's reader uses `list[int]`; the Protocol uses `tuple[int, ...] | None`. Pick one and reconcile.
-3. **`shape` shape.** Today's reader exposes `(T, C, H, W)` for stacked time-series; the Protocol expects `(count, height, width)` 3-tuple. Either widen the Protocol to allow longer tuples, or have the reader expose only the 3D view through the Protocol surface (with the 4D shape via a separate property).
+### 1. Should `AsyncGeoData` add a `values_async()` method?
+
+`GeoData.values` is a sync property that materialises via `self.load()`. Properties can't be async, so the natural async equivalent would be `await reader.values_async()`. Tentative: don't add it — `await reader.load()` is fine and `.values` on the *returned* `GeoTensor` works the way users expect.
+
+### 2. Upstream rename of `GeoData` / `GeoDataBase`?
+
+If we wanted `GeoData` → `SyncReader` and `GeoDataBase` → `ReaderMeta` for naming consistency with `AsyncReader`-shaped names, that should happen in `spaceml-org/georeader` proper as a one-line deprecation alias, not as a parallel layer here. Out of scope for this issue. Flagging because the original design tried to do it, and we should be intentional about *not* doing it here.
+
+### 3. Are `path_or_url` / `indexes` ever lifted onto a Protocol?
+
+No. They're reader-construction details. `GeoTensor` shouldn't have to fake them. `FakeGeoData` shouldn't have to declare them. They stay on the concrete reader classes only.
+
+### 4. Should `AsyncGeoData` be `@runtime_checkable`?
+
+`GeoDataBase` and `GeoData` are not currently runtime-checkable (see [Tutorial Ch. 2 §8](../../georeader_tutorial/02_abstract_reader.md)). Tentative: keep `AsyncGeoData` non-runtime-checkable too for symmetry. If we ever flip them, do it together upstream.

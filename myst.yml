@@ -125,7 +125,6 @@ project:
                     - file: projects/geotoolz/plans/georeader/README.md
                     - file: projects/geotoolz/plans/georeader/reader_protocol.md
                     - file: projects/geotoolz/plans/georeader/reader_rasterio.md
-                    - file: projects/geotoolz/plans/georeader/reader_lazy_cog.md
                     - file: projects/geotoolz/plans/georeader/reader_async_geotiff.md
                 - title: Core types
                   children:

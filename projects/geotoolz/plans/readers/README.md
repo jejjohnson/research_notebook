@@ -29,7 +29,7 @@ Per-sensor reader designs land here when:
 2. **The reader follows one of two existing patterns** ([Track A or Track B below](#the-two-tracks)) but has sensor-specific quirks worth documenting before implementation.
 3. **The work fits into one or more focused issues** rather than a single trivial PR.
 
-The companion to this directory is [`georeader/`](../georeader/) — the **reader-protocol reconciliation** design, which defines the `_ReaderMeta` / `SyncReader` / `AsyncReader` Protocols all readers (current and future) will conform to. That design is about the *interface*; this directory is about *concrete sensor implementations* that satisfy it.
+The companion to this directory is [`georeader/`](../georeader/) — the **reader-protocol reconciliation** design, which keeps today's `GeoData` / `GeoDataBase` Protocols and adds an `AsyncGeoData` Protocol that all readers (current and future) will conform to. That design is about the *interface*; this directory is about *concrete sensor implementations* that satisfy it.
 
 ---
 
@@ -39,7 +39,7 @@ The companion to this directory is [`georeader/`](../georeader/) — the **reade
 
 | Track | Geometry | Existing examples | Pattern |
 |---|---|---|---|
-| **A** — clean affine | Sensor data sits on a regular grid in a standard CRS; the file format ships an affine transform (or one is recoverable from metadata). | Sentinel-2 SAFE, Landsat | Reader subclasses [`GeoData`](../../georeader_tutorial/02_abstract_reader.md) (Phase 1) or [`SyncReader`](../georeader/reader_protocol.md) (post-reconciliation). Reads route through `read.read_from_bounds`. |
+| **A** — clean affine | Sensor data sits on a regular grid in a standard CRS; the file format ships an affine transform (or one is recoverable from metadata). | Sentinel-2 SAFE, Landsat | Reader subclasses [`GeoData`](../../georeader_tutorial/02_abstract_reader.md). Reads route through `read.read_from_bounds`. |
 | **B** — irregular geolocation | Sensor data is a raw array with per-pixel `lons` / `lats`; no honest affine. | EMIT, PRISMA, EnMAP (curvilinear-but-orthorectified) | Reader exposes raw arrays + geolocation; downstream calls [`griddata.read_to_crs`](../../georeader_tutorial/07_griddata.md) to resample to a regular grid. |
 
 **Most new sensors fit one of these two patterns.** The per-sensor design docs in this directory specify which track applies and what sensor-specific glue is needed.
@@ -76,9 +76,9 @@ When a candidate becomes a real design, it lands here as a sibling to the existi
 
 | Design | How sensor readers touch it |
 |---|---|
-| [Reader reconciliation](../georeader/README.md) | All readers (existing and new) conform to the `_ReaderMeta` / `SyncReader` Protocol surface defined there. The Protocol locks the interface; this directory specifies the per-sensor implementations. |
+| [Reader reconciliation](../georeader/README.md) | All readers (existing and new) conform to the `GeoData` (sync) or `AsyncGeoData` (async) Protocol surface defined there. The Protocol locks the interface; this directory specifies the per-sensor implementations. |
 | [Geodatabase](../geodatabase/README.md) | A `GeoCatalog` indexes files; the reader is what's used to *open* one row's file. The `reader_class=...` kwarg on `CatalogPipeline` selects which reader (and therefore which sensor pattern) is in use. |
-| [Core types — `GeoSlice`](../types/geoslice.md) | Once a reader satisfies `SyncReader.read_geoslice(slice)`, it slots into the sampler/loader pipeline regardless of which track it follows. |
+| [Core types — `GeoSlice`](../types/geoslice.md) | Once a reader satisfies `GeoData.read_geoslice(slice)` (or the `AsyncGeoData` async equivalent), it slots into the sampler/loader pipeline regardless of which track it follows. |
 | [`geotoolz.md`](../geotoolz/geotoolz.md) | Sensor-preset operators in `geotoolz.presets.*` (S2, EMIT, EnMAP, ...) wrap the readers specified in this directory. |
 
 ---

@@ -24,7 +24,7 @@ keywords: design, georeader, rasterio, credentials
 
 ## Why this issue exists
 
-[`reader_protocol.md`](reader_protocol.md) refactors `RasterioReader` to conform to the new `_ReaderMeta` / `SyncReader` Protocols. That refactor is about *interface*; it doesn't try to fix the awkward parts of the today-API.
+[`reader_protocol.md`](reader_protocol.md) optionally widens `RasterioReader`'s constructor with `opener=` / `fs=` / `rio_open_kwargs=` knobs (additive — `RasterioReader` already conforms to `GeoData`). That widening is about *bytes-path triage*; it doesn't try to fix the awkward parts of the today-API.
 
 This document is about the awkward parts. It builds on:
 
@@ -148,7 +148,7 @@ gt_b = reader_b.read_window(window)
 Implementation:
 
 ```python
-class RasterioReader(SyncReader):
+class RasterioReader(GeoData):
     def __init__(self, paths, *, credential: Credential | None = None,
                  rio_env_options: dict | None = None, **kwargs):
         self._credential = credential
@@ -361,7 +361,7 @@ Initial set of kwargs (open for discussion):
 
 Out of scope for this design (each is its own potential follow-up):
 
-- **Async retry / async credentials.** Async support lives in [`reader_async_geotiff.md`](reader_async_geotiff.md). Whether `AsyncReader` types accept the same `credential=` Protocol is a question for that design.
+- **Async retry / async credentials.** Async support lives in [`reader_async_geotiff.md`](reader_async_geotiff.md). Whether `AsyncGeoData`-conformant readers accept the same `credential=` Protocol is a question for that design.
 - **Per-reader cache isolation.** Today's `GDAL_CACHEMAX` is process-global. Per-reader caches would require a much deeper change (custom block manager).
 - **Connection pool configuration.** GDAL's HTTP client doesn't expose pool tuning to PROJ-aware code; if needed, the answer is to switch to `AsyncGeoTIFFReader`, which uses obstore directly.
 - **Vault / secrets-manager integration.** That's the user's responsibility upstream of constructing the `Credential`.
@@ -383,11 +383,11 @@ Proposal 4 can ship first since it's purely about ergonomics. Proposals 1–3 ar
 
 ## Open questions
 
-### 1. Should `credential=` be on `RasterioReader` only, or on the abstract `SyncReader` Protocol?
+### 1. Should `credential=` be on `RasterioReader` only, or on the abstract `GeoData` / `AsyncGeoData` Protocols?
 
-If we want `AsyncGeoTIFFReader` (or any future reader) to accept the same kwarg, it has to be in the Protocol. But those readers have their own credential locus (the `ByteStore` they're constructed with), so adding `credential=` to the Protocol creates a question: which path wins when both `credential=` and a credential-bearing `ByteStore` are given?
+If we want `AsyncGeoTIFFReader` (or any future reader) to accept the same kwarg, it has to be in the Protocol. But those readers have their own credential locus (the `obspec.AsyncStore` they're constructed with), so adding `credential=` to the Protocol creates a question: which path wins when both `credential=` and a credential-bearing store are given?
 
-**Tentative pick:** keep `credential=` on `RasterioReader` only for now. Other readers route credentials through their `ByteStore` / `fs` constructor. Promote to the Protocol later if the duplication becomes painful.
+**Tentative pick:** keep `credential=` on `RasterioReader` only for now. Other readers route credentials through `Credential.to_obstore_*_store(...)` and pass the resulting store via `store=`. Promote to the Protocol later if the duplication becomes painful.
 
 ### 2. Should the SAS path-rewrite be opt-in (kwarg) or always-on?
 

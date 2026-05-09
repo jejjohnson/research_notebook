@@ -142,7 +142,7 @@ classDiagram
 ## Constraints
 
 - **Builds on `georeader.GeoTensor`** — the loaders return `GeoTensor` (raster), `xr.Dataset` (xarray), or `gpd.GeoDataFrame` (vector). The `GeoTensor` design itself is documented in [Ch. 1 of the tutorial](../../georeader_tutorial/01_geotensor.md).
-- **Builds on the reader Protocol from [Reader reconciliation](../georeader/README.md)** — loaders accept any `SyncReader` (or `AsyncReader` for the async path). Catalog rows store paths/URIs; loaders open them via the configured reader class.
+- **Builds on the reader Protocol from [Reader reconciliation](../georeader/README.md)** — loaders accept any `GeoData` (sync) or `AsyncGeoData` (async) reader. Catalog rows store paths/URIs; loaders open them via the configured reader class.
 - **`GeoSlice` is shared with multiple designs** — [`types/geoslice.md`](../types/geoslice.md) is the source of truth for the dataclass, samplers, and stitch. Changes to that contract ripple through this design and through [`geotoolz.md`](../geotoolz/geotoolz.md).
 - **Phase 2 introduces a DuckDB dependency** — opt-in via an extra (`georeader-spaceml[duckdb]`), not a hard dep.
 

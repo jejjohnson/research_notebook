@@ -31,19 +31,19 @@ keywords: design, types, protocol
 
 **How it works.** Three flavours show up:
 
-- **`typing.Protocol`** — structural typing. Any class with the right method signatures satisfies it; no inheritance required. Used for `Credential`, `ByteStore`, the reader Protocols. The static type-checker (`mypy` / `ty`) verifies conformance at the call site.
+- **`typing.Protocol`** — structural typing. Any class with the right method signatures satisfies it; no inheritance required. Used for `Credential` and the reader Protocols (`GeoData` / `GeoDataBase` / `AsyncGeoData`). The static type-checker (`mypy` / `ty`) verifies conformance at the call site.
 - **`@dataclass`** — auto-generated `__init__` / `__repr__` / `__eq__`. Used for `GeoSlice`. Often `frozen=True` to make instances immutable and hashable.
-- **Concrete subclasses** of a Protocol — `AzureSASCredential`, `ObstoreByteStore`, etc. Live alongside the Protocol they implement, in the same design doc.
+- **Concrete subclasses** of a Protocol — `AzureSASCredential`, etc. Live alongside the Protocol they implement, in the same design doc.
 
-**What this means for us.** Code that takes a `Protocol` parameter (`def f(reader: SyncReader)`) accepts any conforming object — no shared base class, no inheritance dance. Code that takes a `@dataclass` parameter (`def f(slice_: GeoSlice)`) gets all the dataclass machinery (immutable fields, equality, repr) for free. The patterns are deliberately small and uniform across the directory.
+**What this means for us.** Code that takes a `Protocol` parameter (`def f(reader: GeoData)`) accepts any conforming object — no shared base class, no inheritance dance. Code that takes a `@dataclass` parameter (`def f(slice_: GeoSlice)`) gets all the dataclass machinery (immutable fields, equality, repr) for free. The patterns are deliberately small and uniform across the directory.
 
 ### When does a type land here vs in a design subdir?
 
 **What it is.** The criterion for promoting a type to `plans/types/`. Three conditions, all of which must hold.
 
-**How it works.** A type lives here when (1) it's a public surface — users construct or pattern-match against it directly, (2) it's consumed by more than one of the major designs, and (3) it's small enough to specify in one document. Types that fail any of these stay scoped to their owning design — e.g., `_ReaderMeta` / `SyncReader` are in `georeader/reader_protocol.md` because they're the *subject* of that design, not just incidental to it. Same logic kept `GeoCatalog` in geodatabase and `Operator` in geotoolz.
+**How it works.** A type lives here when (1) it's a public surface — users construct or pattern-match against it directly, (2) it's consumed by more than one of the major designs, and (3) it's small enough to specify in one document. Types that fail any of these stay scoped to their owning design — e.g., `GeoData` / `GeoDataBase` / `AsyncGeoData` live in `georeader/reader_protocol.md` because they're the *subject* of that design, not just incidental to it. Same logic kept `GeoCatalog` in geodatabase and `Operator` in geotoolz.
 
-**What this means for us.** This directory grows slowly. Most "types" stay in their owning subdir; the ones that end up here are the ones that flow *between* layers (`GeoSlice`, `Credential`, `ByteStore`). When a fourth shows up, it follows the same shape as the existing three — same design-doc skeleton, same Protocol-or-dataclass pattern.
+**What this means for us.** This directory grows slowly. Most "types" stay in their owning subdir; the ones that end up here are the ones that flow *between* layers (`GeoSlice`, `Credential`). The `bytestore.md` doc is here too but is **not a Protocol of our own** — it documents the decision to defer cloud byte transport to upstream [`obspec`](https://github.com/developmentseed/obspec) (see [`bytestore.md`](bytestore.md)).
 
 ```{mermaid}
 flowchart LR
@@ -51,11 +51,11 @@ flowchart LR
     GS --> Cat[Geodatabase]
     GS --> Op[geotoolz operators]
     Cred[Credential] --> Reader
-    BS[ByteStore] --> Reader
+    OB["obspec.AsyncStore<br/>(external — not a type we own)"] --> Reader
 
     style GS fill:#e1f5ff,stroke:#0288d1
     style Cred fill:#e1f5ff,stroke:#0288d1
-    style BS fill:#e1f5ff,stroke:#0288d1
+    style OB fill:#f5f5f5,stroke:#999,stroke-dasharray: 5 5
 ```
 
 ---
@@ -71,9 +71,9 @@ A type lands in this directory when **all three** are true:
 The georeader-side types that *aren't* here, and why:
 
 - **`GeoTensor`** — already a real implemented type in `georeader/geotensor.py`; documented in [Tutorial Ch. 1](../../georeader_tutorial/01_geotensor.md). No design doc needed.
-- **`GeoData` / `GeoDataBase` / `_ReaderMeta` / `SyncReader` / `AsyncReader`** — all live in [Reader reconciliation](../georeader/README.md) because they're the subject of that design, not just incidental to it.
+- **`GeoData` / `GeoDataBase` / `AsyncGeoData`** — all live in [Reader reconciliation](../georeader/README.md) because they're the subject of that design, not just incidental to it.
 - **`GeoCatalog` Protocol** — lives in [Geodatabase](../geodatabase/README.md) for the same reason.
-- **`ByteStore`** — first emerged inside the COG-reader plumbing; extracted here as a Protocol since `AsyncGeoTIFFReader` and any future raw-byte-shaped reader will consume it. Listed in "Current designs" below.
+- **`obspec.AsyncStore`** — the cloud-byte transport surface. It's *not* ours — we defer to upstream [`obspec`](https://github.com/developmentseed/obspec) (DevSeed). The note at [`bytestore.md`](bytestore.md) documents this decision and the small `geotoolz.io.open_store(url)` helper we ship.
 
 If a type starts in another design and grows into something multiple designs reference, **promote it here** — the cleanup is the same shape as the GeoSlice promotion that motivated this directory.
 
@@ -84,8 +84,8 @@ If a type starts in another design and grows into something multiple designs ref
 | Design | Type(s) covered |
 |---|---|
 | [`geoslice.md`](geoslice.md) | `GeoSlice` dataclass + the sampler/stitch family (`random_sampler`, `grid_sampler`, `stitch`) that produces and consumes `GeoSlice`. |
-| [`credentials.md`](credentials.md) | `Credential` Protocol + per-cloud subclasses (`AzureSASCredential`, `AzureManagedIdentityCredential`, `AWSStaticCredential`, `AWSProfileCredential`, `GCSServiceAccountCredential`) + `from_config(...)` factory. Replaces the env-var-soup pattern that every project currently re-implements. |
-| [`bytestore.md`](bytestore.md) | `ByteStore` Protocol + adapters (`ObstoreByteStore`, `FsspecByteStore`) + `open_store(url)` factory. Abstracts cloud byte access for `AsyncGeoTIFFReader` (and any future raw-byte reader). |
+| [`credentials.md`](credentials.md) | `Credential` Protocol + per-cloud subclasses (`AzureSASCredential`, `AzureManagedIdentityCredential`, `AWSStaticCredential`, `AWSProfileCredential`, `GCSServiceAccountCredential`) + `from_config(...)` factory + `to_obstore_*_store()` adapter helpers. Replaces the env-var-soup pattern that every project currently re-implements. |
+| [`bytestore.md`](bytestore.md) | One-page passthrough note: cloud byte transport is `obspec.AsyncStore` (upstream, not ours). We ship a small `geotoolz.io.open_store(url)` factory and nothing else. **Not** a Protocol of our own. |
 
 ---
 
@@ -114,7 +114,7 @@ When a candidate becomes a real design, it lands here as a sibling to `geoslice.
 The cross-cutting types are the load-bearing ones — when they're wrong, every downstream design ripples. Things to watch:
 
 - **`Credential.apply()` per-call vs `apply_to_os_environ()` mutation.** The design distinguishes pure (returns a dict) vs mutating (writes `os.environ`) modes. Per-reader isolation only works if every reader consumes the per-call dict; the env-var mode is a backwards-compat hatch, not the recommended path. Audit each reader on the reconciliation path to make sure it accepts the per-call dict.
-- **`ByteStore` adapter parity.** `ObstoreByteStore` and `FsspecByteStore` must handle the same edge cases (large range reads, retries on transient failures, token-expiry refresh). Run the same Protocol-conformance test suite against both.
+- **`obspec` API stability.** `obspec` is the upstream Protocol (DevSeed); `obstore` is the reference implementation. Both are pre-1.0. Our `geotoolz.io.open_store(...)` returns `obspec.AsyncStore`, so any breaking change there ripples through `AsyncGeoTIFFReader`. Pin a minor range and bump deliberately.
 - **`GeoSlice` time-axis convention.** `GeoSlice.interval` is a `pd.Interval`; the slice can be spatial-only (no interval) or spatial+temporal. Document the discriminated-union behaviour clearly so samplers and stitchers don't trip over the optional time dimension.
 - **Sampler API stability.** `random_geo_sampler` / `grid_geo_sampler` are bigger than they look — they couple `GeoSlice`, the catalog, and the inference loop. Treat their signatures as v0.1 public API; bump `_v2` if the shape needs to change rather than mutating in place.
 - **`stitch_predictions` reduction semantics.** Average vs first-write-wins vs max-vote — pick a default, document the alternatives, expose a `method=` knob. Without this, every user reinvents stitching.

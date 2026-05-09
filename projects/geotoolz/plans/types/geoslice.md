@@ -355,7 +355,7 @@ For deterministic pipelines, sort `slices` by `(slice_.bounds, slice_.interval.l
 |---|---|
 | [Geodatabase / `geocatalog.md`](../geodatabase/geocatalog.md) | `GeoCatalog.query(slice_: GeoSlice)` consumes one. Catalog rows + `iter_rows()` is what the samplers iterate. |
 | [Geodatabase / `geoduckdb.md`](../geodatabase/geoduckdb.md) | DuckDB cursor iteration into the samplers; catalog produces lazy row stream, samplers reservoir-sample. |
-| [Reader reconciliation](../georeader/README.md) | `SyncReader.read_geoslice(slice)` and `AsyncReader.read_geoslice(slice)` are the canonical loader entry points. |
+| [Reader reconciliation](../georeader/README.md) | `GeoData.read_geoslice(slice)` (sync) and `AsyncGeoData.read_geoslice(slice)` (async) are the canonical loader entry points. |
 | [`geotoolz.md`](../geotoolz/geotoolz.md) | `geotoolz.sampling.GridSampler` wraps `grid_sampler`. `geotoolz.inference.ApplyToChips` consumes the iterator and uses `stitch` for the inverse step. The Stitch operator in geotoolz is a direct re-export. |
 
 The *flow* of a `GeoSlice` through a typical inference pipeline:
@@ -372,7 +372,7 @@ GeoCatalog  ──grid_sampler──►  GeoSlice  ──reader.read_geoslice─
                                                        GeoTensor (stitched)
 ```
 
-Every arrow is sync in this proposal. The async equivalent (using `AsyncReader.read_geoslice` and `asyncio.gather`) lands as a follow-up if needed.
+Every arrow is sync in this proposal. The async equivalent (using `AsyncGeoData.read_geoslice` and `asyncio.gather`) lands as a follow-up if needed.
 
 ---
 

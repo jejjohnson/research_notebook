@@ -580,10 +580,10 @@ Stars mark where my libraries plug in. Read it from the top: a user wants someth
 `georeader` already gives us a clean object model: **`GeoTensor`** (georeferenced array), **`GeoSlice`** (declarative crop), and a small reader surface anchored on **`RasterioReader`**. What it doesn't yet have is a *protocol* — a shared shape every reader can satisfy — which means async / GDAL-free readers reinvent the substrate every time.
 
 **What plugs in.**
-- **[`async-tiff`](https://github.com/developmentseed/async-tiff)** — pure-Rust async COG reader. Drops in as `AsyncGeoTIFFReader` behind a shared `AsyncReader` Protocol. Owns the COG-parsing primitives (IFD walk, tile-fetch math, decompression) in a private module that future raw-byte readers can reuse.
-- **[`obstore`](https://github.com/developmentseed/obstore)** — the byte mover, abstracted behind a `ByteStore` Protocol so `fsspec` users aren't locked out.
+- **[`async-geotiff`](https://github.com/developmentseed/async-geotiff)** — DevSeed's high-level async COG reader, Rust-backed via [`async-tiff`](https://github.com/developmentseed/async-tiff). Already does IFD walk, tile-fetch, decompression dispatch, request coalescing, and decoding off the event loop. We wrap it in a ~80-LOC `AsyncGeoTIFFReader` adapter.
+- **[`obspec`](https://github.com/developmentseed/obspec)** — the upstream typed Protocol for object-store byte access (DevSeed). [`obstore`](https://github.com/developmentseed/obstore) is the reference implementation. We pass `obspec.AsyncStore` straight through to `async-geotiff`; we don't define our own `ByteStore` Protocol.
 
-**What falls out for free.** A unified **`Reader` Protocol** (`SyncReader` + `AsyncReader` surfaces, anchored on a small `_ReaderMeta` metaclass); cross-cutting types (`GeoSlice`, `Credential`, `ByteStore`) extracted to a shared home in [`plans/types/`](plans/types/) instead of being buried in whichever subsystem first needed them; existing `RasterioReader` keeps doing what it does well; the new async reader stops re-inventing the carrier.
+**What falls out for free.** Today's **`GeoData` / `GeoDataBase`** Protocols stay as the sync surface; we add a single new **`AsyncGeoData`** Protocol mirror (~30 LOC) for the async reader; cross-cutting types (`GeoSlice`, `Credential`) live in a shared home in [`plans/types/`](plans/types/); existing `RasterioReader` keeps doing what it does well; the new async reader is a thin adapter rather than a from-scratch COG reimplementation.
 
 > **What about `lazycogs`?** [`developmentseed/lazycogs`](https://github.com/developmentseed/lazycogs) is excellent — but it returns `xarray.DataArray`, not `GeoTensor`, so it belongs in **Stack B (Dense / xarray)** above as a STAC-driven peer of `stackstac` / `odc-stac`. A sync GDAL-free `GeoTensor` reader for `geotoolz` was floated and deferred to v0.5+ (no clear customer that `RasterioReader` + `AsyncGeoTIFFReader` don't already cover); see [`plans/georeader/README.md` open question §3](plans/georeader/README.md).
 
@@ -727,7 +727,7 @@ The cross-cutting types that flow *between* layers each get their own design —
 
 - **`GeoSlice`** — declarative crop specification (bbox + CRS + optional time window). Decouples *what region* from *which file*; produced by samplers, consumed by readers and operators. → [`plans/types/geoslice.md`](plans/types/geoslice.md).
 - **`Credential`** — Protocol + per-cloud subclasses (Azure SAS / managed identity, AWS static / profile, GCS service account) + `from_config(...)` factory. Replaces the env-var-soup pattern every project currently re-implements. → [`plans/types/credentials.md`](plans/types/credentials.md).
-- **`ByteStore`** — Protocol over the cloud byte interface. `ObstoreByteStore` and `FsspecByteStore` adapters mean readers don't lock you into one transport library. → [`plans/types/bytestore.md`](plans/types/bytestore.md).
+- **Cloud byte transport — defer to [`obspec`](https://github.com/developmentseed/obspec).** We don't ship a Protocol of our own; `obspec.AsyncStore` is the upstream surface and `async-geotiff` already consumes it. We ship one tiny `geotoolz.io.open_store(url)` factory and nothing else. → [`plans/types/bytestore.md`](plans/types/bytestore.md).
 
 ---
 
@@ -757,7 +757,7 @@ Out of scope for the initial library push; flagged here so the architecture leav
 | `xrtoolz` (operator algebra over xarray / `coordax`) | Logic (cubes) | External library | [github.com/jejjohnson/xr_toolz](https://github.com/jejjohnson/xr_toolz) |
 | `GeoSlice` + samplers + `stitch_predictions` | Cross-cutting types | Extracted from existing designs | [`plans/types/geoslice.md`](plans/types/geoslice.md) |
 | `Credential` + per-cloud subclasses | Cross-cutting types | New | [`plans/types/credentials.md`](plans/types/credentials.md) |
-| `ByteStore` + `ObstoreByteStore` / `FsspecByteStore` | Cross-cutting types | New | [`plans/types/bytestore.md`](plans/types/bytestore.md) |
+| `geotoolz.io.open_store(url)` (over upstream `obspec.AsyncStore`) | Cross-cutting types | New (~30 LOC factory only) | [`plans/types/bytestore.md`](plans/types/bytestore.md) |
 | JAX bridge (via `coordax`) | Logic ↔ JAX | Future work | *TBD* |
 
 ---
@@ -768,7 +768,7 @@ Out of scope for the initial library push; flagged here so the architecture leav
 - [`plans/geotoolz/`](plans/geotoolz/) — `geotoolz` operator library design.
 - [`plans/geodatabase/`](plans/geodatabase/) — `GeoCatalog` + DuckDB backend design.
 - [`plans/georeader/`](plans/georeader/) — reader Protocols and concrete reader designs.
-- [`plans/types/`](plans/types/) — cross-cutting type designs (`GeoSlice`, `Credential`, `ByteStore`).
+- [`plans/types/`](plans/types/) — cross-cutting type designs (`GeoSlice`, `Credential`; `bytestore.md` is a passthrough note for upstream `obspec`).
 - [`plans/readers/`](plans/readers/) — per-sensor reader designs (geostationary, MODIS, …).
 
 ### The success-story anchor

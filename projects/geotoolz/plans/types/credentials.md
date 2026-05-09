@@ -371,7 +371,7 @@ Implementation detail: this dispatches on `section` to the right per-cloud helpe
 A `RasterioReader` constructed with a `credential=` kwarg threads it through the `rasterio.Env(...)` wrap:
 
 ```python
-class RasterioReader(SyncReader):
+class RasterioReader(GeoData):
     def __init__(self, paths, *, credential: Credential | None = None,
                  rio_env_options: dict | None = None, **kwargs):
         self._credential = credential
@@ -399,7 +399,7 @@ The fsspec path (`fs=fsspec_fs`) and the opener path (`opener=callable`) take cr
 | [`reader_protocol.md`](../georeader/reader_protocol.md) §"Credential handling" | Articulates where credentials live in each of the three bytes paths. This Protocol is the typed surface for the GDAL-VSI path; the other two paths use their own native credential objects. |
 | [`reader_rasterio.md`](../georeader/reader_rasterio.md) | Wires `credential=` into the `RasterioReader` refactor; specifies refresh-on-401 retry, SAS-fallback path-rewriting, and multi-account isolation. |
 | [Reader reconciliation](../georeader/README.md) | Both readers (`RasterioReader`, future `AsyncGeoTIFFReader`) accept a `credential=` kwarg. Different paths consume it differently; same Protocol surface. |
-| [`bytestore.md`](bytestore.md) | The transport surface for `AsyncGeoTIFFReader` (and any future raw-byte reader). Carries credentials inside the underlying `obstore.ObjectStore` or `fsspec.AbstractFileSystem` constructor. The `Credential` × `ByteStore` boundary — and possible `to_*_store()` bridge helpers — is documented in [`bytestore.md` §"Credential × ByteStore overlap"](bytestore.md#1-credential-x-bytestore-overlap). |
+| [`bytestore.md`](bytestore.md) | Cloud byte transport for `AsyncGeoTIFFReader` is delegated to upstream [`obspec`](https://github.com/developmentseed/obspec); we don't ship a `ByteStore` Protocol. Credentials flow into the underlying `obstore.S3Store` / `GCSStore` / `AzureStore` (which all satisfy `obspec.AsyncStore`) via `Credential.to_obstore_*_store(...)` helpers. See [`bytestore.md`](bytestore.md). |
 
 ---
 

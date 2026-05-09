@@ -25,9 +25,9 @@ This file owns the visual ecosystem map (the layered diagram, the strategy-compa
 
 | Topic | Full design |
 |---|---|
-| Reader Protocol surface; `RasterioReader` refactor | [`georeader/reader_protocol.md`](georeader/reader_protocol.md) |
-| `ByteStore` Protocol + `ObstoreByteStore` / `FsspecByteStore` adapters | [`types/bytestore.md`](types/bytestore.md) |
-| `AsyncGeoTIFFReader` + `AsyncReader` Protocol | [`georeader/reader_async_geotiff.md`](georeader/reader_async_geotiff.md) |
+| Reader Protocol surface (`AsyncGeoData` added; `RasterioReader` widening) | [`georeader/reader_protocol.md`](georeader/reader_protocol.md) |
+| Cloud byte transport — defer to `obspec` (no Protocol of our own) | [`types/bytestore.md`](types/bytestore.md) |
+| `AsyncGeoTIFFReader` — thin adapter over `developmentseed/async-geotiff` | [`georeader/reader_async_geotiff.md`](georeader/reader_async_geotiff.md) |
 | `geotoolz` operator library | [`geotoolz/geotoolz.md`](geotoolz/geotoolz.md) |
 | `GeoCatalog` + builders + DuckDB backend | [`geodatabase/`](geodatabase/) |
 | `GeoSlice` + samplers + stitch | [`types/geoslice.md`](types/geoslice.md) |
@@ -266,7 +266,7 @@ A practical rule:
 
 The two coexist comfortably. New code paths in `async-geotiff` and `lazycogs` default to `obstore`; older code paths in `geopandas`, `pandas`, `xarray`, and `zarr ≤ 2` go through `fsspec`. `georeader.GeoCatalog` uses `obstore` for its parquet round-trip when reading remote catalogs because that's the hot path; but it can fall back to `fsspec` for niche storage.
 
-Both transports satisfy the same `ByteStore` Protocol — readers take a `store=` argument and don't care which is plugged in. See [`types/bytestore.md`](types/bytestore.md) for the Protocol that abstracts both, plus the `ObstoreByteStore` / `FsspecByteStore` adapter sketches and the `open_store(url)` factory.
+For our async path: `AsyncGeoTIFFReader` accepts any [`obspec.AsyncStore`](https://github.com/developmentseed/obspec) (`obstore.S3Store` / `GCSStore` / `AzureStore`, etc.) via `store=`. We don't ship a `ByteStore` Protocol of our own — `obspec` is the upstream Protocol and `obstore` is the reference implementation. Sync reads with niche backends still go through `RasterioReader(fs=fsspec_fs)`. See [`types/bytestore.md`](types/bytestore.md) for the (one-page) rationale and the small `geotoolz.io.open_store(url)` factory.
 
 ---
 

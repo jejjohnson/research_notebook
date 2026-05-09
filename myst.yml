@@ -313,3 +313,5 @@ project:
 site:
   template: book-theme
   title: Research Notebook
+  options:
+    style: projects/geotoolz/diagrams.css

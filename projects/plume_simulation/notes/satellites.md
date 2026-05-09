@@ -24,7 +24,11 @@ The **Methane Alert and Response System (MARS)** integrates data from over 35 sa
 - **Area Flux Mappers (AFM)** — wide-swath column retrievals of XCH₄ (in ppb), enabling regional and national budget attribution.
 :::
 
-The table below is interactive: filter by category, era, or free-text search across satellite name, instrument, and spectral method. The HTML, CSS, and filter logic are loaded from a sibling file ([`satellites_table.html`](satellites_table.html)) so the rendering is identical to the legacy interactive cell — see the mystmd guide on [including tables from file](https://mystmd.org/guide/tables#include-tables-from-file) for the directive pattern.
+The full 27-row catalog is loaded from a sibling file ([`satellites_table.html`](satellites_table.html)) per the mystmd guide on [including tables from file](https://mystmd.org/guide/tables#include-tables-from-file).
+
+:::{caution} Static-only rendering under mystmd `{include}`
+mystmd's HTML sanitization strips `<script>` tags from included content, so the filter buttons (Past / Present / Future, PSI / AFM) and the search input render as inert controls — all 27 rows are always visible. The legacy notebook cell rendered the same HTML inside a sandboxed iframe where the JS *did* run; restoring that interactive UX would require either embedding via `srcdoc=` or keeping a one-cell `.ipynb` companion. Treat this as a static catalog for now.
+:::
 
 ::::{table} MARS satellite constellation — past, present, and future missions tasked for methane retrieval, with spatial / spectral / SNR characteristics and per-row references into `methane.bib`.
 :label: tbl-mars-satellites

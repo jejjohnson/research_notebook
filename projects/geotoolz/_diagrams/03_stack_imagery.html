@@ -1,0 +1,137 @@
+<style>
+  .gsd-stackA {
+    --gsd-fg: #1f2328;
+    --gsd-muted: #57606a;
+    --gsd-border: #d0d7de;
+    --gsd-card: #ffffff;
+    --gsd-connector: #8c959f;
+    --gsd-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --gsd-accent-bg: #ddf4ff;
+    --gsd-accent-border: #54aeff;
+    --gsd-accent-fg: #0969da;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--gsd-fg);
+    max-width: 660px;
+    margin: 1.5em auto;
+  }
+  @media (prefers-color-scheme: dark) {
+    .gsd-stackA {
+      --gsd-fg: #e6edf3;
+      --gsd-muted: #8b949e;
+      --gsd-border: #30363d;
+      --gsd-card: #161b22;
+      --gsd-connector: #6e7681;
+      --gsd-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --gsd-accent-bg: #0c2d6b;
+      --gsd-accent-border: #1f6feb;
+      --gsd-accent-fg: #79c0ff;
+    }
+  }
+  .gsd-stackA * { box-sizing: border-box; }
+  .gsd-stackA__grid {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 8px 14px;
+    align-items: stretch;
+  }
+  .gsd-stackA__label {
+    text-align: right;
+    align-self: center;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--gsd-muted);
+  }
+  .gsd-stackA__row { display: flex; gap: 8px; }
+  .gsd-stackA__cell {
+    flex: 1;
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 6px;
+    padding: 10px 10px;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: var(--gsd-shadow);
+  }
+  .gsd-stackA__cell--accent {
+    background: var(--gsd-accent-bg);
+    border-color: var(--gsd-accent-border);
+    color: var(--gsd-accent-fg);
+  }
+  .gsd-stackA__cell small {
+    display: block;
+    font-weight: 400;
+    color: var(--gsd-muted);
+    font-size: 11.5px;
+    margin-top: 2px;
+  }
+  .gsd-stackA__cell--accent small { color: inherit; opacity: 0.85; }
+  .gsd-stackA__arrow {
+    grid-column: 2;
+    color: var(--gsd-connector);
+    text-align: center;
+    line-height: 1;
+    font-size: 11px;
+    margin: -2px 0;
+  }
+  .gsd-stackA__caption {
+    grid-column: 2;
+    color: var(--gsd-muted);
+    font-size: 11px;
+    text-align: center;
+    font-style: italic;
+    margin: -2px 0;
+  }
+</style>
+<div class="gsd-stackA">
+  <div class="gsd-stackA__grid">
+
+    <div class="gsd-stackA__label">Viz / UX</div>
+    <div class="gsd-stackA__row">
+      <div class="gsd-stackA__cell">lonboard<small>Jupyter / GPU</small></div>
+      <div class="gsd-stackA__cell">titiler<small>flexible API</small></div>
+    </div>
+
+    <div class="gsd-stackA__arrow">▼</div>
+
+    <div class="gsd-stackA__label">Compute</div>
+    <div class="gsd-stackA__row">
+      <div class="gsd-stackA__cell gsd-stackA__cell--accent">geotoolz<small>Operator · Sequential · Graph</small></div>
+    </div>
+
+    <div class="gsd-stackA__caption">GeoTensor in / out</div>
+
+    <div class="gsd-stackA__label">Substrate</div>
+    <div class="gsd-stackA__row">
+      <div class="gsd-stackA__cell">georeader<small>GeoTensor · GeoSlice · GeoCatalog</small></div>
+    </div>
+
+    <div class="gsd-stackA__arrow">▼</div>
+
+    <div class="gsd-stackA__label">Readers</div>
+    <div class="gsd-stackA__row">
+      <div class="gsd-stackA__cell">RasterioReader</div>
+      <div class="gsd-stackA__cell">async-geotiff</div>
+      <div class="gsd-stackA__cell">rio-tiler</div>
+    </div>
+
+    <div class="gsd-stackA__arrow">▼</div>
+
+    <div class="gsd-stackA__label">Transport</div>
+    <div class="gsd-stackA__row">
+      <div class="gsd-stackA__cell">GDAL / VSI<small>legacy IO</small></div>
+      <div class="gsd-stackA__cell">obstore<small>Rust byte mover</small></div>
+    </div>
+
+    <div class="gsd-stackA__arrow">▼</div>
+
+    <div class="gsd-stackA__label">Storage</div>
+    <div class="gsd-stackA__row">
+      <div class="gsd-stackA__cell">COG<small>Cloud Optimized GeoTIFF</small></div>
+    </div>
+
+  </div>
+</div>

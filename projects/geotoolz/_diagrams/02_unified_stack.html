@@ -1,0 +1,150 @@
+<style>
+  .gsd-unified {
+    --gsd-fg: #1f2328;
+    --gsd-muted: #57606a;
+    --gsd-border: #d0d7de;
+    --gsd-card: #ffffff;
+    --gsd-connector: #8c959f;
+    --gsd-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --gsd-accent-bg: #ddf4ff;
+    --gsd-accent-border: #54aeff;
+    --gsd-accent-fg: #0969da;
+    --gsd-highlight-bg: #fff8c5;
+    --gsd-highlight-border: #d4a72c;
+    --gsd-highlight-fg: #7d4e00;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--gsd-fg);
+    max-width: 700px;
+    margin: 1.5em auto;
+  }
+  @media (prefers-color-scheme: dark) {
+    .gsd-unified {
+      --gsd-fg: #e6edf3;
+      --gsd-muted: #8b949e;
+      --gsd-border: #30363d;
+      --gsd-card: #161b22;
+      --gsd-connector: #6e7681;
+      --gsd-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --gsd-accent-bg: #0c2d6b;
+      --gsd-accent-border: #1f6feb;
+      --gsd-accent-fg: #79c0ff;
+      --gsd-highlight-bg: #4d3c00;
+      --gsd-highlight-border: #d4a72c;
+      --gsd-highlight-fg: #f1e05a;
+    }
+  }
+  .gsd-unified * { box-sizing: border-box; }
+  .gsd-unified__grid {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 8px 14px;
+    align-items: stretch;
+  }
+  .gsd-unified__label {
+    text-align: right;
+    align-self: center;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--gsd-muted);
+  }
+  .gsd-unified__row { display: flex; gap: 8px; }
+  .gsd-unified__cell {
+    flex: 1;
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 6px;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: 500;
+    box-shadow: var(--gsd-shadow);
+  }
+  .gsd-unified__cell--accent {
+    background: var(--gsd-accent-bg);
+    border-color: var(--gsd-accent-border);
+    color: var(--gsd-accent-fg);
+    font-weight: 700;
+  }
+  .gsd-unified__cell--highlight {
+    background: var(--gsd-highlight-bg);
+    border-color: var(--gsd-highlight-border);
+    color: var(--gsd-highlight-fg);
+    font-weight: 700;
+  }
+  .gsd-unified__cell small {
+    display: block;
+    font-weight: 400;
+    color: var(--gsd-muted);
+    font-size: 11.5px;
+    margin-top: 2px;
+  }
+  .gsd-unified__cell--accent small,
+  .gsd-unified__cell--highlight small { color: inherit; opacity: 0.85; }
+  .gsd-unified__arrow {
+    grid-column: 2;
+    color: var(--gsd-connector);
+    text-align: center;
+    line-height: 1;
+    font-size: 11px;
+    margin: -2px 0;
+  }
+</style>
+<div class="gsd-unified">
+  <div class="gsd-unified__grid">
+
+    <div class="gsd-unified__label">Viz / UX</div>
+    <div class="gsd-unified__row">
+      <div class="gsd-unified__cell">lonboard</div>
+      <div class="gsd-unified__cell">titiler</div>
+      <div class="gsd-unified__cell">Felt</div>
+    </div>
+
+    <div class="gsd-unified__arrow">▼</div>
+
+    <div class="gsd-unified__label">Logic<br><small style="font-weight:400">Engines</small></div>
+    <div class="gsd-unified__row">
+      <div class="gsd-unified__cell gsd-unified__cell--accent">geotoolz<small>imagery</small></div>
+      <div class="gsd-unified__cell gsd-unified__cell--accent">xrtoolz<small>dense</small></div>
+      <div class="gsd-unified__cell">DuckDB<small>vector</small></div>
+    </div>
+
+    <div class="gsd-unified__arrow">▼</div>
+
+    <div class="gsd-unified__label">Discovery<br><small style="font-weight:400">The Glue</small></div>
+    <div class="gsd-unified__row">
+      <div class="gsd-unified__cell gsd-unified__cell--highlight">★ GeoCatalog ★<small>GeoParquet / GeoJSON / STAC</small></div>
+    </div>
+
+    <div class="gsd-unified__arrow">▼</div>
+
+    <div class="gsd-unified__label">Substrate<br><small style="font-weight:400">Readers</small></div>
+    <div class="gsd-unified__row">
+      <div class="gsd-unified__cell">georeader</div>
+      <div class="gsd-unified__cell">xarray</div>
+      <div class="gsd-unified__cell">GeoPandas</div>
+      <div class="gsd-unified__cell">async-geotiff</div>
+    </div>
+
+    <div class="gsd-unified__arrow">▼</div>
+
+    <div class="gsd-unified__label">Transport<br><small style="font-weight:400">IO</small></div>
+    <div class="gsd-unified__row">
+      <div class="gsd-unified__cell">obstore</div>
+      <div class="gsd-unified__cell">kerchunk</div>
+      <div class="gsd-unified__cell">GDAL / VSI</div>
+    </div>
+
+    <div class="gsd-unified__arrow">▼</div>
+
+    <div class="gsd-unified__label">Storage<br><small style="font-weight:400">Cloud</small></div>
+    <div class="gsd-unified__row">
+      <div class="gsd-unified__cell">COG</div>
+      <div class="gsd-unified__cell">Zarr</div>
+      <div class="gsd-unified__cell">GeoParquet</div>
+    </div>
+
+  </div>
+</div>

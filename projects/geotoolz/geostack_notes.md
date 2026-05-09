@@ -31,8 +31,7 @@ keywords: geospatial, ecosystem, motivation, geotoolz, xrtoolz, geocatalog
 
 A flattened picture of the whole stack, before the detailed walk-through:
 
-:::{raw} html
-:file: _diagrams/01_five_layer.html
+:::{include} _diagrams/01_five_layer.html
 :::
 
 Read it from the bottom: bytes sit in **warehouses**, **forklifts** haul them out only when asked, the **registry** tells the forklift *which* warehouse to go to, **factories** turn raw cargo into finished products, and the **storefront** shows it to the human. Every layer above is useless without the one below — but the *registry* is the layer most people skip and then regret.
@@ -100,8 +99,7 @@ The cloud-native geospatial ecosystem is **mature at the edges** (storage format
 
 The full stack, with `GeoCatalog` as the discovery layer that ties the three data-plane stacks together:
 
-:::{raw} html
-:file: _diagrams/02_unified_stack.html
+:::{include} _diagrams/02_unified_stack.html
 :::
 
 ### The catalog is the glue
@@ -132,8 +130,7 @@ The same six layers repeat across all three stacks; only the row contents change
 **Focus.** 2D/3D satellite and aerial imagery.
 **Philosophy.** Window-based processing — crop spatial slices from massive COGs via HTTP range requests.
 
-:::{raw} html
-:file: _diagrams/03_stack_imagery.html
+:::{include} _diagrams/03_stack_imagery.html
 :::
 
 #### Layers
@@ -170,8 +167,7 @@ The same six layers repeat across all three stacks; only the row contents change
 
 A user asks for a low-cloud Sentinel-2 mosaic of Paris in 2024:
 
-:::{raw} html
-:file: _diagrams/04_lifecycle_imagery.html
+:::{include} _diagrams/04_lifecycle_imagery.html
 :::
 
 **The trick.** The reader makes *two* round trips — first a cheap header read to learn tile layout, then a fan-out of concurrent range reads for just the tiles that overlap the AOI. That's how you turn a 10 GB scene into a 3 MB transfer.
@@ -183,8 +179,7 @@ A user asks for a low-cloud Sentinel-2 mosaic of Paris in 2024:
 **Focus.** Multi-dimensional scientific grids — climate, weather, oceanography.
 **Philosophy.** Coordinate-based DataCubes. Time, altitude, and variable are physical dimensions of a single labelled array.
 
-:::{raw} html
-:file: _diagrams/05_stack_dense.html
+:::{include} _diagrams/05_stack_dense.html
 :::
 
 #### Layers
@@ -226,8 +221,7 @@ A user asks for a low-cloud Sentinel-2 mosaic of Paris in 2024:
 
 A climate scientist asks for monthly mean SST over the North Atlantic for 1990–2024:
 
-:::{raw} html
-:file: _diagrams/06_lifecycle_dense.html
+:::{include} _diagrams/06_lifecycle_dense.html
 :::
 
 **The trick.** Coordinate selection (`.sel`) is translated into chunk indices *before* any bytes are read; only the chunks intersecting the requested coordinate hyperrectangle are fetched. Lazy evaluation through Dask means downstream reductions (`.mean()`) collapse the chunk-fetch + compute graph into a single optimised pass.
@@ -239,8 +233,7 @@ A climate scientist asks for monthly mean SST over the North Atlantic for 1990�
 **Focus.** Discrete features — points, lines, polygons, and their attributes.
 **Philosophy.** Tabular and relational. Geography is just another column in a high-performance database.
 
-:::{raw} html
-:file: _diagrams/07_stack_vector.html
+:::{include} _diagrams/07_stack_vector.html
 :::
 
 #### Layers
@@ -284,8 +277,7 @@ A climate scientist asks for monthly mean SST over the North Atlantic for 1990�
 
 An analyst asks for all building footprints in a flood zone:
 
-:::{raw} html
-:file: _diagrams/08_lifecycle_vector.html
+:::{include} _diagrams/08_lifecycle_vector.html
 :::
 
 **The trick.** Two stages of filtering: (1) **row-group pruning** using the bbox statistics in the Parquet footer skips entire row groups that can't possibly intersect, and only the surviving groups are fetched. (2) **column pruning** means non-needed attribute columns are never read off the wire. The result lands as Arrow buffers, so the hand-off to `lonboard` or GeoPandas is zero-copy.
@@ -298,8 +290,7 @@ An analyst asks for all building footprints in a flood zone:
 
 Most of the modern stack is **already there**. Two of the three libraries below (`georeader` modernisation, `GeoCatalog`) are *reconciliation* work — taking pieces that already work and giving them a coherent surface. The third (`geotoolz` + `xrtoolz`) is the genuinely missing piece: the **factory layer** that doesn't yet have a good general-purpose shape.
 
-:::{raw} html
-:file: _diagrams/09_libraries_fit.html
+:::{include} _diagrams/09_libraries_fit.html
 :::
 
 Stars mark where my libraries plug in. Read it from the top: a user wants something → engines compose carriers → the registry tells them which files to open → readers translate cloud bytes into typed carriers → transport hauls only the bytes needed → cloud storage is the source of truth.

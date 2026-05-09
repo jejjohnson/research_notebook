@@ -1,0 +1,132 @@
+<style>
+  .gsd-stackC {
+    --gsd-fg: #1f2328;
+    --gsd-muted: #57606a;
+    --gsd-border: #d0d7de;
+    --gsd-card: #ffffff;
+    --gsd-connector: #8c959f;
+    --gsd-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --gsd-accent-bg: #ddf4ff;
+    --gsd-accent-border: #54aeff;
+    --gsd-accent-fg: #0969da;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--gsd-fg);
+    max-width: 660px;
+    margin: 1.5em auto;
+  }
+  @media (prefers-color-scheme: dark) {
+    .gsd-stackC {
+      --gsd-fg: #e6edf3;
+      --gsd-muted: #8b949e;
+      --gsd-border: #30363d;
+      --gsd-card: #161b22;
+      --gsd-connector: #6e7681;
+      --gsd-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --gsd-accent-bg: #0c2d6b;
+      --gsd-accent-border: #1f6feb;
+      --gsd-accent-fg: #79c0ff;
+    }
+  }
+  .gsd-stackC * { box-sizing: border-box; }
+  .gsd-stackC__grid {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 8px 14px;
+    align-items: stretch;
+  }
+  .gsd-stackC__label {
+    text-align: right;
+    align-self: center;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--gsd-muted);
+  }
+  .gsd-stackC__row { display: flex; gap: 8px; }
+  .gsd-stackC__row--center { justify-content: center; }
+  .gsd-stackC__cell {
+    flex: 1;
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 6px;
+    padding: 10px 10px;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: var(--gsd-shadow);
+  }
+  .gsd-stackC__cell--accent {
+    background: var(--gsd-accent-bg);
+    border-color: var(--gsd-accent-border);
+    color: var(--gsd-accent-fg);
+  }
+  .gsd-stackC__cell--narrow { flex: 0 0 60%; }
+  .gsd-stackC__cell small {
+    display: block;
+    font-weight: 400;
+    color: var(--gsd-muted);
+    font-size: 11.5px;
+    margin-top: 2px;
+  }
+  .gsd-stackC__cell--accent small { color: inherit; opacity: 0.85; }
+  .gsd-stackC__arrow {
+    grid-column: 2;
+    color: var(--gsd-connector);
+    text-align: center;
+    line-height: 1;
+    font-size: 11px;
+    margin: -2px 0;
+  }
+</style>
+<div class="gsd-stackC">
+  <div class="gsd-stackC__grid">
+
+    <div class="gsd-stackC__label">Viz / UX</div>
+    <div class="gsd-stackC__row">
+      <div class="gsd-stackC__cell">lonboard<small>GeoArrow / GPU</small></div>
+      <div class="gsd-stackC__cell">Felt<small>collaborative</small></div>
+    </div>
+
+    <div class="gsd-stackC__arrow">▼</div>
+
+    <div class="gsd-stackC__label">Engines</div>
+    <div class="gsd-stackC__row">
+      <div class="gsd-stackC__cell gsd-stackC__cell--accent">DuckDB SQL · GeoPandas<small>spatial joins · buffers · filters</small></div>
+    </div>
+
+    <div class="gsd-stackC__arrow">▼</div>
+
+    <div class="gsd-stackC__label">Substrate</div>
+    <div class="gsd-stackC__row">
+      <div class="gsd-stackC__cell">GeoArrow<small>zero-copy tabular spatial streams</small></div>
+    </div>
+
+    <div class="gsd-stackC__arrow">▼</div>
+
+    <div class="gsd-stackC__label">Readers</div>
+    <div class="gsd-stackC__row">
+      <div class="gsd-stackC__cell">pyogrio<small>fast OGR</small></div>
+      <div class="gsd-stackC__cell">PostGIS<small>database</small></div>
+      <div class="gsd-stackC__cell">SedonaDB<small>big data</small></div>
+    </div>
+
+    <div class="gsd-stackC__arrow">▼</div>
+
+    <div class="gsd-stackC__label">Transport</div>
+    <div class="gsd-stackC__row gsd-stackC__row--center">
+      <div class="gsd-stackC__cell gsd-stackC__cell--narrow">obstore</div>
+    </div>
+
+    <div class="gsd-stackC__arrow">▼</div>
+
+    <div class="gsd-stackC__label">Storage</div>
+    <div class="gsd-stackC__row">
+      <div class="gsd-stackC__cell">GeoParquet</div>
+      <div class="gsd-stackC__cell">PostgreSQL</div>
+      <div class="gsd-stackC__cell">FlatGeobuf</div>
+    </div>
+
+  </div>
+</div>

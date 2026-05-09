@@ -1,0 +1,137 @@
+<style>
+  .gsd-stackB {
+    --gsd-fg: #1f2328;
+    --gsd-muted: #57606a;
+    --gsd-border: #d0d7de;
+    --gsd-card: #ffffff;
+    --gsd-connector: #8c959f;
+    --gsd-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --gsd-accent-bg: #ddf4ff;
+    --gsd-accent-border: #54aeff;
+    --gsd-accent-fg: #0969da;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--gsd-fg);
+    max-width: 660px;
+    margin: 1.5em auto;
+  }
+  @media (prefers-color-scheme: dark) {
+    .gsd-stackB {
+      --gsd-fg: #e6edf3;
+      --gsd-muted: #8b949e;
+      --gsd-border: #30363d;
+      --gsd-card: #161b22;
+      --gsd-connector: #6e7681;
+      --gsd-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --gsd-accent-bg: #0c2d6b;
+      --gsd-accent-border: #1f6feb;
+      --gsd-accent-fg: #79c0ff;
+    }
+  }
+  .gsd-stackB * { box-sizing: border-box; }
+  .gsd-stackB__grid {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 8px 14px;
+    align-items: stretch;
+  }
+  .gsd-stackB__label {
+    text-align: right;
+    align-self: center;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--gsd-muted);
+  }
+  .gsd-stackB__row { display: flex; gap: 8px; }
+  .gsd-stackB__row--center { justify-content: center; }
+  .gsd-stackB__cell {
+    flex: 1;
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 6px;
+    padding: 10px 10px;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: var(--gsd-shadow);
+  }
+  .gsd-stackB__cell--accent {
+    background: var(--gsd-accent-bg);
+    border-color: var(--gsd-accent-border);
+    color: var(--gsd-accent-fg);
+  }
+  .gsd-stackB__cell--narrow { flex: 0 0 60%; }
+  .gsd-stackB__cell small {
+    display: block;
+    font-weight: 400;
+    color: var(--gsd-muted);
+    font-size: 11.5px;
+    margin-top: 2px;
+  }
+  .gsd-stackB__cell--accent small { color: inherit; opacity: 0.85; }
+  .gsd-stackB__arrow {
+    grid-column: 2;
+    color: var(--gsd-connector);
+    text-align: center;
+    line-height: 1;
+    font-size: 11px;
+    margin: -2px 0;
+  }
+</style>
+<div class="gsd-stackB">
+  <div class="gsd-stackB__grid">
+
+    <div class="gsd-stackB__label">Viz / UX</div>
+    <div class="gsd-stackB__row">
+      <div class="gsd-stackB__cell">lonboard<small>GPU render</small></div>
+      <div class="gsd-stackB__cell">Holoviz<small>aggregation</small></div>
+    </div>
+
+    <div class="gsd-stackB__arrow">▼</div>
+
+    <div class="gsd-stackB__label">Compute</div>
+    <div class="gsd-stackB__row">
+      <div class="gsd-stackB__cell gsd-stackB__cell--accent">xrtoolz<small>N-D algebra · regridding · means</small></div>
+    </div>
+
+    <div class="gsd-stackB__arrow">▼</div>
+
+    <div class="gsd-stackB__label">Substrate</div>
+    <div class="gsd-stackB__row">
+      <div class="gsd-stackB__cell">xarray<small>coordinates · dimensions · chunks</small></div>
+    </div>
+
+    <div class="gsd-stackB__arrow">▼</div>
+
+    <div class="gsd-stackB__label">Readers</div>
+    <div class="gsd-stackB__row">
+      <div class="gsd-stackB__cell">Zarr<small>standard</small></div>
+      <div class="gsd-stackB__cell">Icechunk<small>versioned</small></div>
+      <div class="gsd-stackB__cell">stackstac · odc-stac · lazycogs</div>
+    </div>
+
+    <div class="gsd-stackB__arrow">▼</div>
+
+    <div class="gsd-stackB__label">Virtual</div>
+    <div class="gsd-stackB__row gsd-stackB__row--center">
+      <div class="gsd-stackB__cell gsd-stackB__cell--narrow">kerchunk<small>HDF5 / NetCDF virtualisation</small></div>
+    </div>
+
+    <div class="gsd-stackB__arrow">▼</div>
+
+    <div class="gsd-stackB__label">Transport</div>
+    <div class="gsd-stackB__row gsd-stackB__row--center">
+      <div class="gsd-stackB__cell gsd-stackB__cell--narrow">obstore</div>
+    </div>
+
+    <div class="gsd-stackB__arrow">▼</div>
+
+    <div class="gsd-stackB__label">Storage</div>
+    <div class="gsd-stackB__row">
+      <div class="gsd-stackB__cell">Zarr · HDF5 · NetCDF</div>
+    </div>
+
+  </div>
+</div>

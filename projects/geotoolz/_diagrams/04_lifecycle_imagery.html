@@ -1,0 +1,320 @@
+<style>
+  .gsd-seqA {
+    --gsd-fg: #1f2328;
+    --gsd-muted: #57606a;
+    --gsd-border: #d0d7de;
+    --gsd-card: #ffffff;
+    --gsd-soft: #f6f8fa;
+    --gsd-arrow: #0969da;
+    --gsd-return: #8c959f;
+    --gsd-par-bg: #fff8c5;
+    --gsd-par-border: #d4a72c;
+    --gsd-lifeline: #d0d7de;
+    --gsd-bg: #ffffff;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--gsd-fg);
+    max-width: 760px;
+    margin: 1.5em auto;
+    --cols: 5;
+    position: relative;
+  }
+  @media (prefers-color-scheme: dark) {
+    .gsd-seqA {
+      --gsd-fg: #e6edf3;
+      --gsd-muted: #8b949e;
+      --gsd-border: #30363d;
+      --gsd-card: #161b22;
+      --gsd-soft: #21262d;
+      --gsd-arrow: #58a6ff;
+      --gsd-return: #6e7681;
+      --gsd-par-bg: #4d3c00;
+      --gsd-par-border: #d4a72c;
+      --gsd-lifeline: #30363d;
+      --gsd-bg: #0d1117;
+    }
+  }
+  .gsd-seqA * { box-sizing: border-box; }
+  .gsd-seqA__hdr {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 0;
+    background: var(--gsd-bg);
+    padding: 6px 0 10px;
+  }
+  .gsd-seqA__actor {
+    text-align: center;
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 6px;
+    padding: 8px 4px;
+    font-weight: 700;
+    font-size: 12px;
+    margin: 0 4px;
+  }
+  .gsd-seqA__actor small {
+    display: block; font-weight: 400; color: var(--gsd-muted); font-size: 11px;
+  }
+
+  .gsd-seqA__body { position: relative; padding: 4px 0 8px; }
+  .gsd-seqA__lifelines {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .gsd-seqA__lifelines > div {
+    border-left: 1px dashed var(--gsd-lifeline);
+    margin-left: calc(50% - 0.5px);
+    width: 1px;
+  }
+
+  .gsd-seqA__rows { position: relative; display: flex; flex-direction: column; gap: 4px; }
+  .gsd-seqA__row {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 0;
+    align-items: center;
+    min-height: 28px;
+  }
+  .gsd-seqA__msg {
+    grid-column: var(--from) / calc(var(--to) + 1);
+    /* shrink the bar inward so it starts/ends at column centers (where lifelines sit) */
+    padding-left: calc(50% / (var(--to) - var(--from) + 1));
+    padding-right: calc(50% / (var(--to) - var(--from) + 1));
+    display: flex;
+    align-items: center;
+    gap: 0;
+    color: var(--gsd-arrow);
+  }
+  .gsd-seqA__msg-line {
+    flex: 1; height: 1.5px; background: currentColor; border-radius: 1px;
+    position: relative; z-index: 2;
+  }
+  .gsd-seqA__msg-head {
+    font-size: 11px; line-height: 1; flex: 0 0 auto;
+    position: relative; z-index: 2;
+  }
+  .gsd-seqA__msg-label {
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: var(--gsd-fg);
+    font-size: 12px;
+    line-height: 1.35;
+    margin: 0 4px;
+    /* wrap long messages instead of truncating with ellipsis */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .gsd-seqA__msg--return { color: var(--gsd-return); }
+  .gsd-seqA__msg--return .gsd-seqA__msg-line {
+    background: transparent;
+    border-top: 1.5px dashed currentColor;
+    height: 0;
+  }
+  .gsd-seqA__msg--reverse { flex-direction: row-reverse; }
+
+  .gsd-seqA__self {
+    grid-column: var(--from) / calc(var(--to) + 1);
+    padding-left: 50%;
+    display: flex;
+    align-items: center;
+    color: var(--gsd-muted);
+    font-size: 11.5px;
+    font-style: italic;
+    position: relative;
+    z-index: 2;
+    overflow: visible;
+    white-space: nowrap;
+  }
+  .gsd-seqA__self-marker {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--gsd-muted);
+    border-radius: 50%;
+    margin-right: 6px;
+    background: var(--gsd-bg);
+    flex: 0 0 auto;
+  }
+
+  .gsd-seqA__par {
+    background: var(--gsd-par-bg);
+    border: 1px solid var(--gsd-par-border);
+    border-radius: 6px;
+    margin: 6px 0;
+    padding: 10px 0 8px;
+    position: relative;
+  }
+  .gsd-seqA__par-tag {
+    position: absolute; top: -8px; left: 12px;
+    background: var(--gsd-par-border);
+    color: var(--gsd-bg);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    z-index: 3;
+  }
+
+  code.gsd-seqA__code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    background: var(--gsd-soft);
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+</style>
+<div class="gsd-seqA">
+  <div class="gsd-seqA__hdr">
+    <div class="gsd-seqA__actor">User<small>U</small></div>
+    <div class="gsd-seqA__actor">GeoCatalog<small>C</small></div>
+    <div class="gsd-seqA__actor">Reader<small>R · georeader</small></div>
+    <div class="gsd-seqA__actor">obstore<small>O</small></div>
+    <div class="gsd-seqA__actor">S3<small>S</small></div>
+  </div>
+
+  <div class="gsd-seqA__body">
+    <div class="gsd-seqA__lifelines">
+      <div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+    <div class="gsd-seqA__rows">
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__msg" style="--from:1; --to:2;">
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-label"><code class="gsd-seqA__code">SQL: bbox ∩ Paris ∧ date ∈ 2024 ∧ cloud &lt; 10</code></span>
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:1; --to:2;">
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-label">list of COG URLs + metadata</span>
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-head">◀</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__msg" style="--from:1; --to:3;">
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-label"><code class="gsd-seqA__code">open(urls, slice=GeoSlice(bbox))</code></span>
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__msg" style="--from:3; --to:4;">
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-label">HEAD + small range read</span>
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__msg" style="--from:4; --to:5;">
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-label">HTTP Range (header)</span>
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:4; --to:5;">
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-label">COG IFD bytes</span>
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-head">◀</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:3; --to:4;">
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-label">tile offsets + nodata + CRS</span>
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-head">◀</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__self" style="--from:3; --to:3;">
+          <span class="gsd-seqA__self-marker"></span>
+          compute overlapping tile indices
+        </div>
+      </div>
+
+      <div class="gsd-seqA__par">
+        <span class="gsd-seqA__par-tag">par — parallel tile fetch</span>
+
+        <div class="gsd-seqA__row">
+          <div class="gsd-seqA__msg" style="--from:3; --to:4;">
+            <span class="gsd-seqA__msg-line"></span>
+            <span class="gsd-seqA__msg-label">range read (tile <em>k</em>)</span>
+            <span class="gsd-seqA__msg-line"></span>
+            <span class="gsd-seqA__msg-head">▶</span>
+          </div>
+        </div>
+
+        <div class="gsd-seqA__row">
+          <div class="gsd-seqA__msg" style="--from:4; --to:5;">
+            <span class="gsd-seqA__msg-line"></span>
+            <span class="gsd-seqA__msg-label">HTTP Range (tile <em>k</em>)</span>
+            <span class="gsd-seqA__msg-line"></span>
+            <span class="gsd-seqA__msg-head">▶</span>
+          </div>
+        </div>
+
+        <div class="gsd-seqA__row">
+          <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:4; --to:5;">
+            <span class="gsd-seqA__msg-line"></span>
+            <span class="gsd-seqA__msg-label">compressed tile bytes</span>
+            <span class="gsd-seqA__msg-line"></span>
+            <span class="gsd-seqA__msg-head">◀</span>
+          </div>
+        </div>
+
+        <div class="gsd-seqA__row">
+          <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:3; --to:4;">
+            <span class="gsd-seqA__msg-line"></span>
+            <span class="gsd-seqA__msg-label">tile bytes</span>
+            <span class="gsd-seqA__msg-line"></span>
+            <span class="gsd-seqA__msg-head">◀</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__self" style="--from:3; --to:3;">
+          <span class="gsd-seqA__self-marker"></span>
+          decompress + assemble window
+        </div>
+      </div>
+
+      <div class="gsd-seqA__row">
+        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:1; --to:3;">
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-label"><code class="gsd-seqA__code">GeoTensor</code> (CRS + affine + array)</span>
+          <span class="gsd-seqA__msg-line"></span>
+          <span class="gsd-seqA__msg-head">◀</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

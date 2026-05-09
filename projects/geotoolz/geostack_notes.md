@@ -31,36 +31,8 @@ keywords: geospatial, ecosystem, motivation, geotoolz, xrtoolz, geocatalog
 
 A flattened picture of the whole stack, before the detailed walk-through:
 
-```text
-                       [ STOREFRONT  —  the USER ]
-              ┌─────────────────────────────────────────────┐
-              │     notebook  ·  web map  ·  tile server    │
-              └──────────────────────▲──────────────────────┘
-                                     │
-                       [ FACTORIES  —  the LOGIC ]
-              ┌──────────────────────┴──────────────────────┐
-              │     pixel math  ·  joins  ·  regridding     │
-              │     compose, transform, reduce, render       │
-              └──────────────────────▲──────────────────────┘
-                                     │
-                  [ SHIPPING REGISTRY  —  DISCOVERY ]
-              ┌──────────────────────┴──────────────────────┐
-              │     "what exists, where it lives, what's     │
-              │      inside" — a queryable metadata index    │
-              └──────────────────────▲──────────────────────┘
-                                     │
-                    [ FORKLIFTS  —  the TRANSPORT ]
-              ┌──────────────────────┴──────────────────────┐
-              │   HTTP range requests  ·  concurrent IO     │
-              │   (only fetch the bytes you actually need)  │
-              └──────────────────────▲──────────────────────┘
-                                     │
-                    [ WAREHOUSES  —  the STORAGE ]
-              ┌──────────────────────┴──────────────────────┐
-              │  cloud object stores  ·  S3 / GCS / Azure   │
-              │  raster files · cube stores · tabular files │
-              └─────────────────────────────────────────────┘
-```
+:::{include} _diagrams/01_five_layer.html
+:::
 
 Read it from the bottom: bytes sit in **warehouses**, **forklifts** haul them out only when asked, the **registry** tells the forklift *which* warehouse to go to, **factories** turn raw cargo into finished products, and the **storefront** shows it to the human. Every layer above is useless without the one below — but the *registry* is the layer most people skip and then regret.
 
@@ -127,88 +99,8 @@ The cloud-native geospatial ecosystem is **mature at the edges** (storage format
 
 The full stack, with `GeoCatalog` as the discovery layer that ties the three data-plane stacks together:
 
-```{mermaid}
-flowchart TB
-    subgraph UX["Viz / UX"]
-        lonboard
-        titiler
-        Felt
-    end
-
-    subgraph LOGIC["Logic — Engines"]
-        geotoolz["geotoolz<br/>(imagery)"]
-        xrtoolz["xrtoolz<br/>(dense)"]
-        duckdb["DuckDB<br/>(vector)"]
-    end
-
-    subgraph DISC["Discovery — The Glue"]
-        cat["★ GeoCatalog ★<br/>GeoParquet / GeoJSON / STAC"]
-    end
-
-    subgraph SUB["Substrate — Readers"]
-        georeader
-        xarray
-        geopandas[GeoPandas]
-        agt[async-geotiff]
-    end
-
-    subgraph TRANSPORT["Transport — IO"]
-        obstore
-        kerchunk
-        vsi[GDAL / VSI]
-    end
-
-    subgraph STORAGE["Storage — Cloud"]
-        cog[COG]
-        zarr[Zarr]
-        gpq[GeoParquet]
-    end
-
-    UX --> LOGIC
-    LOGIC --> DISC
-    DISC --> SUB
-    SUB --> TRANSPORT
-    TRANSPORT --> STORAGE
-
-    style cat fill:#fff3cd,stroke:#f0ad4e,stroke-width:2px
-    style geotoolz fill:#e1f5ff,stroke:#0288d1
-    style xrtoolz fill:#e1f5ff,stroke:#0288d1
-```
-
-ASCII version (kept as the source of truth for terminal/PR review):
-
-```text
-                     [ THE USER / UI LAYER ]
-             ┌──────────────┬──────────────┬──────────────┐
-             │   lonboard   │   titiler    │     Felt     │
-             └──────▲───────┴──────▲───────┴──────▲───────┘
-                    │              │              │
-    ┌─────────────────────────────────────────────────────────────┐
-    │                 [ THE LOGIC LAYER (Engines) ]               │
-    │  geotoolz (Imagery)  ·  xrtoolz (Dense)  ·  DuckDB (Vector) │
-    └──────────────▲───────────────▲───────────────▲──────────────┘
-                   │               │               │
-    ┌──────────────┴───────────────┴───────────────┴──────────────┐
-    │               [ THE DISCOVERY LAYER (The Glue) ]            │
-    │                      ★ GeoCatalog ★                         │
-    │        (Metadata DB: GeoParquet / GeoJSON / STAC)           │
-    └──────────────┬───────────────┬───────────────┬──────────────┘
-                   │               │               │
-    ┌──────────────▼───────────────▼───────────────▼──────────────┐
-    │               [ THE SUBSTRATE / READERS ]                   │
-    │  georeader  ·  xarray  ·  GeoPandas  ·  async-geotiff       │
-    └──────────────┬───────────────┬───────────────┬──────────────┘
-                   │               │               │
-    ┌──────────────▼───────────────▼───────────────▼──────────────┐
-    │               [ THE TRANSPORT LAYER (IO) ]                  │
-    │               obstore  ·  kerchunk  ·  VSI                  │
-    └──────────────┬───────────────┬───────────────┬──────────────┘
-                   │               │               │
-    ┌──────────────▼───────────────▼───────────────▼──────────────┐
-    │               [ THE STORAGE LAYER (Cloud) ]                 │
-    │      COG      ·      Zarr     ·     GeoParquet              │
-    └─────────────────────────────────────────────────────────────┘
-```
+:::{include} _diagrams/02_unified_stack.html
+:::
 
 ### The catalog is the glue
 
@@ -238,37 +130,8 @@ The same six layers repeat across all three stacks; only the row contents change
 **Focus.** 2D/3D satellite and aerial imagery.
 **Philosophy.** Window-based processing — crop spatial slices from massive COGs via HTTP range requests.
 
-```text
-                ┌──────────────────┐    ┌─────────────────┐
-                │    lonboard      │    │    titiler      │
-   VIZ / UX  →  │  (Jupyter/GPU)   │    │ (Flexible API)  │
-                └────────┬─────────┘    └────────┬────────┘
-                         │                       │
-                ┌────────▼───────────────────────▼───────┐
-   COMPUTE   →  │              geotoolz                  │
-                │   Operator · Sequential · Graph        │
-                └────────────────┬───────────────────────┘
-                                 │ GeoTensor in / out
-                ┌────────────────▼───────────────────────┐
-   SUBSTRATE →  │       georeader (The Object Model)     │
-                │  GeoTensor · GeoSlice · GeoCatalog     │
-                └─────┬─────────────┬───────────────┬────┘
-                      │             │               │
-              ┌───────▼─────┐ ┌─────▼───────┐ ┌─────▼──────┐
-   READERS   →│ Rasterio-   │ │ async-      │ │  rio-      │
-              │ Reader      │ │ geotiff     │ │  tiler     │
-              └──────┬──────┘ └─────┬───────┘ └─────┬──────┘
-                     │              │               │
-              ┌──────▼──────┐       └───────┬───────┘
-   TRANSPORT →│  GDAL / VSI │               ▼
-              │ (Legacy IO) │      ┌─────────────────┐
-              └──────┬──────┘      │     obstore     │
-                     │             │(Rust Byte Mover)│
-                     ▼             └───────┬─────────┘
-              ┌──────────────────────────────────────┐
-   STORAGE   →│   COG (Cloud Optimized GeoTIFF)      │
-              └──────────────────────────────────────┘
-```
+:::{include} _diagrams/03_stack_imagery.html
+:::
 
 #### Layers
 
@@ -304,30 +167,8 @@ The same six layers repeat across all three stacks; only the row contents change
 
 A user asks for a low-cloud Sentinel-2 mosaic of Paris in 2024:
 
-```{mermaid}
-sequenceDiagram
-    participant U as User
-    participant C as GeoCatalog
-    participant R as Reader<br/>(georeader)
-    participant O as obstore
-    participant S as S3
-    U->>C: SQL: bbox ∩ Paris ∧ date ∈ 2024 ∧ cloud < 10
-    C-->>U: list of COG URLs + metadata
-    U->>R: open(urls, slice=GeoSlice(bbox))
-    R->>O: HEAD + small range read
-    O->>S: HTTP Range (header)
-    S-->>O: COG IFD bytes
-    O-->>R: tile offsets + nodata + CRS
-    R->>R: compute overlapping tile indices
-    par parallel tile fetch
-        R->>O: range read (tile k)
-        O->>S: HTTP Range (tile k)
-        S-->>O: compressed tile bytes
-        O-->>R: tile bytes
-    end
-    R->>R: decompress + assemble window
-    R-->>U: GeoTensor (CRS + affine + array)
-```
+:::{include} _diagrams/04_lifecycle_imagery.html
+:::
 
 **The trick.** The reader makes *two* round trips — first a cheap header read to learn tile layout, then a fan-out of concurrent range reads for just the tiles that overlap the AOI. That's how you turn a 10 GB scene into a 3 MB transfer.
 
@@ -338,41 +179,8 @@ sequenceDiagram
 **Focus.** Multi-dimensional scientific grids — climate, weather, oceanography.
 **Philosophy.** Coordinate-based DataCubes. Time, altitude, and variable are physical dimensions of a single labelled array.
 
-```text
-                ┌──────────────────┐    ┌─────────────────┐
-   VIZ / UX  →  │    lonboard      │    │    Holoviz      │
-                │  (GPU Render)    │    │ (Aggregation)   │
-                └────────┬─────────┘    └────────┬────────┘
-                         │                       │
-                ┌────────▼───────────────────────▼───────┐
-   COMPUTE   →  │              xrtoolz                   │
-                │   (N-D Algebra / Regridding / Means)   │
-                └────────────────┬───────────────────────┘
-                                 │ Dataset / DataArray
-                ┌────────────────▼───────────────────────┐
-   SUBSTRATE →  │       xarray (The DataCube Model)      │
-                │     Coordinates · Dimensions · Chunks  │
-                └─────┬──────────────┬──────────────┬────┘
-                      │              │              │
-              ┌───────▼─────┐ ┌──────▼──────┐ ┌─────▼──────┐
-   READERS   →│    Zarr     │ │  Icechunk   │ │ stackstac /│
-              │ (Standard)  │ │ (Versioned) │ │ odc-stac / │
-              │             │ │             │ │ lazycogs   │
-              └──────┬──────┘ └──────┬──────┘ └─────┬──────┘
-                     │               │              │
-              ┌──────▼───────────────▼──────┐       │
-   VIRTUAL   →│          kerchunk           │◀──────┘
-              │ (HDF5/NetCDF Virtualization)│
-              └──────────────┬──────────────┘
-                             │
-   TRANSPORT →      ┌────────▼─────────┐
-                    │     obstore      │
-                    └────────┬─────────┘
-                             ▼
-              ┌──────────────────────────────────────┐
-   STORAGE   →│     Zarr  ·  HDF5  ·  NetCDF         │
-              └──────────────────────────────────────┘
-```
+:::{include} _diagrams/05_stack_dense.html
+:::
 
 #### Layers
 
@@ -413,32 +221,8 @@ sequenceDiagram
 
 A climate scientist asks for monthly mean SST over the North Atlantic for 1990–2024:
 
-```{mermaid}
-sequenceDiagram
-    participant U as User
-    participant C as GeoCatalog
-    participant X as xarray
-    participant O as obstore
-    participant S as S3
-    U->>C: query: collection=ERA5, var=sst
-    C-->>U: Zarr URL
-    U->>X: xr.open_zarr(url)
-    X->>O: GET .zmetadata (consolidated)
-    O->>S: HTTP GET
-    S-->>O: schema + chunk grid + coords
-    O-->>X: lazy Dataset (no chunks read yet)
-    U->>X: ds.sst.sel(lat=slice(20,60), lon=slice(-80,0), time=slice("1990","2024"))
-    X->>X: map coord ranges → chunk indices
-    par parallel chunk fetch
-        X->>O: GET chunk (t_i, lat_j, lon_k)
-        O->>S: HTTP GET
-        S-->>O: compressed chunk bytes
-        O-->>X: chunk array
-    end
-    X->>X: decompress + assemble + (optional) Dask graph
-    U->>X: .groupby("time.month").mean()
-    X-->>U: DataArray (12, n_lat, n_lon)
-```
+:::{include} _diagrams/06_lifecycle_dense.html
+:::
 
 **The trick.** Coordinate selection (`.sel`) is translated into chunk indices *before* any bytes are read; only the chunks intersecting the requested coordinate hyperrectangle are fetched. Lazy evaluation through Dask means downstream reductions (`.mean()`) collapse the chunk-fetch + compute graph into a single optimised pass.
 
@@ -449,37 +233,8 @@ sequenceDiagram
 **Focus.** Discrete features — points, lines, polygons, and their attributes.
 **Philosophy.** Tabular and relational. Geography is just another column in a high-performance database.
 
-```text
-                ┌──────────────────┐    ┌─────────────────┐
-   VIZ / UX  →  │    lonboard      │    │      Felt       │
-                │ (GeoArrow/GPU)   │    │ (Collaborative) │
-                └────────┬─────────┘    └────────┬────────┘
-                         │                       │
-                ┌────────▼───────────────────────▼───────┐
-   ENGINES   →  │      DuckDB SQL  /  GeoPandas          │
-                │    (Spatial Joins / Buffers / Filters) │
-                └────────────────┬───────────────────────┘
-                                 │ GeoArrow / DataFrames
-                ┌────────────────▼───────────────────────┐
-   SUBSTRATE →  │    GeoArrow (The Memory Layout)        │
-                │   Zero-copy Tabular Spatial Streams    │
-                └─────┬──────────────┬──────────────┬────┘
-                      │              │              │
-              ┌───────▼─────┐ ┌──────▼──────┐ ┌─────▼──────┐
-   READERS   →│   pyogrio   │ │   PostGIS   │ │  SedonaDB  │
-              │ (Fast OGR)  │ │ (Database)  │ │ (Big Data) │
-              └──────┬──────┘ └──────┬──────┘ └─────┬──────┘
-                     │               │              │
-   TRANSPORT →       └───────┬───────┴──────────────┘
-                             ▼
-                    ┌─────────────────┐
-                    │     obstore     │
-                    └────────┬────────┘
-                             ▼
-              ┌──────────────────────────────────────┐
-   STORAGE   →│  GeoParquet · PostgreSQL · FlatGeobuf│
-              └──────────────────────────────────────┘
-```
+:::{include} _diagrams/07_stack_vector.html
+:::
 
 #### Layers
 
@@ -522,28 +277,8 @@ sequenceDiagram
 
 An analyst asks for all building footprints in a flood zone:
 
-```{mermaid}
-sequenceDiagram
-    participant U as User
-    participant D as DuckDB<br/>(spatial)
-    participant O as obstore
-    participant S as S3
-    U->>D: SELECT * FROM 's3://buildings.parquet'<br/>WHERE ST_Intersects(geom, :flood_bbox)
-    D->>O: GET Parquet footer (small range)
-    O->>S: HTTP Range
-    S-->>O: row-group stats (bbox per group)
-    O-->>D: footer parsed
-    D->>D: predicate pushdown — drop non-intersecting groups
-    par parallel row-group fetch
-        D->>O: GET row-group k (geom + attr columns only)
-        O->>S: HTTP Range
-        S-->>O: column chunks
-        O-->>D: Arrow record batch
-    end
-    D->>D: ST_Intersects on candidates (refine)
-    D-->>U: GeoArrow result table
-    U->>U: hand to lonboard / GeoPandas (zero-copy)
-```
+:::{include} _diagrams/08_lifecycle_vector.html
+:::
 
 **The trick.** Two stages of filtering: (1) **row-group pruning** using the bbox statistics in the Parquet footer skips entire row groups that can't possibly intersect, and only the surviving groups are fetched. (2) **column pruning** means non-needed attribute columns are never read off the wire. The result lands as Arrow buffers, so the hand-off to `lonboard` or GeoPandas is zero-copy.
 
@@ -555,21 +290,8 @@ sequenceDiagram
 
 Most of the modern stack is **already there**. Two of the three libraries below (`georeader` modernisation, `GeoCatalog`) are *reconciliation* work — taking pieces that already work and giving them a coherent surface. The third (`geotoolz` + `xrtoolz`) is the genuinely missing piece: the **factory layer** that doesn't yet have a good general-purpose shape.
 
-```{mermaid}
-flowchart TB
-    USER["<b>USER</b><br/>notebook · API · map"]
-    LOGIC["<b>LOGIC</b><br/>★ geotoolz   ·   ★ xrtoolz<br/><i>future: geoarrax (JAX bridge)</i>"]
-    DISC["<b>DISCOVERY</b><br/>★ GeoCatalog<br/>(GeoParquet + DuckDB)"]
-    SUBS["<b>SUBSTRATE</b><br/>★ georeader (unified Reader Protocol)"]
-    TRANS["<b>TRANSPORT</b><br/>obstore · GDAL/VSI"]
-    STOR["<b>STORAGE</b><br/>COG · Zarr · GeoParquet"]
-
-    USER --> LOGIC --> DISC --> SUBS --> TRANS --> STOR
-
-    style LOGIC fill:#fff3cd,stroke:#f0ad4e,stroke-width:2px
-    style DISC fill:#fff3cd,stroke:#f0ad4e,stroke-width:2px
-    style SUBS fill:#fff3cd,stroke:#f0ad4e,stroke-width:2px
-```
+:::{include} _diagrams/09_libraries_fit.html
+:::
 
 Stars mark where my libraries plug in. Read it from the top: a user wants something → engines compose carriers → the registry tells them which files to open → readers translate cloud bytes into typed carriers → transport hauls only the bytes needed → cloud storage is the source of truth.
 

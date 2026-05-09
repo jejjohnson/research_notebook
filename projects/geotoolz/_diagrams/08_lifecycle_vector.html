@@ -1,0 +1,306 @@
+<style>
+  .gsd-seqC {
+    --gsd-fg: #1f2328;
+    --gsd-muted: #57606a;
+    --gsd-border: #d0d7de;
+    --gsd-card: #ffffff;
+    --gsd-soft: #f6f8fa;
+    --gsd-arrow: #0969da;
+    --gsd-return: #8c959f;
+    --gsd-par-bg: #fff8c5;
+    --gsd-par-border: #d4a72c;
+    --gsd-lifeline: #d0d7de;
+    --gsd-bg: #ffffff;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--gsd-fg);
+    max-width: 760px;
+    margin: 1.5em auto;
+    --cols: 4;
+    position: relative;
+  }
+  @media (prefers-color-scheme: dark) {
+    .gsd-seqC {
+      --gsd-fg: #e6edf3;
+      --gsd-muted: #8b949e;
+      --gsd-border: #30363d;
+      --gsd-card: #161b22;
+      --gsd-soft: #21262d;
+      --gsd-arrow: #58a6ff;
+      --gsd-return: #6e7681;
+      --gsd-par-bg: #4d3c00;
+      --gsd-par-border: #d4a72c;
+      --gsd-lifeline: #30363d;
+      --gsd-bg: #0d1117;
+    }
+  }
+  .gsd-seqC * { box-sizing: border-box; }
+  .gsd-seqC__hdr {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 0;
+    background: var(--gsd-bg);
+    padding: 6px 0 10px;
+  }
+  .gsd-seqC__actor {
+    text-align: center;
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 6px;
+    padding: 8px 4px;
+    font-weight: 700;
+    font-size: 12px;
+    margin: 0 4px;
+  }
+  .gsd-seqC__actor small {
+    display: block; font-weight: 400; color: var(--gsd-muted); font-size: 11px;
+  }
+
+  .gsd-seqC__body { position: relative; padding: 4px 0 8px; }
+  .gsd-seqC__lifelines {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .gsd-seqC__lifelines > div {
+    border-left: 1px dashed var(--gsd-lifeline);
+    margin-left: calc(50% - 0.5px);
+    width: 1px;
+  }
+
+  .gsd-seqC__rows { position: relative; display: flex; flex-direction: column; gap: 4px; }
+  .gsd-seqC__row {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 0;
+    align-items: center;
+    min-height: 28px;
+  }
+  .gsd-seqC__msg {
+    grid-column: var(--from) / calc(var(--to) + 1);
+    padding-left: calc(50% / (var(--to) - var(--from) + 1));
+    padding-right: calc(50% / (var(--to) - var(--from) + 1));
+    display: flex;
+    align-items: center;
+    gap: 0;
+    color: var(--gsd-arrow);
+  }
+  .gsd-seqC__msg-line {
+    flex: 1; height: 1.5px; background: currentColor; border-radius: 1px;
+    position: relative; z-index: 2;
+  }
+  .gsd-seqC__msg-head {
+    font-size: 11px; line-height: 1; flex: 0 0 auto;
+    position: relative; z-index: 2;
+  }
+  .gsd-seqC__msg-label {
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: var(--gsd-fg);
+    font-size: 12px;
+    line-height: 1.35;
+    margin: 0 4px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .gsd-seqC__msg--return { color: var(--gsd-return); }
+  .gsd-seqC__msg--return .gsd-seqC__msg-line {
+    background: transparent;
+    border-top: 1.5px dashed currentColor;
+    height: 0;
+  }
+  .gsd-seqC__msg--reverse { flex-direction: row-reverse; }
+
+  .gsd-seqC__self {
+    grid-column: var(--from) / calc(var(--to) + 1);
+    padding-left: 50%;
+    display: flex;
+    align-items: center;
+    color: var(--gsd-muted);
+    font-size: 11.5px;
+    font-style: italic;
+    position: relative;
+    z-index: 2;
+    overflow: visible;
+    white-space: nowrap;
+  }
+  .gsd-seqC__self-marker {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--gsd-muted);
+    border-radius: 50%;
+    margin-right: 6px;
+    background: var(--gsd-bg);
+    flex: 0 0 auto;
+  }
+
+  .gsd-seqC__par {
+    background: var(--gsd-par-bg);
+    border: 1px solid var(--gsd-par-border);
+    border-radius: 6px;
+    margin: 6px 0;
+    padding: 10px 0 8px;
+    position: relative;
+  }
+  .gsd-seqC__par-tag {
+    position: absolute; top: -8px; left: 12px;
+    background: var(--gsd-par-border);
+    color: var(--gsd-bg);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    z-index: 3;
+  }
+
+  code.gsd-seqC__code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    background: var(--gsd-soft);
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+</style>
+<div class="gsd-seqC">
+  <div class="gsd-seqC__hdr">
+    <div class="gsd-seqC__actor">User<small>U</small></div>
+    <div class="gsd-seqC__actor">DuckDB<small>D · spatial</small></div>
+    <div class="gsd-seqC__actor">obstore<small>O</small></div>
+    <div class="gsd-seqC__actor">S3<small>S</small></div>
+  </div>
+
+  <div class="gsd-seqC__body">
+    <div class="gsd-seqC__lifelines">
+      <div></div><div></div><div></div><div></div>
+    </div>
+
+    <div class="gsd-seqC__rows">
+
+      <div class="gsd-seqC__row">
+        <div class="gsd-seqC__msg" style="--from:1; --to:2;">
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-label"><code class="gsd-seqC__code">SELECT * FROM 's3://buildings.parquet' WHERE ST_Intersects(geom, :flood_bbox)</code></span>
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqC__row">
+        <div class="gsd-seqC__msg" style="--from:2; --to:3;">
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-label">GET Parquet footer (small range)</span>
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqC__row">
+        <div class="gsd-seqC__msg" style="--from:3; --to:4;">
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-label">HTTP Range</span>
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqC__row">
+        <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:3; --to:4;">
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-label">row-group stats (bbox per group)</span>
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-head">◀</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqC__row">
+        <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:2; --to:3;">
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-label">footer parsed</span>
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-head">◀</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqC__row">
+        <div class="gsd-seqC__self" style="--from:2; --to:2;">
+          <span class="gsd-seqC__self-marker"></span>
+          predicate pushdown — drop non-intersecting groups
+        </div>
+      </div>
+
+      <div class="gsd-seqC__par">
+        <span class="gsd-seqC__par-tag">par — parallel row-group fetch</span>
+
+        <div class="gsd-seqC__row">
+          <div class="gsd-seqC__msg" style="--from:2; --to:3;">
+            <span class="gsd-seqC__msg-line"></span>
+            <span class="gsd-seqC__msg-label">GET row-group <em>k</em> (geom + attr columns only)</span>
+            <span class="gsd-seqC__msg-line"></span>
+            <span class="gsd-seqC__msg-head">▶</span>
+          </div>
+        </div>
+
+        <div class="gsd-seqC__row">
+          <div class="gsd-seqC__msg" style="--from:3; --to:4;">
+            <span class="gsd-seqC__msg-line"></span>
+            <span class="gsd-seqC__msg-label">HTTP Range</span>
+            <span class="gsd-seqC__msg-line"></span>
+            <span class="gsd-seqC__msg-head">▶</span>
+          </div>
+        </div>
+
+        <div class="gsd-seqC__row">
+          <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:3; --to:4;">
+            <span class="gsd-seqC__msg-line"></span>
+            <span class="gsd-seqC__msg-label">column chunks</span>
+            <span class="gsd-seqC__msg-line"></span>
+            <span class="gsd-seqC__msg-head">◀</span>
+          </div>
+        </div>
+
+        <div class="gsd-seqC__row">
+          <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:2; --to:3;">
+            <span class="gsd-seqC__msg-line"></span>
+            <span class="gsd-seqC__msg-label">Arrow record batch</span>
+            <span class="gsd-seqC__msg-line"></span>
+            <span class="gsd-seqC__msg-head">◀</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gsd-seqC__row">
+        <div class="gsd-seqC__self" style="--from:2; --to:2;">
+          <span class="gsd-seqC__self-marker"></span>
+          <code class="gsd-seqC__code">ST_Intersects</code> on candidates (refine)
+        </div>
+      </div>
+
+      <div class="gsd-seqC__row">
+        <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:1; --to:2;">
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-label">GeoArrow result table</span>
+          <span class="gsd-seqC__msg-line"></span>
+          <span class="gsd-seqC__msg-head">◀</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqC__row">
+        <div class="gsd-seqC__self" style="--from:1; --to:1;">
+          <span class="gsd-seqC__self-marker"></span>
+          hand to lonboard / GeoPandas (zero-copy)
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

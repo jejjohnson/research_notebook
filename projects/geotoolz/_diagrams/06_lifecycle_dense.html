@@ -1,0 +1,336 @@
+<style>
+  .gsd-seqB {
+    --gsd-fg: #1f2328;
+    --gsd-muted: #57606a;
+    --gsd-border: #d0d7de;
+    --gsd-card: #ffffff;
+    --gsd-soft: #f6f8fa;
+    --gsd-arrow: #0969da;
+    --gsd-return: #8c959f;
+    --gsd-par-bg: #fff8c5;
+    --gsd-par-border: #d4a72c;
+    --gsd-lifeline: #d0d7de;
+    --gsd-bg: #ffffff;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--gsd-fg);
+    max-width: 760px;
+    margin: 1.5em auto;
+    --cols: 5;
+    position: relative;
+  }
+  @media (prefers-color-scheme: dark) {
+    .gsd-seqB {
+      --gsd-fg: #e6edf3;
+      --gsd-muted: #8b949e;
+      --gsd-border: #30363d;
+      --gsd-card: #161b22;
+      --gsd-soft: #21262d;
+      --gsd-arrow: #58a6ff;
+      --gsd-return: #6e7681;
+      --gsd-par-bg: #4d3c00;
+      --gsd-par-border: #d4a72c;
+      --gsd-lifeline: #30363d;
+      --gsd-bg: #0d1117;
+    }
+  }
+  .gsd-seqB * { box-sizing: border-box; }
+  .gsd-seqB__hdr {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 0;
+    background: var(--gsd-bg);
+    padding: 6px 0 10px;
+  }
+  .gsd-seqB__actor {
+    text-align: center;
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 6px;
+    padding: 8px 4px;
+    font-weight: 700;
+    font-size: 12px;
+    margin: 0 4px;
+  }
+  .gsd-seqB__actor small {
+    display: block; font-weight: 400; color: var(--gsd-muted); font-size: 11px;
+  }
+
+  .gsd-seqB__body { position: relative; padding: 4px 0 8px; }
+  .gsd-seqB__lifelines {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .gsd-seqB__lifelines > div {
+    border-left: 1px dashed var(--gsd-lifeline);
+    margin-left: calc(50% - 0.5px);
+    width: 1px;
+  }
+
+  .gsd-seqB__rows { position: relative; display: flex; flex-direction: column; gap: 4px; }
+  .gsd-seqB__row {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: 0;
+    align-items: center;
+    min-height: 28px;
+  }
+  .gsd-seqB__msg {
+    grid-column: var(--from) / calc(var(--to) + 1);
+    padding-left: calc(50% / (var(--to) - var(--from) + 1));
+    padding-right: calc(50% / (var(--to) - var(--from) + 1));
+    display: flex;
+    align-items: center;
+    gap: 0;
+    color: var(--gsd-arrow);
+  }
+  .gsd-seqB__msg-line {
+    flex: 1; height: 1.5px; background: currentColor; border-radius: 1px;
+    position: relative; z-index: 2;
+  }
+  .gsd-seqB__msg-head {
+    font-size: 11px; line-height: 1; flex: 0 0 auto;
+    position: relative; z-index: 2;
+  }
+  .gsd-seqB__msg-label {
+    background: var(--gsd-card);
+    border: 1px solid var(--gsd-border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: var(--gsd-fg);
+    font-size: 12px;
+    line-height: 1.35;
+    margin: 0 4px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .gsd-seqB__msg--return { color: var(--gsd-return); }
+  .gsd-seqB__msg--return .gsd-seqB__msg-line {
+    background: transparent;
+    border-top: 1.5px dashed currentColor;
+    height: 0;
+  }
+  .gsd-seqB__msg--reverse { flex-direction: row-reverse; }
+
+  .gsd-seqB__self {
+    grid-column: var(--from) / calc(var(--to) + 1);
+    padding-left: 50%;
+    display: flex;
+    align-items: center;
+    color: var(--gsd-muted);
+    font-size: 11.5px;
+    font-style: italic;
+    position: relative;
+    z-index: 2;
+    overflow: visible;
+    white-space: nowrap;
+  }
+  .gsd-seqB__self-marker {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--gsd-muted);
+    border-radius: 50%;
+    margin-right: 6px;
+    background: var(--gsd-bg);
+    flex: 0 0 auto;
+  }
+
+  .gsd-seqB__par {
+    background: var(--gsd-par-bg);
+    border: 1px solid var(--gsd-par-border);
+    border-radius: 6px;
+    margin: 6px 0;
+    padding: 10px 0 8px;
+    position: relative;
+  }
+  .gsd-seqB__par-tag {
+    position: absolute; top: -8px; left: 12px;
+    background: var(--gsd-par-border);
+    color: var(--gsd-bg);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    z-index: 3;
+  }
+
+  code.gsd-seqB__code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    background: var(--gsd-soft);
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+</style>
+<div class="gsd-seqB">
+  <div class="gsd-seqB__hdr">
+    <div class="gsd-seqB__actor">User<small>U</small></div>
+    <div class="gsd-seqB__actor">GeoCatalog<small>C</small></div>
+    <div class="gsd-seqB__actor">xarray<small>X</small></div>
+    <div class="gsd-seqB__actor">obstore<small>O</small></div>
+    <div class="gsd-seqB__actor">S3<small>S</small></div>
+  </div>
+
+  <div class="gsd-seqB__body">
+    <div class="gsd-seqB__lifelines">
+      <div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+    <div class="gsd-seqB__rows">
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg" style="--from:1; --to:2;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label">query: <code class="gsd-seqB__code">collection=ERA5, var=sst</code></span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:1; --to:2;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label">Zarr URL</span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">◀</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg" style="--from:1; --to:3;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label"><code class="gsd-seqB__code">xr.open_zarr(url)</code></span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg" style="--from:3; --to:4;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label">GET <code class="gsd-seqB__code">.zmetadata</code> (consolidated)</span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg" style="--from:4; --to:5;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label">HTTP GET</span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:4; --to:5;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label">schema + chunk grid + coords</span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">◀</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:3; --to:4;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label">lazy <code class="gsd-seqB__code">Dataset</code> (no chunks read yet)</span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">◀</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg" style="--from:1; --to:3;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label"><code class="gsd-seqB__code">ds.sst.sel(lat=slice(20,60), lon=slice(-80,0), time=slice("1990","2024"))</code></span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__self" style="--from:3; --to:3;">
+          <span class="gsd-seqB__self-marker"></span>
+          map coord ranges → chunk indices
+        </div>
+      </div>
+
+      <div class="gsd-seqB__par">
+        <span class="gsd-seqB__par-tag">par — parallel chunk fetch</span>
+
+        <div class="gsd-seqB__row">
+          <div class="gsd-seqB__msg" style="--from:3; --to:4;">
+            <span class="gsd-seqB__msg-line"></span>
+            <span class="gsd-seqB__msg-label">GET chunk (<em>t<sub>i</sub>, lat<sub>j</sub>, lon<sub>k</sub></em>)</span>
+            <span class="gsd-seqB__msg-line"></span>
+            <span class="gsd-seqB__msg-head">▶</span>
+          </div>
+        </div>
+
+        <div class="gsd-seqB__row">
+          <div class="gsd-seqB__msg" style="--from:4; --to:5;">
+            <span class="gsd-seqB__msg-line"></span>
+            <span class="gsd-seqB__msg-label">HTTP GET</span>
+            <span class="gsd-seqB__msg-line"></span>
+            <span class="gsd-seqB__msg-head">▶</span>
+          </div>
+        </div>
+
+        <div class="gsd-seqB__row">
+          <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:4; --to:5;">
+            <span class="gsd-seqB__msg-line"></span>
+            <span class="gsd-seqB__msg-label">compressed chunk bytes</span>
+            <span class="gsd-seqB__msg-line"></span>
+            <span class="gsd-seqB__msg-head">◀</span>
+          </div>
+        </div>
+
+        <div class="gsd-seqB__row">
+          <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:3; --to:4;">
+            <span class="gsd-seqB__msg-line"></span>
+            <span class="gsd-seqB__msg-label">chunk array</span>
+            <span class="gsd-seqB__msg-line"></span>
+            <span class="gsd-seqB__msg-head">◀</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__self" style="--from:3; --to:3;">
+          <span class="gsd-seqB__self-marker"></span>
+          decompress + assemble + (optional) Dask graph
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg" style="--from:1; --to:3;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label"><code class="gsd-seqB__code">.groupby("time.month").mean()</code></span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">▶</span>
+        </div>
+      </div>
+
+      <div class="gsd-seqB__row">
+        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:1; --to:3;">
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-label"><code class="gsd-seqB__code">DataArray</code> (12, n_lat, n_lon)</span>
+          <span class="gsd-seqB__msg-line"></span>
+          <span class="gsd-seqB__msg-head">◀</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

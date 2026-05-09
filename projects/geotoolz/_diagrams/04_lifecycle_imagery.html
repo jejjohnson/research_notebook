@@ -81,10 +81,10 @@
     min-height: 28px;
   }
   .gsd-seqA__msg {
-    grid-column: var(--from) / calc(var(--to) + 1);
+    grid-column: var(--from) / span var(--span);
     /* shrink the bar inward so it starts/ends at column centers (where lifelines sit) */
-    padding-left: calc(50% / (var(--to) - var(--from) + 1));
-    padding-right: calc(50% / (var(--to) - var(--from) + 1));
+    padding-left: calc(50% / var(--span));
+    padding-right: calc(50% / var(--span));
     display: flex;
     align-items: center;
     gap: 0;
@@ -123,8 +123,8 @@
   .gsd-seqA__msg--reverse { flex-direction: row-reverse; }
 
   .gsd-seqA__self {
-    grid-column: var(--from) / calc(var(--to) + 1);
-    padding-left: 50%;
+    grid-column: var(--from) / span var(--span);
+    padding-left: calc(50% / var(--span));
     display: flex;
     align-items: center;
     color: var(--gsd-muted);
@@ -132,8 +132,9 @@
     font-style: italic;
     position: relative;
     z-index: 2;
-    overflow: visible;
-    white-space: nowrap;
+    /* allow self-call labels to wrap on narrow viewports */
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   .gsd-seqA__self-marker {
     width: 16px; height: 16px;
@@ -190,7 +191,7 @@
     <div class="gsd-seqA__rows">
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__msg" style="--from:1; --to:2;">
+        <div class="gsd-seqA__msg" style="--from:1; --span:2;">
           <span class="gsd-seqA__msg-line"></span>
           <span class="gsd-seqA__msg-label"><code class="gsd-seqA__code">SQL: bbox ∩ Paris ∧ date ∈ 2024 ∧ cloud &lt; 10</code></span>
           <span class="gsd-seqA__msg-line"></span>
@@ -199,7 +200,7 @@
       </div>
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:1; --to:2;">
+        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:1; --span:2;">
           <span class="gsd-seqA__msg-line"></span>
           <span class="gsd-seqA__msg-label">list of COG URLs + metadata</span>
           <span class="gsd-seqA__msg-line"></span>
@@ -208,7 +209,7 @@
       </div>
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__msg" style="--from:1; --to:3;">
+        <div class="gsd-seqA__msg" style="--from:1; --span:3;">
           <span class="gsd-seqA__msg-line"></span>
           <span class="gsd-seqA__msg-label"><code class="gsd-seqA__code">open(urls, slice=GeoSlice(bbox))</code></span>
           <span class="gsd-seqA__msg-line"></span>
@@ -217,7 +218,7 @@
       </div>
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__msg" style="--from:3; --to:4;">
+        <div class="gsd-seqA__msg" style="--from:3; --span:2;">
           <span class="gsd-seqA__msg-line"></span>
           <span class="gsd-seqA__msg-label">HEAD + small range read</span>
           <span class="gsd-seqA__msg-line"></span>
@@ -226,7 +227,7 @@
       </div>
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__msg" style="--from:4; --to:5;">
+        <div class="gsd-seqA__msg" style="--from:4; --span:2;">
           <span class="gsd-seqA__msg-line"></span>
           <span class="gsd-seqA__msg-label">HTTP Range (header)</span>
           <span class="gsd-seqA__msg-line"></span>
@@ -235,7 +236,7 @@
       </div>
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:4; --to:5;">
+        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:4; --span:2;">
           <span class="gsd-seqA__msg-line"></span>
           <span class="gsd-seqA__msg-label">COG IFD bytes</span>
           <span class="gsd-seqA__msg-line"></span>
@@ -244,7 +245,7 @@
       </div>
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:3; --to:4;">
+        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:3; --span:2;">
           <span class="gsd-seqA__msg-line"></span>
           <span class="gsd-seqA__msg-label">tile offsets + nodata + CRS</span>
           <span class="gsd-seqA__msg-line"></span>
@@ -253,7 +254,7 @@
       </div>
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__self" style="--from:3; --to:3;">
+        <div class="gsd-seqA__self" style="--from:3; --span:1;">
           <span class="gsd-seqA__self-marker"></span>
           compute overlapping tile indices
         </div>
@@ -263,7 +264,7 @@
         <span class="gsd-seqA__par-tag">par — parallel tile fetch</span>
 
         <div class="gsd-seqA__row">
-          <div class="gsd-seqA__msg" style="--from:3; --to:4;">
+          <div class="gsd-seqA__msg" style="--from:3; --span:2;">
             <span class="gsd-seqA__msg-line"></span>
             <span class="gsd-seqA__msg-label">range read (tile <em>k</em>)</span>
             <span class="gsd-seqA__msg-line"></span>
@@ -272,7 +273,7 @@
         </div>
 
         <div class="gsd-seqA__row">
-          <div class="gsd-seqA__msg" style="--from:4; --to:5;">
+          <div class="gsd-seqA__msg" style="--from:4; --span:2;">
             <span class="gsd-seqA__msg-line"></span>
             <span class="gsd-seqA__msg-label">HTTP Range (tile <em>k</em>)</span>
             <span class="gsd-seqA__msg-line"></span>
@@ -281,7 +282,7 @@
         </div>
 
         <div class="gsd-seqA__row">
-          <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:4; --to:5;">
+          <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:4; --span:2;">
             <span class="gsd-seqA__msg-line"></span>
             <span class="gsd-seqA__msg-label">compressed tile bytes</span>
             <span class="gsd-seqA__msg-line"></span>
@@ -290,7 +291,7 @@
         </div>
 
         <div class="gsd-seqA__row">
-          <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:3; --to:4;">
+          <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:3; --span:2;">
             <span class="gsd-seqA__msg-line"></span>
             <span class="gsd-seqA__msg-label">tile bytes</span>
             <span class="gsd-seqA__msg-line"></span>
@@ -300,14 +301,14 @@
       </div>
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__self" style="--from:3; --to:3;">
+        <div class="gsd-seqA__self" style="--from:3; --span:1;">
           <span class="gsd-seqA__self-marker"></span>
           decompress + assemble window
         </div>
       </div>
 
       <div class="gsd-seqA__row">
-        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:1; --to:3;">
+        <div class="gsd-seqA__msg gsd-seqA__msg--return gsd-seqA__msg--reverse" style="--from:1; --span:3;">
           <span class="gsd-seqA__msg-line"></span>
           <span class="gsd-seqA__msg-label"><code class="gsd-seqA__code">GeoTensor</code> (CRS + affine + array)</span>
           <span class="gsd-seqA__msg-line"></span>

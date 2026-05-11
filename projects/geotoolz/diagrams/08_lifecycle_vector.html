@@ -1,9 +1,9 @@
 <div class="gsd-seqC">
   <div class="gsd-seqC__hdr">
-    <div class="gsd-seqC__actor">User<small>U</small></div>
-    <div class="gsd-seqC__actor">DuckDB<small>D · spatial</small></div>
-    <div class="gsd-seqC__actor">obstore<small>O</small></div>
-    <div class="gsd-seqC__actor">S3<small>S</small></div>
+    <div class="gsd-seqC__actor">User<span class="gsd-sub">U</span></div>
+    <div class="gsd-seqC__actor">DuckDB<span class="gsd-sub">D · spatial</span></div>
+    <div class="gsd-seqC__actor">obstore<span class="gsd-sub">O</span></div>
+    <div class="gsd-seqC__actor">S3<span class="gsd-sub">S</span></div>
   </div>
 
   <div class="gsd-seqC__body">
@@ -14,7 +14,7 @@
     <div class="gsd-seqC__rows">
 
       <div class="gsd-seqC__row">
-        <div class="gsd-seqC__msg" style="--from:1; --span:2;">
+        <div class="gsd-seqC__msg" style="grid-column: 1 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqC__msg-line"></span>
           <span class="gsd-seqC__msg-label"><code class="gsd-seqC__code">SELECT * FROM 's3://buildings.parquet' WHERE ST_Intersects(geom, :flood_bbox)</code></span>
           <span class="gsd-seqC__msg-line"></span>
@@ -23,7 +23,7 @@
       </div>
 
       <div class="gsd-seqC__row">
-        <div class="gsd-seqC__msg" style="--from:2; --span:2;">
+        <div class="gsd-seqC__msg" style="grid-column: 2 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqC__msg-line"></span>
           <span class="gsd-seqC__msg-label">GET Parquet footer (small range)</span>
           <span class="gsd-seqC__msg-line"></span>
@@ -32,7 +32,7 @@
       </div>
 
       <div class="gsd-seqC__row">
-        <div class="gsd-seqC__msg" style="--from:3; --span:2;">
+        <div class="gsd-seqC__msg" style="grid-column: 3 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqC__msg-line"></span>
           <span class="gsd-seqC__msg-label">HTTP Range</span>
           <span class="gsd-seqC__msg-line"></span>
@@ -41,7 +41,7 @@
       </div>
 
       <div class="gsd-seqC__row">
-        <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:3; --span:2;">
+        <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="grid-column: 3 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqC__msg-line"></span>
           <span class="gsd-seqC__msg-label">row-group stats (bbox per group)</span>
           <span class="gsd-seqC__msg-line"></span>
@@ -50,7 +50,7 @@
       </div>
 
       <div class="gsd-seqC__row">
-        <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:2; --span:2;">
+        <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="grid-column: 2 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqC__msg-line"></span>
           <span class="gsd-seqC__msg-label">footer parsed</span>
           <span class="gsd-seqC__msg-line"></span>
@@ -59,7 +59,7 @@
       </div>
 
       <div class="gsd-seqC__row">
-        <div class="gsd-seqC__self" style="--from:2; --span:1;">
+        <div class="gsd-seqC__self" style="grid-column: 2 / span 1; padding-left: 50%;">
           <span class="gsd-seqC__self-marker"></span>
           predicate pushdown — drop non-intersecting groups
         </div>
@@ -69,7 +69,7 @@
         <span class="gsd-seqC__par-tag">par — parallel row-group fetch</span>
 
         <div class="gsd-seqC__row">
-          <div class="gsd-seqC__msg" style="--from:2; --span:2;">
+          <div class="gsd-seqC__msg" style="grid-column: 2 / span 2; padding-left: 25%; padding-right: 25%;">
             <span class="gsd-seqC__msg-line"></span>
             <span class="gsd-seqC__msg-label">GET row-group <em>k</em> (geom + attr columns only)</span>
             <span class="gsd-seqC__msg-line"></span>
@@ -78,7 +78,7 @@
         </div>
 
         <div class="gsd-seqC__row">
-          <div class="gsd-seqC__msg" style="--from:3; --span:2;">
+          <div class="gsd-seqC__msg" style="grid-column: 3 / span 2; padding-left: 25%; padding-right: 25%;">
             <span class="gsd-seqC__msg-line"></span>
             <span class="gsd-seqC__msg-label">HTTP Range</span>
             <span class="gsd-seqC__msg-line"></span>
@@ -87,7 +87,7 @@
         </div>
 
         <div class="gsd-seqC__row">
-          <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:3; --span:2;">
+          <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="grid-column: 3 / span 2; padding-left: 25%; padding-right: 25%;">
             <span class="gsd-seqC__msg-line"></span>
             <span class="gsd-seqC__msg-label">column chunks</span>
             <span class="gsd-seqC__msg-line"></span>
@@ -96,7 +96,7 @@
         </div>
 
         <div class="gsd-seqC__row">
-          <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:2; --span:2;">
+          <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="grid-column: 2 / span 2; padding-left: 25%; padding-right: 25%;">
             <span class="gsd-seqC__msg-line"></span>
             <span class="gsd-seqC__msg-label">Arrow record batch</span>
             <span class="gsd-seqC__msg-line"></span>
@@ -106,14 +106,14 @@
       </div>
 
       <div class="gsd-seqC__row">
-        <div class="gsd-seqC__self" style="--from:2; --span:1;">
+        <div class="gsd-seqC__self" style="grid-column: 2 / span 1; padding-left: 50%;">
           <span class="gsd-seqC__self-marker"></span>
           <code class="gsd-seqC__code">ST_Intersects</code> on candidates (refine)
         </div>
       </div>
 
       <div class="gsd-seqC__row">
-        <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="--from:1; --span:2;">
+        <div class="gsd-seqC__msg gsd-seqC__msg--return gsd-seqC__msg--reverse" style="grid-column: 1 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqC__msg-line"></span>
           <span class="gsd-seqC__msg-label">GeoArrow result table</span>
           <span class="gsd-seqC__msg-line"></span>
@@ -122,7 +122,7 @@
       </div>
 
       <div class="gsd-seqC__row">
-        <div class="gsd-seqC__self" style="--from:1; --span:1;">
+        <div class="gsd-seqC__self" style="grid-column: 1 / span 1; padding-left: 50%;">
           <span class="gsd-seqC__self-marker"></span>
           hand to lonboard / GeoPandas (zero-copy)
         </div>

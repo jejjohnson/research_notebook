@@ -1,5 +1,5 @@
 /* Diagram styles for projects/geotoolz/geostack_notes.md.
-   Generated from the <style> blocks in _diagrams/*.html.
+   Generated from the <style> blocks in diagrams/*.html.
    Edit the source HTML and re-extract; do not edit by hand. */
 
 /* ===== 01_five_layer.html ===== */
@@ -149,15 +149,15 @@
     color: var(--gsd-highlight-fg);
     font-weight: 700;
   }
-  .gsd-unified__cell small {
+  .gsd-unified__cell .gsd-sub {
     display: block;
     font-weight: 400;
     color: var(--gsd-muted);
     font-size: 11.5px;
     margin-top: 2px;
   }
-  .gsd-unified__cell--accent small,
-  .gsd-unified__cell--highlight small { color: inherit; opacity: 0.85; }
+  .gsd-unified__cell--accent .gsd-sub,
+  .gsd-unified__cell--highlight .gsd-sub { color: inherit; opacity: 0.85; }
   .gsd-unified__arrow {
     grid-column: 2;
     color: var(--gsd-connector);
@@ -230,14 +230,14 @@
     border-color: var(--gsd-accent-border);
     color: var(--gsd-accent-fg);
   }
-  .gsd-stackA__cell small {
+  .gsd-stackA__cell .gsd-sub {
     display: block;
     font-weight: 400;
     color: var(--gsd-muted);
     font-size: 11.5px;
     margin-top: 2px;
   }
-  .gsd-stackA__cell--accent small { color: inherit; opacity: 0.85; }
+  .gsd-stackA__cell--accent .gsd-sub { color: inherit; opacity: 0.85; }
   .gsd-stackA__arrow {
     grid-column: 2;
     color: var(--gsd-connector);
@@ -310,7 +310,7 @@
     font-size: 12px;
     margin: 0 4px;
   }
-  .gsd-seqA__actor small {
+  .gsd-seqA__actor .gsd-sub {
     display: block; font-weight: 400; color: var(--gsd-muted); font-size: 11px;
   }
 
@@ -496,14 +496,14 @@
     color: var(--gsd-accent-fg);
   }
   .gsd-stackB__cell--narrow { flex: 0 0 60%; }
-  .gsd-stackB__cell small {
+  .gsd-stackB__cell .gsd-sub {
     display: block;
     font-weight: 400;
     color: var(--gsd-muted);
     font-size: 11.5px;
     margin-top: 2px;
   }
-  .gsd-stackB__cell--accent small { color: inherit; opacity: 0.85; }
+  .gsd-stackB__cell--accent .gsd-sub { color: inherit; opacity: 0.85; }
   .gsd-stackB__arrow {
     grid-column: 2;
     color: var(--gsd-connector);
@@ -568,7 +568,7 @@
     font-size: 12px;
     margin: 0 4px;
   }
-  .gsd-seqB__actor small {
+  .gsd-seqB__actor .gsd-sub {
     display: block; font-weight: 400; color: var(--gsd-muted); font-size: 11px;
   }
 
@@ -753,14 +753,14 @@
     color: var(--gsd-accent-fg);
   }
   .gsd-stackC__cell--narrow { flex: 0 0 60%; }
-  .gsd-stackC__cell small {
+  .gsd-stackC__cell .gsd-sub {
     display: block;
     font-weight: 400;
     color: var(--gsd-muted);
     font-size: 11.5px;
     margin-top: 2px;
   }
-  .gsd-stackC__cell--accent small { color: inherit; opacity: 0.85; }
+  .gsd-stackC__cell--accent .gsd-sub { color: inherit; opacity: 0.85; }
   .gsd-stackC__arrow {
     grid-column: 2;
     color: var(--gsd-connector);
@@ -825,7 +825,7 @@
     font-size: 12px;
     margin: 0 4px;
   }
-  .gsd-seqC__actor small {
+  .gsd-seqC__actor .gsd-sub {
     display: block; font-weight: 400; color: var(--gsd-muted); font-size: 11px;
   }
 

@@ -1,10 +1,10 @@
 <div class="gsd-seqB">
   <div class="gsd-seqB__hdr">
-    <div class="gsd-seqB__actor">User<small>U</small></div>
-    <div class="gsd-seqB__actor">GeoCatalog<small>C</small></div>
-    <div class="gsd-seqB__actor">xarray<small>X</small></div>
-    <div class="gsd-seqB__actor">obstore<small>O</small></div>
-    <div class="gsd-seqB__actor">S3<small>S</small></div>
+    <div class="gsd-seqB__actor">User<span class="gsd-sub">U</span></div>
+    <div class="gsd-seqB__actor">GeoCatalog<span class="gsd-sub">C</span></div>
+    <div class="gsd-seqB__actor">xarray<span class="gsd-sub">X</span></div>
+    <div class="gsd-seqB__actor">obstore<span class="gsd-sub">O</span></div>
+    <div class="gsd-seqB__actor">S3<span class="gsd-sub">S</span></div>
   </div>
 
   <div class="gsd-seqB__body">
@@ -15,7 +15,7 @@
     <div class="gsd-seqB__rows">
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg" style="--from:1; --span:2;">
+        <div class="gsd-seqB__msg" style="grid-column: 1 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label">query: <code class="gsd-seqB__code">collection=ERA5, var=sst</code></span>
           <span class="gsd-seqB__msg-line"></span>
@@ -24,7 +24,7 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:1; --span:2;">
+        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="grid-column: 1 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label">Zarr URL</span>
           <span class="gsd-seqB__msg-line"></span>
@@ -33,7 +33,7 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg" style="--from:1; --span:3;">
+        <div class="gsd-seqB__msg" style="grid-column: 1 / span 3; padding-left: 16.6667%; padding-right: 16.6667%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label"><code class="gsd-seqB__code">xr.open_zarr(url)</code></span>
           <span class="gsd-seqB__msg-line"></span>
@@ -42,7 +42,7 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg" style="--from:3; --span:2;">
+        <div class="gsd-seqB__msg" style="grid-column: 3 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label">GET <code class="gsd-seqB__code">.zmetadata</code> (consolidated)</span>
           <span class="gsd-seqB__msg-line"></span>
@@ -51,7 +51,7 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg" style="--from:4; --span:2;">
+        <div class="gsd-seqB__msg" style="grid-column: 4 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label">HTTP GET</span>
           <span class="gsd-seqB__msg-line"></span>
@@ -60,7 +60,7 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:4; --span:2;">
+        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="grid-column: 4 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label">schema + chunk grid + coords</span>
           <span class="gsd-seqB__msg-line"></span>
@@ -69,7 +69,7 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:3; --span:2;">
+        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="grid-column: 3 / span 2; padding-left: 25%; padding-right: 25%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label">lazy <code class="gsd-seqB__code">Dataset</code> (no chunks read yet)</span>
           <span class="gsd-seqB__msg-line"></span>
@@ -78,7 +78,7 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg" style="--from:1; --span:3;">
+        <div class="gsd-seqB__msg" style="grid-column: 1 / span 3; padding-left: 16.6667%; padding-right: 16.6667%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label"><code class="gsd-seqB__code">ds.sst.sel(lat=slice(20,60), lon=slice(-80,0), time=slice("1990","2024"))</code></span>
           <span class="gsd-seqB__msg-line"></span>
@@ -87,7 +87,7 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__self" style="--from:3; --span:1;">
+        <div class="gsd-seqB__self" style="grid-column: 3 / span 1; padding-left: 50%;">
           <span class="gsd-seqB__self-marker"></span>
           map coord ranges → chunk indices
         </div>
@@ -97,7 +97,7 @@
         <span class="gsd-seqB__par-tag">par — parallel chunk fetch</span>
 
         <div class="gsd-seqB__row">
-          <div class="gsd-seqB__msg" style="--from:3; --span:2;">
+          <div class="gsd-seqB__msg" style="grid-column: 3 / span 2; padding-left: 25%; padding-right: 25%;">
             <span class="gsd-seqB__msg-line"></span>
             <span class="gsd-seqB__msg-label">GET chunk (<em>t<sub>i</sub>, lat<sub>j</sub>, lon<sub>k</sub></em>)</span>
             <span class="gsd-seqB__msg-line"></span>
@@ -106,7 +106,7 @@
         </div>
 
         <div class="gsd-seqB__row">
-          <div class="gsd-seqB__msg" style="--from:4; --span:2;">
+          <div class="gsd-seqB__msg" style="grid-column: 4 / span 2; padding-left: 25%; padding-right: 25%;">
             <span class="gsd-seqB__msg-line"></span>
             <span class="gsd-seqB__msg-label">HTTP GET</span>
             <span class="gsd-seqB__msg-line"></span>
@@ -115,7 +115,7 @@
         </div>
 
         <div class="gsd-seqB__row">
-          <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:4; --span:2;">
+          <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="grid-column: 4 / span 2; padding-left: 25%; padding-right: 25%;">
             <span class="gsd-seqB__msg-line"></span>
             <span class="gsd-seqB__msg-label">compressed chunk bytes</span>
             <span class="gsd-seqB__msg-line"></span>
@@ -124,7 +124,7 @@
         </div>
 
         <div class="gsd-seqB__row">
-          <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:3; --span:2;">
+          <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="grid-column: 3 / span 2; padding-left: 25%; padding-right: 25%;">
             <span class="gsd-seqB__msg-line"></span>
             <span class="gsd-seqB__msg-label">chunk array</span>
             <span class="gsd-seqB__msg-line"></span>
@@ -134,14 +134,14 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__self" style="--from:3; --span:1;">
+        <div class="gsd-seqB__self" style="grid-column: 3 / span 1; padding-left: 50%;">
           <span class="gsd-seqB__self-marker"></span>
           decompress + assemble + (optional) Dask graph
         </div>
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg" style="--from:1; --span:3;">
+        <div class="gsd-seqB__msg" style="grid-column: 1 / span 3; padding-left: 16.6667%; padding-right: 16.6667%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label"><code class="gsd-seqB__code">.groupby("time.month").mean()</code></span>
           <span class="gsd-seqB__msg-line"></span>
@@ -150,7 +150,7 @@
       </div>
 
       <div class="gsd-seqB__row">
-        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="--from:1; --span:3;">
+        <div class="gsd-seqB__msg gsd-seqB__msg--return gsd-seqB__msg--reverse" style="grid-column: 1 / span 3; padding-left: 16.6667%; padding-right: 16.6667%;">
           <span class="gsd-seqB__msg-line"></span>
           <span class="gsd-seqB__msg-label"><code class="gsd-seqB__code">DataArray</code> (12, n_lat, n_lon)</span>
           <span class="gsd-seqB__msg-line"></span>

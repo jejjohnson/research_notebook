@@ -1,6 +1,7 @@
 /* Diagram styles for projects/geotoolz/geostack_notes.md.
-   Generated from the <style> blocks in diagrams/*.html.
-   Edit the source HTML and re-extract; do not edit by hand. */
+   Wired into the MyST site via myst.yml's site.options.style entry; the
+   accompanying HTML fragments in diagrams/*.html are pure markup with no
+   inline <style> blocks. Edit this file directly to tweak appearance. */
 
 /* ===== 01_five_layer.html ===== */
 .gsd-fivelayer {
@@ -125,6 +126,14 @@
     text-transform: uppercase;
     font-weight: 700;
     color: var(--gsd-muted);
+  }
+  .gsd-unified__label .gsd-sub {
+    display: inline;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    font-size: 10px;
+    opacity: 0.85;
   }
   .gsd-unified__row { display: flex; gap: 8px; }
   .gsd-unified__cell {

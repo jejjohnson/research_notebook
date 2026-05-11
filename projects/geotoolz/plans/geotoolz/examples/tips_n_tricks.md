@@ -594,7 +594,7 @@ out.metadata["provenance"]
 georeader.save_cog(out, "/out/methane.tif")  # provenance baked into COG tags
 ```
 
-Pairs naturally with the pinned-artifact pattern from the [use-cases doc](geotoolz_use_cases.md#9-pinned--hashed-regulatory-artifact)
+Pairs naturally with the pinned-artifact pattern from the [use-cases doc](usecases.md#9-pinned--hashed-regulatory-artifact)
 — the provenance metadata in the COG references the artifact hash, so a
 consumer years later can chase the COG back to the exact pipeline that
 produced it.
@@ -610,7 +610,7 @@ config. Don’t let provenance bloat overshadow the pixel data.
 
 The other identity-with-side-effect family — pass-through Operators that
 *check* invariants rather than observe state. See
-[the QC use case](geotoolz_use_cases.md#8-data-validation--qc-as-operators)
+[the QC use case](usecases.md#8-data-validation--qc-as-operators)
 for the full pattern.
 
 ### AssertX (recap)
@@ -825,7 +825,7 @@ The library should:
   containing one
 
 Production pipelines never contain closures. This keeps the “operator graph
-as audit artifact” guarantee from the [regulatory artifact use case](geotoolz_use_cases.md#9-pinned--hashed-regulatory-artifact)
+as audit artifact” guarantee from the [regulatory artifact use case](usecases.md#9-pinned--hashed-regulatory-artifact)
 honest — every operator in a regulatory artifact has a stable config, every
 config round-trips, every artifact reruns to the same answer.
 

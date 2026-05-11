@@ -49,6 +49,19 @@ The full design report is [`geotoolz.md`](geotoolz.md). It runs through the arch
 
 ---
 
+## Examples & idioms
+
+Two companion docs sit alongside the main report, both MyST-rendered and listed in the site TOC:
+
+| File | What's in it |
+|---|---|
+| [`examples/usecases.md`](examples/usecases.md) | A 13-case gallery of where the Operator algebra fits in a deployment — notebook exploration, ETL, ML training/inference, LitServe API, FastAPI multi-pipeline service, user-uploaded YAML viz, tile server, QC as operators, regulatory artifacts, active learning, cross-sensor fusion `Graph`, workflow orchestrator units, A/B regression. Each case names the driver (notebook user vs. HTTP request vs. scheduler), the calling code, an implementation sketch, and an honest tradeoffs note. |
+| [`examples/tips_n_tricks.md`](examples/tips_n_tricks.md) | A reference of small composable Operators that punch above their weight — `Tap`/`Snapshot`/`Profile`/`Histogram`/`ShapeTrace`/`Diff` (observers), `Branch`/`Switch`/`Try`/`Coalesce`/`Retry` (control flow), `Fanout`/`ApplyToBands`/`Cache` (composition), context-managed `Mode` and `Spy` (stateful), `AssertX`/`Quarantine` (QC), and small building blocks like `Identity`/`Const`/`Lambda`/`Sink`. Includes the **scoped-by-default** API design for `Mode` (a `with pipe.mode("train"):` context manager) and `Spy` (a `with Spy.scoped() as s: ...` block) — the explicit-scoping alternative to PyTorch's sticky `train()`/`eval()` footgun. |
+
+Both files are deliberate companions, not duplicates: `usecases.md` is "*who drives the pipeline*" (a tour of deployment shapes); `tips_n_tricks.md` is "*what primitives let those shapes work*" (the v0.1 stdlib of idioms). New readers can start with either — use cases first if you want to know *whether* the abstraction fits your problem, tricks first if you already know it does and want the building blocks.
+
+---
+
 ## Connections to other designs
 
 `geotoolz` sits on top of the rest of the plan tree. The cross-design touchpoints:

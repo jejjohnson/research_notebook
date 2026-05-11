@@ -129,6 +129,10 @@ project:
                   children:
                     - file: projects/geotoolz/plans/geotoolz/README.md
                     - file: projects/geotoolz/plans/geotoolz/geotoolz.md
+                    - title: Examples
+                      children:
+                        - file: projects/geotoolz/plans/geotoolz/examples/usecases.md
+                        - file: projects/geotoolz/plans/geotoolz/examples/tips_n_tricks.md
                 - title: Reader reconciliation
                   children:
                     - file: projects/geotoolz/plans/georeader/README.md

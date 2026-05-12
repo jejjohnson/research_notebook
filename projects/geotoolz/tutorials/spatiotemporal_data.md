@@ -61,12 +61,17 @@ For most of the tutorial we write `X` as a single axis and note where structure 
 We type our arrays with [jaxtyping](https://github.com/google/jaxtyping) and name dimensions explicitly with [xarray](https://docs.xarray.dev/) so that every reshape is auditable.
 
 ```python
-from jaxtyping import Float, Array
+from typing import Sequence
+import jax
+import jax.numpy as jnp
+from jaxtyping import Float, Int, Bool, Array
 import xarray as xr
 import einx
 
 Field = Float[Array, "S T V X"]
 ```
+
+Numeric coord arrays use `jaxtyping` (`Float`, `Int`, `Bool`); string coords (variable names, country codes, basin IDs) are typed as `Sequence[str]` since `jaxtyping` does not cover string dtypes.
 
 The named-dims version, for the same physical quantity:
 
@@ -135,7 +140,7 @@ Same location, same time grid, several variables.
 arr:    Float[Array, "T V"]
 coords = {
     "time":     Float[Array, "T"],
-    "variable": Str[Array,   "V"],   # variable names (or band IDs, depths)
+    "variable": Sequence[str],       # variable names of length V (or band IDs, depths)
 }
 da:     xr.DataArray                 # dims = ("time", "variable")
 # geometry: point
@@ -202,7 +207,7 @@ The canonical "remote-sensing scene".
 ```python
 arr:    Float[Array, "V H W"]
 coords = {
-    "variable": Str[Array,   "V"],
+    "variable": Sequence[str],       # variable names of length V
     "lat":      Float[Array, "H"],
     "lon":      Float[Array, "W"],
 }
@@ -267,7 +272,7 @@ The most common datacube in modern Earth-system science.
 arr:    Float[Array, "T V H W"]
 coords = {
     "time":     Float[Array, "T"],
-    "variable": Str[Array,   "V"],
+    "variable": Sequence[str],       # variable names of length V
     "lat":      Float[Array, "H"],     # static
     "lon":      Float[Array, "W"],
 }
@@ -293,7 +298,7 @@ arr:    Float[Array, "S T V H W"]
 coords = {
     "member":   Int[Array,   "S"],     # ensemble member ID, window start, or patch position
     "time":     Float[Array, "T"],
-    "variable": Str[Array,   "V"],
+    "variable": Sequence[str],       # variable names of length V
     "lat":      Float[Array, "H"],
     "lon":      Float[Array, "W"],
 }
@@ -304,7 +309,7 @@ da:     xr.DataArray                   # dims = ("member", "time", "variable", "
 `S` is rarely a single natural data axis.
 It is almost always *manufactured* by one of three operations: **simulation**, **windowing**, or **patching**.
 Each construction creates an `S` axis with different semantics — *and reshapes the coord pack along with it*.
-The dependency-game logic in [Spatiotemporal operators §3](spatiotemporal_operators.md) hinges on which construction you used.
+The dependency-game logic in [Spatiotemporal operators §3](spatiotemporal_operators.md#operators-dependency-game) hinges on which construction you used.
 
 ---
 
@@ -429,7 +434,7 @@ The patch's *origin* in the parent field — `(lat0[S], lon0[S])` — is the boo
 
 ### 2.11 Why this matters for the dependency game
 
-The dependency table in [Spatiotemporal operators §3](spatiotemporal_operators.md) treats `S` as the iid-samples axis, in the spirit of the sklearn contract.
+The dependency table in [Spatiotemporal operators §3](spatiotemporal_operators.md#operators-dependency-game) treats `S` as the iid-samples axis, in the spirit of the sklearn contract.
 That contract is exactly right for **ensemble** `S` — the members really are exchangeable.
 It is **violated** by windows and patches, because adjacent slices share data.
 
@@ -509,6 +514,7 @@ A per-pixel detrend with `(doy_cos, doy_sin)` columns added gives a slope-plus-s
 
 ---
 
+(coords-static-dynamic)=
 ### 3.3 Space coords — static vs dynamic
 
 This is where the taxonomy matters most for compute.
@@ -577,9 +583,10 @@ The patterns: optical / radar / reanalysis products on regular grids are *static
 
 ---
 
+(coords-dependency-game)=
 ### 3.6 How coords interact with the dependency game
 
-Walk through the four cells of the operator-side dependency game (see [Spatiotemporal operators §3](spatiotemporal_operators.md)) with the coord lens:
+Walk through the four cells of the operator-side dependency game (see [Spatiotemporal operators §3](spatiotemporal_operators.md#operators-dependency-game)) with the coord lens:
 
 - **Fit-global / predict-global** (EOF, climatology) — usually *coord-free* in the algorithm itself.
   The parameter tensor is indexed in pixel-space; coords just label the output for the user.
@@ -744,7 +751,7 @@ topology = {
     "hole_starts":      Int[Array, "Nh"],
     "hole_lengths":     Int[Array, "Nh"],
     "polygon_in_unit":  Int[Array, "Np"],        # which conceptual unit each polygon belongs to
-    "attribute":        Str[Array, "Nu"],        # e.g. country code, basin ID
+    "attribute":        Sequence[str],           # length Nu, e.g. country code, basin ID
 }
 data:    Float[Array, "Nu V"]                    # value(s) per unit (Nu units)
 ```
@@ -868,7 +875,7 @@ def aggregate(
 **When you reach for it.**
 Per-country emissions inventories (national methane / CO₂ budgets), per-basin water-storage trends from GRACE, per-municipality deforestation rates, per-watershed precipitation accumulations, parcel-level mean NDVI for crop-yield estimation.
 
-This operation is the geometric form of the *fit-local / predict-global* cell of the dependency game (see [Spatiotemporal operators §3.4](spatiotemporal_operators.md)) — it is *the* operator that turns raster heterogeneity into administrative-world deliverables.
+This operation is the geometric form of the *fit-local / predict-global* cell of the dependency game (see [Spatiotemporal operators §3.4](spatiotemporal_operators.md#operators-local-global)) — it is *the* operator that turns raster heterogeneity into administrative-world deliverables.
 
 ---
 
@@ -920,7 +927,7 @@ If your downstream is per-watershed bookkeeping, aggregate into the multi-polygo
 
 ### 4.6 Geometry × dependency game
 
-Walk the four cells of the operator-side dependency game (see [Spatiotemporal operators §3](spatiotemporal_operators.md)) through the geometric lens:
+Walk the four cells of the operator-side dependency game (see [Spatiotemporal operators §3](spatiotemporal_operators.md#operators-dependency-game)) through the geometric lens:
 
 | Cell                       | Natural geometry                          | Why                                                     |
 |----------------------------|-------------------------------------------|---------------------------------------------------------|

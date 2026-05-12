@@ -67,7 +67,9 @@ For most of the tutorial we write `X` as a single axis and note where structure 
 We type our arrays with [jaxtyping](https://github.com/google/jaxtyping) and name dimensions explicitly with [xarray](https://docs.xarray.dev/) so that every reshape is auditable.
 
 ```python
-from jaxtyping import Float, Array
+import jax
+import jax.numpy as jnp
+from jaxtyping import Float, Int, Bool, Array
 import xarray as xr
 import einx
 
@@ -276,6 +278,7 @@ This is what motivates `geotoolz.Operator` having a single shape protocol.
 
 ---
 
+(operators-dependency-game)=
 ## 3. The dependency game — global vs local
 
 We now answer the central question: *which axes does my operator's parameter tensor span?*
@@ -306,7 +309,8 @@ Nothing varies per pixel after the fit; the operator is *global in space and tim
 
 ```python
 def fit(arr: Float[Array, "S T V H W"], k: int) -> Float[Array, "K V H W"]:
-    flat = einx.rearrange("s t v h w -> (s t) (v h w)", arr - arr.mean(("s", "t")))
+    anomaly = arr - arr.mean(axis=(0, 1), keepdims=True)         # remove mean over S, T
+    flat = einx.rearrange("s t v h w -> (s t) (v h w)", anomaly)
     _, _, vt = jnp.linalg.svd(flat, full_matrices=False)
     return einx.rearrange(
         "k (v h w) -> k v h w", vt[:k], v=arr.shape[2], h=arr.shape[3], w=arr.shape[4]
@@ -469,6 +473,7 @@ predict:      [S, T, V, H, W] ─per-pixel subtract► out[S, T, V, H, W]
 
 ---
 
+(operators-local-global)=
 ### 3.4 Fit local, predict global — *variogram pooling, global Moran's I*
 
 The rare cell, and the one that most operator wrappers get wrong (they often refuse to express it).
@@ -692,30 +697,32 @@ class KNN(Neighborhood):
     k: int
 
     def find(self, query, ref):
-        # pairwise distance — illustrative; production code uses a KDTree
-        d = einx.dot("q d, n d -> q n",
-                     query - query.mean(0),   # placeholder centring
-                     ref   - ref.mean(0))
-        d = einx.reduce("q [d], n [d] -> q n",
-                        query[:, None] - ref[None], op="sqsum")
-        return einx.argmin("q [n] -> q k", d, k=self.k)
+        # squared pairwise distance — illustrative; production code uses a KDTree
+        d2 = einx.reduce("q [d], n [d] -> q n",
+                         query[:, None] - ref[None], op="sqsum")
+        return einx.argmin("q [n] -> q k", d2, k=self.k)
 
 
 class Radius(Neighborhood):
     r: float
-    k_max: int   # we still return a fixed-shape index for jit; pad with -1
+    k_max: int   # we still return a fixed-shape index for jit
 
-    def find(self, query, ref):
+    def find(self, query, ref) -> Int[Array, "Q K"]:
         d2 = einx.reduce("q [d], n [d] -> q n",
                          query[:, None] - ref[None], op="sqsum")
-        within = d2 < self.r ** 2                                  # (Q, N) bool
-        # top-k_max within-radius hits, ties broken by distance:
+        within = d2 < self.r ** 2                          # (Q, N) bool
+
+        # top-k_max within-radius hits, ties broken by distance.
+        # Out-of-radius slots are filled with -1 sentinels that downstream
+        # code must mask before indexing.
         masked = jnp.where(within, d2, jnp.inf)
-        return einx.argmin("q [n] -> q k", masked, k=self.k_max)
-        # entries with d2 == inf are sentinels — downstream code masks them
+        idx    = einx.argmin("q [n] -> q k", masked, k=self.k_max)
+        # mark any slot whose chosen neighbor is out of radius as -1:
+        chosen_d2 = einx.get_at("q [n], q k -> q k", masked, idx)
+        return jnp.where(chosen_d2 < jnp.inf, idx, -1)
 ```
 
-Now an operator that *consumes* a neighborhood — say, a local-mean smoother — written in the coord-aware `(data, coords) → (data, coords)` signature from [Spatiotemporal data §3.6](spatiotemporal_data.md):
+Now an operator that *consumes* a neighborhood — say, a local-mean smoother — written in the coord-aware `(data, coords) → (data, coords)` signature from [Spatiotemporal data §3.6](spatiotemporal_data.md#coords-dependency-game):
 
 ```python
 class LocalMean(eqx.Module):
@@ -747,7 +754,7 @@ Two operators, same algorithm, different *physical* contracts.
 The first is appropriate for problems where similarity-in-feature-space is the locality (anomaly detection in `V`-space, manifold-based gap-filling).
 The second is appropriate for problems where the geometry sets the scale (PDE solvers, plume smoothing, kriging, spatially-stationary GP priors).
 
-**Static vs dynamic coords** (the [Spatiotemporal data §3.3](spatiotemporal_data.md) distinction) maps cleanly onto neighborhood reuse:
+**Static vs dynamic coords** (the [Spatiotemporal data §3.3](spatiotemporal_data.md#coords-static-dynamic) distinction) maps cleanly onto neighborhood reuse:
 
 ```python
 # Static coords — KDTree / radius index built ONCE, reused across all timesteps
@@ -762,7 +769,7 @@ def step(data_t, coords_t):
 result = jax.vmap(step)(data, coords_per_t)
 ```
 
-The structural cost difference (one build vs `T` builds) is exactly the asymmetry [Spatiotemporal data §3.3](spatiotemporal_data.md) flagged: static coords amortise neighborhood construction, dynamic coords cannot.
+The structural cost difference (one build vs `T` builds) is exactly the asymmetry [Spatiotemporal data §3.3](spatiotemporal_data.md#coords-static-dynamic) flagged: static coords amortise neighborhood construction, dynamic coords cannot.
 Operators that consume `Neighborhood` strategies should be written so the index is *cacheable* on static-coord tensors — otherwise dynamic-coord workloads silently inflate cost by a factor of `T`.
 
 ---

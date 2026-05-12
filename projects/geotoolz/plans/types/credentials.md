@@ -23,11 +23,14 @@ keywords: design, types, credentials, auth
 
 ## Summary
 
-Today, credentials for `RasterioReader` flow through process environment variables. The pattern works (GDAL picks them up automatically) but every project that uses `georeader` re-implements the env-var setup logic — `mars_data_ops/utils/filesystem.py` is ~800 lines of "read from a config file, set the right env vars, optionally fetch a managed-identity token first." The duplication is real and the surface is awkward.
+Today, credentials for `RasterioReader` flow through process environment variables.
+The pattern works (GDAL picks them up automatically) but every project that uses `georeader` re-implements the env-var setup logic — `mars_data_ops/utils/filesystem.py` is ~800 lines of "read from a config file, set the right env vars, optionally fetch a managed-identity token first." The duplication is real and the surface is awkward.
 
-This design proposes a typed `Credential` Protocol with concrete subclasses per cloud / auth mode, plus a `from_config(...)` helper for the config-file pattern. Readers (`RasterioReader`, future `AsyncGeoTIFFReader`) accept a `credential=` kwarg that applies the credential's env vars (or, in the fsspec / opener paths, threads the credential through the relevant constructor) without forcing global state.
+This design proposes a typed `Credential` Protocol with concrete subclasses per cloud / auth mode, plus a `from_config(...)` helper for the config-file pattern.
+Readers (`RasterioReader`, future `AsyncGeoTIFFReader`) accept a `credential=` kwarg that applies the credential's env vars (or, in the fsspec / opener paths, threads the credential through the relevant constructor) without forcing global state.
 
-The today-pattern (set env vars once, construct readers anywhere) keeps working — the proposed `Credential` is opt-in. Users who don't construct one get GDAL's existing env-var behaviour for free.
+The today-pattern (set env vars once, construct readers anywhere) keeps working — the proposed `Credential` is opt-in.
+Users who don't construct one get GDAL's existing env-var behaviour for free.
 
 ---
 
@@ -35,43 +38,70 @@ The today-pattern (set env vars once, construct readers anywhere) keeps working 
 
 Three pressures make a typed credential surface worth doing:
 
-1. **Every project re-implements the env-var setup.** [`mars_data_ops/utils/filesystem.py`](../../georeader_tutorial/03_rasterio_reader.md) is the canonical example: ~800 lines of `os.environ[...] = ...` plus auth-priority logic plus a config-file entry point. The same code appears (slightly differently) in every downstream pipeline that touches Azure storage. Promoting it into `georeader` eliminates the duplication and gives the package a stable credential API.
+1. **Every project re-implements the env-var setup.** [`mars_data_ops/utils/filesystem.py`](../../georeader_tutorial/03_rasterio_reader.md) is the canonical example: ~800 lines of `os.environ[...] = ...` plus auth-priority logic plus a config-file entry point.
+   The same code appears (slightly differently) in every downstream pipeline that touches Azure storage.
+   Promoting it into `georeader` eliminates the duplication and gives the package a stable credential API.
 
-2. **Global env-var state is ergonomically awkward.** Two `RasterioReader` instances reading from two Azure accounts in one process have to clobber `AZURE_STORAGE_ACCOUNT` between calls or fall through to the [HTTPS-embedded-SAS workaround](../../georeader_tutorial/03_rasterio_reader.md#mode-3--https-with-embedded-sas-fallback). Tests that want to swap credentials require `monkeypatch.setenv` instead of constructor kwargs. Per-reader credential isolation would solve both.
+2. **Global env-var state is ergonomically awkward.** Two `RasterioReader` instances reading from two Azure accounts in one process have to clobber `AZURE_STORAGE_ACCOUNT` between calls or fall through to the [HTTPS-embedded-SAS workaround](../../georeader_tutorial/03_rasterio_reader.md#mode-3--https-with-embedded-sas-fallback).
+   Tests that want to swap credentials require `monkeypatch.setenv` instead of constructor kwargs.
+   Per-reader credential isolation would solve both.
 
-3. **Managed-identity tokens expire.** The current pattern fetches a token once at startup via `DefaultAzureCredential` and writes it to `AZURE_STORAGE_ACCESS_TOKEN`. If the process runs longer than the token TTL (~1 hour by default), reads start failing with 401 and the user has no in-package recourse. A typed credential that knows how to refresh would handle this transparently.
+3. **Managed-identity tokens expire.** The current pattern fetches a token once at startup via `DefaultAzureCredential` and writes it to `AZURE_STORAGE_ACCESS_TOKEN`.
+   If the process runs longer than the token TTL (~1 hour by default), reads start failing with 401 and the user has no in-package recourse.
+   A typed credential that knows how to refresh would handle this transparently.
 
-The status quo absorbs each of these by re-implementing the same fix every time. A typed `Credential` lets the package own the answer once.
+The status quo absorbs each of these by re-implementing the same fix every time.
+A typed `Credential` lets the package own the answer once.
 
 ---
 
 ## Primer for newcomers
 
-> **ELI5.** A static credential is like a **key that always opens the door**. A dynamic credential (managed identity) is like a **guest pass the building issues you for one hour** — secure, but you have to ask for a new one when it expires. The `Credential` Protocol says "I don't care which kind you have; just hand me something I can use to unlock the door," and quietly handles the renewal if you have a guest pass.
+> **ELI5.** A static credential is like a **key that always opens the door**.
+> A dynamic credential (managed identity) is like a **guest pass the building issues you for one hour** — secure, but you have to ask for a new one when it expires.
+> The `Credential` Protocol says "I don't care which kind you have; just hand me something I can use to unlock the door," and quietly handles the renewal if you have a guest pass.
 
 ### Cloud auth — static vs dynamic credentials
 
-**What it is.** Two broad classes of cloud credential. **Static**: a fixed string (or pair of strings) that's valid until rotated — e.g., AWS access key + secret, an Azure SAS token, a GCS service-account JSON file. **Dynamic**: a credential that's minted on demand and expires after some TTL — e.g., AWS STS session tokens, Azure managed-identity bearer tokens, OIDC JWTs.
+**What it is.** Two broad classes of cloud credential. **Static**: a fixed string (or pair of strings) that's valid until rotated — e.g., AWS access key + secret, an Azure SAS token, a GCS service-account JSON file.
+**Dynamic**: a credential that's minted on demand and expires after some TTL — e.g., AWS STS session tokens, Azure managed-identity bearer tokens, OIDC JWTs.
 
-**How it works.** Static credentials sit in a config file or environment variable; the cloud SDK signs requests with them directly. Dynamic credentials require an upstream call to mint: `azure.identity.DefaultAzureCredential().get_token(...)` reaches the IMDS endpoint (a host-local HTTP service that talks to the cloud control plane), gets a short-lived bearer token, and you sign requests with that. The TTL is typically 1 hour — after that, you need a refresh.
+**How it works.** Static credentials sit in a config file or environment variable; the cloud SDK signs requests with them directly.
+Dynamic credentials require an upstream call to mint: `azure.identity.DefaultAzureCredential().get_token(...)` reaches the IMDS endpoint (a host-local HTTP service that talks to the cloud control plane), gets a short-lived bearer token, and you sign requests with that.
+The TTL is typically 1 hour — after that, you need a refresh.
 
-**What this means for us.** The `Credential` Protocol's two subclass families reflect this split. Static creds (`AzureSASCredential`, `AWSStaticCredential`, `GCSServiceAccountCredential`) have a no-op `refresh()`. Dynamic creds (`AzureManagedIdentityCredential`, `AWSProfileCredential`-with-SSO) have a real `refresh()` that re-fetches the token. Same `apply()` surface; different lifecycle underneath.
+**What this means for us.** The `Credential` Protocol's two subclass families reflect this split.
+Static creds (`AzureSASCredential`, `AWSStaticCredential`, `GCSServiceAccountCredential`) have a no-op `refresh()`.
+Dynamic creds (`AzureManagedIdentityCredential`, `AWSProfileCredential`-with-SSO) have a real `refresh()` that re-fetches the token.
+Same `apply()` surface; different lifecycle underneath.
 
 ### Process environment variables (the GDAL pattern)
 
-**What it is.** GDAL — the C library that reads cloud rasters — discovers credentials from `os.environ`. Set `AWS_ACCESS_KEY_ID` (or `AZURE_STORAGE_SAS_TOKEN`, etc.) before opening a file, and GDAL just works. There's no API call to "configure GDAL with credentials."
+**What it is.** GDAL — the C library that reads cloud rasters — discovers credentials from `os.environ`.
+Set `AWS_ACCESS_KEY_ID` (or `AZURE_STORAGE_SAS_TOKEN`, etc.) before opening a file, and GDAL just works.
+There's no API call to "configure GDAL with credentials."
 
-**How it works.** Inside `RasterioReader`, the code does `with rasterio.Env(**rio_env_options): rasterio.open(path)`. `rasterio.Env(...)` is a context manager that snapshots `os.environ`, overlays the provided keys, opens GDAL with that environment, then restores on exit. GDAL's libcurl reads `AWS_*`, `AZURE_STORAGE_*`, `GOOGLE_APPLICATION_CREDENTIALS` from the env and signs HTTP requests accordingly.
+**How it works.** Inside `RasterioReader`, the code does `with rasterio.Env(**rio_env_options): rasterio.open(path)`.
+`rasterio.Env(...)` is a context manager that snapshots `os.environ`, overlays the provided keys, opens GDAL with that environment, then restores on exit.
+GDAL's libcurl reads `AWS_*`, `AZURE_STORAGE_*`, `GOOGLE_APPLICATION_CREDENTIALS` from the env and signs HTTP requests accordingly.
 
-**What this means for us.** The today-pattern (set env vars at app startup) works because `rasterio.Env(...)` inherits the process env. The proposed pattern (`Credential.apply(env)`) merges credential keys into a per-call dict that's passed to `rasterio.Env(**dict)` — same C-side mechanism, different Python-side scoping. Per-reader isolation flows from this: two readers with two different `apply()`-ed dicts don't see each other's credentials.
+**What this means for us.** The today-pattern (set env vars at app startup) works because `rasterio.Env(...)` inherits the process env.
+The proposed pattern (`Credential.apply(env)`) merges credential keys into a per-call dict that's passed to `rasterio.Env(**dict)` — same C-side mechanism, different Python-side scoping.
+Per-reader isolation flows from this: two readers with two different `apply()`-ed dicts don't see each other's credentials.
 
 ### Managed identity (IMDS)
 
-**What it is.** Azure-specific: when code runs inside Azure compute (VM, AKS pod, Function), the platform exposes a metadata endpoint (`http://169.254.169.254/metadata/identity/...`) that mints bearer tokens. The code asks the endpoint for a token; the platform authenticates the request based on the compute's assigned identity. AWS has the equivalent (`http://169.254.169.254/latest/meta-data/iam/...`), GCP too.
+**What it is.** Azure-specific: when code runs inside Azure compute (VM, AKS pod, Function), the platform exposes a metadata endpoint (`http://169.254.169.254/metadata/identity/...`) that mints bearer tokens.
+The code asks the endpoint for a token; the platform authenticates the request based on the compute's assigned identity.
+AWS has the equivalent (`http://169.254.169.254/latest/meta-data/iam/...`), GCP too.
 
-**How it works.** `azure.identity.DefaultAzureCredential()` walks a chain (env vars → managed identity → developer CLI auth → ...) and uses whichever auth mode succeeds. In production-on-Azure, that's almost always managed identity — no static credentials in the deployed code. The token comes back as `JWT_string` + `expires_on` (a Unix timestamp).
+**How it works.** `azure.identity.DefaultAzureCredential()` walks a chain (env vars → managed identity → developer CLI auth → ...) and uses whichever auth mode succeeds.
+In production-on-Azure, that's almost always managed identity — no static credentials in the deployed code.
+The token comes back as `JWT_string` + `expires_on` (a Unix timestamp).
 
-**What this means for us.** `AzureManagedIdentityCredential.apply()` calls `get_token(...)`, caches the result, and returns env vars. The cache is keyed on the scope (`https://storage.azure.com/.default`); if the cached token is within 60 seconds of expiry, `apply()` triggers a refresh first. Long-running processes don't silently fail at the 1-hour mark.
+**What this means for us.** `AzureManagedIdentityCredential.apply()` calls `get_token(...)`, caches the result, and returns env vars.
+The cache is keyed on the scope (`https://storage.azure.com/.default`); if the cached token is within 60 seconds of expiry, `apply()` triggers a refresh first.
+Long-running processes don't silently fail at the 1-hour mark.
 
 ```{mermaid}
 sequenceDiagram
@@ -95,11 +125,17 @@ sequenceDiagram
 
 ### Bearer tokens and TTL
 
-**What it is.** A *bearer token* is a credential where possession of the token (without further proof) authorises the holder. JWT strings, Azure access tokens, OAuth access tokens are all bearer tokens. TTL (time-to-live) is the deliberately short validity window — typically 1 hour — that limits exposure if the token leaks.
+**What it is.** A *bearer token* is a credential where possession of the token (without further proof) authorises the holder.
+JWT strings, Azure access tokens, OAuth access tokens are all bearer tokens.
+TTL (time-to-live) is the deliberately short validity window — typically 1 hour — that limits exposure if the token leaks.
 
-**How it works.** The token is sent with each request as `Authorization: Bearer <token>`. The server validates the signature against the issuer's public key (no shared secret needed). When TTL expires, requests start failing with 401 Unauthorized; the client must request a new token from the issuer (e.g., refresh via IMDS).
+**How it works.** The token is sent with each request as `Authorization: Bearer <token>`.
+The server validates the signature against the issuer's public key (no shared secret needed).
+When TTL expires, requests start failing with 401 Unauthorized; the client must request a new token from the issuer (e.g., refresh via IMDS).
 
-**What this means for us.** The "401-retry-with-refresh" pattern in [`reader_rasterio.md`](../georeader/reader_rasterio.md) Proposal 2 exists because bearer tokens fail mid-pipeline. Catching one 401, calling `credential.refresh()`, retrying once — that's the standard fix. The `Credential` Protocol carries a `refresh()` method specifically for this; static creds implement it as a no-op.
+**What this means for us.** The "401-retry-with-refresh" pattern in [`reader_rasterio.md`](../georeader/reader_rasterio.md) Proposal 2 exists because bearer tokens fail mid-pipeline.
+Catching one 401, calling `credential.refresh()`, retrying once — that's the standard fix.
+The `Credential` Protocol carries a `refresh()` method specifically for this; static creds implement it as a no-op.
 
 ```{mermaid}
 stateDiagram-v2
@@ -118,29 +154,40 @@ stateDiagram-v2
 
 ## Goals
 
-- **A `Credential` Protocol** that wraps the "apply this credential to a process / reader before opening files" operation. Concrete subclasses per cloud / auth mode.
+- **A `Credential` Protocol** that wraps the "apply this credential to a process / reader before opening files" operation.
+  Concrete subclasses per cloud / auth mode.
 - **Per-cloud helpers** for the common construction patterns: `AzureSASCredential`, `AzureManagedIdentityCredential`, `AWSStaticCredential`, `AWSProfileCredential`, `GCSServiceAccountCredential`.
 - **A `from_config(...)` factory** that reads a config object (configparser, dict, dataclass) and returns the right credential subclass.
-- **Refresh-aware tokens.** Credentials backed by short-lived tokens know how to refresh on demand. Reader integration is wired through [`reader_rasterio.md`](../georeader/reader_rasterio.md).
-- **Backward compatibility.** The today-pattern (set env vars, construct reader, GDAL picks them up) keeps working unchanged. The new `Credential` types are opt-in.
+- **Refresh-aware tokens.** Credentials backed by short-lived tokens know how to refresh on demand.
+  Reader integration is wired through [`reader_rasterio.md`](../georeader/reader_rasterio.md).
+- **Backward compatibility.** The today-pattern (set env vars, construct reader, GDAL picks them up) keeps working unchanged.
+  The new `Credential` types are opt-in.
 
 ---
 
 ## Non-goals
 
 - **Replacing `azure-identity` / `boto3` / `google-auth`.** The credential subclasses *wrap* SDK credential objects; they don't reimplement them.
-- **Authoring a config file format.** `from_config(...)` accepts whatever shape the user has — configparser, dict, pydantic model — and reads from named keys. No new schema.
-- **Changing how GDAL reads credentials.** GDAL still reads from process env vars in the GDAL-VSI path. The `Credential` Protocol is the *Python* side of the boundary; it sets the env vars and refreshes tokens, but the actual cred consumption is GDAL's job.
+- **Authoring a config file format.** `from_config(...)` accepts whatever shape the user has — configparser, dict, pydantic model — and reads from named keys.
+  No new schema.
+- **Changing how GDAL reads credentials.** GDAL still reads from process env vars in the GDAL-VSI path.
+  The `Credential` Protocol is the *Python* side of the boundary; it sets the env vars and refreshes tokens, but the actual cred consumption is GDAL's job.
 - **Credential storage / vault integration.** This design is about the in-process API. Where the credential strings come from (config file, environment, vault, AWS Secrets Manager, …) is the user's call.
 
 ---
 
 ## Constraints
 
-- **Env vars are GDAL's contract.** GDAL reads cloud credentials from environment variables — there's no per-call credential argument in libcurl's GDAL integration. The package crosses that boundary in two ways: `Credential.apply_to_os_environ()` mutates `os.environ` (the today-pattern, set globals at startup) and `Credential.apply(env)` returns a fresh dict the reader merges into `rasterio.Env(**env)` (per-call, per-reader isolation). Both ultimately feed GDAL's libcurl through the env-var mechanism; they differ only in whether the env scope is process-global or per-call.
-- **`apply()` is pure; `apply_to_os_environ()` mutates.** The Protocol design uses two methods so callers can choose. Per-reader isolation in `RasterioReader(credential=...)` uses `apply()` and merges into the local `rasterio.Env(...)` — no `os.environ` mutation, no global-state collisions between readers in one process.
-- **Per-reader isolation works on every bytes path.** GDAL-VSI gets a per-call env dict via `rasterio.Env(**apply(env))`. fsspec gets credentials inside its filesystem constructor. Custom openers close over their own credential. None of these touch `os.environ`.
-- **Refresh logic lives at the reader layer**, not in the `Credential` itself. The `Credential` knows *how* to refresh (`refresh()` method, which may also be invoked internally by `apply()` if the credential's TTL is near-expiry); the reader decides *when* to retry on a 401 (one refresh + one retry, then propagate). This split keeps the credential testable in isolation.
+- **Env vars are GDAL's contract.** GDAL reads cloud credentials from environment variables — there's no per-call credential argument in libcurl's GDAL integration.
+  The package crosses that boundary in two ways: `Credential.apply_to_os_environ()` mutates `os.environ` (the today-pattern, set globals at startup) and `Credential.apply(env)` returns a fresh dict the reader merges into `rasterio.Env(**env)` (per-call, per-reader isolation).
+  Both ultimately feed GDAL's libcurl through the env-var mechanism; they differ only in whether the env scope is process-global or per-call.
+- **`apply()` is pure; `apply_to_os_environ()` mutates.** The Protocol design uses two methods so callers can choose.
+  Per-reader isolation in `RasterioReader(credential=...)` uses `apply()` and merges into the local `rasterio.Env(...)` — no `os.environ` mutation, no global-state collisions between readers in one process.
+- **Per-reader isolation works on every bytes path.** GDAL-VSI gets a per-call env dict via `rasterio.Env(**apply(env))`. fsspec gets credentials inside its filesystem constructor.
+  Custom openers close over their own credential. None of these touch `os.environ`.
+- **Refresh logic lives at the reader layer**, not in the `Credential` itself.
+  The `Credential` knows *how* to refresh (`refresh()` method, which may also be invoked internally by `apply()` if the credential's TTL is near-expiry); the reader decides *when* to retry on a 401 (one refresh + one retry, then propagate).
+  This split keeps the credential testable in isolation.
 - **The today-pattern can't break.** Existing `os.environ['AZURE_STORAGE_*'] = ...` code keeps working — `RasterioReader()` without a `credential=` kwarg inherits from `os.environ` exactly as today.
 
 ---
@@ -185,7 +232,8 @@ class Credential(Protocol):
         ...
 ```
 
-The Protocol is `runtime_checkable` so user code can `isinstance(x, Credential)` for the duck-typed case. Concrete implementations don't need to inherit — any class with the three methods satisfies the Protocol structurally.
+The Protocol is `runtime_checkable` so user code can `isinstance(x, Credential)` for the duck-typed case.
+Concrete implementations don't need to inherit — any class with the three methods satisfies the Protocol structurally.
 
 ---
 
@@ -362,7 +410,8 @@ def from_config(
     ...
 ```
 
-Implementation detail: this dispatches on `section` to the right per-cloud helper, which then reads the right named keys. Same auth-priority logic as `mars_data_ops/utils/filesystem.py:617-703`, just promoted to the package.
+Implementation detail: this dispatches on `section` to the right per-cloud helper, which then reads the right named keys.
+Same auth-priority logic as `mars_data_ops/utils/filesystem.py:617-703`, just promoted to the package.
 
 ---
 
@@ -387,7 +436,8 @@ class RasterioReader(GeoData):
 
 Now per-reader isolation works for the GDAL-VSI path: at the moment `rasterio.Env(...)` is constructed, the credential's env vars are merged into the `rio_env_options` dict (not into `os.environ` globally), so two readers with two different credentials don't collide.
 
-The fsspec path (`fs=fsspec_fs`) and the opener path (`opener=callable`) take credentials through their respective objects' constructors and ignore the `credential=` kwarg if both are given. See [`reader_rasterio.md`](../georeader/reader_rasterio.md) for the full integration spec including refresh-on-401 retry and SAS-fallback rewriting.
+The fsspec path (`fs=fsspec_fs`) and the opener path (`opener=callable`) take credentials through their respective objects' constructors and ignore the `credential=` kwarg if both are given.
+See [`reader_rasterio.md`](../georeader/reader_rasterio.md) for the full integration spec including refresh-on-401 retry and SAS-fallback rewriting.
 
 ---
 
@@ -407,47 +457,63 @@ The fsspec path (`fs=fsspec_fs`) and the opener path (`opener=callable`) take cr
 
 ### 1. Where does `Credential` live — in `georeader` core or as a `[creds]` extra?
 
-The Azure / AWS / GCS subclasses each pull a real SDK (`azure-identity`, `boto3`, `google-auth`). Hard deps would balloon the install footprint. Three options:
+The Azure / AWS / GCS subclasses each pull a real SDK (`azure-identity`, `boto3`, `google-auth`).
+Hard deps would balloon the install footprint.
+Three options:
 
-- **Hard deps** — every install gets all three SDKs. Simplest, biggest install.
-- **`[creds]` extra** — `pip install georeader-spaceml[creds]` enables the typed credentials. Default users keep using env vars manually.
-- **Per-cloud extras** — `[azure-creds]`, `[aws-creds]`, `[gcs-creds]`. Most surgical; most complicated to document.
+- **Hard deps** — every install gets all three SDKs.
+  Simplest, biggest install.
+- **`[creds]` extra** — `pip install georeader-spaceml[creds]` enables the typed credentials.
+  Default users keep using env vars manually.
+- **Per-cloud extras** — `[azure-creds]`, `[aws-creds]`, `[gcs-creds]`.
+  Most surgical; most complicated to document.
 
-**Tentative pick: `[creds]` extra** (single optional dep that pulls all three SDKs). Per-cloud extras if install-size complaints arrive.
+**Tentative pick: `[creds]` extra** (single optional dep that pulls all three SDKs).
+Per-cloud extras if install-size complaints arrive.
 
 ### 2. Should `apply_to_os_environ` be the default `apply` method?
 
-The two-method shape (`apply` returns dict, `apply_to_os_environ` mutates global) is for the per-reader isolation case (which uses `apply`) and the today-pattern case (which uses `apply_to_os_environ`). Could collapse to one method that takes a destination dict:
+The two-method shape (`apply` returns dict, `apply_to_os_environ` mutates global) is for the per-reader isolation case (which uses `apply`) and the today-pattern case (which uses `apply_to_os_environ`).
+Could collapse to one method that takes a destination dict:
 
 ```python
 def apply(self, env: dict[str, str] | None = os.environ) -> dict[str, str]: ...
 ```
 
-Default to `os.environ`, override with `{}` for isolation. Cleaner API, but `os.environ` is mutable global state and using it as a default is a bit of a smell.
+Default to `os.environ`, override with `{}` for isolation.
+Cleaner API, but `os.environ` is mutable global state and using it as a default is a bit of a smell.
 
 **Tentative pick: keep two methods.** The two callsites have genuinely different intentions; one method with a magical default obscures that.
 
 ### 3. Refresh policy — automatic or explicit?
 
-Reader-level refresh on 401 is the obvious answer. Open questions:
+Reader-level refresh on 401 is the obvious answer.
+Open questions:
 
 - **How many retries?** One refresh + one retry is the standard pattern.
 - **Backoff?** Probably no — refresh is fast and retry should be immediate.
-- **Should `apply()` auto-refresh expired tokens, or wait for a 401?** Auto-refresh in `apply()` is cheaper (avoids the 401 round-trip) but requires the credential to know its TTL. Wait-for-401 is simpler but slower on the failure path. The `AzureManagedIdentityCredential` snippet above auto-refreshes; could be relaxed.
+- **Should `apply()` auto-refresh expired tokens, or wait for a 401?** Auto-refresh in `apply()` is cheaper (avoids the 401 round-trip) but requires the credential to know its TTL. Wait-for-401 is simpler but slower on the failure path.
+  The `AzureManagedIdentityCredential` snippet above auto-refreshes; could be relaxed.
 
 ### 4. STS session token / OIDC for AWS
 
-AWS via SSO / STS / OIDC is increasingly common in modern enterprises. The `AWSProfileCredential` above handles this via `boto3.Session`, but the actual refresh is delegated to boto3's own logic. Whether to expose a more explicit `AWSSSOCredential` / `AWSOIDCCredential` is open — depends on how often users want to construct these directly vs going through profile-based config.
+AWS via SSO / STS / OIDC is increasingly common in modern enterprises.
+The `AWSProfileCredential` above handles this via `boto3.Session`, but the actual refresh is delegated to boto3's own logic.
+Whether to expose a more explicit `AWSSSOCredential` / `AWSOIDCCredential` is open — depends on how often users want to construct these directly vs going through profile-based config.
 
 ### 5. Should a `from_env_vars()` constructor exist?
 
-For symmetry with the today-pattern: read whatever's currently in `os.environ`, return the appropriate credential object. Useful for "I've already set env vars; now wrap that as a typed object so my downstream code is consistent." Probably worth adding. Tentative shape: `AzureSASCredential.from_env()`, `AWSStaticCredential.from_env()`, etc. — class methods that read the canonical env vars.
+For symmetry with the today-pattern: read whatever's currently in `os.environ`, return the appropriate credential object.
+Useful for "I've already set env vars; now wrap that as a typed object so my downstream code is consistent." Probably worth adding.
+Tentative shape: `AzureSASCredential.from_env()`, `AWSStaticCredential.from_env()`, etc. — class methods that read the canonical env vars.
 
 ---
 
 ## Alternatives considered
 
-- **Just promote `mars_data_ops/filesystem.py` verbatim.** Rejected: that module is Azure-only, written before the package needed cross-cloud credential support, and tightly coupled to a specific config-file format. A typed Protocol is more flexible.
+- **Just promote `mars_data_ops/filesystem.py` verbatim.** Rejected: that module is Azure-only, written before the package needed cross-cloud credential support, and tightly coupled to a specific config-file format.
+  A typed Protocol is more flexible.
 - **Use `azure-identity` / `boto3` / `google-auth` credential objects directly.** Rejected: each SDK has its own credential type with its own API. The point of the `Credential` Protocol is to give a single surface; user code shouldn't have to branch on which SDK is in play.
 - **Use `fsspec.AbstractFileSystem` as the credential carrier.** Rejected: that's the fsspec-path credential locus, but it doesn't help GDAL-VSI users. fsspec is one of three paths, not the universal answer.
-- **Don't bother — keep the env-var pattern.** Rejected: the duplication is real and the multi-account / refresh-token cases are unsolved. A typed Protocol is the smallest API surface that fixes both.
+- **Don't bother — keep the env-var pattern.** Rejected: the duplication is real and the multi-account / refresh-token cases are unsolved.
+  A typed Protocol is the smallest API surface that fixes both.

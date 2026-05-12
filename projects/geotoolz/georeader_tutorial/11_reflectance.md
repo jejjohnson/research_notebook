@@ -15,8 +15,8 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, radiometry, srf
 ---
 
-> **Module:** `georeader/reflectance.py` (971 LOC, 97 box-drawing characters — third densest in the package)
-> **Role:** convert satellite imagery between physically meaningful radiometric quantities — radiance, top-of-atmosphere (ToA) reflectance, and band-integrated irradiance. Where the package crosses from "geospatial bookkeeping" into actual physics.
+> **Module:** `georeader/reflectance.py` (971 LOC, 97 box-drawing characters — third densest in the package) **Role:** convert satellite imagery between physically meaningful radiometric quantities — radiance, top-of-atmosphere (ToA) reflectance, and band-integrated irradiance.
+> Where the package crosses from "geospatial bookkeeping" into actual physics.
 
 ---
 
@@ -24,9 +24,12 @@ keywords: tutorial, georeader, radiometry, srf
 
 Satellite imagery is delivered in any of three radiometric units depending on the sensor / processing level:
 
-- **Digital numbers (DN)** — raw counts, sensor-specific, dimensionless. You almost never want to work with these.
-- **Radiance (L)** — `W / m² / sr / nm` — the actual photon flux hitting the sensor, per unit area, per unit solid angle, per wavelength. Physical, directly comparable across sensors *if* you know the geometry.
-- **Top-of-atmosphere reflectance (ρ)** — dimensionless, typically ∈ `[0, 1]` — the fraction of incoming solar radiation that the surface reflected back, **before** atmospheric correction. The starting point for most ML pipelines because it normalises out solar-illumination effects (sun angle, Earth-sun distance).
+- **Digital numbers (DN)** — raw counts, sensor-specific, dimensionless.
+  You almost never want to work with these.
+- **Radiance (L)** — `W / m² / sr / nm` — the actual photon flux hitting the sensor, per unit area, per unit solid angle, per wavelength.
+  Physical, directly comparable across sensors *if* you know the geometry.
+- **Top-of-atmosphere reflectance (ρ)** — dimensionless, typically ∈ `[0, 1]` — the fraction of incoming solar radiation that the surface reflected back, **before** atmospheric correction.
+  The starting point for most ML pipelines because it normalises out solar-illumination effects (sun angle, Earth-sun distance).
 
 This module provides:
 
@@ -61,7 +64,8 @@ This module provides:
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-The DN→radiance step is **sensor-specific** (linear scale + offset from per-band calibration coefficients) and lives inside the per-sensor reader, not this module. Once you have radiance, this module handles the rest.
+The DN→radiance step is **sensor-specific** (linear scale + offset from per-band calibration coefficients) and lives inside the per-sensor reader, not this module.
+Once you have radiance, this module handles the rest.
 
 The three supported radiance unit systems all ship in real-world products:
 
@@ -90,8 +94,10 @@ where:
 Three corrections combined:
 
 - **`π`** — convert from solid-angle-aware radiance to a Lambertian-equivalent reflectance.
-- **`d²`** — Earth-sun distance correction. Earth's orbit is elliptical; in January (perihelion) we're closer to the Sun and get more incoming radiation than in July (aphelion).
-- **`cos(θ_z)`** — solar zenith correction. When the Sun is low in the sky, the same surface element intercepts less radiation per unit horizontal area.
+- **`d²`** — Earth-sun distance correction.
+  Earth's orbit is elliptical; in January (perihelion) we're closer to the Sun and get more incoming radiation than in July (aphelion).
+- **`cos(θ_z)`** — solar zenith correction.
+  When the Sun is low in the sky, the same surface element intercepts less radiation per unit horizontal area.
 
 The module factors them into `obfactor = π × d² / cos(θ_z)` — `observation_date_correction_factor` — so the reflectance line collapses to `ρ = L × obfactor / E_sun`.
 
@@ -148,9 +154,11 @@ The module factors them into `obfactor = π × d² / cos(θ_z)` — `observation
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-The annual ≈ ±1.7% variation in distance becomes ≈ ±3.4% in `d²` and therefore ≈ 6.5% peak-to-peak in irradiance over the year. **Ignoring this correction biases reflectance time series**: you'd see a fake annual cycle of ~3% amplitude with peaks in the Northern winter (smaller `d`, more apparent radiance, higher uncorrected reflectance).
+The annual ≈ ±1.7% variation in distance becomes ≈ ±3.4% in `d²` and therefore ≈ 6.5% peak-to-peak in irradiance over the year.
+**Ignoring this correction biases reflectance time series**: you'd see a fake annual cycle of ~3% amplitude with peaks in the Northern winter (smaller `d`, more apparent radiance, higher uncorrected reflectance).
 
-The closed-form expression `d = 1 - 0.01673 × cos(0.0172 × (DOY − 4))` is what `earth_sun_distance_correction_factor(date_of_acquisition)` returns. It's accurate to ~0.001 AU — well below the precision needed for radiometric calibration.
+The closed-form expression `d = 1 - 0.01673 × cos(0.0172 × (DOY − 4))` is what `earth_sun_distance_correction_factor(date_of_acquisition)` returns.
+It's accurate to ~0.001 AU — well below the precision needed for radiometric calibration.
 
 ---
 
@@ -182,10 +190,13 @@ When you want to take a hyperspectral measurement (~285 narrow bands) and turn i
 
 Two functions own this:
 
-- **`srf(center_wavelengths, fwhm, wavelengths)`** — build a Gaussian SRF DataFrame from per-band centre/FWHM specs. Returns shape `(N_wavelengths, K_bands)` normalized so each column sums to 1.
+- **`srf(center_wavelengths, fwhm, wavelengths)`** — build a Gaussian SRF DataFrame from per-band centre/FWHM specs.
+  Returns shape `(N_wavelengths, K_bands)` normalized so each column sums to 1.
 - **`transform_to_srf(hyperspectral_data, srf, wavelengths)`** — apply the SRF: produce a `(K_bands, H, W)` multispectral cube from a `(N_wavelengths, H, W)` hyperspectral cube.
 
-Why Gaussian? Most published SRFs are well-approximated by Gaussians, and Gaussian SRFs are uniquely specified by `(centre, FWHM)`. The exact published SRFs (S2, Landsat, etc.) tend to have ~1% non-Gaussian deviations; for most ML applications the difference doesn't matter, but for radiative-transfer studies you'd want to use the exact published curves rather than a Gaussian approximation.
+Why Gaussian?
+Most published SRFs are well-approximated by Gaussians, and Gaussian SRFs are uniquely specified by `(centre, FWHM)`.
+The exact published SRFs (S2, Landsat, etc.) tend to have ~1% non-Gaussian deviations; for most ML applications the difference doesn't matter, but for radiative-transfer studies you'd want to use the exact published curves rather than a Gaussian approximation.
 
 The `2 × √(2 × ln(2)) ≈ 2.355` constant in the formula is the FWHM-to-σ ratio for a Gaussian — comes up again in any "spread parameter" discussion.
 
@@ -218,11 +229,14 @@ Reflectance computation needs `E_sun` **per band** — a single number that summ
 E_k = ∫ E_sun(λ) × R_k(λ) dλ  /  ∫ R_k(λ) dλ
 ```
 
-`integrated_irradiance(srf, solar_irradiance=None, epsilon_srf=1e-4)` computes the integral per band. If `solar_irradiance=None`, it loads the **Thuillier (2003) reference spectrum** bundled with the package as `SolarIrradiance_Thuillier.csv` (Solar Physics 214). The Thuillier spectrum covers 200–2400 nm at ~1 nm resolution — fine enough for any current orbital sensor.
+`integrated_irradiance(srf, solar_irradiance=None, epsilon_srf=1e-4)` computes the integral per band.
+If `solar_irradiance=None`, it loads the **Thuillier (2003) reference spectrum** bundled with the package as `SolarIrradiance_Thuillier.csv` (Solar Physics 214).
+The Thuillier spectrum covers 200–2400 nm at ~1 nm resolution — fine enough for any current orbital sensor.
 
 The `epsilon_srf` threshold zeroes out SRF values below a tiny floor — important because Gaussian SRFs technically extend forever, and the integration would otherwise pick up out-of-band noise in `E_sun(λ)`.
 
-`load_thuillier_irradiance()` returns the cached DataFrame with columns `["Nanometer", "Radiance(mW/m2/nm)"]`. The `THUILLIER_RADIANCE = None` module-level cache means it's loaded lazily on first use.
+`load_thuillier_irradiance()` returns the cached DataFrame with columns `["Nanometer", "Radiance(mW/m2/nm)"]`.
+The `THUILLIER_RADIANCE = None` module-level cache means it's loaded lazily on first use.
 
 ---
 
@@ -264,7 +278,8 @@ toa_refl = reflectance.radiance_to_reflectance(
 # toa_refl is a (B, H, W) GeoTensor in [0, 1]
 ```
 
-The `solar_irradiance` argument is what lets you specialise to *any* sensor — pass S2's per-band `E_sun` for S2, Landsat's for Landsat. The reader for each sensor typically ships these constants as a module-level array.
+The `solar_irradiance` argument is what lets you specialise to *any* sensor — pass S2's per-band `E_sun` for S2, Landsat's for Landsat.
+The reader for each sensor typically ships these constants as a module-level array.
 
 **B. Hyperspectral EMIT → S2-equivalent multispectral:**
 
@@ -289,19 +304,29 @@ This is the "spectral response binning" preset that the [`geotoolz.md` plan](../
 
 ## 9. Sharp edges
 
-- **`solar_irradiance` units must be `W/m²/nm`, not `mW/m²/nm`.** Even when the input radiance is in mW units. The function normalises radiance internally; it does not normalise the solar input. Mismatched scaling here is the most common bug, off by a factor of 1000.
-- **`center_coords` for solar zenith.** If `data` is a `GeoTensor`, the function can derive scene centre from `transform`. If it's a plain ndarray, you must pass `center_coords` explicitly. Forgetting this with a non-GeoTensor input gives a silent mis-correction.
-- **`crs_coords` defaults to EPSG:4326.** If your `center_coords` are in UTM, pass `crs_coords="EPSG:32630"` (or whichever zone). Otherwise the SZA computation places your scene at lon=500000, lat=4500000 — somewhere in deep space.
-- **`observation_date_corr_factor` shortcut.** Pass it pre-computed and the function skips date and centre coords. Useful for batched processing where you've calibrated `obfactor` once and want to apply it to N tiles cheaply.
-- **Thuillier is in `mW/m²/nm`, not `W/m²/nm`.** Read the column name. If you pass it directly as `solar_irradiance` to `radiance_to_reflectance`, you'll be off by 1000.
-- **`integrated_irradiance` returns same units as input solar spectrum.** Mixing Thuillier (`mW`) with a band-integrated value used as `W` argument is the dominant unit confusion. Convert explicitly.
+- **`solar_irradiance` units must be `W/m²/nm`, not `mW/m²/nm`.** Even when the input radiance is in mW units.
+  The function normalises radiance internally; it does not normalise the solar input.
+  Mismatched scaling here is the most common bug, off by a factor of 1000.
+- **`center_coords` for solar zenith.** If `data` is a `GeoTensor`, the function can derive scene centre from `transform`.
+  If it's a plain ndarray, you must pass `center_coords` explicitly.
+  Forgetting this with a non-GeoTensor input gives a silent mis-correction.
+- **`crs_coords` defaults to EPSG:4326.** If your `center_coords` are in UTM, pass `crs_coords="EPSG:32630"` (or whichever zone).
+  Otherwise the SZA computation places your scene at lon=500000, lat=4500000 — somewhere in deep space.
+- **`observation_date_corr_factor` shortcut.** Pass it pre-computed and the function skips date and centre coords.
+  Useful for batched processing where you've calibrated `obfactor` once and want to apply it to N tiles cheaply.
+- **Thuillier is in `mW/m²/nm`, not `W/m²/nm`.** Read the column name.
+  If you pass it directly as `solar_irradiance` to `radiance_to_reflectance`, you'll be off by 1000.
+- **`integrated_irradiance` returns same units as input solar spectrum.** Mixing Thuillier (`mW`) with a band-integrated value used as `W` argument is the dominant unit confusion.
+  Convert explicitly.
 - **`srf(center, fwhm, wavelengths)` doesn't normalise to unit area.** The `transform_to_srf` and `integrated_irradiance` functions do their own normalisation internally, but if you take the SRF DataFrame and use it elsewhere you may need to divide by `np.trapz(R, wavelengths)`.
 
 ---
 
 ## 10. Why this module is denser than its size
 
-971 LOC, 97 box-drawing characters — the third densest in the package because **physics requires illustration**. The Earth-sun distance plot, the SRF convolution diagram, and the integration visual are doing real explanatory work that prose alone wouldn't. If you only keep one chapter's diagrams from this whole tutorial, this is one of the candidates — they're the ones that explain the *why* not just the *what*.
+971 LOC, 97 box-drawing characters — the third densest in the package because **physics requires illustration**.
+The Earth-sun distance plot, the SRF convolution diagram, and the integration visual are doing real explanatory work that prose alone wouldn't.
+If you only keep one chapter's diagrams from this whole tutorial, this is one of the candidates — they're the ones that explain the *why* not just the *what*.
 
 ---
 
@@ -309,10 +334,13 @@ This is the "spectral response binning" preset that the [`geotoolz.md` plan](../
 
 Three concrete operator-shapes from [`geotoolz.md`](../plans/geotoolz/geotoolz.md) wrap functions in this module:
 
-- **`correction.TOAToBOA(sun_zenith=..., atmosphere=...)`** — wraps `radiance_to_reflectance` plus an atmospheric correction step. The radiance→ToA part is what this module already does.
-- **`radiometry.SRFBin(target_centres, target_fwhm)`** — wraps `srf` + `transform_to_srf` to take a hyperspectral cube and bin it to a target sensor's bands. The basis for the `EnMAP → S2` and `EMIT → S2` preset operators.
+- **`correction.TOAToBOA(sun_zenith=..., atmosphere=...)`** — wraps `radiance_to_reflectance` plus an atmospheric correction step.
+  The radiance→ToA part is what this module already does.
+- **`radiometry.SRFBin(target_centres, target_fwhm)`** — wraps `srf` + `transform_to_srf` to take a hyperspectral cube and bin it to a target sensor's bands.
+  The basis for the `EnMAP → S2` and `EMIT → S2` preset operators.
 - **`presets.s2.S2_L1C_TO_BOA_NDVI(...)`** — a `Sequential` that includes `radiance_to_reflectance` as one of its steps when starting from L1A radiance products.
 
-The module is also implicitly used inside `readers.emit`, `readers.prisma`, and `readers.enmap` — those readers do DN → radiance internally (per their per-sensor calibration coefficients) and expose the radiance-units result. The reflectance step is then a one-line call to this module.
+The module is also implicitly used inside `readers.emit`, `readers.prisma`, and `readers.enmap` — those readers do DN → radiance internally (per their per-sensor calibration coefficients) and expose the radiance-units result.
+The reflectance step is then a one-line call to this module.
 
 Next chapter: [12_save.md](12_save.md) — writing GeoTensors to disk; full Cloud-Optimized GeoTIFF (COG) anatomy.

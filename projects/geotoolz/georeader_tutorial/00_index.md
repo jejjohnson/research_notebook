@@ -15,8 +15,7 @@ license: CC-BY-4.0
 keywords: tutorial, georeader
 ---
 
-> **Source:** [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader/tree/f0d92f0) @ branch `feature/geotensor_npapi`, commit [`f0d92f0`](https://github.com/spaceml-org/georeader/tree/f0d92f0)
-> **Goal:** a module-by-module tutorial that captures the package's capabilities **and preserves all ASCII diagrams** before they're cleaned up downstream.
+> **Source:** [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader/tree/f0d92f0) @ branch `feature/geotensor_npapi`, commit [`f0d92f0`](https://github.com/spaceml-org/georeader/tree/f0d92f0) **Goal:** a module-by-module tutorial that captures the package's capabilities **and preserves all ASCII diagrams** before they're cleaned up downstream.
 
 The package is ~20k LOC across 17 top-level files + 14 reader modules. ~1100 lines of box-drawing ASCII art are scattered across docstrings — this is the doc treasure we're rescuing.
 
@@ -24,7 +23,9 @@ The package is ~20k LOC across 17 top-level files + 14 reader modules. ~1100 lin
 
 ## Recommended tutorial structure
 
-Each chapter = one file under `georeader_tutorial/`. We work through them one at a time. Diagrams are copied verbatim into the tutorial; surrounding prose explains the concept and adds runnable examples.
+Each chapter = one file under `georeader_tutorial/`.
+We work through them one at a time.
+Diagrams are copied verbatim into the tutorial; surrounding prose explains the concept and adds runnable examples.
 
 ### Part I — Core data model
 
@@ -95,7 +96,8 @@ emit.py                  27    ← EMIT NetCDF layout
 TOTAL                  ~1148 box-drawing chars across 17 files
 ```
 
-(Plus pipe-tables and `+--+`-style diagrams not counted above. Per-chapter we'll grep these out exhaustively.)
+(Plus pipe-tables and `+--+`-style diagrams not counted above.
+Per-chapter we'll grep these out exhaustively.)
 
 ---
 

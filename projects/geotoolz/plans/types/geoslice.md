@@ -23,13 +23,16 @@ keywords: design, types, sampler, geoslice
 
 ## Summary
 
-A `GeoSlice` is a **bounded request for data** — a bbox, a time interval, a target resolution, and a CRS. It is the unit of work that catalogs produce, that loaders consume, and that operators (in `geotoolz`) compose against. The three sampler/stitch primitives are the canonical producers and consumer:
+A `GeoSlice` is a **bounded request for data** — a bbox, a time interval, a target resolution, and a CRS. It is the unit of work that catalogs produce, that loaders consume, and that operators (in `geotoolz`) compose against.
+The three sampler/stitch primitives are the canonical producers and consumer:
 
 - `random_sampler(catalog, chip_size, ...)` → iterator of `GeoSlice` for ML training.
 - `grid_sampler(catalog, chip_size, ...)` → iterator of `GeoSlice` for tiled inference.
 - `stitch(predictions, slices, ...)` → reverses the chip operation back into a single output raster.
 
-Today, all four live in `jej_vc_snippets/sampler.py` (~1400 LOC). The [Geodatabase Phase 1 design](../geodatabase/geocatalog.md) proposes promoting them into `georeader.samplers`. This document gives that promotion its own attention so the dataclass invariants, the sampler math, and the stitch reductions are specified in one place rather than scattered across other designs.
+Today, all four live in `jej_vc_snippets/sampler.py` (~1400 LOC).
+The [Geodatabase Phase 1 design](../geodatabase/geocatalog.md) proposes promoting them into `georeader.samplers`.
+This document gives that promotion its own attention so the dataclass invariants, the sampler math, and the stitch reductions are specified in one place rather than scattered across other designs.
 
 ---
 
@@ -37,49 +40,74 @@ Today, all four live in `jej_vc_snippets/sampler.py` (~1400 LOC). The [Geodataba
 
 Three reasons this deserves its own design doc rather than a section inside the catalog plan:
 
-1. **It's the inter-layer contract.** Catalogs produce `GeoSlice`s. Loaders consume them. `geotoolz.sampling.GridSampler` wraps `grid_sampler`; `geotoolz.inference.ApplyToChips` consumes the iterator and `stitch`es predictions. Six designs reference `GeoSlice`; none was the right home to fully specify it.
+1. **It's the inter-layer contract.** Catalogs produce `GeoSlice`s.
+   Loaders consume them.
+   `geotoolz.sampling.GridSampler` wraps `grid_sampler`; `geotoolz.inference.ApplyToChips` consumes the iterator and `stitch`es predictions.
+   Six designs reference `GeoSlice`; none was the right home to fully specify it.
 
-2. **The math is non-trivial and easy to get wrong.** Random-sampler weighting has a documented bias when tile sizes are heterogeneous. Grid-sampler stride math has subtle edge-case behaviour at the trailing row/column. Stitch's four reduction modes (`average` / `max` / `first` / `last`) each have different ordering semantics. Putting it all in one place makes it auditable.
+2. **The math is non-trivial and easy to get wrong.** Random-sampler weighting has a documented bias when tile sizes are heterogeneous.
+   Grid-sampler stride math has subtle edge-case behaviour at the trailing row/column.
+   Stitch's four reduction modes (`average` / `max` / `first` / `last`) each have different ordering semantics.
+   Putting it all in one place makes it auditable.
 
-3. **`GeoSlice` overlaps with two other concepts** — `rasterio.windows.Window` (pixel-space rectangle) and `slices.create_windows` (chunking generator). Reconciling the three is a design decision in its own right, not a footnote in another doc.
+3. **`GeoSlice` overlaps with two other concepts** — `rasterio.windows.Window` (pixel-space rectangle) and `slices.create_windows` (chunking generator).
+   Reconciling the three is a design decision in its own right, not a footnote in another doc.
 
 ---
 
 ## Primer for newcomers
 
-> **ELI5.** A `GeoSlice` is a **delivery slip**: it says where (bbox), when (time), at what zoom (resolution), and in what coordinate system (CRS). The catalog writes the slip; the loader reads it; whoever's in between never has to ask "wait, which file did this come from?" — the slip has everything they need.
+> **ELI5.** A `GeoSlice` is a **delivery slip**: it says where (bbox), when (time), at what zoom (resolution), and in what coordinate system (CRS).
+> The catalog writes the slip; the loader reads it; whoever's in between never has to ask "wait, which file did this come from?" — the slip has everything they need.
 
 ### Frozen dataclasses (immutability)
 
-**What it is.** A `@dataclass(frozen=True)` is a Python class with auto-generated `__init__` / `__repr__` / `__eq__` *and* a guarantee that its attributes can't be mutated after construction. Trying to assign a new value to a field raises `FrozenInstanceError`.
+**What it is.** A `@dataclass(frozen=True)` is a Python class with auto-generated `__init__` / `__repr__` / `__eq__` *and* a guarantee that its attributes can't be mutated after construction.
+Trying to assign a new value to a field raises `FrozenInstanceError`.
 
-**How it works.** The `@dataclass` decorator inspects type annotations and synthesises the constructor. `frozen=True` adds `__setattr__` and `__delattr__` overrides that raise. The instance is also hashable by default (because nothing can change), which lets you use it as a dict key or set member.
+**How it works.** The `@dataclass` decorator inspects type annotations and synthesises the constructor.
+`frozen=True` adds `__setattr__` and `__delattr__` overrides that raise.
+The instance is also hashable by default (because nothing can change), which lets you use it as a dict key or set member.
 
-**What this means for us.** `GeoSlice` is frozen so that once constructed, it can be passed across function boundaries, stored in caches, used as a dict key for "slices I've already processed," etc. Code that wants to *change* a slice creates a new one (`dataclasses.replace(slice_, bounds=new_bounds)`) — explicit by design. Mutable units of work flowing between layers are a recipe for bugs.
+**What this means for us.** `GeoSlice` is frozen so that once constructed, it can be passed across function boundaries, stored in caches, used as a dict key for "slices I've already processed," etc. Code that wants to *change* a slice creates a new one (`dataclasses.replace(slice_, bounds=new_bounds)`) — explicit by design.
+Mutable units of work flowing between layers are a recipe for bugs.
 
 ### `pd.Interval` and `IntervalIndex`
 
-**What it is.** A `pd.Interval(start, end, closed='both')` is pandas's typed representation of a time range. Combined into an `IntervalIndex`, you get fast "find all rows whose interval overlaps this query interval" queries — the temporal counterpart to a spatial R-tree.
+**What it is.** A `pd.Interval(start, end, closed='both')` is pandas's typed representation of a time range.
+Combined into an `IntervalIndex`, you get fast "find all rows whose interval overlaps this query interval" queries — the temporal counterpart to a spatial R-tree.
 
-**How it works.** Each interval is an immutable object with a `closed` policy (`'both'`, `'left'`, `'right'`, `'neither'`). Standard set ops (`overlaps`, `contains`) are vectorised at the IntervalIndex level. Scales cleanly: 10k intervals → microseconds per query. Same primitive used inside catalogs to filter by time.
+**How it works.** Each interval is an immutable object with a `closed` policy (`'both'`, `'left'`, `'right'`, `'neither'`).
+Standard set ops (`overlaps`, `contains`) are vectorised at the IntervalIndex level.
+Scales cleanly: 10k intervals → microseconds per query.
+Same primitive used inside catalogs to filter by time.
 
-**What this means for us.** `GeoSlice.interval` is a `pd.Interval`, not a `(tmin, tmax)` tuple, because the catalog stores intervals the same way and "does this slice's interval overlap any catalog row?" is a single function call (no manual min/max gymnastics). Convention is `closed='both'` everywhere — both endpoints inclusive.
+**What this means for us.** `GeoSlice.interval` is a `pd.Interval`, not a `(tmin, tmax)` tuple, because the catalog stores intervals the same way and "does this slice's interval overlap any catalog row?" is a single function call (no manual min/max gymnastics).
+Convention is `closed='both'` everywhere — both endpoints inclusive.
 
 ### `pyproj.CRS` (vs string EPSG codes)
 
-**What it is.** `pyproj.CRS` is a typed CRS object that knows its EPSG code, WKT representation, axis order, datum shifts, and reprojection rules. Compared to a bare `"EPSG:4326"` string, it carries semantic information.
+**What it is.** `pyproj.CRS` is a typed CRS object that knows its EPSG code, WKT representation, axis order, datum shifts, and reprojection rules.
+Compared to a bare `"EPSG:4326"` string, it carries semantic information.
 
-**How it works.** Constructed from `"EPSG:32630"`, a WKT string, or a `pyproj.CRS.from_epsg(32630)` call. Carries methods for axis-order checking, transformation parameter lookup, and "is this CRS equivalent to that one" comparisons. Reprojection to/from another CRS goes through `pyproj.Transformer`.
+**How it works.** Constructed from `"EPSG:32630"`, a WKT string, or a `pyproj.CRS.from_epsg(32630)` call.
+Carries methods for axis-order checking, transformation parameter lookup, and "is this CRS equivalent to that one" comparisons.
+Reprojection to/from another CRS goes through `pyproj.Transformer`.
 
-**What this means for us.** `GeoSlice.crs` is a `pyproj.CRS`, not a string, so two slices in slightly different CRS representations (e.g., `EPSG:32630` vs full WKT for the same UTM zone) can be compared sensibly. The package's `compare_crs(a, b)` helper does the right thing across the various forms.
+**What this means for us.** `GeoSlice.crs` is a `pyproj.CRS`, not a string, so two slices in slightly different CRS representations (e.g., `EPSG:32630` vs full WKT for the same UTM zone) can be compared sensibly.
+The package's `compare_crs(a, b)` helper does the right thing across the various forms.
 
 ### "Unit of work" between layers
 
 **What it is.** A small, immutable, self-contained value that flows from a *producer* (catalog, sampler) to a *consumer* (loader, operator) across a function boundary, carrying everything the consumer needs to do its job — no further reference to the producer required.
 
-**How it works.** `GeoSlice` has four fields: `bounds` (where in space), `interval` (when in time), `resolution` (at what pixel size), `crs` (in which coordinate system). That's enough for a loader to fetch a chip without consulting the catalog or the sampler again. The producer hands you a slice; you do whatever; you hand the result downstream. No hidden state.
+**How it works.** `GeoSlice` has four fields: `bounds` (where in space), `interval` (when in time), `resolution` (at what pixel size), `crs` (in which coordinate system).
+That's enough for a loader to fetch a chip without consulting the catalog or the sampler again.
+The producer hands you a slice; you do whatever; you hand the result downstream.
+No hidden state.
 
-**What this means for us.** The pattern decouples layers cleanly. A `random_sampler` doesn't know which loader will consume the slice; a `read_geoslice(slice)` method doesn't know whether the slice came from a sampler, a manual user query, or a JSON config. Same `GeoSlice` shape; many producers and consumers; no coupling beyond the type.
+**What this means for us.** The pattern decouples layers cleanly.
+A `random_sampler` doesn't know which loader will consume the slice; a `read_geoslice(slice)` method doesn't know whether the slice came from a sampler, a manual user query, or a JSON config. Same `GeoSlice` shape; many producers and consumers; no coupling beyond the type.
 
 ```{mermaid}
 sequenceDiagram
@@ -113,20 +141,25 @@ sequenceDiagram
 
 ## Non-goals
 
-- **Defining the `GeoCatalog` Protocol** — that's [Geodatabase](../geodatabase/README.md). This doc only describes how catalogs *produce* `GeoSlice` via the samplers.
+- **Defining the `GeoCatalog` Protocol** — that's [Geodatabase](../geodatabase/README.md).
+  This doc only describes how catalogs *produce* `GeoSlice` via the samplers.
 - **Defining the loader contract** — loaders that take a `GeoSlice` and return a `GeoTensor` are part of the catalog/reader designs.
 - **Owning the model-loop helper.** The old `run_inference_with_grid_sampler` is deliberately not promoted; `geotoolz.inference.ApplyToChips` is the sanctioned successor.
-- **Async samplers.** All three primitives are sync. An async iterator variant is plausible but lands later if needed.
+- **Async samplers.** All three primitives are sync.
+  An async iterator variant is plausible but lands later if needed.
 
 ---
 
 ## Constraints
 
 - **`GeoSlice.crs` is `pyproj.CRS`-shaped.** Matches the rest of `georeader`; no string-only or EPSG-int-only constraint.
-- **Time intervals are `pd.Interval`-shaped.** Matches the catalog's `IntervalIndex`. `closed='both'` is the convention everywhere.
+- **Time intervals are `pd.Interval`-shaped.** Matches the catalog's `IntervalIndex`.
+  `closed='both'` is the convention everywhere.
 - **`GeoSlice` is immutable.** `frozen=True` dataclass — slices are passed across function boundaries and shouldn't be mutated in flight.
-- **`stitch` produces a `GeoTensor`**, not a bare ndarray. Carrying CRS/transform through is non-negotiable; otherwise the result isn't georeferenced.
-- **No torch in the core path.** `random_sampler` returns an `Iterator[GeoSlice]`, not a `DataLoader`. ML adapters can be built on top.
+- **`stitch` produces a `GeoTensor`**, not a bare ndarray.
+  Carrying CRS/transform through is non-negotiable; otherwise the result isn't georeferenced.
+- **No torch in the core path.** `random_sampler` returns an `Iterator[GeoSlice]`, not a `DataLoader`.
+  ML adapters can be built on top.
 
 ---
 
@@ -172,10 +205,14 @@ class GeoSlice:
 
 ### Invariants
 
-- `bounds` is `(xmin, ymin, xmax, ymax)` with `xmin < xmax` and `ymin < ymax`. Antimeridian-crossing bboxes are forbidden at the slice level — split before constructing.
-- `interval.closed == "both"`. Half-open intervals are accepted by `pd.Interval` but rejected here for consistency with the catalog's `IntervalIndex`.
-- `resolution` is positive in both axes. The sign of the y-resolution is **not** flipped — slices store positive resolutions and the `transform` property handles the y-axis sign.
-- `(bounds, resolution)` is consistent: `(xmax - xmin) / x_res` and `(ymax - ymin) / y_res` should round to integers within `PIXEL_PRECISION = 3` decimal digits. Producers (samplers) guarantee this; loaders may assume it.
+- `bounds` is `(xmin, ymin, xmax, ymax)` with `xmin < xmax` and `ymin < ymax`.
+  Antimeridian-crossing bboxes are forbidden at the slice level — split before constructing.
+- `interval.closed == "both"`.
+  Half-open intervals are accepted by `pd.Interval` but rejected here for consistency with the catalog's `IntervalIndex`.
+- `resolution` is positive in both axes.
+  The sign of the y-resolution is **not** flipped — slices store positive resolutions and the `transform` property handles the y-axis sign.
+- `(bounds, resolution)` is consistent: `(xmax - xmin) / x_res` and `(ymax - ymin) / y_res` should round to integers within `PIXEL_PRECISION = 3` decimal digits.
+  Producers (samplers) guarantee this; loaders may assume it.
 
 ### Why `GeoSlice` and not `Window` or `slice`?
 
@@ -187,7 +224,9 @@ class GeoSlice:
 | Carries resolution | no | no | yes |
 | Use for | within-file extraction | array slicing | inter-layer contract |
 
-`GeoSlice` exists because the inter-layer contract needs all four. A `Window` is what a loader produces *from* a `GeoSlice` once it knows the source file's transform. A Python `slice` is what `slices.create_windows` ([Tutorial Ch. 6](../../georeader_tutorial/06_slices.md)) emits inside a single file, with no geographic meaning.
+`GeoSlice` exists because the inter-layer contract needs all four.
+A `Window` is what a loader produces *from* a `GeoSlice` once it knows the source file's transform.
+A Python `slice` is what `slices.create_windows` ([Tutorial Ch. 6](../../georeader_tutorial/06_slices.md)) emits inside a single file, with no geographic meaning.
 
 ### Conversion to/from `Window`
 
@@ -225,7 +264,8 @@ def random_sampler(
 ) -> Iterator[GeoSlice]: ...
 ```
 
-- `catalog` is consulted via `iter_rows()` (Phase 1) or a streaming cursor (Phase 2). The sampler doesn't materialise the full catalog.
+- `catalog` is consulted via `iter_rows()` (Phase 1) or a streaming cursor (Phase 2).
+  The sampler doesn't materialise the full catalog.
 - `length=None` means "infinite iterator"; downstream code uses `itertools.islice` to bound.
 - `roi` / `toi` filter the catalog before sampling.
 - `units="pixels"` interprets `chip_size` in pixels; `units="crs"` in CRS units (relevant for cross-resolution catalogs).
@@ -234,7 +274,8 @@ def random_sampler(
 
 ### Area-weighted sampling math
 
-Default `weight="area"`. Tiles big enough to fit a chip are kept; each surviving tile gets weight proportional to its area:
+Default `weight="area"`.
+Tiles big enough to fit a chip are kept; each surviving tile gets weight proportional to its area:
 
 $$
 w_i = \frac{(x_{\max,i} - x_{\min,i}) \cdot (y_{\max,i} - y_{\min,i})}{\sum_j A_j}
@@ -251,15 +292,21 @@ The timestamp is sampled uniformly (in seconds) inside the tile's interval and a
 
 ### The weighting bias (open question)
 
-Area-weighted sampling pushes samples *toward* large tiles. For uniform-density imagery this is what you want — every pixel has equal probability of being sampled. For tiled mosaics with one giant tile and many small ones, it over-samples the giant tile.
+Area-weighted sampling pushes samples *toward* large tiles.
+For uniform-density imagery this is what you want — every pixel has equal probability of being sampled.
+For tiled mosaics with one giant tile and many small ones, it over-samples the giant tile.
 
 Three options:
 
-- **`weight="area"` (default)** — what's described above. Right for uniform imagery.
-- **`weight="uniform"`** — each tile has equal probability regardless of size. Right for tiled mosaics where each tile represents one "scene" and you want balanced training data.
-- **`weight=callable`** — user-supplied function over the catalog row. Maximum flexibility; rarely needed.
+- **`weight="area"` (default)** — what's described above.
+  Right for uniform imagery.
+- **`weight="uniform"`** — each tile has equal probability regardless of size.
+  Right for tiled mosaics where each tile represents one "scene" and you want balanced training data.
+- **`weight=callable`** — user-supplied function over the catalog row.
+  Maximum flexibility; rarely needed.
 
-The proposal is to expose `weight={"area", "uniform"}` and document the bias. See [parent README §Open questions](README.md) for the unresolved decision on whether `callable` is worth adding in v1.
+The proposal is to expose `weight={"area", "uniform"}` and document the bias.
+See [parent README §Open questions](README.md) for the unresolved decision on whether `callable` is worth adding in v1.
 
 ---
 
@@ -292,18 +339,22 @@ n_{\text{cols}} = \left\lceil \frac{W - w}{s_x} \right\rceil + 1, \qquad
 n_{\text{rows}} = \left\lceil \frac{H - h}{s_y} \right\rceil + 1
 $$
 
-Final-row/column chips are **shifted** (not truncated) so chip size stays exact across the grid. Total chip count = sum over tiles. Matches the standard sliding-window convention used by `xrpatcher` / `xbatcher`.
+Final-row/column chips are **shifted** (not truncated) so chip size stays exact across the grid.
+Total chip count = sum over tiles.
+Matches the standard sliding-window convention used by `xrpatcher` / `xbatcher`.
 
 ### Reconciliation with `slices.create_windows`
 
-[`slices.create_windows`](../../georeader_tutorial/06_slices.md) does the same stride math but at the pixel level inside a single file. The relationship:
+[`slices.create_windows`](../../georeader_tutorial/06_slices.md) does the same stride math but at the pixel level inside a single file.
+The relationship:
 
 | Layer | Function | Input | Output |
 |---|---|---|---|
 | Inter-file (catalog) | `grid_sampler` | catalog + chip size in CRS units | iterator of `GeoSlice` |
 | Intra-file (one raster) | `slices.create_windows` | `(H, W)` shape + chip size in pixels | iterator of `Window` |
 
-`grid_sampler` calls into the catalog to find tiles; for each tile it can either reimplement stride math itself or convert the tile's bounds into a `(H, W)` shape and delegate to `create_windows`, then convert each `Window` back to a `GeoSlice`. The implementation detail is open; the two functions stay separately useful at their respective scopes.
+`grid_sampler` calls into the catalog to find tiles; for each tile it can either reimplement stride math itself or convert the tile's bounds into a `(H, W)` shape and delegate to `create_windows`, then convert each `Window` back to a `GeoSlice`.
+The implementation detail is open; the two functions stay separately useful at their respective scopes.
 
 ---
 
@@ -321,7 +372,8 @@ def stitch(
 ) -> GeoTensor: ...
 ```
 
-- `predictions[i]` is the model output for `slices[i]`. Same length, same order.
+- `predictions[i]` is the model output for `slices[i]`.
+  Same length, same order.
 - `roi` is optional — clips the output to a polygon footprint.
 - Returns a `GeoTensor` with transform/CRS derived from the union of the slices' bounds and the assumed-uniform resolution.
 
@@ -343,9 +395,11 @@ row = int((ymax - slice_.bounds[3]) / y_res)   # y-flip: rows count from north d
 
 ### Order-dependence
 
-`first` and `last` are **order-dependent** by definition — they reduce based on the iteration order of `predictions`. `average` and `max` are order-independent.
+`first` and `last` are **order-dependent** by definition — they reduce based on the iteration order of `predictions`.
+`average` and `max` are order-independent.
 
-For deterministic pipelines, sort `slices` by `(slice_.bounds, slice_.interval.left)` before passing. The samplers don't guarantee a stable order — `random_sampler` is intentionally random; `grid_sampler` iterates tiles in catalog order, which depends on the backend.
+For deterministic pipelines, sort `slices` by `(slice_.bounds, slice_.interval.left)` before passing.
+The samplers don't guarantee a stable order — `random_sampler` is intentionally random; `grid_sampler` iterates tiles in catalog order, which depends on the backend.
 
 ---
 
@@ -380,29 +434,42 @@ Every arrow is sync in this proposal. The async equivalent (using `AsyncGeoData.
 
 ### 1. `weight=callable` in `random_sampler`
 
-Section above proposes `weight={"area", "uniform"}` for v1. A callable variant (`weight=lambda row: ...`) is requested by some users for stratified sampling but adds API surface. Defer to v2 or include now? **Tentative pick: defer.**
+Section above proposes `weight={"area", "uniform"}` for v1. A callable variant (`weight=lambda row: ...`) is requested by some users for stratified sampling but adds API surface.
+Defer to v2 or include now?
+**Tentative pick: defer.**
 
 ### 2. `GeoSlice` antimeridian policy
 
-The invariants require `xmin < xmax`. Antimeridian-crossing AOIs are forbidden at the slice level. Where does the split happen?
+The invariants require `xmin < xmax`.
+Antimeridian-crossing AOIs are forbidden at the slice level.
+Where does the split happen?
 
 - **At the producer** (sampler refuses to emit antimeridian-crossing slices, splits internally).
 - **At the consumer** (loader detects and splits the read into two).
 - **At a higher level** (reject antimeridian-crossing inputs entirely with a clear error).
 
-[`window_utils.bounds_to_windows`](../../georeader_tutorial/04_window_utils.md) currently handles this in the loader path by returning a list of windows. Whether `GeoSlice` should mirror that or refuse outright is a judgement call.
+[`window_utils.bounds_to_windows`](../../georeader_tutorial/04_window_utils.md) currently handles this in the loader path by returning a list of windows.
+Whether `GeoSlice` should mirror that or refuse outright is a judgement call.
 
 ### 3. `GeoSlice.dims` for higher-rank slices
 
-Today's `shape` returns `(h, w)`. For 4D `(t, b, h, w)` chips, do we want a `dims` property? The number of channels can be inferred from the catalog row + loader, not from the slice itself. **Tentative pick: keep slices 2D-shaped; let downstream code assemble multi-dim chunks.**
+Today's `shape` returns `(h, w)`.
+For 4D `(t, b, h, w)` chips, do we want a `dims` property?
+The number of channels can be inferred from the catalog row + loader, not from the slice itself.
+**Tentative pick: keep slices 2D-shaped; let downstream code assemble multi-dim chunks.**
 
 ### 4. `stitch` default for `method`
 
-`average` is the proposal default. For probability-output models this is *wrong* — averaging probabilities pre-softmax gives the wrong posterior. For most practical cases users want `last` (faster, no allocation of the counts array) or `average` (smoother). Pick: keep `average` as default, document the gotcha. **Tentative pick: keep `average`.**
+`average` is the proposal default.
+For probability-output models this is *wrong* — averaging probabilities pre-softmax gives the wrong posterior.
+For most practical cases users want `last` (faster, no allocation of the counts array) or `average` (smoother).
+Pick: keep `average` as default, document the gotcha.
+**Tentative pick: keep `average`.**
 
 ### 5. Time semantics in `stitch`
 
-`stitch` produces a single `GeoTensor` from many slices. If those slices have different `interval` fields (likely, when stitching predictions across time), what does the output's `interval` become?
+`stitch` produces a single `GeoTensor` from many slices.
+If those slices have different `interval` fields (likely, when stitching predictions across time), what does the output's `interval` become?
 
 - **Union of all input intervals** — semantically defensible.
 - **Drop the time field** — the output is spatial; time is no longer meaningful.
@@ -415,6 +482,9 @@ Today's `shape` returns `(h, w)`. For 4D `(t, b, h, w)` chips, do we want a `dim
 ## Alternatives considered
 
 - **Use `BoundingBox` from torchgeo.** Rejected: brings a torch dependency into the inter-layer contract; doesn't carry resolution; carries time only optionally.
-- **Reuse `rasterio.windows.Window`.** Rejected: `Window` is pixel-space and CRS-agnostic. Cross-CRS catalogs would need conversion at every layer boundary.
-- **Use a STAC `Item` as the unit of work.** Rejected: too heavy. STAC items carry rich asset metadata that the inter-layer contract doesn't need; forcing every slice to be STAC-shaped pulls in a JSON-schema dep.
-- **Skip the dataclass; pass `(bounds, interval, resolution, crs)` as a tuple.** Rejected: the sampler/loader/stitch surface is wide enough that a positional tuple becomes a bug magnet. Field names matter.
+- **Reuse `rasterio.windows.Window`.** Rejected: `Window` is pixel-space and CRS-agnostic.
+  Cross-CRS catalogs would need conversion at every layer boundary.
+- **Use a STAC `Item` as the unit of work.** Rejected: too heavy.
+  STAC items carry rich asset metadata that the inter-layer contract doesn't need; forcing every slice to be STAC-shaped pulls in a JSON-schema dep.
+- **Skip the dataclass; pass `(bounds, interval, resolution, crs)` as a tuple.** Rejected: the sampler/loader/stitch surface is wide enough that a positional tuple becomes a bug magnet.
+  Field names matter.

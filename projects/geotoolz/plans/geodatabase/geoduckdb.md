@@ -15,9 +15,8 @@ license: CC-BY-4.0
 keywords: design, geodatabase, duckdb, geoparquet
 ---
 
-> **Scope:** adding a DuckDB-backed catalog backend, GeoParquet-as-artifact, and SQL-native cross-catalog operations to the [`jejjohnson/georeader`](https://github.com/jejjohnson/georeader) `catalog` module proposed in Phase 1.
->
-> **Status:** design proposal, no code changed yet. Assumes Phase 1 (the in-memory `GeoCatalog`, builders, loaders, samplers, and `to_geoparquet`/`from_geoparquet` round-trip) has shipped.
+> **Scope:** adding a DuckDB-backed catalog backend, GeoParquet-as-artifact, and SQL-native cross-catalog operations to the [`jejjohnson/georeader`](https://github.com/jejjohnson/georeader) `catalog` module proposed in Phase 1.  **Status:** design proposal, no code changed yet.
+> Assumes Phase 1 (the in-memory `GeoCatalog`, builders, loaders, samplers, and `to_geoparquet`/`from_geoparquet` round-trip) has shipped.
 
 ---
 
@@ -63,7 +62,8 @@ DuckDB is an in-process columnar OLAP engine with a `spatial` extension that giv
 
 ### 1.2 Spatial extension
 
-GEOS-backed, GeoParquet 1.x compatible. The functions Phase 2 leans on:
+GEOS-backed, GeoParquet 1.x compatible.
+The functions Phase 2 leans on:
 
 | Category | Functions used |
 | --- | --- |
@@ -74,26 +74,32 @@ GEOS-backed, GeoParquet 1.x compatible. The functions Phase 2 leans on:
 | CRS | `ST_Transform` (requires the `spatial` extension's bundled PROJ data) |
 | Indexing | `CREATE INDEX ... USING RTREE` (on `.duckdb` table files only) |
 
-Spatial joins build an in-memory R-tree on the smaller side per query. Persistent on-disk R-trees are limited to materialized DuckDB tables, not Parquet — see [§7](#7-sharp-edges).
+Spatial joins build an in-memory R-tree on the smaller side per query.
+Persistent on-disk R-trees are limited to materialized DuckDB tables, not Parquet — see [§7](#7-sharp-edges).
 
 ### 1.3 GeoParquet support
 
 - Reads any GeoParquet 1.0/1.1 file produced by `geopandas.to_parquet` (or by DuckDB itself).
 - Writes via `COPY ... TO 'file.parquet' (FORMAT 'parquet', COMPRESSION 'zstd')` — schema includes WKB geometry + GeoParquet-style column metadata when the spatial extension is loaded.
-- GeoParquet **1.1** introduces a per-row `bbox` covering struct that lets the engine push spatial filters down to the row-group level *without parsing WKB*. For 10⁷-row catalogs this is roughly an order-of-magnitude speedup on selective queries.
+- GeoParquet **1.1** introduces a per-row `bbox` covering struct that lets the engine push spatial filters down to the row-group level *without parsing WKB*.
+  For 10⁷-row catalogs this is roughly an order-of-magnitude speedup on selective queries.
 
-> ⚠️ The `spatial` extension's GeoParquet *write* path is more recent than the read path. Pin a known-good DuckDB version (≥ 1.1) and add a smoke test that round-trips a small catalog.
+> ⚠️ The `spatial` extension's GeoParquet *write* path is more recent than the read path.
+> Pin a known-good DuckDB version (≥ 1.1) and add a smoke test that round-trips a small catalog.
 
 ---
 
 ## 2. User story
 
-**Persona shift.** Phase 1's user has hundreds to thousands of files in one project. Phase 2's user has *too many to load eagerly*, or *wants to publish* a catalog so a collaborator (or a CI job, or a notebook on a different machine) can query it without rebuilding.
+**Persona shift.** Phase 1's user has hundreds to thousands of files in one project.
+Phase 2's user has *too many to load eagerly*, or *wants to publish* a catalog so a collaborator (or a CI job, or a notebook on a different machine) can query it without rebuilding.
 
 **Goal arc:**
 
-1. *"I built a 1M-row catalog yesterday. Reload it instantly."* → `open_catalog("cat.parquet")` (no `build_*_catalog` needed).
-2. *"My collaborator wants to query my catalog from her laptop."* → I push to `s3://bucket/cat.parquet`; she runs `open_catalog("s3://bucket/cat.parquet")`. Only the row groups her query touches get downloaded.
+1. *"I built a 1M-row catalog yesterday.
+   Reload it instantly."* → `open_catalog("cat.parquet")` (no `build_*_catalog` needed).
+2. *"My collaborator wants to query my catalog from her laptop."* → I push to `s3://bucket/cat.parquet`; she runs `open_catalog("s3://bucket/cat.parquet")`.
+   Only the row groups her query touches get downloaded.
 3. *"Intersect 200k imagery rows with 500k label rows."* → SQL spatial join, parallel, minutes instead of an OOM.
 4. *"How does my coverage break down by month, by tile, by cloud %?"* → one SQL query against the catalog, no loop.
 5. *"Stream candidate slices into the random sampler without materializing the join."* → DuckDB cursor → `iter_rows()` → sampler.
@@ -130,34 +136,55 @@ The framing: **DuckDB doesn't replace Phase 1, it extends the working envelope b
 
 ### 3.3 Compared with alternatives
 
-- **STAC + pgSTAC / stac-fastapi.** Heavier: needs Postgres, a schema, an HTTP service. Wins on standardization and federated discovery. Loses on dev velocity for single-user / single-team workflows.
-- **PostGIS + GeoAlchemy.** Real database. More features (transactions, advanced indexes, triggers). Far more setup. Best when you already run Postgres for other reasons.
-- **xstac + intake-stac.** Library-only, no server. But STAC items are JSON-per-file, so a 1M-item catalog is 1M JSON files or one giant blob — both worse than one Parquet file for the queries we care about.
-- **Plain `gpd.read_parquet` + Python.** What Phase 1 already gives via `from_geoparquet`. Fine until you need joins or analytics at scale.
+- **STAC + pgSTAC / stac-fastapi.** Heavier: needs Postgres, a schema, an HTTP service.
+  Wins on standardization and federated discovery.
+  Loses on dev velocity for single-user / single-team workflows.
+- **PostGIS + GeoAlchemy.** Real database.
+  More features (transactions, advanced indexes, triggers).
+  Far more setup.
+  Best when you already run Postgres for other reasons.
+- **xstac + intake-stac.** Library-only, no server.
+  But STAC items are JSON-per-file, so a 1M-item catalog is 1M JSON files or one giant blob — both worse than one Parquet file for the queries we care about.
+- **Plain `gpd.read_parquet` + Python.** What Phase 1 already gives via `from_geoparquet`.
+  Fine until you need joins or analytics at scale.
 
-The unique slot DuckDB occupies: **zero-server, single-file, parallel, SQL, with native Parquet + spatial**. Nothing else hits all five.
+The unique slot DuckDB occupies: **zero-server, single-file, parallel, SQL, with native Parquet + spatial**.
+Nothing else hits all five.
 
 ---
 
 ## 3.4 Primer for newcomers
 
-> **ELI5.** GeoParquet is like a **phone book for spatial data** — alphabetised columns of data with bbox info on every page. DuckDB is the librarian who can read the bbox info to *skip 99% of pages* when you ask "who's in Madagascar?" — without ever opening those pages. The combination scales to millions of files because it never reads what it doesn't need.
+> **ELI5.** GeoParquet is like a **phone book for spatial data** — alphabetised columns of data with bbox info on every page.
+> DuckDB is the librarian who can read the bbox info to *skip 99% of pages* when you ask "who's in Madagascar?" — without ever opening those pages.
+> The combination scales to millions of files because it never reads what it doesn't need.
 
 ### DuckDB: an embedded SQL database
 
-**What it is.** DuckDB is a SQL database that runs in-process — no server, no daemon. Think SQLite, but column-oriented and tuned for analytics (OLAP) rather than transactional workloads. Open-source, fast, with a `spatial` extension that adds GIS functions.
+**What it is.** DuckDB is a SQL database that runs in-process — no server, no daemon.
+Think SQLite, but column-oriented and tuned for analytics (OLAP) rather than transactional workloads.
+Open-source, fast, with a `spatial` extension that adds GIS functions.
 
-**How it works.** `import duckdb; con = duckdb.connect()` gives you a SQL engine in your Python process. Queries run against tables (in-memory), Parquet files (read directly without import), or a persistent on-disk database. The `spatial` extension adds `ST_Intersects`, `ST_Contains`, `GEOMETRY` types — basically PostGIS in an embedded engine.
+**How it works.** `import duckdb; con = duckdb.connect()` gives you a SQL engine in your Python process.
+Queries run against tables (in-memory), Parquet files (read directly without import), or a persistent on-disk database.
+The `spatial` extension adds `ST_Intersects`, `ST_Contains`, `GEOMETRY` types — basically PostGIS in an embedded engine.
 
-**What this means for us.** Phase 2 stores catalogs as GeoParquet on disk (or in cloud storage); DuckDB reads them lazily. Queries are vanilla SQL: `SELECT path FROM catalog WHERE ST_Intersects(geometry, AOI) AND date BETWEEN '2023-01-01' AND '2023-12-31'`. No daemon, no schema migrations, no driver dance — it's a Python import.
+**What this means for us.** Phase 2 stores catalogs as GeoParquet on disk (or in cloud storage); DuckDB reads them lazily.
+Queries are vanilla SQL: `SELECT path FROM catalog WHERE ST_Intersects(geometry, AOI) AND date BETWEEN '2023-01-01' AND '2023-12-31'`.
+No daemon, no schema migrations, no driver dance — it's a Python import.
 
 ### GeoParquet 1.1 + bbox-column predicate pushdown
 
-**What it is.** **GeoParquet** is a spec for storing geometry columns inside Apache Parquet files. **Predicate pushdown** is the database-engine optimisation that lets a query skip reading rows that obviously can't match. **GeoParquet 1.1** adds an optional `bbox` column that makes spatial predicate pushdown work for cloud-hosted Parquet.
+**What it is.** **GeoParquet** is a spec for storing geometry columns inside Apache Parquet files.
+**Predicate pushdown** is the database-engine optimisation that lets a query skip reading rows that obviously can't match. **GeoParquet 1.1** adds an optional `bbox` column that makes spatial predicate pushdown work for cloud-hosted Parquet.
 
-**How it works.** Parquet stores data in row-groups (typically ~10⁵ rows each), each with min/max statistics per column. A query like `WHERE date > '2023-06-01'` skips row-groups whose date max is < 2023-06-01 without reading them. Adding a per-row `bbox` column (four floats: `xmin`, `ymin`, `xmax`, `ymax`) extends this to spatial predicates: `ST_Intersects(geometry, AOI)` translates to `bbox.xmin < AOI.xmax AND bbox.xmax > AOI.xmin AND ...`, which uses Parquet's column statistics. Now a 1M-row catalog answers a small-AOI query by reading ~10⁵ rows of bbox data, not all 1M geometries.
+**How it works.** Parquet stores data in row-groups (typically ~10⁵ rows each), each with min/max statistics per column.
+A query like `WHERE date > '2023-06-01'` skips row-groups whose date max is < 2023-06-01 without reading them.
+Adding a per-row `bbox` column (four floats: `xmin`, `ymin`, `xmax`, `ymax`) extends this to spatial predicates: `ST_Intersects(geometry, AOI)` translates to `bbox.xmin < AOI.xmax AND bbox.xmax > AOI.xmin AND ...`, which uses Parquet's column statistics.
+Now a 1M-row catalog answers a small-AOI query by reading ~10⁵ rows of bbox data, not all 1M geometries.
 
-**What this means for us.** A Phase 2 catalog hosted on S3 can be queried with sub-second latency for the typical AOI-bounded workload, even at multi-million row scales — without downloading the full catalog. The catalog *itself* becomes a queryable cloud artifact, not a thing you download to use.
+**What this means for us.** A Phase 2 catalog hosted on S3 can be queried with sub-second latency for the typical AOI-bounded workload, even at multi-million row scales — without downloading the full catalog.
+The catalog *itself* becomes a queryable cloud artifact, not a thing you download to use.
 
 ```{mermaid}
 flowchart TD
@@ -172,11 +199,15 @@ flowchart TD
 
 ### Lazy queries / cursors
 
-**What it is.** A *cursor* is a query handle that yields rows on demand, rather than materialising the whole result set up front. Standard database concept; the difference between `SELECT * FROM big_table` returning 10M rows in memory vs streaming them.
+**What it is.** A *cursor* is a query handle that yields rows on demand, rather than materialising the whole result set up front.
+Standard database concept; the difference between `SELECT * FROM big_table` returning 10M rows in memory vs streaming them.
 
-**How it works.** DuckDB returns query results lazily by default — `con.execute("SELECT ...")` returns a relation object that hasn't fetched anything yet. `.fetchall()` materialises; `.fetchmany(N)` streams N at a time; `.arrow()` returns an Arrow stream that downstream consumers (sampler, loader) can iterate without ever holding the full result.
+**How it works.** DuckDB returns query results lazily by default — `con.execute("SELECT ...")` returns a relation object that hasn't fetched anything yet.
+`.fetchall()` materialises; `.fetchmany(N)` streams N at a time; `.arrow()` returns an Arrow stream that downstream consumers (sampler, loader) can iterate without ever holding the full result.
 
-**What this means for us.** A `random_sampler` over a 10M-row catalog doesn't need to load 10M rows into Python — it iterates the cursor and reservoir-samples without ever materialising. Same for `grid_sampler` walking tiles in a continent-scale catalog. The streaming cursor is what makes Phase 2 the right tool above 10⁵ rows.
+**What this means for us.** A `random_sampler` over a 10M-row catalog doesn't need to load 10M rows into Python — it iterates the cursor and reservoir-samples without ever materialising.
+Same for `grid_sampler` walking tiles in a continent-scale catalog.
+The streaming cursor is what makes Phase 2 the right tool above 10⁵ rows.
 
 ```{mermaid}
 sequenceDiagram
@@ -202,9 +233,14 @@ sequenceDiagram
 
 **What it is.** Building a catalog one shard at a time without ever holding the full catalog in memory — needed when the catalog is too big to fit (e.g., the full Sentinel-2 archive is ~10⁷ scenes).
 
-**How it works.** Two patterns. **Append-to-Parquet:** write rows in chunks to a growing Parquet file; the writer holds only the current chunk. **DuckDB INSERT INTO:** create a table, insert rows in chunks, export to Parquet at the end; DuckDB handles its own paging. The Phase 2 builders use the first pattern (append-to-Parquet) because it doesn't require DuckDB during construction — just a Parquet writer.
+**How it works.** Two patterns.
+**Append-to-Parquet:** write rows in chunks to a growing Parquet file; the writer holds only the current chunk.
+**DuckDB INSERT INTO:** create a table, insert rows in chunks, export to Parquet at the end; DuckDB handles its own paging.
+The Phase 2 builders use the first pattern (append-to-Parquet) because it doesn't require DuckDB during construction — just a Parquet writer.
 
-**What this means for us.** Catalog builders that scan millions of files don't OOM partway through. Each shard is a small append; the final Parquet file is what users query against. Without streaming, Phase 2's "10⁶+ row catalog" claim wouldn't survive contact with reality at the build step.
+**What this means for us.** Catalog builders that scan millions of files don't OOM partway through.
+Each shard is a small append; the final Parquet file is what users query against.
+Without streaming, Phase 2's "10⁶+ row catalog" claim wouldn't survive contact with reality at the build step.
 
 ---
 
@@ -212,7 +248,8 @@ sequenceDiagram
 
 ### 4.1 Predicate pushdown via Parquet zone maps
 
-A Parquet file is a sequence of *row groups*; each row group has, per column, min/max statistics. GeoParquet adds a per-row-group geometry bbox (and, in 1.1, an optional per-row bbox column).
+A Parquet file is a sequence of *row groups*; each row group has, per column, min/max statistics.
+GeoParquet adds a per-row-group geometry bbox (and, in 1.1, an optional per-row bbox column).
 
 For a query
 
@@ -241,7 +278,8 @@ $$
 \text{cost} \;\approx\; \underbrace{n \log n}_{\text{R-tree build on A}} \;+\; \underbrace{m \log n}_{\text{probes from B}} \;+\; \underbrace{k}_{\text{candidate refinement}}
 $$
 
-where `k` is the candidate match count after bbox filtering, refined by the exact `ST_Intersects` predicate. Compare with `gpd.overlay`'s effective `O(n + m + n × m')` (R-tree filter then per-pair intersection check), which dominates for dense overlap.
+where `k` is the candidate match count after bbox filtering, refined by the exact `ST_Intersects` predicate.
+Compare with `gpd.overlay`'s effective `O(n + m + n × m')` (R-tree filter then per-pair intersection check), which dominates for dense overlap.
 
 Empirically, on the same machine: a 200 k × 500 k spatial join takes minutes in DuckDB, hours in geopandas, and OOMs at 1M × 1M in geopandas while completing in DuckDB.
 
@@ -253,7 +291,8 @@ The interval-overlap predicate
 a.tmax >= b.tmin AND a.tmin <= b.tmax
 ```
 
-is recognized by DuckDB's optimizer as a **range join** (a.k.a. band join). The algorithm sorts both sides by `tmin`, then sweeps:
+is recognized by DuckDB's optimizer as a **range join** (a.k.a. band join).
+The algorithm sorts both sides by `tmin`, then sweeps:
 
 ```
 sort A by tmin, B by tmin
@@ -267,13 +306,15 @@ Cost: $O(n \log n + m \log m + |\text{matches}|)$. No nested-loop blow-up.
 
 ### 4.4 Combined spatiotemporal join cost
 
-For a query that joins on both space and time, DuckDB's planner picks the more selective predicate first based on column statistics. Typical plan:
+For a query that joins on both space and time, DuckDB's planner picks the more selective predicate first based on column statistics.
+Typical plan:
 
 1. Spatial join via R-tree (filters out 99%+ of pairs in most workloads).
 2. Apply temporal predicate as a post-filter.
 3. Compute `ST_Intersection` only for surviving pairs.
 
-You can verify with `EXPLAIN`. The win versus Phase 1 is **2–3 orders of magnitude on real-world catalog sizes**.
+You can verify with `EXPLAIN`.
+The win versus Phase 1 is **2–3 orders of magnitude on real-world catalog sizes**.
 
 ### 4.5 GeoParquet bbox column (1.1)
 
@@ -291,13 +332,16 @@ WHERE bbox.xmax >= $x0 AND bbox.xmin <= $x1
   AND ST_Intersects(geometry, ST_MakeEnvelope($x0,$y0,$x1,$y1))
 ```
 
-The first four conjuncts are pure double-comparison — no WKB parsing, fully vectorized. The exact `ST_Intersects` runs only on rows that pass the bbox filter. For very selective queries this is roughly 10× faster than calling `ST_Intersects` directly on every row.
+The first four conjuncts are pure double-comparison — no WKB parsing, fully vectorized.
+The exact `ST_Intersects` runs only on rows that pass the bbox filter.
+For very selective queries this is roughly 10× faster than calling `ST_Intersects` directly on every row.
 
 The catalog writer should always emit the bbox column.
 
 ### 4.6 Streaming build cost model
 
-Phase 1's `build_raster_catalog` materializes the whole gdf. For 10M files at ~1 KB/row, that's 10 GB plus Python overhead.
+Phase 1's `build_raster_catalog` materializes the whole gdf.
+For 10M files at ~1 KB/row, that's 10 GB plus Python overhead.
 
 The streaming variant batches `B` rows into Arrow record batches and appends to a Parquet writer:
 
@@ -305,13 +349,15 @@ $$
 \text{peak memory} \;\approx\; B \cdot \text{row\_size} \;+\; \text{open-file-handles} \cdot \text{rasterio overhead}
 $$
 
-For `B = 10 000` and ~1 KB/row, peak is ~10 MB plus rasterio's per-file overhead (tens of MB). Build time is dominated by `rasterio.open` calls, which can be parallelized with a `ThreadPoolExecutor` (GIL-friendly because rasterio releases the GIL during I/O).
+For `B = 10 000` and ~1 KB/row, peak is ~10 MB plus rasterio's per-file overhead (tens of MB).
+Build time is dominated by `rasterio.open` calls, which can be parallelized with a `ThreadPoolExecutor` (GIL-friendly because rasterio releases the GIL during I/O).
 
 ---
 
 ## 5. Coupling with Phase 1
 
-The whole point of the Phase 1 protocol design was to make Phase 2 transparent. Here's the seam:
+The whole point of the Phase 1 protocol design was to make Phase 2 transparent.
+Here's the seam:
 
 | Operation | `InMemoryGeoCatalog` (Phase 1) | `DuckDBGeoCatalog` (Phase 2) |
 | --- | --- | --- |
@@ -326,11 +372,13 @@ The whole point of the Phase 1 protocol design was to make Phase 2 transparent. 
 
 **Loaders unchanged.** `load_raster(catalog, slice, ...)` only needs `catalog.iter_rows()` (or a single `query` + `iter_rows`) — it never touches the underlying gdf or relation.
 
-**Samplers** need the smallest tweak: replace `catalog.gdf.iloc[i]` patterns with `catalog.iter_rows()` or `catalog.query(slice).iter_rows()`. Once that's done, samplers work identically against either backend.
+**Samplers** need the smallest tweak: replace `catalog.gdf.iloc[i]` patterns with `catalog.iter_rows()` or `catalog.query(slice).iter_rows()`.
+Once that's done, samplers work identically against either backend.
 
 **`stitch` unchanged.** It only consumes `GeoSlice` + `np.ndarray`, no catalog.
 
-The catalog is the only seam. Get the protocol right and Phase 2 is purely additive.
+The catalog is the only seam.
+Get the protocol right and Phase 2 is purely additive.
 
 ---
 
@@ -354,7 +402,8 @@ georeader/
 
 ### 6.2 Protocol additions
 
-The Phase 1 `GeoCatalog` protocol stays mostly intact. Phase 2 adds:
+The Phase 1 `GeoCatalog` protocol stays mostly intact.
+Phase 2 adds:
 
 ```python
 class GeoCatalog(Protocol):
@@ -391,7 +440,8 @@ class CatalogRow:
     extras: dict[str, Any]                         # backend-specific extras (data_vars, layer, ...)
 ```
 
-Loaders consume `CatalogRow`. Whether the row came from a gdf or a DuckDB cursor is invisible.
+Loaders consume `CatalogRow`.
+Whether the row came from a gdf or a DuckDB cursor is invisible.
 
 ### 6.4 `DuckDBGeoCatalog`
 
@@ -455,7 +505,9 @@ def build_raster_catalog(
 ) -> GeoCatalog: ...
 ```
 
-When `backend="duckdb"`, the builder streams metadata into an Arrow record-batch writer and lands directly in `out_path` as GeoParquet. The returned object is a `DuckDBGeoCatalog` opened on that file. Memory stays bounded regardless of file count.
+When `backend="duckdb"`, the builder streams metadata into an Arrow record-batch writer and lands directly in `out_path` as GeoParquet.
+The returned object is a `DuckDBGeoCatalog` opened on that file.
+Memory stays bounded regardless of file count.
 
 Same surface for `build_xarray_catalog` and `build_vector_catalog`.
 
@@ -510,25 +562,35 @@ The CLI is a thin wrapper around `DuckDBGeoCatalog`; everything it does is calla
 ### 6.8 What I'd *not* add in Phase 2
 
 - A query DSL that abstracts over pandas vs SQL. Just expose `.gdf` and `.relation` as escape hatches.
-- A persistent server (HTTP API). That's STAC's job.
-- Auto-conversion between CRSs at query time. Catalogs should be written in one CRS; `ST_Transform` is available but slow and a footgun.
-- Materialized R-tree indexes on Parquet. They don't exist; if you need persistent indexes, write to `.duckdb` (see [§7](#7-sharp-edges)).
+- A persistent server (HTTP API).
+  That's STAC's job.
+- Auto-conversion between CRSs at query time.
+  Catalogs should be written in one CRS; `ST_Transform` is available but slow and a footgun.
+- Materialized R-tree indexes on Parquet.
+  They don't exist; if you need persistent indexes, write to `.duckdb` (see [§7](#7-sharp-edges)).
 
 ---
 
 ## 7. Sharp edges
 
-1. **GeoParquet 1.0 vs 1.1.** 1.1 adds the per-row bbox column — order-of-magnitude speedup for spatial filters at scale. Default to writing 1.1; provide a `--geoparquet-version=1.0` opt-out for compatibility with older readers.
-2. **DuckDB spatial extension version pinning.** APIs are stable but evolving. Pin a minimum DuckDB version (e.g. ≥ 1.1) and document the install (`INSTALL spatial; LOAD spatial; INSTALL httpfs; LOAD httpfs;`).
-3. **No persistent R-tree on Parquet.** Persistent R-tree indexes only exist in `.duckdb` table files. If a catalog will be queried thousands of times with the same predicate shapes, materialize to `.duckdb`:
+1. **GeoParquet 1.0 vs 1.1.** 1.1 adds the per-row bbox column — order-of-magnitude speedup for spatial filters at scale.
+   Default to writing 1.1; provide a `--geoparquet-version=1.0` opt-out for compatibility with older readers.
+2. **DuckDB spatial extension version pinning.** APIs are stable but evolving.
+   Pin a minimum DuckDB version (e.g. ≥ 1.1) and document the install (`INSTALL spatial; LOAD spatial; INSTALL httpfs; LOAD httpfs;`).
+3. **No persistent R-tree on Parquet.** Persistent R-tree indexes only exist in `.duckdb` table files.
+   If a catalog will be queried thousands of times with the same predicate shapes, materialize to `.duckdb`:
    ```sql
    CREATE TABLE files AS SELECT * FROM 'cat.parquet';
    CREATE INDEX idx_geom ON files USING RTREE (geometry);
    ```
    Otherwise, rely on bbox + zone-map pushdown — usually fast enough.
-4. **Multi-CRS catalogs.** Same problem as Phase 1, more visible because SQL doesn't auto-reproject. Strong recommendation: **write all GeoParquet in EPSG:4326**, store the native CRS in a column, reproject on load. `ST_Transform` works but requires PROJ data and is slow per call.
-5. **NULL temporal sentinels.** Don't write `pd.Timestamp.min/.max` — they overflow `TIMESTAMP`. Write `NULL` and require explicit `OR tmin IS NULL` for queries that should include date-less files.
-6. **Cursor lifecycle on `iter_rows()`.** The DuckDB connection must outlive the iterator. Use a context manager:
+4. **Multi-CRS catalogs.** Same problem as Phase 1, more visible because SQL doesn't auto-reproject.
+   Strong recommendation: **write all GeoParquet in EPSG:4326**, store the native CRS in a column, reproject on load.
+   `ST_Transform` works but requires PROJ data and is slow per call.
+5. **NULL temporal sentinels.** Don't write `pd.Timestamp.min/.max` — they overflow `TIMESTAMP`.
+   Write `NULL` and require explicit `OR tmin IS NULL` for queries that should include date-less files.
+6. **Cursor lifecycle on `iter_rows()`.** The DuckDB connection must outlive the iterator.
+   Use a context manager:
    ```python
    with catalog.cursor() as rows:
        for row in rows:
@@ -536,17 +598,27 @@ The CLI is a thin wrapper around `DuckDBGeoCatalog`; everything it does is calla
    ```
    Document that storing the iterator beyond the `with` block is unsupported.
 7. **WKB → shapely deserialization cost.** Per-row `shapely.from_wkb` is fine at 10⁴ rows/s, painful at 10⁶. For tight inner loops, batch with `shapely.from_wkb(arr)` (vectorized, uses `pygeos` / shapely 2.x).
-8. **Sampler weighting on lazy catalogs.** Phase 1's area-weighted random sampler ([§4.5 of Phase 1 report](#45-random-sampler-weighting)) needs all candidate areas. With DuckDB, either (a) maintain a precomputed `area_m2` column at build time (recommended), (b) use `USING SAMPLE 10%` to estimate, or (c) stream the area column once and cache.
-9. **Parquet schema evolution.** Parquet is immutable. Add a column → rewrite the file. Mitigate by storing the catalog as a directory of dated shards with consistent schema; DuckDB reads them as one virtual table via `read_parquet('shards/*.parquet')`. Document the canonical schema and bump a version column.
-10. **Authentication for remote.** `httpfs` picks up env vars, `~/.aws/credentials`, GCS service accounts automatically. Document this and provide one-line recipes per provider. Surface clear errors when auth fails (DuckDB's default messages are cryptic).
-11. **Streaming builder + multiprocessing.** When `n_workers > 1`, the rasterio metadata extraction parallelizes well, but Arrow record-batch writes must serialize. Use a single writer thread fed by a queue. Don't try to parallelize the Parquet writer itself.
-12. **Connection-per-thread.** DuckDB connections are *not* thread-safe; use `con.cursor()` in worker threads or open a fresh connection per process. The `DuckDBGeoCatalog` should expose a `.cursor()` method, not pass `con` around.
+8. **Sampler weighting on lazy catalogs.** Phase 1's area-weighted random sampler ([§4.5 of Phase 1 report](#45-random-sampler-weighting)) needs all candidate areas.
+   With DuckDB, either (a) maintain a precomputed `area_m2` column at build time (recommended), (b) use `USING SAMPLE 10%` to estimate, or (c) stream the area column once and cache.
+9. **Parquet schema evolution.** Parquet is immutable.
+   Add a column → rewrite the file.
+   Mitigate by storing the catalog as a directory of dated shards with consistent schema; DuckDB reads them as one virtual table via `read_parquet('shards/*.parquet')`.
+   Document the canonical schema and bump a version column.
+10. **Authentication for remote.** `httpfs` picks up env vars, `~/.aws/credentials`, GCS service accounts automatically.
+    Document this and provide one-line recipes per provider.
+    Surface clear errors when auth fails (DuckDB's default messages are cryptic).
+11. **Streaming builder + multiprocessing.** When `n_workers > 1`, the rasterio metadata extraction parallelizes well, but Arrow record-batch writes must serialize.
+    Use a single writer thread fed by a queue.
+    Don't try to parallelize the Parquet writer itself.
+12. **Connection-per-thread.** DuckDB connections are *not* thread-safe; use `con.cursor()` in worker threads or open a fresh connection per process.
+    The `DuckDBGeoCatalog` should expose a `.cursor()` method, not pass `con` around.
 
 ---
 
 ## 8. End-to-end examples
 
-A varied gallery, organized by what's *new* in Phase 2 — persistence, analytics, scale, federation, and lazy ML pipelines. All examples assume the Phase 1 surface exists.
+A varied gallery, organized by what's *new* in Phase 2 — persistence, analytics, scale, federation, and lazy ML pipelines.
+All examples assume the Phase 1 surface exists.
 
 | § | Example | Pattern |
 | --- | --- | --- |
@@ -754,7 +826,8 @@ joint = catalog.sql("""
 """)
 ```
 
-Slower and PROJ-dependent. Document the cost.
+Slower and PROJ-dependent.
+Document the cost.
 
 ### 8.5 Sampler / inference patterns at scale
 
@@ -846,12 +919,14 @@ None require new dependencies; all are thin wrappers over DuckDB or geopandas.
 
 ## 9. Verdict
 
-Phase 2 is a **clean, additive upgrade** that costs almost nothing for users on the in-memory path and unlocks 2–3 orders of magnitude more catalog scale, plus a real sharing story, for users who need it. The Phase 1 protocol design pays off here: loaders, samplers, and stitchers are unchanged.
+Phase 2 is a **clean, additive upgrade** that costs almost nothing for users on the in-memory path and unlocks 2–3 orders of magnitude more catalog scale, plus a real sharing story, for users who need it.
+The Phase 1 protocol design pays off here: loaders, samplers, and stitchers are unchanged.
 
 What needs to happen to ship Phase 2:
 
 - [ ] Implement `DuckDBGeoCatalog` behind a `[duckdb]` extra, satisfying the `GeoCatalog` protocol from Phase 1.
-- [ ] Canonicalize the GeoParquet schema (§6.6) — types, NULL conventions, bbox column, sort order. Bump a `schema_version` column so future migrations are tractable.
+- [ ] Canonicalize the GeoParquet schema (§6.6) — types, NULL conventions, bbox column, sort order.
+  Bump a `schema_version` column so future migrations are tractable.
 - [ ] Add the streaming-write builders (`backend="duckdb"`) so multi-million-file ingest doesn't materialize a gdf.
 - [ ] Round-trip tests on every backend at three scales: 10², 10⁴, 10⁶ rows.
 - [ ] Cross-CRS smoke test (mixed-UTM-zone catalog harmonized to EPSG:4326 at write time).
@@ -875,15 +950,20 @@ The DuckDB-on-GeoParquet path is sound; concerns to manage actively.
 
 ### DuckDB `spatial` extension version pinning
 
-The `spatial` extension is pre-1.0 in DuckDB; behaviours change between versions. GeoParquet 1.1 bbox-column predicate pushdown specifically lands at **DuckDB ≥ 1.1**. **Mitigation:** pin `duckdb >= 1.1` (and a known-good spatial-extension pin) in package metadata; add a CI matrix that tests on the latest DuckDB once it crosses 1.0 final. Don't lower the pin even if a user asks — silent query-plan regressions are the worst kind of bug.
+The `spatial` extension is pre-1.0 in DuckDB; behaviours change between versions.
+GeoParquet 1.1 bbox-column predicate pushdown specifically lands at **DuckDB ≥ 1.1**.
+**Mitigation:** pin `duckdb >= 1.1` (and a known-good spatial-extension pin) in package metadata; add a CI matrix that tests on the latest DuckDB once it crosses 1.0 final. Don't lower the pin even if a user asks — silent query-plan regressions are the worst kind of bug.
 
 ### `httpfs` extension and credentials
 
-Reading S3 / GCS / Azure GeoParquet from cloud needs the `httpfs` extension configured with the right credentials. DuckDB's secret API differs from `obstore` / `fsspec` patterns. **Mitigation:** define the `Credential` ↔ DuckDB-secret bridge in the [`Credential`](../types/credentials.md) design (cross-link), so users don't configure auth twice (once for georeader readers, once for DuckDB).
+Reading S3 / GCS / Azure GeoParquet from cloud needs the `httpfs` extension configured with the right credentials.
+DuckDB's secret API differs from `obstore` / `fsspec` patterns.
+**Mitigation:** define the `Credential` ↔ DuckDB-secret bridge in the [`Credential`](../types/credentials.md) design (cross-link), so users don't configure auth twice (once for georeader readers, once for DuckDB).
 
 ### Concurrent reads/writes from multiple processes
 
-DuckDB on a single GeoParquet file is **read-safe** across processes. Write-safe only under specific patterns:
+DuckDB on a single GeoParquet file is **read-safe** across processes.
+Write-safe only under specific patterns:
 - **Append-only** (new row groups in new files, then a manifest concat) — safe.
 - **In-place mutation** (rewrite the file under existing reads) — not safe across concurrent writers; you need an external lock or a Delta-Lake-style manifest.
 
@@ -891,12 +971,18 @@ Phase 2 of `GeoCatalog` should default to the append-only pattern; document the 
 
 ### GeoParquet 1.1 writer support
 
-DuckDB's GeoParquet *write* path is newer than the read path. Round-trip test (write with DuckDB, read with `geopandas.read_parquet`, check bbox column survives + CRS metadata is preserved) before promising the writer in v0.1. Cross-link [`geocatalog.md` §10.2](geocatalog.md#102-geoparquet-11-writer-adoption-is-uneven).
+DuckDB's GeoParquet *write* path is newer than the read path.
+Round-trip test (write with DuckDB, read with `geopandas.read_parquet`, check bbox column survives + CRS metadata is preserved) before promising the writer in v0.1. Cross-link [`geocatalog.md` §10.2](geocatalog.md#102-geoparquet-11-writer-adoption-is-uneven).
 
 ### Bit-rot risk
 
-Most users will stay on Phase 1 (GeoPandas in-memory) for the 90% case; Phase 2 won't see organic exercise until someone hits 10⁶+ rows. **Risk:** the Phase 2 code paths regress without being noticed. **Mitigation:** maintain a multi-million-row CI fixture from v0.1; gate Phase 2 release behind one real Phase 2 user.
+Most users will stay on Phase 1 (GeoPandas in-memory) for the 90% case; Phase 2 won't see organic exercise until someone hits 10⁶+ rows.
+**Risk:** the Phase 2 code paths regress without being noticed.
+**Mitigation:** maintain a multi-million-row CI fixture from v0.1; gate Phase 2 release behind one real Phase 2 user.
 
 ### `ST_Transform` is slow per row
 
-DuckDB's `ST_Transform` requires PROJ data and is expensive when called per row. Hence the §4 design choice to write all GeoParquet in EPSG:4326 and store native CRS as a column for round-trip — reproject at write time, not at query time. **Footgun for users who skip this convention:** a multi-CRS catalog with `ST_Transform` in the WHERE clause will be 100× slower than a 4326-canonical catalog. Document loudly.
+DuckDB's `ST_Transform` requires PROJ data and is expensive when called per row.
+Hence the §4 design choice to write all GeoParquet in EPSG:4326 and store native CRS as a column for round-trip — reproject at write time, not at query time.
+**Footgun for users who skip this convention:** a multi-CRS catalog with `ST_Transform` in the WHERE clause will be 100× slower than a 4326-canonical catalog.
+Document loudly.

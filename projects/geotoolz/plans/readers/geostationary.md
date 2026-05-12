@@ -31,7 +31,9 @@ keywords: design, readers, goes, seviri
 
 ## User Story
 
-I’m migrating geostationary readers from `rs_tools` into `georeader`, starting with **GOES-R ABI** and **MSG SEVIRI**, with a path to **MTG-FCI** and **Himawari AHI**. The work is substantially smaller than first thought: `georeader` already owns CRS reprojection through `read.read_from_bounds` and irregular-geolocation reprojection through `griddata.read_to_crs`. What’s missing is the **reader** — the per-sensor class that opens these files, parses sensor-specific metadata, exposes calibrated radiance, and conforms to whichever existing convention (S2-style `GeoData` or PRISMA-style raw-arrays-plus-`lons`/`lats`) fits the file format on disk.
+I’m migrating geostationary readers from `rs_tools` into `georeader`, starting with **GOES-R ABI** and **MSG SEVIRI**, with a path to **MTG-FCI** and **Himawari AHI**.
+The work is substantially smaller than first thought: `georeader` already owns CRS reprojection through `read.read_from_bounds` and irregular-geolocation reprojection through `griddata.read_to_crs`.
+What’s missing is the **reader** — the per-sensor class that opens these files, parses sensor-specific metadata, exposes calibrated radiance, and conforms to whichever existing convention (S2-style `GeoData` or PRISMA-style raw-arrays-plus-`lons`/`lats`) fits the file format on disk.
 
 ## Motivation
 
@@ -44,11 +46,14 @@ Each geostationary sensor lives in its own file format with its own quirks:
 |MSG SEVIRI       |`.nat` (Native) or xRIT segments|Custom binary; needs explicit parsing |
 |Himawari AHI     |HSD segments                    |Custom binary                         |
 
-A `satpy` install can read all of these but drags in xarray/dask/pyresample and is pipeline-shaped. The `georeader`-shaped equivalent is much smaller in scope: a reader per sensor that produces either a `GeoData` (when the file’s affine is clean) or a PRISMA-like object exposing `.lons`, `.lats`, and raw arrays (when it isn’t), and lets `georeader`’s existing machinery do the rest. The motivation is to keep `georeader` consistent: one mental model for the user (`georeader.readers.X`, then `read.read_from_bounds` or `griddata.read_to_crs`), regardless of sensor.
+A `satpy` install can read all of these but drags in xarray/dask/pyresample and is pipeline-shaped.
+The `georeader`-shaped equivalent is much smaller in scope: a reader per sensor that produces either a `GeoData` (when the file’s affine is clean) or a PRISMA-like object exposing `.lons`, `.lats`, and raw arrays (when it isn’t), and lets `georeader`’s existing machinery do the rest.
+The motivation is to keep `georeader` consistent: one mental model for the user (`georeader.readers.X`, then `read.read_from_bounds` or `griddata.read_to_crs`), regardless of sensor.
 
 ## Mathematics
 
-The only math the reader itself owns is computing `.lons` and `.lats` from scan angles when the file format doesn’t already give them. This is the standard `+proj=geos` forward projection, lifted directly from the [GOES-R PUG](https://www.goes-r.gov/users/docs/PUG-main-vol1.pdf) and MSG ICD. As a private utility:
+The only math the reader itself owns is computing `.lons` and `.lats` from scan angles when the file format doesn’t already give them.
+This is the standard `+proj=geos` forward projection, lifted directly from the [GOES-R PUG](https://www.goes-r.gov/users/docs/PUG-main-vol1.pdf) and MSG ICD. As a private utility:
 
 ```python
 # georeader/readers/geostationary/_projection.py
@@ -76,15 +81,18 @@ def scan_to_geodetic(
     return lat, lon, on_disk
 ```
 
-That’s the entire math footprint inside the reader package. Beyond it, anything users need (satellite/solar zenith, local resolution, disk mask) can live in a separate `geostationary_utils` module later — **out of scope** for this design.
+That’s the entire math footprint inside the reader package.
+Beyond it, anything users need (satellite/solar zenith, local resolution, disk mask) can live in a separate `geostationary_utils` module later — **out of scope** for this design.
 
 ## Target API
 
-Two tracks fall out of the file formats. The reader user-facing surface is identical in spirit; the *implementation* differs.
+Two tracks fall out of the file formats.
+The reader user-facing surface is identical in spirit; the *implementation* differs.
 
 ### Track A — Clean `+proj=geos` affine (GOES ABI, MTG-FCI)
 
-Conforms to `GeoData` like the S2 reader. The CRS is `+proj=geos` with the right sweep axis (`x` for GOES, `y` for FCI), the transform is linear in scan-angle-projected meters, and `read.read_from_bounds` works directly through rasterio:
+Conforms to `GeoData` like the S2 reader.
+The CRS is `+proj=geos` with the right sweep axis (`x` for GOES, `y` for FCI), the transform is linear in scan-angle-projected meters, and `read.read_from_bounds` works directly through rasterio:
 
 ```python
 # georeader/readers/geostationary/abi.py
@@ -178,7 +186,8 @@ class ABI_L1b(GeoData):
 
 ### Track B — Irregular file formats (SEVIRI, AHI)
 
-Mirrors the PRISMA reader exactly. The reader does **not** conform to `GeoData`; instead it exposes raw arrays plus `.lons`/`.lats`, and users go through `griddata.read_to_crs`:
+Mirrors the PRISMA reader exactly.
+The reader does **not** conform to `GeoData`; instead it exposes raw arrays plus `.lons`/`.lats`, and users go through `griddata.read_to_crs`:
 
 ```python
 # georeader/readers/geostationary/seviri.py
@@ -238,9 +247,13 @@ geo = griddata.read_to_crs(np.moveaxis(raw, 0, 2),
 # geo: GeoTensor (2, H', W') in EPSG:3857
 ```
 
-Internally, `_projection.scan_to_geodetic` populates `lons` and `lats` once during `__init__` from the file’s scan-angle metadata. **Users never see the projection module.**
+Internally, `_projection.scan_to_geodetic` populates `lons` and `lats` once during `__init__` from the file’s scan-angle metadata.
+**Users never see the projection module.**
 
-> **A note on the HRV channel.** SEVIRI’s HRV is 1 km native versus 3 km for the other 11 channels, on a smaller and offset grid. The reader handles this by treating HRV as a separate group with its own `lons`/`lats`, similar to S2’s 10/20/60 m groups. If `bands=['HRV']`, the reader’s grid is 1 km; if `bands=['IR_108', 'HRV']` is requested with `include_hrv=True`, the reader returns two parallel arrays and lets the user choose how to combine. Mixing resolutions silently is a known footgun and we don’t want it.
+> **A note on the HRV channel.** SEVIRI’s HRV is 1 km native versus 3 km for the other 11 channels, on a smaller and offset grid.
+> The reader handles this by treating HRV as a separate group with its own `lons`/`lats`, similar to S2’s 10/20/60 m groups.
+> If `bands=['HRV']`, the reader’s grid is 1 km; if `bands=['IR_108', 'HRV']` is requested with `include_hrv=True`, the reader returns two parallel arrays and lets the user choose how to combine.
+> Mixing resolutions silently is a known footgun and we don’t want it.
 
 ### Public bucket helpers
 
@@ -346,28 +359,38 @@ def test_seviri_corner_against_icd():
 
 ### ABI L1b reader (~1 week)
 
-The first concrete reader. NetCDF parsing through rasterio (`netcdf:path:Rad`); CRS construction from CF metadata or manually from sub-sat lon and sweep axis; calibration via `Rad`‘s `scale_factor`/`add_offset` plus `kappa0` for reflectance and Planck inversion for brightness temperature. Bands at three native resolutions handled S2-style. AWS S3 URIs work through fsspec/rasterio’s GDAL `/vsis3/` driver. Tests against a small fixture file in CI.
+The first concrete reader.
+NetCDF parsing through rasterio (`netcdf:path:Rad`); CRS construction from CF metadata or manually from sub-sat lon and sweep axis; calibration via `Rad`‘s `scale_factor`/`add_offset` plus `kappa0` for reflectance and Planck inversion for brightness temperature.
+Bands at three native resolutions handled S2-style.
+AWS S3 URIs work through fsspec/rasterio’s GDAL `/vsis3/` driver.
+Tests against a small fixture file in CI.
 
 ### SEVIRI Native reader (~2 weeks)
 
-This is the bigger lift because the `.nat` format needs custom binary parsing. Two options:
+This is the bigger lift because the `.nat` format needs custom binary parsing.
+Two options:
 
 1. Leverage `eumdac` / `satpy`’s SEVIRI native reader as an internal dependency for the parsing step only and rebuild calibration ourselves.
 2. Write a from-scratch parser following the MSG Level 1.5 ICD (more work, fewer dependencies).
 
-Lean toward an optional `satpy` dependency for the parsing only — cleaner and we can always replace it. Calibration coefficients are in the file header; HRV handled as a separate grid.
+Lean toward an optional `satpy` dependency for the parsing only — cleaner and we can always replace it.
+Calibration coefficients are in the file header; HRV handled as a separate grid.
 
 ### MTG-FCI reader (~1 week)
 
-Follows ABI: NetCDF, CF metadata, similar calibration story. Quirks are FCI’s chunked layout and the L1c grid.
+Follows ABI: NetCDF, CF metadata, similar calibration story.
+Quirks are FCI’s chunked layout and the L1c grid.
 
 ### Himawari AHI HSD reader (~2 weeks)
 
-Custom binary, similar in scope to SEVIRI Native. **Defer** until ABI + SEVIRI are landed.
+Custom binary, similar in scope to SEVIRI Native.
+**Defer** until ABI + SEVIRI are landed.
 
 ### SEVIRI HRIT reader (~2 weeks)
 
-xRIT-compressed segments. The messiest of the lot. **Defer** until clear demand.
+xRIT-compressed segments.
+The messiest of the lot.
+**Defer** until clear demand.
 
 ### Public bucket helpers (~1 day per sensor)
 

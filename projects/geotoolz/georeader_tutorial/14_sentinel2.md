@@ -15,14 +15,15 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, sentinel2
 ---
 
-> **Module:** `georeader/readers/S2_SAFE_reader.py` (1845 LOC — the largest file in the package)
-> **Role:** read Sentinel-2 imagery in the official SAFE product format. Both Level-1C (top-of-atmosphere reflectance) and Level-2A (atmospherically-corrected surface reflectance) are supported, from local folders or Google Cloud's free public bucket.
+> **Module:** `georeader/readers/S2_SAFE_reader.py` (1845 LOC — the largest file in the package) **Role:** read Sentinel-2 imagery in the official SAFE product format.
+> Both Level-1C (top-of-atmosphere reflectance) and Level-2A (atmospherically-corrected surface reflectance) are supported, from local folders or Google Cloud's free public bucket.
 
 ---
 
 ## 1. Why this module is so large
 
-A Sentinel-2 SAFE product is **not one file**. It's a folder hierarchy with:
+A Sentinel-2 SAFE product is **not one file**.
+It's a folder hierarchy with:
 
 - 13 separate JPEG2000 (`.jp2`) files — one per spectral band — at three different native resolutions (10 m, 20 m, 60 m).
 - Two XML metadata files — product-level (`MTD_MSIL1C.xml`) and tile-level (`MTD_TL.xml`) — describing acquisition geometry, calibration coefficients, sun/viewing angles, cloud masks, and processing baseline.
@@ -31,7 +32,8 @@ A Sentinel-2 SAFE product is **not one file**. It's a folder hierarchy with:
 
 The module's job is to hide all of that behind a single class that behaves like a `GeoData` (Chapter 2) — `s2.shape`, `s2.transform`, `s2.read_from_bounds(...)`, `s2.load()` all work as if S2 were one file.
 
-The 1845 LOC accommodates: SAFE-folder discovery, XML parsing, granule resolution, per-band JP2 stacking via `RasterioReader`, DN→radiance conversion, SRF extraction, multi-resolution band alignment, and Google Cloud Storage path translation. All of that is invisible from the public API surface, which is essentially three classes (`S2Image`, `S2ImageL1C`, `S2ImageL2A`) and one factory (`s2loader`).
+The 1845 LOC accommodates: SAFE-folder discovery, XML parsing, granule resolution, per-band JP2 stacking via `RasterioReader`, DN→radiance conversion, SRF extraction, multi-resolution band alignment, and Google Cloud Storage path translation.
+All of that is invisible from the public API surface, which is essentially three classes (`S2Image`, `S2ImageL1C`, `S2ImageL2A`) and one factory (`s2loader`).
 
 ---
 
@@ -74,10 +76,14 @@ The 1845 LOC accommodates: SAFE-folder discovery, XML parsing, granule resolutio
 
 The key technical differences:
 
-- **L1C** — values are *top-of-atmosphere* reflectance scaled to int16 with a factor of `1 / 10000`. To convert to radiance, the module's `DN_to_radiance` applies per-band physical calibration constants from the metadata.
-- **L2A** — values are *bottom-of-atmosphere* reflectance from ESA's Sen2Cor processor (or equivalent). Includes the SCL band — a per-pixel classification (cloud / snow / water / vegetation / bare ground / etc.). **B10 (cirrus, 1375 nm) is dropped** because Sen2Cor uses it in the correction process and doesn't produce a corrected surface value.
+- **L1C** — values are *top-of-atmosphere* reflectance scaled to int16 with a factor of `1 / 10000`.
+  To convert to radiance, the module's `DN_to_radiance` applies per-band physical calibration constants from the metadata.
+- **L2A** — values are *bottom-of-atmosphere* reflectance from ESA's Sen2Cor processor (or equivalent).
+  Includes the SCL band — a per-pixel classification (cloud / snow / water / vegetation / bare ground / etc.).
+  **B10 (cirrus, 1375 nm) is dropped** because Sen2Cor uses it in the correction process and doesn't produce a corrected surface value.
 
-For ML pipelines you almost always want **L2A** — the atmospheric correction is consistent across scenes and removes much of the haze/illumination variability that confuses CNN training. For radiative-transfer studies that need to handle their own correction, you want L1C.
+For ML pipelines you almost always want **L2A** — the atmospheric correction is consistent across scenes and removes much of the haze/illumination variability that confuses CNN training.
+For radiative-transfer studies that need to handle their own correction, you want L1C.
 
 ---
 
@@ -101,11 +107,16 @@ B11  │  1610 nm  │   90 nm   │    20m     │  ✓  │  ✓  │ SWIR 1
 B12  │  2190 nm  │  180 nm   │    20m     │  ✓  │  ✓  │ SWIR 2
 ```
 
-This table is **the** reference you'll come back to. Three things worth highlighting:
+This table is **the** reference you'll come back to.
+Three things worth highlighting:
 
-- **Three native resolutions: 10 m / 20 m / 60 m.** When you set `out_res=10`, the 20 m and 60 m bands are *upsampled* on read. When you set `out_res=20`, the 10 m bands are *downsampled* and the 60 m bands are *upsampled*. The `out_res=20` option is the practical sweet-spot when you don't strictly need 10 m resolution — you keep more bands at native resolution.
+- **Three native resolutions: 10 m / 20 m / 60 m.** When you set `out_res=10`, the 20 m and 60 m bands are *upsampled* on read.
+  When you set `out_res=20`, the 10 m bands are *downsampled* and the 60 m bands are *upsampled*.
+  The `out_res=20` option is the practical sweet-spot when you don't strictly need 10 m resolution — you keep more bands at native resolution.
 - **B08 is the broad NIR (842 nm), B8A is the narrow NIR (865 nm).** These look interchangeable but aren't — atmospheric scientists prefer B8A (narrower bandpass = cleaner SWIR-NIR spectroscopy); ML practitioners often use B08 (10 m native + matches Landsat-8 NIR more closely).
-- **Bands 10/11/12 wavelength ordering looks weird.** B11 (1610 nm) is *between* B09 (945 nm) and B12 (2190 nm); B10 (1375 nm) is also between them. The naming follows ESA's historical band-ID scheme, not wavelength order. When constructing band lists for SRF binning or visualisation, use `BANDS_S2 = ["B01", "B02", ..., "B12"]` (the module-level constant) — that's the canonical order matching the array's band axis.
+- **Bands 10/11/12 wavelength ordering looks weird.** B11 (1610 nm) is *between* B09 (945 nm) and B12 (2190 nm); B10 (1375 nm) is also between them.
+  The naming follows ESA's historical band-ID scheme, not wavelength order.
+  When constructing band lists for SRF binning or visualisation, use `BANDS_S2 = ["B01", "B02", ..., "B12"]` (the module-level constant) — that's the canonical order matching the array's band axis.
 
 The module exports the canonical lists as `BANDS_S2` (full 13 for L1C), `BANDS_S2_L1C` (alias), and `BANDS_S2_L2A` (12 bands; no B10).
 
@@ -119,7 +130,8 @@ S2Image                    # base class — do not instantiate directly
 └── S2ImageL2A             # L2A-specific: SCL band, no B10
 ```
 
-`S2Image` lives at [S2_SAFE_reader.py:295](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L295). It implements the `GeoData` protocol (Chapter 2 §3) plus S2-specific machinery:
+`S2Image` lives at [S2_SAFE_reader.py:295](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L295).
+It implements the `GeoData` protocol (Chapter 2 §3) plus S2-specific machinery:
 
 - Granule discovery: walking the SAFE folder to find per-band JP2 paths.
 - Multi-resolution band alignment: each band has its native resolution; `out_res=` selects the output grid and bands at other native resolutions get resampled internally.
@@ -133,7 +145,8 @@ S2Image                    # base class — do not instantiate directly
 
 `S2ImageL2A` ([S2_SAFE_reader.py:918](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L918)) adds:
 
-- The Scene Classification Layer (SCL) — a 20 m raster of integer class codes (0=NoData, 1=Saturated, 2=DarkArea, 3=CloudShadow, 4=Vegetation, 5=BareSoil, 6=Water, 7=Unclassified, 8=CloudMediumProb, 9=CloudHighProb, 10=ThinCirrus, 11=Snow). Useful for masking without running a separate cloud detector.
+- The Scene Classification Layer (SCL) — a 20 m raster of integer class codes (0=NoData, 1=Saturated, 2=DarkArea, 3=CloudShadow, 4=Vegetation, 5=BareSoil, 6=Water, 7=Unclassified, 8=CloudMediumProb, 9=CloudHighProb, 10=ThinCirrus, 11=Snow).
+  Useful for masking without running a separate cloud detector.
 
 ---
 
@@ -153,11 +166,15 @@ S2ImageL2A(
 
 A few non-obvious points:
 
-- **`s2folder`** can be a `gs://` path. The module recognises `gs://gcp-public-data-sentinel-2/...` URIs and uses `fsspec` to walk the folder structure.
-- **`polygon` is in `EPSG:4326`.** Almost always — most catalog queries return WGS84 polygons. The module reprojects internally to the tile's UTM zone.
+- **`s2folder`** can be a `gs://` path.
+  The module recognises `gs://gcp-public-data-sentinel-2/...` URIs and uses `fsspec` to walk the folder structure.
+- **`polygon` is in `EPSG:4326`.** Almost always — most catalog queries return WGS84 polygons.
+  The module reprojects internally to the tile's UTM zone.
 - **`out_res=20` is often the best choice** for ML — keeps red-edge and SWIR at native resolution, avoids upsampling.
-- **`bands=` lets you load a subset.** Memory-efficient for "just RGB" or "just NDVI" use cases. The default is all bands at the chosen `out_res`.
-- **`window_focus`** — same semantics as `RasterioReader.set_window` (Chapter 3 §4). Restricts subsequent reads to a sub-region.
+- **`bands=` lets you load a subset.** Memory-efficient for "just RGB" or "just NDVI" use cases.
+  The default is all bands at the chosen `out_res`.
+- **`window_focus`** — same semantics as `RasterioReader.set_window` (Chapter 3 §4).
+  Restricts subsequent reads to a sub-region.
 
 ---
 
@@ -174,7 +191,8 @@ def s2loader(
 )
 ```
 
-Located at [S2_SAFE_reader.py:1603](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1603). The factory you should use 95% of the time:
+Located at [S2_SAFE_reader.py:1603](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1603).
+The factory you should use 95% of the time:
 
 - Detects whether the folder is L1C or L2A from the SAFE name (the second path segment encodes `MSIL1C` vs `MSIL2A`).
 - Returns the appropriate subclass.
@@ -190,7 +208,8 @@ Both wrap `s2loader` after extracting the SAFE path from the feature's assets.
 
 ## 7. The Google Cloud public bucket
 
-`gs://gcp-public-data-sentinel-2/` (constant: `FULL_PATH_PUBLIC_BUCKET_SENTINEL_2`) is a free, no-auth-required mirror of the entire Sentinel-2 archive. The `s2_public_bucket_path(...)` function ([S2_SAFE_reader.py:1739](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1739)) constructs paths from `(tile_number_field, datetime, processing_baseline)` — useful when you have a SAFE name from a catalog query and need to turn it into a `gs://` URL.
+`gs://gcp-public-data-sentinel-2/` (constant: `FULL_PATH_PUBLIC_BUCKET_SENTINEL_2`) is a free, no-auth-required mirror of the entire Sentinel-2 archive.
+The `s2_public_bucket_path(...)` function ([S2_SAFE_reader.py:1739](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1739)) constructs paths from `(tile_number_field, datetime, processing_baseline)` — useful when you have a SAFE name from a catalog query and need to turn it into a `gs://` URL.
 
 The standard "load any S2 scene from anywhere" recipe:
 
@@ -210,7 +229,8 @@ The lazy access pattern matches what you'd get with a single-file `RasterioReade
 
 ## 8. SRF reading
 
-`read_srf(s2obj=None, mission=None, ...)` ([S2_SAFE_reader.py:1411](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1411)) returns a `pd.DataFrame` with the **published S2 SRFs** — wavelength index, one column per band — exactly as ESA distributes them. Use this for the spectral-binning recipe in [Chapter 11 §8](11_reflectance.md):
+`read_srf(s2obj=None, mission=None, ...)` ([S2_SAFE_reader.py:1411](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/readers/S2_SAFE_reader.py#L1411)) returns a `pd.DataFrame` with the **published S2 SRFs** — wavelength index, one column per band — exactly as ESA distributes them.
+Use this for the spectral-binning recipe in [Chapter 11 §8](11_reflectance.md):
 
 ```python
 srf_df = read_srf(mission="S2A")            # or pass s2obj
@@ -261,13 +281,20 @@ The DataFrame uses the canonical band naming (`B01`, `B02`, ..., `B12`) so it li
 
 ## 10. Sharp edges
 
-- **`out_res=10` upsamples 8 of 13 bands.** B01, B05–B07, B8A, B09, B10, B11, B12 are not natively at 10 m. Setting `out_res=10` makes them all `(10980, 10980)` via `Resampling.cubic_spline`; you don't get more information, just bigger files.
+- **`out_res=10` upsamples 8 of 13 bands.** B01, B05–B07, B8A, B09, B10, B11, B12 are not natively at 10 m.
+  Setting `out_res=10` makes them all `(10980, 10980)` via `Resampling.cubic_spline`; you don't get more information, just bigger files.
 - **L2A drops B10.** Code that hardcodes `bands=BANDS_S2_L1C` will fail on L2A. Use `BANDS_S2_L2A` or filter dynamically based on `s2.bands`.
-- **Old vs new SAFE names.** Pre-2017 products use a different naming convention (`s2_old_format_name_split`). The `s2loader` factory handles both; custom path parsing won't.
-- **Processing-baseline drift.** ESA reprocesses the archive every few years. `S2A_*_N0500_*` (baseline 5.00) and `S2A_*_N0510_*` (5.10) have subtly different radiometric calibration. Match baselines in time-series analyses or you'll see fake change signals.
-- **B10 in L1C is *only* useful for cloud detection.** It's centred on a strong water-vapour absorption — surface reflectance there is essentially zero, so any signal is from cirrus clouds in the upper atmosphere. Don't include B10 as a "regular" spectral feature.
+- **Old vs new SAFE names.** Pre-2017 products use a different naming convention (`s2_old_format_name_split`).
+  The `s2loader` factory handles both; custom path parsing won't.
+- **Processing-baseline drift.** ESA reprocesses the archive every few years.
+  `S2A_*_N0500_*` (baseline 5.00) and `S2A_*_N0510_*` (5.10) have subtly different radiometric calibration.
+  Match baselines in time-series analyses or you'll see fake change signals.
+- **B10 in L1C is *only* useful for cloud detection.** It's centred on a strong water-vapour absorption — surface reflectance there is essentially zero, so any signal is from cirrus clouds in the upper atmosphere.
+  Don't include B10 as a "regular" spectral feature.
 - **SCL is at 20 m.** When using L2A's SCL band as a cloud mask at `out_res=10`, the mask is upsampled — single-pixel cloud features can become 4-pixel features at 10 m.
-- **Requester-pays buckets.** The Microsoft / AWS S3 mirrors are requester-pays. Pass `requester_pays=True` to authenticate the read. The Google public bucket is free.
+- **Requester-pays buckets.** The Microsoft / AWS S3 mirrors are requester-pays.
+  Pass `requester_pays=True` to authenticate the read.
+  The Google public bucket is free.
 - **JP2 reads are not parallel-safe in the SAFE-reader sense.** Each band is a separate `RasterioReader`, so each is independently parallel-safe (Chapter 3), but reading multiple bands of one S2 scene from multiple processes is fine.
 
 ---
@@ -276,9 +303,12 @@ The DataFrame uses the canonical band naming (`B01`, `B02`, ..., `B12`) so it li
 
 The whole `presets.s2` block in [`geotoolz.md` §1.2](../plans/geotoolz/geotoolz.md) sits on top of this module:
 
-- **`presets.s2.S2_L2A_RGB(brightness=...)`** — `Sequential([s2.isel(["B04","B03","B02"]), ToFloat32, PercentileClip, Gamma])`. Loads via `s2loader`, picks RGB bands, normalises.
-- **`presets.s2.S2_L2A_NDVI(...)`** — `Sequential([s2.load(), MaskClouds(scl_band), NDVI(red_idx=2, nir_idx=3)])`. Uses the SCL band for cloud masking — a free pass thanks to L2A.
-- **`presets.s2.S2_L1C_TO_BOA_NDVI(...)`** — the harder pipeline: `Sequential([DN_to_radiance, TOAToBOA, MaskClouds, NDVI])`. Hits `DN_to_radiance` from this module before the radiometric work in [Chapter 11](11_reflectance.md).
+- **`presets.s2.S2_L2A_RGB(brightness=...)`** — `Sequential([s2.isel(["B04","B03","B02"]), ToFloat32, PercentileClip, Gamma])`.
+  Loads via `s2loader`, picks RGB bands, normalises.
+- **`presets.s2.S2_L2A_NDVI(...)`** — `Sequential([s2.load(), MaskClouds(scl_band), NDVI(red_idx=2, nir_idx=3)])`.
+  Uses the SCL band for cloud masking — a free pass thanks to L2A.
+- **`presets.s2.S2_L1C_TO_BOA_NDVI(...)`** — the harder pipeline: `Sequential([DN_to_radiance, TOAToBOA, MaskClouds, NDVI])`.
+  Hits `DN_to_radiance` from this module before the radiometric work in [Chapter 11](11_reflectance.md).
 - **`presets.s2.S2_QA60_CLOUD_MASK(...)`** — bit-flag extraction from the QA60 band on L1C.
 
 Sentinel-2 is the most-used sensor in the package's ecosystem, and this module's design (single class subclassing `GeoData`, lazy granule access, multi-resolution alignment) is the template the other big sensor readers (`emit`, `prisma`, `enmap`) follow.

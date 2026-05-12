@@ -15,7 +15,8 @@ license: CC-BY-4.0
 keywords: design, readers, modis, viirs
 ---
 
-> **Design Report** — design for MODIS, VIIRS, and related curvilinear-geolocation readers in [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader). Companion to the geostationary readers design.
+> **Design Report** — design for MODIS, VIIRS, and related curvilinear-geolocation readers in [`spaceml-org/georeader`](https://github.com/spaceml-org/georeader).
+> Companion to the geostationary readers design.
 
 ## Contents
 
@@ -32,11 +33,14 @@ keywords: design, readers, modis, viirs
 
 ## User Story
 
-I'm continuing the migration from `rs_tools` into `georeader` with the next family of sensors: **MODIS** on Aqua/Terra, plus its close relatives **VIIRS** (S-NPP, NOAA-20/21), and eventually **AVHRR**, **Sentinel-3 OLCI/SLSTR**, and airborne **AVIRIS-NG**. Unlike GOES/SEVIRI, none of these have a clean affine in any standard CRS — they're polar-orbiting (or airborne) curvilinear scanners whose native geometry is "this is the lat/lon of every single pixel." The PRISMA reader is the right precedent and `griddata.read_to_crs` is the right resampler, but the reader has to set things up carefully so the curvilinear → regular-grid step works correctly, especially around bowtie pixels, multi-resolution bands, and dateline crossings.
+I'm continuing the migration from `rs_tools` into `georeader` with the next family of sensors: **MODIS** on Aqua/Terra, plus its close relatives **VIIRS** (S-NPP, NOAA-20/21), and eventually **AVHRR**, **Sentinel-3 OLCI/SLSTR**, and airborne **AVIRIS-NG**.
+Unlike GOES/SEVIRI, none of these have a clean affine in any standard CRS — they're polar-orbiting (or airborne) curvilinear scanners whose native geometry is "this is the lat/lon of every single pixel." The PRISMA reader is the right precedent and `griddata.read_to_crs` is the right resampler, but the reader has to set things up carefully so the curvilinear → regular-grid step works correctly, especially around bowtie pixels, multi-resolution bands, and dateline crossings.
 
 ## Motivation
 
-MODIS is the foundational dataset of the modern remote-sensing era — 25 years of daily global coverage, 36 spectral bands, three native resolutions (250 m / 500 m / 1 km), and an enormous downstream Level-2 product family (MOD09 surface reflectance, MOD11 LST, MOD13 vegetation indices, MOD14 fires, ...). VIIRS is the operational successor (similar bands, similar geometry, NetCDF instead of HDF4). Both ship as files where the *only* honest description of geometry is per-pixel `lons`/`lats`; any attempt to fit an affine to them is a lie at the swath edges.
+MODIS is the foundational dataset of the modern remote-sensing era — 25 years of daily global coverage, 36 spectral bands, three native resolutions (250 m / 500 m / 1 km), and an enormous downstream Level-2 product family (MOD09 surface reflectance, MOD11 LST, MOD13 vegetation indices, MOD14 fires, ...).
+VIIRS is the operational successor (similar bands, similar geometry, NetCDF instead of HDF4).
+Both ship as files where the *only* honest description of geometry is per-pixel `lons`/`lats`; any attempt to fit an affine to them is a lie at the swath edges.
 
 | Sensor | Format | Geolocation | Native res. | Notes |
 |---|---|---|---|---|
@@ -46,9 +50,11 @@ MODIS is the foundational dataset of the modern remote-sensing era — 25 years 
 | Sentinel-3 OLCI/SLSTR | NetCDF | In-file `geo_coordinates` | 300 m / 500 m / 1 km | Push-broom but still curvilinear; defer |
 | AVIRIS-NG (airborne) | ENVI binary | Separate `IGM`/`GLT` files | sub-meter to ~10 m | Very long swaths; defer |
 
-`rs_tools` solved download and patching for MODIS but not the read-arbitrary-AOI problem; `satpy` solves both at the cost of a heavy dependency tree. The georeader-shaped equivalent is one reader per sensor following the PRISMA pattern, plus a small set of curvilinear utilities to handle quirks that PRISMA doesn't have.
+`rs_tools` solved download and patching for MODIS but not the read-arbitrary-AOI problem; `satpy` solves both at the cost of a heavy dependency tree.
+The georeader-shaped equivalent is one reader per sensor following the PRISMA pattern, plus a small set of curvilinear utilities to handle quirks that PRISMA doesn't have.
 
-The reader's job is, again, narrow: open the HDF/NetCDF files, parse calibration, link the geolocation file (when separate), expose `.lons`/`.lats` plus calibrated arrays and metadata, and let `griddata.read_to_crs` do the rest. The new things this design has to address that the GEO design didn't:
+The reader's job is, again, narrow: open the HDF/NetCDF files, parse calibration, link the geolocation file (when separate), expose `.lons`/`.lats` plus calibrated arrays and metadata, and let `griddata.read_to_crs` do the rest.
+The new things this design has to address that the GEO design didn't:
 
 1. **Multi-file products** (data file + separate geolocation file)
 2. **The bowtie effect** (overlapping pixels at scan edges)
@@ -58,9 +64,12 @@ The reader's job is, again, narrow: open the HDF/NetCDF files, parse calibration
 
 ## Mathematics: The Curvilinear Transformation
 
-The forward problem — pixel index $(i, j)$ → $(\varphi_{ij}, \lambda_{ij})$ — is given by the file's geolocation arrays. The backward problem is the reprojection that `griddata.read_to_crs` does, and it's worth being explicit about what's happening, because the choice of resampling method interacts with bowtie pixels in ways that matter.
+The forward problem — pixel index $(i, j)$ → $(\varphi_{ij}, \lambda_{ij})$ — is given by the file's geolocation arrays.
+The backward problem is the reprojection that `griddata.read_to_crs` does, and it's worth being explicit about what's happening, because the choice of resampling method interacts with bowtie pixels in ways that matter.
 
-Let `V[i, j, k]` be the source array of shape `(H, W, C)`, with `lons[i, j]` and `lats[i, j]` giving the geographic location of pixel `(i, j)`. For a target CRS and a target resolution `Δ`, we want a regular grid `V_dst[m, n, k]` at locations `(x_m, y_n)` in target-CRS meters. The transformation has three steps:
+Let `V[i, j, k]` be the source array of shape `(H, W, C)`, with `lons[i, j]` and `lats[i, j]` giving the geographic location of pixel `(i, j)`.
+For a target CRS and a target resolution `Δ`, we want a regular grid `V_dst[m, n, k]` at locations `(x_m, y_n)` in target-CRS meters.
+The transformation has three steps:
 
 ```python
 # Pseudocode for what griddata.read_to_crs is doing under the hood
@@ -93,13 +102,16 @@ V_dst = scipy.interpolate.griddata(
 
 Three numerical hazards show up here that the reader has to either fix or document:
 
-> **Bowtie duplicates.** The source point cloud has multiple samples for the same ground location at scan edges. Nearest-neighbor handles this gracefully (one of the duplicates wins arbitrarily) but Delaunay-based linear interpolation can produce visible seams where degenerate triangles meet.
+> **Bowtie duplicates.** The source point cloud has multiple samples for the same ground location at scan edges.
+> Nearest-neighbor handles this gracefully (one of the duplicates wins arbitrarily) but Delaunay-based linear interpolation can produce visible seams where degenerate triangles meet.
 
-> **Antimeridian crossings.** A swath might have lons of +179.8° and -179.7° in adjacent pixels; if you project naively to a CRS that doesn't wrap (Web Mercator, UTM), the swath gets stretched halfway around the world. The reader handles this by detecting the discontinuity in `.lons` and either splitting the swath or unwrapping (e.g., `lons[lons < 0] += 360` when in the eastern-hemisphere tile).
+> **Antimeridian crossings.** A swath might have lons of +179.8° and -179.7° in adjacent pixels; if you project naively to a CRS that doesn't wrap (Web Mercator, UTM), the swath gets stretched halfway around the world.
+> The reader handles this by detecting the discontinuity in `.lons` and either splitting the swath or unwrapping (e.g., `lons[lons < 0] += 360` when in the eastern-hemisphere tile).
 
 > **Off-disk / fill values.** Sentinels like `-999` in `.lats`/`.lons` must be masked before the KD-tree is built, otherwise they pull nearest-neighbor queries into nonsense.
 
-The reader does **not** implement the resampling — `griddata.read_to_crs` does — but it owns making sure the inputs to that function are clean: valid masks applied, antimeridian unwrapped or flagged, and bowtie status known. As a small utility module:
+The reader does **not** implement the resampling — `griddata.read_to_crs` does — but it owns making sure the inputs to that function are clean: valid masks applied, antimeridian unwrapped or flagged, and bowtie status known.
+As a small utility module:
 
 ```python
 # georeader/readers/curvilinear/_swath.py — internal, sensor-agnostic
@@ -130,11 +142,13 @@ def dedupe_bowtie(
     ...
 ```
 
-Users never call these directly. Readers call them from `__init__` or expose them as opt-in methods.
+Users never call these directly.
+Readers call them from `__init__` or expose them as opt-in methods.
 
 ## Target API
 
-The MODIS L1B reader follows the PRISMA template precisely. A separate geolocation file (`MOD03`/`MYD03`) is the norm at 1 km; for 500 m and 250 m the geolocation either lives inside the data file or must be derived by interpolation, and the reader handles both cases.
+The MODIS L1B reader follows the PRISMA template precisely.
+A separate geolocation file (`MOD03`/`MYD03`) is the norm at 1 km; for 500 m and 250 m the geolocation either lives inside the data file or must be derived by interpolation, and the reader handles both cases.
 
 ### MODIS L1B reader
 
@@ -261,9 +275,11 @@ class VIIRS_L1B:
 
 ### Variations within the family
 
-For Level-2 MODIS products (`MOD09`, `MOD11`, `MOD13`), the same reader pattern applies but the bands change and the calibration helpers (`to_reflectance` / `to_brightness_temperature`) become identity passes — the products are already in physical units. Implement these as separate small classes (`MODIS_L2_SurfaceReflectance`, `MODIS_LST`) that share a base mixin if duplication appears.
+For Level-2 MODIS products (`MOD09`, `MOD11`, `MOD13`), the same reader pattern applies but the bands change and the calibration helpers (`to_reflectance` / `to_brightness_temperature`) become identity passes — the products are already in physical units.
+Implement these as separate small classes (`MODIS_L2_SurfaceReflectance`, `MODIS_LST`) that share a base mixin if duplication appears.
 
-For **Sentinel-3 OLCI/SLSTR** (NetCDF, push-broom but still curvilinear due to Earth rotation during the scan), the reader is structurally identical: open file, expose `.lons`/`.lats`, calibrate, route through `griddata.read_to_crs`. Defer until MODIS and VIIRS land.
+For **Sentinel-3 OLCI/SLSTR** (NetCDF, push-broom but still curvilinear due to Earth rotation during the scan), the reader is structurally identical: open file, expose `.lons`/`.lats`, calibrate, route through `griddata.read_to_crs`.
+Defer until MODIS and VIIRS land.
 
 For **AVIRIS-NG** (airborne, ENVI format with separate IGM/GLT geolocation files), again structurally identical — the only difference is the file-parsing layer.
 
@@ -348,19 +364,28 @@ The work splits into a small curvilinear utility module, the per-sensor readers,
 
 ### Curvilinear utilities (~2 days)
 
-`georeader/readers/curvilinear/_swath.py` with `crosses_antimeridian`, `unwrap_antimeridian`, `bowtie_mask`, `dedupe_bowtie`, plus tests. These are sensor-agnostic and the only piece of new shared infrastructure. Whether to expose any of these publicly is a design decision; start internal-only and promote if external users need them.
+`georeader/readers/curvilinear/_swath.py` with `crosses_antimeridian`, `unwrap_antimeridian`, `bowtie_mask`, `dedupe_bowtie`, plus tests.
+These are sensor-agnostic and the only piece of new shared infrastructure.
+Whether to expose any of these publicly is a design decision; start internal-only and promote if external users need them.
 
 ### MODIS L1B reader (~2 weeks)
 
-The first concrete reader. HDF4 parsing through `pyhdf` (the only mature HDF4 binding); calibration coefficients live in attributes per-band; geolocation comes from the linked `MOD03` file at 1 km, and from in-file SDS at 500 m / 250 m. Three resolution variants share the class and dispatch on file name. Tests against a small fixture granule in CI. The bowtie deduplication is the one MODIS-specific footgun and gets its own test.
+The first concrete reader.
+HDF4 parsing through `pyhdf` (the only mature HDF4 binding); calibration coefficients live in attributes per-band; geolocation comes from the linked `MOD03` file at 1 km, and from in-file SDS at 500 m / 250 m.
+Three resolution variants share the class and dispatch on file name.
+Tests against a small fixture granule in CI. The bowtie deduplication is the one MODIS-specific footgun and gets its own test.
 
 ### MODIS L2 readers (~1 week each)
 
-`MODIS_L2_SurfaceReflectance` (`MOD09`), `MODIS_LST` (`MOD11`), `MODIS_VegetationIndex` (`MOD13`). These are thinner because calibration is a no-op, but each has its own band list and quality-flag conventions. Build only the ones I need first, generalize later.
+`MODIS_L2_SurfaceReflectance` (`MOD09`), `MODIS_LST` (`MOD11`), `MODIS_VegetationIndex` (`MOD13`).
+These are thinner because calibration is a no-op, but each has its own band list and quality-flag conventions.
+Build only the ones I need first, generalize later.
 
 ### VIIRS L1B reader (~2 weeks)
 
-HDF5 / NetCDF instead of HDF4 (cleaner). I-band and M-band variants in one class with a `resolution` switch like MODIS. Geolocation from `GIMGO` / `GMTCO` companion files. Tests against a small fixture.
+HDF5 / NetCDF instead of HDF4 (cleaner).
+I-band and M-band variants in one class with a `resolution` switch like MODIS. Geolocation from `GIMGO` / `GMTCO` companion files.
+Tests against a small fixture.
 
 ### Sentinel-3 OLCI/SLSTR, AVHRR, AVIRIS-NG (~1–2 weeks each)
 
@@ -393,4 +418,5 @@ The single biggest open design question, worth resolving before locking anything
 > 2. As a free function in `_swath.py` (users call it on raw arrays)
 > 3. As a kwarg at construction time (`MODIS_L1B(..., bowtie_dedupe=True)`)
 
-The PRISMA reader doesn't have analogous concerns so there's no precedent. **Instinct: the method form** — leaves the default behavior untouched (all pixels exposed), but gives users a clean opt-in for resampling pipelines that need it.
+The PRISMA reader doesn't have analogous concerns so there's no precedent.
+**Instinct: the method form** — leaves the default behavior untouched (all pixels exposed), but gives users a clean opt-in for resampling pipelines that need it.

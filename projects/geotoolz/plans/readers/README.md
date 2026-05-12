@@ -16,7 +16,8 @@ keywords: design, readers, sensors
 ---
 
 > **Status:** index of per-sensor reader designs.
-> **Scope:** the design of the *reader classes* for specific sensor families being migrated into `georeader` from `rs_tools`. Each per-sensor design specifies the file format, metadata parsing, calibration, and how the reader fits into one of `georeader`'s existing patterns (S2-style affine `GeoData`, or PRISMA-style raw-arrays-plus-`lons`/`lats`).
+> **Scope:** the design of the *reader classes* for specific sensor families being migrated into `georeader` from `rs_tools`.
+> Each per-sensor design specifies the file format, metadata parsing, calibration, and how the reader fits into one of `georeader`'s existing patterns (S2-style affine `GeoData`, or PRISMA-style raw-arrays-plus-`lons`/`lats`).
 > **Audience:** anyone implementing a new sensor reader in `georeader`, or trying to figure out which sensor goes with which existing pattern.
 
 ---
@@ -29,7 +30,8 @@ Per-sensor reader designs land here when:
 2. **The reader follows one of two existing patterns** ([Track A or Track B below](#the-two-tracks)) but has sensor-specific quirks worth documenting before implementation.
 3. **The work fits into one or more focused issues** rather than a single trivial PR.
 
-The companion to this directory is [`georeader/`](../georeader/) — the **reader-protocol reconciliation** design, which keeps today's `GeoData` / `GeoDataBase` Protocols and adds an `AsyncGeoData` Protocol that all readers (current and future) will conform to. That design is about the *interface*; this directory is about *concrete sensor implementations* that satisfy it.
+The companion to this directory is [`georeader/`](../georeader/) — the **reader-protocol reconciliation** design, which keeps today's `GeoData` / `GeoDataBase` Protocols and adds an `AsyncGeoData` Protocol that all readers (current and future) will conform to.
+That design is about the *interface*; this directory is about *concrete sensor implementations* that satisfy it.
 
 ---
 
@@ -53,7 +55,8 @@ The companion to this directory is [`georeader/`](../georeader/) — the **reade
 | [`geostationary.md`](geostationary.md) | GOES-R ABI, MSG SEVIRI, MTG-FCI, Himawari AHI | A for ABI/FCI (clean `+proj=geos`), B for SEVIRI/AHI (irregular file formats) |
 | [`modis.md`](modis.md) | MODIS (Aqua/Terra), VIIRS (S-NPP / NOAA-20/21), planned: AVHRR, Sentinel-3 OLCI/SLSTR, AVIRIS-NG | B (curvilinear scanners; per-pixel `lons`/`lats` is the only honest description) |
 
-Both designs share structure: User Story / Motivation / Mathematics / Target API / Example Use Cases / Subtasks / Open Design Questions. They reference each other directly because the geostationary readers were designed first and the MODIS family followed the same template.
+Both designs share structure: User Story / Motivation / Mathematics / Target API / Example Use Cases / Subtasks / Open Design Questions.
+They reference each other directly because the geostationary readers were designed first and the MODIS family followed the same template.
 
 ---
 

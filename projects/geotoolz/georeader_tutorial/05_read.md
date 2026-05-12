@@ -15,8 +15,9 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, read, reproject
 ---
 
-> **Module:** `georeader/read.py` (1967 LOC, the densest module in the package — 123 box-drawing characters across the docstring)
-> **Role:** the public face of georeader. Most users start here. Six "specify the AOI in the form most natural to your problem" entry points, plus reprojection / resampling / grid-matching.
+> **Module:** `georeader/read.py` (1967 LOC, the densest module in the package — 123 box-drawing characters across the docstring) **Role:** the public face of georeader.
+> Most users start here.
+> Six "specify the AOI in the form most natural to your problem" entry points, plus reprojection / resampling / grid-matching.
 
 ---
 
@@ -108,10 +109,13 @@ Each `read_from_*` has a sibling `window_from_*` that returns just the `Window` 
 
 The split matters because:
 
-- **Windows are CRS-free.** Once you have a window in the source's pixel space, no further coordinate math is needed. `read_from_window` is the cheapest entry point.
-- **Bounds carry a CRS.** `read_from_bounds(data, bounds, crs_bounds)` *always* takes a separate `crs_bounds` arg — even if it's the same as the data — because there's no way to read the CRS off a tuple. Forgetting `crs_bounds` is a common bug.
+- **Windows are CRS-free.** Once you have a window in the source's pixel space, no further coordinate math is needed.
+  `read_from_window` is the cheapest entry point.
+- **Bounds carry a CRS.** `read_from_bounds(data, bounds, crs_bounds)` *always* takes a separate `crs_bounds` arg — even if it's the same as the data — because there's no way to read the CRS off a tuple.
+  Forgetting `crs_bounds` is a common bug.
 
-The `window_from_*` siblings are the bridge: they normalise any AOI specification into a pixel window in the source's CRS, with antimeridian handling and outer-rounding applied. The `read_from_*` functions then call `data.read_from_window(window, boundless=True).load()`.
+The `window_from_*` siblings are the bridge: they normalise any AOI specification into a pixel window in the source's CRS, with antimeridian handling and outer-rounding applied.
+The `read_from_*` functions then call `data.read_from_window(window, boundless=True).load()`.
 
 ---
 
@@ -153,10 +157,14 @@ The `window_from_*` siblings are the bridge: they normalise any AOI specificatio
 Three reprojection-flavoured entry points:
 
 - **`read_to_crs(data, dst_crs, resampling=...)`** — simplest case: same bounds, new CRS. Used for visualisation flips (UTM → Web Mercator).
-- **`read_reproject(data, dst_crs=None, bounds=None, resolution_dst_crs=None, dst_transform=None, ...)`** — the workhorse. Choose any combination of CRS / bounds / resolution / explicit transform; the function fills in the rest using `window_utils.figure_out_transform`.
-- **`read_reproject_like(data_in, data_like, ...)`** — match another raster's grid exactly. Reads `data_like.transform`, `data_like.crs`, `data_like.shape` and builds the matching read. Standard pattern for stacking heterogeneous sources onto a common grid.
+- **`read_reproject(data, dst_crs=None, bounds=None, resolution_dst_crs=None, dst_transform=None, ...)`** — the workhorse.
+  Choose any combination of CRS / bounds / resolution / explicit transform; the function fills in the rest using `window_utils.figure_out_transform`.
+- **`read_reproject_like(data_in, data_like, ...)`** — match another raster's grid exactly.
+  Reads `data_like.transform`, `data_like.crs`, `data_like.shape` and builds the matching read.
+  Standard pattern for stacking heterogeneous sources onto a common grid.
 
-The default resampling is `cubic_spline`. The advice in the table is good: **switch to `nearest` for masks and class labels**, otherwise you'll get fractional class IDs after resampling.
+The default resampling is `cubic_spline`.
+The advice in the table is good: **switch to `nearest` for masks and class labels**, otherwise you'll get fractional class IDs after resampling.
 
 The `resize` function is the resolution-only sibling — same CRS, same origin, new pixel size — with built-in anti-aliasing pre-blur for downsampling.
 
@@ -186,7 +194,8 @@ The `resize` function is the resolution-only sibling — same CRS, same origin, 
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-`boundless=True` is the default everywhere in `read.py`. This is deliberate: the moment you compose tiled inference with edge tiles, you *want* fixed-size outputs and don't want to special-case "this tile is at the edge."
+`boundless=True` is the default everywhere in `read.py`.
+This is deliberate: the moment you compose tiled inference with edge tiles, you *want* fixed-size outputs and don't want to special-case "this tile is at the edge."
 
 `boundless=False` is the right choice when you specifically want to detect off-edge requests — e.g., "did my AOI actually fall inside the scene?"
 
@@ -194,7 +203,8 @@ The `resize` function is the resolution-only sibling — same CRS, same origin, 
 
 ## 6. The eight-step `read_reproject` walkthrough
 
-The implementation of `read_reproject` ([read.py:1348](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/read.py#L1348)) is annotated with eight numbered banner-comments inside the function body. They're not a single ASCII diagram, but they're the clearest map of how reprojection actually works in this package — worth preserving.
+The implementation of `read_reproject` ([read.py:1348](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/read.py#L1348)) is annotated with eight numbered banner-comments inside the function body.
+They're not a single ASCII diagram, but they're the clearest map of how reprojection actually works in this package — worth preserving.
 
 ```text
 ─────────────────────────────────────────────────────────────────────────
@@ -282,11 +292,17 @@ This is where the actual coordinate transformation happens:
 
 Five things worth highlighting from this walkthrough:
 
-1. **Step 3 is the fast path.** Same CRS + same pixel size + grid-aligned origins → reprojection collapses to a window read. ~10–100× speedup. This is why operators that read coregistered data should reach for `read_from_bounds` (which dispatches via this path) instead of `read_reproject` blindly.
-2. **Step 6 short-circuits non-intersecting requests.** Asking for an AOI that doesn't overlap the scene returns a nodata-filled array, not an error. Composing tiled inference across catalogs of partially-overlapping scenes works without try/except.
-3. **Step 7 reads with a 3-pixel buffer.** That's the anti-aliasing-of-resampling-kernels reason. Bilinear / cubic kernels need neighbouring pixels at the destination boundary; without the buffer you get a thin nodata stripe along edges.
-4. **Step 4's bool dance.** Reprojecting a bool mask via `nearest` is correct semantically but loses smooth boundaries. The float32 → interpolate → threshold trick gives anti-aliased mask edges while preserving bool dtype on output.
-5. **Step 8 iterates by non-spatial dim.** A `(T, C, H, W)` GeoTensor reprojects band-by-band, time-by-time. The outer loop is in Python; the inner reprojection is in `rasterio.warp.reproject` (GDAL). For very large stacks this can be a bottleneck — one of the things a JAX-batched reprojection in `geotoolz` could improve later.
+1. **Step 3 is the fast path.** Same CRS + same pixel size + grid-aligned origins → reprojection collapses to a window read. ~10–100× speedup.
+   This is why operators that read coregistered data should reach for `read_from_bounds` (which dispatches via this path) instead of `read_reproject` blindly.
+2. **Step 6 short-circuits non-intersecting requests.** Asking for an AOI that doesn't overlap the scene returns a nodata-filled array, not an error.
+   Composing tiled inference across catalogs of partially-overlapping scenes works without try/except.
+3. **Step 7 reads with a 3-pixel buffer.** That's the anti-aliasing-of-resampling-kernels reason.
+   Bilinear / cubic kernels need neighbouring pixels at the destination boundary; without the buffer you get a thin nodata stripe along edges.
+4. **Step 4's bool dance.** Reprojecting a bool mask via `nearest` is correct semantically but loses smooth boundaries.
+   The float32 → interpolate → threshold trick gives anti-aliased mask edges while preserving bool dtype on output.
+5. **Step 8 iterates by non-spatial dim.** A `(T, C, H, W)` GeoTensor reprojects band-by-band, time-by-time.
+   The outer loop is in Python; the inner reprojection is in `rasterio.warp.reproject` (GDAL).
+   For very large stacks this can be a bottleneck — one of the things a JAX-batched reprojection in `geotoolz` could improve later.
 
 ---
 
@@ -321,7 +337,8 @@ Five things worth highlighting from this walkthrough:
 
 ## 8. The `pad_add` argument on `read_from_polygon`
 
-`read_from_polygon` accepts `pad_add=(rows, cols)` — a tuple of pixel padding to grow the read window beyond the polygon's bounding box. This isn't documented as a feature of the others, but it shows up in two contexts:
+`read_from_polygon` accepts `pad_add=(rows, cols)` — a tuple of pixel padding to grow the read window beyond the polygon's bounding box.
+This isn't documented as a feature of the others, but it shows up in two contexts:
 
 - **Reprojection edge handling.** Internal calls in `read_reproject` use `pad_add=(3, 3)` so that the resampling kernel has neighbours at the destination boundary (Step 7 above).
 - **CNN context windows.** For a segmentation model that needs context around the AOI, `pad_add=(32, 32)` reads a buffer; you pass through to inference, then crop the centre.
@@ -332,11 +349,16 @@ For other entry points, achieve the same effect by `pad_window`-ing the result o
 
 ## 9. Sharp edges
 
-- **`crs_bounds` / `crs_polygon` / `crs_center_coords` are required when they differ from the source.** If omitted, the function assumes the AOI is already in the source's CRS — which is silently wrong if it isn't. Pass the CRS explicitly always.
-- **Default resampling is `cubic_spline`.** Wrong for masks. Pass `resampling=Resampling.nearest` for class labels / cloud masks.
-- **`read_reproject` allocates the output upfront (Step 5).** A misconfigured huge output shape (e.g., units mismatch in `resolution_dst_crs`) tries to allocate a TB-scale array. If allocation seems suspicious, print the inferred output shape before reading.
-- **The fast path (Step 3) requires *exact* integer pixel offsets.** A fractional offset of 0.0003 still triggers the full reproject path. The `_is_exact_round` precision check matches `PIXEL_PRECISION = 3` from `window_utils`.
-- **`read_from_polygon` reads the polygon's *bounding box*, then masks.** It doesn't do per-pixel polygon membership at the read step — the read returns a rectangle. For pixel-level masking, follow with `rasterize` ([Chapter 9](09_rasterize.md)) or use `data.footprint().intersects(polygon)` checks.
+- **`crs_bounds` / `crs_polygon` / `crs_center_coords` are required when they differ from the source.** If omitted, the function assumes the AOI is already in the source's CRS — which is silently wrong if it isn't.
+  Pass the CRS explicitly always.
+- **Default resampling is `cubic_spline`.** Wrong for masks.
+  Pass `resampling=Resampling.nearest` for class labels / cloud masks.
+- **`read_reproject` allocates the output upfront (Step 5).** A misconfigured huge output shape (e.g., units mismatch in `resolution_dst_crs`) tries to allocate a TB-scale array.
+  If allocation seems suspicious, print the inferred output shape before reading.
+- **The fast path (Step 3) requires *exact* integer pixel offsets.** A fractional offset of 0.0003 still triggers the full reproject path.
+  The `_is_exact_round` precision check matches `PIXEL_PRECISION = 3` from `window_utils`.
+- **`read_from_polygon` reads the polygon's *bounding box*, then masks.** It doesn't do per-pixel polygon membership at the read step — the read returns a rectangle.
+  For pixel-level masking, follow with `rasterize` ([Chapter 9](09_rasterize.md)) or use `data.footprint().intersects(polygon)` checks.
 - **Antimeridian-crossing AOIs split into two reads.** Inherited from `bounds_to_windows` ([Chapter 4 §3](04_window_utils.md)); the splitting is automatic but it's two HTTP requests on cloud data.
 - **`read_from_tile` returns a Web Mercator tile.** If your source isn't in Web Mercator, this triggers a full reprojection per tile — fine for occasional rendering, expensive for a tile-loop.
 
@@ -350,6 +372,8 @@ Three functions from this module are essentially the entire `geotoolz.sampling.G
 - `read_from_window(boundless=True)` — fixed-shape chip retrieval.
 - `read_reproject_like` — when sampling from heterogeneous sources, match all chips to a common grid.
 
-A `GridSampler` is mostly a generator of `(x_min, y_min, x_max, y_max)` tuples in the source CRS; the `chip_op` calls `read_from_bounds` per tuple. Add `pad_add=(context, context)` for inference with context, then `slice_save_for_pred` ([Chapter 4 §9](04_window_utils.md)) to crop back when stitching. The whole loop is ~50 lines that wrap functions already in this module.
+A `GridSampler` is mostly a generator of `(x_min, y_min, x_max, y_max)` tuples in the source CRS; the `chip_op` calls `read_from_bounds` per tuple.
+Add `pad_add=(context, context)` for inference with context, then `slice_save_for_pred` ([Chapter 4 §9](04_window_utils.md)) to crop back when stitching.
+The whole loop is ~50 lines that wrap functions already in this module.
 
 Next chapter: [06_slices.md](06_slices.md) — tiling strategies (overlap, stride, chunked) for memory-efficient processing of datasets that don't fit in RAM.

@@ -15,8 +15,8 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, mosaic
 ---
 
-> **Module:** `georeader/mosaic.py` (450 LOC)
-> **Role:** turn N partially-overlapping `GeoData` sources into a single seamless `GeoTensor`. Reprojects, resamples, and fills nodata gaps from later rasters in the list.
+> **Module:** `georeader/mosaic.py` (450 LOC) **Role:** turn N partially-overlapping `GeoData` sources into a single seamless `GeoTensor`.
+> Reprojects, resamples, and fills nodata gaps from later rasters in the list.
 
 ---
 
@@ -24,9 +24,13 @@ keywords: tutorial, georeader, mosaic
 
 You have a list of rasters and one of these problems:
 
-- **Adjacent scenes with gaps.** Two S2 tiles cover an AOI that straddles a swath edge. Each has a triangular nodata zone where the other has data. You want the union with no gaps.
-- **Cloudy time series.** Three S2 acquisitions of the same scene over a month, each with different clouds. You want a single cloud-free image — pixel by pixel, take the first valid observation.
-- **Heterogeneous mixed sources.** S2 + Landsat covering the same AOI at different resolutions. You want one grid, S2 where available, Landsat to fill gaps.
+- **Adjacent scenes with gaps.** Two S2 tiles cover an AOI that straddles a swath edge.
+  Each has a triangular nodata zone where the other has data.
+  You want the union with no gaps.
+- **Cloudy time series.** Three S2 acquisitions of the same scene over a month, each with different clouds.
+  You want a single cloud-free image — pixel by pixel, take the first valid observation.
+- **Heterogeneous mixed sources.** S2 + Landsat covering the same AOI at different resolutions.
+  You want one grid, S2 where available, Landsat to fill gaps.
 
 All three are the same operation underneath: **iterate the list, fill remaining nodata from each subsequent raster.** That's `spatial_mosaic`.
 
@@ -63,7 +67,8 @@ All three are the same operation underneath: **iterate the list, fill remaining 
 The two rules underneath:
 
 1. **Order = priority.** `[A, B, C]` means "use A wherever A is valid; use B where A is nodata but B is valid; use C only where both A and B are nodata."
-2. **Early termination.** If after raster B every pixel is valid, raster C is never read. A user-supplied list of cloud-free fallback scenes pays nothing for the unused tail when the AOI is mostly cloud-free.
+2. **Early termination.** If after raster B every pixel is valid, raster C is never read.
+   A user-supplied list of cloud-free fallback scenes pays nothing for the unused tail when the AOI is mostly cloud-free.
 
 This is the `rasterio.merge.merge` shape but with two extras `merge` doesn't have: per-raster validity masks (next section) and arbitrary masking functions (e.g., apply a cloud detector lazily before contributing to the mosaic).
 
@@ -98,15 +103,23 @@ This is the `rasterio.merge.merge` shape but with two extras `merge` doesn't hav
 
 Conceptually different from spatial mosaicking: **every** timestep contributes (subject to nodata), and a reduction (median, mean, max, ...) decides the per-pixel output value.
 
-The module docstring promises a `rasters_reduction(rasters, reducer=np.nanmedian, ...)` function for this. **It isn't implemented in the current module** — only `spatial_mosaic` is exported. See [§8 below](#8-the-implementation-vs-docstring-gap) for what's actually shipped vs documented.
+The module docstring promises a `rasters_reduction(rasters, reducer=np.nanmedian, ...)` function for this.
+**It isn't implemented in the current module** — only `spatial_mosaic` is exported.
+See [§8 below](#8-the-implementation-vs-docstring-gap) for what's actually shipped vs documented.
 
 The conceptual reduction recipes are still useful as a reference:
 
-- **`nanmedian`** — robust temporal composite. The standard cloud-free recipe: stack T scenes, mask clouds to NaN, take the per-pixel median across time. Outliers (residual clouds, shadows, snow) bias the mean but barely move the median.
+- **`nanmedian`** — robust temporal composite.
+  The standard cloud-free recipe: stack T scenes, mask clouds to NaN, take the per-pixel median across time.
+  Outliers (residual clouds, shadows, snow) bias the mean but barely move the median.
 - **`nanmean`** — when you actually want the average (e.g., monthly mean radiance for an energy-budget paper).
-- **`nanmax`** — max-NDVI compositing. For each pixel, pick the timestep where NDVI was highest. Standard greenness-of-the-year recipe.
-- **`nanmin`** — minimum compositing. Useful for water/wetland detection where the *darkest* observation rejects clouds.
-- **`nanstd`** — temporal variability map. Not a composite but a derived product (where does the scene change a lot?).
+- **`nanmax`** — max-NDVI compositing.
+  For each pixel, pick the timestep where NDVI was highest.
+  Standard greenness-of-the-year recipe.
+- **`nanmin`** — minimum compositing.
+  Useful for water/wetland detection where the *darkest* observation rejects clouds.
+- **`nanstd`** — temporal variability map.
+  Not a composite but a derived product (where does the scene change a lot?).
 
 ---
 
@@ -143,7 +156,8 @@ spatial_mosaic([reader1, reader2, reader3], ...)              # nodata-only
 spatial_mosaic([(reader1, mask1), (reader2, mask2), ...], ...) # explicit masks
 ```
 
-The mask convention: **`True` means invalid** (cloud, shadow, sensor flag set). Invalid pixels are treated like nodata — fall through to the next raster.
+The mask convention: **`True` means invalid** (cloud, shadow, sensor flag set).
+Invalid pixels are treated like nodata — fall through to the next raster.
 
 There's also a third form via `masking_function`:
 
@@ -151,7 +165,8 @@ There's also a third form via `masking_function`:
 spatial_mosaic([reader1, reader2, reader3], masking_function=detect_clouds, ...)
 ```
 
-`masking_function` is called with each `GeoData` and returns a `GeoData` of invalid pixels. The wrapper computes the mask lazily, which avoids materialising mask rasters when the spatial precedence rules out their parent (early termination above).
+`masking_function` is called with each `GeoData` and returns a `GeoData` of invalid pixels.
+The wrapper computes the mask lazily, which avoids materialising mask rasters when the spatial precedence rules out their parent (early termination above).
 
 The masking function is the seam where downstream packages plug in cloud detectors (CloudSEN12, s2cloudless, FMask) without the mosaic module taking a hard dep.
 
@@ -177,8 +192,10 @@ spatial_mosaic(
 
 A few non-obvious points:
 
-- **Output grid is configured via the same triplet as `read_reproject`.** Polygon / bounds + transform / dst_crs + resolution. Pass any consistent subset; `figure_out_transform` ([Chapter 4 §6](04_window_utils.md)) fills in the rest.
-- **`window_size=(h, w)` switches to tiled processing.** For large mosaics that don't fit in RAM, tile through the output grid; for each output tile, call `read_reproject(reader, bounds=tile_bounds)` per input raster. Memory cost is `O(tile_size × n_rasters)`, not `O(output_size)`.
+- **Output grid is configured via the same triplet as `read_reproject`.** Polygon / bounds + transform / dst_crs + resolution.
+  Pass any consistent subset; `figure_out_transform` ([Chapter 4 §6](04_window_utils.md)) fills in the rest.
+- **`window_size=(h, w)` switches to tiled processing.** For large mosaics that don't fit in RAM, tile through the output grid; for each output tile, call `read_reproject(reader, bounds=tile_bounds)` per input raster.
+  Memory cost is `O(tile_size × n_rasters)`, not `O(output_size)`.
 - **`resampling=cubic_spline` is the default.** Same caveat as `read.py` — flip to `Resampling.nearest` when mosaicking categorical data (cloud masks, class labels).
 - **The "first raster wins" defaults** (CRS, dtype, nodata) make the call short for "give me everything in raster1's coordinate system." Override only when you have a reason — passing inconsistent dtype across rasters can silently truncate values during the first reproject step.
 
@@ -207,7 +224,8 @@ composite = mosaic.spatial_mosaic(
 )
 ```
 
-Key idea: **rank before mosaicking.** The "first raster wins" rule means the order of `data_list` controls per-pixel preference. Ordering by global cloud cover (or by acquisition recency, or by snow score, etc.) makes the composite reflect a quality preference, not just a temporal order.
+Key idea: **rank before mosaicking.** The "first raster wins" rule means the order of `data_list` controls per-pixel preference.
+Ordering by global cloud cover (or by acquisition recency, or by snow score, etc.) makes the composite reflect a quality preference, not just a temporal order.
 
 For temporal reductions that *don't* prefer one timestep — true median compositing — you'd want `rasters_reduction`, which (see next section) isn't actually implemented yet.
 
@@ -230,9 +248,11 @@ The `window_size=(h, w)` argument on `spatial_mosaic` covers the chunked-process
 
 ## 8. The implementation-vs-docstring gap
 
-The module docstring promises four functions; the source defines one. This is worth flagging because:
+The module docstring promises four functions; the source defines one.
+This is worth flagging because:
 
-- If you read the docstring expecting a `rasters_reduction` for temporal compositing, **it doesn't exist**. You'd implement it yourself using `np.nanmedian` over a stacked-time `GeoTensor` (Chapter 1 §9 covers `GeoTensor.stack`).
+- If you read the docstring expecting a `rasters_reduction` for temporal compositing, **it doesn't exist**.
+  You'd implement it yourself using `np.nanmedian` over a stacked-time `GeoTensor` (Chapter 1 §9 covers `GeoTensor.stack`).
 - The `pad_add_rasters` helper would have been useful for aligning rasters of different shapes prior to stacking; the workaround is `read_reproject_like` per raster against a common reference.
 
 This is one of the loose ends downstream `geotoolz.compositing` fills in — `MeanComposite`, `MedianComposite`, `MaxNDVIComposite`, `CloudFreeComposite` (the [geotoolz.md plan §1.2](../plans/geotoolz/geotoolz.md)) are the operator-form versions of what the docstring here describes but doesn't implement.
@@ -246,25 +266,32 @@ median = np.nanmedian(stacked.values, axis=0)                             # (C, 
 out = GeoTensor(median, transform=stacked.transform, crs=stacked.crs)
 ```
 
-That's six lines you'd otherwise expect to be `mosaic.rasters_reduction(readers, reducer=np.nanmedian)`. Worth knowing it isn't there.
+That's six lines you'd otherwise expect to be `mosaic.rasters_reduction(readers, reducer=np.nanmedian)`.
+Worth knowing it isn't there.
 
 ---
 
 ## 9. Sharp edges
 
-- **First raster's metadata wins.** `dst_crs`, `dtype_dst`, `dst_nodata` all default to the first raster. Mixing dtypes silently truncates; mixing CRS triggers reprojection (correct, but the cost surprises people who didn't realise their list was heterogeneous).
+- **First raster's metadata wins.** `dst_crs`, `dtype_dst`, `dst_nodata` all default to the first raster.
+  Mixing dtypes silently truncates; mixing CRS triggers reprojection (correct, but the cost surprises people who didn't realise their list was heterogeneous).
 - **Mask convention is `True = invalid`.** It's the inverse of "valid mask." Easy to get backwards if you're coming from `masked_array` or sklearn.
 - **Default `cubic_spline` resampling.** Flip to `nearest` for categorical mosaics (cloud masks, class labels).
-- **Tile processing (`window_size`) is per-tile complete.** It doesn't stream — each output tile fully reads and reprojects each contributing input tile. Memory bound is per-tile; total compute is the same.
-- **`spatial_mosaic_chunked` / `rasters_reduction` / `pad_add_rasters` aren't implemented.** Don't trust the module docstring's "Module Functions Overview" list. Inspect the source.
-- **No deduplication.** Passing the same reader twice in `data_list` reads it twice. The module doesn't try to detect identity.
-- **Order matters and is silent.** Two cloud-free scenes in `[scene1, scene2]` vs `[scene2, scene1]` produce different mosaics in their overlap region. There's no "blend" mode in the current implementation.
+- **Tile processing (`window_size`) is per-tile complete.** It doesn't stream — each output tile fully reads and reprojects each contributing input tile.
+  Memory bound is per-tile; total compute is the same.
+- **`spatial_mosaic_chunked` / `rasters_reduction` / `pad_add_rasters` aren't implemented.** Don't trust the module docstring's "Module Functions Overview" list.
+  Inspect the source.
+- **No deduplication.** Passing the same reader twice in `data_list` reads it twice.
+  The module doesn't try to detect identity.
+- **Order matters and is silent.** Two cloud-free scenes in `[scene1, scene2]` vs `[scene2, scene1]` produce different mosaics in their overlap region.
+  There's no "blend" mode in the current implementation.
 
 ---
 
 ## 10. Connection to `geotoolz.compositing`
 
-The [geotoolz.md plan §1.2](../plans/geotoolz/geotoolz.md) lists `compositing` as one of the v0.2 modules with four operators: `MedianComposite`, `MaxNDVIComposite`, `CloudFreeComposite`, `MeanComposite`. Mapping to this module:
+The [geotoolz.md plan §1.2](../plans/geotoolz/geotoolz.md) lists `compositing` as one of the v0.2 modules with four operators: `MedianComposite`, `MaxNDVIComposite`, `CloudFreeComposite`, `MeanComposite`.
+Mapping to this module:
 
 | `geotoolz` operator | Maps to `mosaic.spatial_mosaic` how |
 |---|---|
@@ -273,6 +300,7 @@ The [geotoolz.md plan §1.2](../plans/geotoolz/geotoolz.md) lists `compositing` 
 | `MedianComposite` | not direct: needs `rasters_reduction(reducer=np.nanmedian)` |
 | `MeanComposite` | not direct: needs `rasters_reduction(reducer=np.nanmean)` |
 
-So `geotoolz.compositing` is *partly* a thin wrapper over `spatial_mosaic` and *partly* the missing `rasters_reduction` reimplemented at the operator layer. The implementation gap above means `geotoolz.compositing` will probably ship its own temporal-reduction core rather than depending on this module for it.
+So `geotoolz.compositing` is *partly* a thin wrapper over `spatial_mosaic` and *partly* the missing `rasters_reduction` reimplemented at the operator layer.
+The implementation gap above means `geotoolz.compositing` will probably ship its own temporal-reduction core rather than depending on this module for it.
 
 Next chapter: [09_rasterize.md](09_rasterize.md) — burning vector geometries into raster grids (the inverse of `vectorize`).

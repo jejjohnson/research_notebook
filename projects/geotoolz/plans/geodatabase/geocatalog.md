@@ -16,14 +16,14 @@ keywords: design, geodatabase, catalog, geopandas
 ---
 
 > **Scope:** evaluating the `remote_sensing/dataset*.py`, `sampler.py`, `operations.py`, and `rasterio_utils.py` files in [`jejjohnson/jej_vc_snippets`](https://github.com/jejjohnson/jej_vc_snippets) for promotion into [`jejjohnson/georeader`](https://github.com/jejjohnson/georeader).
->
 > **Status:** design proposal, no code changed yet.
 
 ---
 
 ## 0. What I read
 
-I worked from the public-API view (signatures + docstrings) plus the algorithmic core of every function. The six files in `jej_vc_snippets/remote_sensing/` that are dataset-builder material are:
+I worked from the public-API view (signatures + docstrings) plus the algorithmic core of every function.
+The six files in `jej_vc_snippets/remote_sensing/` that are dataset-builder material are:
 
 | File | Lines | Top-level surface |
 | --- | ---: | --- |
@@ -34,7 +34,9 @@ I worked from the public-API view (signatures + docstrings) plus the algorithmic
 | `operations.py` | ~1000 | `query_spatiotemporal_index`, `intersect_spatiotemporal_indexes`, `union_spatiotemporal_indexes` |
 | `rasterio_utils.py` | ~250 | `update_metadata`, `read_metadata`, `filter_by_metadata`, `get_tags`, `print_all_metadata`, `save_image_with_tags`, `append_tags_to_existing` |
 
-> ⚠️ Found two literal syntax errors in `dataset_vector.py` (`return_meta bool = True` missing colon at line ~416; `if return_meta` missing colon at line ~1076). The file has never been imported successfully. Tests are therefore sparse to non-existent.
+> ⚠️ Found two literal syntax errors in `dataset_vector.py` (`return_meta bool = True` missing colon at line ~416; `if return_meta` missing colon at line ~1076).
+> The file has never been imported successfully.
+> Tests are therefore sparse to non-existent.
 
 ---
 
@@ -44,15 +46,20 @@ The six files form a small **catalog → query → load → sample → stitch** 
 
 ### 1.1 The shared index format
 
-Every `build_*_spatiotemporal_index` function emits the *same* object: a `geopandas.GeoDataFrame` whose row label is a `pd.IntervalIndex(name='datetime', closed='both')` and whose `geometry` column holds reprojected file footprints (bounding-box `Polygon`s in a uniform target CRS). One row per file. Extra columns differ by backend (`filepath` always; for xarray, also `data_vars`, `time_var`, `time_resolution`, `n_timesteps`; for vector, `layer`).
+Every `build_*_spatiotemporal_index` function emits the *same* object: a `geopandas.GeoDataFrame` whose row label is a `pd.IntervalIndex(name='datetime', closed='both')` and whose `geometry` column holds reprojected file footprints (bounding-box `Polygon`s in a uniform target CRS).
+One row per file.
+Extra columns differ by backend (`filepath` always; for xarray, also `data_vars`, `time_var`, `time_resolution`, `n_timesteps`; for vector, `layer`).
 
 This is the central design choice and it's a good one: **pandas + geopandas already give you `O(log n)` interval-tree temporal lookup and `O(log n)` R-tree spatial lookup for free.** No custom data structures needed.
 
 ### 1.2 The three backends
 
-- **Raster (`dataset.py`)** — file footprints come from `rasterio.open(...).bounds`, reprojected to `target_crs` via a lazy `WarpedVRT`. Loaders use `rasterio.merge.merge()` driven by query bounds and a target resolution; output is a numpy array `(bands, height, width)` plus a validity mask, plus an `Affine`.
-- **Xarray (`dataset_xarray.py`)** — opens each file with `xr.open_dataset(...)` (engine inferred from extension: `.zarr` → zarr, else netcdf4/h5netcdf), resolves CRS via `rio.crs` or a fallback, derives bounds from coordinate min/max, parses time from a `time_var` (default `'time'`). Loaders return `xr.Dataset` (or per-var numpy arrays); merging uses `rioxarray.merge.merge_datasets`.
-- **Vector (`dataset_vector.py`)** — opens each file with `geopandas.read_file(...)`, reprojects to target CRS, footprint = `total_bounds`. Loaders rasterize with `rasterio.features.rasterize` and return `torch.long` tensors keyed by ML task (`semantic_segmentation`, `object_detection`, `instance_segmentation`).
+- **Raster (`dataset.py`)** — file footprints come from `rasterio.open(...).bounds`, reprojected to `target_crs` via a lazy `WarpedVRT`.
+  Loaders use `rasterio.merge.merge()` driven by query bounds and a target resolution; output is a numpy array `(bands, height, width)` plus a validity mask, plus an `Affine`.
+- **Xarray (`dataset_xarray.py`)** — opens each file with `xr.open_dataset(...)` (engine inferred from extension: `.zarr` → zarr, else netcdf4/h5netcdf), resolves CRS via `rio.crs` or a fallback, derives bounds from coordinate min/max, parses time from a `time_var` (default `'time'`).
+  Loaders return `xr.Dataset` (or per-var numpy arrays); merging uses `rioxarray.merge.merge_datasets`.
+- **Vector (`dataset_vector.py`)** — opens each file with `geopandas.read_file(...)`, reprojects to target CRS, footprint = `total_bounds`.
+  Loaders rasterize with `rasterio.features.rasterize` and return `torch.long` tensors keyed by ML task (`semantic_segmentation`, `object_detection`, `instance_segmentation`).
 
 ### 1.3 The set algebra
 
@@ -66,28 +73,35 @@ All operate at the index level, never opening a file.
 
 ### 1.4 The sampler / inference layer
 
-`sampler.py` is the ML-glue: a `GeoSlice` dataclass + `random_geo_sampler` / `grid_geo_sampler` / `stitch_predictions` factories. The catalog is what the samplers iterate; the slices flow downstream into loaders and operators. Detailed design — dataclass invariants, sampling math, stitch reductions — lives in [`types/geoslice.md`](../types/geoslice.md). This document only covers how the catalog feeds the samplers.
+`sampler.py` is the ML-glue: a `GeoSlice` dataclass + `random_geo_sampler` / `grid_geo_sampler` / `stitch_predictions` factories.
+The catalog is what the samplers iterate; the slices flow downstream into loaders and operators.
+Detailed design — dataclass invariants, sampling math, stitch reductions — lives in [`types/geoslice.md`](../types/geoslice.md).
+This document only covers how the catalog feeds the samplers.
 
 ### 1.5 Auxiliary
 
-`rasterio_utils.py` is *not* a dataset builder — it's GDAL tag read/write helpers. It does not belong in this migration; fold the read helpers into georeader's existing `rasterio_reader.py` and drop the rest.
+`rasterio_utils.py` is *not* a dataset builder — it's GDAL tag read/write helpers.
+It does not belong in this migration; fold the read helpers into georeader's existing `rasterio_reader.py` and drop the rest.
 
 ---
 
 ## 2. User story
 
-**Persona.** A scientist or ML engineer with a folder (or bucket) of N satellite or model-output files spanning years and tiles. Possibly heterogeneous: S2 mixed with Landsat, NetCDF reanalysis mixed with ad-hoc Zarr stores, raster imagery alongside vector labels.
+**Persona.** A scientist or ML engineer with a folder (or bucket) of N satellite or model-output files spanning years and tiles.
+Possibly heterogeneous: S2 mixed with Landsat, NetCDF reanalysis mixed with ad-hoc Zarr stores, raster imagery alongside vector labels.
 
 **Goal arc:**
 
-1. *"I have 10 000 files. Make them queryable."* → `build_*_index(filepaths, regex, target_crs)` → one GeoDataFrame.
+1. *"I have 10 000 files.
+   Make them queryable."* → `build_*_index(filepaths, regex, target_crs)` → one GeoDataFrame.
 2. *"Give me the data for this bbox + this date range."* → `query_index(...)` → filtered subset → `load_and_merge_*(...)` → mosaicked numpy/xarray.
 3. *"Stream me ML training chips."* → `random_geo_sampler(index, chip_size).__call__()` → iterator of `GeoSlice` → call loader per slice → batch.
 4. *"Run my model over the whole AOI for the whole year and write a georeferenced raster."* → `run_inference_with_grid_sampler(index, model, output_path, chip_size, stride)` → stitched output.
 5. *"My imagery is in catalog A, my labels are in catalog B; pair them."* → `intersect_spatiotemporal_indexes(A, B)` → joint catalog, queries return only spatiotemporally-paired tiles.
 6. *"Combine Landsat 7 + Landsat 8 into one virtual dataset."* → `union_spatiotemporal_indexes(L7, L8)`.
 
-The stack is therefore not "yet another dataloader" — it's a **lightweight, file-based, Pythonic STAC**. No JSON catalog format, no service, no pgSTAC. Just a GeoDataFrame you can pickle.
+The stack is therefore not "yet another dataloader" — it's a **lightweight, file-based, Pythonic STAC**.
+No JSON catalog format, no service, no pgSTAC. Just a GeoDataFrame you can pickle.
 
 ---
 
@@ -95,7 +109,9 @@ The stack is therefore not "yet another dataloader" — it's a **lightweight, fi
 
 ### 3.1 The gap this fills in georeader
 
-`georeader` today is excellent at the *single-file* level: open a Sentinel-2 SAFE, read a bbox, get a `GeoTensor`, reproject, save COG. But it has **no story for collections of files**. If the user has ten years of daily files across many tiles, they're on their own to write the catalog, the query, the mosaic, and the temporal stack. These snippets are exactly that missing layer.
+`georeader` today is excellent at the *single-file* level: open a Sentinel-2 SAFE, read a bbox, get a `GeoTensor`, reproject, save COG. But it has **no story for collections of files**.
+If the user has ten years of daily files across many tiles, they're on their own to write the catalog, the query, the mosaic, and the temporal stack.
+These snippets are exactly that missing layer.
 
 The georeader modules these would build on are:
 
@@ -110,8 +126,11 @@ The georeader modules these would build on are:
 
 ### 3.2 Compared with alternatives
 
-- **TorchGeo `RasterDataset`** has the same idea (regex-parsed filename, R-tree, `BoundingBox` query). The snippets are a **lighter, GeoDataFrame-native reimagining** of that pattern, without the torch dependency in the index layer. That's a feature, not a bug — it lets non-ML users (analysis, mosaicking, inference) use the same catalog.
-- **STAC / pystac-client** is heavier: requires a JSON spec, an API, network fetches. The snippets work on local files and return a Python object you can ship around.
+- **TorchGeo `RasterDataset`** has the same idea (regex-parsed filename, R-tree, `BoundingBox` query).
+  The snippets are a **lighter, GeoDataFrame-native reimagining** of that pattern, without the torch dependency in the index layer.
+  That's a feature, not a bug — it lets non-ML users (analysis, mosaicking, inference) use the same catalog.
+- **STAC / pystac-client** is heavier: requires a JSON spec, an API, network fetches.
+  The snippets work on local files and return a Python object you can ship around.
 - **xbatcher / xarray-spatial / odc-geo** overlap with the *xarray* loader but not with the catalog/intersection logic.
 
 The concrete value-add over TorchGeo is therefore:
@@ -125,23 +144,34 @@ The concrete value-add over TorchGeo is therefore:
 
 ## 3.3 Primer for newcomers
 
-> **ELI5.** An R-tree is a **russian-doll of bounding boxes** — each big box knows what smaller boxes it contains. To find files in your area, you only open the boxes that overlap your area, never the rest. Combined with a similar trick for time, queries answer in milliseconds even over thousands of files.
+> **ELI5.** An R-tree is a **russian-doll of bounding boxes** — each big box knows what smaller boxes it contains.
+> To find files in your area, you only open the boxes that overlap your area, never the rest.
+> Combined with a similar trick for time, queries answer in milliseconds even over thousands of files.
 
 ### `gpd.GeoDataFrame` (geopandas)
 
-**What it is.** A `pandas.DataFrame` subclass with a `geometry` column holding Shapely geometries (Polygon, MultiPolygon, Point, LineString). Each row is a feature; rows behave like dataframe rows; the geometry column gets spatial-aware operations.
+**What it is.** A `pandas.DataFrame` subclass with a `geometry` column holding Shapely geometries (Polygon, MultiPolygon, Point, LineString).
+Each row is a feature; rows behave like dataframe rows; the geometry column gets spatial-aware operations.
 
-**How it works.** `gpd.GeoDataFrame({"path": [...], "date": [...], "geometry": [Polygon(...), ...]})` — same constructor pattern as a regular DataFrame, but the `geometry` column is special-cased. Geopandas wraps Shapely (Python bindings to GEOS, the C library) plus pyproj (CRS handling) plus rtree (spatial indexing) plus fiona (file I/O). All the heavy lifting is in C; the Python layer is convenient bookkeeping.
+**How it works.** `gpd.GeoDataFrame({"path": [...], "date": [...], "geometry": [Polygon(...), ...]})` — same constructor pattern as a regular DataFrame, but the `geometry` column is special-cased.
+Geopandas wraps Shapely (Python bindings to GEOS, the C library) plus pyproj (CRS handling) plus rtree (spatial indexing) plus fiona (file I/O).
+All the heavy lifting is in C; the Python layer is convenient bookkeeping.
 
-**What this means for us.** Phase 1's catalog is *literally* a GeoDataFrame plus an `IntervalIndex` for time. Builders read each file's bounds via `WarpedVRT` (lazy reprojection that doesn't read pixels), assemble those into geometries, and stick the result in a gdf. Queries leverage geopandas's existing R-tree + Shapely operations. No new spatial-data-structure code.
+**What this means for us.** Phase 1's catalog is *literally* a GeoDataFrame plus an `IntervalIndex` for time.
+Builders read each file's bounds via `WarpedVRT` (lazy reprojection that doesn't read pixels), assemble those into geometries, and stick the result in a gdf.
+Queries leverage geopandas's existing R-tree + Shapely operations.
+No new spatial-data-structure code.
 
 ### R-tree + IntervalIndex (the indices)
 
 **What it is.** Two indices stacked: an **R-tree** for "find rows whose `geometry` overlaps this bbox" and an **IntervalIndex** for "find rows whose `interval` overlaps this date range." Combined, they answer spatiotemporal queries in `O(log n + k)`.
 
-**How it works.** Geopandas builds the R-tree on first access via the `gdf.sindex` property — backed by libspatialindex's R-tree implementation in C. Pandas builds the IntervalIndex when you attach intervals via `gdf = gdf.set_index(pd.IntervalIndex.from_arrays(start, end, closed='both'))`. A combined query is `gdf[gdf.index.overlaps(query_interval)].cx[xmin:xmax, ymin:ymax]` — first the time filter, then the spatial filter.
+**How it works.** Geopandas builds the R-tree on first access via the `gdf.sindex` property — backed by libspatialindex's R-tree implementation in C. Pandas builds the IntervalIndex when you attach intervals via `gdf = gdf.set_index(pd.IntervalIndex.from_arrays(start, end, closed='both'))`.
+A combined query is `gdf[gdf.index.overlaps(query_interval)].cx[xmin:xmax, ymin:ymax]` — first the time filter, then the spatial filter.
 
-**What this means for us.** A catalog of 10k tile×date rows answers "files overlapping this AOI in June 2023" in sub-millisecond. The index is built lazily (first query pays the construction cost), so importing a Phase 1 catalog is fast even if you never query it. Beyond ~10⁵ rows the gdf's row-iteration overhead dominates and you should switch to Phase 2 (DuckDB).
+**What this means for us.** A catalog of 10k tile×date rows answers "files overlapping this AOI in June 2023" in sub-millisecond.
+The index is built lazily (first query pays the construction cost), so importing a Phase 1 catalog is fast even if you never query it.
+Beyond ~10⁵ rows the gdf's row-iteration overhead dominates and you should switch to Phase 2 (DuckDB).
 
 ```{mermaid}
 flowchart TD
@@ -162,11 +192,15 @@ flowchart TD
 
 ### Set algebra over catalogs
 
-**What it is.** Catalogs support `query`, `intersect`, and `union` operations that produce new catalogs — like set operations on indexed file collections. Lets you compose "data I have" with "data I want" without writing custom join code per workflow.
+**What it is.** Catalogs support `query`, `intersect`, and `union` operations that produce new catalogs — like set operations on indexed file collections.
+Lets you compose "data I have" with "data I want" without writing custom join code per workflow.
 
-**How it works.** `intersect(catalog_A, catalog_B)` walks pairs of geometries (using the R-tree to skip non-intersecting pairs), computes per-pair `(geom_A ∩ geom_B, max(start_A, start_B), min(end_A, end_B))`, drops empty intersections. `union` is the opposite — concatenate, then optionally dedupe. `query` is "intersect with a single-row catalog" — the AOI is a one-row catalog with one geometry and one interval.
+**How it works.** `intersect(catalog_A, catalog_B)` walks pairs of geometries (using the R-tree to skip non-intersecting pairs), computes per-pair `(geom_A ∩ geom_B, max(start_A, start_B), min(end_A, end_B))`, drops empty intersections.
+`union` is the opposite — concatenate, then optionally dedupe.
+`query` is "intersect with a single-row catalog" — the AOI is a one-row catalog with one geometry and one interval.
 
-**What this means for us.** Pairing imagery with labels (raster × vector across two backends), building cross-sensor catalogs (S2 + Landsat for change detection), filtering to "files that have all three of (S2, EnMAP, ERA5)" — all expressible as catalog set algebra, not bespoke pandas joins each time. Same shape carries to Phase 2 where it's SQL `INTERSECT` / `UNION` under the hood.
+**What this means for us.** Pairing imagery with labels (raster × vector across two backends), building cross-sensor catalogs (S2 + Landsat for change detection), filtering to "files that have all three of (S2, EnMAP, ERA5)" — all expressible as catalog set algebra, not bespoke pandas joins each time.
+Same shape carries to Phase 2 where it's SQL `INTERSECT` / `UNION` under the hood.
 
 ```{mermaid}
 sequenceDiagram
@@ -198,7 +232,8 @@ with rasterio.open(filepath) as src:
         polygon = shapely.geometry.box(xmin, ymin, xmax, ymax)
 ```
 
-`WarpedVRT` is a *lazy* virtual reprojection: bounds are computed analytically from the source's affine + CRS without resampling pixels. This is what makes indexing 10 000 files fast.
+`WarpedVRT` is a *lazy* virtual reprojection: bounds are computed analytically from the source's affine + CRS without resampling pixels.
+This is what makes indexing 10 000 files fast.
 
 ### 4.2 Temporal interval construction
 
@@ -209,7 +244,8 @@ mint = pd.Timestamp(date_str).floor('D')          # 00:00:00.000000
 maxt = pd.Timestamp(date_str).ceil('D') - 1e-6    # 23:59:59.999999
 ```
 
-For a `(start, stop)` filename, the interval is `[floor(start), ceil(stop) - 1µs]`. For files with no date, `(pd.Timestamp.min, pd.Timestamp.max)` — a point of contention; see [§7](#7-sharp-edges-to-fix-on-the-way-in).
+For a `(start, stop)` filename, the interval is `[floor(start), ceil(stop) - 1µs]`.
+For files with no date, `(pd.Timestamp.min, pd.Timestamp.max)` — a point of contention; see [§7](#7-sharp-edges-to-fix-on-the-way-in).
 
 ### 4.3 Combined query
 
@@ -235,7 +271,8 @@ $$
 [\max(a_1, a_2),\ \min(b_1, b_2)]
 $$
 
-discarded if `min(b₁, b₂) < max(a₁, a₂)`. Vectorised:
+discarded if `min(b₁, b₂) < max(a₁, a₂)`.
+Vectorised:
 
 ```python
 mint  = np.maximum(datetime_1.left,  datetime_2.left)
@@ -247,7 +284,8 @@ The result's `IntervalIndex` is built from those two arrays with `closed='both'`
 
 ### 4.5 Sampler and stitch math
 
-Random-sampler weighting (area-weighted tile selection + uniform chip placement), grid-sampler stride math, and the four stitch-reduction modes (`average` / `max` / `first` / `last`) are specified in [`types/geoslice.md`](../types/geoslice.md). Those primitives consume what this catalog produces but aren't catalog-specific — see that document for invariants and edge cases.
+Random-sampler weighting (area-weighted tile selection + uniform chip placement), grid-sampler stride math, and the four stitch-reduction modes (`average` / `max` / `first` / `last`) are specified in [`types/geoslice.md`](../types/geoslice.md).
+Those primitives consume what this catalog produces but aren't catalog-specific — see that document for invariants and edge cases.
 
 ---
 
@@ -297,7 +335,8 @@ georeader/
 
 ### 6.2 Core types
 
-`GeoSlice` is specified in [`types/geoslice.md`](../types/geoslice.md). The catalog imports and re-exports it for convenience.
+`GeoSlice` is specified in [`types/geoslice.md`](../types/geoslice.md).
+The catalog imports and re-exports it for convenience.
 
 ```python
 class GeoCatalog:
@@ -390,11 +429,14 @@ The shift from `dict[str, np.ndarray]` to `GeoTensor` is the single biggest clea
 
 ### 6.5 Samplers
 
-`random_sampler`, `grid_sampler`, and `stitch` are specified in [`types/geoslice.md`](../types/geoslice.md) — including signatures, area-weighting math, stride math, and the four stitch reduction modes. From the catalog's perspective the only API touchpoint is that all three accept a `GeoCatalog` and consume `iter_rows()` / `query()` to find tiles.
+`random_sampler`, `grid_sampler`, and `stitch` are specified in [`types/geoslice.md`](../types/geoslice.md) — including signatures, area-weighting math, stride math, and the four stitch reduction modes.
+From the catalog's perspective the only API touchpoint is that all three accept a `GeoCatalog` and consume `iter_rows()` / `query()` to find tiles.
 
 ### 6.6 What I'd cut
 
-- `run_inference_with_grid_sampler` — too opinionated. Replace with a 5-line cookbook example. Library shouldn't own the model loop.
+- `run_inference_with_grid_sampler` — too opinionated.
+  Replace with a 5-line cookbook example.
+  Library shouldn't own the model loop.
 - The `dict[str, np.ndarray]` return contract.
 - Hardcoded `torch.long` in the vector loaders; make torch optional, default to numpy with `dtype=np.int64`.
 - `loguru` as a hard dependency — switch to stdlib `logging`.
@@ -404,22 +446,35 @@ The shift from `dict[str, np.ndarray]` to `GeoTensor` is the single biggest clea
 
 ## 7. Sharp edges to fix on the way in
 
-1. **Two literal syntax errors in `dataset_vector.py`** — the file has never run. Tells you tests are sparse.
-2. **`pd.Timestamp.min` / `Timestamp.max` as fallback intervals** for date-less files will dominate `IntervalIndex` ranges and make logs misleading. Either require a date or carry an explicit `static` flag.
-3. **Bounds in unprojected lat/lon get distorted by `WarpedVRT`** — for files spanning the antimeridian or poles, `.bounds` is the *reprojected* envelope, not a great-circle hull. Document this; consider exposing a `densify=N` option that samples the boundary before reprojection.
-4. **`t_sample = interval.left.value / 1e9`** uses `Timestamp.value` (nanoseconds). Fine, but it'll silently break for `Timestamp.min` / `.max` (overflow on the float). Skip random temporal sampling when the interval is "infinite".
-5. **`gpd.overlay` is `O(n × m)`** worst-case despite the R-tree. For `10k × 10k` catalogs this is slow; document the cost or add a chunked variant.
-6. **Hardcoded `nodata=0`** in the xarray merge call. Should respect the source's `_FillValue` / `nodata`.
-7. **`merge_method='count'`** is listed in the raster loader signature but isn't a valid `rasterio.merge` method. Either implement or remove.
-8. **`use_cache=True` + `lru_cache`** on file handles in long-running processes — at fork time these break under multiprocessing dataloaders. Document or disable in worker contexts.
-9. **No tests, no examples** that exercise multi-CRS catalogs (e.g. mixing UTM zones). The most likely real-world failure mode.
-10. **`loguru` everywhere** — gives nice-looking logs but is a hard dep. Bury behind stdlib `logging` so georeader users aren't forced into it.
+1. **Two literal syntax errors in `dataset_vector.py`** — the file has never run.
+   Tells you tests are sparse.
+2. **`pd.Timestamp.min` / `Timestamp.max` as fallback intervals** for date-less files will dominate `IntervalIndex` ranges and make logs misleading.
+   Either require a date or carry an explicit `static` flag.
+3. **Bounds in unprojected lat/lon get distorted by `WarpedVRT`** — for files spanning the antimeridian or poles, `.bounds` is the *reprojected* envelope, not a great-circle hull.
+   Document this; consider exposing a `densify=N` option that samples the boundary before reprojection.
+4. **`t_sample = interval.left.value / 1e9`** uses `Timestamp.value` (nanoseconds).
+   Fine, but it'll silently break for `Timestamp.min` / `.max` (overflow on the float).
+   Skip random temporal sampling when the interval is "infinite".
+5. **`gpd.overlay` is `O(n × m)`** worst-case despite the R-tree.
+   For `10k × 10k` catalogs this is slow; document the cost or add a chunked variant.
+6. **Hardcoded `nodata=0`** in the xarray merge call.
+   Should respect the source's `_FillValue` / `nodata`.
+7. **`merge_method='count'`** is listed in the raster loader signature but isn't a valid `rasterio.merge` method.
+   Either implement or remove.
+8. **`use_cache=True` + `lru_cache`** on file handles in long-running processes — at fork time these break under multiprocessing dataloaders.
+   Document or disable in worker contexts.
+9. **No tests, no examples** that exercise multi-CRS catalogs (e.g. mixing UTM zones).
+   The most likely real-world failure mode.
+10. **`loguru` everywhere** — gives nice-looking logs but is a hard dep.
+    Bury behind stdlib `logging` so georeader users aren't forced into it.
 
 ---
 
 ## 8. End-to-end examples
 
-A varied gallery, organized by intent. Each example uses only the proposed API; small extensions beyond §6 are flagged inline as `# extension:` comments. Imports are kept minimal per snippet — assume `numpy as np`, `pandas as pd` everywhere.
+A varied gallery, organized by intent.
+Each example uses only the proposed API; small extensions beyond §6 are flagged inline as `# extension:` comments.
+Imports are kept minimal per snippet — assume `numpy as np`, `pandas as pd` everywhere.
 
 | § | Example | Pattern |
 | --- | --- | --- |
@@ -650,7 +705,8 @@ for sl in random_sampler(paired, chip_size=(512, 512)):
 
 #### I. SAR + optical fusion (Sentinel-1 GRD + Sentinel-2 L2A)
 
-Different acquisition cadences. Pad each S1 row's interval by ±3 days so `intersect` allows loose temporal pairing, then fuse on load.
+Different acquisition cadences.
+Pad each S1 row's interval by ±3 days so `intersect` allows loose temporal pairing, then fuse on load.
 
 ```python
 from georeader.catalog import build_raster_catalog
@@ -696,7 +752,9 @@ combined = np.concatenate([x_high.values, x_low.values], axis=0)                
 
 #### K. Multi-modal stack: optical + DEM (static) + ERA5 (coarse, lat/lon)
 
-Three backends and two CRSs. DEM has no time → `spatial_only=True`. ERA5 is xarray in EPSG:4326 → reproject the slice on the fly.
+Three backends and two CRSs.
+DEM has no time → `spatial_only=True`.
+ERA5 is xarray in EPSG:4326 → reproject the slice on the fly.
 
 ```python
 from georeader.catalog import build_raster_catalog, build_xarray_catalog, load_raster, load_xarray
@@ -781,7 +839,8 @@ for a, p in temporal_pair_sampler(catalog, (224, 224), 100_000):
 
 #### N. Spatial-block cross-validation (no spatial leakage)
 
-Cluster tile centroids into K spatial blocks; fold by block, never by row. Critical for honest generalization estimates on geospatial models.
+Cluster tile centroids into K spatial blocks; fold by block, never by row.
+Critical for honest generalization estimates on geospatial models.
 
 ```python
 from sklearn.cluster import KMeans
@@ -838,7 +897,9 @@ The new examples lean on a small set of conveniences that aren't in §6's minima
 
 ## 9. Verdict
 
-The snippets are the **right idea, executed roughly**. The shared GeoDataFrame index is genuinely good — the algebra (`intersect` / `union` / `query`) falls out for free, three backends share one shape, and the math is sound (modulo the sharp edges in [§7](#7-sharp-edges-to-fix-on-the-way-in)). The samplers and stitching are textbook but correct.
+The snippets are the **right idea, executed roughly**.
+The shared GeoDataFrame index is genuinely good — the algebra (`intersect` / `union` / `query`) falls out for free, three backends share one shape, and the math is sound (modulo the sharp edges in [§7](#7-sharp-edges-to-fix-on-the-way-in)).
+The samplers and stitching are textbook but correct.
 
 What needs work before promotion to a public georeader API:
 
@@ -859,29 +920,45 @@ The Phase 1 / Phase 2 design is sound; several execution-level concerns deserve 
 
 ### 10.1 Cross-CRS query footgun
 
-The catalog stores all geometries in a uniform target CRS (Phase 1 default: source CRS preserved per-row but reprojected for query; Phase 2 convention from `geoduckdb.md` §4: write all GeoParquet in EPSG:4326). Users querying `WHERE ST_Intersects(geom, AOI)` with AOI in a non-target CRS get **silently empty results** — no error, just no rows. **Mitigation:** provide a `query` helper that takes `(aoi: shapely.Geometry, aoi_crs: pyproj.CRS)` and projects internally before passing to the underlying engine. Make this the canonical path; the raw `gdf.cx[...]` / SQL paths assume the AOI is already in catalog CRS.
+The catalog stores all geometries in a uniform target CRS (Phase 1 default: source CRS preserved per-row but reprojected for query; Phase 2 convention from `geoduckdb.md` §4: write all GeoParquet in EPSG:4326).
+Users querying `WHERE ST_Intersects(geom, AOI)` with AOI in a non-target CRS get **silently empty results** — no error, just no rows.
+**Mitigation:** provide a `query` helper that takes `(aoi: shapely.Geometry, aoi_crs: pyproj.CRS)` and projects internally before passing to the underlying engine.
+Make this the canonical path; the raw `gdf.cx[...]` / SQL paths assume the AOI is already in catalog CRS.
 
 ### 10.2 GeoParquet 1.1 writer adoption is uneven
 
-`geopandas.to_parquet` defaults to GeoParquet 1.0; the per-row bbox column for predicate pushdown requires **GeoParquet 1.1**, which means an explicit `version="1.1"` flag (or whatever the geopandas writer uses) and a `geopandas` version pin. DuckDB's GeoParquet *write* path is newer than its read path. **Mitigation:** pin `geopandas >= 0.14` (or whatever first-shipped 1.1 writer) and `duckdb >= 1.1` explicitly in the package metadata; add a CI test that round-trips a small catalog through `to_geoparquet` → disk → `from_geoparquet` and verifies the bbox column survives.
+`geopandas.to_parquet` defaults to GeoParquet 1.0; the per-row bbox column for predicate pushdown requires **GeoParquet 1.1**, which means an explicit `version="1.1"` flag (or whatever the geopandas writer uses) and a `geopandas` version pin.
+DuckDB's GeoParquet *write* path is newer than its read path.
+**Mitigation:** pin `geopandas >= 0.14` (or whatever first-shipped 1.1 writer) and `duckdb >= 1.1` explicitly in the package metadata; add a CI test that round-trips a small catalog through `to_geoparquet` → disk → `from_geoparquet` and verifies the bbox column survives.
 
 ### 10.3 Phase 2 risk of bit-rot
 
-Most users will stay on Phase 1 (GeoPandas + IntervalIndex) for the 90% case. Phase 2 (DuckDB) won't get exercised unless someone hits the 10⁶+-row threshold. **Risk:** untested code paths on the upgrade. **Mitigation:** gate the Phase 2 release behind one real Phase 2 user (a multi-million-row catalog from your own work, or a community case study); add a multi-million-row CI fixture if no organic user emerges within v0.2.
+Most users will stay on Phase 1 (GeoPandas + IntervalIndex) for the 90% case.
+Phase 2 (DuckDB) won't get exercised unless someone hits the 10⁶+-row threshold.
+**Risk:** untested code paths on the upgrade.
+**Mitigation:** gate the Phase 2 release behind one real Phase 2 user (a multi-million-row catalog from your own work, or a community case study); add a multi-million-row CI fixture if no organic user emerges within v0.2.
 
 ### 10.4 `schema_version` column is reserved, not used yet
 
-GeoParquet schemas evolve. Reserve a `schema_version` column from v0.1 so future migrations are tractable; current Phase 1 schema is de facto v0; bump to v1 the first time we change anything substantive (e.g. add a `n_timesteps` column). Document the migration runbook so this doesn't turn into tribal knowledge.
+GeoParquet schemas evolve.
+Reserve a `schema_version` column from v0.1 so future migrations are tractable; current Phase 1 schema is de facto v0; bump to v1 the first time we change anything substantive (e.g. add a `n_timesteps` column).
+Document the migration runbook so this doesn't turn into tribal knowledge.
 
 ### 10.5 Concurrent write semantics
 
-Phase 1 (GeoPandas in memory) is single-writer. Phase 2 (DuckDB on a shared GeoParquet) is **read-safe** across processes; **write-safe only if you treat Parquet as append-only** (new row groups in new files, not in-place mutation). Document the recommended write pattern; users coordinating multiple crawlers will trip over this.
+Phase 1 (GeoPandas in memory) is single-writer.
+Phase 2 (DuckDB on a shared GeoParquet) is **read-safe** across processes; **write-safe only if you treat Parquet as append-only** (new row groups in new files, not in-place mutation).
+Document the recommended write pattern; users coordinating multiple crawlers will trip over this.
 
 ### 10.6 IntervalIndex edge cases
 
-`pd.IntervalIndex` with `closed="both"` handles overlapping intervals fine, but **back-to-back intervals** (one ends at `t`, next starts at `t`) double-count at the boundary. For sub-daily satellite data this rarely matters; for daily/hourly products it does. Decide on `closed="left"` vs `closed="both"` and stick with it; document the choice.
+`pd.IntervalIndex` with `closed="both"` handles overlapping intervals fine, but **back-to-back intervals** (one ends at `t`, next starts at `t`) double-count at the boundary.
+For sub-daily satellite data this rarely matters; for daily/hourly products it does.
+Decide on `closed="left"` vs `closed="both"` and stick with it; document the choice.
 
 ### 10.7 Adapter scope
 
-The plan mentions STAC read/write adapters and a `GeoDataset` torch adapter. Each adapter is a small library on its own — STAC has its own metadata model that doesn't round-trip cleanly to a GeoDataFrame in all cases (collections vs items, asset-level metadata). **Scope honestly:** v0.1 ships `to_geoparquet` / `from_geoparquet` round-trip; STAC and torch adapters are v0.2+. Don't promise adapters that aren't built.
+The plan mentions STAC read/write adapters and a `GeoDataset` torch adapter.
+Each adapter is a small library on its own — STAC has its own metadata model that doesn't round-trip cleanly to a GeoDataFrame in all cases (collections vs items, asset-level metadata).
+**Scope honestly:** v0.1 ships `to_geoparquet` / `from_geoparquet` round-trip; STAC and torch adapters are v0.2+. Don't promise adapters that aren't built.
 

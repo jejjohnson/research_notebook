@@ -15,8 +15,9 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, window
 ---
 
-> **Module:** `georeader/window_utils.py` (1471 LOC, the second-densest in diagrams)
-> **Role:** the math underneath everything else in the package. Windows, bounds, transforms, rounding, padding, polygon reprojection. Reading these utilities once is the cheapest way to understand why the higher-level `read.py` API is shaped the way it is.
+> **Module:** `georeader/window_utils.py` (1471 LOC, the second-densest in diagrams) **Role:** the math underneath everything else in the package.
+> Windows, bounds, transforms, rounding, padding, polygon reprojection.
+> Reading these utilities once is the cheapest way to understand why the higher-level `read.py` API is shaped the way it is.
 
 ---
 
@@ -28,13 +29,15 @@ Three responsibilities in one file:
 2. **Padding & rounding.** Grow / shrink / round windows so they align with pixel boundaries, fit a fixed CNN input size, or include all partial pixels intersected by a query.
 3. **Polygon ↔ pixel.** Reproject Shapely geometries between CRSs and convert their vertices to pixel-coordinate paths (used by `rasterize` and `vectorize` downstream).
 
-A single design decision sits underneath all of it: `PIXEL_PRECISION = 3` decimal places. Coordinate transforms drift through reprojection round-trips, so the module deliberately tolerates ≤ 0.001-pixel error before deciding "this is or isn't an integer offset."
+A single design decision sits underneath all of it: `PIXEL_PRECISION = 3` decimal places.
+Coordinate transforms drift through reprojection round-trips, so the module deliberately tolerates ≤ 0.001-pixel error before deciding "this is or isn't an integer offset."
 
 ---
 
 ## 2. Window anatomy
 
-A `rasterio.windows.Window` is a rectangle in *pixel* space — not geographic space. The constructor argument order is the source of most bugs that touch this module.
+A `rasterio.windows.Window` is a rectangle in *pixel* space — not geographic space.
+The constructor argument order is the source of most bugs that touch this module.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -64,16 +67,21 @@ A `rasterio.windows.Window` is a rectangle in *pixel* space — not geographic s
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-> **NOTE:** Window constructor order is `(col_off, row_off)` but most geospatial
-> operations use `(row, col)` or `(y, x)` order. **Be careful!**
+> **NOTE:** Window constructor order is `(col_off, row_off)` but most geospatial operations use `(row, col)` or `(y, x)` order.
+> **Be careful!**
 
-That note is in the source verbatim and it earns its caps. Three places this trips people up:
+That note is in the source verbatim and it earns its caps.
+Three places this trips people up:
 
-- `np.zeros(shape)` is `(rows, cols)` = `(height, width)`. A `Window` is `(col_off, row_off, width, height)`. Mismatched axis order between the two has cost more than one afternoon.
-- `pad_window(window, pad_size)` takes `(pad_rows, pad_cols)` — numpy order, **not** Window order. The docstring warns about this.
+- `np.zeros(shape)` is `(rows, cols)` = `(height, width)`.
+  A `Window` is `(col_off, row_off, width, height)`.
+  Mismatched axis order between the two has cost more than one afternoon.
+- `pad_window(window, pad_size)` takes `(pad_rows, pad_cols)` — numpy order, **not** Window order.
+  The docstring warns about this.
 - `pad_window_to_size(window, size)` takes `(height, width)` — numpy order, **not** `(width, height)`.
 
-The module commits to numpy order for axis-tuple arguments because that's what users coming from `np.pad` expect. The Window constructor order is fixed by rasterio.
+The module commits to numpy order for axis-tuple arguments because that's what users coming from `np.pad` expect.
+The Window constructor order is fixed by rasterio.
 
 ---
 
@@ -105,8 +113,11 @@ The module commits to numpy order for axis-tuple arguments because that's what u
 
 Two named functions handle the round-trip:
 
-- **`window_bounds(window, transform) → (minx, miny, maxx, maxy)`** — apply `transform` to the four window corners, return their axis-aligned bounding box. Fast, deterministic, no CRS involved.
-- **`bounds_to_windows(data, bounds_dst, crs_dst) → list[Window]`** — the more interesting one. Reprojects `bounds_dst` from `crs_dst` into `data.crs`, then inverts the transform. Returns a **list** because a query that crosses the antimeridian splits into two windows in the source CRS. Most calls return a length-1 list; AOI bboxes that wrap longitude need length-2 handling.
+- **`window_bounds(window, transform) → (minx, miny, maxx, maxy)`** — apply `transform` to the four window corners, return their axis-aligned bounding box.
+  Fast, deterministic, no CRS involved.
+- **`bounds_to_windows(data, bounds_dst, crs_dst) → list[Window]`** — the more interesting one.
+  Reprojects `bounds_dst` from `crs_dst` into `data.crs`, then inverts the transform.
+  Returns a **list** because a query that crosses the antimeridian splits into two windows in the source CRS. Most calls return a length-1 list; AOI bboxes that wrap longitude need length-2 handling.
 
 The asymmetry — one direction is geometry math, the other is CRS-aware — is why this module is bigger than it might first seem.
 
@@ -114,7 +125,8 @@ The asymmetry — one direction is geometry math, the other is CRS-aware — is 
 
 ## 4. Rounding: outer vs inner
 
-Bounds rarely land on integer pixel boundaries. You have to choose which way to round.
+Bounds rarely land on integer pixel boundaries.
+You have to choose which way to round.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -141,14 +153,16 @@ Bounds rarely land on integer pixel boundaries. You have to choose which way to 
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-Default in georeader: **outer**. Reasons:
+Default in georeader: **outer**.
+Reasons:
 
 - For a read query, "give me everything that intersects this AOI" is what users mean 99% of the time.
 - Combined with `boundless=True` reads, outer rounding plus padding gives you a guaranteed-shape result with no missing data inside the AOI.
 
 `round_inner_window` shows up in two niche cases: when you're cropping to a strict mask (no partial-pixel contamination), and when you're computing the largest *fully covered* sub-window for tile-aligned reads.
 
-Both functions tolerate `PIXEL_PRECISION = 3` slop before rounding — the example in the docstring: `99.9997 → 100`, `100.5 → unchanged`. That tolerance is what lets reprojection round-trips not slowly drift the window by sub-pixel amounts each pass.
+Both functions tolerate `PIXEL_PRECISION = 3` slop before rounding — the example in the docstring: `99.9997 → 100`, `100.5 → unchanged`.
+That tolerance is what lets reprojection round-trips not slowly drift the window by sub-pixel amounts each pass.
 
 ---
 
@@ -158,7 +172,8 @@ Two related functions, both in the "make my tile a fixed size" job.
 
 ### `pad_window(window, pad_size=(pad_rows, pad_cols))`
 
-Symmetric expansion on all four sides. Used to add **context** around an inference tile.
+Symmetric expansion on all four sides.
+Used to add **context** around an inference tile.
 
 ```text
 Original window:              Padded window (pad_size=(2, 3)):
@@ -176,11 +191,13 @@ Output: width = 100 + 2×3 = 106
         row_off = original - 2
 ```
 
-The output window may have **negative offsets** — that's intentional, and you read it via `read_from_window(..., boundless=True)` to pad the off-edge region with `fill_value_default`. (Chapter 3 §6.)
+The output window may have **negative offsets** — that's intentional, and you read it via `read_from_window(..., boundless=True)` to pad the off-edge region with `fill_value_default`.
+(Chapter 3 §6.)
 
 ### `pad_window_to_size(window, size=(height, width))`
 
-Re-centre to a target size. Both expansion *and* contraction work — passing a size smaller than the window gives you a centre crop.
+Re-centre to a target size.
+Both expansion *and* contraction work — passing a size smaller than the window gives you a centre crop.
 
 ```text
 Expansion (size > window):          Contraction (size < window):
@@ -198,7 +215,8 @@ Expansion (size > window):          Contraction (size < window):
 Symmetric expansion             Symmetric contraction
 ```
 
-Odd differences favour the bottom/right edge (integer division). When you need exact symmetry, use `pad_window` with explicit `pad_size`.
+Odd differences favour the bottom/right edge (integer division).
+When you need exact symmetry, use `pad_window` with explicit `pad_size`.
 
 ---
 
@@ -234,7 +252,8 @@ This function is the seam between `read.read_from_bounds` (which calls it) and t
 
 ## 7. Polygon ↔ pixel — exterior coordinates
 
-`window_polygon` is the geometry-aware sibling of `window_bounds`. Returns a Shapely `Polygon` rather than a 4-tuple — important when the transform has rotation/shear (`b ≠ 0` or `d ≠ 0`), where the bounding box and the actual footprint differ.
+`window_polygon` is the geometry-aware sibling of `window_bounds`.
+Returns a Shapely `Polygon` rather than a 4-tuple — important when the transform has rotation/shear (`b ≠ 0` or `d ≠ 0`), where the bounding box and the actual footprint differ.
 
 ```text
 window_surrounding=False (default):     window_surrounding=True:
@@ -251,15 +270,22 @@ Polygon includes full pixels             Polygon passes through pixel centers
 
 The `window_surrounding` flag picks between two valid pixel-footprint conventions:
 
-- **`False` (default)** — the polygon traces the *outside* of the pixel grid. Pixels are areas with non-zero extent. Use when you're computing intersections with vector geometries that should agree with `window_bounds`.
-- **`True`** — the polygon vertices sit at *pixel centres*. Pixels are samples (points) on a regular grid. Use when you're matching against point clouds or building irregular-grid representations.
+- **`False` (default)** — the polygon traces the *outside* of the pixel grid.
+  Pixels are areas with non-zero extent.
+  Use when you're computing intersections with vector geometries that should agree with `window_bounds`.
+- **`True`** — the polygon vertices sit at *pixel centres*.
+  Pixels are samples (points) on a regular grid.
+  Use when you're matching against point clouds or building irregular-grid representations.
 
 The default matches GIS convention; the alternative is needed when interfacing with point-sampling tools (some scipy/skimage routines treat pixels as samples by default).
 
 Companion functions:
 
-- **`polygon_to_crs(polygon, crs_polygon, dst_crs)`** — reproject a Shapely geometry. Works on `Polygon` and `MultiPolygon`; preserves geometry type.
-- **`exterior_pixel_coords(transform, crs, polygon, crs_polygon=None)`** — reproject `polygon` into the raster's CRS, then convert each ring of vertices to pixel coordinates. Returns `List[List[(col, row)]]` (one inner list per polygon part). Used by `rasterize` ([Chapter 9](09_rasterize.md)) to draw filled regions.
+- **`polygon_to_crs(polygon, crs_polygon, dst_crs)`** — reproject a Shapely geometry.
+  Works on `Polygon` and `MultiPolygon`; preserves geometry type.
+- **`exterior_pixel_coords(transform, crs, polygon, crs_polygon=None)`** — reproject `polygon` into the raster's CRS, then convert each ring of vertices to pixel coordinates.
+  Returns `List[List[(col, row)]]` (one inner list per polygon part).
+  Used by `rasterize` ([Chapter 9](09_rasterize.md)) to draw filled regions.
 
 ---
 
@@ -277,7 +303,8 @@ Given two windows:
 - A `dict[str, slice]` to extract the part of `window_read` that **does** overlap `window_data`
 - A `dict[str, (pad_left, pad_right)]` to pad the result so it ends up the requested shape
 
-The reader then reads the slice from disk and applies `np.pad` (or its own `fill_value_default`-aware equivalent) to produce a full-size array. CNN inference at scene edges relies entirely on this — every chip comes back the requested shape, with off-edge regions filled with nodata.
+The reader then reads the slice from disk and applies `np.pad` (or its own `fill_value_default`-aware equivalent) to produce a full-size array.
+CNN inference at scene edges relies entirely on this — every chip comes back the requested shape, with off-edge regions filled with nodata.
 
 Source: [window_utils.py:599](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/window_utils.py#L599).
 
@@ -294,7 +321,8 @@ The companion to `pad_window` for inference pipelines: when you've read a tile *
 4. Stitch extracted regions together to form complete prediction
 ```
 
-The reference is Huang et al. (2018) — the standard tile-and-stitch recipe. Used by ml4floods and similar segmentation pipelines built on georeader.
+The reference is Huang et al. (2018) — the standard tile-and-stitch recipe.
+Used by ml4floods and similar segmentation pipelines built on georeader.
 
 Source: [window_utils.py:1256](https://github.com/spaceml-org/georeader/blob/f0d92f0/georeader/window_utils.py#L1256).
 
@@ -302,7 +330,8 @@ Source: [window_utils.py:1256](https://github.com/spaceml-org/georeader/blob/f0d
 
 ## 10. Function reference
 
-Grouped by purpose. Every function takes / returns `rasterio.Affine`, `rasterio.windows.Window`, or shapely `Polygon`/`MultiPolygon` — no GeoTensor/Reader anywhere in this module.
+Grouped by purpose.
+Every function takes / returns `rasterio.Affine`, `rasterio.windows.Window`, or shapely `Polygon`/`MultiPolygon` — no GeoTensor/Reader anywhere in this module.
 
 **Padding & rounding**
 - `pad_window(window, pad_size=(rows, cols))` — symmetric expansion
@@ -341,12 +370,19 @@ Grouped by purpose. Every function takes / returns `rasterio.Affine`, `rasterio.
 
 ## 11. Sharp edges
 
-- **Window order vs numpy order.** `Window(col_off, row_off, width, height)` — `(x, y, w, h)` in screen-coordinate parlance. `pad_window(pad_size)` is `(rows, cols)` — `(y, x)` in numpy parlance. `pad_window_to_size(size)` is `(height, width)`. The module deliberately uses numpy order for axis-tuple args; the rasterio Window constructor is fixed.
-- **`PIXEL_PRECISION = 3` is module-global.** If you have a workflow with sub-millipixel meaningful precision (you don't, but if), you'd need to thread `precision=` through every call. In practice, 3 is right.
-- **Antimeridian-crossing AOIs return *two* windows.** `bounds_to_windows` returns a list. Code that does `windows[0]` will silently lose half the AOI when an Asia/Pacific bbox is queried.
-- **Rotated transforms break `window_bounds`.** When `b ≠ 0` or `d ≠ 0`, the four-corner bounding box overestimates the data footprint. Use `window_polygon` and intersect against actual geometry.
+- **Window order vs numpy order.** `Window(col_off, row_off, width, height)` — `(x, y, w, h)` in screen-coordinate parlance.
+  `pad_window(pad_size)` is `(rows, cols)` — `(y, x)` in numpy parlance.
+  `pad_window_to_size(size)` is `(height, width)`.
+  The module deliberately uses numpy order for axis-tuple args; the rasterio Window constructor is fixed.
+- **`PIXEL_PRECISION = 3` is module-global.** If you have a workflow with sub-millipixel meaningful precision (you don't, but if), you'd need to thread `precision=` through every call.
+  In practice, 3 is right.
+- **Antimeridian-crossing AOIs return *two* windows.** `bounds_to_windows` returns a list.
+  Code that does `windows[0]` will silently lose half the AOI when an Asia/Pacific bbox is queried.
+- **Rotated transforms break `window_bounds`.** When `b ≠ 0` or `d ≠ 0`, the four-corner bounding box overestimates the data footprint.
+  Use `window_polygon` and intersect against actual geometry.
 - **`figure_out_transform` errors are validation, not bugs.** "ERROR (need bounds)" rows in the table are deliberate — there's no sensible default.
-- **`exterior_pixel_coords` returns col-row, not row-col.** Matches Shapely (x, y) convention. Don't pass it directly to `np.zeros[...]`.
+- **`exterior_pixel_coords` returns col-row, not row-col.** Matches Shapely (x, y) convention.
+  Don't pass it directly to `np.zeros[...]`.
 
 ---
 
@@ -354,10 +390,14 @@ Grouped by purpose. Every function takes / returns `rasterio.Affine`, `rasterio.
 
 Three concrete things `geotoolz.sampling` and `geotoolz.inference` will lean on:
 
-1. **`pad_window` + `slice_save_for_pred`** is the entire ApplyToChips machinery. Read with context, predict, save the centre, stitch.
+1. **`pad_window` + `slice_save_for_pred`** is the entire ApplyToChips machinery.
+   Read with context, predict, save the centre, stitch.
 2. **`bounds_to_windows`** is what a `BoundingBoxSampler` (TorchGeo-style) calls under the hood when chips are specified in geographic coords rather than pixel coords.
-3. **`figure_out_transform`** is the "design my output grid" function. Every reprojection-aware operator (mosaicking, ensemble averaging across scenes) needs it.
+3. **`figure_out_transform`** is the "design my output grid" function.
+   Every reprojection-aware operator (mosaicking, ensemble averaging across scenes) needs it.
 
-You can build the whole `geotoolz.sampling` module without touching anything in `georeader` *except* this file plus `read.py`. That's a clean cut for the operator layer.
+You can build the whole `geotoolz.sampling` module without touching anything in `georeader` *except* this file plus `read.py`.
+That's a clean cut for the operator layer.
 
-Next chapter: [05_read.md](05_read.md) — the high-level reading API (`read_from_bounds`, `read_from_polygon`, `read_from_center_coords`, reprojection / resampling). The single densest module in the package by diagram count, and the one most users touch first.
+Next chapter: [05_read.md](05_read.md) — the high-level reading API (`read_from_bounds`, `read_from_polygon`, `read_from_center_coords`, reprojection / resampling).
+The single densest module in the package by diagram count, and the one most users touch first.

@@ -18,44 +18,34 @@ keywords: design, geotoolz, operators, examples, remote-sensing
 > **Status:** companion to [`geotoolz.md`](../geotoolz.md) — codifies the v0.1 idiom library of observers, control flow, assertions, and small building blocks.
 > **Audience:** anyone composing `geotoolz` pipelines beyond the canned operator surface; anyone deciding which speculative tricks belong in v0.1 vs later.
 
-A reference of small composable Operators that punch above their weight. The
-meta-pattern across all of them: **the `Operator` interface is general enough
-to express things that aren’t just transforms** — side effects, assertions,
-profiling, control flow, error handling, caching, and metadata propagation all
-become first-class composable units.
+A reference of small composable Operators that punch above their weight.
+The meta-pattern across all of them: **the `Operator` interface is general enough to express things that aren’t just transforms** — side effects, assertions, profiling, control flow, error handling, caching, and metadata propagation all become first-class composable units.
 
-Drop them into a `Sequential` like any other op. They follow the same
-config-round-trip rules, plug into Hydra-zen YAML, and respect the carrier
-contract (`GeoTensor → GeoTensor`, even when they don’t transform).
+Drop them into a `Sequential` like any other op.
+They follow the same config-round-trip rules, plug into Hydra-zen YAML, and respect the carrier contract (`GeoTensor → GeoTensor`, even when they don’t transform).
 
 ## Contents
 
-- [Inspection / introspection (Tap family)](#inspection--introspection-tap-family)
-  - [Tap](#tap) · [Snapshot](#snapshot) · [TimeIt / Profile](#timeit--profile) · [Histogram](#histogram) · [ShapeTrace](#shapetrace) · [Spy / Hook](#spy--hook) · [Diff](#diff)
-- [Control flow](#control-flow)
-  - [Branch](#branch) · [Switch](#switch) · [Try / Fallback](#try--fallback) · [Coalesce](#coalesce) · [Retry](#retry)
-- [Composition](#composition)
-  - [Fanout](#fanout) · [ApplyToBands](#applytobands) · [Cache / Memoize](#cache--memoize)
-- [Stateful / ML](#stateful--ml)
-  - [Mode](#mode) · [Provenance / Watermark](#provenance--watermark)
-- [Validation / QC (assertion family)](#validation--qc-assertion-family)
-  - [AssertX](#assertx-recap) · [Quarantine](#quarantine)
-- [Small but load-bearing building blocks](#small-but-load-bearing-building-blocks)
-  - [Identity](#identity) · [Const](#const) · [Lambda](#lambda) · [Sink](#sink) · [Subsample](#subsample)
+- [Inspection / introspection (Tap family)](#inspection--introspection-tap-family) - [Tap](#tap) · [Snapshot](#snapshot) · [TimeIt / Profile](#timeit--profile) · [Histogram](#histogram) · [ShapeTrace](#shapetrace) · [Spy / Hook](#spy--hook) · [Diff](#diff)
+- [Control flow](#control-flow) - [Branch](#branch) · [Switch](#switch) · [Try / Fallback](#try--fallback) · [Coalesce](#coalesce) · [Retry](#retry)
+- [Composition](#composition) - [Fanout](#fanout) · [ApplyToBands](#applytobands) · [Cache / Memoize](#cache--memoize)
+- [Stateful / ML](#stateful--ml) - [Mode](#mode) · [Provenance / Watermark](#provenance--watermark)
+- [Validation / QC (assertion family)](#validation--qc-assertion-family) - [AssertX](#assertx-recap) · [Quarantine](#quarantine)
+- [Small but load-bearing building blocks](#small-but-load-bearing-building-blocks) - [Identity](#identity) · [Const](#const) · [Lambda](#lambda) · [Sink](#sink) · [Subsample](#subsample)
 - [Two design rules](#two-design-rules)
 
 -----
 
 ## Inspection / introspection (Tap family)
 
-The simplest, most powerful family: identity Operators with side effects. They
-let users observe a pipeline without breaking the chain.
+The simplest, most powerful family: identity Operators with side effects.
+They let users observe a pipeline without breaking the chain.
 
 ### Tap
 
-The seed pattern. An identity Operator with a side effect — the `fn` runs, the
-GeoTensor flows through unchanged. Already in the core surface; included here
-because the rest of this section builds on it.
+The seed pattern.
+An identity Operator with a side effect — the `fn` runs, the GeoTensor flows through unchanged.
+Already in the core surface; included here because the rest of this section builds on it.
 
 ```python
 gz.Sequential([
@@ -67,8 +57,8 @@ gz.Sequential([
 
 ### Snapshot
 
-`Tap` that **stores** instead of prints. After the pipeline runs, every named
-intermediate is available for plotting, debugging, or comparison.
+`Tap` that **stores** instead of prints.
+After the pipeline runs, every named intermediate is available for plotting, debugging, or comparison.
 
 ```python
 snap = gz.core.Snapshot()
@@ -99,9 +89,8 @@ class _SnapshotTap(Operator):
     def _apply(self, gt): self.store[self.key] = gt; return gt
 ```
 
-**Tradeoff.** Stores *references*, not copies — if an in-place op downstream
-mutates the array, your snapshot sees it too. Add `copy=True` for safety in
-exploratory work; leave default `False` for hot loops.
+**Tradeoff.** Stores *references*, not copies — if an in-place op downstream mutates the array, your snapshot sees it too.
+Add `copy=True` for safety in exploratory work; leave default `False` for hot loops.
 
 ### TimeIt / Profile
 
@@ -141,15 +130,13 @@ class _TimedOp(Operator):
         return out
 ```
 
-**Tradeoff.** `wrap()` adds one Python frame per op — negligible compared to
-GeoTensor work but visible in microbenchmark territory. For tile-server hot
-paths, profile during development and remove before deploying.
+**Tradeoff.** `wrap()` adds one Python frame per op — negligible compared to GeoTensor work but visible in microbenchmark territory.
+For tile-server hot paths, profile during development and remove before deploying.
 
 ### Histogram
 
-`Tap` that captures **distributions**, not point summaries. Useful for “is
-this band shifted from last week?” or “did my correction blow out the bright
-end?”
+`Tap` that captures **distributions**, not point summaries.
+Useful for “is this band shifted from last week?” or “did my correction blow out the bright end?”
 
 ```python
 hist = gz.core.Histogram(bins=50)
@@ -162,14 +149,13 @@ hist.plot(overlay=True)               # both distributions on one axis
 hist.compare("post_correction", reference="/data/ref_dist.npz")  # vs golden
 ```
 
-**Tradeoff.** Cheap *per call* (one `np.histogram`), expensive in *aggregate*
-if you bin every chip in a 10k-tile run. For ETL monitoring, sample 1% of tiles
-rather than all of them.
+**Tradeoff.** Cheap *per call* (one `np.histogram`), expensive in *aggregate* if you bin every chip in a 10k-tile run.
+For ETL monitoring, sample 1% of tiles rather than all of them.
 
 ### ShapeTrace
 
-Logs shape, dtype, CRS, transform, and bands at every step. Invaluable when an
-op silently strips a band or changes a transform.
+Logs shape, dtype, CRS, transform, and bands at every step.
+Invaluable when an op silently strips a band or changes a transform.
 
 ```python
 gz.Sequential([
@@ -184,8 +170,7 @@ gz.Sequential([
 # step 2: (1, 256, 256) float32 EPSG:32630 res=10  bands=ndvi   ← collapsed
 ```
 
-A diff-mode is the killer feature — only logs *changes* between steps, so a
-20-op pipeline doesn’t drown you in 20 identical lines.
+A diff-mode is the killer feature — only logs *changes* between steps, so a 20-op pipeline doesn’t drown you in 20 identical lines.
 
 ```python
 gz.core.ShapeTrace(mode="diff_only")
@@ -193,14 +178,11 @@ gz.core.ShapeTrace(mode="diff_only")
 
 ### Spy / Hook
 
-Register a callback that fires whenever an op of a specific *type* runs
-anywhere in the graph. Same idea as PyTorch forward hooks, but for operator
-graphs — cross-cutting instrumentation without modifying every Sequential.
+Register a callback that fires whenever an op of a specific *type* runs anywhere in the graph.
+Same idea as PyTorch forward hooks, but for operator graphs — cross-cutting instrumentation without modifying every Sequential.
 
-**Hooks are scoped, never global.** A naive global registry — hooks registered
-in one module firing in another — is a footgun the size of a barn (debug
-output appearing in production, tests leaking hooks into other tests). The
-primary API is a `with` block:
+**Hooks are scoped, never global.** A naive global registry — hooks registered in one module firing in another — is a footgun the size of a barn (debug output appearing in production, tests leaking hooks into other tests).
+The primary API is a `with` block:
 
 ```python
 # Debug: "why is MatchedFilter being called 47 times?"
@@ -248,23 +230,17 @@ class Spy:
                 fn(op, input_gt, output_gt)
 ```
 
-`Operator.__call__` invokes `Spy.fire(self, args, output)` after `_apply`. When
-no `Spy.scoped()` block is active, `_active_spies.get()` returns `()` and the
-firing path is a single empty-tuple iteration.
+`Operator.__call__` invokes `Spy.fire(self, args, output)` after `_apply`.
+When no `Spy.scoped()` block is active, `_active_spies.get()` returns `()` and the firing path is a single empty-tuple iteration.
 
-**Tradeoff.** Scoping is the safe default but it doesn't help when the
-behaviour you want to debug is *deep inside a worker process*. For that case,
-the worker can enter its own `Spy.scoped()` at startup — the contextvar
-behaves correctly under `concurrent.futures` workers. Avoid promoting a
-"global / sticky" `Spy.on` to a public API; if a test or a notebook needs the
-global feel, wrap the whole session in `with Spy.scoped() as s: ...` and
-register at the top.
+**Tradeoff.** Scoping is the safe default but it doesn't help when the behaviour you want to debug is *deep inside a worker process*.
+For that case, the worker can enter its own `Spy.scoped()` at startup — the contextvar behaves correctly under `concurrent.futures` workers.
+Avoid promoting a "global / sticky" `Spy.on` to a public API; if a test or a notebook needs the global feel, wrap the whole session in `with Spy.scoped() as s: ...` and register at the top.
 
 ### Diff
 
-Compares output to a stored reference; raises on drift beyond a tolerance. The
-**pytest of operator pipelines** — drop inline during refactoring to catch
-silent regressions.
+Compares output to a stored reference; raises on drift beyond a tolerance.
+The **pytest of operator pipelines** — drop inline during refactoring to catch silent regressions.
 
 ```python
 gz.Sequential([
@@ -275,10 +251,8 @@ gz.Sequential([
 # raises DiffError("max abs diff 0.0023 exceeds atol=1e-4 at index (0, 142, 89)")
 ```
 
-Workflow: bless a reference once you trust the pipeline output, then `Diff`
-catches any subsequent change. Particularly useful when refactoring a
-`Sequential` into a `Graph` or swapping a primitive — the numbers should
-match, and `Diff` proves it.
+Workflow: bless a reference once you trust the pipeline output, then `Diff` catches any subsequent change.
+Particularly useful when refactoring a `Sequential` into a `Graph` or swapping a primitive — the numbers should match, and `Diff` proves it.
 
 ```python
 # bless mode (run once when you know the pipeline is correct)
@@ -286,20 +260,19 @@ gz.core.Diff.bless("/refs/post_correction.tif")(gt)
 ```
 
 **Tradeoff.** Reference files drift over time as legitimate improvements ship.
-Pair with version pinning: `Diff.against("/refs/v3/...", atol=...)` per
-pipeline version, never overwrite a blessed reference in place.
+Pair with version pinning: `Diff.against("/refs/v3/...", atol=...)` per pipeline version, never overwrite a blessed reference in place.
 
 -----
 
 ## Control flow
 
-The Operator interface is general enough to express conditional execution,
-fallbacks, and retries. Same composition primitives, more interesting graphs.
+The Operator interface is general enough to express conditional execution, fallbacks, and retries.
+Same composition primitives, more interesting graphs.
 
 ### Branch
 
-Conditional execution based on a predicate over the GeoTensor. Apply correction
-only if the input warrants it; otherwise pass through.
+Conditional execution based on a predicate over the GeoTensor.
+Apply correction only if the input warrants it; otherwise pass through.
 
 ```python
 gz.Sequential([
@@ -312,9 +285,8 @@ gz.Sequential([
 ])
 ```
 
-The predicate is a callable rather than an Operator because it’s a *boolean
-decision* about an input, not a transform of it. The two arms are Operators
-because they perform the work.
+The predicate is a callable rather than an Operator because it’s a *boolean decision* about an input, not a transform of it.
+The two arms are Operators because they perform the work.
 
 ### Switch
 
@@ -332,19 +304,16 @@ gz.core.Switch(
 )
 ```
 
-Use this for cross-sensor pipelines where the *same downstream analysis* needs
-sensor-specific preprocessing. The downstream op stays one Sequential; the
-sensor branching lives in one place.
+Use this for cross-sensor pipelines where the *same downstream analysis* needs sensor-specific preprocessing.
+The downstream op stays one Sequential; the sensor branching lives in one place.
 
-**Tradeoff.** A `Switch` with five branches whose bodies share 80% of their
-operators is a code smell — refactor into `Sequential([common_prefix, Switch(...) for the divergent step])`. Don’t let `Switch` become a
-copy-paste vehicle.
+**Tradeoff.** A `Switch` with five branches whose bodies share 80% of their operators is a code smell — refactor into `Sequential([common_prefix, Switch(...) for the divergent step])`.
+Don’t let `Switch` become a copy-paste vehicle.
 
 ### Try / Fallback
 
-Robust to upstream flakiness — if the first op fails, try the fallback. Useful
-for ML inference where a remote model is occasionally unavailable, or for
-batch jobs that should survive transient errors.
+Robust to upstream flakiness — if the first op fails, try the fallback.
+Useful for ML inference where a remote model is occasionally unavailable, or for batch jobs that should survive transient errors.
 
 ```python
 gz.core.Try(
@@ -354,18 +323,14 @@ gz.core.Try(
 )
 ```
 
-Always specify the exception types in `on=`. Catching bare `Exception` masks
-real bugs.
+Always specify the exception types in `on=`.
+Catching bare `Exception` masks real bugs.
 
-**Tradeoff.** Silent fallback can hide deteriorating production conditions —
-“the v2 model has been OOMing for two weeks but Try kept covering it up.” Pair
-with metrics: log every fallback as a counter, alert when the rate exceeds a
-threshold.
+**Tradeoff.** Silent fallback can hide deteriorating production conditions — “the v2 model has been OOMing for two weeks but Try kept covering it up.” Pair with metrics: log every fallback as a counter, alert when the rate exceeds a threshold.
 
 ### Coalesce
 
-First-non-empty across sources — the “S2 first, fall back to Landsat if S2 is
-too cloudy, fall back to MODIS if Landsat is also unavailable” pattern.
+First-non-empty across sources — the “S2 first, fall back to Landsat if S2 is too cloudy, fall back to MODIS if Landsat is also unavailable” pattern.
 
 ```python
 gz.core.Coalesce([
@@ -375,9 +340,8 @@ gz.core.Coalesce([
 ], is_empty=lambda gt: np.isnan(gt).mean() > 0.7)
 ```
 
-Distinct from `Try` — `Coalesce` cascades on a *quality predicate* (the output
-is bad), `Try` cascades on an *exception* (the operator failed). They compose
-naturally:
+Distinct from `Try` — `Coalesce` cascades on a *quality predicate* (the output is bad), `Try` cascades on an *exception* (the operator failed).
+They compose naturally:
 
 ```python
 gz.core.Coalesce([
@@ -388,8 +352,8 @@ gz.core.Coalesce([
 
 ### Retry
 
-Wraps an op with retry + backoff. Most useful for `ModelOp` over a remote API
-or any op touching the network.
+Wraps an op with retry + backoff.
+Most useful for `ModelOp` over a remote API or any op touching the network.
 
 ```python
 gz.core.Retry(
@@ -400,10 +364,8 @@ gz.core.Retry(
 )
 ```
 
-**Tradeoff.** Retries hide latency from upstream callers — a tile server
-request that nominally takes 200ms can spike to 7 seconds because of two
-retries. For latency-sensitive paths, prefer `Try` with a fast fallback over
-`Retry` with backoff.
+**Tradeoff.** Retries hide latency from upstream callers — a tile server request that nominally takes 200ms can spike to 7 seconds because of two retries.
+For latency-sensitive paths, prefer `Try` with a fast fallback over `Retry` with backoff.
 
 -----
 
@@ -413,8 +375,7 @@ Building blocks for graphs that aren’t pure linear chains.
 
 ### Fanout
 
-One input, multiple outputs — useful when you want N derived products from one
-read instead of re-reading the source N times.
+One input, multiple outputs — useful when you want N derived products from one read instead of re-reading the source N times.
 
 ```python
 products = gz.core.Fanout({
@@ -425,37 +386,31 @@ products = gz.core.Fanout({
 # {"ndvi": GeoTensor, "ndwi": GeoTensor, "rgb": GeoTensor}
 ```
 
-For computing many indices on one scene, Fanout reads once and computes once
-per index. Compared to running three separate Sequentials, it’s both faster
-(one read) and more honest (the input GeoTensor is genuinely shared).
+For computing many indices on one scene, Fanout reads once and computes once per index.
+Compared to running three separate Sequentials, it’s both faster (one read) and more honest (the input GeoTensor is genuinely shared).
 
-A `Graph` with a single input and N outputs expresses the same thing more
-formally. `Fanout` is the sugar for the common case.
+A `Graph` with a single input and N outputs expresses the same thing more formally.
+`Fanout` is the sugar for the common case.
 
 ### ApplyToBands
 
-Split-apply-combine over the band axis — applies the inner op to each band
-independently, recombines. Mirrors xarray’s `.groupby()` shape but for bare
-arrays.
+Split-apply-combine over the band axis — applies the inner op to each band independently, recombines.
+Mirrors xarray’s `.groupby()` shape but for bare arrays.
 
 ```python
 # Apply Lee speckle filter independently to each polarisation channel
 gz.core.ApplyToBands(gz.sar.LeeSpeckle(window=7), axis=0)(sar_gt)
 ```
 
-Composable with everything: drop into a Sequential, wrap in Cache, profile
-with TimeIt. The inner op becomes a regular Operator that just happens to run
-N times.
+Composable with everything: drop into a Sequential, wrap in Cache, profile with TimeIt.
+The inner op becomes a regular Operator that just happens to run N times.
 
-**Tradeoff.** Naive implementation is a Python-level for-loop over bands —
-fine for ~10 bands, painful for hyperspectral with ~200. For hyperspectral,
-the inner op should ideally be vectorisable across the band axis directly;
-`ApplyToBands` is the fallback when it isn’t.
+**Tradeoff.** Naive implementation is a Python-level for-loop over bands — fine for ~10 bands, painful for hyperspectral with ~200. For hyperspectral, the inner op should ideally be vectorisable across the band axis directly; `ApplyToBands` is the fallback when it isn’t.
 
 ### Cache / Memoize
 
-Hashes input + operator config, caches the result. Saves hours during
-iterative analysis where you keep re-running the same expensive prefix.
+Hashes input + operator config, caches the result.
+Saves hours during iterative analysis where you keep re-running the same expensive prefix.
 
 ```python
 expensive_prefix = gz.core.Cache(
@@ -491,15 +446,11 @@ class Cache(Operator):
         ).hexdigest()
 ```
 
-The cache key is `(input_hash, inner.config_hash())`. Both must be stable —
-the input hash is on `GeoTensor` content (or a checksum of the source bytes),
-the config hash is what `get_config()` returns canonicalised.
+The cache key is `(input_hash, inner.config_hash())`.
+Both must be stable — the input hash is on `GeoTensor` content (or a checksum of the source bytes), the config hash is what `get_config()` returns canonicalised.
 
-**Tradeoff.** Memory backend is fast but unbounded — wrap with an LRU. Disk
-backend is restart-friendly but you need to garbage-collect old entries. Cache
-must opt-in (`Cache(...)` wraps explicitly), never silent — if `Cache` ever
-becomes a default, debugging “why does my pipeline produce stale output”
-becomes a nightmare.
+**Tradeoff.** Memory backend is fast but unbounded — wrap with an LRU. Disk backend is restart-friendly but you need to garbage-collect old entries.
+Cache must opt-in (`Cache(...)` wraps explicitly), never silent — if `Cache` ever becomes a default, debugging “why does my pipeline produce stale output” becomes a nightmare.
 
 -----
 
@@ -509,12 +460,9 @@ Operators that hold state across calls or interact with the broader runtime.
 
 ### Mode
 
-Train / eval switching for pipelines that mix deterministic preprocessing with
-train-only operators (augmentation, dropout-like ops). The lesson from PyTorch
-is that *implicit, instance-level, sticky* `train()` / `eval()` is a footgun —
-"I forgot to call `.eval()` on the batchnorm" is the well-known bug. `geotoolz`
-takes the **scoped, explicit** path: mode is a context manager on a Sequential,
-not a sticky attribute on the operator graph.
+Train / eval switching for pipelines that mix deterministic preprocessing with train-only operators (augmentation, dropout-like ops).
+The lesson from PyTorch is that *implicit, instance-level, sticky* `train()` / `eval()` is a footgun — "I forgot to call `.eval()` on the batchnorm" is the well-known bug.
+`geotoolz` takes the **scoped, explicit** path: mode is a context manager on a Sequential, not a sticky attribute on the operator graph.
 
 ```python
 pipe = gz.Sequential([
@@ -561,22 +509,17 @@ class _ModeGated(Operator):
         return gt
 ```
 
-`Sequential._apply` threads the current `_mode` to `_ModeGated` children
-explicitly (a private kwarg or a contextvar — either works; the contextvar form
-nests cleanly for `Sequential`-in-`Sequential`). Either way, **there is no
-"current mode" without an active `with` block** — a defensive default that
-prevents the PyTorch bug at construction time.
+`Sequential._apply` threads the current `_mode` to `_ModeGated` children explicitly (a private kwarg or a contextvar — either works; the contextvar form nests cleanly for `Sequential`-in-`Sequential`).
+Either way, **there is no "current mode" without an active `with` block** — a defensive default that prevents the PyTorch bug at construction time.
 
-**Tradeoff.** Slightly more verbose than `pipe.train()` / `pipe.eval()`. The
-verbosity is the feature — every train-mode invocation is grep-able in source,
-and code that forgets to enter the scope fails loudly instead of silently
-producing augmented "validation" tensors.
+**Tradeoff.** Slightly more verbose than `pipe.train()` / `pipe.eval()`.
+The verbosity is the feature — every train-mode invocation is grep-able in source, and code that forgets to enter the scope fails loudly instead of silently producing augmented "validation" tensors.
 
 ### Provenance / Watermark
 
-Operator graph stamps lineage metadata into the output GeoTensor. Survives
-subsequent transformations, lands in the COG header on save. Now your output
-COGs *know* what produced them.
+Operator graph stamps lineage metadata into the output GeoTensor.
+Survives subsequent transformations, lands in the COG header on save.
+Now your output COGs *know* what produced them.
 
 ```python
 pipe = gz.core.Provenance.wrap(my_methane_pipeline)
@@ -594,29 +537,22 @@ out.metadata["provenance"]
 georeader.save_cog(out, "/out/methane.tif")  # provenance baked into COG tags
 ```
 
-Pairs naturally with the pinned-artifact pattern from the [use-cases doc](usecases.md#9-pinned--hashed-regulatory-artifact)
-— the provenance metadata in the COG references the artifact hash, so a
-consumer years later can chase the COG back to the exact pipeline that
-produced it.
+Pairs naturally with the pinned-artifact pattern from the [use-cases doc](usecases.md#9-pinned--hashed-regulatory-artifact) — the provenance metadata in the COG references the artifact hash, so a consumer years later can chase the COG back to the exact pipeline that produced it.
 
-**Tradeoff.** Provenance metadata grows with every wrap — a deeply-nested
-Graph produces a large lineage record. Cap at a reasonable depth, or store
-the full graph hash and a small operator-name summary rather than every
-config. Don’t let provenance bloat overshadow the pixel data.
+**Tradeoff.** Provenance metadata grows with every wrap — a deeply-nested Graph produces a large lineage record.
+Cap at a reasonable depth, or store the full graph hash and a small operator-name summary rather than every config. Don’t let provenance bloat overshadow the pixel data.
 
 -----
 
 ## Validation / QC (assertion family)
 
-The other identity-with-side-effect family — pass-through Operators that
-*check* invariants rather than observe state. See
-[the QC use case](usecases.md#8-data-validation--qc-as-operators)
-for the full pattern.
+The other identity-with-side-effect family — pass-through Operators that *check* invariants rather than observe state.
+See [the QC use case](usecases.md#8-data-validation--qc-as-operators) for the full pattern.
 
 ### AssertX (recap)
 
-A family of pass-through Operators that raise (or warn) on contract
-violations. Drop anywhere in a pipeline.
+A family of pass-through Operators that raise (or warn) on contract violations.
+Drop anywhere in a pipeline.
 
 ```python
 gz.Sequential([
@@ -629,8 +565,8 @@ gz.Sequential([
 
 ### Quarantine
 
-Non-raising QC: routes bad GeoTensors to a sidecar location for later
-debugging, and lets the pipeline continue. The “log_and_continue” of QC.
+Non-raising QC: routes bad GeoTensors to a sidecar location for later debugging, and lets the pipeline continue.
+The “log_and_continue” of QC.
 
 ```python
 gz.Sequential([
@@ -644,19 +580,14 @@ gz.Sequential([
 ])
 ```
 
-Behaviour: if the inner check passes, GeoTensor flows through. If it fails,
-the GeoTensor is written to the sink with the failure reason as sidecar
-metadata, the pipeline returns a sentinel (e.g. an all-NaN GeoTensor of the
-same shape), and downstream ops skip it gracefully.
+Behaviour: if the inner check passes, GeoTensor flows through.
+If it fails, the GeoTensor is written to the sink with the failure reason as sidecar metadata, the pipeline returns a sentinel (e.g. an all-NaN GeoTensor of the same shape), and downstream ops skip it gracefully.
 
-The orchestrator gets a “look here for bad data” pile that grows over time —
-a free dataset of failure modes for debugging and improving upstream readers.
+The orchestrator gets a “look here for bad data” pile that grows over time — a free dataset of failure modes for debugging and improving upstream readers.
 
-**Tradeoff.** Quarantine is a *hedge* — it trades immediate failure for
-delayed debugging. Don’t quarantine errors that indicate genuine bugs (wrong
-CRS, wrong band order); those should `raise`. Quarantine is for *expected
-edge cases* in the data (corrupt scenes, partial downloads, sensor
-glitches).
+**Tradeoff.** Quarantine is a *hedge* — it trades immediate failure for delayed debugging.
+Don’t quarantine errors that indicate genuine bugs (wrong CRS, wrong band order); those should `raise`.
+Quarantine is for *expected edge cases* in the data (corrupt scenes, partial downloads, sensor glitches).
 
 -----
 
@@ -666,9 +597,8 @@ Boring on their own, indispensable in combination.
 
 ### Identity
 
-Explicit no-op. The right thing to put in a `Branch` default, a `Switch`
-unmatched case, or anywhere a pipeline structurally needs an Operator but you
-have no work to do.
+Explicit no-op.
+The right thing to put in a `Branch` default, a `Switch` unmatched case, or anywhere a pipeline structurally needs an Operator but you have no work to do.
 
 ```python
 class Identity(Operator):
@@ -680,14 +610,14 @@ class Identity(Operator):
 gz.core.Branch(predicate=is_clean, if_true=gz.core.Identity(), if_false=cleanup)
 ```
 
-Use `Identity` rather than passing `None`. It serialises, it composes, it
-shows up in `repr()` and `ShapeTrace` output. Being explicit about no-ops
-makes them visible.
+Use `Identity` rather than passing `None`.
+It serialises, it composes, it shows up in `repr()` and `ShapeTrace` output.
+Being explicit about no-ops makes them visible.
 
 ### Const
 
-Returns a fixed GeoTensor regardless of input. Great for golden test fixtures
-and as a synthetic source in `Switch` defaults.
+Returns a fixed GeoTensor regardless of input.
+Great for golden test fixtures and as a synthetic source in `Switch` defaults.
 
 ```python
 class Const(Operator):
@@ -724,16 +654,15 @@ gz.Sequential([
 ])
 ```
 
-**Tradeoff.** Closures aren’t config-round-trippable. `Lambda` should be
-flagged `forbid_in_yaml=True` — research-only, never ships to prod. The first
-time a `Lambda` recurs, refactor it into a real Operator subclass with a name.
+**Tradeoff.** Closures aren’t config-round-trippable.
+`Lambda` should be flagged `forbid_in_yaml=True` — research-only, never ships to prod.
+The first time a `Lambda` recurs, refactor it into a real Operator subclass with a name.
 
 ### Sink
 
-A terminal write Operator that’s still composable. The classic write op
-(e.g. `WriteCOG`) returns nothing, which means it can’t be `Tap`-ped or
-`Snapshot`-ed and breaks cleanly into other ops. `Sink` writes *and* returns
-the input unchanged.
+A terminal write Operator that’s still composable.
+The classic write op (e.g. `WriteCOG`) returns nothing, which means it can’t be `Tap`-ped or `Snapshot`-ed and breaks cleanly into other ops.
+`Sink` writes *and* returns the input unchanged.
 
 ```python
 class Sink(Operator):
@@ -751,15 +680,11 @@ gz.Sequential([
 ])
 ```
 
-Useful for debugging (“what did the pipeline look like at step 3?”), for
-checkpointing long pipelines (write intermediate to disk in case the rest
-crashes), and for branching analysis (write intermediate, continue with final
-product).
+Useful for debugging (“what did the pipeline look like at step 3?”), for checkpointing long pipelines (write intermediate to disk in case the rest crashes), and for branching analysis (write intermediate, continue with final product).
 
 ### Subsample
 
-Random pixel sample inside a `Tap`-style op, for fast viz off a
-full-resolution GeoTensor without re-reading.
+Random pixel sample inside a `Tap`-style op, for fast viz off a full-resolution GeoTensor without re-reading.
 
 ```python
 gz.Sequential([
@@ -768,18 +693,15 @@ gz.Sequential([
 ])
 ```
 
-Or as a standalone transform that returns a smaller GeoTensor (decimated, with
-an updated transform):
+Or as a standalone transform that returns a smaller GeoTensor (decimated, with an updated transform):
 
 ```python
 small_gt = gz.core.Subsample(stride=10)(big_gt)  # every 10th pixel
 plt.imshow(small_gt.values)
 ```
 
-**Tradeoff.** Random subsampling biases summary statistics for non-uniform
-fields (e.g., concentrated NDVI hotspots in mostly-bare scenes). For fair
-visualisation, use stride-based subsampling; for fair statistics, use
-weighted random sampling.
+**Tradeoff.** Random subsampling biases summary statistics for non-uniform fields (e.g., concentrated NDVI hotspots in mostly-bare scenes).
+For fair visualisation, use stride-based subsampling; for fair statistics, use weighted random sampling.
 
 -----
 
@@ -789,9 +711,9 @@ These keep the surface tractable as the trick library grows.
 
 ### 1. Honest naming
 
-Don’t disguise an assertion as a transform. Don’t disguise a side effect as a
-computation. Users should be able to scan a Sequential and immediately see
-which steps mutate, which observe, which guard, and which control flow.
+Don’t disguise an assertion as a transform.
+Don’t disguise a side effect as a computation.
+Users should be able to scan a Sequential and immediately see which steps mutate, which observe, which guard, and which control flow.
 
 ```python
 # Good — the role of each step is obvious
@@ -813,21 +735,17 @@ Naming convention (suggested):
 
 ### 2. Round-trip discipline
 
-Operators that hold closures (`Tap`, `Lambda`, `Branch` with a callable
-predicate, `Spy` hooks) **cannot** round-trip to YAML faithfully. Their
-`get_config()` is a debug repr, not a faithful serialisation.
+Operators that hold closures (`Tap`, `Lambda`, `Branch` with a callable predicate, `Spy` hooks) **cannot** round-trip to YAML faithfully.
+Their `get_config()` is a debug repr, not a faithful serialisation.
 
 The library should:
 
 - Flag those Operators with `forbid_in_yaml = True`
 - Have the YAML loader refuse to instantiate any operator with that flag set
-- Have the YAML dumper raise (loudly) if asked to serialise a graph
-  containing one
+- Have the YAML dumper raise (loudly) if asked to serialise a graph containing one
 
-Production pipelines never contain closures. This keeps the “operator graph
-as audit artifact” guarantee from the [regulatory artifact use case](usecases.md#9-pinned--hashed-regulatory-artifact)
-honest — every operator in a regulatory artifact has a stable config, every
-config round-trips, every artifact reruns to the same answer.
+Production pipelines never contain closures.
+This keeps the “operator graph as audit artifact” guarantee from the [regulatory artifact use case](usecases.md#9-pinned--hashed-regulatory-artifact) honest — every operator in a regulatory artifact has a stable config, every config round-trips, every artifact reruns to the same answer.
 
 -----
 
@@ -848,5 +766,5 @@ Once these primitives exist, **most user “Operator subclass” needs go away.*
 |`WithProvenance`    |`Provenance.wrap(my_pipeline)`                                |
 |`S2OrLandsatNDVI`   |`Switch(key="sensor", cases={...})`                           |
 
-The library’s primitive set does the work; users compose. Adding a new trick
-adds one Operator, not a family of variants.
+The library’s primitive set does the work; users compose.
+Adding a new trick adds one Operator, not a family of variants.

@@ -15,7 +15,15 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, query, download
 ---
 
-> **Modules** (all small): - `query_utils.py` (80 LOC) — generic spatial-overlap helpers - `scihubcopernicus_query.py` (111 LOC) — Copernicus SciHub query (Sentinel-1/2/3) - `download_utils.py` (61 LOC) — generic HTTP-with-auth download - `download_pv_product.py` (328 LOC) — Proba-V product download from VITO - `tileserver.py` (68 LOC) — XYZ tileserver consumer  **Role:** the **discovery and acquisition** plumbing.
+> **Modules** (all small):
+>
+> - `query_utils.py` (80 LOC) — generic spatial-overlap helpers
+> - `scihubcopernicus_query.py` (111 LOC) — Copernicus SciHub query (Sentinel-1/2/3)
+> - `download_utils.py` (61 LOC) — generic HTTP-with-auth download
+> - `download_pv_product.py` (328 LOC) — Proba-V product download from VITO
+> - `tileserver.py` (68 LOC) — XYZ tileserver consumer
+>
+> **Role:** the **discovery and acquisition** plumbing.
 > Find scenes by AOI + time, download them, or read from a web tile server.
 > **No ASCII diagrams in any of these.** They're all small utility modules.
 

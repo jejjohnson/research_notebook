@@ -26,12 +26,18 @@ They follow the same config-round-trip rules, plug into Hydra-zen YAML, and resp
 
 ## Contents
 
-- [Inspection / introspection (Tap family)](#inspection--introspection-tap-family) - [Tap](#tap) · [Snapshot](#snapshot) · [TimeIt / Profile](#timeit--profile) · [Histogram](#histogram) · [ShapeTrace](#shapetrace) · [Spy / Hook](#spy--hook) · [Diff](#diff)
-- [Control flow](#control-flow) - [Branch](#branch) · [Switch](#switch) · [Try / Fallback](#try--fallback) · [Coalesce](#coalesce) · [Retry](#retry)
-- [Composition](#composition) - [Fanout](#fanout) · [ApplyToBands](#applytobands) · [Cache / Memoize](#cache--memoize)
-- [Stateful / ML](#stateful--ml) - [Mode](#mode) · [Provenance / Watermark](#provenance--watermark)
-- [Validation / QC (assertion family)](#validation--qc-assertion-family) - [AssertX](#assertx-recap) · [Quarantine](#quarantine)
-- [Small but load-bearing building blocks](#small-but-load-bearing-building-blocks) - [Identity](#identity) · [Const](#const) · [Lambda](#lambda) · [Sink](#sink) · [Subsample](#subsample)
+- [Inspection / introspection (Tap family)](#inspection--introspection-tap-family)
+  - [Tap](#tap) · [Snapshot](#snapshot) · [TimeIt / Profile](#timeit--profile) · [Histogram](#histogram) · [ShapeTrace](#shapetrace) · [Spy / Hook](#spy--hook) · [Diff](#diff)
+- [Control flow](#control-flow)
+  - [Branch](#branch) · [Switch](#switch) · [Try / Fallback](#try--fallback) · [Coalesce](#coalesce) · [Retry](#retry)
+- [Composition](#composition)
+  - [Fanout](#fanout) · [ApplyToBands](#applytobands) · [Cache / Memoize](#cache--memoize)
+- [Stateful / ML](#stateful--ml)
+  - [Mode](#mode) · [Provenance / Watermark](#provenance--watermark)
+- [Validation / QC (assertion family)](#validation--qc-assertion-family)
+  - [AssertX](#assertx-recap) · [Quarantine](#quarantine)
+- [Small but load-bearing building blocks](#small-but-load-bearing-building-blocks)
+  - [Identity](#identity) · [Const](#const) · [Lambda](#lambda) · [Sink](#sink) · [Subsample](#subsample)
 - [Two design rules](#two-design-rules)
 
 -----

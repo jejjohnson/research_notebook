@@ -15,7 +15,12 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, spot, probav
 ---
 
-> **Modules:** - `georeader/readers/spotvgt_image_operational.py` (389 LOC) - `georeader/readers/probav_image_operational.py` (701 LOC) **Role:** read SPOT VGT and Proba-V — two coarse-resolution operational vegetation-monitoring sensors that pre-date the Sentinel-2 era.
+> **Modules:**
+>
+> - `georeader/readers/spotvgt_image_operational.py` (389 LOC)
+> - `georeader/readers/probav_image_operational.py` (701 LOC)
+>
+> **Role:** read SPOT VGT and Proba-V — two coarse-resolution operational vegetation-monitoring sensors that pre-date the Sentinel-2 era.
 > **No ASCII diagrams in either file.** They're operational readers built before the docstring-illustration push.
 
 ---

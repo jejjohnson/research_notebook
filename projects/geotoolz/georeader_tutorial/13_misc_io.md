@@ -15,7 +15,13 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, io
 ---
 
-> **Modules:** - `georeader/io.py` (113 LOC) — NetCDF safe-open - `georeader/dataarray.py` (145 LOC) — xarray bridge - `georeader/plot.py` (336 LOC) — matplotlib helpers **Role:** the connective tissue.
+> **Modules:**
+>
+> - `georeader/io.py` (113 LOC) — NetCDF safe-open
+> - `georeader/dataarray.py` (145 LOC) — xarray bridge
+> - `georeader/plot.py` (336 LOC) — matplotlib helpers
+>
+> **Role:** the connective tissue.
 > Each module is small, focused, and invisible until you need it.
 > **Diagrams:** none.
 > These files don't have ASCII art — they're pure utility code.

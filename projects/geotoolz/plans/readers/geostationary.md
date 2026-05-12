@@ -22,7 +22,10 @@ keywords: design, readers, goes, seviri
 - [User Story](#user-story)
 - [Motivation](#motivation)
 - [Mathematics](#mathematics)
-- [Target API](#target-api) - [Track A — Clean `+proj=geos` affine](#track-a--clean-projgeos-affine-goes-abi-mtg-fci) - [Track B — Irregular file formats](#track-b--irregular-file-formats-seviri-ahi) - [Public bucket helpers](#public-bucket-helpers)
+- [Target API](#target-api)
+  - [Track A — Clean `+proj=geos` affine](#track-a--clean-projgeos-affine-goes-abi-mtg-fci)
+  - [Track B — Irregular file formats](#track-b--irregular-file-formats-seviri-ahi)
+  - [Public bucket helpers](#public-bucket-helpers)
 - [Example Use Cases](#example-use-cases)
 - [Subtasks](#subtasks)
 

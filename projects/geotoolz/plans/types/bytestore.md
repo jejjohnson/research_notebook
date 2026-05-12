@@ -34,7 +34,7 @@ Concretely:
 
 - [`AsyncGeoTIFFReader`](../georeader/reader_async_geotiff.md) accepts a `store: obspec.AsyncStore | None` kwarg and forwards it straight to `async_geotiff.GeoTIFF.open(path, store=store)`.
   The Rust core handles range requests, coalescing, decoding off the event loop.
-- [`RasterioReader`](reader_rasterio.md) is unchanged on the bytes side — it routes through GDAL VSI / fsspec / a user-supplied `opener=` callback.
+- [`RasterioReader`](../georeader/reader_rasterio.md) is unchanged on the bytes side — it routes through GDAL VSI / fsspec / a user-supplied `opener=` callback.
   There is no `store=` kwarg.
 - The [`Credential`](credentials.md) Protocol exposes small `to_obstore_*_store()` helpers that build a real `obstore.S3Store` / `GCSStore` / `AzureStore`.
   Those satisfy `obspec.AsyncStore` because `obstore` is the reference implementation of the `obspec` Protocol.

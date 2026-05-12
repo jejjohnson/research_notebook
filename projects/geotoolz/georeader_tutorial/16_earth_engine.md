@@ -15,7 +15,13 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, gee
 ---
 
-> **Modules:** - `georeader/readers/ee_image.py` (539 LOC) - `georeader/readers/ee_query.py` (589 LOC) - `georeader/readers/ee_utils.py` (58 LOC) **Role:** export raster data from Google Earth Engine into `GeoTensor`s, handling GEE's request-size limits through recursive tile splitting and parallel downloads.
+> **Modules:**
+>
+> - `georeader/readers/ee_image.py` (539 LOC)
+> - `georeader/readers/ee_query.py` (589 LOC)
+> - `georeader/readers/ee_utils.py` (58 LOC)
+>
+> **Role:** export raster data from Google Earth Engine into `GeoTensor`s, handling GEE's request-size limits through recursive tile splitting and parallel downloads.
 
 ---
 

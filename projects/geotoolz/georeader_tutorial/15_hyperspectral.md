@@ -15,7 +15,13 @@ license: CC-BY-4.0
 keywords: tutorial, georeader, emit, prisma, enmap
 ---
 
-> **Modules:** - `georeader/readers/emit.py` (1102 LOC) - `georeader/readers/prisma.py` (571 LOC) - `georeader/readers/enmap.py` (865 LOC) **Role:** read three hyperspectral satellite sensors — EMIT (NASA, ISS, 285 bands), PRISMA (ASI, 239 bands), EnMAP (DLR, 224 bands).
+> **Modules:**
+>
+> - `georeader/readers/emit.py` (1102 LOC)
+> - `georeader/readers/prisma.py` (571 LOC)
+> - `georeader/readers/enmap.py` (865 LOC)
+>
+> **Role:** read three hyperspectral satellite sensors — EMIT (NASA, ISS, 285 bands), PRISMA (ASI, 239 bands), EnMAP (DLR, 224 bands).
 > All cover ~400–2500 nm with ~10 nm spectral sampling.
 > The three readers share a design pattern but diverge on georeferencing — that's the interesting part.
 

@@ -23,7 +23,10 @@ keywords: design, readers, modis, viirs
 - [User Story](#user-story)
 - [Motivation](#motivation)
 - [Mathematics: The Curvilinear Transformation](#mathematics-the-curvilinear-transformation)
-- [Target API](#target-api) - [MODIS L1B reader](#modis-l1b-reader) - [VIIRS L1B reader](#viirs-l1b-reader) - [Variations within the family](#variations-within-the-family)
+- [Target API](#target-api)
+  - [MODIS L1B reader](#modis-l1b-reader)
+  - [VIIRS L1B reader](#viirs-l1b-reader)
+  - [Variations within the family](#variations-within-the-family)
 - [Example Use Cases](#example-use-cases)
 - [Subtasks](#subtasks)
 - [Open Design Question](#open-design-question)
@@ -409,7 +412,11 @@ Three in the established style:
 
 The single biggest open design question, worth resolving before locking anything down:
 
-> **Where does `dedupe_bowtie` live?** Three options:  1. As a method on the reader (`obj.dedupe_bowtie()` returns a new reader) 2. As a free function in `_swath.py` (users call it on raw arrays) 3. As a kwarg at construction time (`MODIS_L1B(..., bowtie_dedupe=True)`)
+> **Where does `dedupe_bowtie` live?** Three options:
+>
+> 1. As a method on the reader (`obj.dedupe_bowtie()` returns a new reader)
+> 2. As a free function in `_swath.py` (users call it on raw arrays)
+> 3. As a kwarg at construction time (`MODIS_L1B(..., bowtie_dedupe=True)`)
 
 The PRISMA reader doesn't have analogous concerns so there's no precedent.
 **Instinct: the method form** — leaves the default behavior untouched (all pixels exposed), but gives users a clean opt-in for resampling pipelines that need it.

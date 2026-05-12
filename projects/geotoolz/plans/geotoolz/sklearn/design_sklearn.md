@@ -491,7 +491,10 @@ Roughly 15 operators / utilities; the estimator wrappers are the user-facing API
 
 - `gz.sklearn.ToPixelMajor()` — `(C, H, W) → PixelTable (H*W, C)`
 - `gz.sklearn.FromPixelMajor()` — inverse
-- `gz.sklearn.ToTemporalPixelMajor(time_handling=...)` — `(C, T, H, W) → PixelTable` - `time_handling="features"` → `(H*W, T*C)` - `time_handling="samples"`  → `(H*W*T, C)` - `time_handling="panel"`    → `PanelTable (H*W, C, T)`
+- `gz.sklearn.ToTemporalPixelMajor(time_handling=...)` — `(C, T, H, W) → PixelTable`
+  - `time_handling="features"` → `(H*W, T*C)`
+  - `time_handling="samples"`  → `(H*W*T, C)`
+  - `time_handling="panel"`    → `PanelTable (H*W, C, T)`
 - `gz.sklearn.FromTemporalPixelMajor()` — inverse (output shape determined by estimator’s per-row output)
 - `gz.sklearn.ToChipMajor()` — `(C, H, W) → (1, C*H*W)` for scene-level
 - `gz.sklearn.ToBandMajor()` — `(C, H, W) → (C, H*W)` for spectral clustering

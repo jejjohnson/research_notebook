@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.1.8](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.7...research_notebook-v0.1.8) (2026-05-12)
+
+
+### Bug Fixes
+
+* **docs:** render geostack_notes diagrams via book-theme custom CSS ([#61](https://github.com/jejjohnson/research_notebook/issues/61)) ([5911cba](https://github.com/jejjohnson/research_notebook/commit/5911cba626c94f28d9f3dacfe42c3e532a42fa7a))
+
+
+### Documentation
+
+* **geotoolz:** add examples gallery; fix geostack_notes diagram rendering ([#62](https://github.com/jejjohnson/research_notebook/issues/62)) ([3816174](https://github.com/jejjohnson/research_notebook/commit/3816174028f7b8bd3a46a6df6bd3e9ebc52e4aa7))
+* **geotoolz:** drop LazyCOGReader; thin async reader over async-geotiff + obspec ([#57](https://github.com/jejjohnson/research_notebook/issues/57)) ([db982b0](https://github.com/jejjohnson/research_notebook/commit/db982b029c57cb244899040d3c6394bebbfa44ad))
+* **geotoolz:** replace ascii + mermaid diagrams with html in geostack_notes ([#60](https://github.com/jejjohnson/research_notebook/issues/60)) ([3b00048](https://github.com/jejjohnson/research_notebook/commit/3b00048595821d44e4f8ac700e4b4226ed880384))
+* **geotoolz:** sklearn + skimage bridges; ventilated prose across all docs ([#63](https://github.com/jejjohnson/research_notebook/issues/63)) ([be676f0](https://github.com/jejjohnson/research_notebook/commit/be676f0ec4df87c0f27871702361c66c068c08b3))
+* **plume_simulation:** migrate roadmap notes to mystmd format ([#59](https://github.com/jejjohnson/research_notebook/issues/59)) ([8f69930](https://github.com/jejjohnson/research_notebook/commit/8f69930664b1a459d0e83a18fe6492aedc1f58b8))
+
 ## [0.1.7](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.6...research_notebook-v0.1.7) (2026-05-08)
 
 

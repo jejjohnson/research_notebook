@@ -133,6 +133,14 @@ project:
                       children:
                         - file: projects/geotoolz/plans/geotoolz/examples/usecases.md
                         - file: projects/geotoolz/plans/geotoolz/examples/tips_n_tricks.md
+                    - title: scikit-image bridge
+                      children:
+                        - file: projects/geotoolz/plans/geotoolz/skimage/design_skimage.md
+                        - file: projects/geotoolz/plans/geotoolz/skimage/examples_skimage.md
+                    - title: scikit-learn bridge
+                      children:
+                        - file: projects/geotoolz/plans/geotoolz/sklearn/design_sklearn.md
+                        - file: projects/geotoolz/plans/geotoolz/sklearn/examples_sklearn.md
                 - title: Reader reconciliation
                   children:
                     - file: projects/geotoolz/plans/georeader/README.md

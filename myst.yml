@@ -123,6 +123,10 @@ project:
           children:
             - file: projects/geotoolz/geostack_notes.md
             - file: projects/geotoolz/operational_attribution.md
+            - title: Tutorials
+              children:
+                - file: projects/geotoolz/tutorials/spatiotemporal_data.md
+                - file: projects/geotoolz/tutorials/spatiotemporal_operators.md
             - title: Plans
               children:
                 - title: geotoolz

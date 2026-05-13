@@ -18,7 +18,7 @@ keywords: design, geodatabase, catalog, geoparquet
 > **Status:** design proposal — split into two phases (Phase 1 + Phase 2 below).
 > **Shipping shape:** incubated as `geotoolz.catalog` inside the `geotoolz` library — *not* a standalone `geocatalog` package at v0.1. Graduation is future work, gated on API stability and a real external user that wants the catalog without the operator algebra. See [`geopatcher/README.md`](../geopatcher/README.md) for the same incubation pattern; both submodules graduate together or independently when their APIs settle.
 > **Scope:** a single `GeoCatalog` Protocol with two backends — an in-memory GeoDataFrame (Phase 1) and a DuckDB-backed GeoParquet store (Phase 2) — that share the same query API and the same `GeoSlice` unit of work.
-> **Audience:** anyone touching the `geotoolz.catalog` submodule, or building downstream pipelines (`geotoolz.ops.CatalogPipeline`, ML training set builders) that consume catalogs.
+> **Audience:** anyone touching the `geotoolz.catalog` submodule, or building downstream pipelines (`geotoolz.catalog_ops.CatalogPipeline`, ML training set builders) that consume catalogs.
 
 ---
 

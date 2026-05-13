@@ -16,8 +16,9 @@ keywords: design, geopatcher, patching, locality, streaming, geotoolz
 ---
 
 > **Status:** design proposal — three companion documents below (`design.md`, `examples.md`, `scaling.md`).
+> **Shipping shape:** incubated as `geotoolz.patch` inside the `geotoolz` library — *not* a standalone package at v0.1. Graduation to a standalone `geopatcher` package is future work, gated on API stability and a real external user that wants the patcher without the operator algebra.
 > **Scope:** a backend-agnostic *Patcher* abstraction that controls **locality** in the geotoolz stack — how a global field is split into local patches, how operators consume them, and how local outputs are merged back into a global field.
-> **Audience:** anyone composing operators that need a notion of *receptive field* (CNNs, FNOs, GPs, GNNs, neural processes), anyone building inference pipelines that stream over fields that don't fit in RAM, and anyone writing per-tile training datasets on top of [`georeader`](../georeader/README.md) / [`GeoCatalog`](../geodatabase/README.md).
+> **Audience:** anyone composing operators that need a notion of *receptive field* (CNNs, FNOs, GPs, GNNs, neural processes), anyone building inference pipelines that stream over fields that don't fit in RAM, and anyone writing per-tile training datasets on top of [`georeader`](../georeader/README.md) / [`geotoolz.catalog`](../geodatabase/README.md).
 
 ---
 
@@ -39,6 +40,17 @@ The `Patcher` composes the four axes and exposes a tiny surface: `split(field) �
 The operator sits *outside* the Patcher — that's the whole point. Patching handles locality; the operator handles modelling. Swap either independently.
 
 `geopatcher` is the geotoolz-native realisation of what `xrpatcher` does for xarray cubes (referenced in [`geotoolz.md` §5](../geotoolz/geotoolz.md)) — same composition idea, but anchored on the `Field` / `Domain` protocols so it covers rasters, gridded cubes, points, polygons, and (later) graphs/meshes through one Protocol-dispatched surface.
+
+**Inside `geotoolz`, this is the canonical home for every concrete sampler, window, and aggregation primitive.** Earlier drafts of the catalog plan proposed putting `grid_geo_sampler` / `random_geo_sampler` / `stitch_predictions` into `georeader.samplers`; that was a layering inversion. `georeader` (the separate upstream library) owns the substrate (reader Protocols, `GeoTensor`, byte paths). `geotoolz` (this library) owns everything else, with two incubation submodules: `geotoolz.catalog` (file indexing) and `geotoolz.patch` (the patching/sampling algebra specified here). `geotoolz.ops.GridSampler` / `ApplyToChips` / `CatalogPipeline` become thin operator wrappers around `geotoolz.patch.Patcher` rather than bespoke samplers. The ownership table is spelled out in [`design.md` §1 "Ownership: who lives where in the geotoolz stack"](design.md#1-patching-the-locality-layer).
+
+### Why incubate as a submodule rather than ship as a standalone package?
+
+Two libraries (`georeader` + `geotoolz`) are cheaper to maintain than four, and the patching abstraction needs to earn its keep against real operator graphs before it commits to a stable public API. Living as `geotoolz.patch` means:
+
+- **API can churn freely** during the v0.1–v0.3 phase. No external semver promise.
+- **`Operator`/`Sequential`/`Graph` are the forcing function** for whether the four-axis Patcher actually fits geoscience workflows. Bad abstractions get spotted faster when their primary user lives in the same repo.
+- **One install, one dep graph.** Users who reach for `geotoolz` for chip-iteration get the patcher; users who only want operators don't pay extra.
+- **Graduation is a planned event, not a perpetual ambition.** When the API stabilises and a real external user wants the patcher without the operator algebra, extract `geotoolz.patch → geopatcher` with `from geotoolz.patch import *` re-export shims + `DeprecationWarning`. Same pattern Keras used for layer/optimizer subpackages, and `sklearn.experimental` uses today.
 
 ---
 

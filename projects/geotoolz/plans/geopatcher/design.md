@@ -143,6 +143,40 @@ class Patcher:
 
 The operator sits *outside* the Patcher — that's the entire point. The Patcher handles locality; the operator handles modeling. Swap either independently.
 
+### Ownership: who lives where in the geotoolz stack
+
+The four-axis composition is new as an abstraction, and **`geotoolz.patch` is the canonical home for every concrete sampler, window, and aggregation primitive** in the stack. The patching algebra was previously sketched as `georeader.samplers` — that was a layering inversion (`georeader` owns the substrate, not the algebra over it).
+
+**Two shipping libraries, not four.** The architectural split below names four conceptual layers, but they ship as two packages:
+
+- **`georeader`** — the separate upstream library, owns the substrate.
+- **`geotoolz`** — this library, owns everything else. Three submodules: `geotoolz.ops` (operator algebra), `geotoolz.patch` (this design, incubates → standalone `geopatcher` at maturity), `geotoolz.catalog` (the catalog plan, incubates → standalone `geocatalog` at maturity). `geotoolz.types` holds the cross-cutting `GeoSlice` dataclass.
+
+Incubation means: external users install `geotoolz`, import `from geotoolz.patch import Patcher, Rectangular, RegularStride, OverlapAdd`. The API can churn during v0.1–v0.3. When `geotoolz.patch` matures, the package extracts to `geopatcher` with `from geotoolz.patch import *` shims + `DeprecationWarning` so existing call sites keep working.
+
+The conceptual layers:
+
+| Layer | Ships as | Owns | Doesn't own |
+|---|---|---|---|
+| [`georeader`](../georeader/README.md) | Separate library | Reader Protocols (`GeoData` / `AsyncGeoData` / `GeoDataBase`), `GeoTensor` carrier, bytes-path triage, window utils | Anything that says "for each chip…" |
+| [`geotoolz.catalog`](../geodatabase/README.md) | `geotoolz` submodule (→ future `geocatalog`) | `GeoCatalog` Protocol + `InMemoryGeoCatalog` / `DuckDBGeoCatalog`, file-level query / intersect / union, builders, `iter_slices()` | Anything past the `GeoSlice` boundary — once the slice is produced, the catalog's job is done |
+| **`geotoolz.patch`** (this design) | `geotoolz` submodule (→ future `geopatcher`) | `Patcher`, `PatchGeometry`, `Sampler`, `Window`, `Aggregation` — including the concrete `RegularStride` / `Random` / `PoissonDisk` / `OverlapAdd` / `WeightedSum` / `InvVarWeightedMean` / `Hann` / `Tukey` / … primitives that subsume the legacy `grid_geo_sampler` / `random_geo_sampler` / `stitch_predictions` free functions | Reading bytes; indexing files |
+| [`geotoolz.ops`](../geotoolz/README.md) | `geotoolz` submodule (stable core) | `Operator`, `Sequential`, `Graph`, `ModelOp`. `GridSampler` / `ApplyToChips` / `CatalogPipeline` are thin **operator wrappers** around `geotoolz.patch.Patcher`, not bespoke samplers | The locality logic itself |
+| [`geotoolz.types.GeoSlice`](../types/geoslice.md) | `geotoolz` submodule (graduates with whichever sibling extracts first) | The cross-cutting wire format produced by `geotoolz.catalog` and consumed by `geotoolz.patch` + `georeader`'s loaders. Shared by all three. | — |
+
+The legacy free-function API maps onto the Patcher cleanly — these aren't replacements, they're the same primitives expressed in the new vocabulary:
+
+| Legacy (pre-`geopatcher`) | Patcher expression |
+|---|---|
+| `grid_geo_sampler(catalog, chip_size)` | `Patcher(Rectangular(chip_size), RegularStride(step=chip_size), Boxcar(), OverlapAdd())` driven by `catalog.iter_slices()` |
+| `random_geo_sampler(catalog, chip_size, n)` | `Patcher(Rectangular(chip_size), Random(n_samples=n), Boxcar(), ByIndex())` driven by `catalog.iter_slices()` |
+| `stitch_predictions(slices, preds, mode="average")` | `OverlapAdd.merge(patches, domain)` — `mode` becomes the choice of `Aggregation` (`OverlapAdd` / `Max` / `Sum` / `Mean`) |
+| `geotoolz.sampling.GridSampler` | Thin operator wrapper around the first row |
+| `geotoolz.inference.ApplyToChips` | `for p in patcher.split(field): yield operator(p)` + `patcher.merge(...)` |
+| `geotoolz.catalog_ops.CatalogPipeline` | Outer loop of the *hierarchical Patcher-of-Patchers* in [`scaling.md` §3](scaling.md#3-hierarchical-reconstruction-patcher-of-patchers) |
+
+The contribution of `geopatcher` is twofold: **(a)** expose the four axes as *independently configurable* rather than fused into ad-hoc free functions, and **(b)** extend the same composition off rasters onto grids, points, polygons, and (later) graphs/meshes through one Protocol surface.
+
 ---
 ## 5. Time as a Distinct Axis
 
@@ -324,12 +358,20 @@ The full stack, top to bottom:
    ↑ produces Patches over ↑
 
    Field (Section 4)
-        ├── RasterioField  ─┐
-        ├── GeoTensorField  ├──→ RasterDomain
-        ├── RioXarrayField ─┘
-        ├── XarrayField      ──→ GridDomain
-        ├── GeoPandasField   ──→ VectorDomain
-        └── XvecField        ──→ PointDomain
+        ├── RasterioReader        ─┐  (existing GeoData, sync)
+        ├── AsyncGeoTIFFReader     ├──→ RasterDomain ≡ GeoDataBase
+        ├── GeoTensor              ├─     (existing carrier)
+        ├── RioXarrayField        ─┘
+        ├── XarrayField              ──→ GridDomain
+        ├── GeoPandasField           ──→ VectorDomain
+        └── XvecField                ──→ PointDomain
+
+   ↑ Fields are sourced from ↑
+
+   GeoCatalog (Section 4.5)
+        ├── InMemoryGeoCatalog    ─┐
+        │                          ├──→ GeoSlice (bounds + time + res + CRS)
+        └── DuckDBGeoCatalog      ─┘    one row per file
 
    ↑ patches are consumed by ↑
 
@@ -340,7 +382,7 @@ The full stack, top to bottom:
         └── Family (by domain): spectral / graph / kernel / spectral-on-manifold
 ```
 
-Three orthogonal sets of decisions. The Patcher (and TimePatcher) handles locality of data presentation; the Field/Domain layer handles backend ergonomics; the model handles locality of parameters and choice of operator family. Each set is independently configurable, and the natural pairings (Rectangular ↔ RasterDomain ↔ FNO; RadiusGraph ↔ PointDomain ↔ GP; etc.) come out as defaults rather than hard constraints.
+Four orthogonal sets of decisions. The Patcher (and TimePatcher) handles locality of data presentation; the Field/Domain layer handles backend ergonomics (and is mostly the existing `GeoData` / `AsyncGeoData` / `GeoDataBase` Protocols from [`georeader`](../georeader/README.md)); the `GeoCatalog` layer handles "which files become a Field"; the model handles locality of parameters and choice of operator family. Each set is independently configurable, and the natural pairings (Rectangular ↔ RasterDomain ↔ FNO; RadiusGraph ↔ PointDomain ↔ GP; etc.) come out as defaults rather than hard constraints.
 
 
 ---
@@ -482,7 +524,11 @@ The rows are not exclusive (you can run a CNN on unstructured data after griddin
 
 The previous sections are intentionally backend-agnostic. To make them executable, we add a thin protocol layer between the Patcher and the actual data structures.
 
+For rasters this protocol *already exists* in the geotoolz stack — it's the [`GeoData` / `GeoDataBase` / `AsyncGeoData` Protocols](../georeader/reader_protocol.md) from the modernised `georeader`. The `Field` / `Domain` framing here is a *generalisation* of those Protocols across the four data geometries (raster, grid, point, vector), not a parallel ontology. Where this design names `RasterioField`, the concrete object is the existing [`RasterioReader`](../georeader/reader_rasterio.md); where it names `AsyncRasterioField`, the concrete object is the existing [`AsyncGeoTIFFReader`](../georeader/reader_async_geotiff.md). The conceptual layer is what's new; the raster-side adapters are existing types renamed for cross-substrate clarity.
+
 ### Notes on specific backends
+
+**Rasters: rasterio vs `RasterioReader` vs `AsyncGeoTIFFReader` vs rioxarray.** These aren't competitors — they live at different levels of the stack and all satisfy the same `GeoData` / `AsyncGeoData` Protocol surface. **rasterio** is foundational (wraps GDAL; provides windowed I/O, CRS, affine transforms, and the `Window` abstraction itself). **`RasterioReader`** (the `georeader` sync workhorse) is the canonical `GeoData` — `rasterio.open` + `read_from_window`, with the three bytes-paths triage (`opener=` / `fs=` / GDAL VSI) documented in [`reader_rasterio.md`](../georeader/reader_rasterio.md). **`AsyncGeoTIFFReader`** is the async COG reader on top of `obstore` + `async-tiff`, satisfying `AsyncGeoData`. **rioxarray** puts a rasterio I/O backend behind an xarray DataArray. All four speak `rasterio.windows.Window` and produce the same `RasterDomain`. `RasterioReader` is the right choice for sync windowed reads; `AsyncGeoTIFFReader` for high-concurrency fan-out (per-tile inference, many small reads); rioxarray for users who want the xarray surface end-to-end.
 
 **Points.** There is no single dominant choice in geoscience. The real options:
 - **xvec** — vector data cubes (xarray + shapely). The modern answer for stations/floats/swath samples with multiple variables and times.
@@ -490,8 +536,6 @@ The previous sections are intentionally backend-agnostic. To make them executabl
 - **geopandas with Point geometries + scipy.spatial.cKDTree** — most pragmatic for pure point clouds; gives a real spatial index for neighbor queries.
 
 Recommendation: xvec for in-situ multivariate data, geopandas+KDTree for pure point clouds. Both coexist under the same protocol.
-
-**Rasters: rasterio vs georeader vs rioxarray.** These aren't competitors — they live at different levels of the stack. **rasterio** is foundational (wraps GDAL; provides windowed I/O, CRS, affine transforms, and the `Window` abstraction itself). **georeader (spaceml-org)** is a thin convenience layer on rasterio that gives ML-friendly `GeoTensor` access. **rioxarray** puts a rasterio I/O backend behind an xarray DataArray. All three speak `Window` and produce the same `RasterDomain`. Rasterio is the right choice for lazy windowed reads from disk-backed COGs (patching huge rasters that don't fit in memory); the others are ergonomic wrappers.
 
 **Unstructured meshes.** `uxarray` for unstructured-grid model output (MPAS, FVCOM, ICON) — the "structured irregular" row, distinct from raw points.
 
@@ -528,35 +572,43 @@ class PointDomain(Domain):      # xvec or geopandas+KDTree: points + neighbor in
     coords: np.ndarray; kdtree: cKDTree; crs: CRS | None
 ```
 
+### Reconciliation with georeader Protocols
+
+For the raster path, the abstract `Field` and `RasterDomain` above line up exactly with the existing georeader Protocols:
+
+| Patcher concept | georeader Protocol | Notes |
+|---|---|---|
+| `Field` (raster, sync) | [`GeoData`](../georeader/reader_protocol.md) | `Field.select(window)` ≡ `GeoData.read_from_window(window)`; `Field.with_data(array)` ≡ constructing a `GeoTensor`. |
+| `Field` (raster, async) | [`AsyncGeoData`](../georeader/reader_protocol.md) | `await field.select(window)` ≡ `await reader.read_from_window(window)`. Lets the Patcher fan out high-concurrency tile reads through `AsyncGeoTIFFReader` without the operator caring. |
+| `RasterDomain` | [`GeoDataBase`](../georeader/reader_protocol.md) | `GeoDataBase` already carries `crs`, `transform`, `shape`, `width`, `height` — exactly the metadata surface a `RasterDomain` needs. Functions typed `domain: GeoDataBase` are guaranteed I/O-free; the same guarantee the Patcher needs when running `sampler.anchors(field.domain, geometry)`. |
+| Patch carrier | [`GeoTensor`](../../georeader_tutorial/01_geotensor.md) | The output of `select()` is a `GeoTensor` — an `np.ndarray` subclass that carries CRS + affine, so coordinate metadata propagates through the operator without manual bookkeeping. |
+| `IndicesT` (raster) | [`GeoSlice`](../types/geoslice.md) or `rasterio.windows.Window` | Pixel-space `Window` is the natural unit when the Patcher is driven by a pixel-grid sampler; geographic-space `GeoSlice` (bounds + CRS + interval + resolution) is the natural unit when the Patcher is driven off a `GeoCatalog`. The two are interconvertible via `GeoSlice.to_window(transform)`. |
+
+The grid / point / vector domains *do* introduce new Protocols — they're the genuinely new surface area in this design.
+
 ### Backend adapters
 
+For rasters the adapter is **the existing georeader reader, unchanged**. The "Patcher adapter" is just an alias of the Protocol surface that's already there:
+
 ```python
-# 1a. Rasters — rasterio (foundational, lazy, disk-backed)
-class RasterioField:
-    def __init__(self, ds): self._ds = ds
-    @property
-    def domain(self): return RasterDomain(self._ds.transform,
-                                          (self._ds.height, self._ds.width),
-                                          self._ds.crs)
-    def select(self, window): return _InMemoryRaster(self._ds.read(window=window), ...)
+# Rasters (sync) — RasterioReader is already a GeoData; the Patcher consumes it directly.
+field: Field[RasterDomain] = RasterioReader("s3://bucket/scene.tif")
 
-# 1b. Rasters — georeader.GeoTensor (rasterio + ML wrapper)
-class GeoTensorField:
-    def __init__(self, gt): self._gt = gt
-    @property
-    def domain(self): return RasterDomain(self._gt.transform, self._gt.shape, self._gt.crs)
-    def select(self, window): return GeoTensorField(self._gt.read_from_window(window))
+# Rasters (async) — AsyncGeoTIFFReader is already an AsyncGeoData.
+field: AsyncField[RasterDomain] = await AsyncGeoTIFFReader.open("s3://bucket/scene.tif")
 
-# 1c. Rasters — rioxarray (rasterio behind an xarray DataArray)
-class RioXarrayField:
-    def __init__(self, da): self._da = da
-    @property
-    def domain(self): return RasterDomain(self._da.rio.transform(),
-                                          (self._da.rio.height, self._da.rio.width),
-                                          self._da.rio.crs)
-    def select(self, window): return RioXarrayField(self._da.rio.isel_window(window))
+# Rasters (in-memory carrier) — GeoTensor also satisfies GeoData, so a fully-loaded
+# raster behaves the same as a lazy reader from the Patcher's perspective.
+field: Field[RasterDomain] = some_geotensor
 
-# 2. Dense non-raster grids — xarray.DataArray
+# Rasters (xarray surface) — rioxarray DataArrays go through a thin RioXarrayField shim.
+field: Field[RasterDomain] = RioXarrayField(rxr.open_rasterio(..., chunks={...}))
+```
+
+The genuinely new adapter code lives on the non-raster side, where there is no existing georeader Protocol to reuse:
+
+```python
+# Dense non-raster grids — xarray.DataArray (the canonical xrtoolz substrate)
 class XarrayField:
     def __init__(self, da): self._da = da
     @property
@@ -564,14 +616,14 @@ class XarrayField:
                                         crs=getattr(self._da.rio, "crs", None))
     def select(self, isel): return XarrayField(self._da.isel(**isel))
 
-# 3. Polygons — geopandas.GeoDataFrame
+# Polygons — geopandas.GeoDataFrame
 class GeoPandasField:
     def __init__(self, gdf): self._gdf = gdf
     @property
     def domain(self): return VectorDomain(self._gdf.geometry, self._gdf.sindex, self._gdf.crs)
     def select(self, mask): return GeoPandasField(self._gdf.iloc[mask].copy())
 
-# 4. Points — xvec
+# Points — xvec
 class XvecField:
     def __init__(self, ds):
         self._ds = ds
@@ -583,6 +635,8 @@ class XvecField:
                                           self._kdtree, self._ds.xvec.geom_crs)
     def select(self, idx): return XvecField(self._ds.isel(geometry=idx))
 ```
+
+Three Protocols (`GridField`, `VectorField`, `PointField`) need to be added to `geopatcher` itself; the raster Protocol is reused from [`georeader.abstract_reader`](../georeader/reader_protocol.md) verbatim.
 
 ### Dispatch in PatchGeometry
 
@@ -630,6 +684,65 @@ Natural pairings drop out:
 | `KNNGraph` | `PointDomain` | xvec, geopandas+KDTree |
 
 A `Rectangular` patch on a `VectorDomain` raises — which is correct. Cross-cases that genuinely make sense are added as additional `@register` methods when needed.
+
+### Upstream: `GeoCatalog` as the patch-source layer
+
+A `Field` is one open dataset. In real workflows the question "what's the field?" has its own answer — usually "the rows of a [`GeoCatalog`](../geodatabase/README.md) that match this query." The Patcher composes cleanly above the catalog layer:
+
+```
+   ┌────────────────────────────┐
+   │   GeoCatalog               │   query → list[GeoSlice]
+   │   (InMemoryGeoCatalog or   │   one row per file
+   │    DuckDBGeoCatalog)       │
+   └─────────────┬──────────────┘
+                 │ iter_slices() / query(bounds, time)
+                 ▼
+        ┌──────────────────┐
+        │   GeoSlice       │   bounds + interval + resolution + CRS
+        └─────────┬────────┘
+                  │ load_geoslice(slice) →
+                  ▼
+            ┌──────────┐
+            │  Field   │   GeoData (RasterioReader / AsyncGeoTIFFReader / GeoTensor / …)
+            └────┬─────┘
+                 │ patcher.split(field) →
+                 ▼
+            ┌──────────┐
+            │  Patch   │ → operator → output → aggregation → reconstructed Field
+            └──────────┘
+```
+
+Two integration patterns matter, depending on whether the catalog row drives the *Sampler* or the *Field*:
+
+**1. Catalog-driven Sampler.** A `GeoCatalog` produces `GeoSlice`s (via [`grid_geo_sampler`](../types/geoslice.md) / [`random_geo_sampler`](../types/geoslice.md)), and those `GeoSlice`s *are* the Patcher anchors. The Patcher's `Sampler` is then an `Explicit` sampler reading from the catalog:
+
+```python
+catalog: GeoCatalog = build_raster_catalog(paths=[...], backend="memory")
+
+slices = list(grid_geo_sampler(catalog, chip_size=(256, 256)))   # producer
+
+patcher = Patcher(
+    geometry    = Rectangular(size=(256, 256)),
+    sampler     = Explicit(anchors_=slices),                       # consumer
+    window      = Hann(),
+    aggregation = OverlapAdd(streaming=True, target_path="out.zarr"),
+)
+```
+
+This is the v0.1 raster path — exactly what [`geotoolz.inference.ApplyToChips`](../geotoolz/geotoolz.md) and [`geotoolz.catalog_ops.CatalogPipeline`](../geotoolz/geotoolz.md) do today, expressed as a four-axis Patcher.
+
+**2. Catalog-driven Field.** The catalog row *is* the field — one Patcher per file:
+
+```python
+for slice_ in catalog.iter_slices():
+    field = catalog.load_geoslice(slice_)              # → GeoData (lazy)
+    for patch in patcher.split(field):
+        yield operator(patch)
+```
+
+This is the outer loop of the *hierarchical Patcher-of-Patchers* in [`scaling.md` §3](scaling.md#3-hierarchical-reconstruction-patcher-of-patchers). The outer "Patcher" is the catalog iterator; the inner Patcher is the per-file four-axis composition.
+
+The two patterns are dual: pattern 1 treats the catalog as a *Sampler over slices*; pattern 2 treats the catalog as a *Sampler over fields*. Both compose with the same four-axis Patcher; which one fits depends on whether the chips you want straddle file boundaries (pattern 1) or live one-per-file (pattern 2).
 
 ---
 

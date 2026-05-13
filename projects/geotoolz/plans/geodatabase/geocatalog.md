@@ -297,9 +297,9 @@ Those primitives consume what this catalog produces but aren't catalog-specific 
 | `load_and_merge_rasters_spatial` | Heavy overlap with `mosaic.py` — both do windowed reads + `rasterio.merge`. The snippet adds the index-driven query layer on top. |
 | `load_xarray_datasets*` | New territory; georeader doesn't really do xarray reads end-to-end. `dataarray.py` exists as a thin GeoTensor↔DataArray bridge; this would extend that. |
 | `load_and_rasterize_vectors*` | Overlaps `rasterize.py`. The snippet adds index-driven file selection and per-task label conventions. |
-| `sampler.py` / `GeoSlice` | Promoted to its own design — see [`types/geoslice.md`](../types/geoslice.md), which reconciles `GeoSlice` with `rasterio.windows.Window` and `slices.py`. |
-| `run_inference_with_grid_sampler` | Cut. The model loop belongs at the operator layer ([`geotoolz.inference.ApplyToChips`](../geotoolz/geotoolz.md)), not in georeader. |
-| `stitch_predictions` | Specified in [`types/geoslice.md`](../types/geoslice.md). |
+| `sampler.py` / `GeoSlice` | `GeoSlice` is promoted to its own cross-cutting design — see [`types/geoslice.md`](../types/geoslice.md). The sampler functions (`grid_geo_sampler` / `random_geo_sampler` / `stitch_predictions`) **do not live in georeader.samplers** in the final layering — they belong to [`geopatcher`](../geopatcher/README.md) as concrete `Patcher(...)` recipes. `georeader` owns the substrate (reader Protocols, byte paths, `GeoTensor`); the patching/sampling algebra is a separate layer. |
+| `run_inference_with_grid_sampler` | Cut. The model loop belongs at the operator layer ([`geotoolz.inference.ApplyToChips`](../geotoolz/geotoolz.md), which itself becomes a thin wrapper around `geopatcher.Patcher`), not in georeader. |
+| `stitch_predictions` | Lives in [`geopatcher`](../geopatcher/README.md) as `OverlapAdd.merge` (and its four reduction modes — `average` / `max` / `first` / `last`). The dataclass-level reconciliation with `Window` / `slices.py` stays in [`types/geoslice.md`](../types/geoslice.md). |
 | `query` / `intersect` / `union` | New. Set algebra over a GeoDataFrame catalog — clean fit as a new module. |
 | `rasterio_utils.py` | Keep only `get_tags` / `print_all_metadata` and fold into existing readers. The xarray-tagging half should not live here; it's ad-hoc rioxarray plumbing. |
 
@@ -324,13 +324,12 @@ georeader/
 │   ├── xarray.py               # build_xarray_catalog + xarray loaders   [extra: xarray]
 │   ├── vector.py               # build_vector_catalog + rasterizers
 │   └── ops.py                  # query, intersect, union
-├── samplers/                   # NEW — see types/geoslice.md design
-│   ├── __init__.py
-│   ├── geoslice.py             # GeoSlice dataclass
-│   ├── random.py               # random_sampler
-│   ├── grid.py                 # grid_sampler
-│   └── stitch.py               # stitch
 └── ...                         # existing modules unchanged
+
+# NB: the samplers (random / grid / stitch) live in geopatcher, NOT here.
+# georeader owns the substrate (Protocols, GeoTensor, byte paths); the
+# patching algebra is geopatcher's job. The GeoSlice dataclass itself
+# lives in types/geoslice.md as the cross-cutting wire format.
 ```
 
 ### 6.2 Core types

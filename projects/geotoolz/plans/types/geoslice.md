@@ -31,8 +31,7 @@ The three sampler/stitch primitives are the canonical producers and consumer:
 - `stitch(predictions, slices, ...)` → reverses the chip operation back into a single output raster.
 
 Today, all four live in `jej_vc_snippets/sampler.py` (~1400 LOC).
-The [Geodatabase Phase 1 design](../geodatabase/geocatalog.md) proposes promoting them into `georeader.samplers`.
-This document gives that promotion its own attention so the dataclass invariants, the sampler math, and the stitch reductions are specified in one place rather than scattered across other designs.
+**Ownership update (post-`geopatcher`):** the three primitives above move into [`geopatcher`](../geopatcher/README.md) — they are concrete instances of `Patcher(Rectangular × RegularStride × Boxcar × OverlapAdd)` (grid sampler), `Patcher(Rectangular × Random × Boxcar × …)` (random sampler), and `OverlapAdd.merge` (stitch). `georeader.samplers` is not the right home: `georeader` owns the substrate (Protocols, carriers, byte paths); the patching/sampling algebra belongs in `geopatcher`. The dataclass itself stays here in `types/` — it's the cross-cutting wire format between the catalog (producer), `geopatcher` (consumer), and `georeader`'s loaders (consumer). This document gives the dataclass its own attention so the invariants, sampler math, and stitch reductions are specified in one place rather than scattered across other designs.
 
 ---
 

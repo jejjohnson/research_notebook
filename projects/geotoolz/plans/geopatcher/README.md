@@ -36,7 +36,7 @@ The whole framework is one object with four pluggable axes:
 | **`Window`** | Boundary treatment (spectral leakage, edge artefacts) | `Boxcar`, `Hann`, `Tukey`, `Gaussian` |
 | **`Aggregation`** | Local predictions → global field | `OverlapAdd`, `Mean`, `WeightedSum`, `InvVarWeightedMean`, `ByIndex`, `Learned` |
 
-The `Patcher` composes the four axes and exposes a tiny surface: `split(field) → Iterator[Patch]` and `merge(patches, domain) → Field`.
+The `Patcher` composes the four axes and, in the current proposal, exposes a tiny surface: `split(field) → Iterator[Patch]` and `merge(patches, domain) → Field`.
 The operator sits *outside* the Patcher — that's the whole point. Patching handles locality; the operator handles modelling. Swap either independently.
 
 `geopatcher` is the geotoolz-native realisation of what `xrpatcher` does for xarray cubes (referenced in [`geotoolz.md` §5](../geotoolz/geotoolz.md)) — same composition idea, but anchored on the `Field` / `Domain` protocols so it covers rasters, gridded cubes, points, polygons, and (later) graphs/meshes through one Protocol-dispatched surface.

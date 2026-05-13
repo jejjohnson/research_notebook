@@ -91,6 +91,7 @@ The cross-design touchpoints:
 | [Reader reconciliation](../georeader/README.md) | `geotoolz.catalog_ops.CatalogPipeline` accepts a `reader_class=...` kwarg pulling from any `GeoData` (sync) or `AsyncGeoData` (async) reader. The strategy injection is the central swappability seam. |
 | [Geodatabase](../geodatabase/README.md) | `CatalogPipeline(catalog, op).run()` consumes a `GeoCatalog`. The pipeline iterates the catalog, applies the operator per row, writes outputs. |
 | [Core types — `GeoSlice`](../types/geoslice.md) | `geotoolz.sampling.GridSampler` wraps `grid_sampler`; `geotoolz.inference.ApplyToChips` consumes the iterator and uses `stitch` for the inverse step. The `Stitch` operator in `geotoolz` is a direct re-export of the primitive specified there. |
+| [`geopatcher`](../geopatcher/README.md) | The general four-axis Patcher framework — `geotoolz.sampling.GridSampler` and `geotoolz.inference.ApplyToChips` are the v0.1 special case of `Patcher(Rectangular × RegularStride × Hann × OverlapAdd)`. Streaming reconstruction (lazy `Field.select`, disk-backed `Aggregation`, hierarchical Patcher-of-Patchers) plugs into `CatalogPipeline` for petabyte-scale inference. |
 | [Sensor readers](../readers/README.md) | Sensor-preset operators (`presets.s2.S2_L2A_RGB`, `presets.emit.EMIT_METHANE_MF`, etc.) wrap the per-sensor readers from those designs. |
 
 ---

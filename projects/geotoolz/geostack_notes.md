@@ -659,6 +659,7 @@ Out of scope for the initial library push; flagged here so the architecture leav
 | `GeoCatalog` (Phase 1, GeoPandas) | Discovery | New (on existing GeoParquet + GeoPandas) | [`plans/geodatabase/geocatalog.md`](plans/geodatabase/geocatalog.md) |
 | `DuckDBGeoCatalog` (Phase 2) | Discovery | New (on existing GeoParquet + DuckDB) | [`plans/geodatabase/geoduckdb.md`](plans/geodatabase/geoduckdb.md) |
 | `geotoolz` (`Operator`, `Sequential`, `Graph`, `ModelOp`, sensor presets) | Logic (imagery) | New library | [`plans/geotoolz/`](plans/geotoolz/) |
+| `geopatcher` (`Patcher`, `PatchGeometry`, `Sampler`, `Window`, `Aggregation`; streaming + hierarchical) | Logic (locality) | New library | [`plans/geopatcher/`](plans/geopatcher/) |
 | `xrtoolz` (operator algebra over xarray / `coordax`) | Logic (cubes) | External library | [github.com/jejjohnson/xr_toolz](https://github.com/jejjohnson/xr_toolz) |
 | `GeoSlice` + samplers + `stitch_predictions` | Cross-cutting types | Extracted from existing designs | [`plans/types/geoslice.md`](plans/types/geoslice.md) |
 | `Credential` + per-cloud subclasses | Cross-cutting types | New | [`plans/types/credentials.md`](plans/types/credentials.md) |
@@ -672,6 +673,7 @@ Out of scope for the initial library push; flagged here so the architecture leav
 - [`plans/geostack.md`](plans/geostack.md) — the engineering-focused ecosystem reference (strategy tables, bytes-paths triage, end-to-end flows).
   Eventually this motivation doc will merge in.
 - [`plans/geotoolz/`](plans/geotoolz/) — `geotoolz` operator library design.
+- [`plans/geopatcher/`](plans/geopatcher/) — `geopatcher` four-axis Patcher framework, streaming, and hierarchical composition.
 - [`plans/geodatabase/`](plans/geodatabase/) — `GeoCatalog` + DuckDB backend design.
 - [`plans/georeader/`](plans/georeader/) — reader Protocols and concrete reader designs.
 - [`plans/types/`](plans/types/) — cross-cutting type designs (`GeoSlice`, `Credential`; `bytestore.md` is a passthrough note for upstream `obspec`).

@@ -656,11 +656,12 @@ Out of scope for the initial library push; flagged here so the architecture leav
 |---|---|---|---|
 | `georeader` (modernised) | Substrate / Readers | Reconciliation refactor | [`plans/georeader/`](plans/georeader/) |
 | Sensor-specific readers (ABI, SEVIRI, MODIS, VIIRS, …) | Substrate / Readers | New, on shared Reader Protocol | [`plans/readers/`](plans/readers/) |
-| `GeoCatalog` (Phase 1, GeoPandas) | Discovery | New (on existing GeoParquet + GeoPandas) | [`plans/geodatabase/geocatalog.md`](plans/geodatabase/geocatalog.md) |
-| `DuckDBGeoCatalog` (Phase 2) | Discovery | New (on existing GeoParquet + DuckDB) | [`plans/geodatabase/geoduckdb.md`](plans/geodatabase/geoduckdb.md) |
-| `geotoolz` (`Operator`, `Sequential`, `Graph`, `ModelOp`, sensor presets) | Logic (imagery) | New library | [`plans/geotoolz/`](plans/geotoolz/) |
+| `geotoolz.catalog` — Phase 1 `InMemoryGeoCatalog` (GeoPandas + R-tree + IntervalIndex) | Discovery | New — `geotoolz` submodule (incubates → standalone `geocatalog` at maturity) | [`plans/geodatabase/geocatalog.md`](plans/geodatabase/geocatalog.md) |
+| `geotoolz.catalog` — Phase 2 `DuckDBGeoCatalog` (GeoParquet + DuckDB spatial) | Discovery | Same submodule, second backend | [`plans/geodatabase/geoduckdb.md`](plans/geodatabase/geoduckdb.md) |
+| `geotoolz.ops` (`Operator`, `Sequential`, `Graph`, `ModelOp`, sensor presets) | Logic (imagery) | New — `geotoolz` library, stable core | [`plans/geotoolz/`](plans/geotoolz/) |
+| `geotoolz.patch` (`Patcher`, `PatchGeometry`, `Sampler`, `Window`, `Aggregation`; streaming + hierarchical) | Logic (locality) | New — `geotoolz` submodule (incubates → standalone `geopatcher` at maturity) | [`plans/geopatcher/`](plans/geopatcher/) |
 | `xrtoolz` (operator algebra over xarray / `coordax`) | Logic (cubes) | External library | [github.com/jejjohnson/xr_toolz](https://github.com/jejjohnson/xr_toolz) |
-| `GeoSlice` + samplers + `stitch_predictions` | Cross-cutting types | Extracted from existing designs | [`plans/types/geoslice.md`](plans/types/geoslice.md) |
+| `geotoolz.types.GeoSlice` (cross-cutting wire format; samplers live in `geotoolz.patch`) | Cross-cutting types | `geotoolz` submodule | [`plans/types/geoslice.md`](plans/types/geoslice.md) |
 | `Credential` + per-cloud subclasses | Cross-cutting types | New | [`plans/types/credentials.md`](plans/types/credentials.md) |
 | `geotoolz.io.open_store(url)` (over upstream `obspec.AsyncStore`) | Cross-cutting types | New (~30 LOC factory only) | [`plans/types/bytestore.md`](plans/types/bytestore.md) |
 | JAX bridge (via `coordax`) | Logic ↔ JAX | Future work | *TBD* |
@@ -672,6 +673,7 @@ Out of scope for the initial library push; flagged here so the architecture leav
 - [`plans/geostack.md`](plans/geostack.md) — the engineering-focused ecosystem reference (strategy tables, bytes-paths triage, end-to-end flows).
   Eventually this motivation doc will merge in.
 - [`plans/geotoolz/`](plans/geotoolz/) — `geotoolz` operator library design.
+- [`plans/geopatcher/`](plans/geopatcher/) — `geopatcher` four-axis Patcher framework, streaming, and hierarchical composition.
 - [`plans/geodatabase/`](plans/geodatabase/) — `GeoCatalog` + DuckDB backend design.
 - [`plans/georeader/`](plans/georeader/) — reader Protocols and concrete reader designs.
 - [`plans/types/`](plans/types/) — cross-cutting type designs (`GeoSlice`, `Credential`; `bytestore.md` is a passthrough note for upstream `obspec`).

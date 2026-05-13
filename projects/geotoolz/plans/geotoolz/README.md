@@ -30,6 +30,17 @@ Where `georeader` reads bytes and produces `GeoTensor`s, `geotoolz` lets users *
 It's the RS-shaped sibling to `xr_toolz` (the climate-side composition library): same architectural patterns, separate codebase, different substrate.
 `GeoTensor` is the shared currency at the bottom; the operator surface is built fresh for each library's audience.
 
+### Two libraries, multiple submodules
+
+`georeader` and `geotoolz` are the two shipping libraries. Inside `geotoolz` two incubation submodules host plan trees that may graduate to their own packages once their APIs settle:
+
+- **`geotoolz.ops`** — the stable core: `Operator`, `Sequential`, `Graph`, `ModelOp`, sensor presets. The public surface most users touch.
+- **`geotoolz.patch`** — the four-axis Patcher framework specified in [`plans/geopatcher/`](../geopatcher/README.md). Incubates toward a future standalone `geopatcher`.
+- **`geotoolz.catalog`** — the `GeoCatalog` Protocol + backends specified in [`plans/geodatabase/`](../geodatabase/README.md). Incubates toward a future standalone `geocatalog`.
+- **`geotoolz.types`** — cross-cutting value types (`GeoSlice`); graduates with whichever sibling extracts first.
+
+The point of incubation: API can churn freely during v0.1–v0.3 against real operator-graph users, then graduate via `from geotoolz.patch import *` / `from geotoolz.catalog import *` re-export shims with `DeprecationWarning`. Same pattern Keras used for layer/optimizer subpackages.
+
 ---
 
 ## What's in the design
@@ -91,6 +102,7 @@ The cross-design touchpoints:
 | [Reader reconciliation](../georeader/README.md) | `geotoolz.catalog_ops.CatalogPipeline` accepts a `reader_class=...` kwarg pulling from any `GeoData` (sync) or `AsyncGeoData` (async) reader. The strategy injection is the central swappability seam. |
 | [Geodatabase](../geodatabase/README.md) | `CatalogPipeline(catalog, op).run()` consumes a `GeoCatalog`. The pipeline iterates the catalog, applies the operator per row, writes outputs. |
 | [Core types — `GeoSlice`](../types/geoslice.md) | `geotoolz.sampling.GridSampler` wraps `grid_sampler`; `geotoolz.inference.ApplyToChips` consumes the iterator and uses `stitch` for the inverse step. The `Stitch` operator in `geotoolz` is a direct re-export of the primitive specified there. |
+| [`geopatcher`](../geopatcher/README.md) | The canonical home for the patching/sampling algebra. `geotoolz.sampling.GridSampler`, `geotoolz.inference.ApplyToChips`, and `geotoolz.catalog_ops.CatalogPipeline` are **thin operator wrappers around `geopatcher.Patcher`** — `GridSampler` = `Patcher(Rectangular × RegularStride × Boxcar × OverlapAdd)` driven by `catalog.iter_slices()`; `ApplyToChips` = `for p in patcher.split(field): yield op(p)` + `patcher.merge(...)`. `geotoolz` does not implement samplers or stitching of its own; it consumes them from `geopatcher`. Streaming reconstruction (lazy `Field.select`, disk-backed `Aggregation`, hierarchical Patcher-of-Patchers) plugs into `CatalogPipeline` for petabyte-scale inference. |
 | [Sensor readers](../readers/README.md) | Sensor-preset operators (`presets.s2.S2_L2A_RGB`, `presets.emit.EMIT_METHANE_MF`, etc.) wrap the per-sensor readers from those designs. |
 
 ---

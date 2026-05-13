@@ -16,9 +16,9 @@ keywords: design, geodatabase, catalog, geoparquet
 ---
 
 > **Status:** design proposal — split into two phases (Phase 1 + Phase 2 below).
-> **Scope:** the long-term shape of the catalog layer in `georeader`.
-> A single `GeoCatalog` Protocol with two backends — an in-memory GeoDataFrame (Phase 1) and a DuckDB-backed GeoParquet store (Phase 2) — that share the same query API and the same `GeoSlice` unit of work.
-> **Audience:** anyone touching `georeader`'s catalog module, or building downstream pipelines (`geotoolz.catalog_ops.CatalogPipeline`, ML training set builders) that consume catalogs.
+> **Shipping shape:** incubated as `geotoolz.catalog` inside the `geotoolz` library — *not* a standalone `geocatalog` package at v0.1. Graduation is future work, gated on API stability and a real external user that wants the catalog without the operator algebra. See [`geopatcher/README.md`](../geopatcher/README.md) for the same incubation pattern; both submodules graduate together or independently when their APIs settle.
+> **Scope:** a single `GeoCatalog` Protocol with two backends — an in-memory GeoDataFrame (Phase 1) and a DuckDB-backed GeoParquet store (Phase 2) — that share the same query API and the same `GeoSlice` unit of work.
+> **Audience:** anyone touching the `geotoolz.catalog` submodule, or building downstream pipelines (`geotoolz.catalog_ops.CatalogPipeline`, ML training set builders) that consume catalogs.
 
 ---
 
@@ -26,7 +26,7 @@ keywords: design, geodatabase, catalog, geoparquet
 
 A *geocatalog* in this design is a **spatiotemporal index over geospatial files** — a queryable mapping from `(geometry, time interval, metadata)` to a backend-specific path or asset.
 Today, every project that wants one rolls its own (the `jej_vc_snippets` repo has three: one for rasters, one for xarray datasets, one for vector files).
-This design promotes those snippets into `georeader` as a single unified API, then extends it to scale.
+This design promotes those snippets into the `geotoolz.catalog` submodule as a single unified API, then extends it to scale. (Earlier drafts placed the catalog inside `georeader`; that was a layering inversion — `georeader` is the substrate library and shouldn't ship a file-index layer on top of itself.)
 
 **Phase 1** ships an in-memory `GeoCatalog` Protocol with one default implementation (`InMemoryGeoCatalog`) that wraps a `gpd.GeoDataFrame` with an `IntervalIndex` for time and an R-tree for space.
 Three builder entry points (`build_raster_catalog`, `build_xarray_catalog`, `build_vector_catalog`) cover the three backend types.

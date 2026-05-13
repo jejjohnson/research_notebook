@@ -145,6 +145,12 @@ project:
                       children:
                         - file: projects/geotoolz/plans/geotoolz/sklearn/design_sklearn.md
                         - file: projects/geotoolz/plans/geotoolz/sklearn/examples_sklearn.md
+                - title: geopatcher
+                  children:
+                    - file: projects/geotoolz/plans/geopatcher/README.md
+                    - file: projects/geotoolz/plans/geopatcher/design.md
+                    - file: projects/geotoolz/plans/geopatcher/examples.md
+                    - file: projects/geotoolz/plans/geopatcher/scaling.md
                 - title: Reader reconciliation
                   children:
                     - file: projects/geotoolz/plans/georeader/README.md

@@ -574,6 +574,7 @@ This is how `geotoolz.Sequential` and the upcoming `Reduce` / `Broadcast` marker
 > The rest of this tutorial assumes raster input, where neighborhoods are fixed stencils and the question of "what is a neighbor?" is decided by the grid.
 > This appendix previews how the same dependency-game framework extends to non-raster geometries (point sets, meshes, graphs), where the operator must *define* its neighborhood explicitly.
 > The full treatment of graph and mesh operators belongs to a later tutorial; this section is here because the design implication for `geotoolz`'s `Operator` signature is already worth flagging.
+> The corresponding design proposal — a four-axis `Patcher` framework over the `Field` / `Domain` substrate, with `KNNGraph` and `RadiusGraph` as first-class `PatchGeometry` choices — lives in the [`geopatcher` plan](../plans/geopatcher/README.md).
 
 The hardest part of the dependency game on non-raster data is that *"local"* is not a single concept.
 Two operators can both claim to be local in `X` and yet have entirely different physical receptive fields, because they disagree on *how to define a neighborhood*.

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.9](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.8...research_notebook-v0.1.9) (2026-05-13)
+
+
+### Documentation
+
+* **geotoolz:** add spatiotemporal data + operators tutorials ([#64](https://github.com/jejjohnson/research_notebook/issues/64)) ([c2be9a3](https://github.com/jejjohnson/research_notebook/commit/c2be9a37fa99b04eec15dcc38c964780915085d8))
+* **geotoolz:** integrate geopatcher plan; incubate as geotoolz.patch / geotoolz.catalog submodules ([#66](https://github.com/jejjohnson/research_notebook/issues/66)) ([b09f4fe](https://github.com/jejjohnson/research_notebook/commit/b09f4fefda1febdea063d939885b324403270adf))
+
 ## [0.1.8](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.7...research_notebook-v0.1.8) (2026-05-12)
 
 

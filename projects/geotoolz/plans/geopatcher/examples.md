@@ -58,7 +58,7 @@ patches: list[Patch[
     tuple[int, int],          # AnchorT  = (row, col) top-left pixel
     Window,                   # IndicesT = rasterio Window
     Array,                    # DataT    = Array[12, 256, 256] = (C, H, W)
-]] = patcher.split(field)
+]] = list(patcher.split(field))
 ```
 
 A CNN consumes `patch.data` directly. `OverlapAdd` is only used if you reconstruct a full output field at inference.

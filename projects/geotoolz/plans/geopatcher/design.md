@@ -1,8 +1,21 @@
+---
+title: Spatiotemporal Operators in Geoscience: A Unified Framework
+subject: Geopatcher design
+subtitle: A layered view of patching, models, algorithm families, backends, and time
+authors:
+  - Geotoolz contributors
+license: CC-BY-4.0
+keywords:
+  - geoscience
+  - spatiotemporal operators
+  - patching
+  - operator learning
+  - geopatcher
+---
+
 # Spatiotemporal Operators in Geoscience: A Unified Framework
 
 This report builds up a unified picture of spatiotemporal operator learning in four layers: **patching** (locality of data presentation), **models** (locality of parameters via pooling), **algorithm families** (chosen by data domain), and **backends** (Field/Domain adapter layer). At the end, we add **time** as a peer axis with its own structure that composes with the spatial framework.
-
----
 
 ## 1. Patching: The Locality Layer
 

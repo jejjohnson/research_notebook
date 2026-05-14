@@ -33,7 +33,7 @@ The detailed roadmap now lives in [`roadmap/`](roadmap/README.md), one file per 
   - [V.B — Point process model (TMTPP)](roadmap/06b_point_process.md)
   - [V.C — Persistency](roadmap/06c_persistency.md)
   - [V.D — Total emission estimation](roadmap/06d_total_emission.md)
-- [**Operational attribution — unified-stack success-story plan**](../../geotoolz/operational_attribution.md) — projected end-to-end pipeline (3 instruments, 3 orchestration phases) showing how MARS-style attribution rebuilds on `georeader` + `GeoCatalog` + `geotoolz` + `plumax`. *(Lives under `projects/geotoolz/` since it anchors the geotoolz success-story pitch.)*
+- [**Operational attribution — unified-stack success-story plan**](https://jejjohnson.github.io/research_journal_v2/operational-attribution) — projected end-to-end pipeline (3 instruments, 3 orchestration phases) showing how MARS-style attribution rebuilds on `georeader` + `GeoCatalog` + `geotoolz` + `plumax`. *(Now lives in the [research journal](https://github.com/jejjohnson/research_journal_v2) under `notes/geotoolz/` alongside the rest of the geotoolz design notes.)*
 
 ---
 

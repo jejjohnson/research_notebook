@@ -70,22 +70,29 @@ worked examples.
 
 ```
 projects/geostack/
-├── pyproject.toml          # standalone "geostack" package (notebook-only — no src/)
+├── pyproject.toml          # standalone "geostack" package
 ├── README.md               # this file
+├── src/geostack/           # shared real-data loaders (data.py)
+├── tests/                  # smoke tests for the loaders
 └── notebooks/
-    ├── 01_composition_core.ipynb         # + .py source (jupytext py:percent)
-    ├── 02_pipeline_idioms.ipynb          # + .py
-    ├── 03_operators_lake_tahoe.ipynb     # + .py
-    ├── 04_image_processing_caldor.ipynb  # + .py
-    ├── 05_patching_grids.ipynb           # + .py
-    ├── 06_ml_patches_augment.ipynb       # + .py
-    └── 07_deployment_shapes.ipynb        # + .py
+    ├── 01_composition_core.ipynb
+    ├── 02_pipeline_idioms.ipynb
+    ├── 03_operators_lake_tahoe.ipynb
+    ├── 04_image_processing_caldor.ipynb
+    ├── 05_patching_grids.ipynb
+    ├── 06_ml_patches_augment.ipynb
+    ├── 07_deployment_shapes.ipynb
+    ├── patching/           # 6 deep dives + recipes/ (3 framework bridges)
+    └── catalog/            # 5 deep dives
 ```
 
-Each `*.ipynb` ships with an executed copy (figures inline). The paired
-`*.py` is the **jupytext py:percent source-of-truth** — edit the `.py`
-and round-trip via `jupytext --to ipynb --execute -o foo.ipynb foo.py`
-to refresh the rendered notebook.
+Each `*.ipynb` ships with an executed copy (figures inline). To
+re-execute a single notebook against fresh MPC data:
+
+```bash
+pixi run -e geostack jupyter nbconvert --to notebook --execute --inplace \
+    projects/geostack/notebooks/03_operators_lake_tahoe.ipynb
+```
 
 ## Reproducing
 

@@ -273,11 +273,20 @@ geostack = { path = "projects/geostack", editable = true }
 # matplotlib come through the geostack pyproject's dependency stanza.
 
 [feature.geostack.tasks]
-# Runs all seven notebooks end-to-end. Notebooks 03–06 fetch Sentinel-2
-# scenes from Microsoft Planetary Computer (anonymous read), so a
-# network connection is required. 1800 s timeout per notebook to cover
-# the slower MPC reads (post-fire scene in 04 + 4-band scene in 06).
+# Runs the applied walkthrough (01–07) end-to-end. Notebooks 03–06
+# fetch Sentinel-2 scenes from Microsoft Planetary Computer
+# (anonymous read), so a network connection is required. 1800 s
+# timeout per notebook covers the slower MPC reads (post-fire
+# scene in 04 + 4-band scene in 06).
 execute-geostack = "jupyter nbconvert --to notebook --execute --inplace projects/geostack/notebooks/*.ipynb --ExecutePreprocessor.timeout=1800"
+# Runs the patching deep dives + recipes against real MPC data.
+execute-geostack-patching = "jupyter nbconvert --to notebook --execute --inplace projects/geostack/notebooks/patching/*.ipynb projects/geostack/notebooks/patching/recipes/*.ipynb --ExecutePreprocessor.timeout=1800"
+# Runs the catalog deep dives against real MPC + Natural Earth.
+execute-geostack-catalog = "jupyter nbconvert --to notebook --execute --inplace projects/geostack/notebooks/catalog/*.ipynb --ExecutePreprocessor.timeout=1800"
+# Convenience: applied + patching + catalog in one shot.
+execute-geostack-all = { depends-on = ["execute-geostack", "execute-geostack-patching", "execute-geostack-catalog"] }
+# Smoke-test the data loaders against the live external APIs.
+test-geostack = "pytest projects/geostack/tests/ -v -m slow"
 
 [environments]
 default = { features = ["dev"], solve-group = "default" }

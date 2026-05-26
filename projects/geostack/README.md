@@ -56,7 +56,7 @@ underneath the surface of the stack:
 
 | # | Notebook | What it shows |
 |---|---|---|
-| 01 | [Intro — build → query → load](notebooks/catalog/01_intro.ipynb) | Foundational walk-through on synthetic GeoTIFFs. |
+| 01 | [Intro — build → query → load](notebooks/catalog/01_intro.ipynb) | Build a catalog from a real Sentinel-2 L2A archive on MPC (eight scenes over Lake Tahoe), query it, mosaic and time-stack the matches. |
 | 02 | [Backends](notebooks/catalog/02_backends.ipynb) | Raster, xarray, and vector catalog backends. |
 | 03 | [Set algebra](notebooks/catalog/03_set_algebra.ipynb) | `query`, intersect, union — composable catalog operations. |
 | 04 | [DuckDB at scale](notebooks/catalog/04_duckdb.ipynb) | DuckDB-backed catalogs over millions of items. |
@@ -98,15 +98,23 @@ pixi run -e geostack jupyter nbconvert --to notebook --execute --inplace \
 
 The parent `research_notebook` pixi file defines a `geostack` feature /
 environment that bundles all the deps (geotoolz, geopatcher,
-planetary-computer, pystac-client, rioxarray, matplotlib, jupytext,
-ipykernel, nbconvert).
+geocatalog, planetary-computer, pystac-client, rioxarray, matplotlib,
+ipykernel, nbconvert, scipy, duckdb, pyogrio, netcdf4, xvec, …).
 
 ```bash
 # One-time install
 pixi install -e geostack
 
-# Re-execute every notebook end-to-end (writes outputs inplace)
-pixi run -e geostack execute-geostack
+# Re-execute scoped subsets (each task targets one notebook tier).
+pixi run -e geostack execute-geostack            # applied walkthrough (01–07)
+pixi run -e geostack execute-geostack-patching   # patching/ deep dives + recipes
+pixi run -e geostack execute-geostack-catalog    # catalog/ deep dives
+
+# Convenience: applied + patching + catalog in one shot.
+pixi run -e geostack execute-geostack-all
+
+# Smoke-test the geostack.data loaders against MPC / GBIF / Natural Earth.
+pixi run -e geostack test-geostack
 
 # Or run a single notebook
 pixi run -e geostack jupyter nbconvert --to notebook --execute --inplace \

@@ -11,7 +11,7 @@ API key is required.
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 import numpy as np
 import planetary_computer
@@ -20,6 +20,10 @@ import rioxarray
 import xarray as xr
 from georeader.geotensor import GeoTensor
 from rasterio.enums import Resampling
+
+
+if TYPE_CHECKING:
+    import geopandas as gpd
 
 
 # ---------------------------------------------------------------------------
@@ -372,12 +376,16 @@ def load_gbif_points(
     *,
     bbox: tuple[float, float, float, float] = (-124, 32, -114, 42),
     limit: int = 500,
-):
+) -> gpd.GeoDataFrame:
     """Pull GBIF occurrence points (vector ``geopandas.GeoDataFrame``).
 
     Default: California live oak (``Quercus agrifolia``, taxonKey 5285750)
     across the California bbox — gives a believable point cloud for
     KNN-graph / radius-graph geometry demos.
+
+    Returns an empty-but-valid ``GeoDataFrame`` (with a ``geometry``
+    column and EPSG:4326 CRS) when GBIF returns zero results, so
+    downstream code can rely on the schema without a special case.
     """
     import geopandas as gpd
     import requests
@@ -395,20 +403,28 @@ def load_gbif_points(
     )
     r.raise_for_status()
     data = r.json()
-    rows = [
-        {
-            "key": rec["key"],
-            "scientificName": rec.get("scientificName"),
-            "eventDate": rec.get("eventDate"),
-            "geometry": Point(rec["decimalLongitude"], rec["decimalLatitude"]),
-        }
-        for rec in data.get("results", [])
-        if rec.get("decimalLongitude") is not None
-    ]
-    return gpd.GeoDataFrame(rows, crs="EPSG:4326")
+    rows: list[dict] = []
+    geoms: list[Point] = []
+    for rec in data.get("results", []):
+        lon = rec.get("decimalLongitude")
+        lat = rec.get("decimalLatitude")
+        if lon is None or lat is None:
+            continue
+        rows.append(
+            {
+                "key": rec["key"],
+                "scientificName": rec.get("scientificName"),
+                "eventDate": rec.get("eventDate"),
+            }
+        )
+        geoms.append(Point(lon, lat))
+    # Pass the geometry column explicitly so the CRS sticks even when
+    # `rows` is empty — `GeoDataFrame(rows, crs=...)` silently fails to
+    # set the CRS without an existing geometry column.
+    return gpd.GeoDataFrame(rows, geometry=geoms, crs="EPSG:4326")
 
 
-def load_natural_earth_admin1():
+def load_natural_earth_admin1() -> gpd.GeoDataFrame:
     """Natural Earth admin-1 (states / provinces) — small global vector."""
     import geopandas as gpd
 

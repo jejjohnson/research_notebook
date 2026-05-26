@@ -49,8 +49,7 @@ from geopatcher import (
     SpatialRegularStride,
 )
 from georeader.geotensor import GeoTensor
-from geotoolz import Sequential
-from geotoolz.core import Lambda
+from geotoolz import Lambda, Sequential
 from geotoolz.patch_ops import (
     ApplyToChips,
     GridSampler,
@@ -501,6 +500,31 @@ for ax in axes.ravel():
     ax.set_yticks([])
 plt.suptitle("Hann + stride=32: smooth blending, both backends agree on the interior")
 plt.show()
+
+# %% [markdown]
+# ## Scaling to a real Sentinel-2 tile
+#
+# The synthetic 256×256 GeoTIFF above keeps the demo fast. The
+# **same code path** scales to a full Sentinel-2 tile (~10980×10980
+# px) by swapping in a real MPC asset URL — `rasterio` reads only
+# the bytes each `SpatialPatcher.Window` touches.
+#
+# ```python
+# from geostack import load_stac_items, LAKE_TAHOE_TILE
+# item = load_stac_items(
+#     "sentinel-2-l2a", (-180, -90, 180, 90), "2024-06-01/2024-07-15",
+#     tile=LAKE_TAHOE_TILE, max_cloud_cover=5,
+# )[0]
+# # Lazy windowed read straight from MPC — no full-tile fetch.
+# reader = RasterioReader(item.assets["B04"].href)
+# field = RasterField(reader)
+# # Same patcher + same `Sequential` as above; storage shape is
+# # `(10980, 10980)` instead of `(256, 256)`.
+# ```
+#
+# In production the on-disk zarr accumulator scales to whatever fits
+# on the volume you point `target_path` at — useful for global
+# inference runs where the reconstructed field is hundreds of GB.
 
 # %% [markdown]
 # ## What this proves

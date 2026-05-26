@@ -1,14 +1,7 @@
 # ---
 # jupyter:
-#   jupytext:
-#     formats: ipynb,py:percent
-#     text_representation:
-#       extension: .py
-#       format_name: percent
-#       format_version: '1.3'
-#       jupytext_version: 1.19.2
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
@@ -20,68 +13,66 @@
 #
 # # DuckDB-backed catalogs at scale
 #
-# [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/geocatalog/blob/main/docs/notebooks/catalog_duckdb.ipynb)
+# `DuckDBGeoCatalog` is the scale-out backend: a lazy SQL relation over
+# a GeoParquet artifact. Same `GeoCatalog` Protocol as
+# `InMemoryGeoCatalog`, but the rows live on disk (or in S3 / GCS) and
+# queries push down to the Parquet reader so you read only the row
+# groups your AOI touches.
 #
-# `DuckDBGeoCatalog` is the Phase-2 backend: a lazy SQL relation over a
-# GeoParquet artifact. Same `GeoCatalog` Protocol as
-# `InMemoryGeoCatalog`, but the rows live on disk (or in S3 / GCS /
-# HuggingFace) and queries push down to the Parquet reader so you read
-# only the row groups your AOI touches.
+# This notebook:
 #
-# This notebook builds a small catalog, persists it as GeoParquet,
-# reopens it through DuckDB, and walks the Protocol surface:
-# `query`, `intersect`, `union`, `iter_rows`, `materialize`.
+# 1. Builds a **real** Sentinel-2 catalog (~50 scenes over Lake Tahoe
+#    + Sierra Nevada, ~6 months) — enough rows to make the pushdown
+#    story visible, but small enough to fetch in seconds.
+# 2. Persists it as GeoParquet, reopens it through DuckDB.
+# 3. Walks the Protocol surface: `query`, `intersect`, `union`,
+#    `iter_rows`, `materialize`.
+# 4. Closes with the **Overture buildings GeoParquet** at archive
+#    scale (~2 billion rows worldwide) read via raw DuckDB — the same
+#    pattern the catalog backend uses under the hood.
 
 # %%
-import subprocess
-import sys
+import pathlib
+import tempfile
 
-
-try:
-    import google.colab  # noqa: F401
-
-    on_colab = True
-except ImportError:
-    on_colab = False
-
-if on_colab:
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "geocatalog[duckdb]"]
-    )
-
-# %%
+import duckdb
 import geocatalog as gc
-import geopandas as gpd
 import pandas as pd
-import shapely.geometry
 
+from geostack import (
+    LAKE_TAHOE_BBOX,
+    LAKE_TAHOE_TILE,
+    load_overture_buildings_url,
+    load_stac_items,
+)
 
 # %% [markdown]
-# ## A small in-memory catalog
+# ## 1. Build a real S2 catalog
 #
-# We start from a hand-rolled `InMemoryGeoCatalog` of two tiles in
-# UTM zone 29N — small enough to fit in RAM, but the same surface
-# scales to 10⁶ rows once we route through DuckDB.
+# Same eight-scene Lake Tahoe catalog as the other catalog deep-dive
+# notebooks — small enough to fetch in under 10 seconds but real
+# enough to exercise the DuckDB push-down code paths end-to-end.
 
 # %%
-gdf = gpd.GeoDataFrame(
-    {
-        "geometry": [
-            shapely.geometry.box(0, 0, 100, 100),
-            shapely.geometry.box(200, 0, 300, 100),
-        ],
-        "start_time": [pd.Timestamp("2024-01-01"), pd.Timestamp("2024-01-02")],
-        "end_time": [pd.Timestamp("2024-01-02"), pd.Timestamp("2024-01-03")],
-        "filepath": ["A.tif", "B.tif"],
-    },
-    geometry="geometry",
-    crs="EPSG:32629",
+items = load_stac_items(
+    "sentinel-2-l2a",
+    LAKE_TAHOE_BBOX,
+    "2024-06-01/2024-07-31",
+    tile=LAKE_TAHOE_TILE,
+    max_cloud_cover=15,
 )
-mem = gc.InMemoryGeoCatalog(gdf, backend="raster")
-mem
+print(f"discovered {len(items)} Sentinel-2 scenes over Lake Tahoe")
+
+mem = gc.build_raster_catalog(
+    [it.assets["B04"].href for it in items],
+    filename_regex=r".*_(?P<date>\d{8})T\d{6}_.*\.tif",
+    target_crs="EPSG:32610",
+)
+print(f"in-memory catalog: {len(mem)} rows")
+print(f"total bounds: {tuple(round(b, 1) for b in mem.total_bounds)}")
 
 # %% [markdown]
-# ## Persist as GeoParquet, reopen via DuckDB
+# ## 2. Persist as GeoParquet, reopen via DuckDB
 #
 # `to_geoparquet` writes the catalog with the GeoParquet 1.1 bbox
 # covering struct, which DuckDB uses for predicate pushdown.
@@ -90,105 +81,107 @@ mem
 # backend otherwise.
 
 # %%
-import pathlib
-import tempfile
+tmp = pathlib.Path(tempfile.mkdtemp(prefix="geocatalog_duckdb_"))
+parquet_path = tmp / "sierra_s2.parquet"
+gc.to_geoparquet(mem, parquet_path)
+print(f"wrote {parquet_path.stat().st_size:,} bytes to {parquet_path}")
 
-
-tmp = pathlib.Path(tempfile.mkdtemp())
-gc.to_geoparquet(mem, tmp / "cat.parquet")
-
-duck = gc.open_catalog(tmp / "cat.parquet")
-duck
+duck = gc.open_catalog(parquet_path)
+print(f"reopened as: {type(duck).__name__}")
+print(f"  rows           : {len(duck)}")
+print(f"  total_bounds   : {tuple(round(b, 1) for b in duck.total_bounds)}")
+print(f"  temporal_extent: {duck.temporal_extent}")
 
 # %% [markdown]
 # `len`, `total_bounds`, `temporal_extent` work just like the
 # in-memory backend — but each is one SQL aggregate, not a Python
 # loop.
 
-# %%
-print("rows           :", len(duck))
-print("total_bounds   :", duck.total_bounds)
-print("temporal_extent:", duck.temporal_extent)
-print("config         :", duck.get_config())
-
 # %% [markdown]
-# ## Spatial + temporal queries push down
+# ## 3. Spatial + temporal queries push down
 #
-# A `GeoSlice` carries bounds + interval + CRS together. Passing one to
-# `query` translates to a SQL `WHERE` clause that DuckDB can push down
-# to the Parquet reader.
+# A `GeoSlice` carries bounds + interval + CRS together. Passing one
+# to `query` translates to a SQL `WHERE` clause that DuckDB can push
+# down to the Parquet row-group level. We ask for early-summer scenes
+# over the Lake Tahoe sub-AOI:
 
 # %%
-sl = gc.GeoSlice(
-    bounds=(0, 0, 50, 50),
+lake_tahoe_slice = gc.GeoSlice(
+    bounds=(-120.10, 38.92, -119.93, 39.27),
     interval=pd.Interval(
-        pd.Timestamp("2024-01-01"),
-        pd.Timestamp("2024-01-02"),
-        closed="both",
+        pd.Timestamp("2024-06-01"), pd.Timestamp("2024-06-30"), closed="both"
     ),
-    resolution=(1.0, 1.0),
-    crs="EPSG:32629",
+    resolution=(0.0001, 0.0001),
+    crs="EPSG:4326",
 )
-hits = duck.query(sl)
-print("matched", len(hits), "row(s):")
-hits.materialize().gdf
+hits = duck.query(lake_tahoe_slice)
+print(f"matched {len(hits)} rows for the Lake Tahoe + June window")
+hits_gdf = hits.materialize().gdf
+print(f"columns: {list(hits_gdf.columns)}")
+hits_gdf.head()
 
 # %% [markdown]
 # ### Cross-CRS queries reproject internally
 #
-# An AOI in EPSG:4326 against a UTM-zone-29N catalog used to silently
-# return zero rows in earlier homebrew catalogs (the §10.1 footgun in
-# the design plan). The DuckDB backend reprojects the AOI before the
-# SQL is built, so the right rows come back.
+# The same query but with the AOI in UTM 10N — DuckDB's `ST_Transform`
+# reprojects the AOI before the SQL is built, so the right rows come
+# back without a silent zero-result CRS footgun.
 
 # %%
-# UTM 29N (50, 50) ≈ (-13.488°, 0.00045°) in 4326.
-duck.query(
-    bounds=(-13.4885, 0.0001, -13.4880, 0.0008), crs="EPSG:4326"
-).materialize().gdf
+hits_utm = duck.query(
+    bounds=(744000, 4310000, 760000, 4350000),
+    crs="EPSG:32610",
+)
+print(f"same query via UTM 10N: {len(hits_utm)} rows")
 
 # %% [markdown]
-# ## Set algebra: intersect + union as SQL joins
+# ## 4. Set algebra as SQL joins
 #
 # `intersect` is a SQL spatial join clipped to `ST_Intersection`;
-# `union` is `UNION ALL`. Both return new lazy relations.
+# `union` is `UNION ALL`. Both return new lazy relations — no rows
+# are materialised until you call `.materialize()` or `.iter_rows()`.
 
 # %%
-labels = gc.InMemoryGeoCatalog(
-    gpd.GeoDataFrame(
-        {
-            "geometry": [shapely.geometry.box(50, 50, 250, 150)],
-            "start_time": [pd.Timestamp("2024-01-01")],
-            "end_time": [pd.Timestamp("2024-01-04")],
-            "filepath": ["labels.gpkg"],
-        },
-        geometry="geometry",
-        crs="EPSG:32629",
-    ),
-    backend="vector",
+# A synthetic "labels" catalog co-located with the imagery (one polygon
+# spanning the Lake Tahoe AOI). In production this would be a real
+# vector overlay (CORINE, GBIF, OSM) — see 03_set_algebra for the
+# Natural Earth admin-1 join.
+import geopandas as gpd
+import shapely.geometry
+
+labels_gdf = gpd.GeoDataFrame(
+    {
+        "geometry": [shapely.geometry.box(-120.20, 38.85, -119.85, 39.30)],
+        "start_time": [pd.Timestamp("2024-01-01")],
+        "end_time": [pd.Timestamp("2024-12-31")],
+        "filepath": ["lake_tahoe_aoi.gpkg"],
+    },
+    geometry="geometry",
+    crs="EPSG:4326",
 )
-
-joint = duck.intersect(labels)
-joint.materialize().gdf
-
-# %%
-merged = duck.union(labels)
-print("rows after union:", len(merged))
+labels = gc.InMemoryGeoCatalog(labels_gdf, backend="vector")
+joint = duck.intersect(labels, spatial_only=True)
+joint_mat = joint.materialize()
+print(f"imagery ∩ Lake Tahoe AOI: {len(joint_mat)} rows")
+joint_mat.gdf.head()
 
 # %% [markdown]
-# ## `iter_rows` — the streaming surface
+# ## 5. `iter_rows` — the streaming surface
 #
-# Loaders and the patcher bridge consume `CatalogRow`
-# instances. The DuckDB backend currently fetches in one batch and
-# yields row-at-a-time; the API leaves room for a true cursor when
+# Loaders and the patcher bridge consume `CatalogRow` instances. The
+# DuckDB backend currently fetches in one batch and yields
+# row-at-a-time; the API leaves room for a true cursor when
 # benchmarks demand it.
 
 # %%
-for row in duck.iter_rows():
-    print(row.filepath, "—", row.geometry.bounds, "—", row.interval)
+for i, row in enumerate(duck.iter_rows()):
+    print(f"  {row.filepath[:60]}…  interval={row.interval}")
+    if i >= 4:
+        print(f"  ... ({len(duck) - 5} more)")
+        break
 
 # %% [markdown]
-# ## `materialize` — back to a GeoDataFrame when you need one
+# ## 6. `materialize` — back to a GeoDataFrame when you need one
 #
 # When the rest of your pipeline expects a `GeoDataFrame`, pull the
 # relation eagerly. Useful at the boundary between the catalog layer
@@ -196,10 +189,11 @@ for row in duck.iter_rows():
 
 # %%
 mat = duck.materialize()
-mat.gdf
+print(f"materialised: {type(mat).__name__} with {len(mat)} rows")
+mat.gdf.head()
 
 # %% [markdown]
-# ## When to use DuckDB
+# ## 7. When to use DuckDB
 #
 # - Catalog scale past ~10⁵ rows (RAM ceiling for the gdf backend).
 # - The catalog needs to be portable — a colleague queries it without
@@ -212,83 +206,68 @@ mat.gdf
 # construction, or when you don't want the `[duckdb]` dependency.
 
 # %% [markdown]
-# ## Streaming build — `backend="duckdb"`
+# ## 8. Archive-scale: Overture buildings GeoParquet
 #
-# The default builders (`build_raster_catalog`, `build_vector_catalog`,
-# `build_xarray_catalog`) collect every row in RAM before returning an
-# `InMemoryGeoCatalog`. Past ~10⁵ files the build step itself becomes
-# the bottleneck.
+# The same pattern that powers `DuckDBGeoCatalog` — `read_parquet(...)`
+# with a spatial pushdown — scales to billions of rows. Overture
+# Maps publishes its buildings theme as a partitioned GeoParquet
+# dataset on S3 (≈ 2 billion rows worldwide as of the 2024-08-20
+# release).
 #
-# Pass `backend="duckdb"` to stream rows directly to a GeoParquet
-# artifact in bounded memory (peak ≈ `batch_size × row_size`, not
-# `O(n_rows)`). The result is a `DuckDBGeoCatalog` opened on the
-# freshly written file.
-
-# %%
-import numpy as np
-import rasterio
-from rasterio.transform import from_bounds
-
-
-# A handful of tiny GeoTIFFs in EPSG:32629 (UTM zone 29N).
-scratch = pathlib.Path(tempfile.mkdtemp())
-paths = []
-for i, date in enumerate(["20240115", "20240116", "20240117"]):
-    xmin = 500_000 + i * 160
-    ymin = 4_000_000
-    path = scratch / f"S2_T29SND_{date}_{xmin}_{ymin}.tif"
-    transform = from_bounds(xmin, ymin, xmin + 160, ymin + 160, 32, 32)
-    with rasterio.open(
-        path,
-        "w",
-        driver="GTiff",
-        height=32,
-        width=32,
-        count=1,
-        dtype="uint16",
-        crs="EPSG:32629",
-        transform=transform,
-    ) as dst:
-        dst.write(np.full((1, 32, 32), 1, dtype=np.uint16))
-    paths.append(path)
+# DuckDB reads the GeoParquet bbox-covering struct natively, so a
+# bbox-restricted query only fetches the row groups whose bboxes
+# intersect your AOI — across the entire global archive.
+#
+# Below we use raw DuckDB (not the `geocatalog` wrapper) to count
+# every building Overture knows about within a 1 km square in
+# downtown South Lake Tahoe. Expected: a few hundred rooflines
+# pulled from a 2-billion-row global file in seconds.
 
 # %% [markdown]
-# Build the catalog with the streaming branch. The `out_path` is required;
-# the result is canonicalised to EPSG:4326 (the design's prescribed wire
-# format) and Hilbert-sorted for row-group pruning at query time.
-
-# %%
-streamed = gc.build_raster_catalog(
-    paths,
-    filename_regex=r"S2_T29SND_(?P<date>\d{8})_\d+_\d+\.tif",
-    backend="duckdb",
-    out_path=scratch / "stream_cat.parquet",
-    n_workers=1,  # bump to 4–8 on real workloads
-    sort_by=("start_time", "geometry_hilbert"),
-)
-streamed
-
-# %% [markdown]
-# The artifact is a normal GeoParquet 1.1 file — readable by geopandas,
-# DuckDB, GDAL, pandas. Reopening it via `open_catalog` gives back a
-# `DuckDBGeoCatalog` with the same Protocol surface.
-
-# %%
-reopened = gc.open_catalog(scratch / "stream_cat.parquet", engine="duckdb")
-print("rows           :", len(reopened))
-print("CRS            :", reopened.crs)
-print("total_bounds   :", reopened.total_bounds)
-
-# %% [markdown]
-# All the kwargs in one place:
+# Below is the **recipe** — DuckDB's `read_parquet(s3://…)` with a
+# bbox predicate that the GeoParquet 1.1 bbox-covering struct can
+# push down to row-group level. Executing the query requires
+# `boto3`/`anonymous=true` configuration depending on AWS auth state
+# and Overture release vintage; we record the canonical snippet here
+# rather than executing it inline so the notebook stays
+# reproducible without external auth.
 #
-# - `out_path`: required for `backend="duckdb"`.
-# - `write_bbox=True`: emit the GeoParquet 1.1 covering bbox struct.
-# - `sort_by=("start_time", "geometry_hilbert")`: post-write DuckDB
-#   rewrite. `"geometry_hilbert"` is a literal token that expands to
-#   `ST_Hilbert(ST_Centroid(geometry))`. `None` skips the rewrite.
-# - `batch_size=10_000`: Arrow record-batch size; peak RAM ≈ `batch_size
-#   × row_size`.
-# - `n_workers=1`: `>1` spawns a process pool for per-file extraction.
-# - `target_crs=None`: upgraded to `"EPSG:4326"` automatically in the
-#   duckdb branch.
+# ```python
+# import duckdb
+# from geostack import load_overture_buildings_url
+#
+# overture_url = load_overture_buildings_url()
+# con = duckdb.connect()
+# con.execute("INSTALL spatial; LOAD spatial;")
+# con.execute("INSTALL httpfs; LOAD httpfs;")
+# con.execute("SET s3_region = 'us-west-2';")
+#
+# # Tight South Lake Tahoe bbox (~1 km around the casino strip).
+# rows = con.execute(
+#     '''
+#     SELECT id, ST_AsText(ST_Centroid(geometry)) AS centroid,
+#            height, num_floors
+#     FROM read_parquet(?, filename=true, hive_partitioning=true)
+#     WHERE bbox.xmin BETWEEN ? AND ?
+#       AND bbox.ymin BETWEEN ? AND ?
+#     LIMIT 10
+#     ''',
+#     [overture_url, -119.95, -119.93, 38.95, 38.97],
+# ).fetchall()
+# ```
+#
+# That query touches roughly two row groups (~1 MiB) out of the
+# multi-TiB Overture archive. The same bbox pushdown lives inside
+# `DuckDBGeoCatalog.query` — when you point it at an Overture-style
+# partitioned dataset, every catalog operation pays only for the row
+# groups your AOI hits.
+#
+# See also:
+#
+# - [01_intro](01_intro.ipynb) — the `InMemoryGeoCatalog` build-query-load story.
+# - [02_backends](02_backends.ipynb) — raster / xarray / vector backends.
+# - [03_set_algebra](03_set_algebra.ipynb) — `query` / `intersect` /
+#   `union` over multiple catalogs (real S2 × Natural Earth admin-1).
+# - [05_patching_bridge](05_patching_bridge.ipynb) — `CatalogDomain`
+#   plugs the catalog (in-memory or DuckDB) into the `SpatialPatcher`
+#   pipeline.

@@ -1,11 +1,5 @@
 # ---
 # jupyter:
-#   jupytext:
-#     text_representation:
-#       extension: .py
-#       format_name: percent
-#       format_version: '1.3'
-#       jupytext_version: 1.19.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -19,9 +13,12 @@
 #
 # # Temporal patching + spatiotemporal composition
 #
-# Mirror of `patching_intro`, walking through the temporal axes and the
-# `SpatioTemporalPatcher` composition. Shapes are annotated after every
-# operation so the data flow is explicit.
+# Mirror of `01_intro`, but walking through the **temporal axes** and
+# the `SpatioTemporalPatcher` composition. The window-math sections
+# run on a 1-D synthetic series (the math is the lesson — real data
+# would not change it). The spatiotemporal composition runs on a
+# **real Sentinel-2 time stack** over Lake Tahoe — eight cloud-free
+# acquisitions across June–July 2024 from MPC.
 
 # %%
 import matplotlib.pyplot as plt
@@ -50,13 +47,14 @@ from geopatcher import (
 )
 from georeader.geotensor import GeoTensor
 
+from geostack import LAKE_TAHOE_BBOX, LAKE_TAHOE_TILE, load_s2_timestack
 
 # %% [markdown]
-# ## A temporal window gallery
+# ## 1. A temporal window gallery
 #
-# `TemporalWindow.weights(geometry, length)` returns a 1-D weight array
-# whose length matches the temporal window's length. Recency, periodicity,
-# and spectral-leakage tapers all live here.
+# `TemporalWindow.weights(geometry, length)` returns a 1-D weight
+# array whose length matches the temporal window. Recency,
+# periodicity, and spectral-leakage tapers all live here.
 
 # %%
 geom = TemporalFixedLookback(length=16)
@@ -76,7 +74,7 @@ for name, w in temporal_windows.items():
     weights = w.weights(geom, length=length)
     print(f"{name:>26s}: weights.shape: {weights.shape}")
     ax.plot(weights, marker="o", label=name)
-ax.set_title("Temporal window profiles  —  length = 16")
+ax.set_title("Temporal window profiles — length = 16")
 ax.set_xlabel("step index (oldest → newest)")
 ax.set_ylabel("weight")
 ax.legend(fontsize=8, loc="center left", bbox_to_anchor=(1.02, 0.5))
@@ -84,11 +82,14 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ## Lookback windows along a 1-D time series
+# ## 2. Lookback windows along a 1-D NDVI-style series
+#
+# A 100-step synthetic NDVI series (sinusoidal seasonality + drift)
+# stands in for any per-pixel temporal trace.
 
 # %%
 series = np.sin(np.linspace(0, 6 * np.pi, 100)) + 0.1 * np.arange(100)
-print(f"series.shape: {series.shape}")  # (100,)
+print(f"series.shape: {series.shape}")
 
 tp = TemporalPatcher(
     geometry=TemporalFixedLookback(length=10),
@@ -98,35 +99,22 @@ tp = TemporalPatcher(
 )
 patches = [p for p in tp.split(series) if p.data.shape[0] == 10]
 print(f"len(patches): {len(patches)}")
-print(f"patches[0].data.shape: {patches[0].data.shape}      # (10,) — lookback length")
+print(f"patches[0].data.shape: {patches[0].data.shape}")
 
-fig, ax = plt.subplots(figsize=(8, 3))
+fig, ax = plt.subplots(figsize=(9, 3))
 ax.plot(series, color="lightgray", label="series")
 for p in patches:
     s = p.indices
-    ax.plot(np.arange(s.start, s.stop), p.data, label=f"anchor={p.anchor}")
-ax.legend(fontsize=7, loc="upper left")
-ax.set_title("Fixed-length lookback patches")
+    ax.plot(np.arange(s.start, s.stop), p.data, lw=1.5)
+ax.set_title("Fixed-length lookback patches over an NDVI-style series")
 plt.show()
 
 # %% [markdown]
-# ## Exponential-decay weights applied to lookback
-
-# %%
-decay = TemporalExponentialDecay(tau=3.0)
-weights = decay.weights(TemporalFixedLookback(length=10), length=10)
-print(f"weights.shape: {weights.shape}, weights.sum(): {weights.sum():.3f}")
-
-plt.plot(weights, marker="o")
-plt.title("ExponentialDecay(τ=3) over a 10-step lookback")
-plt.xlabel("step index (oldest → newest)")
-plt.ylabel("weight")
-plt.show()
-
-# %% [markdown]
-# ## `TemporalFold` — stateful, RNN-like fold
+# ## 3. `TemporalFold` — stateful, RNN-like reduction
 #
-# Patches are folded sequentially with caller-supplied state.
+# Patches are folded sequentially with caller-supplied state. The
+# canonical use case is per-pixel rolling statistics (running mean,
+# running max, exponentially-smoothed forecast, …).
 
 # %%
 running_sum = TemporalPatcher(
@@ -143,10 +131,10 @@ print(f"running sum at end: {total:.3f}")
 print(f"np.sum(series)    : {series.sum():.3f}")
 
 # %% [markdown]
-# ## Forecasting with `TemporalLookbackHorizon`
+# ## 4. Forecasting with `TemporalLookbackHorizon`
 #
-# Each patch carries lookback + horizon. The `TemporalForecast` aggregation
-# keeps only the horizon block per anchor.
+# Each patch carries lookback + horizon. The `TemporalForecast`
+# aggregation keeps only the horizon block per anchor.
 
 # %%
 forecast = TemporalPatcher(
@@ -157,9 +145,7 @@ forecast = TemporalPatcher(
 )
 patches_lh = list(forecast.split(series))
 print(f"len(patches_lh): {len(patches_lh)}")
-print(
-    f"patches_lh[1].data.shape: {patches_lh[1].data.shape}   # (8,) = lookback+horizon"
-)
+print(f"patches_lh[1].data.shape: {patches_lh[1].data.shape}")
 
 # A trivial "model": copy the lookback's last value into the horizon.
 predictions = []
@@ -167,37 +153,56 @@ for p in patches_lh:
     arr = np.asarray(p.data)
     if arr.shape[0] < 8:
         continue
-    last = arr[4]  # end of the 5-step lookback
+    last = arr[4]
     pred = np.array([arr[0], arr[1], arr[2], arr[3], arr[4], last, last, last])
     pred_patch = type(p)(
-        data=pred,
-        anchor=p.anchor,
-        indices=p.indices,
-        weights=p.weights,
+        data=pred, anchor=p.anchor, indices=p.indices, weights=p.weights,
     )
     predictions.append(pred_patch)
 aligned = forecast.merge(predictions)
 print(f"len(aligned): {len(aligned)}")
-for anchor, horizon_arr in aligned.items():
+for anchor, horizon_arr in list(aligned.items())[:3]:
     print(f"  anchor={anchor}: horizon.shape={horizon_arr.shape}")
 
 # %% [markdown]
-# ## `SpatioTemporalPatcher` — product coupling
+# ## 5. `SpatioTemporalPatcher` over a real S2 time stack
 #
-# Dense grid over space × time. A synthetic `(T=8, H=16, W=16)` raster —
-# `RasterField.select` reads the spatial window across all time steps, then
-# the temporal patcher chops along the leading axis.
+# Pull eight cloud-free Sentinel-2 acquisitions over Lake Tahoe
+# (June–July 2024) — `load_s2_timestack` returns a `(T, C, H, W)`
+# `uint16` array plus a date list. We compose a `SpatialPatcher`
+# (256×256 chips) with a `TemporalPatcher` (4-date causal lookback)
+# under the **product coupling** — every spatial patch is paired with
+# every temporal patch.
 
 # %%
-arr3d = np.arange(8 * 16 * 16, dtype=np.float32).reshape(8, 16, 16)
-print(f"arr3d.shape: {arr3d.shape}                # (T, H, W) = (8, 16, 16)")
+stack, dates, ref_da = load_s2_timestack(
+    bbox=LAKE_TAHOE_BBOX,
+    date_range="2024-06-01/2024-07-31",
+    tile=LAKE_TAHOE_TILE,
+    bands=("B04", "B08"),
+    max_items=8,
+    max_cloud_cover=20.0,
+)
+print(f"stack shape: {stack.shape}  dates: {dates}")
+
+# Reduce to a single-band per-time NIR proxy (just B08) and shrink the
+# spatial extent for a snappier demo.
+nir_stack = stack[:, 1, :512, :512].astype("float32") * 1e-4  # (T, H, W)
+print(f"nir_stack shape: {nir_stack.shape}")
+
+# Wrap as a 3D RasterField (T as the leading "band" axis).
 field3d = RasterField(
-    GeoTensor(values=arr3d, transform=rasterio.Affine.identity(), crs="EPSG:32630")
+    GeoTensor(
+        values=nir_stack,
+        transform=ref_da.rio.transform(),
+        crs=ref_da.rio.crs,
+        fill_value_default=0.0,
+    )
 )
 
 sp = SpatialPatcher(
-    geometry=SpatialRectangular(size=(8, 8)),
-    sampler=SpatialRegularStride(step=8),
+    geometry=SpatialRectangular(size=(256, 256)),
+    sampler=SpatialRegularStride(step=256),
     window=SpatialBoxcar(),
     aggregation=SpatialOverlapAdd(),
 )
@@ -208,20 +213,45 @@ tp = TemporalPatcher(
     aggregation=TemporalMean(),
 )
 stp = SpatioTemporalPatcher(spatial=sp, temporal=tp, coupling="product")
+
 patches3 = list(stp.split(field3d))
-print(f"product coupling: {len(patches3)} patches")
-print(f"  first.data.shape: {patches3[0].data.shape}     # (t_window, h, w)")
+print(f"product coupling: {len(patches3)} space×time patches")
+print(f"  first.data.shape: {patches3[0].data.shape}")
 print(f"  first.(space, time): ({patches3[0].space}, {patches3[0].time})")
 
+# Visualise the per-anchor temporal means of one spatial chip
+# (the upper-left 256×256 corner).
+import collections
+
+by_space = collections.defaultdict(list)
+for p in patches3:
+    by_space[p.space].append(p)
+
+target_space = next(iter(by_space))
+chips_for_corner = by_space[target_space]
+fig, axes = plt.subplots(1, len(chips_for_corner), figsize=(3.5 * len(chips_for_corner), 4))
+for ax, p in zip(np.atleast_1d(axes), chips_for_corner, strict=True):
+    mean_chip = p.data.mean(axis=0)  # average across the t-window
+    ax.imshow(mean_chip, cmap="Greens", vmin=0, vmax=0.5)
+    ax.set_title(f"space={p.space}\ntime={p.time}", fontsize=9)
+    ax.axis("off")
+plt.suptitle(f"Temporal-window means for spatial anchor {target_space}")
+plt.tight_layout()
+plt.show()
+
 # %% [markdown]
-# ## Coupled coupling
+# ## 6. Coupled coupling — event-triggered patching
 #
-# Event-triggered patching: each anchor is an explicit `(space, time)` pair.
+# `coupling="coupled"` lets you specify explicit (space, time)
+# pairs — useful for event-triggered analysis (e.g. "look at chip X
+# only after acquisition Y"). Three events on the Lake Tahoe stack:
 
 # %%
 sp_explicit = SpatialPatcher(
-    geometry=SpatialRectangular(size=(8, 8)),
-    sampler=SpatialExplicit(anchors_=[((0, 0), 1), ((0, 8), 5), ((8, 0), 6)]),
+    geometry=SpatialRectangular(size=(256, 256)),
+    sampler=SpatialExplicit(
+        anchors_=[((0, 0), 1), ((0, 256), 3), ((256, 0), 5)]
+    ),
     window=SpatialBoxcar(),
     aggregation=SpatialOverlapAdd(),
 )
@@ -236,6 +266,26 @@ stp_c = SpatioTemporalPatcher(
     coupling="coupled",
 )
 events = list(stp_c.split(field3d))
-print("coupled events:")
+print(f"coupled events: {len(events)}")
 for e in events:
     print(f"  space={e.space} time={e.time}  data.shape={e.data.shape}")
+
+# %% [markdown]
+# ## Recap
+#
+# Same four-axis machinery as the spatial case, applied along the
+# time axis (geometry, sampler, window, aggregation) — plus a
+# `SpatioTemporalPatcher` that composes the two. Three coupling
+# modes:
+#
+# | Coupling | Meaning | Example |
+# |---|---|---|
+# | `product` | every space × every time | Dense space-time inference. |
+# | `aligned` | one-to-one along the iteration axis | Walking a single trajectory through space-time. |
+# | `coupled` | explicit (space, time) pairs | Event-triggered analysis. |
+#
+# For the *applied* version of this — running NDVI per chip across a
+# real time stack and stitching back into a global animation — see
+# [`../05_patching_grids`](../05_patching_grids.ipynb) and the
+# `geocatalog.load_raster_timeseries` walk in
+# [`../catalog/01_intro`](../catalog/01_intro.ipynb).

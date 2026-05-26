@@ -1,13 +1,7 @@
 # ---
 # jupyter:
-#   jupytext:
-#     text_representation:
-#       extension: .py
-#       format_name: percent
-#       format_version: '1.3'
-#       jupytext_version: 1.19.2
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
@@ -17,38 +11,17 @@
 # title: "Catalog — raster / xarray / vector backends"
 # ---
 #
-# # Catalog backends: raster, xarray, vector
-#
-# [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/jejjohnson/geocatalog/blob/main/docs/notebooks/catalog_backends.ipynb)
+# # Catalog backends — raster, xarray, vector on real data
 #
 # Three builders share one `GeoCatalog` shape. This notebook builds a
-# small catalog for each and prints the underlying data structure so
-# you can see what each backend records.
-
-# %%
-import subprocess
-import sys
-
-
-try:
-    import google.colab  # noqa: F401
-
-    IN_COLAB = True
-except ImportError:
-    IN_COLAB = False
-
-if IN_COLAB:
-    subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "pip",
-            "install",
-            "-q",
-            "geocatalog @ git+https://github.com/jejjohnson/geocatalog@main",
-        ],
-        check=True,
-    )
+# catalog for each backend against **real public data**, then prints
+# the underlying GeoDataFrame so the substrate diversity is concrete:
+#
+# | Backend | Real source |
+# |---|---|
+# | `build_raster_catalog` | Eight Sentinel-2 L2A scenes over Lake Tahoe (MPC) |
+# | `build_xarray_catalog` | Copernicus DEM GLO-30 tile over the same AOI, saved as a NetCDF |
+# | `build_vector_catalog` | Natural Earth admin-1 polygons (Pacific states) |
 
 # %%
 import tempfile
@@ -59,54 +32,40 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import rasterio
-import shapely.geometry
+import planetary_computer
+import pystac_client
+import rioxarray
 import xarray as xr
-from rasterio.transform import from_bounds
 
+from geostack import (
+    LAKE_TAHOE_BBOX,
+    LAKE_TAHOE_TILE,
+    load_natural_earth_admin1,
+    load_stac_items,
+)
 
 tmp = Path(tempfile.mkdtemp(prefix="geocatalog_backends_"))
 print(f"workdir: {tmp}")
 
 # %% [markdown]
-# ## 1. Raster backend
+# ## 1. Raster backend — real Sentinel-2 L2A scenes
 #
-# The canonical case: a directory of GeoTIFFs, indexed by filename date.
-
+# Eight cloud-free scenes over Lake Tahoe (June–July 2024). The
+# catalog stores the **signed asset URLs**; pixel data is read lazily
+# on `load_raster`.
 
 # %%
-def write_tif(name: str, value: int, bounds: tuple, crs: str = "EPSG:32629") -> Path:
-    path = tmp / name
-    xmin, ymin, xmax, ymax = bounds
-    transform = from_bounds(xmin, ymin, xmax, ymax, 32, 32)
-    data = np.full((3, 32, 32), value, dtype=np.uint16)
-    with rasterio.open(
-        path,
-        "w",
-        driver="GTiff",
-        height=32,
-        width=32,
-        count=3,
-        dtype="uint16",
-        crs=crs,
-        transform=transform,
-    ) as dst:
-        dst.write(data)
-    return path
-
-
-raster_files = [
-    write_tif(
-        "S2_T29SND_20240115_r0.tif", 10, (500_000, 4_000_000, 500_320, 4_000_320)
-    ),
-    write_tif(
-        "S2_T29SND_20240116_r0.tif", 20, (500_320, 4_000_000, 500_640, 4_000_320)
-    ),
-]
+items = load_stac_items(
+    "sentinel-2-l2a",
+    LAKE_TAHOE_BBOX,
+    "2024-06-01/2024-07-31",
+    tile=LAKE_TAHOE_TILE,
+    max_cloud_cover=15,
+)
 raster_cat = gc.build_raster_catalog(
-    raster_files,
-    filename_regex=r"S2_T29SND_(?P<date>\d{8}).*\.tif",
-    target_crs="EPSG:32629",
+    [it.assets["B04"].href for it in items],
+    filename_regex=r".*_(?P<date>\d{8})T\d{6}_.*\.tif",
+    target_crs="EPSG:32610",
 )
 print(raster_cat)
 print(f"backend: {raster_cat.backend}")
@@ -115,27 +74,39 @@ print(f"backend: {raster_cat.backend}")
 # The catalog is literally a `GeoDataFrame` — show it.
 
 # %%
-raster_cat.gdf
+raster_cat.gdf[["filepath", "start_time", "end_time", "geometry"]].head()
 
 # %% [markdown]
-# ## 2. Xarray backend (extras: `xarray-raster`)
+# ## 2. Xarray backend — Copernicus DEM
 #
-# A small NetCDF on disk; bounds come from the coord min/max, time from
-# a configurable coordinate (default `"time"`).
+# A real DEM tile saved to disk as NetCDF; bounds come from the coord
+# min/max, time from a configurable coordinate (default `"time"`).
+# We add a singleton-time dim so the xarray builder's time-aware path
+# is exercised even though a DEM is technically time-invariant.
 
 # %%
-nc_path = tmp / "modis_2024.nc"
+mpc = pystac_client.Client.open(
+    "https://planetarycomputer.microsoft.com/api/stac/v1",
+    modifier=planetary_computer.sign_inplace,
+)
+dem_items = list(
+    mpc.search(
+        collections=["cop-dem-glo-30"],
+        bbox=LAKE_TAHOE_BBOX,
+    ).items()
+)
+dem = (
+    rioxarray.open_rasterio(dem_items[0].assets["data"].href, masked=False)
+    .squeeze("band", drop=True)
+    .rio.clip_box(*LAKE_TAHOE_BBOX, crs="EPSG:4326")
+)
+nc_path = tmp / "cop_dem_lake_tahoe.nc"
 ds = xr.Dataset(
-    {
-        "ndvi": (
-            ("time", "y", "x"),
-            np.linspace(0, 1, 5 * 16 * 16, dtype=np.float32).reshape(5, 16, 16),
-        )
-    },
+    {"elevation": (("time", "y", "x"), dem.values[None, ...])},
     coords={
-        "time": pd.date_range("2024-01-01", periods=5, freq="D"),
-        "y": np.linspace(40.5, 40.0, 16),
-        "x": np.linspace(-3.5, -3.0, 16),
+        "time": pd.date_range("2024-01-01", periods=1, freq="D"),
+        "y": dem.y.values,
+        "x": dem.x.values,
     },
 )
 ds.to_netcdf(nc_path)
@@ -144,7 +115,7 @@ print(ds)
 
 # %%
 xa_cat = gc.build_xarray_catalog(
-    [nc_path], target_crs="EPSG:4326", data_vars=["ndvi"], time_var="time"
+    [nc_path], target_crs="EPSG:4326", data_vars=["elevation"], time_var="time"
 )
 print(xa_cat)
 print(f"backend: {xa_cat.backend}")
@@ -152,70 +123,94 @@ print(f"n_timesteps: {int(xa_cat.gdf['n_timesteps'].iloc[0])}")
 xa_cat.gdf
 
 # %% [markdown]
-# ## 3. Vector backend
+# ## 3. Vector backend — Natural Earth admin-1 polygons
 #
-# Polygon footprints come from each file's `total_bounds` in the target
-# CRS. Loaders rasterise into a label `GeoTensor` for ML targets.
+# Polygon footprints come from each file's `total_bounds` in the
+# target CRS. We persist one GeoPackage per state so the catalog has
+# multiple rows.
 
 # %%
-vec_gdf = gpd.GeoDataFrame(
-    {
-        "class_id": [1, 2],
-        "geometry": [
-            shapely.geometry.box(500_000, 4_000_000, 500_160, 4_000_160),
-            shapely.geometry.box(500_160, 4_000_160, 500_320, 4_000_320),
-        ],
-    },
-    crs="EPSG:32629",
-)
-vec_path = tmp / "labels_20240115.gpkg"
-vec_gdf.to_file(vec_path, driver="GPKG")
-
-print("Original GeoDataFrame on disk:")
-print(vec_gdf)
+ne = load_natural_earth_admin1()
+pacific_states = ["California", "Oregon", "Nevada"]
+vec_paths = []
+for state in pacific_states:
+    sub = ne[ne["name"] == state][["name", "geometry"]].copy()
+    sub["class_id"] = pacific_states.index(state) + 1
+    # Date-stamped filename so the regex picks up a date.
+    p = tmp / f"admin1_{state.lower()}_20240101.gpkg"
+    sub.to_file(p, driver="GPKG")
+    vec_paths.append(p)
+print(f"wrote {len(vec_paths)} admin GeoPackages to {tmp}")
 
 # %%
 vec_cat = gc.build_vector_catalog(
-    [vec_path], filename_regex=r"labels_(?P<date>\d{8})\.gpkg"
+    vec_paths,
+    filename_regex=r"admin1_[a-z]+_(?P<date>\d{8})\.gpkg",
 )
 print(vec_cat)
 print(f"backend: {vec_cat.backend}")
 vec_cat.gdf
 
 # %% [markdown]
-# ## Rasterising the labels for an AOI
+# ## 4. Rasterising the labels over the Lake Tahoe AOI
+#
+# `load_vector(..., task="semantic_segmentation")` turns the polygon
+# overlay into a label `GeoTensor` that lines up with any imagery
+# you load over the same AOI — the foundation for a vision-model
+# training pipeline.
 
 # %%
 aoi = gc.GeoSlice(
-    bounds=(500_000, 4_000_000, 500_320, 4_000_320),
+    bounds=LAKE_TAHOE_BBOX,
     interval=pd.Interval(
-        pd.Timestamp("2024-01-15"), pd.Timestamp("2024-01-16"), closed="both"
+        pd.Timestamp("2024-01-01"), pd.Timestamp("2024-12-31"), closed="both"
     ),
-    resolution=(10.0, 10.0),
-    crs="EPSG:32629",
+    resolution=(0.001, 0.001),  # ~100 m at this latitude
+    crs="EPSG:4326",
 )
 label_tensor = gc.load_vector(
     vec_cat, aoi, task="semantic_segmentation", label_field="class_id"
 )
-print(f"label_tensor.values.shape: {label_tensor.values.shape}   # (1, 32, 32)")
+print(f"label_tensor.values.shape: {label_tensor.values.shape}")
 print(f"unique class IDs: {sorted(np.unique(label_tensor.values).tolist())}")
 
-plt.imshow(label_tensor.values[0], cmap="tab10", vmin=0, vmax=4)
-plt.title("Rasterised semantic-segmentation labels")
-plt.colorbar(shrink=0.7)
+fig, ax = plt.subplots(figsize=(7, 8))
+im = ax.imshow(label_tensor.values[0], cmap="tab10", vmin=0, vmax=4)
+ax.set_title("Pacific-states admin labels rasterised to Lake Tahoe AOI")
+ax.axis("off")
+cbar = fig.colorbar(im, ax=ax, shrink=0.7, ticks=[0, 1, 2, 3])
+cbar.ax.set_yticklabels(["background", "California", "Oregon", "Nevada"])
 plt.show()
 
 # %% [markdown]
-# ## GeoParquet roundtrip
+# ## 5. GeoParquet roundtrip
 #
-# Any catalog can be persisted as a GeoParquet artifact. The Phase 2
-# DuckDB backend reads the same format.
+# Any catalog can be persisted as a GeoParquet artifact. The DuckDB
+# backend (see [04_duckdb](04_duckdb.ipynb)) reads the same format
+# directly without materialising the dataframe.
 
 # %%
 parquet_path = tmp / "raster_cat.parquet"
 gc.to_geoparquet(raster_cat, parquet_path)
-print(f"wrote {parquet_path.stat().st_size} bytes to {parquet_path}")
+print(f"wrote {parquet_path.stat().st_size:,} bytes to {parquet_path}")
 
 recovered = gc.from_geoparquet(parquet_path)
 print(f"recovered: {recovered}")
 print(f"len matches: {len(recovered) == len(raster_cat)}")
+
+# %% [markdown]
+# ## Recap
+#
+# Same `GeoCatalog` API, three substrates:
+#
+# | Builder | Reads | Stores per row |
+# |---|---|---|
+# | `build_raster_catalog` | GeoTIFFs / `.vsicurl/` URLs | filepath, bounds (footprint polygon), time interval |
+# | `build_xarray_catalog` | NetCDF / zarr | filepath, bounds (from coord extent), time interval (from `time` coord), `n_timesteps` |
+# | `build_vector_catalog` | GeoPackage / Shapefile / Parquet | filepath, bounds (`total_bounds`), time interval |
+#
+# All three round-trip through GeoParquet. All three implement the
+# same `GeoCatalog` Protocol — `query`, `intersect`, `union`,
+# `where`, `load_*` — so the [set algebra](03_set_algebra.ipynb) and
+# [patching bridge](05_patching_bridge.ipynb) demos work uniformly
+# regardless of which builder you used.

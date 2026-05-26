@@ -10,8 +10,12 @@ requires-python = ">=3.12"
 # notebook under `notebooks/` can import `from geostack import
 # load_s2_chip` instead of duplicating ~30 lines of MPC plumbing.
 dependencies = [
-    # Core composition library + patching extra.
-    "geotoolz[patch] @ git+https://github.com/jejjohnson/geotoolz@main",
+    # Core composition library + patching framework. We name geotoolz
+    # and geopatcher separately so resolvers always get both, and the
+    # geotoolz `[patch]` extra (which pulls geopatcher) is redundant
+    # but harmless.
+    "geotoolz @ git+https://github.com/jejjohnson/geotoolz@main",
+    "geopatcher[pipekit] @ git+https://github.com/jejjohnson/geopatcher@main",
     # Catalog deep-dive notebooks (catalog/*).
     "geocatalog[fsspec] @ git+https://github.com/jejjohnson/geocatalog@main",
     # STAC discovery + remote raster read.
@@ -39,5 +43,31 @@ dependencies = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.metadata]
+# Allow direct git references in `project.dependencies` (the geotoolz /
+# geocatalog deps are pulled from GitHub until those packages land on
+# PyPI). Without this hatch refuses to build the wheel.
+allow-direct-references = true
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/geostack"]
+
+[tool.uv.sources]
+# geotoolz's own pyproject pins geopatcher to a `feat/pipekit-integration`
+# branch that only exists in the maintainer's local checkout. Override
+# here so a fresh `uv pip install -e projects/geostack` resolves
+# cleanly against GitHub `main`.
+geopatcher = { git = "https://github.com/jejjohnson/geopatcher", branch = "main" }
+geotoolz = { git = "https://github.com/jejjohnson/geotoolz", branch = "main" }
+geocatalog = { git = "https://github.com/jejjohnson/geocatalog", branch = "main" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+markers = [
+    "slow: marks tests that hit live external APIs (MPC, GBIF, Natural Earth, Overture); skip with -m 'not slow'",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]

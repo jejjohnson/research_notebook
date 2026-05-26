@@ -19,7 +19,7 @@
 #
 # # Composition core — walkthrough
 #
-# This notebook exercises every primitive in `geotoolz.core` end-to-end against
+# This notebook exercises every primitive in `geotoolz` end-to-end against
 # plain Python integers. **No `GeoTensor` setup required** — the composition
 # algebra is carrier-agnostic, so the same code that runs here works against
 # ndarrays, scalars, or `GeoTensor`s once domain operators land.
@@ -349,7 +349,7 @@ print(op(arr).ravel())
 # ## 10. Pickling — operator graphs as artifacts
 #
 # The "operator graph as audit artifact" pattern depends on pickling working.
-# Every YAML-safe operator in `geotoolz.core` round-trips through `pickle`
+# Every YAML-safe operator in `geotoolz` round-trips through `pickle`
 # cleanly. Operators flagged `forbid_in_yaml = True` (`Tap`, `Lambda`,
 # `Branch`, `Switch`, `Sink`, `ModelOp`) hold closures and cannot reproducibly
 # serialise — use `Operator` subclasses with named `get_config()` for those

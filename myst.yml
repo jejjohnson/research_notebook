@@ -60,6 +60,38 @@ project:
                 - file: notebooks/coordax/dynamics/10_pde_parameter_estimation.ipynb
     - title: Projects
       children:
+        - title: Geostack
+          children:
+            - file: projects/geostack/README.md
+            - title: Applied walkthrough
+              children:
+                - file: projects/geostack/notebooks/01_composition_core.ipynb
+                - file: projects/geostack/notebooks/02_pipeline_idioms.ipynb
+                - file: projects/geostack/notebooks/03_operators_lake_tahoe.ipynb
+                - file: projects/geostack/notebooks/04_image_processing_caldor.ipynb
+                - file: projects/geostack/notebooks/05_patching_grids.ipynb
+                - file: projects/geostack/notebooks/06_ml_patches_augment.ipynb
+                - file: projects/geostack/notebooks/07_deployment_shapes.ipynb
+            - title: Patching deep dives
+              children:
+                - file: projects/geostack/notebooks/patching/01_intro.ipynb
+                - file: projects/geostack/notebooks/patching/02_geometries.ipynb
+                - file: projects/geostack/notebooks/patching/03_sampling.ipynb
+                - file: projects/geostack/notebooks/patching/04_backends.ipynb
+                - file: projects/geostack/notebooks/patching/05_time.ipynb
+                - file: projects/geostack/notebooks/patching/06_streaming.ipynb
+                - title: Framework recipes
+                  children:
+                    - file: projects/geostack/notebooks/patching/recipes/grain.ipynb
+                    - file: projects/geostack/notebooks/patching/recipes/jax_vmap.ipynb
+                    - file: projects/geostack/notebooks/patching/recipes/torch_dataset.ipynb
+            - title: Catalog deep dives
+              children:
+                - file: projects/geostack/notebooks/catalog/01_intro.ipynb
+                - file: projects/geostack/notebooks/catalog/02_backends.ipynb
+                - file: projects/geostack/notebooks/catalog/03_set_algebra.ipynb
+                - file: projects/geostack/notebooks/catalog/04_duckdb.ipynb
+                - file: projects/geostack/notebooks/catalog/05_patching_bridge.ipynb
         - title: Methane PoD
           children:
             - file: projects/methane_pod/README.md

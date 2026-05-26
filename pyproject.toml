@@ -36,7 +36,7 @@ docs = [
 [tool.ruff]
 target-version = "py312"
 line-length = 88
-exclude = ["notebooks/", "marimo_notebooks/"]
+exclude = ["notebooks/", "marimo_notebooks/", "projects/*/notebooks/"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
@@ -45,6 +45,11 @@ ignore = ["E402", "E721", "E731", "E741", "F722"]
 [tool.ruff.lint.per-file-ignores]
 "notebooks/**/*.py" = ["E501", "I001", "B018"]
 "marimo_notebooks/**/*.py" = ["E501", "I001", "B018"]
+# Jupytext py:percent sources under projects/*/notebooks/ have long
+# markdown URLs, Unicode glyphs (×, −, …), and late cell-imports — all
+# expected in notebook prose. Mirror the relaxation that `notebooks/`
+# above already gets, plus RUF001/002/003 for Unicode in markdown.
+"projects/*/notebooks/**/*.py" = ["E501", "I001", "B018", "RUF001", "RUF002", "RUF003"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

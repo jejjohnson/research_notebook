@@ -253,6 +253,41 @@ execute-plume-radtran = "jupyter nbconvert --to notebook --execute --inplace pro
 test-plume-simulation = "pytest projects/plume_simulation/tests -v -m 'not slow'"
 test-plume-simulation-all = "pytest projects/plume_simulation/tests -v"
 
+# ---------------------------------------------------------------------------
+# Project env: geostack
+# Notebook-only walkthrough of the pipekit + geotoolz + geopatcher stack
+# (see projects/geostack/README.md for the chronological order). The
+# geotoolz / geopatcher / pipekit trio is not on PyPI yet, so the
+# editable geostack pyproject pulls them from GitHub.
+# ---------------------------------------------------------------------------
+[feature.geostack.dependencies]
+python = "3.12.*"
+ipykernel = ">=6.29"
+jupyter = "*"
+nbconvert = "*"
+jupytext = ">=1.16"
+
+[feature.geostack.pypi-dependencies]
+geostack = { path = "projects/geostack", editable = true }
+# geotoolz[patch] + planetary-computer + pystac-client + rioxarray +
+# matplotlib come through the geostack pyproject's dependency stanza.
+
+[feature.geostack.tasks]
+# Runs the applied walkthrough (01–07) end-to-end. Notebooks 03–06
+# fetch Sentinel-2 scenes from Microsoft Planetary Computer
+# (anonymous read), so a network connection is required. 1800 s
+# timeout per notebook covers the slower MPC reads (post-fire
+# scene in 04 + 4-band scene in 06).
+execute-geostack = "jupyter nbconvert --to notebook --execute --inplace projects/geostack/notebooks/*.ipynb --ExecutePreprocessor.timeout=1800"
+# Runs the patching deep dives + recipes against real MPC data.
+execute-geostack-patching = "jupyter nbconvert --to notebook --execute --inplace projects/geostack/notebooks/patching/*.ipynb projects/geostack/notebooks/patching/recipes/*.ipynb --ExecutePreprocessor.timeout=1800"
+# Runs the catalog deep dives against real MPC + Natural Earth.
+execute-geostack-catalog = "jupyter nbconvert --to notebook --execute --inplace projects/geostack/notebooks/catalog/*.ipynb --ExecutePreprocessor.timeout=1800"
+# Convenience: applied + patching + catalog in one shot.
+execute-geostack-all = { depends-on = ["execute-geostack", "execute-geostack-patching", "execute-geostack-catalog"] }
+# Smoke-test the data loaders against the live external APIs.
+test-geostack = "pytest projects/geostack/tests/ -v -m slow"
+
 [environments]
 default = { features = ["dev"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
@@ -262,6 +297,7 @@ pyrox = { features = ["pyrox"], solve-group = "pyrox" }
 coordax = { features = ["coordax"], solve-group = "coordax" }
 methane-pod = { features = ["methane-pod", "dev"], solve-group = "methane-pod" }
 plume-simulation = { features = ["plume-simulation", "dev"], solve-group = "plume-simulation" }
+geostack = { features = ["geostack", "dev"], solve-group = "geostack" }
 
 [tasks]
 test = "pytest -v"

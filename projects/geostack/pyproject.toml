@@ -1,0 +1,83 @@
+[project]
+name = "geostack"
+version = "0.1.0"
+description = "Worked examples for the geostack (pipekit + geotoolz + geopatcher) — chronological notebook walkthrough."
+requires-python = ">=3.12"
+
+# Library plus notebook deps. The library (`src/geostack/`) ships
+# `data.py`, a thin collection of real-data loaders (Sentinel-2 chips,
+# Landsat, NAIP, ERA5, GBIF, Overture, Natural Earth) so every
+# notebook under `notebooks/` can import `from geostack import
+# load_s2_chip` instead of duplicating ~30 lines of MPC plumbing.
+dependencies = [
+    # Core composition library + patching framework. We name geotoolz
+    # and geopatcher separately so resolvers always get both, and the
+    # geotoolz `[patch]` extra (which pulls geopatcher) is redundant
+    # but harmless.
+    "geotoolz @ git+https://github.com/jejjohnson/geotoolz@main",
+    "geopatcher[pipekit] @ git+https://github.com/jejjohnson/geopatcher@main",
+    # Catalog deep-dive notebooks (catalog/*). We deliberately do NOT
+    # request the `[fsspec]` extra: it pins `s3fs>=2025.12` -> a
+    # specific `aiobotocore` -> a specific `botocore` that collides
+    # with pixi's conda-pinned botocore in CI. The notebooks only need
+    # https:// (signed MPC URLs), which fsspec covers via `aiohttp`
+    # alone.
+    "geocatalog @ git+https://github.com/jejjohnson/geocatalog@main",
+    "fsspec>=2024.6",
+    "aiohttp>=3.10",
+    # STAC discovery + remote raster read.
+    "planetary-computer>=1.0",
+    "pystac-client>=0.8",
+    "rioxarray>=0.18",
+    "xarray>=2024.3",
+    "zarr>=2.17",
+    # Plotting (every notebook).
+    "matplotlib>=3.10",
+    # Vector helpers.
+    "geopandas>=0.14",
+    "shapely>=2",
+    "pyogrio>=0.9",  # geopandas vector IO (GeoPackage, Parquet)
+    "requests>=2.31",
+    "scipy>=1.13",  # patching/03_sampling: nearest-neighbour histograms
+    "netcdf4>=1.7",  # catalog/02_backends: build_xarray_catalog reads .nc
+    "xvec>=0.4",  # patching/04_backends: XvecField (geometry-coord xr.Dataset)
+    # Catalog scale demos (catalog/04_duckdb).
+    "duckdb>=1.0",
+    # Re-execution (jupytext is not required at runtime since the .py
+    # sources don't ship in the repo — only the executed .ipynb does).
+    "ipykernel>=6.29",
+    "nbconvert>=7",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+# Allow direct git references in `project.dependencies` (the geotoolz /
+# geocatalog deps are pulled from GitHub until those packages land on
+# PyPI). Without this hatch refuses to build the wheel.
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/geostack"]
+
+[tool.uv.sources]
+# geotoolz's own pyproject pins geopatcher to a `feat/pipekit-integration`
+# branch that only exists in the maintainer's local checkout. Override
+# here so a fresh `uv pip install -e projects/geostack` resolves
+# cleanly against GitHub `main`.
+geopatcher = { git = "https://github.com/jejjohnson/geopatcher", branch = "main" }
+geotoolz = { git = "https://github.com/jejjohnson/geotoolz", branch = "main" }
+geocatalog = { git = "https://github.com/jejjohnson/geocatalog", branch = "main" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+markers = [
+    "slow: marks tests that hit live external APIs (MPC, GBIF, Natural Earth, Overture); skip with -m 'not slow'",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]

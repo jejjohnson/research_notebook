@@ -110,3 +110,13 @@ projects/plume_simulation/data/hapi_lut/
 *.tmp
 *.swp
 _build/
+
+# Obsidian editor metadata (per-machine workspace state).
+.obsidian/
+
+# Stray local scratch dirs (not part of the repo's source).
+# `research_notebook/` is the 2023-era Jupyter Book build output that
+# predates the move to MyST; `code/` is a personal scratchpad of
+# jax/torch experiments outside the formal project layout.
+research_notebook/
+code/

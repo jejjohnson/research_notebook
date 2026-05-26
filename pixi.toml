@@ -253,6 +253,32 @@ execute-plume-radtran = "jupyter nbconvert --to notebook --execute --inplace pro
 test-plume-simulation = "pytest projects/plume_simulation/tests -v -m 'not slow'"
 test-plume-simulation-all = "pytest projects/plume_simulation/tests -v"
 
+# ---------------------------------------------------------------------------
+# Project env: geostack
+# Notebook-only walkthrough of the pipekit + geotoolz + geopatcher stack
+# (see projects/geostack/README.md for the chronological order). The
+# geotoolz / geopatcher / pipekit trio is not on PyPI yet, so the
+# editable geostack pyproject pulls them from GitHub.
+# ---------------------------------------------------------------------------
+[feature.geostack.dependencies]
+python = "3.12.*"
+ipykernel = ">=6.29"
+jupyter = "*"
+nbconvert = "*"
+jupytext = ">=1.16"
+
+[feature.geostack.pypi-dependencies]
+geostack = { path = "projects/geostack", editable = true }
+# geotoolz[patch] + planetary-computer + pystac-client + rioxarray +
+# matplotlib come through the geostack pyproject's dependency stanza.
+
+[feature.geostack.tasks]
+# Runs all seven notebooks end-to-end. Notebooks 03–06 fetch Sentinel-2
+# scenes from Microsoft Planetary Computer (anonymous read), so a
+# network connection is required. 1800 s timeout per notebook to cover
+# the slower MPC reads (post-fire scene in 04 + 4-band scene in 06).
+execute-geostack = "jupyter nbconvert --to notebook --execute --inplace projects/geostack/notebooks/*.ipynb --ExecutePreprocessor.timeout=1800"
+
 [environments]
 default = { features = ["dev"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
@@ -262,6 +288,7 @@ pyrox = { features = ["pyrox"], solve-group = "pyrox" }
 coordax = { features = ["coordax"], solve-group = "coordax" }
 methane-pod = { features = ["methane-pod", "dev"], solve-group = "methane-pod" }
 plume-simulation = { features = ["plume-simulation", "dev"], solve-group = "plume-simulation" }
+geostack = { features = ["geostack", "dev"], solve-group = "geostack" }
 
 [tasks]
 test = "pytest -v"

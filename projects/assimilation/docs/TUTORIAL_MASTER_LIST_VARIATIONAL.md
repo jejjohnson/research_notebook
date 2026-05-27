@@ -809,7 +809,13 @@ The "latent-space" angle on vardax — autoencoder priors as a regulariser, late
 
 ## Status snapshot
 
-This is a curriculum scaffold; every row is `—` (gap) unless an existing notebook in `R = research_notebook` already covers it. Follow-up PRs will populate `projects/vardax/notebooks/<section>/<name>.ipynb` and flip the `Source` column.
+This is a curriculum scaffold. Each row's `Source` column reflects what already exists:
+
+- `R` rows are notebooks that already live in `projects/assimilation/notebooks/` (the L63 / L96 / L96-2L tutorials shipped with the assimilation project).
+- `V` / `G` / `K` rows are notebooks that exist upstream in the `vardax` / `gaussx` / `pipekit` repos (none at the time of writing — every such row currently reads `—`, but the legend documents what those tags mean when upstream notebooks land).
+- `—` rows are gaps to be filled by follow-up PRs.
+
+Follow-up PRs will populate `projects/assimilation/notebooks/vardax/<section>/<name>.ipynb` (a new `vardax/` subdirectory under the existing notebooks tree, alongside `00_lorenz63_setup.md` and friends) and flip the `Source` column from `—` to `R`. Pure-prose chapters that port math may land as `.md` instead of `.ipynb`.
 
 **v1 priority** (~6 sessions, ~35 notebooks): Parts 0–6 + 13 + 14 + 16 + the L63 entries that already exist in `projects/assimilation/`. Foundations + components + half the seven methods + posterior + validation + training.
 

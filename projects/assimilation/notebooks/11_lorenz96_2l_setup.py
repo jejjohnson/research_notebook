@@ -209,11 +209,12 @@ print(f"total prior-floor RMSE: {total_rms:.3f}")
 # 2. **Fast recovery.** Since the fast variables are *unobserved*,
 #    the only way to constrain them is through the slow-fast
 #    coupling. Strong-constraint 4DVar may actually **degrade** the
-#    fast RMSE below the prior floor — slow-fitting can drive the
+#    fast RMSE above the prior floor — slow-fitting can drive the
 #    optimiser to fast values that minimise slow residual but
 #    diverge from the true fast state ("imbalance" failure mode).
-#    Weak-4DVar's model-error allowance softens this; amortized
-#    methods can leverage learned fast-state structure.
+#    Weak-4DVar's model-error allowance softens this in principle;
+#    amortized methods can leverage learned fast-state structure to
+#    avoid the trap entirely.
 
 # %% [markdown]
 # ## 5. Forward roundtrip sanity check

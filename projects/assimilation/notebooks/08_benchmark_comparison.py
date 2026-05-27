@@ -232,7 +232,7 @@ plt.show()
 #   the dynamics constraint.
 # - **FourDVarNet** edges past strong-4DVar with ~3 seconds of
 #   training.
-# - **AmortizedPosterior** wins the MAP race outright (RMSE ~0.05) and
+# - **AmortizedPosterior** wins the MAP race outright (RMSE ~0.7) and
 #   wins by 100× on inference latency — but the predictive variances
 #   are mis-calibrated, see the per-notebook NLL discussion in
 #   [`07_amortized_posterior`](07_amortized_posterior.ipynb).

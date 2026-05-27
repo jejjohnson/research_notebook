@@ -27,13 +27,15 @@ inversion problem.
 State layout
 ------------
 The flat state vector has length ``K + J * K``: the first ``K``
-entries are the slow variables, the remaining ``J * K`` are the fast
-variables in row-major order with the slow index varying slowest.
+entries are the slow variables. The remaining ``J * K`` fast entries
+are laid out as ``K`` contiguous blocks of length ``J`` — i.e.
+``Y[k, j]`` with the slow index ``k`` varying slowest. Each slow
+variable ``X_k`` couples to its own length-``J`` block.
 
 .. code-block:: python
 
-    X = state[:K]
-    Y = state[K:].reshape(J, K)  # Y[j, k]
+    X = state[:K]                  # (K,)
+    Y = state[K:].reshape(K, J)    # Y[k, j]
 """
 
 from __future__ import annotations
@@ -118,17 +120,18 @@ class Lorenz96TwoLevelVF(eqx.Module):
         X = state[:K]
         Y = state[K:].reshape(J * K)
 
-        # Slow back-reaction: mean of the J fast variables in each
-        # slow block.
-        Y_blocks = Y.reshape(K, J)  # (K, J)
-        Y_mean_per_slow = Y_blocks.mean(axis=1)  # (K,)
+        # Slow back-reaction term: -(h c / b) * sum_{j} Y_{j, k}.
+        # Y is laid out as K contiguous blocks of length J (see module
+        # docstring), so reshape (K, J) and sum over j.
+        Y_blocks = Y.reshape(K, J)  # (K, J), Y_blocks[k, j]
+        Y_block_sum = Y_blocks.sum(axis=1)  # (K,)
 
-        # Slow tendencies: same L96-1L structure, plus back-reaction.
+        # Slow tendencies: same L96-1L structure plus back-reaction.
         dX = (
             jnp.roll(X, 1) * (jnp.roll(X, -1) - jnp.roll(X, 2))
             - X
             + self.F
-            - self.h * self.c * Y_mean_per_slow  # (h c / b) * J * Y_mean
+            - (self.h * self.c / self.b) * Y_block_sum
         )
 
         # Fast tendencies: cyclic shifts on the full JK-long ring.

@@ -7,6 +7,12 @@ Each notebook calls
 which times one analysis evaluation, computes the canonical metrics,
 and returns a `MethodResult`. The comparison notebook collects a list
 of these and turns them into a pandas DataFrame via `compare`.
+
+Generic over state dim: ``run_fn`` may return any ``(T+1, D)`` array
+and ``problem`` may be any of `LorenzProblem` (L63),
+`LorenzL96Problem` (L96 single-level), or `LorenzL96TwoLevelProblem`
+(L96 two-level) — anything that exposes a ``truth: (T+1, D)``
+attribute.
 """
 
 from __future__ import annotations
@@ -14,48 +20,55 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Protocol
 
 import jax
 import jax.numpy as jnp
 from jaxtyping import Array, Float
 
-from assimilation.lorenz63 import LorenzProblem
 from assimilation.metrics import rmse
+
+
+class _HasTruth(Protocol):
+    """Minimal duck-type satisfied by every `Lorenz*Problem` in this
+    package — only the ``truth`` array is read by the harness."""
+
+    truth: Float[Array, "T_plus_1 D"]
 
 
 @dataclass
 class MethodResult:
-    """One method's output on the canonical Lorenz-63 problem.
+    """One method's output on a shared benchmark problem.
 
     Attributes
     ----------
     name: short string id (e.g. ``"oi"``, ``"strong_4dvar"``).
-    mean: ``(T+1, 3)`` analysis trajectory (the MAP / posterior mean).
+    mean: ``(T+1, D)`` analysis trajectory (the MAP / posterior mean).
+        ``D`` is the state dimension of the specific problem — 3 for
+        L63, 40 for L96 single-level, 72 for L96 two-level.
     runtime_ms: wall-clock for a single analysis call, in milliseconds.
         Includes the first compile; pass ``warmup=True`` to subtract it.
     train_time_s: training wall-clock for learned methods, in seconds.
         ``None`` for closed-form / iterative methods that don't train.
     rmse_total: scalar RMSE over the whole trajectory.
-    rmse_per_component: ``(3,)`` per-component RMSE for the three Lorenz
-        states.
+    rmse_per_component: ``(D,)`` per-component RMSE.
     extras: free-form dict — used by individual notebooks for method-
         specific diagnostics (e.g. number of GN outer iterations).
     """
 
     name: str
-    mean: Float[Array, "T_plus_1 3"]
+    mean: Float[Array, "T_plus_1 D"]
     runtime_ms: float
     rmse_total: float
-    rmse_per_component: Float[Array, 3]
+    rmse_per_component: Float[Array, " D"]
     train_time_s: float | None = None
     extras: dict[str, Any] | None = None
 
 
 def run_method(
     name: str,
-    run_fn: Callable[[], Float[Array, "T_plus_1 3"]],
-    problem: LorenzProblem,
+    run_fn: Callable[[], Float[Array, "T_plus_1 D"]],
+    problem: _HasTruth,
     *,
     warmup: bool = True,
     train_time_s: float | None = None,
@@ -63,9 +76,10 @@ def run_method(
 ) -> MethodResult:
     """Time ``run_fn`` and compute RMSE against the problem's truth.
 
-    ``run_fn`` is a zero-arg closure that returns the analysis trajectory
-    of shape ``(T+1, 3)``. It is called twice when ``warmup=True``: the
-    first call's compile time is discarded.
+    ``run_fn`` is a zero-arg closure returning the analysis trajectory
+    of shape ``(T+1, D)`` matching ``problem.truth``. It is called
+    twice when ``warmup=True``: the first call's compile time is
+    discarded.
     """
     if warmup:
         _warm = run_fn()

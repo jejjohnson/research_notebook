@@ -14,26 +14,31 @@
 # ---
 
 # %% [markdown]
-# # Two-level L96 benchmark — all seven methods, head to head
+# # Two-level L96 benchmark — six methods, head to head
 #
-# Same script as the L63 and L96-1L comparison notebooks but on the
-# multi-scale 72-D problem set up in
+# Same script as the L63 and L96-1L comparison notebooks, restricted
+# to six of the seven AnalysisStep methods (Incremental-4DVar
+# diverges on the stiff slow-fast coupling — see the note at the end
+# of Section 2 — and is omitted here).
+#
+# The benchmark runs on the multi-scale 72-D problem set up in
 # [`11_lorenz96_2l_setup`](11_lorenz96_2l_setup.ipynb). The notebook
-# tracks **two** RMSE columns now — one for the slow block and one
-# for the fast block — because the slow-only observation regime
-# means the two scales are constrained very differently.
+# tracks **two** RMSE columns — one for the slow block and one for
+# the fast block — because the slow-only observation regime means
+# the two scales are constrained very differently.
 #
 # What we're watching for:
 #
-# - **OI / 3DVar** match the prior floor on slow ($\sim 7.6$) and
-#   fast ($\sim 0.4$) — the diagonal $B$ has no way to propagate
+# - **OI / 3DVar** match the prior floor on slow (~$6.5$) and
+#   fast (~$0.3$) — the diagonal $B$ has no way to propagate
 #   information.
-# - **4DVar variants** drop the slow RMSE; the dynamics constraint
-#   exists to propagate slow obs into unobserved slow grid points
-#   *and* into the (entirely unobserved) fast block.
-# - **AmortizedPosterior / FourDVarNet** learn the slow-fast joint
-#   structure from simulated pairs and may recover the fast block
-#   better than any iterative method on this short window.
+# - **Strong-4DVar** drops slow RMSE dramatically (the dynamics
+#   constraint propagates slow obs into unobserved slow grid
+#   points), but **degrades** the (unobserved) fast block above its
+#   prior floor — the classic "imbalance" failure.
+# - **AmortizedPosterior** learns the slow-fast joint structure from
+#   simulated pairs; it's the only method that preserves the fast
+#   block at the prior floor while still improving slow recovery.
 
 # %%
 from __future__ import annotations
@@ -289,33 +294,37 @@ plt.show()
 # %% [markdown]
 # ## 7. Discussion
 #
-# Expected reading of the table (your numbers will vary slightly with
-# the random seed):
+# Reading of the table (your numbers will vary slightly with the
+# random seed):
 #
-# - **OI / 3DVar.** Both match the slow prior floor (~7.6) and leave
-#   fast at the fast prior floor (~0.4). Identical by Decision D14.
-# - **Strong-4DVar.** Cuts the slow RMSE substantially via the
-#   dynamics constraint. Often **degrades fast RMSE above the prior
-#   floor** — the classic "imbalance" failure mode where slow-
-#   fitting forces fast values that satisfy slow residuals but
-#   diverge from truth.
-# - **Incremental-4DVar.** Similar slow improvement at a fraction of
-#   the per-evaluation cost; with relaxed CG tolerances at $D = 72$.
-# - **Weak-4DVar.** The model-error allowance buys some protection
-#   against the imbalance failure, at the cost of looser slow fit.
-# - **FourDVarNet.** Learned solver; trained on 48 simulated
-#   trajectories. Tends to handle slow and fast jointly because the
-#   modulator sees the full state.
-# - **AmortizedPosterior.** No inner solve. Sub-millisecond
+# - **OI / 3DVar.** Both match the slow prior floor (~6.5) and leave
+#   fast at the fast prior floor (~0.3). Identical by Decision D14.
+# - **Strong-4DVar.** Cuts slow RMSE roughly 3× via the dynamics
+#   constraint. Best slow recovery in the benchmark, but **fast RMSE
+#   doubles above the prior floor** — the classic "imbalance"
+#   failure mode where slow-fitting drives fast values that satisfy
+#   slow residuals but diverge from truth.
+# - **Weak-4DVar.** Surprisingly poor on this problem: the model-
+#   error augmentation enlarges the control space substantially and
+#   the BFGS solver struggles to converge in the default
+#   `max_steps`. The per-grid-point `rmse_max` column shows the
+#   blow-up. Increasing `max_steps` and tightening
+#   `model_err_cov_op` would help.
+# - **FourDVarNet.** Learned solver, trained on 48 simulated
+#   trajectories. Under-trained at $D = 72$ — the modulator hasn't
+#   seen enough joint slow-fast structure yet. Longer training
+#   closes the gap.
+# - **AmortizedPosterior.** No inner solve, sub-millisecond
 #   inference. The regression head learns the slow-fast statistical
-#   structure from 128 simulated pairs; the result is often the
-#   best fast-block RMSE because the network has internalised the
-#   coupling rather than re-deriving it from scratch every analysis.
+#   structure from 128 simulated pairs; this is the **only method
+#   that preserves the fast block at the prior floor** while still
+#   improving slow recovery — exactly the behaviour the imbalance
+#   failure makes impossible for iterative methods.
 #
 # Take-home: **slow obs + dynamics is not enough to constrain fast
-# state**. You either need explicit model-error treatment
-# (weak-4DVar) or learned structure (amortized / FourDVarNet) to
-# avoid making fast variables worse than the prior.
+# state in a well-balanced way**. Strong-4DVar wins on slow recovery
+# but pays for it on fast; only the learned method internalises
+# enough joint structure to update slow without disturbing fast.
 #
 # Follow-ups:
 #

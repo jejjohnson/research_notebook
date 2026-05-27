@@ -6,13 +6,15 @@ title: Data assimilation benchmarks
 
 A side-by-side comparison of the seven `pipekit_cycle.AnalysisStep`
 methods shipped in [vardax](https://github.com/jejjohnson/vardax) on
-two shared chaotic test problems — **Lorenz-63** (3-D, sparse-time
-partial obs) and **Lorenz-96** (single-level, 40-D, sparse spatial +
-temporal obs). Every notebook loads the *same* problem (truth,
+three shared chaotic test problems — **Lorenz-63** (3-D, sparse-time
+partial obs), **Lorenz-96 single-level** (40-D, sparse spatial +
+temporal obs), and **Lorenz-96 two-level** (Wilks 2005 multi-scale,
+72-D, slow-only obs). Every notebook loads the *same* problem (truth,
 observations, mask, $B$, $R$) via the harness factories
-`assimilation.generate_problem(key)` (L63) and
-`assimilation.generate_l96_problem(key)` (L96), so the numbers stack
-into one comparison table per system.
+`assimilation.generate_problem(key)` (L63),
+`assimilation.generate_l96_problem(key)` (L96), and
+`assimilation.generate_l96_2l_problem(key)` (L96-2L), so the numbers
+stack into one comparison table per system.
 
 ## Headline — Lorenz-63 (`PRNGKey(42)`)
 
@@ -95,22 +97,24 @@ better numbers.
 
 ## Headline — Lorenz-96 two-level (`PRNGKey(0)`)
 
-Per-block RMSE (prior floors: slow 7.58, fast 0.39):
+Per-block RMSE (prior floors: slow 6.51, fast 0.34):
 
 | Method | slow RMSE | fast RMSE | total | Inference | Training |
 |---|---:|---:|---:|---:|---:|
-| OI = 3DVar | 6.71 | 0.39 | 2.27 | 0.5 s | — |
-| FourDVarNet | 6.16 | 1.25 | 2.37 | 0.2 s | ~140 s |
-| Strong-4DVar | 4.60 | 0.88 | 1.75 | 2.5 s | — |
-| **AmortizedPosterior** | 4.64 | **0.44** | 1.60 | **10 ms** | ~15 s |
-| **Weak-4DVar** | **4.12** | 0.84 | **1.58** | 7.1 s | — |
+| OI = 3DVar | 6.27 | **0.34** | 2.11 | 0.4 s | — |
+| **Strong-4DVar** | **2.01** | 0.79 | **1.00** | 3.1 s | — |
+| **AmortizedPosterior** | 5.45 | **0.34** | 1.84 | **12 ms** | ~18 s |
+| FourDVarNet | 7.36 | 1.10 | 2.66 | 0.2 s | ~180 s |
+| Weak-4DVar | 7.69 | 0.79 | 2.67 | 8.6 s | — |
 | Incremental-4DVar | (diverges) | | | | |
 
-The take-home: dynamics-aware methods improve slow but **disturb**
-the unobserved fast block above its prior floor — the imbalance
-failure mode. Only the amortized regression head, which learned the
-slow-fast joint structure from 128 simulated pairs, recovers the
-slow variables without sacrificing the fast ones.
+The take-home: **Strong-4DVar wins decisively on slow recovery (3×
+reduction) but degrades the unobserved fast block above its prior
+floor — the imbalance failure mode**. AmortizedPosterior is the only
+method that improves slow without sacrificing fast (the learned head
+internalises the slow-fast joint structure from simulated pairs).
+Weak-4DVar's larger control space struggles to converge under the
+default BFGS step budget on this strongly-chaotic regime.
 
 ## Running
 
@@ -118,8 +122,8 @@ slow variables without sacrificing the fast ones.
 # From repo root, set up the env (uv)
 uv pip install -e projects/assimilation
 
-# Execute every notebook end-to-end
-for f in projects/assimilation/notebooks/0[1-8]_*.py; do
+# Execute every notebook end-to-end (skips the 00 setup .md)
+for f in projects/assimilation/notebooks/{0[1-8],09,10,11,12}_*.py; do
   uv run jupytext --to ipynb --execute "$f"
 done
 

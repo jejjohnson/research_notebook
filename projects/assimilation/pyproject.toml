@@ -1,0 +1,39 @@
+[project]
+name = "assimilation"
+version = "0.1.0"
+description = "Lorenz-63 / Lorenz-96 (single- and two-level) data-assimilation benchmarks — seven AnalysisStep methods (BLUE/OI, 3DVar, strong/weak/incremental 4DVar, FourDVarNet, AmortizedPosterior) on the same shared problems."
+requires-python = ">=3.12"
+# `vardax` is not on PyPI; we depend on it via a direct git reference
+# so non-uv installs (`pip install .`) also resolve. uv users get the
+# same source via `[tool.uv.sources]` below, which keeps the
+# resolution deterministic.
+dependencies = [
+    "vardax @ git+https://github.com/jejjohnson/vardax",
+    "jax>=0.5",
+    "jaxlib>=0.5",
+    "equinox>=0.11",
+    "lineax>=0.1",
+    "diffrax>=0.5",
+    "optimistix>=0.1",
+    "optax>=0.2",
+    "numpy",
+    "pandas",
+]
+
+[project.optional-dependencies]
+notebooks = ["matplotlib>=3.9", "ipykernel>=6.29"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/assimilation"]
+
+# Allow `vardax @ git+...` in project.dependencies (a "direct
+# reference" in PEP 440). Default hatch metadata rejects them.
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.uv.sources]
+vardax = { git = "https://github.com/jejjohnson/vardax" }

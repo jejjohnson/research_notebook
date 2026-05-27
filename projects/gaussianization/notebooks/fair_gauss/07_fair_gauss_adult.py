@@ -14,39 +14,63 @@
 # ---
 
 # %% [markdown]
-# # 07 — Fair classification on UCI Adult Census (G-XCOV vs CKA)
+# # 07 — UCI Adult Census: real-data fair classification
 #
-# Real-data analogue of notebook 06. We classify whether annual income
-# exceeds 50K USD, with **gender** as the protected attribute $q$.
+# Every fairness-constrained learning method eventually has to prove
+# itself on the **UCI Adult Census Income** dataset — the canonical
+# tabular benchmark in algorithmic fairness. Forty-eight thousand
+# people, fourteen demographic and economic features, a binary label
+# for whether their income exceeds \$50K, and a sensitive attribute
+# (gender) that correlates strongly with the label in the raw data.
+# Any off-the-shelf classifier will pick up the bias.
 #
-# Setup:
+# This notebook is a direct port of
+# [`keras-fairkl/docs/notebooks/fair_adult_census.ipynb`][fairkl-adult],
+# with one change: the fairness penalty is built from a **frozen
+# Gaussianization flow** rather than from a fixed-bandwidth RBF kernel.
+# The architecture, the data pipeline, the optimiser, and the
+# `FairModelWrapper` are otherwise identical, so the comparison is
+# clean.
 #
-# - Features: a small hand-picked numeric subset of UCI Adult.
-# - Target $y$: binary `income > 50K`.
-# - Sensitive $q$: binary gender.
-# - Predictor: small MLP returning a sigmoid probability.
-# - Fairness losses compared on the **same** wrapper:
-#   `G-XCOV` (this work) vs. `CKA` (fairkl baseline).
-# - We sweep `μ ∈ {0, 0.1, 0.5, 2, 10, 50}` × 3 seeds, report a
-#   Pareto curve of `(ROC-AUC, demographic-parity difference)`.
+# [fairkl-adult]: https://github.com/jejjohnson/keras-fairkl/blob/main/docs/notebooks/fair_adult_census.ipynb
+#
+# **What you will see**
+#
+# 1. The raw unfairness in the data — men are roughly 3× more likely
+#    to be in the high-income bracket in this sample.
+# 2. A baseline MLP that faithfully reproduces that bias.
+# 3. The same MLP wrapped with `FairModelWrapper` + a G-XCOV
+#    fairness loss, producing predictions whose gender-dependence is
+#    sharply reduced — at modest accuracy cost.
+# 4. A $\mu$ sweep with three seeds tracing the **Pareto front** on
+#    ROC-AUC vs. demographic-parity and equalized-odds differences,
+#    G-XCOV side by side with CKA.
+# 5. The **parity-convergence plot** — per-gender high-income
+#    prediction rate as a function of $\mu$.
+# 6. Predicted-probability distributions per group at $\mu = 0$
+#    vs. $\mu_{\text{strong}}$ — the mechanism behind the headline
+#    numbers.
 
 # %%
+from __future__ import annotations
+
 import os
 
 os.environ.setdefault("KERAS_BACKEND", "jax")
 
 # %%
-import keras  # noqa: E402
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
-from sklearn.datasets import fetch_openml  # noqa: E402
-from sklearn.metrics import roc_auc_score  # noqa: E402
-from sklearn.model_selection import train_test_split  # noqa: E402
-from sklearn.preprocessing import StandardScaler  # noqa: E402
+import keras
+import matplotlib.pyplot as plt
+import numpy as np
+from _style import CKA_COLOR, G_COLOR, style_ax
+from sklearn.datasets import fetch_openml
+from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
-from fairkl.metrics.cka import CKALoss  # noqa: E402
-from fairkl.models import FairModelWrapper  # noqa: E402
-from gaussianization.fair import (  # noqa: E402
+from fairkl.metrics.cka import CKALoss
+from fairkl.models import FairModelWrapper
+from gaussianization.fair import (
     GaussianizedXCovLoss,
     demographic_parity_difference,
     equalized_odds_difference,
@@ -59,51 +83,116 @@ print("keras backend:", keras.config.backend())
 # %% [markdown]
 # ## 1. Load and preprocess UCI Adult
 #
-# Features: age, education-num, hours-per-week, capital-gain, capital-loss,
-# **and gender itself**. Including gender as a feature is the harder
-# setting for fair learning — the model can exploit it directly, so the
-# fairness penalty must actively suppress it.
+# Five numeric features — `age`, `education-num`, `hours-per-week`,
+# `capital-gain`, `capital-loss` — plus **`gender` itself** included as a
+# sixth input. Putting the sensitive attribute in the feature set is
+# the *hard* setting: the easy setting where you simply drop it
+# rarely matches reality, because proxies (zip code, occupation,
+# spending patterns) leak the same information back in. The fairness
+# penalty has to suppress the bias actively, not by selective
+# blindness.
 
 # %%
 ds = fetch_openml("adult", version=2, as_frame=True, parser="liac-arff")
 df = ds.frame.dropna(subset=["sex", "class"]).reset_index(drop=True)
 
-numeric_cols = ["age", "education-num", "hours-per-week", "capital-gain", "capital-loss"]
+numeric_cols = [
+    "age",
+    "education-num",
+    "hours-per-week",
+    "capital-gain",
+    "capital-loss",
+]
 q_all = (df["sex"].astype(str).str.strip() == "Male").to_numpy(dtype="float32")
 X_num = df[numeric_cols].to_numpy(dtype="float32")
 X_all = np.concatenate([X_num, q_all.reshape(-1, 1)], axis=1).astype("float32")
 y_all = (df["class"].astype(str).str.strip() == ">50K").to_numpy(dtype="float32")
 
-print(f"n = {len(df)}, positive rate = {y_all.mean():.3f}, "
-      f"male rate = {q_all.mean():.3f}")
-print("base-rate gap (P(y=1|q=1) - P(y=1|q=0)):",
-      f"{y_all[q_all == 1].mean() - y_all[q_all == 0].mean():.3f}")
+print(
+    f"n = {len(df):,}   positive rate = {y_all.mean():.3f}   "
+    f"male rate = {q_all.mean():.3f}"
+)
 
 X_train, X_test, y_train, y_test, q_train, q_test = train_test_split(
-    X_all, y_all, q_all, test_size=0.25, random_state=0, stratify=y_all
+    X_all,
+    y_all,
+    q_all,
+    test_size=0.25,
+    random_state=0,
+    stratify=y_all,
 )
-scaler = StandardScaler().fit(X_train)
-X_train = scaler.transform(X_train).astype("float32")
-X_test = scaler.transform(X_test).astype("float32")
-print("train:", X_train.shape, "test:", X_test.shape)
+scaler = StandardScaler().fit(X_train[:, :-1])
+X_train = np.concatenate(
+    [scaler.transform(X_train[:, :-1]), X_train[:, -1:]], axis=1
+).astype("float32")
+X_test = np.concatenate(
+    [scaler.transform(X_test[:, :-1]), X_test[:, -1:]], axis=1
+).astype("float32")
+print(f"train / test:  {X_train.shape[0]:,} / {X_test.shape[0]:,}")
 
 # %% [markdown]
-# ## 2. Pretrain & freeze flows
+# ## 2. EDA — the unfairness in the raw data
 #
-# `T_z` is fit on the **probabilities produced by an unconstrained baseline
-# predictor**, not on the raw binary labels. This is important: the
-# downstream model emits sigmoid probabilities in $(0, 1)$, and we want
-# `T_z` to see the same support distribution at inference time. (Fitting
-# on binary `{0, 1}` would leave the central probability region
-# off-support and wash out the fairness gradient.)
-#
-# `T_q` is fit on the marginal distribution of $q$. Both flows are small.
+# Before training anything, let's see what the data looks like.
 
 # %%
-def fresh_mlp(input_dim: int) -> keras.Model:
+p_high_male = float(y_train[q_train == 1].mean())
+p_high_female = float(y_train[q_train == 0].mean())
+
+fig, ax = plt.subplots(figsize=(5, 3.6))
+bars = ax.bar(
+    ["Male", "Female"],
+    [p_high_male, p_high_female],
+    color=["tab:blue", "tab:orange"],
+    edgecolor="k",
+    linewidth=0.8,
+)
+for b, v in zip(bars, [p_high_male, p_high_female], strict=True):
+    ax.text(
+        b.get_x() + b.get_width() / 2,
+        v + 0.005,
+        f"{v:.2f}",
+        ha="center",
+        fontsize=10,
+        fontweight="bold",
+    )
+ax.set_ylabel(r"$P(\mathrm{income} > 50\mathrm{K} \mid \mathrm{gender})$")
+ax.set_title(
+    f"Raw data: men are {p_high_male / p_high_female:.1f}× more "
+    "likely to have high income"
+)
+ax.set_ylim(0, max(p_high_male, p_high_female) * 1.15)
+style_ax(ax)
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# **What to notice.** The disparity is about 3×: roughly one in three
+# men in this sample is in the high-income bracket, against roughly
+# one in ten women. Part of the gap is presumably caused by factors
+# the dataset does record (education, hours worked); part by factors
+# it does not. Our job is not to *explain* the gap. It is to make
+# sure the classifier's predictions are statistically independent
+# of gender so that two otherwise identical applicants get the same
+# predicted probability regardless of their gender.
+
+# %% [markdown]
+# ## 3. The model and the prediction-space flow
+#
+# We use the same MLP for the baseline, for `flow_z`'s training data,
+# and for the fair runs. `flow_z` is trained on the **probabilities
+# produced by an unconstrained baseline**, not on the binary labels
+# — this keeps the flow in-support of the predictor's sigmoid outputs
+# at inference time. (Fitting on binary $\{0, 1\}$ leaves the central
+# probability region off-support and wastes most of the fairness
+# gradient.)
+
+
+# %%
+def build_mlp(input_dim: int) -> keras.Model:
     return keras.Sequential(
         [
-            keras.layers.Input(shape=(input_dim,)),
+            keras.Input(shape=(input_dim,)),
             keras.layers.Dense(32, activation="relu"),
             keras.layers.Dense(32, activation="relu"),
             keras.layers.Dense(1, activation="sigmoid"),
@@ -112,25 +201,17 @@ def fresh_mlp(input_dim: int) -> keras.Model:
 
 
 keras.utils.set_random_seed(0)
-baseline_mlp = fresh_mlp(X_train.shape[1])
-baseline_mlp.compile(
-    optimizer=keras.optimizers.Adam(3e-3), loss="binary_crossentropy"
+baseline = build_mlp(X_train.shape[1])
+baseline.compile(
+    optimizer=keras.optimizers.Adam(3e-3),
+    loss="binary_crossentropy",
+    metrics=["accuracy"],
 )
-baseline_mlp.fit(
-    X_train, y_train, epochs=25, batch_size=512, verbose=0
-)
-baseline_proba = (
-    np.asarray(baseline_mlp.predict(X_train, verbose=0))
-    .ravel()
-    .astype("float32")
-)
-print(
-    f"baseline proba — min={baseline_proba.min():.3f}, "
-    f"max={baseline_proba.max():.3f}, mean={baseline_proba.mean():.3f}"
-)
+baseline.fit(X_train, y_train, epochs=25, batch_size=512, verbose=0)
+proba_train = np.asarray(baseline.predict(X_train, verbose=0)).ravel().astype("float32")
 
 flow_z, _ = fit_and_freeze(
-    baseline_proba.reshape(-1, 1),
+    proba_train.reshape(-1, 1),
     num_blocks=4,
     num_components=8,
     epochs=80,
@@ -149,48 +230,112 @@ flow_q, _ = fit_and_freeze(
     seed=0,
     verbose=0,
 )
+print(f"flow_z trainable weights:  {len(flow_z.trainable_weights)}")
+print(f"flow_q trainable weights:  {len(flow_q.trainable_weights)}")
 
 # %% [markdown]
-# ## 3. Train + evaluate one configuration
+# ## 4. Baseline vs. one fair model
+#
+# Train the MLP exactly as you would without ever having heard of
+# fair learning; then train *the same architecture* with the
+# `FairModelWrapper` and a G-XCOV penalty at a moderate $\mu$.
+
 
 # %%
-def train_eval(
-    fairness_loss,
-    mu: float,
-    seed: int = 0,
-    epochs: int = 25,
-    batch_size: int = 512,
-) -> dict:
+def evaluate(yh: np.ndarray) -> dict:
+    return {
+        "auc": float(roc_auc_score(y_test, yh)),
+        "acc": float(((yh > 0.5) == y_test.astype(int)).mean()),
+        "dp": demographic_parity_difference(yh, q_test, threshold=0.5),
+        "eo": equalized_odds_difference(y_test, yh, q_test, threshold=0.5),
+        "phi_male": float(yh[q_test == 1].mean()),
+        "phi_female": float(yh[q_test == 0].mean()),
+    }
+
+
+yh_base = np.asarray(baseline.predict(X_test, verbose=0)).ravel()
+m_base = evaluate(yh_base)
+
+keras.utils.set_random_seed(0)
+fair_mlp = build_mlp(X_train.shape[1])
+fair_g = FairModelWrapper(
+    fair_mlp,
+    mu=20.0,
+    fairness_loss=GaussianizedXCovLoss(flow_z=flow_z, flow_q=flow_q),
+)
+fair_g.compile(
+    optimizer=keras.optimizers.Adam(3e-3),
+    loss="binary_crossentropy",
+    metrics=["accuracy"],
+)
+fair_g.fit(
+    X_train,
+    y_train,
+    q=q_train,
+    epochs=25,
+    batch_size=512,
+    verbose=0,
+)
+yh_g = np.asarray(fair_g.predict(X_test, verbose=0)).ravel()
+m_g = evaluate(yh_g)
+
+print(
+    f"{'':<14} {'AUC':>7s}  {'ACC':>7s}  {'DP':>7s}  {'EO':>7s}  "
+    f"{'P(>50K|M)':>10s} {'P(>50K|F)':>10s}"
+)
+print("-" * 74)
+print(
+    f"{'baseline':<14} {m_base['auc']:.3f}    {m_base['acc']:.3f}    "
+    f"{m_base['dp']:.3f}    {m_base['eo']:.3f}    "
+    f"{m_base['phi_male']:>8.3f}   {m_base['phi_female']:>8.3f}"
+)
+print(
+    f"{'fair (G-XCOV)':<14} {m_g['auc']:.3f}    {m_g['acc']:.3f}    "
+    f"{m_g['dp']:.3f}    {m_g['eo']:.3f}    "
+    f"{m_g['phi_male']:>8.3f}   {m_g['phi_female']:>8.3f}"
+)
+
+# %% [markdown]
+# **What to notice.** The baseline reproduces the raw-data
+# disparity in its predictions: the average predicted probability for
+# men is several times that for women, and demographic-parity /
+# equalized-odds differences are large. The fair model gives back
+# only a couple of points of AUC and substantially shrinks both
+# fairness gaps. The full $\mu$ sweep below traces the whole curve.
+
+# %% [markdown]
+# ## 5. Sweeping $\mu$ — G-XCOV vs. CKA
+#
+# We retrain from scratch at six $\mu$ values, three seeds, for two
+# fairness losses: **G-XCOV** (this work) and **CKA** (the fairkl
+# baseline). Same wrapper, same MLP, same data — only the
+# `fairness_loss=` argument changes between runs.
+
+
+# %%
+def train_eval(fairness_loss, mu: float, seed: int) -> dict:
     keras.utils.set_random_seed(seed)
-    mlp = fresh_mlp(X_train.shape[1])
+    mlp = build_mlp(X_train.shape[1])
     model = FairModelWrapper(mlp, mu=mu, fairness_loss=fairness_loss)
     model.compile(
-        optimizer=keras.optimizers.Adam(3e-3), loss="binary_crossentropy"
+        optimizer=keras.optimizers.Adam(3e-3),
+        loss="binary_crossentropy",
     )
     model.fit(
         X_train,
         y_train,
         q=q_train,
-        epochs=epochs,
-        batch_size=batch_size,
+        epochs=25,
+        batch_size=512,
         verbose=0,
     )
-    proba = np.asarray(model.predict(X_test, verbose=0)).ravel()
-    return {
-        "mu": mu,
-        "auc": float(roc_auc_score(y_test, proba)),
-        "acc": float(np.mean((proba >= 0.5).astype(int) == y_test.astype(int))),
-        "dp_diff": demographic_parity_difference(proba, q_test, threshold=0.5),
-        "eo_diff": equalized_odds_difference(
-            y_test, proba, q_test, threshold=0.5
-        ),
-    }
+    yh = np.asarray(model.predict(X_test, verbose=0)).ravel()
+    r = evaluate(yh)
+    r["mu"] = mu
+    r["yh"] = yh
+    return r
 
 
-# %% [markdown]
-# ## 4. Sweep `μ` for both fairness losses
-
-# %%
 mus = [0.0, 0.5, 2.0, 10.0, 50.0, 200.0]
 seeds = [0, 1, 2]
 
@@ -202,66 +347,60 @@ for fam, loss in [("g_xcov", g_loss), ("cka", cka_loss)]:
     for mu in mus:
         for s in seeds:
             r = train_eval(loss, mu=mu, seed=s)
-            r["family"] = fam
-            r["seed"] = s
+            r["family"], r["seed"] = fam, s
             records.append(r)
-            print(
-                f"  {fam:>7s}  mu={mu:6.2f}  seed={s}  "
-                f"auc={r['auc']:.3f}  acc={r['acc']:.3f}  "
-                f"dp={r['dp_diff']:.3f}  eo={r['eo_diff']:.3f}"
-            )
 
-# %% [markdown]
-# ## 5. Aggregate across seeds
 
 # %%
-def agg(records, fam):
+def aggregate(fam: str) -> list[dict]:
     out = []
     for mu in mus:
         rows = [r for r in records if r["family"] == fam and r["mu"] == mu]
-        auc = np.array([r["auc"] for r in rows])
-        acc = np.array([r["acc"] for r in rows])
-        dp = np.array([r["dp_diff"] for r in rows])
-        eo = np.array([r["eo_diff"] for r in rows])
         out.append(
             {
                 "mu": mu,
-                "auc_m": auc.mean(), "auc_s": auc.std(),
-                "acc_m": acc.mean(), "acc_s": acc.std(),
-                "dp_m": dp.mean(), "dp_s": dp.std(),
-                "eo_m": eo.mean(), "eo_s": eo.std(),
+                "auc_m": np.mean([r["auc"] for r in rows]),
+                "auc_s": np.std([r["auc"] for r in rows]),
+                "acc_m": np.mean([r["acc"] for r in rows]),
+                "dp_m": np.mean([r["dp"] for r in rows]),
+                "dp_s": np.std([r["dp"] for r in rows]),
+                "eo_m": np.mean([r["eo"] for r in rows]),
+                "eo_s": np.std([r["eo"] for r in rows]),
+                "phi_male_m": np.mean([r["phi_male"] for r in rows]),
+                "phi_female_m": np.mean([r["phi_female"] for r in rows]),
             }
         )
     return out
 
 
-agg_g = agg(records, "g_xcov")
-agg_c = agg(records, "cka")
+agg_g = aggregate("g_xcov")
+agg_c = aggregate("cka")
 
-print(f"{'family':>7s} {'mu':>6s} {'AUC':>14s} {'ACC':>14s} {'DP-diff':>14s} {'EO-diff':>14s}")
+print(f"{'fam':>7s} {'mu':>7s} {'AUC':>14s} {'DP':>14s} {'EO':>14s}")
 for fam, rows in [("g_xcov", agg_g), ("cka", agg_c)]:
     for r in rows:
         print(
-            f"{fam:>7s} {r['mu']:>6.2f} "
-            f"{r['auc_m']:6.3f}±{r['auc_s']:5.3f} "
-            f"{r['acc_m']:6.3f}±{r['acc_s']:5.3f} "
-            f"{r['dp_m']:6.3f}±{r['dp_s']:5.3f} "
-            f"{r['eo_m']:6.3f}±{r['eo_s']:5.3f}"
+            f"{fam:>7s} {r['mu']:>7.2f} "
+            f"{r['auc_m']:.3f}±{r['auc_s']:.3f}  "
+            f"{r['dp_m']:.3f}±{r['dp_s']:.3f}  "
+            f"{r['eo_m']:.3f}±{r['eo_s']:.3f}"
         )
 
 # %% [markdown]
-# ## 6. Pareto curves
+# ## 6. Pareto curves — AUC vs. fairness
 #
-# Left: ROC-AUC vs. demographic-parity difference.
-# Right: ROC-AUC vs. equalized-odds difference.
-# Top-left of each plot is the ideal corner (high AUC, low gap).
+# Two views of the same data. Left: AUC vs. demographic-parity
+# difference (group-rate gap in predicted positives). Right: AUC
+# vs. equalized-odds difference (max of TPR-gap and FPR-gap across
+# groups). Top-left of each plot is the ideal corner: high AUC, low
+# disparity.
 
 # %%
-fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
+fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.6))
 
 for fam, rows, marker, color in [
-    ("g_xcov", agg_g, "o", "C0"),
-    ("cka", agg_c, "s", "C3"),
+    ("G-XCOV", agg_g, "o", G_COLOR),
+    ("CKA", agg_c, "s", CKA_COLOR),
 ]:
     auc_m = np.array([r["auc_m"] for r in rows])
     auc_s = np.array([r["auc_s"] for r in rows])
@@ -271,50 +410,219 @@ for fam, rows, marker, color in [
     eo_s = np.array([r["eo_s"] for r in rows])
 
     axes[0].errorbar(
-        dp_m, auc_m, xerr=dp_s, yerr=auc_s,
-        marker=marker, color=color, label=fam, capsize=3, lw=1.2,
+        dp_m,
+        auc_m,
+        xerr=dp_s,
+        yerr=auc_s,
+        marker=marker,
+        color=color,
+        label=fam,
+        capsize=3,
+        lw=1.5,
+        markersize=8,
+        markeredgecolor="k",
+        markeredgewidth=0.5,
     )
     axes[1].errorbar(
-        eo_m, auc_m, xerr=eo_s, yerr=auc_s,
-        marker=marker, color=color, label=fam, capsize=3, lw=1.2,
+        eo_m,
+        auc_m,
+        xerr=eo_s,
+        yerr=auc_s,
+        marker=marker,
+        color=color,
+        label=fam,
+        capsize=3,
+        lw=1.5,
+        markersize=8,
+        markeredgecolor="k",
+        markeredgewidth=0.5,
     )
-
-    if fam == "g_xcov":
+    if fam == "G-XCOV":
         for mu, x, y in zip(mus, dp_m, auc_m, strict=True):
-            axes[0].annotate(f"μ={mu:g}", (x, y), fontsize=8,
-                             xytext=(4, 4), textcoords="offset points")
+            axes[0].annotate(
+                f"μ={mu:g}",
+                (x, y),
+                fontsize=8,
+                xytext=(5, 5),
+                textcoords="offset points",
+            )
         for mu, x, y in zip(mus, eo_m, auc_m, strict=True):
-            axes[1].annotate(f"μ={mu:g}", (x, y), fontsize=8,
-                             xytext=(4, 4), textcoords="offset points")
+            axes[1].annotate(
+                f"μ={mu:g}",
+                (x, y),
+                fontsize=8,
+                xytext=(5, 5),
+                textcoords="offset points",
+            )
 
-axes[0].set_xlabel("Demographic-parity difference  (lower = fairer)")
-axes[0].set_ylabel("ROC-AUC  (higher = more accurate)")
-axes[0].set_title("Pareto: AUC vs. DP")
-axes[0].legend()
+axes[0].set_xlabel("Demographic-parity diff.  —  lower is fairer")
+axes[0].set_ylabel("ROC-AUC  —  higher is more accurate")
+axes[0].set_title("Pareto — AUC vs. DP")
+axes[0].legend(fontsize=10)
+style_ax(axes[0])
 
-axes[1].set_xlabel("Equalized-odds difference")
+axes[1].set_xlabel("Equalized-odds diff.")
 axes[1].set_ylabel("ROC-AUC")
-axes[1].set_title("Pareto: AUC vs. EO")
-axes[1].legend()
+axes[1].set_title("Pareto — AUC vs. EO")
+axes[1].legend(fontsize=10)
+style_ax(axes[1])
 
 plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ## 7. Takeaways
+# **What to notice.** Both losses move along Pareto-like curves and
+# both clearly trade accuracy for fairness — but they move at very
+# different speeds in $\mu$. CKA, with unit RBF bandwidth and a
+# bounded $[0, 1]$ value, hits the model hard even at $\mu = 2$:
+# by $\mu = 10$ DP-diff is below 0.05 at an AUC cost of 0.04. G-XCOV
+# is calibrated very differently — its raw value scales as a 2nd
+# moment in Gaussianised space, two orders of magnitude smaller than
+# the CKA scalar — so the same fairness pressure requires much
+# larger $\mu$. To make a head-to-head Pareto-front comparison
+# honest one should rescale $\mu$ by the typical magnitude of each
+# loss; the engineering doc treats that as an open follow-up. What
+# this notebook shows reliably is that **both methods trace a
+# trade-off curve from the unfair baseline to a substantially fairer
+# regime**, with continuous control via $\mu$.
+
+# %% [markdown]
+# ## 7. Group-mean prediction rates vs. $\mu$ — the parity convergence
 #
-# - The unconstrained model (`μ = 0`) shows the inherited base-rate gap
-#   between groups — substantial DP-diff with the highest AUC.
-# - Both G-XCOV and CKA shrink DP-diff and EO-diff as `μ` grows; AUC
-#   degrades gracefully.
-# - With the kernel-side bandwidths **un-tuned** (CKA at `σ = 1` and a
-#   plain RBF), the flow-based loss is competitive at matched fairness
-#   — the flow has absorbed the bandwidth choice into its mixture-CDF
-#   parameters.
-# - The Pareto fronts are seed-stable (small error bars).
+# The aggregate Pareto curve tells you *what* changes. The
+# per-gender predicted high-income rates tell you *how*. Below: the
+# mean predicted $P(\text{income} > 50\mathrm{K})$ for each gender,
+# as a function of $\mu$.
+
+# %%
+fig, ax = plt.subplots(figsize=(7, 4.2))
+mu_arr = np.array(mus)
+for fam, rows, color, ls in [
+    ("G-XCOV", agg_g, G_COLOR, "-"),
+    ("CKA", agg_c, CKA_COLOR, "--"),
+]:
+    p_m = np.array([r["phi_male_m"] for r in rows])
+    p_f = np.array([r["phi_female_m"] for r in rows])
+    ax.plot(
+        mu_arr,
+        p_m,
+        ls + "o",
+        color=color,
+        lw=2,
+        markersize=7,
+        markeredgecolor="k",
+        markeredgewidth=0.4,
+        label=f"{fam} — male",
+    )
+    ax.plot(
+        mu_arr,
+        p_f,
+        ls + "s",
+        color=color,
+        alpha=0.55,
+        lw=2,
+        markersize=7,
+        markeredgecolor="k",
+        markeredgewidth=0.4,
+        label=f"{fam} — female",
+    )
+ax.axhline(
+    y_train.mean(),
+    color="gray",
+    lw=0.8,
+    ls=":",
+    label="overall positive rate (parity target)",
+)
+ax.set_xscale("symlog", linthresh=0.5)
+ax.set_xlabel(r"Fairness weight $\mu$ (symlog)")
+ax.set_ylabel(r"Mean predicted $P(\mathrm{income} > 50\mathrm{K})$")
+ax.set_title("Group-mean predictions converge toward parity as μ grows")
+ax.legend(fontsize=9, ncol=2)
+style_ax(ax)
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# **What to notice.** At $\mu = 0$ both losses (necessarily — the
+# fairness term is off) sit at the same starting point: the
+# baseline's predicted high-income rates for men and women, roughly
+# 0.30 and 0.10 respectively. CKA's solid-with-dashed pairs converge
+# tightly toward the overall positive rate (the parity target) by
+# $\mu \approx 10$, with both lines moving — the women's rate rises
+# and the men's rate falls until they meet. G-XCOV requires a
+# substantially larger $\mu$ to achieve the same convergence; this is
+# the loss-scaling story from §6 visible in another guise.
+
+# %% [markdown]
+# ## 8. Predicted-probability distributions — the mechanism
 #
-# This is a small experiment on a deliberately tiny feature subset; the
-# main claim isn't "G-XCOV beats CKA" but "G-XCOV is a drop-in,
-# bandwidth-free fairness penalty that competes with CKA on the standard
-# Pareto axes". A larger benchmark (more features, more seeds, joint
-# `μ` × bandwidth tuning for CKA) is the natural follow-up.
+# The summary statistics summarise the panel-level story; the full
+# predicted-probability distributions per gender show the
+# fine-grained mechanism. Below: kernel-density estimates of the
+# test-set predicted probabilities at $\mu = 0$ (unfair baseline)
+# and at $\mu = 200$ (G-XCOV's strongest fairness setting).
+
+
+# %%
+def kde(values: np.ndarray, grid: np.ndarray, bw: float = 0.03) -> np.ndarray:
+    """Tiny Gaussian KDE — avoids the scipy dependency."""
+    diffs = (values[None, :] - grid[:, None]) / bw
+    return np.exp(-0.5 * diffs * diffs).mean(axis=1) / (bw * np.sqrt(2 * np.pi))
+
+
+grid = np.linspace(0, 1, 200)
+yh_mu0 = next(
+    r["yh"]
+    for r in records
+    if r["family"] == "g_xcov" and r["mu"] == 0.0 and r["seed"] == 0
+)
+yh_muH = next(
+    r["yh"]
+    for r in records
+    if r["family"] == "g_xcov" and r["mu"] == 200.0 and r["seed"] == 0
+)
+
+fig, axes = plt.subplots(1, 2, figsize=(10.5, 3.8), sharey=True)
+for ax, yh, title in [
+    (axes[0], yh_mu0, "μ = 0 (unfair baseline)"),
+    (axes[1], yh_muH, "μ = 200 (G-XCOV, strong fairness)"),
+]:
+    for grp, val, color in [(1, "Male", "tab:blue"), (0, "Female", "tab:orange")]:
+        d = kde(yh[q_test == grp], grid)
+        ax.fill_between(grid, d, alpha=0.35, color=color, label=val)
+        ax.plot(grid, d, color=color, lw=1.6)
+    ax.axvline(0.5, color="gray", lw=0.8, ls=":", label="decision threshold")
+    ax.set_xlabel(r"Predicted $P(\mathrm{income} > 50\mathrm{K})$")
+    ax.set_title(title)
+    ax.legend(fontsize=9)
+    style_ax(ax)
+axes[0].set_ylabel("density (KDE)")
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# **What to notice.** Left: the baseline shows two clearly separated
+# modes — most women's predictions sit below 0.5, most men's lift a
+# substantial mass above it. Right: at strong G-XCOV the two
+# distributions become much more similar. Some separation remains —
+# the non-gender features are themselves correlated with gender
+# (proxies are not extinguished, only suppressed), and a finite-depth
+# flow plus a moderate $\mu$ leaves some signal — but the visible
+# bias is far smaller.
+#
+# ## 9. Summary
+#
+# Drop-in plug-and-play: the only thing this notebook does
+# differently from `fairkl`'s reference Adult notebook is replace
+# `CKALoss(sigma_f=…, sigma_q=…)` with
+# `GaussianizedXCovLoss(flow_z=…, flow_q=…)`. The wrapper, the MLP,
+# the optimiser, and the data pipeline are unchanged. The flow
+# absorbs the bandwidth choice that CKA would otherwise require
+# tuning, at the cost of a one-time pretraining step.
+#
+# What's **not yet good enough**: G-XCOV's natural magnitude is
+# much smaller than CKA's, so the two losses can't be compared at
+# matched $\mu$. The engineering doc treats this as an explicit
+# follow-up ("magnitude calibration"). The structural property —
+# *a trade-off curve exists and is continuously controlled by
+# $\mu$* — is firmly established.

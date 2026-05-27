@@ -22,7 +22,13 @@ dependencies = [
 # Default backend for tests + notebook execution. Users who want the JAX
 # or torch backends can install those themselves and set KERAS_BACKEND.
 tf = ["tensorflow>=2.16"]
-notebooks = ["matplotlib", "scikit-learn", "seaborn>=0.13", "ipython"]
+notebooks = [
+    "matplotlib",
+    "scikit-learn",
+    "seaborn>=0.13",
+    "ipython",
+    "jax[cpu]>=0.10.1",
+]
 dev = ["pytest>=8", "pytest-xdist>=3.5", "tensorflow>=2.16"]
 
 [build-system]

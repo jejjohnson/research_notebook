@@ -139,7 +139,7 @@ A reconciled, exhaustive curriculum spanning what currently exists in **filterax
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.5 | Anatomy of one DA cycle — forecast / analysis / inflate, why each step exists | — | 🧱 | dd: `architecture.md`; three-panel diagram (prior cloud → posterior cloud → inflated cloud) |
+| 0.5 | Anatomy of one DA cycle — forecast / analysis / inflate, why each step exists | — | 🧱 | dd:architecture.md; three-panel diagram (prior cloud → posterior cloud → inflated cloud) |
 | 0.6 | Why ensembles? — sample-covariance limits, rank ≤ $N_e − 1$, when ensemble beats parametric | — | 🧱 | eigenvalue-spectrum plot vs $N_e$; rank deficit and the null direction visualised |
 
 ### 0.D — Variational DA (3D/4D-Var) contrast
@@ -151,8 +151,8 @@ A reconciled, exhaustive curriculum spanning what currently exists in **filterax
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.7 | 3D-Var vs Kalman — duality (Kalman = sequential 3D-Var with $B = P^f$) | — | 🧱 🌉 | pairs with R `plume_simulation/assimilation/00_3dvar_derivation.md`; minimisation = closed-form same answer |
-| 0.8 | 4D-Var with adjoints — and how differentiable EnKF (Part 8) compares | — | 🧱 🌉 | dd: `features/differentiable_da.md` §4; cost / memory / Jacobian comparison table |
+| 0.7 | 3D-Var vs Kalman — duality (Kalman = sequential 3D-Var with $B = P^f$) | — | 🧱 🌉 | pairs with R `projects/plume_simulation/notebooks/assimilation/00_3dvar_derivation.md`; minimisation = closed-form same answer |
+| 0.8 | 4D-Var with adjoints — and how differentiable EnKF (Part 8) compares | — | 🧱 🌉 | dd:features/differentiable_da.md §4; cost / memory / Jacobian comparison table |
 
 ### 0.E — Information vs covariance form
 
@@ -194,7 +194,7 @@ filterax's pure-function building blocks. Every L1 / L2 algorithm composes from 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 1.4 | The ensemble Kalman gain — Bessel correction, Woodbury dispatch for structured $R$ | — | 🧱 | api: `kalman_gain`; dd: `architecture.md`; cost table for dense / diagonal / Toeplitz $R$ |
+| 1.4 | The ensemble Kalman gain — Bessel correction, Woodbury dispatch for structured $R$ | — | 🧱 | api: `kalman_gain`; dd:architecture.md; cost table for dense / diagonal / Toeplitz $R$ |
 | 1.5 | Innovation covariance & gaussx structural dispatch — diag / low-rank / Toeplitz $R$ | — | 🧱 🔁 | api: `innovation_covariance`; pairs with GP 1.4 (Toeplitz) and 1.3 (Kronecker) |
 
 ### 1.C — Likelihood & innovation statistics
@@ -230,7 +230,7 @@ filterax's pure-function building blocks. Every L1 / L2 algorithm composes from 
 |---|----------|--------|-------|--------------|
 | 1.8 | Localisation taper zoo — visual + differentiability table | — | 🧱 🔁 | api: `gaspari_cohn`, `gaussian_taper`, `hard_cutoff`, `soar_taper`; pairs with GP 2.A (kernel zoo); plot $\rho(d/r)$ side-by-side |
 | 1.9 | Generic `localize(cov, coords, taper_fn)` — assembling localised covariances | — | 🧱 | api: `localize`; ETKF-localized vs LETKF-localized comparison |
-| 1.10 | Adaptive localisation (Anderson) — empirical correlation $\to$ taper | — | 🔬 | api: `adaptive_localization`; dd: `features/localization_inflation.md` |
+| 1.10 | Adaptive localisation (Anderson) — empirical correlation $\to$ taper | — | 🔬 | api: `adaptive_localization`; dd:features/localization_inflation.md |
 
 ### 1.F — Inflation primitives
 
@@ -255,7 +255,7 @@ filterax's pure-function building blocks. Every L1 / L2 algorithm composes from 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 1.14 | Domain decomposition — patches for high-dim spatial DA | — | 🔬 | api: `create_patches`, `assign_obs_to_patches`, `blend_patches`; dd: `architecture.md`; 2D grid example with overlap visualisation |
+| 1.14 | Domain decomposition — patches for high-dim spatial DA | — | 🔬 | api: `create_patches`, `assign_obs_to_patches`, `blend_patches`; dd:architecture.md; 2D grid example with overlap visualisation |
 
 ---
 
@@ -272,7 +272,7 @@ Each filter as its own tutorial. Verified against the closed-form Kalman update 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 2.1 | Stochastic EnKF (Evensen 1994) — perturbed-obs analysis | — | 🧱 | api: `filters.StochasticEnKF`; dd: `features/filters.md`; MC-noise vs $N_e$ plot; pairs with 3.9 (key threading) |
+| 2.1 | Stochastic EnKF (Evensen 1994) — perturbed-obs analysis | — | 🧱 | api: `filters.StochasticEnKF`; dd:features/filters.md; MC-noise vs $N_e$ plot; pairs with 3.9 (key threading) |
 
 ### 2.B — Deterministic square-root family
 
@@ -283,7 +283,7 @@ Each filter as its own tutorial. Verified against the closed-form Kalman update 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 2.2 | ETKF (Bishop 2001) — ensemble transform, symmetric sqrt | — | 🧱 | api: `filters.ETKF`; dd: `features/filters.md`; rank-$N_y$ spectrum trick walked through; gradient-stability sanity check |
+| 2.2 | ETKF (Bishop 2001) — ensemble transform, symmetric sqrt | — | 🧱 | api: `filters.ETKF`; dd:features/filters.md; rank-$N_y$ spectrum trick walked through; gradient-stability sanity check |
 | 2.3 | EnSRF batch form (Whitaker & Hamill 2002) — separate mean & perturbation updates | — | 🧱 | api: `filters.EnSRF`; equivalence with ETKF in batch mode (Tippett 2003 §3) |
 | 2.4 | Serial EnSRF — scalar obs processing, no eigh | — | 🧱 | api: `filters.EnSRF_Serial`; per-obs scalar gain; diagonal-$R$ requirement |
 | 2.5 | ESTKF (Nerger 2012) — $(N_e − 1)$ error subspace, mean-preserving projection | — | 🧱 | api: `filters.ESTKF`; $L \in \mathbb{R}^{N_e \times (N_e-1)}$ Householder construction; reduced eigh cost |
@@ -342,9 +342,9 @@ Each filter as its own tutorial. Verified against the closed-form Kalman update 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 3.1 | The protocol family — `AbstractDynamics` / `AbstractObsOperator` / `AbstractInflator` / `AbstractLocalizer` / `AbstractScheduler` | — | 🧱 | api: `filterax._src._protocols`; dd: `architecture.md`; class diagram with extension points |
+| 3.1 | The protocol family — `AbstractDynamics` / `AbstractObsOperator` / `AbstractInflator` / `AbstractLocalizer` / `AbstractScheduler` | — | 🧱 | api: `filterax._src._protocols`; dd:architecture.md; class diagram with extension points |
 | 3.2 | Plugging in a JAX dynamics model | — | 🧱 | identity / linear / Lorenz-63 / SDE wrappers; pure-function rule |
-| 3.3 | Plugging in a nonlinear obs operator — neural decoder warm-up for Part 8 | — | 🌉 | dd: `features/differentiable_da.md` §6.B; equinox-based `eqx.nn.MLP` example |
+| 3.3 | Plugging in a nonlinear obs operator — neural decoder warm-up for Part 8 | — | 🌉 | dd:features/differentiable_da.md §6.B; equinox-based `eqx.nn.MLP` example |
 
 ### 3.B — L2 model walkthroughs
 
@@ -380,7 +380,7 @@ Each filter as its own tutorial. Verified against the closed-form Kalman update 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 4.1 | EnKS (Evensen & van Leeuwen 2000) — standard backward pass | — | 🧱 | api: `smoothers.EnKS`; dd: `features/smoothers.md`; backward-scan diagram; final-time identity |
+| 4.1 | EnKS (Evensen & van Leeuwen 2000) — standard backward pass | — | 🧱 | api: `smoothers.EnKS`; dd:features/smoothers.md; backward-scan diagram; final-time identity |
 | 4.2 | EnsembleRTS — RTS interpretation, model-error placeholder | — | 🧱 | api: `smoothers.EnsembleRTS`; equivalence with EnKS without explicit $Q$ |
 | 4.3 | FixedLagSmoother — windowed lookahead, online interpretation | — | 🔬 | api: `smoothers.FixedLagSmoother`; lag=0 / lag=T-1 limits; rolling-buffer interpretation |
 
@@ -393,7 +393,7 @@ Each filter as its own tutorial. Verified against the closed-form Kalman update 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 4.4 | EnsembleSqrtSmoother — deterministic sqrt backward pass | — | 🔬 | api: `smoothers.EnsembleSqrtSmoother`; dd: `features/smoothers.md` Gap 4; perts-in-column-span demo |
+| 4.4 | EnsembleSqrtSmoother — deterministic sqrt backward pass | — | 🔬 | api: `smoothers.EnsembleSqrtSmoother`; dd:features/smoothers.md Gap 4; perts-in-column-span demo |
 
 ### 4.C — Iterative smoothers
 
@@ -404,7 +404,7 @@ Each filter as its own tutorial. Verified against the closed-form Kalman update 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 4.5 | IES (Chen & Oliver 2013) — iterative ensemble smoother for inverse problems | — | 🔬 | api: `smoothers.IES`; dd: `features/smoothers.md` Gap 5; anchor-to-$\theta_0$ visualisation; $\alpha$ ablation |
+| 4.5 | IES (Chen & Oliver 2013) — iterative ensemble smoother for inverse problems | — | 🔬 | api: `smoothers.IES`; dd:features/smoothers.md Gap 5; anchor-to-$\theta_0$ visualisation; $\alpha$ ablation |
 
 ### 4.D — Selection & memory trade-offs
 
@@ -425,7 +425,7 @@ Each filter as its own tutorial. Verified against the closed-form Kalman update 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 5.1 | EKI (Iglesias, Law & Stuart 2013) — iterative ensemble inversion | — | 🧱 | api: `EKI`, `processes.EKI`; dd: `features/processes.md`; one-step Kalman equivalence on the sample cov |
+| 5.1 | EKI (Iglesias, Law & Stuart 2013) — iterative ensemble inversion | — | 🧱 | api: `EKI`, `processes.EKI`; dd:features/processes.md; one-step Kalman equivalence on the sample cov |
 | 5.2 | TEKI — Tikhonov-regularised EKI with prior pull | — | 🌉 | api: `processes.TEKI`; augmented-identity block; unidentifiable-parameter shrinkage demo |
 | 5.3 | GNKI — Gauss-Newton with explicit ensemble Jacobian | — | 🔬 | api: `processes.GNKI`; requires $J > N_p$; one-step linear-Gaussian convergence |
 | 5.4 | ETKI — deterministic / sqrt EKI variant | — | 🔬 | api: `processes.ETKI`; deterministic transform analog |
@@ -451,7 +451,7 @@ Each filter as its own tutorial. Verified against the closed-form Kalman update 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 5.7 | UKI — unscented Kalman inversion, parametric mean / cov | — | 🧱 | api: `UKI`, `processes.UKI`; dd: `features/processes.md`; sigma-point cloud diagram |
+| 5.7 | UKI — unscented Kalman inversion, parametric mean / cov | — | 🧱 | api: `UKI`, `processes.UKI`; dd:features/processes.md; sigma-point cloud diagram |
 | 5.8 | Sigma-point utilities — reusable for filter ops in Part 2 | — | 🧱 🔁 | api: `processes.sigma_points`; mirrors GP 6.3; reconstruction-of-mean-and-cov sanity check |
 
 ### 5.D — Regularised / sparse
@@ -482,7 +482,7 @@ Covered in 5.A (TEKI, SparseInversion); listed here for navigation.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 6.1 | Spurious correlations & sample-cov rank — visual + spectrum demo | — | 🧱 | dd: `features/localization_inflation.md`; correlation heat-map at small / large $N_e$ |
+| 6.1 | Spurious correlations & sample-cov rank — visual + spectrum demo | — | 🧱 | dd:features/localization_inflation.md; correlation heat-map at small / large $N_e$ |
 | 6.2 | R-localisation vs B-localisation — when each is correct | — | 🧱 | Hunt 2007 §2; B-loc preserves PSD only with specific tapers; R-loc requires diagonal $R$ |
 
 ### 6.B — Why inflation
@@ -493,7 +493,7 @@ Covered in 5.A (TEKI, SparseInversion); listed here for navigation.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 6.3 | Filter divergence — overconfident analysis rejects obs | — | 🧱 | dd: `features/localization_inflation.md`; trajectory-plot demo with / without inflation |
+| 6.3 | Filter divergence — overconfident analysis rejects obs | — | 🧱 | dd:features/localization_inflation.md; trajectory-plot demo with / without inflation |
 | 6.4 | Multiplicative vs RTPS vs RTPP — when each wins | — | 🧱 | calibration table; spread-trajectory comparison; failure modes |
 
 ### 6.C — Adaptive variants
@@ -522,7 +522,7 @@ Covered in 5.A (TEKI, SparseInversion); listed here for navigation.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.1 | Ensemble spread & RMSE — minimal pair for "is the filter alive" | — | 🧱 | dd: `features/diagnostics.md`; trajectory plots; spread-RMSE ratio reading |
+| 7.1 | Ensemble spread & RMSE — minimal pair for "is the filter alive" | — | 🧱 | dd:features/diagnostics.md; trajectory plots; spread-RMSE ratio reading |
 | 7.2 | Rank histograms & reliability | — | 🧱 | Talagrand diagrams; under- / well- / over-dispersive signatures |
 
 ### 7.B — Innovation diagnostics
@@ -534,7 +534,7 @@ Covered in 5.A (TEKI, SparseInversion); listed here for navigation.
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
 | 7.3 | Innovation chi-squared & Mahalanobis | — | 🧱 | api: `innovation_statistics`; pass/fail thresholds; cycle-averaged plots |
-| 7.4 | Desroziers diagnostic — observation-error tuning | — | 🔬 | dd: `features/diagnostics.md`; recovering $R$ from posterior innovations |
+| 7.4 | Desroziers diagnostic — observation-error tuning | — | 🔬 | dd:features/diagnostics.md; recovering $R$ from posterior innovations |
 
 ### 7.C — Reliability & sharpness
 
@@ -561,7 +561,7 @@ Covered in 5.A (TEKI, SparseInversion); listed here for navigation.
 
 ## Part 8 — Differentiable DA
 
-Wave 5.B; design doc `features/differentiable_da.md`.
+See dd:features/differentiable_da.md.
 
 ### 8.A — Theory & gradient stability
 
@@ -573,7 +573,7 @@ Wave 5.B; design doc `features/differentiable_da.md`.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 8.1 | Why differentiable — learning dynamics, obs ops, hyperparams end-to-end | — | 🧱 | dd: `features/differentiable_da.md` §1; four motivating use cases |
+| 8.1 | Why differentiable — learning dynamics, obs ops, hyperparams end-to-end | — | 🧱 | dd:features/differentiable_da.md §1; four motivating use cases |
 | 8.2 | Stochastic vs deterministic filters under `grad` — eigh degeneracy & the rank-$N_y$ trick | — | 🔬 | regression context for [#82](https://github.com/jejjohnson/filterax/issues/82); api: `_etkf_inner_spectrum`; before / after gradient plot |
 
 ### 8.B — `differentiable_assimilate` mechanics
@@ -584,7 +584,7 @@ Wave 5.B; design doc `features/differentiable_da.md`.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 8.3 | The scan + vmap + remat idiom — single fused XLA `While` | — | 🧱 | api: `differentiable_assimilate`; dd: `features/differentiable_da.md` §8 |
+| 8.3 | The scan + vmap + remat idiom — single fused XLA `While` | — | 🧱 | api: `differentiable_assimilate`; dd:features/differentiable_da.md §8 |
 | 8.4 | Carry-dtype unification & extension kwargs (LETKF coords) | — | 🌉 | regression context for `test_diff_assimilate_handles_mixed_time_dtypes`; mixed-dtype trace error reproduction |
 
 ### 8.C — Training patterns
@@ -596,9 +596,9 @@ Wave 5.B; design doc `features/differentiable_da.md`.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 8.5 | Pattern A — learn dynamics parameters (Neural ODE through filter) | — | 🔬 | dd: `features/differentiable_da.md` §6.A; loss-vs-epoch curve; gradient-sign sanity |
-| 8.6 | Pattern B — learn observation operator (neural decoder) | — | 🔬 | dd: `features/differentiable_da.md` §6.B; neural RTM example (plumax Tier IV v2) |
-| 8.7 | Pattern C — meta-learn inflation / localisation radius / $R$ diag | — | 🔬 | dd: `features/differentiable_da.md` §6.C; constrained-via-`exp` reparameterisation |
+| 8.5 | Pattern A — learn dynamics parameters (Neural ODE through filter) | — | 🔬 | dd:features/differentiable_da.md §6.A; loss-vs-epoch curve; gradient-sign sanity |
+| 8.6 | Pattern B — learn observation operator (neural decoder) | — | 🔬 | dd:features/differentiable_da.md §6.B; neural RTM example (plumax Tier IV v2) |
+| 8.7 | Pattern C — meta-learn inflation / localisation radius / $R$ diag | — | 🔬 | dd:features/differentiable_da.md §6.C; constrained-via-`exp` reparameterisation |
 
 ### 8.D — Memory & remat
 
@@ -609,8 +609,8 @@ Wave 5.B; design doc `features/differentiable_da.md`.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 8.8 | `jax.checkpoint` placement — $O(\sqrt{T})$ memory under reverse-mode | — | 🧱 | dd: `features/differentiable_da.md` §5.1; checkpoint-on-body vs checkpoint-on-scan |
-| 8.9 | ROAD-EnKF — local-gradient approximation, $O(1)$ memory | — | 🔬 | dd: `features/differentiable_da.md` §6.D; not yet implemented — gap |
+| 8.8 | `jax.checkpoint` placement — $O(\sqrt{T})$ memory under reverse-mode | — | 🧱 | dd:features/differentiable_da.md §5.1; checkpoint-on-body vs checkpoint-on-scan |
+| 8.9 | ROAD-EnKF — local-gradient approximation, $O(1)$ memory | — | 🔬 | dd:features/differentiable_da.md §6.D; not yet implemented — gap |
 
 ### 8.E — Loss zoo
 
@@ -622,7 +622,7 @@ Wave 5.B; design doc `features/differentiable_da.md`.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 8.10 | NLL vs MSE vs CRPS vs spread-skill — pick your gradient signal | — | 🧱 | dd: `features/differentiable_da.md` §3; calibration vs accuracy trade-off table |
+| 8.10 | NLL vs MSE vs CRPS vs spread-skill — pick your gradient signal | — | 🧱 | dd:features/differentiable_da.md §3; calibration vs accuracy trade-off table |
 
 ---
 
@@ -637,7 +637,7 @@ Wave 5.B; design doc `features/differentiable_da.md`.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 9.1 | `filterax.optax.eki` — EKI as a gradient transform | — | 🧱 | api: `filterax.optax.eki`; dd: `features/optax_ekp.md`; three-iter convergence smoke |
+| 9.1 | `filterax.optax.eki` — EKI as a gradient transform | — | 🧱 | api: `filterax.optax.eki`; dd:features/optax_ekp.md; three-iter convergence smoke |
 | 9.2 | `filterax.optax.eks` — EKS as a gradient transform | — | 🧱 | api: `filterax.optax.eks`; per-step key-advance demonstration |
 | 9.3 | `filterax.optax.uki` — UKI with parametric carry | — | 🌉 | api: `filterax.optax.uki`; mean / covariance both updated |
 
@@ -645,7 +645,7 @@ Wave 5.B; design doc `features/differentiable_da.md`.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 9.4 | Composing with `optax.chain` — gradient clipping, masking, scheduling on top of EKI | — | 🌉 | dd: `features/optax_ekp.md`; `clip_by_global_norm` example; mask-by-param-name |
+| 9.4 | Composing with `optax.chain` — gradient clipping, masking, scheduling on top of EKI | — | 🌉 | dd:features/optax_ekp.md; `clip_by_global_norm` example; mask-by-param-name |
 
 ### 9.C — Hybrid SGD + EKI
 
@@ -728,7 +728,7 @@ The bridge into broader filtering / sequential-VI work. Each tutorial sits next 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
 | 11.1 | Diagonal $R$ → Woodbury gain — never densify | — | 🧱 🔁 | api: `gaussx.LowRankUpdate`, `gaussx.solve_rows`; pairs with GP 1.9 |
-| 11.2 | Toeplitz / Kronecker $R$ — spatial obs noise | — | 🌉 🔁 | dd: `integrations/geostack.md`; pairs with GP 1.4 / 1.3 |
+| 11.2 | Toeplitz / Kronecker $R$ — spatial obs noise | — | 🌉 🔁 | dd:integrations/geostack.md; pairs with GP 1.4 / 1.3 |
 
 ### 11.B — pipekit (orchestration)
 
@@ -738,14 +738,14 @@ The bridge into broader filtering / sequential-VI work. Each tutorial sits next 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 11.3 | filterax filter as `pipekit.AnalysisStep` (wrapper pattern D11) | — | 🧱 | dd: `integrations/pipekit.md`; api: `FilterAsAnalysisStep` (user wrapper) |
+| 11.3 | filterax filter as `pipekit.AnalysisStep` (wrapper pattern D11) | — | 🧱 | dd:integrations/pipekit.md; api: `FilterAsAnalysisStep` (user wrapper) |
 | 11.4 | Sequential / Graph / Cycle composition | — | 🌉 | full multi-step Tier IV pipeline; pipekit-side notebook |
 
 ### 11.C — somax (SDE dynamics)
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 11.5 | `somax` SDE as `AbstractDynamics` | — | 🌉 | dd: `examples/integration.md`; stochastic forward model worked example |
+| 11.5 | `somax` SDE as `AbstractDynamics` | — | 🌉 | dd:examples/integration.md; stochastic forward model worked example |
 
 ### 11.D — geo_toolz / xr_assimilate (xarray)
 
@@ -757,7 +757,7 @@ The bridge into broader filtering / sequential-VI work. Each tutorial sits next 
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 11.7 | Multi-instrument methane retrieval — `JointObsOperator`, `SequentialAssimilation`, `GeoLocalizer`, fixed-lag smoother | — | 🔬 | dd: `integrations/plumax.md`; the canonical end-to-end demo |
+| 11.7 | Multi-instrument methane retrieval — `JointObsOperator`, `SequentialAssimilation`, `GeoLocalizer`, fixed-lag smoother | — | 🔬 | dd:integrations/plumax.md; the canonical end-to-end demo |
 
 ---
 

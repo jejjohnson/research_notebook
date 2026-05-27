@@ -2,8 +2,8 @@
 title: "Fair Gaussianization — follow-up experiments"
 short_title: "Fair Gaussianization — follow-ups"
 description: >
-  Six follow-up experiments that move the Gaussianization flow from the
-  predictor's *output* (current setup) to the inputs / representations
+  Seven follow-up experiments that move the Gaussianization flow from
+  the predictor's *output* (current setup) to the inputs / representations
   / per-sample reweighting / counterfactual generation pipeline. Math,
   engineering, pseudocode, asks, and tradeoffs for each.
 status: design
@@ -32,14 +32,14 @@ two structural problems we surfaced empirically in notebooks 06–07:
    training, so a flow on $X$ is *always* in-support. We're not using
    that.
 
-This doc proposes **six follow-up experiments** that move the flow's
+This doc proposes **seven follow-up experiments** that move the flow's
 role around the pipeline. Three of them are pure preprocessing (the
 flow runs once, offline); two are training-time but on stable
 quantities; one is a counterfactual data-augmentation. Each comes with
 math, pseudocode, an explicit "ask" of what new infrastructure is
 needed, honest tradeoffs, and a falsifiable hypothesis.
 
-## 1. TL;DR — the six approaches at a glance
+## 1. TL;DR — the seven approaches at a glance
 
 | Approach | Flow's job | When it runs | Predictor sees | Fairness mechanism |
 |---|---|---|---|---|
@@ -49,15 +49,16 @@ needed, honest tradeoffs, and a falsifiable hypothesis.
 | **D. Conditional flow $T_{X\|q}$** | Gaussianises $X$ given $q$ | Offline | $T_{X\|q}(X, q)$ | structural ($Z \perp q$ by construction) |
 | **E. Counterfactual augmentation** | Generates $\tilde X$ with $q$ flipped | Offline (data prep) | $X \cup \tilde X$ | data-level + consistency loss |
 | **F. Density-ratio reweighting** | Estimates $p(X\|q)$ | Offline (weight prep) | $X$ with weights $w_i$ | classical importance weighting |
+| **G. Representation bottleneck** *(stretch)* | $T_R$ on encoder output | Training-time (with refresh) | encoded $R$ then head | soft penalty on intermediate representation |
 
-All six leave the predictor's training-loop architecture **unchanged**
+All seven leave the predictor's training-loop architecture **unchanged**
 (or nearly so) — the work happens before training, and the predictor
 sees a tweaked feature space or a weighted task loss. Compare to the
 *original* experiment, where the fairness logic was inside the
 optimisation loop. The follow-ups are easier to compose, easier to
 debug, and don't carry the moving-target risk.
 
-```{admonition} Design-space map
+:::{admonition} Design-space map
 :class: tip
 
 ```
@@ -83,7 +84,7 @@ debug, and don't carry the moving-target risk.
 
 The original experiment lives in the *outputs* column; every
 follow-up here moves it to the inputs.
-```
+:::
 
 Notation throughout: $X \in \mathbb{R}^{n \times d}$ inputs,
 $y \in \mathbb{R}^n$ targets, $q \in \mathbb{R}^{n \times d_q}$
@@ -443,6 +444,10 @@ mlp.fit(features(X_train), y_train, ...)
 
 **Soft variant** (Stiefel-soft):
 
+`GaussianizedXCovLoss` would re-apply `T_X` to its `z_pred` input and
+also shape-mismatch when `k != d`, so we compute the cross-covariance
+penalty directly on the already-projected $Z_p$ against $T_q(q)$:
+
 ```python
 class FairProjMLP(keras.Model):
     def __init__(self, d, k, T_X, T_q, mu=1.0, ortho_lam=10.0):
@@ -453,21 +458,37 @@ class FairProjMLP(keras.Model):
         )
         self.mlp = build_mlp(input_dim=k)
         self.mu, self.ortho_lam = mu, ortho_lam
-        self.g_xcov = GaussianizedXCovLoss(T_X, T_q, normalize=True)
+
+    def _xcov_penalty(self, Zp, q):
+        # ||Cov(Zp, T_q(q))||_F^2  / (||Cov(Zp)||_F · ||Cov(T_q(q))||_F)
+        qg = self.T_q(q)
+        Zp_c = Zp - ops.mean(Zp, axis=0, keepdims=True)
+        qg_c = qg - ops.mean(qg, axis=0, keepdims=True)
+        n = ops.cast(ops.shape(Zp_c)[0], Zp_c.dtype)
+        denom = ops.maximum(n - 1.0, 1.0)
+        C    = ops.matmul(ops.transpose(Zp_c), qg_c) / denom
+        S_z  = ops.matmul(ops.transpose(Zp_c), Zp_c) / denom
+        S_q  = ops.matmul(ops.transpose(qg_c), qg_c) / denom
+        fz = ops.sqrt(ops.sum(S_z * S_z)); fq = ops.sqrt(ops.sum(S_q * S_q))
+        return ops.sum(C * C) / (fz * fq + 1e-12)
 
     def call(self, inputs, training=False):
         x, q = inputs["x"], inputs["q"]
         Z = self.T_X(x)
         Zp = ops.matmul(Z, self.P)
         if training:
-            # Fairness penalty on the projected latent
-            self.add_loss(self.mu * self.g_xcov(q, Zp))
+            # Fairness penalty on the projected latent (k-dim, not d-dim)
+            self.add_loss(self.mu * self._xcov_penalty(Zp, q))
             # Orthogonality constraint as soft penalty
             PtP = ops.matmul(ops.transpose(self.P), self.P)
             self.add_loss(self.ortho_lam *
                           ops.sum((PtP - ops.eye(self.P.shape[1])) ** 2))
         return self.mlp(Zp)
 ```
+
+(For the eventual implementation, factor out `_xcov_penalty` as a free
+function — it's the same linear-CKA computation used in
+`GaussianizedXCovLoss`, just without the leading $T_z$ pass.)
 
 ### 4.4 Asks
 
@@ -641,14 +662,25 @@ broadly useful (density estimation conditional on covariates).
 
 ### 5.6 Hypothesis
 
-```{admonition} H-D — Conditional flow exact $Z \perp q$; biggest AUC cost.
+```{admonition} H-D — Conditional flow gives exact $Z \perp q$ (DP-diff = 0); EO-diff is *not* guaranteed; biggest AUC cost.
 :class: hypothesis
 
-A predictor on $T_{X \mid q}(X, q)$ achieves DP-diff and EO-diff
-**exactly 0** by construction (within numerical noise), but pays a
-substantial AUC cost compared to A–C, because the conditional flow
-strips all $q$-conditioned predictive signal — including the legitimate
-component (e.g. real education effects across groups).
+A predictor on $T_{X \mid q}(X, q)$ achieves **demographic-parity
+difference = 0** by construction (within numerical noise), because
+$Z \perp q$ implies $f_\theta(Z) \perp q$ for any deterministic
+$f_\theta$.
+
+**Equalized-odds difference is *not* guaranteed to be zero**: EO
+conditions on the true label $y$, and when $y$ is correlated with $q$
+(which is the case in any non-trivial fairness benchmark), conditioning
+on $y$ can reintroduce dependence between $f_\theta(Z)$ and $q$ even
+when the marginal $Z \perp q$ holds. EO-diff = 0 would additionally
+require $y \perp q$ in the data, which Adult Census clearly violates.
+
+In practice we expect a substantial AUC cost compared to A–C — the
+conditional flow strips all $q$-conditioned predictive signal,
+including the legitimate component (e.g. real education effects
+across groups).
 
 **Failure prediction.** If $q$ has very little information about
 predictively-useful aspects of $X$, the conditional flow's removal
@@ -1090,8 +1122,15 @@ from gaussianization.gauss_keras import (
 )
 ```
 
-Six new symbols and one extended bijector class.  None of the existing
-API breaks.
+Six new public symbols in `gaussianization.fair`
+(`score_features_g`, `q_orthogonal_projection`, `fit_marginals`,
+`fit_and_freeze_conditional`, `generate_counterfactuals`,
+`density_ratio_weights`), two new classes in `gauss_keras`
+(`GaussianizationLayer` — a thin frozen-flow wrapper for Approach A;
+`ConditionalGaussianizationFlow` — the conditional flow for D/E/F),
+and one extended bijector
+(`MixtureCDFGaussianization` gains an optional `condition` input).
+None of the existing API breaks.
 
 ---
 

@@ -505,27 +505,41 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# **What to notice.** All four losses trace a Pareto-like curve from
-# the unfair baseline (top-right) toward fairness (bottom-left). The
-# *shape* of each curve reveals what kind of dependence each loss
-# captures:
+# **What to notice.** Three of the four losses trace a Pareto-like
+# curve from the unfair baseline (top-right) toward fairness
+# (bottom-left). The fourth -- G-TC -- reveals a known failure mode
+# of joint-flow NLL fairness, and is the most interesting result of
+# the notebook.
 #
 # - **G-XCOV** sweeps smoothly but plateaus a bit short of zero
-#   dependence — its bounded gradient runs out of pressure at high μ.
-# - **G-MI**'s diverging gradient at $|\rho| \to 1$ produces a steeper
-#   descent: it reaches lower terminal $|\text{corr}|$ than G-XCOV at
-#   matched μ, often at a similar (or slightly higher) RMSE.
-# - **G-TC** uses a full joint flow rather than a closed form, so its
-#   trajectory and per-μ value are on a different scale entirely; the
-#   curve is parameterised by raw μ here without rescaling.
-# - **CKA** with RBF σ=1 stays competitive — the bandwidth-tuning
+#   dependence -- its bounded gradient runs out of pressure at high μ.
+# - **G-MI**'s diverging gradient at $|\rho| \to 1$ produces a similar
+#   descent on this dataset, with a slight loss of accuracy at
+#   matched fairness compared to G-XCOV (the diverging gradient is
+#   not free).
+# - **G-TC collapses the predictor to a near-constant output at
+#   $\mu \ge 8$** -- look at the table: RMSE jumps to ≈ 2.29, the
+#   group-mean gap is essentially zero, and $|\text{corr}|$ becomes
+#   unstable (a constant has no correlation with anything). The
+#   joint-flow NLL has a global minimum when the joint matches the
+#   shuffled product distribution, and the optimiser found a
+#   trivial solution: predict $\hat y \approx \mathbb{E}[y]$
+#   regardless of $X$. That output is automatically independent of
+#   $q$ but predictively useless. **This is the failure mode the
+#   engineering doc warns about** under "joint-flow capacity" and
+#   "magnitude calibration": raw NLL is unsuitable as a fairness
+#   loss without a *relative* baseline subtraction
+#   $\mathcal{L}_{\text{G-TC}} - H_{\mathcal{N}(0, I)}$ to anchor it.
+#   Fixing this is a planned follow-up.
+# - **CKA** with RBF σ=1 stays competitive -- the bandwidth-tuning
 #   advantage is invisible on this small toy.
 #
 # The point is *not* to declare a winner at matched μ (the natural
 # magnitudes differ; see the engineering doc's H4). It is to confirm
-# that **all four trade-off curves exist and are continuously
-# controlled by μ**, with the new family of losses occupying
-# territory previously only the kernel methods could reach.
+# that **G-XCOV and G-MI trace honest trade-off curves continuously
+# controlled by μ**, and that **G-TC's current formulation has a
+# pathology** worth fixing before it joins them as a viable
+# production loss.
 
 # %% [markdown]
 # ## 8. Group-mean predictions vs. $\mu$ — the parity convergence

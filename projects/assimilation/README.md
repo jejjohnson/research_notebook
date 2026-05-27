@@ -79,6 +79,39 @@ better numbers.
   all seven methods on the L96 problem, Hovmöller-overlay plots and
   the accuracy-latency scatter.
 
+**Lorenz-96 two-level ($K=8$ slow, $J=8$ fast → $D=72$)**
+
+- [`11_lorenz96_2l_setup`](notebooks/11_lorenz96_2l_setup.ipynb) —
+  Wilks 2005 sub-grid model: equations, slow-fast Hovmöllers,
+  slow-only sparse obs design, prior-floor analysis. **Start here
+  for the multi-scale problem.**
+- [`12_lorenz96_2l_benchmark`](notebooks/12_lorenz96_2l_benchmark.ipynb) —
+  six methods on the two-level problem (Incremental-4DVar diverges
+  on the stiff slow-fast coupling and is documented as a known
+  failure mode). The slow-vs-fast RMSE breakdown is the headline:
+  most 4DVar variants improve slow but **degrade fast** (the
+  classic "imbalance" failure), while `AmortizedPosterior`
+  preserves the fast block near the prior floor.
+
+## Headline — Lorenz-96 two-level (`PRNGKey(0)`)
+
+Per-block RMSE (prior floors: slow 7.58, fast 0.39):
+
+| Method | slow RMSE | fast RMSE | total | Inference | Training |
+|---|---:|---:|---:|---:|---:|
+| OI = 3DVar | 6.71 | 0.39 | 2.27 | 0.5 s | — |
+| FourDVarNet | 6.16 | 1.25 | 2.37 | 0.2 s | ~140 s |
+| Strong-4DVar | 4.60 | 0.88 | 1.75 | 2.5 s | — |
+| **AmortizedPosterior** | 4.64 | **0.44** | 1.60 | **10 ms** | ~15 s |
+| **Weak-4DVar** | **4.12** | 0.84 | **1.58** | 7.1 s | — |
+| Incremental-4DVar | (diverges) | | | | |
+
+The take-home: dynamics-aware methods improve slow but **disturb**
+the unobserved fast block above its prior floor — the imbalance
+failure mode. Only the amortized regression head, which learned the
+slow-fast joint structure from 128 simulated pairs, recovers the
+slow variables without sacrificing the fast ones.
+
 ## Running
 
 ```bash

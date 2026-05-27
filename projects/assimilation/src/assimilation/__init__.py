@@ -20,16 +20,26 @@ from assimilation.lorenz96 import (
     LorenzL96Problem,
     generate_l96_problem,
 )
+from assimilation.lorenz96_2l import (
+    Lorenz96TwoLevelForward,
+    Lorenz96TwoLevelVF,
+    LorenzL96TwoLevelProblem,
+    generate_l96_2l_problem,
+)
 from assimilation.metrics import nll_gaussian, rmse, sigma_coverage
 
 
 __all__ = [
     "Lorenz63Forward",
     "Lorenz96Forward",
+    "Lorenz96TwoLevelForward",
+    "Lorenz96TwoLevelVF",
     "LorenzL96Problem",
+    "LorenzL96TwoLevelProblem",
     "LorenzProblem",
     "MethodResult",
     "compare",
+    "generate_l96_2l_problem",
     "generate_l96_problem",
     "generate_problem",
     "nll_gaussian",

@@ -245,7 +245,7 @@ The atomic operation of Gaussianization: turn each coordinate's distribution int
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 1.1 | [Marginal transforms: ECDF & histograms](../../) | B `01_marginal_transforms` | 🧱 | rbig canonical entry; rank → uniform → normal |
+| 1.1 | Marginal transforms — ECDF & histograms | B `01_marginal_transforms` | 🧱 | rbig canonical entry; rank → uniform → normal |
 | 1.2 | Boundary issues & support extension | B `07_boundary_issues` | 🧱 | tails, $\pm\infty$ handling, rbig's three remedies |
 | 1.3 | Glivenko–Cantelli & finite-sample bias | — | 🧱 | **GAP** — pedagogical |
 
@@ -438,7 +438,7 @@ Stack the rotation + marginal blocks into a differentiable graph and train end-t
 ### 4.A — NLL training of stacked blocks
 
 **Key equations / models:**
-- Loss: $\mathcal{L}(\theta) = -\tfrac{1}{n}\sum_i \log p_Z(T_\theta(x_i)) + \log|\det J_{T_\theta}(x_i)|$
+- Loss: $\mathcal{L}(\theta) = -\tfrac{1}{n}\sum_i \big[\log p_Z(T_\theta(x_i)) + \log|\det J_{T_\theta}(x_i)|\big]$
 - $p_Z = \mathcal{N}(0,I)$ so $-\log p_Z(z) = \tfrac{1}{2}\|z\|^2 + \tfrac{d}{2}\log 2\pi$
 - Gradient through `bisection` inverse via implicit-function theorem
 
@@ -721,13 +721,14 @@ Drop strict invertibility for expressiveness or generality. Each sub-part keeps 
 ### 9.A — Injective / lossy Gaussianization
 
 **Key equations / models:**
-- Injective bijector $T:\mathbb{R}^d\to\mathbb{R}^m$, $m<d$, data on a submanifold
-- Density via pseudo-inverse Jacobian: $|\det J^\top J|^{1/2}$
-- M-Flow (Brehmer & Cranmer 2020), manifold flows
+- Data assumed to live on an $m$-dim submanifold of $\mathbb{R}^d$ with $m\leq d$
+- *Injective* decoder $g:\mathbb{R}^m\to\mathbb{R}^d$ — image is the data manifold; one-to-one with no information loss
+- *Lossy* / surjective encoder $E:\mathbb{R}^d\to\mathbb{R}^m$ — left-inverse of $g$ on-manifold, many-to-one off-manifold
+- On-manifold density via $|\det J_g^\top J_g|^{1/2}$ (Brehmer & Cranmer 2020, M-Flow)
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 9.1 | Injective Gaussianization — manifold flows | — | 🔬 | **GAP** |
+| 9.1 | Injective decoder + lossy encoder — manifold flows on data of intrinsic dimension $m\leq d$ | — | 🔬 | **GAP** |
 
 ### 9.B — Augmented / lifted flows
 
@@ -1154,7 +1155,7 @@ Pretrain a flow on a dataset, **freeze its weights**, then use the Gaussianised 
 
 **Key equations / models:**
 - Pretrain $T_\theta$ s.t. $T_\theta(x)\sim\mathcal{N}(0,I)$, freeze weights
-- Use $T_\theta$ to extract Gaussianised features; compute independence in Gaussian space (where covariance ↔ dependence is exact)
+- Use $T_\theta$ to extract Gaussianised features. Covariance-based independence measures on $(T(x), q)$ become a **tractable proxy** for independence; the equivalence "zero covariance ⇔ independence" requires the *joint* to be Gaussian, which marginal Gaussianisation of $x$ alone does not guarantee (and breaks especially for categorical $q$). In practice the proxy works well when marginal-shape mismatch dominates the dependence signal.
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
@@ -1226,8 +1227,10 @@ The central pedagogical hook: **the proximal operator of a Gaussianized prior is
 **Key equations / models:**
 - Gaussianized prior log-density: $\log p_R(x) = \log\mathcal{N}(T(x); 0, I) + \log|\det J_T(x)|$
 - Score: $\nabla\log p_R(x) = -J_T(x)^\top T(x) + \nabla\log|\det J_T(x)|$
-- **Closed-form prox in latent space**: $\mathrm{prox}_{\|z\|^2/(2\tau)}(z) = z/(1 + 1/\tau)$
-- Pull-back: $x_+ = T^{-1}(z_+/(1+1/\tau))$ where $z_+ = T(x)$
+- **Variable split**: rewrite the inverse problem in latent coordinates $z = T(x)$ via HQS / ADMM so the regulariser becomes the standard-Gaussian negative log-prior $\tfrac{1}{2}\|z\|^2$
+- **Closed-form prox in *latent* coordinates**: $\mathrm{prox}_{\|z\|^2/(2\tau)}(z) = z/(1 + 1/\tau)$
+- Caveat: this is the prox with respect to the *latent-space* Euclidean metric, **not** the Euclidean prox of the induced data-space prior $-\log p_R(x)$ — those coincide only when $T$ is linear / isometric. With general $T$, the data-space prox $\arg\min_x\,\tfrac{1}{2\tau}\|x-x_0\|^2 - \log p_R(x)$ has no closed form, which is precisely why the latent-split formulation is the practical recipe (cf. Asim 2020, Whang 2021).
+- Pull-back update: $x_+ = T^{-1}(z_+/(1+1/\tau))$ where $z_+ = T(x)$
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|

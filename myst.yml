@@ -95,6 +95,7 @@ project:
         - title: Data assimilation
           children:
             - file: projects/assimilation/README.md
+            - file: projects/assimilation/docs/TUTORIAL_MASTER_LIST_VARIATIONAL.md
             - file: projects/assimilation/docs/TUTORIAL_MASTER_LIST_FILTER.md
             - title: Lorenz-63
               children:

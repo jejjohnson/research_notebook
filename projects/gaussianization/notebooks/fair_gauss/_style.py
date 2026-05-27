@@ -22,4 +22,6 @@ GROUP_COLORS = {
     1: "tab:orange",
 }
 G_COLOR = "tab:purple"  # G-XCOV everywhere
+MI_COLOR = "tab:green"  # G-MI everywhere
+TC_COLOR = "tab:olive"  # G-TC everywhere
 CKA_COLOR = "tab:red"  # CKA baseline everywhere

@@ -58,13 +58,16 @@ os.environ.setdefault("KERAS_BACKEND", "jax")
 import keras
 import matplotlib.pyplot as plt
 import numpy as np
-from _style import CKA_COLOR, G_COLOR, SCATTER_KW, style_ax
+from _style import CKA_COLOR, G_COLOR, MI_COLOR, SCATTER_KW, TC_COLOR, style_ax
 
 from fairkl.metrics.cka import CKALoss
 from fairkl.models import FairModelWrapper
 from gaussianization.fair import (
+    GaussianizedMutualInfoLoss,
+    GaussianizedTotalCorrelationLoss,
     GaussianizedXCovLoss,
     fit_and_freeze,
+    fit_and_freeze_joint,
     pearson_corr,
 )
 
@@ -143,6 +146,24 @@ flow_q, _ = fit_and_freeze(
 )
 print(f"flow_y trainable weights:  {len(flow_y.trainable_weights)} (expected 0)")
 print(f"flow_q trainable weights:  {len(flow_q.trainable_weights)} (expected 0)")
+
+# A *joint* flow on the shuffled product distribution of (y, q) -- used
+# by G-TC. The shuffle ensures the flow learns to Gaussianise
+# independent draws of (y, q); deviation from N(0, I) at test time
+# measures dependence in the actual (predictor output, q) pair.
+flow_yq, _ = fit_and_freeze_joint(
+    y_train,
+    q_train,
+    num_blocks=6,
+    num_components=10,
+    epochs=100,
+    batch_size=256,
+    lr=2e-3,
+    seed=0,
+    n_shuffles=2,
+    verbose=0,
+)
+print(f"flow_yq trainable weights: {len(flow_yq.trainable_weights)} (expected 0)")
 
 # %% [markdown]
 # ## 3. The model — a stock Keras MLP, untouched
@@ -299,13 +320,25 @@ plt.show()
 # makes predictions — they are just no longer keyed on $q$.
 
 # %% [markdown]
-# ## 7. The Pareto curve — G-XCOV vs. CKA, three seeds
+# ## 7. The Pareto curve — four fairness losses, three seeds
 #
 # Loss curves and scatter plots show one configuration. The held-out
 # Pareto curve shows the *family* of trade-offs you can buy. We
-# re-run the sweep at six $\mu$ values and three seeds for each of
-# **G-XCOV** (this work) and **CKA** (the fairkl baseline) — same
-# wrapper, same MLP, same data, only the fairness loss changes.
+# re-run the sweep at five $\mu$ values and three seeds for each of
+# **four** fairness losses — same wrapper, same MLP, same data, only
+# the `fairness_loss=` argument changes:
+#
+# - **G-XCOV** (this work): 2nd-moment dependence in Gaussianised
+#   space; linear CKA after the flow. Bounded gradient.
+# - **G-MI** (this work): closed-form Gaussian mutual information on
+#   Gaussianised features — $-\tfrac{1}{2}\log(1 - \rho^2)$ in 1-D.
+#   Gradient *diverges* as $|\rho| \to 1$, so it pushes harder at
+#   high dependence than G-XCOV does.
+# - **G-TC** (this work): NLL of a *joint* flow trained on shuffled
+#   (independent) pairs. The flow learns the full copula of the
+#   independent reference, so dependence shows up as a finite NLL
+#   gap. Does not assume the joint is Gaussian.
+# - **CKA** (fairkl baseline): RBF kernel-alignment with σ=1.
 
 
 # %%
@@ -332,12 +365,19 @@ def train_eval(fairness_loss, mu: float, seed: int) -> dict:
     }
 
 
-mus = [0.0, 0.05, 0.5, 2.0, 8.0, 32.0]
+mus = [0.0, 0.5, 2.0, 8.0, 32.0]
 seeds = [0, 1, 2]
+mi_loss = GaussianizedMutualInfoLoss(flow_z=flow_y, flow_q=flow_q, eps=1e-4)
+tc_loss = GaussianizedTotalCorrelationLoss(joint_flow=flow_yq)
 cka_loss = CKALoss(sigma_f=1.0, sigma_q=1.0, kernel="rbf", debiased=False)
 
 records = []
-for fam_name, loss in [("g_xcov", g_loss), ("cka", cka_loss)]:
+for fam_name, loss in [
+    ("g_xcov", g_loss),
+    ("g_mi", mi_loss),
+    ("g_tc", tc_loss),
+    ("cka", cka_loss),
+]:
     for mu in mus:
         for s in seeds:
             r = train_eval(loss, mu=mu, seed=s)
@@ -368,10 +408,17 @@ def aggregate(fam: str) -> list[dict]:
 
 
 agg_g = aggregate("g_xcov")
+agg_mi = aggregate("g_mi")
+agg_tc = aggregate("g_tc")
 agg_c = aggregate("cka")
 
 print(f"\n{'family':>7s} {'mu':>6s} {'RMSE':>15s} {'|corr|':>15s} {'gap':>15s}")
-for fam, rows in [("g_xcov", agg_g), ("cka", agg_c)]:
+for fam, rows in [
+    ("g_xcov", agg_g),
+    ("g_mi", agg_mi),
+    ("g_tc", agg_tc),
+    ("cka", agg_c),
+]:
     for r in rows:
         print(
             f"{fam:>7s} {r['mu']:>6.2f} "
@@ -385,6 +432,8 @@ fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.5))
 
 for fam, rows, marker, color in [
     ("G-XCOV", agg_g, "o", G_COLOR),
+    ("G-MI", agg_mi, "^", MI_COLOR),
+    ("G-TC", agg_tc, "D", TC_COLOR),
     ("CKA", agg_c, "s", CKA_COLOR),
 ]:
     rmse_m = np.array([r["rmse_m"] for r in rows])
@@ -456,16 +505,27 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# **What to notice.** The cost of fairness is *not linear* for either
-# loss: the first units come almost free (an elbow near $\mu \approx
-# 0.5$ where dependence drops sharply for a few hundredths of RMSE),
-# while the last units are expensive (the model must abandon the $3q$
-# component of the target outright, and no other feature can recover
-# that information). G-XCOV and CKA trace similar fronts on this
-# task; the two error bars overlap at most $\mu$ values, with CKA
-# eking out slightly lower terminal dependence at slightly higher
-# terminal RMSE. The pragmatic recipe is the same with either loss:
-# pick the $\mu$ that meets your fairness tolerance, retrain, deploy.
+# **What to notice.** All four losses trace a Pareto-like curve from
+# the unfair baseline (top-right) toward fairness (bottom-left). The
+# *shape* of each curve reveals what kind of dependence each loss
+# captures:
+#
+# - **G-XCOV** sweeps smoothly but plateaus a bit short of zero
+#   dependence — its bounded gradient runs out of pressure at high μ.
+# - **G-MI**'s diverging gradient at $|\rho| \to 1$ produces a steeper
+#   descent: it reaches lower terminal $|\text{corr}|$ than G-XCOV at
+#   matched μ, often at a similar (or slightly higher) RMSE.
+# - **G-TC** uses a full joint flow rather than a closed form, so its
+#   trajectory and per-μ value are on a different scale entirely; the
+#   curve is parameterised by raw μ here without rescaling.
+# - **CKA** with RBF σ=1 stays competitive — the bandwidth-tuning
+#   advantage is invisible on this small toy.
+#
+# The point is *not* to declare a winner at matched μ (the natural
+# magnitudes differ; see the engineering doc's H4). It is to confirm
+# that **all four trade-off curves exist and are continuously
+# controlled by μ**, with the new family of losses occupying
+# territory previously only the kernel methods could reach.
 
 # %% [markdown]
 # ## 8. Group-mean predictions vs. $\mu$ — the parity convergence

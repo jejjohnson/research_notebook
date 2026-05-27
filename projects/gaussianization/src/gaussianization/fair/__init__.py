@@ -2,8 +2,8 @@
 
 A small library that composes:
 
-* :mod:`gaussianization.gauss_keras` — Keras 3 Gaussianization flows.
-* `fairkl <https://github.com/jejjohnson/keras-fairkl>`_ — the
+* :mod:`gaussianization.gauss_keras` -- Keras 3 Gaussianization flows.
+* `fairkl <https://github.com/jejjohnson/keras-fairkl>`_ -- the
   ``FairModelWrapper`` and a CKA baseline.
 
 The flow is pretrained on a dataset, frozen, and used as a differentiable
@@ -16,7 +16,8 @@ from __future__ import annotations
 
 from gaussianization.fair.freeze import freeze_flow, is_fully_frozen
 from gaussianization.fair.losses import (
-    GaussianizedHSICLoss,
+    GaussianizedMutualInfoLoss,
+    GaussianizedTotalCorrelationLoss,
     GaussianizedXCovLoss,
 )
 from gaussianization.fair.metrics import (
@@ -24,15 +25,20 @@ from gaussianization.fair.metrics import (
     equalized_odds_difference,
     pearson_corr,
 )
-from gaussianization.fair.pretrain import fit_and_freeze
+from gaussianization.fair.pretrain import (
+    fit_and_freeze,
+    fit_and_freeze_joint,
+)
 
 
 __all__ = [
-    "GaussianizedHSICLoss",
+    "GaussianizedMutualInfoLoss",
+    "GaussianizedTotalCorrelationLoss",
     "GaussianizedXCovLoss",
     "demographic_parity_difference",
     "equalized_odds_difference",
     "fit_and_freeze",
+    "fit_and_freeze_joint",
     "freeze_flow",
     "is_fully_frozen",
     "pearson_corr",

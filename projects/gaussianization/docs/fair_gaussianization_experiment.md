@@ -1,486 +1,502 @@
-# Fair Learning with Gaussianization Flows — Engineering Doc
+---
+title: "Fair learning with frozen Gaussianization flows"
+short_title: "Fair Gaussianization — engineering doc"
+description: >
+  Replace the CKA fairness penalty in keras-fairkl with a fairness loss
+  built from a frozen Gaussianization flow. Three penalties are proposed:
+  G-XCOV (linear CKA in Gaussianised space), G-MI (closed-form Gaussian
+  mutual-information after Gaussianisation), and G-TC (total correlation
+  under a frozen joint flow).
+status: design
+---
 
-**Status:** Design / proposal
+# Fair learning with frozen Gaussianization flows
+
 **Project:** `projects/gaussianization`
 **Author:** J. E. Johnson
 **Last updated:** 2026-05-27
 
----
-
 ## 1. TL;DR
 
-Replace the **CKA fairness penalty** in the [`keras-fairkl`](https://github.com/jejjohnson/keras-fairkl)
-`FairModelWrapper` with a **Gaussianization-Flow-based independence loss**.
-The flow is trained once on an auxiliary dataset, its weights are frozen, and it
-is then used as a differentiable "Gaussian-space probe" inside the downstream
-task's optimisation loop. Because Gaussianization makes marginals (approximately)
-standard Normal, **linear measures of dependence in flow space approximate
-non-linear measures of dependence in data space** — which gives us a principled,
-batch-friendly, fully differentiable replacement for CKA.
+Replace the **CKA fairness penalty** in [`keras-fairkl`](https://github.com/jejjohnson/keras-fairkl)'s
+`FairModelWrapper` with a family of fairness losses built from a
+**frozen Gaussianization flow**.  The flow is trained once on an
+auxiliary dataset, its weights are frozen, and it is then used as a
+differentiable *Gaussian-space probe* inside the downstream task's
+optimisation loop.  Gaussianisation lets us replace bandwidth-tuned
+RBF kernels (CKA, HSIC) with closed-form, parametric, scale-invariant
+penalties — the flow absorbs the kernel choice.
 
-The experiment lives under `projects/gaussianization/` (Keras 3, JAX backend) and
-reuses three existing assets:
+Three penalties, in order of strictness:
 
-| Asset | Role |
-|---|---|
-| `projects/gaussianization/.../gauss_keras` | Keras 3 Gaussianization Flow (pretrained then frozen) |
-| `keras-fairkl` | `FairModelWrapper`, baseline `CKALoss`, datasets, training scaffold |
-| `gauss_flows` (JAX) | Reference implementation + scientific validation harness |
+| Loss   | Captures                                                        | Closed form? | Joint flow needed? | Class |
+|--------|-----------------------------------------------------------------|-------------|--------------------|---|
+| G-XCOV | 2nd-moment dependence in Gaussianised space (= linear CKA there) | yes         | no — two marginal flows | `GaussianizedXCovLoss` |
+| G-MI   | Mutual information assuming joint-Gaussian after Gaussianisation | yes         | no — two marginal flows | `GaussianizedMutualInfoLoss` |
+| G-TC   | Full mutual information / total correlation, no Gaussian-joint assumption | no — via flow NLL | **yes** — one joint flow over $(z, q)$ | `GaussianizedTotalCorrelationLoss` |
 
----
-
-## 2. Background & Motivation
-
-### 2.1 Fair learning via dependence penalties
-
-Following the kernel-fairness line (Pérez-Suay et al. 2017, Cortes et al. 2012),
-`keras-fairkl` minimises
-
-$$
-\mathcal{L}(\theta) \;=\; \underbrace{\mathcal{L}_{\text{task}}(f_\theta(X), y)}_{\text{predictive}}
-                       + \mu \underbrace{\mathrm{Dep}(f_\theta(X), q)}_{\text{fairness}}
-$$
-
-where $q$ is a sensitive attribute and `Dep` is a kernel statistic — currently
-HSIC, MMD, or **CKA** (Centred Kernel Alignment, `fairkl.metrics.cka.CKALoss`).
-CKA is bounded in $[0, 1]$, scale-invariant for linear kernels, and works as a
-per-batch statistic via the `add_loss` mechanism inside
-`FairModelWrapper.call` (`src/fairkl/models/fair_wrapper.py:155`).
-
-### 2.2 Why try Gaussianization?
-
-Gaussianization Flows (Chen & Gopinath 2000; Laparra et al. 2011 — "RBIG";
-Meng et al. 2020 — "Gaussianization Flows") learn a diffeomorphism
-$T: \mathbb{R}^d \to \mathbb{R}^d$ such that $T(X) \approx \mathcal{N}(0, I)$.
-Three properties make them attractive for fairness:
-
-1. **Bijectivity** — $T$ preserves information; independence in flow space is
-   exactly equivalent to independence in data space.
-2. **Marginal Gaussianity** — after $T$, marginal distributions are
-   (approximately) standard Normal, so the *linear* covariance fully captures
-   marginal-Gaussian dependence. Cross-correlation Frobenius norm in flow space
-   is therefore a tight surrogate for non-linear dependence in data space.
-3. **Closed-form differentiable density** — `log_prob` and `log_det_jacobian`
-   are smooth in both inputs and parameters, so frozen flows compose naturally
-   into downstream gradient-based optimisation.
-
-Crucially, freezing $T$ collapses the bilevel "min-task while $T$ models
-distribution" problem to a single-level problem with a fixed surrogate metric,
-which is exactly the regime where `keras-fairkl`'s `add_loss` machinery thrives.
-
-### 2.3 What's wrong with CKA that this fixes?
-
-* **Bandwidth sensitivity.** RBF-CKA in `fairkl.metrics.cka.cka_rbf` requires
-  picking `sigma_f, sigma_q`; the experiment author currently sets these by
-  hand or tunes them with Keras Tuner. A pretrained flow absorbs the bandwidth
-  choice into its learned components (mixture-of-CDF parameters).
-* **Batch-size sensitivity.** CKA is a U/V-statistic that is noisy at small
-  batches (see `CKALoss` docstring's warning at batch < 128). A flow-based
-  test that operates on individual samples is less batch-bound.
-* **Linear-in-RKHS only.** CKA is a Hilbert-Schmidt cross-norm — it captures
-  second-order dependence in feature space. Flows model the full density.
+All three are differentiable w.r.t. the downstream model parameters and
+plug into `FairModelWrapper` via its `fairness_loss=...` argument.
 
 ---
 
-## 3. Three-Repo Landscape
+## 2. The mental model — three pictures
 
-### 3.1 `keras-fairkl` — the fairness training surface
+### 2.1 Stage 1 (one-time): pretrain the probes
 
-| Asset | Path | Notes |
-|---|---|---|
-| `FairModelWrapper` | `src/fairkl/models/fair_wrapper.py:26` | Wraps any `keras.Model`; injects penalty via `add_loss` in `call()` (line 155). Input protocol: dict `{"x": X, "q": q}`. |
-| `CKALoss` | `src/fairkl/metrics/cka.py` | Baseline to beat. Constructor takes `sigma_f, sigma_q, kernel, debiased`. |
-| `HSICLoss`, `MMDLoss` | `src/fairkl/metrics/{hsic,mmd}.py` | Alternative baselines. |
-| `FairLinear`, `FairKernelRidge`, `FairPCA`, `FairKernelPCA` | `src/fairkl/models/` | Hard-wired predictors — useful for closed-form sanity checks. |
-| Adult Census example | `docs/notebooks/fair_adult_census.py` | Drop-in reference experiment. |
-| Backend | Keras 3, JAX backend tested | Reuse `KERAS_BACKEND=jax` to share infra with `gauss_keras`. |
+```
+       D_pre  (auxiliary data, fixed sample)
+         │
+         ├─► T_z  ──► fit by MLE on N(0,I) base ──► freeze ─────────┐
+         │   (marginal flow on z)                                   │
+         │                                                          │
+         ├─► T_q  ──► fit by MLE on N(0,I) base ──► freeze ─────────┤  used by
+         │   (marginal flow on q)                                   │  G-XCOV, G-MI
+         │                                                          ▼
+         │                                                  ┌──────────────┐
+         │                                                  │  frozen      │
+         └─► T_zq ─► fit on (z, π(q))  ──► freeze ──────────┤  probes      │
+             (joint flow on shuffled       independent pairs│              │
+              product distribution)        only             │  used by G-TC│
+                                                            └──────────────┘
+```
 
-The single extension point we need: **a `keras.losses.Loss` subclass with the
-signature `__call__(q, f_pred) -> scalar`**, instantiable as
-`fairness_loss=…` on the `FairModelWrapper`. Everything else is free.
+### 2.2 Stage 2 (every step): the fair training loop
 
-### 3.2 `projects/gaussianization` — the Keras flow library
+The trick — and the load-bearing claim of this whole experiment — is
+that the **flow's weights are frozen** but the **flow's input is the
+predictor's output**, so gradients still propagate from the loss back
+through $T_z$ to $\theta$.
 
-| Asset | Path | Notes |
-|---|---|---|
-| `GaussianizationFlow` | `src/gaussianization/gauss_keras/bijectors/flow.py:11` | `log_prob(x) -> (batch,)`, `sample(n, seed)`, `invert(z)`, `forward_with_intermediates(x)`. |
-| `make_gaussianization_flow` | `src/gaussianization/gauss_keras/training.py:33` | Builds `(FixedOrtho → (Householder → MixtureCDFGaussianization) × N)`. Supports PCA + quantile init. |
-| `make_coupling_flow` | `training.py:71` | Coupling-layer variant with MLP conditioners. |
-| `base_nll_loss` | `training.py:22` | Use as Keras loss on the *latent* output during pretraining. |
-| Backend | Pure Keras 3 (TF / JAX / PyTorch all work) | Same as fairkl — clean integration. |
+```
+       X ───► f_θ ───────────► z ──┐                                ┌──► ∂L/∂θ
+        ▲                          │                                │     ▲
+        │                          ├──► task_loss(z, y) ───┐        │     │ updates θ
+        │                          │                       │        │     │
+        │                          │   ┌── T_z(z) ─────┐   │        │     │
+        │                          ├──►│               ├──►│        │     │
+       (data)                      │   │  L_fair(·, ·) │   ├──► L ──┤     │
+                                   │   │               │   │ = task │     │
+       q ──────────────────────────┼──►│   T_q(q)  ────┘   │ + μ·L_fair    │
+                                   │   └───────────────┘   │        │     │
+                                   │   frozen, but grads   │        │     │
+                                   │   flow through  z     │        │     │
+                                   └───────────────────────┘        │     │
+                                                                    ▼     │
+                                                          backprop ──────►┘
+                                                          (no updates to T_z, T_q)
+```
 
-### 3.3 `gauss_flows` — JAX reference
+### 2.3 Where each loss penalises
 
-JAX/Equinox/FlowJax implementation. **Not used at runtime** in this
-experiment (we stay in Keras for direct fairkl interop), but used to:
-
-* Cross-validate density/log-prob numbers on shared test fixtures.
-* Compare optimisation behaviour (Keras vs. FlowJax `fit_to_data`).
-* Provide the `entropy(...)` helper as a sanity check on a pretrained flow.
-
-Key files: `src/gauss_flows/_src/flows/gaussianization.py`,
-`src/gauss_flows/_src/inference/train.py`.
+```
+   predictor output z              sensitive attribute q
+         │                                  │
+         ▼                                  ▼
+      ┌──────┐                          ┌──────┐
+      │  T_z │  (frozen)                │  T_q │  (frozen)
+      └───┬──┘                          └───┬──┘
+          │                                 │
+          ▼                                 ▼
+   Z = T_z(z) ~ N(0, I_dz) marginally  Q = T_q(q) ~ N(0, I_dq) marginally
+          │                                 │
+          └──────────────┬──────────────────┘
+                         ▼
+              ┌─────────────────────┐
+              │ C = sample          │   ← the (d_z × d_q) cross-cov
+              │  cross-cov (Z, Q)   │     is the *only* dependence
+              └─────┬───────────────┘     signal that survives
+                    │                     Gaussianisation under
+                    │                     the joint-Gaussian
+       ┌────────────┼──────────────┐      assumption
+       ▼            ▼              ▼
+    ‖C‖²_F     -½ logdet      − log p_N(0,I)( T_zq(z, q) )
+    /‖Sz‖‖Sq‖  (I − C C^T)         ▲
+       │           │                │  ← uses a full joint flow
+       ▼           ▼                │     trained on shuffled
+   ┌──────┐    ┌──────┐         ┌─────────┐  (independent) pairs;
+   │G-XCOV│    │ G-MI │         │  G-TC   │  catches higher-order
+   └──────┘    └──────┘         └─────────┘  dependence
+```
 
 ---
 
-## 4. Mathematical Formulation
+## 3. Why Gaussianisation helps (the one-paragraph theory)
 
-Let $z = f_\theta(X) \in \mathbb{R}^{d_z}$ be the predictor output (or
-embedding) and $q \in \mathbb{R}^{d_q}$ the sensitive attribute.
+A Gaussianization flow $T: \mathbb{R}^d \to \mathbb{R}^d$ is a smooth
+diffeomorphism with smooth inverse, so it preserves all statistical
+dependence: $T(Z) \perp T(Q) \iff Z \perp Q$.  What it changes is the
+*shape* of the marginals.  After training, each marginal of $T(X)$ is
+approximately $\mathcal{N}(0, 1)$.  Three consequences:
 
-### 4.1 Approach A (recommended) — Gaussianised Cross-Covariance ("G-XCOV")
+1. **Bandwidth-free dependence measures.**  CKA and HSIC need a kernel
+   bandwidth; the "right" bandwidth depends on the scale of the data.
+   In Gaussianised space the scale is fixed at 1, so a *linear* kernel
+   (or a unit-bandwidth RBF) suffices.  The flow absorbs the bandwidth
+   choice into its mixture-CDF parameters during pretraining.
 
-Pretrain two flows (or a single joint flow whose marginals we project):
+2. **Gaussian-joint assumption becomes nearly free.**  Closed-form MI
+   ($-\tfrac{1}{2}\log\det(I - CC^\top)$) requires assuming the joint
+   $(Z, Q)$ is Gaussian.  On raw data this is wildly wrong.  After
+   marginal Gaussianisation it is much closer to true — the marginals
+   are exact, only the copula remains non-Gaussian — so the closed-form
+   MI estimate becomes a usable surrogate.
+
+3. **Compatibility with frozen-flow autodiff.**  All flow components
+   (`MixtureCDFGaussianization`, `Householder`) are smooth in their
+   inputs.  Stopping gradient on the flow's *weights* does not stop
+   gradient flow through the flow's *inputs*, so the predictor's
+   parameters $\theta$ still receive a gradient signal from
+   $\nabla_z \mathcal{L}_{\text{fair}}(T_z(z), T_q(q))$ via the chain
+   rule.
+
+The flow is therefore exactly the right thing to freeze: a fixed,
+smooth, scale-normalising, differentiable preprocessor that turns
+"measure non-linear dependence in the data" into "measure linear
+dependence between near-Gaussian variables."
+
+---
+
+## 4. Mathematical formulation
+
+Let $z = f_\theta(X) \in \mathbb{R}^{d_z}$ be the predictor output and
+$q \in \mathbb{R}^{d_q}$ the sensitive attribute.  Define
+$Z = T_z(z)$, $Q = T_q(q)$ in Gaussianised space, and let
+$C = \widehat{\mathrm{Cov}}(Z, Q)$,
+$S_z = \widehat{\mathrm{Cov}}(Z, Z)$,
+$S_q = \widehat{\mathrm{Cov}}(Q, Q)$ denote sample (cross-)covariances
+on a batch of size $n$.
+
+### 4.1 G-XCOV — linear-CKA in Gaussianised space
 
 $$
-T_z : \mathbb{R}^{d_z} \to \mathbb{R}^{d_z}, \qquad
-T_q : \mathbb{R}^{d_q} \to \mathbb{R}^{d_q}
-$$
-
-each by maximum likelihood under a $\mathcal{N}(0, I)$ base. After pretraining,
-**freeze all parameters of $T_z, T_q$**. The fairness loss for a batch
-$\{(z_i, q_i)\}_{i=1}^n$ is
-
-$$
-\mathcal{L}_{\text{fair}}^{\text{G-XCOV}}
+\mathcal{L}_{\text{G-XCOV}}
 \;=\;
-\bigl\lVert \widehat{\mathrm{Cov}}\bigl(T_z(z), T_q(q)\bigr) \bigr\rVert_F^2,
+\frac{\lVert C \rVert_F^2}
+     {\lVert S_z \rVert_F \, \lVert S_q \rVert_F + \varepsilon}
+\quad\in\; [0, 1].
 $$
 
-i.e. the Frobenius norm of the empirical cross-covariance computed *after*
-Gaussianisation. Because $T_z, T_q$ are diffeomorphisms,
-$T_z(z) \perp T_q(q) \iff z \perp q$. Because marginals are (approximately)
-standard Normal, the cross-covariance is a tight low-order surrogate for full
-non-linear dependence.
+This is exact **linear CKA** (Cortes et al. 2012; Kornblith et al. 2019)
+applied to the Gaussianised features.  In $d_z = d_q = 1$ it collapses
+to $\rho^2$ where $\rho$ is the Gaussianised cross-correlation.  The
+un-normalised numerator $\lVert C \rVert_F^2$ is identically **HSIC with
+linear kernels** on the Gaussianised features — so this single loss
+covers both "linear CKA in Gaussianised space" and "HSIC with linear
+kernels in Gaussianised space" depending on whether you toggle
+`normalize`.
 
-Equivalent reading: this is **CKA with a linear kernel applied in
-Gaussianised space**. The flow replaces the RBF bandwidth.
+Bounded, smooth, second-moment only.  Gradient $\partial \rho^2 / \partial \rho = 2\rho$
+is bounded — the loss is gentle near perfect dependence.
 
-Differentiability: $T_z$ is composed of `MixtureCDFGaussianization` (smooth via
-`ndtri` / mixture-CDF) and `Householder` (linear). All ops are JAX-traceable
-and `jax.lax.stop_gradient` on the flow's variables freezes them.
+### 4.2 G-MI — closed-form Gaussian mutual information
 
-### 4.2 Approach B — Density-Ratio Mutual Information (DR-MI)
-
-Train a **joint** flow $p_\phi(z, q)$ on baseline data. Freeze it. Mutual
-information is
-
-$$
-I(z; q) = \mathbb{E}_{(z,q)}\Bigl[\log p_\phi(z, q) - \log p_\phi(z) - \log p_\phi(q)\Bigr].
-$$
-
-The marginals $p_\phi(z), p_\phi(q)$ are obtained by Monte-Carlo
-marginalisation through the joint flow (sample $q' \sim p_\phi(q)$ then
-$\log p_\phi(z) \approx \log \tfrac{1}{M}\sum_{m} p_\phi(z, q'_m)$).
-
-Pros: principled MI estimate. Cons: expensive marginalisation per batch;
-joint flow harder to pretrain. **Defer to a stretch goal.**
-
-### 4.3 Approach C — Total-Correlation under a Joint Flow ("TC-loss")
-
-Train one joint flow $T$ on baseline $(z_0, q)$. Freeze. For a new batch
-$(f_\theta(X), q)$, the total correlation is
+If $(Z, Q)$ were *jointly* Gaussian with standardised marginals,
+mutual information has the Gel'fand–Yaglom closed form:
 
 $$
-\mathrm{TC} = D_{\mathrm{KL}}\bigl(p(T(z, q)) \,\big\|\, \prod_i \mathcal{N}(0, 1)\bigr),
+I(Z; Q) \;=\; -\tfrac{1}{2}\log\det\bigl(I_{d_z} - C\, S_q^{-1}\, C^\top\, S_z^{-1}\bigr).
 $$
 
-estimated as
+After Gaussianisation $S_z \approx I_{d_z}$ and $S_q \approx I_{d_q}$,
+so
 
 $$
-\widehat{\mathrm{TC}}
-= -\tfrac{1}{n}\sum_i \log p_{\mathcal{N}(0,I)}\bigl(T(z_i, q_i)\bigr)
-  - H_{\text{marginal-Gauss}}.
+\mathcal{L}_{\text{G-MI}}
+\;=\; -\tfrac{1}{2}\log\det(I_{d_z} - C\, C^\top)
+\quad\in\; [0, +\infty).
 $$
 
-The marginal-Gaussian entropy is a constant in $\theta$. This is essentially
-"penalise non-Gaussianity of the joint after Gaussianisation". Cheap, but the
-pretraining baseline distribution matters.
+In $d_z = d_q = 1$ this is $-\tfrac{1}{2}\log(1 - \rho^2)$.  The gradient
+$\partial \mathcal{L} / \partial \rho = \rho / (1 - \rho^2)$ **diverges**
+as $\rho \to 1$, so G-MI is much sharper than G-XCOV at high dependence.
+We clip the eigenvalues of $I - CC^\top$ at a small $\varepsilon$ for
+numerical safety; this caps the loss at
+$-\tfrac{d}{2}\log\varepsilon$.
 
-### 4.4 Approach D — HSIC with Gaussianised Kernels ("G-HSIC")
+The closed-form requires the joint to be *Gaussian after Gaussianisation*.
+Marginal Gaussianisation gets us most of the way there, but the
+**residual copula** is still arbitrary — so G-MI underestimates true MI
+whenever the dependence has structure beyond second-order correlation
+(quadratic-in-$Z$, XOR-style, multi-modal).  That gap is exactly what
+G-TC closes.
 
-Plug Gaussianised features into HSIC: replace each `cka_rbf` kernel matrix in
-`fairkl.metrics.cka` with $K_{ij} = \langle T(x_i), T(x_j) \rangle$ (linear in
-Gaussianised space) or $K_{ij} = \exp(-\|T(x_i) - T(x_j)\|^2 / 2)$ (RBF in
-Gaussianised space with fixed unit bandwidth — the flow absorbs the bandwidth).
-This is the **smallest possible code delta** from current CKA: literally swap
-the kernel call.
+### 4.3 G-TC — total correlation under a frozen joint flow
 
-### 4.5 Recommended primary loss
+Pretrain a **joint** flow $T_{zq}: \mathbb{R}^{d_z + d_q} \to \mathbb{R}^{d_z + d_q}$
+on the empirical **product distribution** of the baseline data:
+draw $(z^{(0)}_i, q_{\pi(i)})$ where $\pi$ is a random permutation.  By
+construction these pairs are independent, so a well-fit $T_{zq}$
+Gaussianises independent draws to $\mathcal{N}(0, I_{d_z + d_q})$.  Freeze
+$T_{zq}$.
 
-**Use Approach A (G-XCOV) as the headline,** with Approach D (G-HSIC) as a
-control to disentangle "flow as preprocessor" from "linear vs. RBF after
-flow". Approach C is a useful sanity check. Approach B is a stretch goal.
+At downstream training time, evaluate the **same frozen** $T_{zq}$ on
+the *actual* (potentially dependent) pair $(z, q)$:
+
+$$
+\mathcal{L}_{\text{G-TC}}
+\;=\;
+-\frac{1}{n}\sum_{i=1}^{n} \log p_{\mathcal{N}(0, I)}\!\bigl(T_{zq}(z_i, q_i)\bigr).
+$$
+
+When $(z, q)$ is independent like the baseline, $T_{zq}(z, q) \sim \mathcal{N}(0, I)$
+and the loss equals the entropy of $\mathcal{N}(0, I_{d_z + d_q})$
+(a constant in $\theta$).  When $(z, q)$ carries dependence, $T_{zq}$
+no longer Gaussianises the joint and the NLL is strictly larger.
+
+By a change-of-variables argument, this NLL difference is exactly the
+KL divergence between $p(z, q)$ and $p(z)\,p(q)$ — i.e. the mutual
+information.  Unlike G-MI it does **not** assume the joint is Gaussian:
+the flow itself learns the copula during pretraining.  The price is
+needing a richer pretraining stage.
+
+### 4.4 Comparison table
+
+| Property            | G-XCOV          | G-MI                 | G-TC                          |
+|---------------------|-----------------|----------------------|-------------------------------|
+| Order of dependence | 2nd moment      | All (joint-Gaussian) | All (no joint assumption)     |
+| Range               | $[0, 1]$        | $[0, -\tfrac{d}{2}\log\varepsilon]$ | $[H_{\mathcal{N}(0,I)}, +\infty)$ |
+| Gradient at high dep| Bounded         | **Diverges**         | Bounded if flow well-fit      |
+| Closed form         | yes             | yes                  | no — needs flow forward pass  |
+| Pretraining         | 2 marginal flows| 2 marginal flows     | 2 marginal *or* 1 joint flow  |
+| Compute / batch     | one matmul      | one matmul + eigh    | full joint-flow forward       |
+| Sensitive to copula structure beyond 2nd order | no | no | **yes** |
+
+### 4.5 Deferred (stretch)
+
+* **G-HSIC-RBF.**  HSIC with a unit-bandwidth RBF kernel in Gaussianised
+  space.  Identical to existing CKA code but with $T_z(x)$ in place of
+  $x$.  Useful as an ablation to separate "flow as preprocessor" from
+  "linear vs RBF after the flow".
+* **DR-MI.**  True mutual information via Monte-Carlo marginalisation
+  through the joint flow.  Expensive; G-TC already captures the same
+  signal at lower cost.
 
 ---
 
-## 5. Experiment Design
+## 5. Hypotheses we're testing
 
-### 5.1 Two-stage pipeline
+Each loss family makes a falsifiable prediction about what kind of
+dependence it can suppress, and at what cost in accuracy.
 
-```
-Stage 1 — pretrain & freeze
-  data D_pre  ─►  fit T_z, T_q  by MLE (NLL on standard-Normal base)
-                     │
-                     └─►  save weights; mark non-trainable
+```{admonition} H1 — G-XCOV plateaus where 2nd-moment dependence saturates.
+:class: hypothesis
 
-Stage 2 — fair downstream training
-  data D_task ─►  f_θ  ─►  z = f_θ(X)
-                            │
-                            ├─► task_loss(z, y)        ◄── user-supplied
-                            └─► μ · L_fair(T_z(z), T_q(q))
-                                        ▲
-                                        └── frozen flows, autograd flows through
-```
+If the predictor's residual dependence on $q$ is purely linear in
+Gaussianised space (e.g. binary $q$, scalar $z$), G-XCOV at large $\mu$
+will drive both Pareto axes toward zero monotonically.
 
-`D_pre` and `D_task` can be:
-
-* **Same data**: warm-start the flow on the training set. Simple. Risk: flow
-  over-specialises to training distribution; doesn't see test marginals.
-* **Different splits**: pretrain on a held-out auxiliary set; safer.
-* **Synthetic ablation**: pretrain on i.i.d. Gaussian (so $T \approx \text{id}$) —
-  this collapses G-XCOV to vanilla cross-covariance and is the strongest
-  baseline to beat.
-
-### 5.2 Freezing the flow inside Keras
-
-```python
-from gaussianization.gauss_keras.training import make_gaussianization_flow
-
-T_z = make_gaussianization_flow(input_dim=d_z, num_blocks=6)
-T_z(keras.ops.zeros((1, d_z)))      # force build
-# ... fit T_z on D_pre with base_nll_loss ...
-for w in T_z.weights:               # critical: stop optimiser updates
-    w._trainable = False
-T_z.trainable = False
+**Failure prediction.** When the predictor encodes $q$ through a
+non-monotone function (think: $|q|$, $q^2$ where $q$ is centred), G-XCOV
+sees $C \approx 0$ even though dependence is large.  CKA-RBF and G-MI
+should both still see it; G-TC definitely will.
 ```
 
-When the frozen `T_z` is called inside `FairGaussLoss.__call__`, Keras 3 with
-the JAX backend traces it as part of the gradient w.r.t. `z` (and therefore
-w.r.t. $\theta$), but emits no updates to the flow's variables. Under the
-JAX backend, an extra safety belt is `keras.ops.stop_gradient` on the flow's
-parameter tensors if any optimiser path could otherwise see them.
+```{admonition} H2 — G-MI matches CKA's terminal fairness at lower μ.
+:class: hypothesis
 
-### 5.3 The new loss class
+Because G-MI's gradient diverges as $\rho^2 \to 1$, the optimiser feels
+a sharply rising cost in the high-dependence regime and pushes harder.
+On Adult (where G-XCOV at μ = 200 still leaves DP-diff ≈ 0.14), G-MI at
+moderate μ should reach DP-diff ≈ 0.02 — comparable to CKA at μ = 50.
 
-```python
-# projects/gaussianization/src/gaussianization/fair/losses.py
-import keras
-from keras import ops
-
-class GaussianizedXCovLoss(keras.losses.Loss):
-    """Fairness loss: Frobenius norm of cross-cov in Gaussianised space.
-
-    L = || E[T_z(z) T_q(q)^T] - E[T_z(z)] E[T_q(q)]^T ||_F^2
-    """
-    def __init__(self, flow_z, flow_q, normalize=True, name="g_xcov", **kw):
-        super().__init__(name=name, **kw)
-        self.flow_z = flow_z
-        self.flow_q = flow_q
-        self.normalize = normalize
-
-    def call(self, q_true, z_pred):
-        zg = self.flow_z(z_pred)                            # (n, d_z)
-        qg = self.flow_q(ops.cast(q_true, z_pred.dtype))    # (n, d_q)
-        zg = zg - ops.mean(zg, axis=0, keepdims=True)
-        qg = qg - ops.mean(qg, axis=0, keepdims=True)
-        n  = ops.cast(ops.shape(zg)[0], zg.dtype)
-        C  = ops.matmul(ops.transpose(zg), qg) / (n - 1.0)  # (d_z, d_q)
-        loss = ops.sum(C * C)
-        if self.normalize:
-            sz = ops.sum(zg * zg) / (n - 1.0)
-            sq = ops.sum(qg * qg) / (n - 1.0)
-            loss = loss / (sz * sq + 1e-12)
-        return loss
+**Failure prediction.** If the predictor's dependence on $q$ is so weak
+that $\rho$ never enters the steep regime ($\rho^2 \lesssim 0.3$), G-MI
+behaves like a slightly noisier G-XCOV and offers no advantage.
 ```
 
-Wire it in exactly like CKA:
+```{admonition} H3 — G-TC catches structure G-MI misses on engineered data.
+:class: hypothesis
 
-```python
-from fairkl.models import FairModelWrapper
+Construct a synthetic predictor that satisfies $\rho(z, q) \approx 0$ but
+$z$ is determined by $q$ through a quadratic relationship — the "XOR
+analogue" of the fair_adult_census sidebar.  G-MI's value is near zero,
+its gradient near zero, and the unfair predictor is undisturbed.  G-TC,
+because its joint flow learnt that *independent* pairs Gaussianise to
+$\mathcal{N}(0, I)$ and quadratic-dependent pairs do not, sees a finite
+NLL gap and pushes back.
 
-mlp = keras.Sequential([keras.layers.Dense(64, "relu"),
-                        keras.layers.Dense(1)])
-fair = FairModelWrapper(
-    mlp, mu=0.5,
-    fairness_loss=GaussianizedXCovLoss(flow_z=T_z, flow_q=T_q),
-)
-fair.compile(optimizer="adam", loss="mse")
-fair.fit(X_train, y_train, q=q_train, epochs=50, batch_size=256)
+**Failure prediction.** If the joint flow's effective capacity is too
+small (`num_blocks` too few), it cannot represent the quadratic copula
+and G-TC reduces to a noisy G-MI.
 ```
 
-### 5.4 Pretraining the flow — concrete recipe
+```{admonition} H4 — Magnitude scales differ; μ must be re-tuned per loss.
+:class: hypothesis
 
-```python
-KERAS_BACKEND=jax  # set before any keras import
-T = make_gaussianization_flow(
-        input_dim=d, num_blocks=8, num_components=12,
-        pca_init_data=D_pre, mixture_init_data=D_pre,
-    )
-T.compile(optimizer=keras.optimizers.Adam(1e-3),
-          loss=base_nll_loss)
-T.fit(D_pre, D_pre, epochs=300, batch_size=512, validation_split=0.1,
-      callbacks=[keras.callbacks.EarlyStopping(patience=15)])
-T.save("artefacts/T_z.keras")
+The natural magnitudes of the three losses span ~3 orders of magnitude
+at the unconstrained baseline.  G-XCOV ≈ ρ² is $O(1)$; G-MI is also
+$O(1)$ but with a different curvature; G-TC differs from its baseline
+NLL by a small KL value.  Comparing Pareto fronts at matched μ is
+unfair.  The Pareto plots should therefore parameterise by μ on
+**separate** colour-coded curves, and the only fair comparison is at
+matched fairness (vertical slice).
 ```
 
-Validate the flow has actually Gaussianised the data before trusting any
-fairness number on top:
+---
 
-* **Marginal QQ-plot** of `T(D_pre)` vs `N(0,1)`.
-* **Negentropy** ≈ 0 on each marginal.
-* **Cross-validated NLL** stable across epochs.
-* **`gauss_flows`-side cross-check**: re-fit a FlowJax `gaussianization_flow`
-  on the same `D_pre` and compare per-sample log-probs (Pearson > 0.99
-  expected up to numerical noise).
+## 6. Experiment design
 
-### 5.5 Architecture / file layout
+### 6.1 Two-stage pipeline (reprise of the ASCII diagrams)
 
-A self-contained sub-tree inside the existing `projects/gaussianization`
-project (do **not** spawn a new top-level project — this is an *experiment
-on* the existing library, not a new library):
+**Stage 1 — pretrain + freeze.**
+
+* Train $T_z$ on the predictor-output distribution of an unconstrained
+  baseline (e.g. for classification, sigmoid probabilities of the
+  baseline MLP — *not* the raw binary labels, otherwise the flow lives
+  on a 2-point support that is off-support of the actual predictions).
+* Train $T_q$ on the marginal of $q$.
+* Train $T_{zq}$ on the **shuffled product distribution** of the same
+  baseline data — independent pairs by construction.
+* Freeze all weights.
+
+**Stage 2 — fair downstream training.**
+
+* Drop in `FairModelWrapper(base, mu=μ, fairness_loss=...)` with any of
+  the three new losses.
+* `compile(..., loss="...")` as usual.  The wrapper handles the dict
+  packing `{"x": X, "q": q}`.
+
+### 6.2 What gets penalised, where the gradient goes
+
+A short walk through one optimiser step:
+
+```
+forward:
+    z = f_θ(X)               # (n, 1)
+    L_task = mse(z, y)        # standard Keras loss
+    L_fair = G-MI(T_z(z),     # passes through frozen T_z,
+                  T_q(q))     #   T_q -- their weights are not
+                              #   in trainable_variables
+    L = L_task + μ · L_fair
+
+backward (autodiff):
+    ∂L_task/∂z   →  ∂L_task/∂θ
+    ∂L_fair/∂z   = ∂L_fair / ∂T_z(z) · ∂T_z(z) / ∂z
+                   ↑                    ↑
+                   eigh of (I − CC^T)   smooth mixture-CDF jacobian
+                                        — frozen but still differentiable
+    ∂L_fair/∂z   →  ∂L_fair/∂θ
+    optimiser update:  θ ← θ − η ∂L/∂θ
+    (T_z, T_q, T_zq receive no gradient — they have zero trainable_weights)
+```
+
+The key chain-rule fact: `stop_gradient` (or `trainable=False`) blocks
+gradients into the **parameters** of the flow, but does **not** block
+gradients into its **inputs**.  Without this property the whole scheme
+collapses.
+
+### 6.3 File layout
 
 ```
 projects/gaussianization/
-├── src/gaussianization/
-│   └── fair/                       # NEW subpackage
-│       ├── __init__.py
-│       ├── losses.py               # GaussianizedXCovLoss, GHSICLoss, TCLoss
-│       ├── freeze.py               # freeze_flow(model) helper
-│       └── pretrain.py             # fit_and_freeze(D, **kw) -> frozen flow
-├── notebooks/
-│   ├── 05_fair_gauss_synthetic.ipynb     # toy: y = tanh(x) + 3q + ε
-│   ├── 06_fair_gauss_adult.ipynb         # UCI Adult Census
-│   └── 07_fair_gauss_vs_cka.ipynb        # head-to-head ablation
-├── tests/
-│   ├── test_fair_losses.py         # shape/gradient/freeze tests
-│   └── test_fair_independence.py   # known-independent inputs ⇒ loss ≈ 0
-└── docs/
-    └── fair_gaussianization_experiment.md   # this file
+├── src/gaussianization/fair/
+│   ├── __init__.py          # public API
+│   ├── losses.py            # GaussianizedXCovLoss / MutualInfoLoss / TotalCorrelationLoss
+│   ├── pretrain.py          # fit_and_freeze, fit_and_freeze_joint
+│   ├── freeze.py            # freeze_flow helper
+│   └── metrics.py           # numpy fairness eval metrics
+├── tests/test_fair.py       # 15 tests including closed-form checks
+├── notebooks/fair_gauss/
+│   ├── 05_fair_gauss_pretrain.ipynb
+│   ├── 06_fair_gauss_synthetic.ipynb   # G-XCOV + G-MI + G-TC + CKA
+│   ├── 07_fair_gauss_adult.ipynb       # same on UCI Adult
+│   └── _style.py
+└── docs/fair_gaussianization_experiment.md   # this file
 ```
-
-The notebooks follow the repo convention: executed `.ipynb` with embedded
-outputs, optionally paired with a short prose `.md` (see `CLAUDE.md`).
-
-### 5.6 Hydra config sketch
-
-Adopt the existing `configs/` hierarchy:
-
-```yaml
-# configs/experiment/fair_gauss_adult.yaml
-defaults:
-  - /data: adult
-  - /model: mlp_small
-  - _self_
-
-flow:
-  num_blocks: 8
-  num_components: 12
-  epochs_pretrain: 300
-  artefact_path: artefacts/T_q_adult.keras
-
-fairness:
-  loss: g_xcov              # one of: cka | hsic | mmd | g_xcov | g_hsic | tc
-  mu: 0.5
-
-train:
-  batch_size: 256
-  epochs: 100
-  optimizer: adam
-  lr: 1e-3
-```
-
-Sweeps come for free: `pixi run train experiment=fair_gauss_adult fairness.mu=0.0,0.1,0.5,1.0,5.0 fairness.loss=cka,g_xcov`.
 
 ---
 
-## 6. Datasets
+## 7. Datasets
 
-| Dataset | Sensitive $q$ | Task | Use |
-|---|---|---|---|
-| Synthetic: $y = \tanh(x_1) + 0.5 x_2 + 3 q + \varepsilon$, $q \sim \text{Bern}(0.5)$ | $q$ | regression | Sanity / unit test (mirrors `fairkl/docs/notebooks/fair_model_wrapper.py`). |
-| **UCI Adult Census** | gender | binary classif. (income > 50K) | Headline benchmark; already wired in `fairkl/docs/notebooks/fair_adult_census.py`. ≈32k/6.5k. |
-| **COMPAS** | race | recidivism classif. | Standard fairness benchmark; add later. |
-| **German Credit** | age / gender | credit-default classif. | Small (1000 rows) → useful for over-fitting studies. |
-| **CelebA (subset)** | gender | smile classif. | Stretch: representation-level fairness (z = penultimate-layer embedding). |
-
-All non-synthetic datasets are downloaded via a new
-`scripts/preprocess_fairness.py` and DVC-tracked (`.dvc` pointers committed,
-raw CSVs excluded). Follow the existing pattern in `scripts/preprocess.py`.
+| Dataset                                                                              | Sensitive $q$ | Task                 | Use                                                                                                |
+|--------------------------------------------------------------------------------------|--------------|----------------------|----------------------------------------------------------------------------------------------------|
+| Synthetic regression: $y = \tanh(x_1) + 0.5 x_2 + 3 q + \varepsilon$, $q\sim\mathrm{Bern}(0.5)$ | $q$          | regression           | Notebook 06; the structure is exactly the fairkl `fair_model_wrapper` benchmark.                  |
+| UCI Adult Census (OpenML id `adult` v2)                                              | gender       | binary classification| Notebook 07; ~49k rows, 5 numeric features + gender as a feature.                                  |
+| (Future) Engineered quadratic-dependence dataset                                     | $q$          | regression           | H3 test: $z$ determined by $q^2$ so $\rho \approx 0$ but MI > 0.  Distinguishes G-MI from G-TC.    |
+| (Future) COMPAS                                                                      | race         | classification       | Second real-data check.                                                                            |
 
 ---
 
-## 7. Evaluation Plan
+## 8. Evaluation plan
 
-For every (dataset, fairness loss, $\mu$) combination report:
+For every (dataset, loss, $\mu$, seed) combination report:
 
-**Predictive metrics**
-* Regression: RMSE, R².
-* Classification: accuracy, ROC-AUC, log-loss.
-
-**Fairness metrics** (compute on test set with the trained downstream model;
-implement in a new `gaussianization.fair.metrics` module — these are
-*evaluation* statistics, not training losses):
-
-* **Demographic Parity Difference / Ratio** — `|P(ŷ=1|q=1) − P(ŷ=1|q=0)|`.
-* **Equalized Odds Difference** — max gap in TPR and FPR across groups.
-* **Statistical-parity HSIC** — kernel statistic on $(ŷ, q)$ with fixed RBF
-  bandwidth (median heuristic) for a *neutral* judge.
-* **Predictive-MI estimate** — separately fit a small MINE / KNN-based
-  MI estimator on $(ŷ, q)$.
-
-**Sanity / diagnostic**
-* **G-XCOV value itself** on train + val + test, plotted vs. $\mu$.
-* Marginal QQ-plots of $T_z(f_\theta(X))$ before / after fair training.
+* **Predictive metrics.**  RMSE / R² (regression).  Accuracy, ROC-AUC,
+  log-loss (classification).
+* **Fairness metrics (numpy-side, neutral judge).**  Demographic-parity
+  difference, equalized-odds difference, |Pearson($\hat y, q$)|.  These
+  are computed at evaluation time, *not* used as the training loss, so
+  they are independent of the training penalty.
+* **Diagnostic: training-time loss value.**  Each loss's own value
+  through training (so we can see G-MI saturate at the eps clip if it
+  does, etc.).
 
 **Comparison axes**
-1. Loss family: `cka | g_xcov | g_hsic | tc` × $\mu \in \{0, 0.1, 0.5, 1, 5\}$.
-2. Flow capacity: `num_blocks ∈ {2, 4, 8, 16}`.
-3. Flow training set: same-as-task vs. held-out vs. i.i.d. Normal (control).
-4. Batch size: 32, 128, 512 (test the batch-sensitivity claim).
 
-**Statistical rigour**: 5 seeds, report mean ± std; paired bootstrap for
-"G-XCOV vs CKA" deltas at fixed $\mu$.
+1. Loss family: `cka | g_xcov | g_mi | g_tc` × $\mu \in \{0, 0.1, 0.5, 2, 10, 50, 200\}$.
+2. Flow depth (`num_blocks ∈ {2, 4, 8}`) — does a deeper joint flow
+   improve G-TC on the quadratic-dependence test (H3)?
+3. Pretraining set — same-as-task vs held-out vs i.i.d. Gaussian
+   (the latter collapses G-XCOV to vanilla cross-cov; control).
+4. Batch size — G-MI and G-TC may be more batch-sensitive than G-XCOV
+   (eigh + flow forward).
+
+**Statistical rigour.**  3 seeds for the headline figures, 5 for any
+"X beats Y at matched fairness" claim, paired-bootstrap CIs.
+
+**Magnitude calibration follow-up.**  Each loss has a different natural
+scale.  To make the loss-family axis a *fair* comparison, scale $\mu$
+per-family by the loss value at the unconstrained baseline, so that
+`effective μ` puts everyone at the same relative pressure.  Report
+both raw-μ and calibrated-μ Pareto fronts.
 
 ---
 
-## 8. Risks & Open Questions
+## 9. Risks & open questions
 
-| Risk | Mitigation |
+```{admonition} Risk — flow off-support drift
+:class: warning
+
+`flow_z` is pretrained on the baseline predictor's outputs.  During fair
+training the predictor's output distribution shifts.  If it drifts far
+off-support of $D_{\text{pre}}$ the flow's Gaussianisation breaks down
+and the fairness loss becomes unreliable.
+
+**Mitigation.**  (a) Pretrain with a wider noise-augmented dataset.
+(b) Periodically refresh `flow_z` on a fresh batch of predictor outputs.
+(c) Monitor the marginal NLL of the predictor's outputs under
+`flow_z.log_prob` during training and warn when it climbs.
+```
+
+```{admonition} Risk — joint-flow capacity for G-TC
+:class: warning
+
+If $T_{zq}$ doesn't have enough capacity to represent the empirical
+product distribution, it will not Gaussianise independent pairs cleanly
+— the baseline NLL is then noisy and G-TC has high-variance gradients.
+
+**Mitigation.**  Use `make_coupling_flow` rather than the diagonal stack
+for $T_{zq}$ when $d_z + d_q > 2$; pretrain with more `n_shuffles` so
+the product distribution is well-sampled.
+```
+
+| Other risk | Mitigation |
 |---|---|
-| **Flow over-fits $D_{\text{pre}}$ and gives wrong gradients off-support.** | Validate on held-out NLL; consider $D_{\text{pre}} \neq D_{\text{task}}$; add light noise injection at flow training time. |
-| **`add_loss` + JAX backend funkiness with sub-models.** | Smoke test early: build a 2-layer MLP, wrap, run one `fit` step. The `FairModelWrapper` already uses this exact pattern with CKA. |
-| **Freezing doesn't really freeze.** | Assert in `test_fair_losses.py` that `len(model.trainable_variables)` is unchanged after wrapping vs. before. Diff a frozen flow's weights before/after a training step. |
-| **`MixtureCDFGaussianization` inverse uses bisection** (`mixture_cdf.py`) — non-smooth gradients at root. | We only call the *forward* direction in fairness loss, which is smooth. Avoid `invert` in the loss path. |
-| **G-XCOV is only second-order in flow space.** | Approach B/C are higher-order; can swap in later. Report G-HSIC alongside for higher-order check. |
-| **Per-sample flow eval slows training.** | Profile. Flow forward is ~`num_blocks × (d² + dK)` per sample — for `d=8, K=12, blocks=8` and `bs=256` this is sub-millisecond on a GPU. |
-| **CKA baseline tuned with Keras Tuner but G-XCOV uses fixed flow — unfair comparison.** | Tune the flow's `num_blocks, num_components` with the same Keras Tuner budget as CKA's $\sigma$. |
+| Eigendecomposition (`ops.linalg.eigh`) is slow for large $d_z$ | We expect $d_z = 1$ in practice (regression / single-logit classification); scalar fast path is taken. |
+| Frozen-flow gradient is silently zeroed | Existing `test_loss_gradients_flow_to_predictor` parametrised over G-XCOV and G-MI asserts non-zero gradients to $\theta$. |
+| Comparing μ's across losses is misleading | The doc warns about it; notebooks plot each loss as its own Pareto curve, no point-to-point comparison at matched μ. |
 
-**Open questions for follow-ups**
+**Open questions for follow-ups.**
 
-* Does pretraining $T_z$ on the *predictor's outputs* (a moving target) work
-  better than on the raw features? (Bilevel iteration vs. fixed flow.)
-* Is one *joint* flow $T(z, q)$ strictly better than two marginal flows
-  $T_z, T_q$ for capturing dependence? Empirically test.
-* Can the flow's `forward_with_intermediates` give us a *per-layer*
-  fairness signal — i.e. anneal the depth of $T$ during training?
-
----
-
-## 9. Stretch Goals
-
-1. **Approach B (DR-MI)** with a joint flow + MC marginalisation.
-2. **Fair representation learning** — use the encoder of an autoencoder
-   as $f_\theta$, push G-XCOV between bottleneck and $q$.
-3. **Fair clustering** — combine `FairPCA` / `FairKernelPCA` from `fairkl`
-   with a G-XCOV penalty on cluster assignments.
-4. **JAX/Equinox port** — re-implement `GaussianizedXCovLoss` against
-   `gauss_flows` FlowJax flows; benchmark against the Keras version on a
-   shared CI fixture.
-5. **Theoretical note** — write up the equivalence
-   "linear cross-cov in Gaussianised space ≡ HSIC with marginal-Gaussian
-   kernel in data space" as a section of `survae_flows_proof.md` (or a
-   sibling proof doc).
+* Does *fine-tuning* the marginal flows during downstream training (a
+  light EMA update) actually help, or does it leak into the predictor's
+  gradient and corrupt the fairness signal?
+* G-TC requires a joint flow.  Can a single $T_{zq}$ pretrained once
+  serve every downstream task on the same data, or does it need to be
+  re-trained per architecture?
+* For multi-class sensitive attributes (race in COMPAS), does the
+  one-hot encoding of $q$ work, or do we need a categorical flow head?
 
 ---
 
@@ -488,47 +504,29 @@ implement in a new `gaussianization.fair.metrics` module — these are
 
 | # | Milestone | Acceptance |
 |---|---|---|
-| M1 | Skeleton: `src/gaussianization/fair/{losses,freeze,pretrain}.py` + tests pass with synthetic data | `pytest tests/test_fair_losses.py` green; `make lint typecheck` clean |
-| M2 | Synthetic notebook `05_fair_gauss_synthetic.ipynb` reproduces $\mu \uparrow \Rightarrow$ fairness $\uparrow$, accuracy slowly $\downarrow$ | Notebook executed, committed with outputs |
-| M3 | UCI Adult notebook `06_fair_gauss_adult.ipynb`; beat or match CKA on demographic parity at matched accuracy | Comparison table + plots |
-| M4 | Ablation notebook `07_fair_gauss_vs_cka.ipynb` (5-seed bars, $\mu$ sweep, loss-family sweep) | All four axes of §7 covered |
-| M5 | Hydra config + DVC stage so `pixi run dvc repro` regenerates results from a clean clone | `dvc repro` succeeds; results committed under `results/fair_gauss/` |
-| M6 | MyST docs entry under "Gaussianization flows" toc in `myst.yml`; cross-link to this engineering doc | Built docs render the new notebooks |
-| M7 (stretch) | Approach C (TC-loss) implementation + comparison row in the ablation table | Added to notebook 07 |
-| M8 (stretch) | JAX/`gauss_flows` cross-validation: same data, two flow implementations, log-probs agree to 1e-5 | Cross-check script in `scripts/` |
+| ✅ M1 | Skeleton: `fair/{losses,freeze,pretrain,metrics}.py` + tests pass on synthetic data | `pytest tests/test_fair.py` green; lint + typecheck clean |
+| ✅ M2 | Notebook 05: pretrain + freeze + 4 diagnostics | Executed, committed with figures |
+| ✅ M3 | Notebook 06: synthetic Pareto with G-XCOV vs CKA | Pareto curve from RMSE 0.11 to 1.35 |
+| ✅ M4 | Notebook 07: Adult Pareto with G-XCOV vs CKA | Pareto traced; CKA beats G-XCOV terminal fairness as expected |
+| 🟡 M5 | **G-MI loss + G-TC loss + extended tests** | This commit |
+| 🟡 M6 | Notebooks 06 and 07 re-executed with G-MI and G-TC trajectories | Pareto plots show 4 curves (CKA / G-XCOV / G-MI / G-TC) |
+| ⏳ M7 | H3 quadratic-dependence experiment isolating G-TC's advantage | New notebook `08_quadratic_dependence.ipynb` |
+| ⏳ M8 | Hydra config + DVC stage for reproducibility | `pixi run dvc repro` regenerates all figures |
+| ⏳ M9 | Magnitude-calibration follow-up | Calibrated-μ Pareto plots alongside raw-μ |
 
 ---
 
-## 11. Conventions Checklist
+## 11. References
 
-Per `research_notebook/CLAUDE.md` and `keras-fairkl/CLAUDE.md`:
-
-* `from __future__ import annotations` at the top of every new `.py`.
-* Type hints on every public function.
-* Google-style docstrings (match `fairkl` style — `FairModelWrapper` is the template).
-* `pathlib.Path` for filesystem.
-* Notebooks committed *executed*; figures inline via `plt.show()`, no
-  separate PNGs.
-* Conventional commits: `feat(fair_gauss): …`, `test(fair_gauss): …`,
-  `docs(fair_gauss): …`.
-* Pre-commit gates: `pytest`, `ruff check .`, `ruff format --check .`,
-  `ty check src/gaussianization`.
-* Plans/scratch in `.plans/` (gitignored); this engineering doc is *committed*
-  because it's the spec, not a scratchpad.
-
----
-
-## 12. References
-
-* Cortes, Mohri, Rostamizadeh (2012). *Algorithms for Learning Kernels Based
-  on Centered Alignment.* JMLR.
-* Gretton, Bousquet, Smola, Schölkopf (2005). *Measuring Statistical
-  Dependence with Hilbert–Schmidt Norms.* ALT.
-* Pérez-Suay et al. (2017). *Fair Kernel Learning.* ECML PKDD.
+* Cortes, Mohri, Rostamizadeh (2012). *Algorithms for Learning Kernels Based on Centered Alignment.* JMLR 13.
+* Kornblith, Norouzi, Lee, Hinton (2019). *Similarity of Neural Network Representations Revisited.* ICML.
+* Gretton, Bousquet, Smola, Schölkopf (2005). *Measuring Statistical Dependence with Hilbert–Schmidt Norms.* ALT.
+* Gel'fand & Yaglom (1957). *Computation of the amount of information about a random function contained in another such function.* AMS Translations 12.
 * Chen, Gopinath (2000). *Gaussianization.* NeurIPS.
-* Laparra, Camps-Valls, Malo (2011). *Iterative Gaussianization: From
-  ICA to Random Rotations* (RBIG).
+* Laparra, Camps-Valls, Malo (2011). *Iterative Gaussianization: From ICA to Random Rotations* (RBIG).
 * Meng, Song, Song, Ermon (2020). *Gaussianization Flows.* AISTATS.
+* Watanabe (1960). *Information theoretical analysis of multivariate correlation.* (Total correlation.)
+* Pérez-Suay et al. (2017). *Fair Kernel Learning.* ECML PKDD.
 * Belghazi et al. (2018). *MINE: Mutual Information Neural Estimation.* ICML.
 
 ---
@@ -536,55 +534,45 @@ Per `research_notebook/CLAUDE.md` and `keras-fairkl/CLAUDE.md`:
 ## Appendix A — Minimum working example
 
 ```python
-# scripts/exp_fair_gauss_demo.py
-from __future__ import annotations
 import os
 os.environ.setdefault("KERAS_BACKEND", "jax")
 
-import numpy as np
 import keras
-from keras import ops
+import numpy as np
 
-from gaussianization.gauss_keras.training import (
-    make_gaussianization_flow, base_nll_loss,
-)
-from gaussianization.fair.losses import GaussianizedXCovLoss
 from fairkl.models import FairModelWrapper
+from gaussianization.fair import (
+    GaussianizedMutualInfoLoss,
+    GaussianizedXCovLoss,
+    GaussianizedTotalCorrelationLoss,
+    fit_and_freeze,
+    fit_and_freeze_joint,
+)
 
+# Synthetic data with q as a feature
 rng = np.random.default_rng(0)
-n, d = 4000, 4
-q = rng.binomial(1, 0.5, size=n).astype(np.float32)
-X = rng.normal(size=(n, d)).astype(np.float32)
-y = np.tanh(X[:, 0]) + 0.5 * X[:, 1] + 3.0 * q + 0.1 * rng.normal(size=n)
-y = y.astype(np.float32)
+n = 4000
+q = rng.binomial(1, 0.5, n).astype("float32")
+x = rng.standard_normal((n, 3)).astype("float32")
+y = (np.tanh(x[:, 0]) + 0.5 * x[:, 1] + 3 * q
+     + 0.1 * rng.standard_normal(n)).astype("float32")
+X = np.concatenate([x, q.reshape(-1, 1)], axis=1)
 
-# -- Stage 1: pretrain & freeze the two flows -----------------------------
-def fit_freeze(data_1d_or_kd):
-    a = np.atleast_2d(data_1d_or_kd.T).T if data_1d_or_kd.ndim == 1 else data_1d_or_kd
-    T = make_gaussianization_flow(input_dim=a.shape[1], num_blocks=4,
-                                  num_components=8, mixture_init_data=a)
-    T.compile(optimizer=keras.optimizers.Adam(1e-3), loss=base_nll_loss)
-    T.fit(a, a, epochs=80, batch_size=256, verbose=0)
-    T.trainable = False
-    return T
+# Stage 1: pretrain + freeze probes
+flow_y, _  = fit_and_freeze(y.reshape(-1, 1), num_blocks=4, epochs=40, seed=0)
+flow_q, _  = fit_and_freeze(q.reshape(-1, 1), num_blocks=2, epochs=40, seed=0)
+flow_yq, _ = fit_and_freeze_joint(y, q, num_blocks=4, epochs=40, seed=0)
 
-T_z = fit_freeze(y.reshape(-1, 1))     # downstream output is 1-d for regression
-T_q = fit_freeze(q.reshape(-1, 1))
-
-# -- Stage 2: fair downstream training ------------------------------------
+# Stage 2: pick a loss and train
 mlp = keras.Sequential([keras.layers.Dense(32, "relu"),
+                        keras.layers.Dense(32, "relu"),
                         keras.layers.Dense(1)])
 fair = FairModelWrapper(
-    mlp, mu=0.5,
-    fairness_loss=GaussianizedXCovLoss(flow_z=T_z, flow_q=T_q),
+    mlp, mu=2.0,
+    fairness_loss=GaussianizedMutualInfoLoss(flow_z=flow_y, flow_q=flow_q),
+    # or: GaussianizedXCovLoss(flow_z=flow_y, flow_q=flow_q),
+    # or: GaussianizedTotalCorrelationLoss(joint_flow=flow_yq),
 )
-fair.compile(optimizer=keras.optimizers.Adam(3e-3), loss="mse")
-fair.fit(X, y, q=q, epochs=40, batch_size=256, verbose=2)
-
-# -- Diagnostics ----------------------------------------------------------
-yhat = fair.predict(X).ravel()
-print("RMSE:", np.sqrt(np.mean((yhat - y) ** 2)))
-print("|corr(yhat, q)|:", abs(np.corrcoef(yhat, q)[0, 1]))
+fair.compile(optimizer="adam", loss="mse")
+fair.fit(X, y, q=q, epochs=40, batch_size=256)
 ```
-
-Running this end-to-end is the M1 acceptance criterion.

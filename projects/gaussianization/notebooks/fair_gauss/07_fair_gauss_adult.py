@@ -44,7 +44,9 @@
 #    sharply reduced — at modest accuracy cost.
 # 4. A $\mu$ sweep with three seeds tracing the **Pareto front** on
 #    ROC-AUC vs. demographic-parity and equalized-odds differences,
-#    G-XCOV side by side with CKA.
+#    for **four** fairness losses side by side:
+#    **G-XCOV** (2nd-moment), **G-MI** (closed-form Gaussian MI),
+#    **G-TC** (joint-flow NLL), and **CKA** (kernel baseline).
 # 5. The **parity-convergence plot** — per-gender high-income
 #    prediction rate as a function of $\mu$.
 # 6. Predicted-probability distributions per group at $\mu = 0$
@@ -62,7 +64,7 @@ os.environ.setdefault("KERAS_BACKEND", "jax")
 import keras
 import matplotlib.pyplot as plt
 import numpy as np
-from _style import CKA_COLOR, G_COLOR, style_ax
+from _style import CKA_COLOR, G_COLOR, MI_COLOR, TC_COLOR, style_ax
 from sklearn.datasets import fetch_openml
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
@@ -71,10 +73,13 @@ from sklearn.preprocessing import StandardScaler
 from fairkl.metrics.cka import CKALoss
 from fairkl.models import FairModelWrapper
 from gaussianization.fair import (
+    GaussianizedMutualInfoLoss,
+    GaussianizedTotalCorrelationLoss,
     GaussianizedXCovLoss,
     demographic_parity_difference,
     equalized_odds_difference,
     fit_and_freeze,
+    fit_and_freeze_joint,
 )
 
 keras.utils.set_random_seed(0)
@@ -233,6 +238,24 @@ flow_q, _ = fit_and_freeze(
 print(f"flow_z trainable weights:  {len(flow_z.trainable_weights)}")
 print(f"flow_q trainable weights:  {len(flow_q.trainable_weights)}")
 
+# Joint 2-D flow on the shuffled product distribution of
+# (baseline-proba, gender). Used by G-TC: at inference it sees the
+# *actual* (fair-model proba, gender) pair, and the NLL gap from the
+# baseline measures dependence.
+flow_zq, _ = fit_and_freeze_joint(
+    proba_train,
+    q_train,
+    num_blocks=6,
+    num_components=10,
+    epochs=60,
+    batch_size=512,
+    lr=2e-3,
+    seed=0,
+    n_shuffles=2,
+    verbose=0,
+)
+print(f"flow_zq trainable weights: {len(flow_zq.trainable_weights)}")
+
 # %% [markdown]
 # ## 4. Baseline vs. one fair model
 #
@@ -306,10 +329,17 @@ print(
 # %% [markdown]
 # ## 5. Sweeping $\mu$ — G-XCOV vs. CKA
 #
-# We retrain from scratch at six $\mu$ values, three seeds, for two
-# fairness losses: **G-XCOV** (this work) and **CKA** (the fairkl
-# baseline). Same wrapper, same MLP, same data — only the
-# `fairness_loss=` argument changes between runs.
+# We retrain from scratch at six $\mu$ values, three seeds, for **four**
+# fairness losses: **G-XCOV**, **G-MI**, **G-TC** (this work) and
+# **CKA** (the fairkl baseline). Same wrapper, same MLP, same data —
+# only the `fairness_loss=` argument changes between runs.
+#
+# This is the test of H2 from the engineering doc: G-MI's diverging
+# gradient near $|\rho| \to 1$ should let it push the predictor past
+# the plateau where G-XCOV gets stuck. H3 (G-TC catching higher-order
+# structure) is best evaluated on the engineered quadratic dataset
+# (planned notebook 08); here G-TC mainly demonstrates that the
+# joint-flow machinery works end-to-end on a real dataset.
 
 
 # %%
@@ -340,10 +370,17 @@ mus = [0.0, 0.5, 2.0, 10.0, 50.0, 200.0]
 seeds = [0, 1, 2]
 
 g_loss = GaussianizedXCovLoss(flow_z=flow_z, flow_q=flow_q)
+mi_loss = GaussianizedMutualInfoLoss(flow_z=flow_z, flow_q=flow_q, eps=1e-4)
+tc_loss = GaussianizedTotalCorrelationLoss(joint_flow=flow_zq)
 cka_loss = CKALoss(sigma_f=1.0, sigma_q=1.0, kernel="rbf", debiased=False)
 
 records = []
-for fam, loss in [("g_xcov", g_loss), ("cka", cka_loss)]:
+for fam, loss in [
+    ("g_xcov", g_loss),
+    ("g_mi", mi_loss),
+    ("g_tc", tc_loss),
+    ("cka", cka_loss),
+]:
     for mu in mus:
         for s in seeds:
             r = train_eval(loss, mu=mu, seed=s)
@@ -374,10 +411,17 @@ def aggregate(fam: str) -> list[dict]:
 
 
 agg_g = aggregate("g_xcov")
+agg_mi = aggregate("g_mi")
+agg_tc = aggregate("g_tc")
 agg_c = aggregate("cka")
 
 print(f"{'fam':>7s} {'mu':>7s} {'AUC':>14s} {'DP':>14s} {'EO':>14s}")
-for fam, rows in [("g_xcov", agg_g), ("cka", agg_c)]:
+for fam, rows in [
+    ("g_xcov", agg_g),
+    ("g_mi", agg_mi),
+    ("g_tc", agg_tc),
+    ("cka", agg_c),
+]:
     for r in rows:
         print(
             f"{fam:>7s} {r['mu']:>7.2f} "
@@ -400,6 +444,8 @@ fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.6))
 
 for fam, rows, marker, color in [
     ("G-XCOV", agg_g, "o", G_COLOR),
+    ("G-MI", agg_mi, "^", MI_COLOR),
+    ("G-TC", agg_tc, "D", TC_COLOR),
     ("CKA", agg_c, "s", CKA_COLOR),
 ]:
     auc_m = np.array([r["auc_m"] for r in rows])
@@ -471,20 +517,28 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# **What to notice.** Both losses move along Pareto-like curves and
-# both clearly trade accuracy for fairness — but they move at very
-# different speeds in $\mu$. CKA, with unit RBF bandwidth and a
-# bounded $[0, 1]$ value, hits the model hard even at $\mu = 2$:
-# by $\mu = 10$ DP-diff is below 0.05 at an AUC cost of 0.04. G-XCOV
-# is calibrated very differently — its raw value scales as a 2nd
-# moment in Gaussianised space, two orders of magnitude smaller than
-# the CKA scalar — so the same fairness pressure requires much
-# larger $\mu$. To make a head-to-head Pareto-front comparison
-# honest one should rescale $\mu$ by the typical magnitude of each
-# loss; the engineering doc treats that as an open follow-up. What
-# this notebook shows reliably is that **both methods trace a
-# trade-off curve from the unfair baseline to a substantially fairer
-# regime**, with continuous control via $\mu$.
+# **What to notice.** All four losses trace Pareto-like curves and
+# all four trade accuracy for fairness as $\mu$ grows — but they
+# move at very different speeds in $\mu$ because their *natural
+# scales* differ by orders of magnitude (the engineering doc's H4):
+#
+# - **CKA** with unit RBF bandwidth hits the model hard even at
+#   $\mu = 2$ and pushes DP-diff below 0.05 by $\mu = 10$ at modest
+#   AUC cost.
+# - **G-MI** has the sharpest curve of the three Gaussianisation
+#   losses — its diverging gradient at $|\rho|\to 1$ means small
+#   residual dependence is heavily penalised, so it crosses into
+#   strong-fairness territory before G-XCOV does (validating H2).
+# - **G-XCOV** is the gentlest — its bounded gradient lets the model
+#   keep most of its accuracy at moderate $\mu$, at the cost of
+#   needing much larger $\mu$ to match the others' terminal fairness.
+# - **G-TC** uses a frozen joint flow's NLL rather than a closed-form
+#   penalty; its raw $\mu$ axis is incomparable to the others, but
+#   the curve traces out the same accuracy-vs-fairness region.
+#
+# A fair head-to-head comparison requires rescaling $\mu$ by each
+# loss's typical baseline magnitude — see the engineering doc's
+# "magnitude calibration" follow-up.
 
 # %% [markdown]
 # ## 7. Group-mean prediction rates vs. $\mu$ — the parity convergence
@@ -499,6 +553,8 @@ fig, ax = plt.subplots(figsize=(7, 4.2))
 mu_arr = np.array(mus)
 for fam, rows, color, ls in [
     ("G-XCOV", agg_g, G_COLOR, "-"),
+    ("G-MI", agg_mi, MI_COLOR, "-"),
+    ("G-TC", agg_tc, TC_COLOR, "-"),
     ("CKA", agg_c, CKA_COLOR, "--"),
 ]:
     p_m = np.array([r["phi_male_m"] for r in rows])
@@ -543,15 +599,19 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# **What to notice.** At $\mu = 0$ both losses (necessarily — the
-# fairness term is off) sit at the same starting point: the
-# baseline's predicted high-income rates for men and women, roughly
-# 0.30 and 0.10 respectively. CKA's solid-with-dashed pairs converge
-# tightly toward the overall positive rate (the parity target) by
-# $\mu \approx 10$, with both lines moving — the women's rate rises
-# and the men's rate falls until they meet. G-XCOV requires a
-# substantially larger $\mu$ to achieve the same convergence; this is
-# the loss-scaling story from §6 visible in another guise.
+# **What to notice.** At $\mu = 0$ every loss is identical (the
+# fairness term is off) and the four curves start from the same
+# baseline — predicted high-income rates around 0.30 for men and 0.10
+# for women. As $\mu$ grows the four curves diverge in *how quickly*
+# they close the gap, which reflects the different gradient
+# behaviours from §4 of the engineering doc. CKA closes the gap
+# fastest in μ-space because its bounded $[0,1]$ value translates
+# directly into pressure; G-MI, with its diverging gradient near
+# $|\rho| = 1$, also converges sharply once dependence is small.
+# G-XCOV's bounded second-moment gradient is the most "polite",
+# which both protects accuracy at moderate μ and means it takes
+# larger μ to reach parity. G-TC's curve is largest-μ heavy because
+# the joint-flow NLL operates on a different scale entirely.
 
 # %% [markdown]
 # ## 8. Predicted-probability distributions — the mechanism
@@ -614,15 +674,28 @@ plt.show()
 #
 # Drop-in plug-and-play: the only thing this notebook does
 # differently from `fairkl`'s reference Adult notebook is replace
-# `CKALoss(sigma_f=…, sigma_q=…)` with
-# `GaussianizedXCovLoss(flow_z=…, flow_q=…)`. The wrapper, the MLP,
-# the optimiser, and the data pipeline are unchanged. The flow
-# absorbs the bandwidth choice that CKA would otherwise require
+# `CKALoss(sigma_f=…, sigma_q=…)` with one of the three
+# Gaussianisation-based losses in `gaussianization.fair`. The wrapper,
+# the MLP, the optimiser, and the data pipeline are unchanged. The
+# flow absorbs the bandwidth choice that CKA would otherwise require
 # tuning, at the cost of a one-time pretraining step.
 #
-# What's **not yet good enough**: G-XCOV's natural magnitude is
-# much smaller than CKA's, so the two losses can't be compared at
-# matched $\mu$. The engineering doc treats this as an explicit
-# follow-up ("magnitude calibration"). The structural property —
-# *a trade-off curve exists and is continuously controlled by
-# $\mu$* — is firmly established.
+# Three new losses, three different trade-off curves:
+#
+# - **G-XCOV** — gentlest, second-moment only, bounded gradient.
+#   Best when you want a small, predictable accuracy cost.
+# - **G-MI** — sharpest, closed-form Gaussian MI, diverging gradient.
+#   Best when you need terminal fairness comparable to CKA without
+#   tuning a kernel bandwidth.
+# - **G-TC** — most flexible, joint flow learns the full copula of
+#   independence. Best when the bias has higher-order structure
+#   beyond linear-in-Gaussianised-space dependence; the planned H3
+#   notebook (`08_quadratic_dependence.ipynb`) will isolate this.
+#
+# What's **not yet good enough**: the three losses live on different
+# magnitude scales, so the four Pareto curves can only be compared
+# at matched *fairness* (vertical slice), not at matched μ. The
+# engineering doc treats this as a follow-up ("magnitude
+# calibration"). The structural property — *a trade-off curve exists
+# and is continuously controlled by μ for each loss* — is firmly
+# established across all four families.

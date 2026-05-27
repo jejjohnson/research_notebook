@@ -159,6 +159,12 @@ project:
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb
             - file: projects/gaussianization/notebooks/03_iterative_gaussianization_init.ipynb
             - file: projects/gaussianization/notebooks/04_coupling_equivalence.ipynb
+            - title: Fair learning with Gaussianization flows
+              children:
+                - file: projects/gaussianization/docs/fair_gaussianization_experiment.md
+                - file: projects/gaussianization/notebooks/fair_gauss/05_fair_gauss_pretrain.ipynb
+                - file: projects/gaussianization/notebooks/fair_gauss/06_fair_gauss_synthetic.ipynb
+                - file: projects/gaussianization/notebooks/fair_gauss/07_fair_gauss_adult.ipynb
         - title: Interpolation (SSH reconstruction)
           children:
             - file: projects/interpolation/README.md

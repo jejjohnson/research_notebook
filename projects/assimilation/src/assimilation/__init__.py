@@ -9,7 +9,14 @@ them all side-by-side.
 
 from __future__ import annotations
 
-from assimilation.benchmark import MethodResult, compare, run_method
+from assimilation.benchmark import (
+    MethodResult,
+    assemble_full_trajectory,
+    assim_batch,
+    compare,
+    free_forecast,
+    run_method,
+)
 from assimilation.lorenz63 import (
     Lorenz63Forward,
     LorenzProblem,
@@ -38,7 +45,10 @@ __all__ = [
     "LorenzL96TwoLevelProblem",
     "LorenzProblem",
     "MethodResult",
+    "assemble_full_trajectory",
+    "assim_batch",
     "compare",
+    "free_forecast",
     "generate_l96_2l_problem",
     "generate_l96_problem",
     "generate_problem",

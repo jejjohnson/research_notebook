@@ -1,21 +1,24 @@
-"""Lorenz-63 forward model + canonical assimilation problem.
+"""Lorenz-63 forward model + canonical forecast-mode benchmark.
 
-The whole benchmark hangs off `generate_problem(key)`: every notebook
-loads the *identical* `(truth, obs, mask, prior_mean, B_op, R_op, T, dt)`
-tuple, then runs it through one analysis method. Re-using the same
-problem across methods is the only way the comparison numbers are
-apples-to-apples.
+The whole benchmark hangs off `generate_problem(key)`. Following
+Ahmed et al. 2020 (PyDA), each problem carries **two** time scales:
 
-Observation setup (classic Lorenz partial-obs):
+1. **Assimilation window** ``t \\in [0, T_assim]`` — the methods see
+   observations here.
+2. **Free-forecast window** ``t \\in (T_assim, T_total]`` — the
+   analysis from step 1 is rolled forward; methods receive no obs
+   here. This is where the chaotic divergence becomes visible.
 
-- Observe only the **x-component** (the canonical noisy / chaotic
-  driver). y and z must be recovered through cross-covariances or
-  dynamics.
-- Observe every `obs_every` time-steps, not every step.
-- Gaussian observation noise with std `obs_noise`.
+Defaults follow PyDA: total run of 10 time units (``T_total = 1000`` at
+``dt = 0.01``, roughly 9 L63 Lyapunov times) with a 2-time-unit assim
+window. Observations live on the x-component every 0.2 time units —
+partial observations on a chaotic system, the regime where 4DVar
+beats OI by an order of magnitude.
 
-This is harder than the full-state case and is the regime in which
-4DVar-family methods most clearly beat OI / 3DVar.
+Every method consumes the same assim-window `Batch1D`; their analyses
+are then extended into the forecast window by free-running the
+forward integrator. The harness in `assimilation.benchmark` does this
+extension uniformly via `free_forecast` / `assemble_full_trajectory`.
 """
 
 from __future__ import annotations
@@ -32,58 +35,59 @@ from vardax._src.utils.dynamical_systems import Lorenz63
 
 @dataclass(frozen=True)
 class LorenzProblem:
-    """Shared benchmark problem.
+    """Forecast-mode L63 benchmark problem.
 
     Attributes
     ----------
-    truth: ``(T+1, 3)`` ground-truth Lorenz-63 trajectory.
-    obs: ``(T+1, 3)`` observations (NaN-clean, zeros at masked entries).
-    mask: ``(T+1, 3)`` binary mask — 1 at observed (time, component) pairs.
-    prior_mean: ``(T+1, 3)`` background mean for OI/3DVar/learned methods.
-    prior_mean_state: ``(3,)`` background for the 4DVar-family x_0 control.
-    B_op: prior covariance as a lineax operator over ``(T+1, 3)``.
-    R_op: observation covariance over ``(T+1, 3)``.
-    B_op_state: prior covariance over the ``(3,)`` initial state.
-    R_op_state: observation covariance over the ``(3,)`` per-step obs.
-    dt: integration time-step (seconds in the canonical scaling).
-    T: number of forecast steps (so trajectories have length ``T+1``).
-    obs_every: temporal stride between observations.
+    truth: ``(T_total+1, 3)`` ground-truth trajectory across the full
+        analysis + forecast window.
+    obs: ``(T_assim+1, 3)`` observations on the assim window only
+        (zero at masked entries).
+    mask: ``(T_assim+1, 3)`` binary mask.
+    prior_mean: ``(T_assim+1, 3)`` background for OI/3DVar/learned
+        methods.
+    prior_mean_state: ``(3,)`` background for the 4DVar-family x_0
+        control.
+    B_op, R_op: covariances over ``(T_assim+1, 3)``.
+    B_op_state, R_op_state: covariances over the ``(3,)`` state.
+    dt: integration time-step.
+    T_assim: number of forecast steps inside the assim window
+        (assim trajectory has length ``T_assim + 1``).
+    T_total: number of forecast steps across the full run.
+    obs_every: temporal obs stride inside the assim window.
     obs_noise: std of the Gaussian observation noise.
     """
 
-    truth: Float[Array, "T_plus_1 3"]
-    obs: Float[Array, "T_plus_1 3"]
-    mask: Float[Array, "T_plus_1 3"]
-    prior_mean: Float[Array, "T_plus_1 3"]
+    truth: Float[Array, "T_total_plus_1 3"]
+    obs: Float[Array, "T_assim_plus_1 3"]
+    mask: Float[Array, "T_assim_plus_1 3"]
+    prior_mean: Float[Array, "T_assim_plus_1 3"]
     prior_mean_state: Float[Array, 3]
     B_op: lx.AbstractLinearOperator
     R_op: lx.AbstractLinearOperator
     B_op_state: lx.AbstractLinearOperator
     R_op_state: lx.AbstractLinearOperator
     dt: float
-    T: int
+    T_assim: int
+    T_total: int
     obs_every: int
     obs_noise: float
 
     @property
-    def T_plus_1(self) -> int:
-        return self.T + 1
+    def T_assim_plus_1(self) -> int:
+        return self.T_assim + 1
+
+    @property
+    def T_total_plus_1(self) -> int:
+        return self.T_total + 1
+
+    @property
+    def T_forecast(self) -> int:
+        return self.T_total - self.T_assim
 
 
 class Lorenz63Forward(eqx.Module):
-    """Lorenz-63 forward model satisfying ``pipekit_cycle.ForwardModel``.
-
-    Wraps the diffrax-integrated `vardax._src.utils.dynamical_systems.Lorenz63`
-    vector field as a one-step pipekit_cycle-compatible operator.
-    Integration uses a single RK4 step of size `dt`, which is sufficient
-    for the canonical `dt = 0.01` Lorenz-63 setup and keeps the model
-    pure-jax (no diffrax solver state to thread).
-
-    Attributes
-    ----------
-    dt: integration time-step.
-    sigma, rho, beta: Lorenz-63 parameters.
-    """
+    """Lorenz-63 forward model — `pipekit_cycle.ForwardModel` compatible."""
 
     dt: float
     sigma: float = 10.0
@@ -95,19 +99,11 @@ class Lorenz63Forward(eqx.Module):
         return jax.ShapeDtypeStruct((3,), jnp.float32)
 
     def _vector_field(self, x: Float[Array, 3]) -> Float[Array, 3]:
-        # Re-use the canonical L63 vector field; ignore t (autonomous).
         l63 = Lorenz63(sigma=self.sigma, rho=self.rho, beta=self.beta)
         return l63(0.0, x, None)
 
-    def step(
-        self,
-        state: Float[Array, 3],
-        dt: float,
-    ) -> Float[Array, 3]:
-        """Advance the state by ``dt`` via one RK4 step.
-
-        The signature matches ``pipekit_cycle.ForwardModel.step``.
-        """
+    def step(self, state: Float[Array, 3], dt: float) -> Float[Array, 3]:
+        """Single RK4 step. Signature matches ``pipekit_cycle.ForwardModel.step``."""
         k1 = self._vector_field(state)
         k2 = self._vector_field(state + 0.5 * dt * k1)
         k3 = self._vector_field(state + 0.5 * dt * k2)
@@ -144,9 +140,7 @@ def _simulate_truth(
         new = fwd.step(state, dt)
         return new, new
 
-    # Burn-in.
     state, _ = jax.lax.scan(_scan_step, x0, None, length=burn_in)
-    # Saved trajectory.
     _, traj = jax.lax.scan(_scan_step, state, None, length=T)
     return jnp.concatenate([state[None, :], traj], axis=0)
 
@@ -154,72 +148,74 @@ def _simulate_truth(
 def generate_problem(
     *,
     key: PRNGKeyArray,
-    T: int = 40,
+    T_assim: int = 50,
+    T_total: int = 1000,
     dt: float = 0.01,
-    obs_every: int = 4,
-    obs_noise: float = 1.0,
+    obs_every: int = 5,
+    obs_noise: float = 0.5,
     prior_std: float = 5.0,
+    observe_components: tuple[int, ...] = (0, 1, 2),
     sigma: float = 10.0,
     rho: float = 28.0,
     beta: float = 8.0 / 3.0,
 ) -> LorenzProblem:
-    """Generate the canonical Lorenz-63 partial-obs assimilation problem.
+    """Generate the forecast-mode Lorenz-63 benchmark (PyDA-style).
+
+    Defaults: 0.5-time-unit assim window (half a Lyapunov time) inside
+    a 10-time-unit total run (~9 Lyapunov times); full state
+    ``(x, y, z)`` observed every 0.05 time units with Gaussian noise
+    std 0.5. With these settings strong-4DVar's BFGS inner solver
+    converges reliably on the short window (chaotic-rollout gradients
+    become unstable past ~1 Lyapunov time), and the analysis quality
+    becomes a clean function of how good a single ``x_0`` each method
+    recovers — making the 9-Lyapunov-time free-forecast story the
+    headline.
 
     Parameters
     ----------
-    key: PRNG key for the truth's initial perturbation and obs noise.
-    T: number of forecast steps. Trajectory length is ``T + 1``.
-    dt: integration time-step. ``0.01`` is the canonical Lorenz-63 value.
-    obs_every: observe one in every ``obs_every`` time steps.
-    obs_noise: std of Gaussian observation noise on the x-component.
-    prior_std: std used for the diagonal background covariance ``B``.
+    key: PRNG key for the truth's perturbation and obs noise.
+    T_assim: forecast steps in the assim window
+        (trajectory length there is ``T_assim + 1``).
+    T_total: total forecast steps including the free-forecast phase.
+    dt: integration time-step.
+    obs_every: observe one in every ``obs_every`` time steps within
+        the assim window. PyDA uses 20 (every 0.2 time units).
+    obs_noise: std of Gaussian observation noise. PyDA-equivalent
+        for full-state obs.
+    prior_std: std for the diagonal background covariance.
+    observe_components: which Lorenz components carry observations.
+        Default is full state ``(0, 1, 2)`` (PyDA convention). Pass
+        ``(0,)`` to recover the classic "x-only" partial-obs regime.
     sigma, rho, beta: Lorenz-63 parameters.
-
-    Returns
-    -------
-    `LorenzProblem` with all the pieces every method needs.
     """
+    if T_total < T_assim:
+        raise ValueError(f"T_total ({T_total}) must be >= T_assim ({T_assim}).")
+
     k_truth, k_obs = jax.random.split(key)
     truth = _simulate_truth(
-        k_truth, T=T, dt=dt, sigma=sigma, rho=rho, beta=beta
+        k_truth, T=T_total, dt=dt, sigma=sigma, rho=rho, beta=beta
     ).astype(jnp.float32)
 
-    # Mask: 1 at (time t multiple of obs_every, component x=0), else 0.
-    T_plus_1 = T + 1
-    mask = jnp.zeros((T_plus_1, 3), dtype=jnp.float32)
-    obs_times = jnp.arange(0, T_plus_1, obs_every)
-    mask = mask.at[obs_times, 0].set(1.0)
+    # Mask + obs over the assim window only.
+    T_assim_plus_1 = T_assim + 1
+    mask = jnp.zeros((T_assim_plus_1, 3), dtype=jnp.float32)
+    obs_times = jnp.arange(0, T_assim_plus_1, obs_every)
+    comp_idx = jnp.asarray(observe_components, dtype=jnp.int32)
+    mask = mask.at[obs_times[:, None], comp_idx[None, :]].set(1.0)
 
-    # Noisy observations on the x-component; zero elsewhere.
-    noise = obs_noise * jax.random.normal(k_obs, (T_plus_1, 3))
-    obs = (truth + noise) * mask
+    noise = obs_noise * jax.random.normal(k_obs, (T_assim_plus_1, 3))
+    obs = (truth[:T_assim_plus_1] + noise) * mask
 
-    prior_mean = jnp.zeros((T_plus_1, 3), dtype=jnp.float32)
+    prior_mean = jnp.zeros((T_assim_plus_1, 3), dtype=jnp.float32)
     prior_mean_state = jnp.zeros(3, dtype=jnp.float32)
 
-    # B = prior_std^2 * I over the (T+1, 3) state.
-    # R = obs_noise^2 * I over the (T+1, 3) obs.
-    # `DiagonalLinearOperator` (rather than `IdentityLinearOperator * scalar`)
-    # carries the positive-semidefinite tag through, which `lineax.CG`
-    # inside `vardax.ThreeDVar` / `IncrementalFourDVar` requires. Users
-    # can swap for structured operators (`gaussx` Matern, etc.) for
-    # higher-fidelity comparisons.
-    B_diag = jnp.full((T_plus_1, 3), prior_std**2, dtype=jnp.float32)
-    R_diag = jnp.full((T_plus_1, 3), obs_noise**2, dtype=jnp.float32)
+    B_diag = jnp.full((T_assim_plus_1, 3), prior_std**2, dtype=jnp.float32)
+    R_diag = jnp.full((T_assim_plus_1, 3), obs_noise**2, dtype=jnp.float32)
     state_diag = jnp.full((3,), prior_std**2, dtype=jnp.float32)
     state_R_diag = jnp.full((3,), obs_noise**2, dtype=jnp.float32)
 
-    # Wrap with `TaggedLinearOperator(..., positive_semidefinite_tag)`:
-    # `DiagonalLinearOperator` does not auto-carry the tag, but
-    # `lineax.CG` (used inside `vardax.ThreeDVar` /
-    # `IncrementalFourDVar`) refuses untagged operators.
     def _pd(op: lx.AbstractLinearOperator) -> lx.AbstractLinearOperator:
         return lx.TaggedLinearOperator(op, lx.positive_semidefinite_tag)
-
-    B_op = _pd(lx.DiagonalLinearOperator(B_diag))
-    R_op = _pd(lx.DiagonalLinearOperator(R_diag))
-    B_op_state = _pd(lx.DiagonalLinearOperator(state_diag))
-    R_op_state = _pd(lx.DiagonalLinearOperator(state_R_diag))
 
     return LorenzProblem(
         truth=truth,
@@ -227,12 +223,13 @@ def generate_problem(
         mask=mask,
         prior_mean=prior_mean,
         prior_mean_state=prior_mean_state,
-        B_op=B_op,
-        R_op=R_op,
-        B_op_state=B_op_state,
-        R_op_state=R_op_state,
+        B_op=_pd(lx.DiagonalLinearOperator(B_diag)),
+        R_op=_pd(lx.DiagonalLinearOperator(R_diag)),
+        B_op_state=_pd(lx.DiagonalLinearOperator(state_diag)),
+        R_op_state=_pd(lx.DiagonalLinearOperator(state_R_diag)),
         dt=dt,
-        T=T,
+        T_assim=T_assim,
+        T_total=T_total,
         obs_every=obs_every,
         obs_noise=obs_noise,
     )

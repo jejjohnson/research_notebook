@@ -108,7 +108,7 @@ def test_forward_roundtrip_zero_error():
     import jax
     from assimilation import generate_l96_2l_problem
 
-    prob = generate_l96_2l_problem(key=jax.random.PRNGKey(0), T=10)
+    prob = generate_l96_2l_problem(key=jax.random.PRNGKey(0), T_assim=10, T_total=10)
     fwd = Lorenz96TwoLevelForward(
         K=prob.K,
         J=prob.J,
@@ -123,6 +123,6 @@ def test_forward_roundtrip_zero_error():
         new = fwd.step(s, fwd.dt)
         return new, new
 
-    _, traj = jax.lax.scan(step, prob.truth[0], None, length=prob.T)
+    _, traj = jax.lax.scan(step, prob.truth[0], None, length=prob.T_total)
     rt = jnp.concatenate([prob.truth[0][None, :], traj], axis=0)
     assert float(jnp.max(jnp.abs(rt - prob.truth))) < 1e-5

@@ -51,28 +51,32 @@ from jaxtyping import Array, Float, PRNGKeyArray
 
 @dataclass(frozen=True)
 class LorenzL96TwoLevelProblem:
-    """Shared two-level L96 benchmark problem.
+    """Forecast-mode two-level L96 benchmark problem.
+
+    Same assim-window + free-forecast structure as `LorenzProblem`
+    and `LorenzL96Problem`. Slow variables receive sparse-in-space-
+    and-time observations inside the assim window; the fast block is
+    entirely unobserved.
 
     Attributes
     ----------
-    truth: ``(T+1, K + J*K)`` flattened ground-truth trajectory.
-    obs: ``(T+1, K + J*K)`` observations, zero at masked entries.
-        Only the slow-variable block (first ``K`` columns) carries
-        observations by default; the fast block is fully masked.
-    mask: ``(T+1, K + J*K)`` binary mask.
-    prior_mean, prior_mean_state: zero priors over the full flat
-        state, in trajectory and ``(K + J*K,)`` shape respectively.
-    B_op, R_op, B_op_state, R_op_state: diagonal covariances over the
-        trajectory and the flat state.
+    truth: ``(T_total+1, D)`` ground-truth trajectory, ``D = K + J*K``.
+    obs: ``(T_assim+1, D)`` observations on the assim window only.
+    mask: ``(T_assim+1, D)`` binary mask (slow block only).
+    prior_mean, prior_mean_state: zero priors.
+    B_op, R_op, B_op_state, R_op_state: diagonal covariances.
     K, J: slow and fast dimensions.
     F, h, c, b: Lorenz-96-2L parameters.
-    dt, T, obs_every_space, obs_every_time, obs_noise: setup knobs.
+    dt: integration time-step.
+    T_assim, T_total: forecast-step counts for the assim window
+        and the full run.
+    obs_every_space, obs_every_time, obs_noise: obs setup.
     """
 
-    truth: Float[Array, "T_plus_1 D"]
-    obs: Float[Array, "T_plus_1 D"]
-    mask: Float[Array, "T_plus_1 D"]
-    prior_mean: Float[Array, "T_plus_1 D"]
+    truth: Float[Array, "T_total_plus_1 D"]
+    obs: Float[Array, "T_assim_plus_1 D"]
+    mask: Float[Array, "T_assim_plus_1 D"]
+    prior_mean: Float[Array, "T_assim_plus_1 D"]
     prior_mean_state: Float[Array, " D"]
     B_op: lx.AbstractLinearOperator
     R_op: lx.AbstractLinearOperator
@@ -85,19 +89,27 @@ class LorenzL96TwoLevelProblem:
     c: float
     b: float
     dt: float
-    T: int
+    T_assim: int
+    T_total: int
     obs_every_space: int
     obs_every_time: int
     obs_noise: float
 
     @property
     def D(self) -> int:
-        """Flat state dimension ``K + J * K``."""
         return self.K + self.J * self.K
 
     @property
-    def T_plus_1(self) -> int:
-        return self.T + 1
+    def T_assim_plus_1(self) -> int:
+        return self.T_assim + 1
+
+    @property
+    def T_total_plus_1(self) -> int:
+        return self.T_total + 1
+
+    @property
+    def T_forecast(self) -> int:
+        return self.T_total - self.T_assim
 
 
 class Lorenz96TwoLevelVF(eqx.Module):
@@ -235,10 +247,11 @@ def generate_l96_2l_problem(
     h: float = 1.0,
     c: float = 10.0,
     b: float = 10.0,
-    T: int = 40,
+    T_assim: int = 80,
+    T_total: int = 200,
     dt: float = 0.005,
     obs_every_space: int = 2,
-    obs_every_time: int = 4,
+    obs_every_time: int = 10,
     obs_noise: float = 0.5,
     prior_std: float = 5.0,
 ) -> LorenzL96TwoLevelProblem:
@@ -267,35 +280,44 @@ def generate_l96_2l_problem(
     F, h, c, b: Lorenz-96-2L parameters. The defaults are the
         strongly-coupled, strongly-chaotic regime; ``F = 10`` gives
         a weakly-chaotic alternative.
-    T, dt: trajectory length and integration step.
+    T_assim, T_total: forecast steps in the assim window and the
+        full run. Defaults: 0.4-time-unit assim + 0.6-time-unit
+        free-forecast = 1-time-unit total (~2 slow Lyapunov times).
+        Shorter than L96-1L because slow-only obs through fast
+        coupling saturates quickly.
+    dt: integration step. Smaller than L96-1L because the fast
+        timescale is c=10 times faster.
     obs_every_space, obs_every_time: slow-variable obs stride.
     obs_noise: std of Gaussian observation noise.
     prior_std: diagonal background covariance std for both slow and
         fast variables.
     """
+    if T_total < T_assim:
+        raise ValueError(f"T_total ({T_total}) must be >= T_assim ({T_assim}).")
+
     k_truth, k_obs = jax.random.split(key)
     truth = _simulate_l96_2l_truth(
-        k_truth, K=K, J=J, F=F, h=h, c=c, b=b, T=T, dt=dt
+        k_truth, K=K, J=J, F=F, h=h, c=c, b=b, T=T_total, dt=dt
     ).astype(jnp.float32)
 
     D = K + J * K
-    T_plus_1 = T + 1
+    T_assim_plus_1 = T_assim + 1
 
     # Mask covers only the slow block (first K columns) and only at
-    # obs_every_time-spaced time slices.
-    mask = jnp.zeros((T_plus_1, D), dtype=jnp.float32)
+    # obs_every_time-spaced time slices inside the assim window.
+    mask = jnp.zeros((T_assim_plus_1, D), dtype=jnp.float32)
     space_idx_slow = jnp.arange(0, K, obs_every_space)
-    time_idx = jnp.arange(0, T_plus_1, obs_every_time)
+    time_idx = jnp.arange(0, T_assim_plus_1, obs_every_time)
     mask = mask.at[time_idx[:, None], space_idx_slow[None, :]].set(1.0)
 
-    noise = obs_noise * jax.random.normal(k_obs, (T_plus_1, D))
-    obs = (truth + noise) * mask
+    noise = obs_noise * jax.random.normal(k_obs, (T_assim_plus_1, D))
+    obs = (truth[:T_assim_plus_1] + noise) * mask
 
-    prior_mean = jnp.zeros((T_plus_1, D), dtype=jnp.float32)
+    prior_mean = jnp.zeros((T_assim_plus_1, D), dtype=jnp.float32)
     prior_mean_state = jnp.zeros(D, dtype=jnp.float32)
 
-    B_diag = jnp.full((T_plus_1, D), prior_std**2, dtype=jnp.float32)
-    R_diag = jnp.full((T_plus_1, D), obs_noise**2, dtype=jnp.float32)
+    B_diag = jnp.full((T_assim_plus_1, D), prior_std**2, dtype=jnp.float32)
+    R_diag = jnp.full((T_assim_plus_1, D), obs_noise**2, dtype=jnp.float32)
     state_B_diag = jnp.full((D,), prior_std**2, dtype=jnp.float32)
     state_R_diag = jnp.full((D,), obs_noise**2, dtype=jnp.float32)
 
@@ -319,7 +341,8 @@ def generate_l96_2l_problem(
         c=c,
         b=b,
         dt=dt,
-        T=T,
+        T_assim=T_assim,
+        T_total=T_total,
         obs_every_space=obs_every_space,
         obs_every_time=obs_every_time,
         obs_noise=obs_noise,

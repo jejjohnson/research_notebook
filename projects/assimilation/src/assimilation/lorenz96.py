@@ -39,35 +39,36 @@ from vardax._src.utils.dynamical_systems import Lorenz96
 
 @dataclass(frozen=True)
 class LorenzL96Problem:
-    """Shared L96 benchmark problem.
+    """Forecast-mode L96 benchmark problem.
+
+    Following PyDA, every method assimilates obs on the
+    ``[0, T_assim]`` window and is then free-forecast through to
+    ``T_total``. The truth covers the full window for plotting and
+    RMSE; obs/mask/prior are restricted to the assim window.
 
     Attributes
     ----------
-    truth: ``(T+1, K)`` ground-truth trajectory.
-    obs: ``(T+1, K)`` observations, zero at masked entries.
-    mask: ``(T+1, K)`` binary mask combining spatial and temporal
-        sparsity. ``1`` where the entry is observed.
-    prior_mean: ``(T+1, K)`` background mean for OI/3DVar/learned
-        methods (used as ``y0`` for the iterative solvers).
+    truth: ``(T_total+1, K)`` full ground-truth trajectory.
+    obs: ``(T_assim+1, K)`` observations on the assim window only.
+    mask: ``(T_assim+1, K)`` binary mask.
+    prior_mean: ``(T_assim+1, K)`` background for OI / 3DVar /
+        FourDVarNet / Amortized.
     prior_mean_state: ``(K,)`` background for the 4DVar-family ``x_0``
         control.
-    B_op, R_op: covariances over ``(T+1, K)`` — used by OI / 3DVar /
-        learned heads.
-    B_op_state, R_op_state: covariances over ``(K,)`` — used by the
-        4DVar family.
-    K: state dimension (number of grid points on the periodic ring).
-    F: Lorenz-96 forcing.
+    B_op, R_op: covariances over ``(T_assim+1, K)``.
+    B_op_state, R_op_state: covariances over ``(K,)``.
+    K, F: Lorenz-96 dimension and forcing.
     dt: integration time-step.
-    T: number of forecast steps. Trajectories have length ``T + 1``.
-    obs_every_space, obs_every_time: stride of the spatial / temporal
-        observation grids.
+    T_assim, T_total: forecast-step counts for the assim window and
+        the full run (length T_assim+1 and T_total+1 respectively).
+    obs_every_space, obs_every_time: obs strides in the assim window.
     obs_noise: std of the Gaussian observation noise.
     """
 
-    truth: Float[Array, "T_plus_1 K"]
-    obs: Float[Array, "T_plus_1 K"]
-    mask: Float[Array, "T_plus_1 K"]
-    prior_mean: Float[Array, "T_plus_1 K"]
+    truth: Float[Array, "T_total_plus_1 K"]
+    obs: Float[Array, "T_assim_plus_1 K"]
+    mask: Float[Array, "T_assim_plus_1 K"]
+    prior_mean: Float[Array, "T_assim_plus_1 K"]
     prior_mean_state: Float[Array, " K"]
     B_op: lx.AbstractLinearOperator
     R_op: lx.AbstractLinearOperator
@@ -76,14 +77,23 @@ class LorenzL96Problem:
     K: int
     F: float
     dt: float
-    T: int
+    T_assim: int
+    T_total: int
     obs_every_space: int
     obs_every_time: int
     obs_noise: float
 
     @property
-    def T_plus_1(self) -> int:
-        return self.T + 1
+    def T_assim_plus_1(self) -> int:
+        return self.T_assim + 1
+
+    @property
+    def T_total_plus_1(self) -> int:
+        return self.T_total + 1
+
+    @property
+    def T_forecast(self) -> int:
+        return self.T_total - self.T_assim
 
 
 class Lorenz96Forward(eqx.Module):
@@ -154,55 +164,57 @@ def generate_l96_problem(
     key: PRNGKeyArray,
     K: int = 40,
     F: float = 8.0,
-    T: int = 20,
+    T_assim: int = 50,
+    T_total: int = 250,
     dt: float = 0.01,
     obs_every_space: int = 4,
-    obs_every_time: int = 4,
+    obs_every_time: int = 5,
     obs_noise: float = 1.0,
     prior_std: float = 5.0,
 ) -> LorenzL96Problem:
-    """Generate the canonical Lorenz-96 partial-obs assimilation problem.
+    """Generate the forecast-mode Lorenz-96 benchmark.
 
-    Defaults match the textbook partial-obs setup: ``K = 40``,
-    ``F = 8`` (chaotic), 21-step window, observe every 4th grid
-    point at every 4th time step.
+    Defaults: K=40, F=8 (chaotic), 0.5-time-unit assim window inside
+    a 2.5-time-unit total run (~5 L96 Lyapunov times). Observe every
+    4th grid point every 0.05 time units inside the assim window;
+    free-forecast for 2 time units after. The 5-Lyapunov-time
+    horizon is short enough that methods with good $x_0$ recovery
+    visibly outperform the noisy-analysis baselines.
 
     Parameters
     ----------
     key: PRNG key for truth + obs noise.
     K: number of grid points on the periodic ring.
     F: Lorenz-96 forcing constant.
-    T: number of forecast steps. Trajectory has length ``T + 1``.
+    T_assim: forecast steps inside the assim window.
+    T_total: total forecast steps over the full run.
     dt: integration time-step.
     obs_every_space: spatial obs stride. ``1`` for full-state, larger
         values for sparser obs.
-    obs_every_time: temporal obs stride.
+    obs_every_time: temporal obs stride inside the assim window.
     obs_noise: std of the Gaussian observation noise.
     prior_std: std for the diagonal background covariance.
-
-    Returns
-    -------
-    A `LorenzL96Problem` carrying every operator each method needs.
     """
-    k_truth, k_obs = jax.random.split(key)
-    truth = _simulate_l96_truth(k_truth, K=K, F=F, T=T, dt=dt).astype(jnp.float32)
+    if T_total < T_assim:
+        raise ValueError(f"T_total ({T_total}) must be >= T_assim ({T_assim}).")
 
-    T_plus_1 = T + 1
-    # Combined spatial / temporal mask.
+    k_truth, k_obs = jax.random.split(key)
+    truth = _simulate_l96_truth(k_truth, K=K, F=F, T=T_total, dt=dt).astype(jnp.float32)
+
+    T_assim_plus_1 = T_assim + 1
     space_idx = jnp.arange(0, K, obs_every_space)
-    time_idx = jnp.arange(0, T_plus_1, obs_every_time)
-    mask = jnp.zeros((T_plus_1, K), dtype=jnp.float32)
+    time_idx = jnp.arange(0, T_assim_plus_1, obs_every_time)
+    mask = jnp.zeros((T_assim_plus_1, K), dtype=jnp.float32)
     mask = mask.at[time_idx[:, None], space_idx[None, :]].set(1.0)
 
-    # Noisy observations at observed entries; zero elsewhere.
-    noise = obs_noise * jax.random.normal(k_obs, (T_plus_1, K))
-    obs = (truth + noise) * mask
+    noise = obs_noise * jax.random.normal(k_obs, (T_assim_plus_1, K))
+    obs = (truth[:T_assim_plus_1] + noise) * mask
 
-    prior_mean = jnp.zeros((T_plus_1, K), dtype=jnp.float32)
+    prior_mean = jnp.zeros((T_assim_plus_1, K), dtype=jnp.float32)
     prior_mean_state = jnp.zeros(K, dtype=jnp.float32)
 
-    B_diag = jnp.full((T_plus_1, K), prior_std**2, dtype=jnp.float32)
-    R_diag = jnp.full((T_plus_1, K), obs_noise**2, dtype=jnp.float32)
+    B_diag = jnp.full((T_assim_plus_1, K), prior_std**2, dtype=jnp.float32)
+    R_diag = jnp.full((T_assim_plus_1, K), obs_noise**2, dtype=jnp.float32)
     state_B_diag = jnp.full((K,), prior_std**2, dtype=jnp.float32)
     state_R_diag = jnp.full((K,), obs_noise**2, dtype=jnp.float32)
 
@@ -222,7 +234,8 @@ def generate_l96_problem(
         K=K,
         F=F,
         dt=dt,
-        T=T,
+        T_assim=T_assim,
+        T_total=T_total,
         obs_every_space=obs_every_space,
         obs_every_time=obs_every_time,
         obs_noise=obs_noise,

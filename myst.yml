@@ -162,6 +162,7 @@ project:
             - title: Fair learning with Gaussianization flows
               children:
                 - file: projects/gaussianization/docs/fair_gaussianization_experiment.md
+                - file: projects/gaussianization/docs/fair_gaussianization_followups.md
                 - file: projects/gaussianization/notebooks/fair_gauss/05_fair_gauss_pretrain.ipynb
                 - file: projects/gaussianization/notebooks/fair_gauss/06_fair_gauss_synthetic.ipynb
                 - file: projects/gaussianization/notebooks/fair_gauss/07_fair_gauss_adult.ipynb

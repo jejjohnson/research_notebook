@@ -154,6 +154,7 @@ project:
         - title: Gaussianization flows
           children:
             - file: projects/gaussianization/README.md
+            - file: projects/gaussianization/TUTORIAL_MASTER_LIST.md
             - file: projects/gaussianization/survae_flows_proof.md
             - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb

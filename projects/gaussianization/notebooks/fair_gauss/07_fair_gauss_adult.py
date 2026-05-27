@@ -517,28 +517,44 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# **What to notice.** All four losses trace Pareto-like curves and
-# all four trade accuracy for fairness as $\mu$ grows — but they
-# move at very different speeds in $\mu$ because their *natural
-# scales* differ by orders of magnitude (the engineering doc's H4):
+# **What to notice.** Three of the four losses behave as the
+# engineering doc predicted; the fourth (G-TC) exposes a failure
+# mode that we now know is intrinsic to raw joint-flow NLL.
 #
-# - **CKA** with unit RBF bandwidth hits the model hard even at
-#   $\mu = 2$ and pushes DP-diff below 0.05 by $\mu = 10$ at modest
-#   AUC cost.
-# - **G-MI** has the sharpest curve of the three Gaussianisation
-#   losses — its diverging gradient at $|\rho|\to 1$ means small
-#   residual dependence is heavily penalised, so it crosses into
-#   strong-fairness territory before G-XCOV does (validating H2).
-# - **G-XCOV** is the gentlest — its bounded gradient lets the model
-#   keep most of its accuracy at moderate $\mu$, at the cost of
-#   needing much larger $\mu$ to match the others' terminal fairness.
-# - **G-TC** uses a frozen joint flow's NLL rather than a closed-form
-#   penalty; its raw $\mu$ axis is incomparable to the others, but
-#   the curve traces out the same accuracy-vs-fairness region.
+# - **CKA** with unit RBF bandwidth is the strongest baseline:
+#   pushes DP-diff to 0.04 by $\mu = 2$ and to 0.01 by $\mu = 10$,
+#   at AUC ≈ 0.83.
+# - **G-XCOV** sweeps gracefully — at $\mu = 200$ it reaches DP-diff
+#   ≈ 0.10 and EO-diff ≈ 0.10 at AUC ≈ 0.80, a clean trade-off curve
+#   continuously controlled by $\mu$.
+# - **G-MI** sits essentially on top of G-XCOV on this dataset.
+#   Hypothesis H2 (diverging gradient ⇒ stronger terminal fairness)
+#   does *not* visibly materialise here: G-MI and G-XCOV reach
+#   nearly identical (AUC, DP) pairs at every $\mu$. The most
+#   likely explanation is that the predictor never enters the
+#   $|\rho| \gtrsim 0.7$ regime where the G-MI gradient is
+#   meaningfully larger than the G-XCOV gradient — the
+#   binary-classification setting keeps the Gaussianised
+#   correlation modest. H2 needs a regression-style test (notebook
+#   06) or an engineered high-$\rho$ benchmark to confirm.
+# - **G-TC collapses the predictor to a constant** at $\mu \ge 2$:
+#   AUC drops to 0.57, DP-diff and EO-diff both go to **exactly
+#   zero**, and the AUC keeps falling toward chance at higher $\mu$.
+#   This is the same constant-predictor pathology that notebook 06
+#   exposed on regression — the joint-flow NLL has a global minimum
+#   when the joint matches the shuffled product distribution, and
+#   $\hat y \approx \mathrm{const}$ attains it trivially. The fix
+#   is to subtract the baseline NLL of $\mathcal{N}(0, I)$ so the
+#   loss measures the *gap* from the optimal product distribution
+#   rather than the absolute NLL; tracked as a follow-up in the
+#   engineering doc.
 #
-# A fair head-to-head comparison requires rescaling $\mu$ by each
-# loss's typical baseline magnitude — see the engineering doc's
-# "magnitude calibration" follow-up.
+# A fair head-to-head comparison of G-XCOV / G-MI / CKA at matched
+# *fairness* (vertical slice of the Pareto plot, not at matched
+# $\mu$) shows CKA winning AUC at low DP-diff on Adult — the kernel
+# baseline benefits from a bandwidth that happens to be well-suited
+# to the data, while our Gaussianisation losses inherit whatever
+# scale the flow chose. See the magnitude-calibration follow-up.
 
 # %% [markdown]
 # ## 7. Group-mean prediction rates vs. $\mu$ — the parity convergence

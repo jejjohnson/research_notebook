@@ -28,6 +28,11 @@ env/
 venv/
 ENV/
 
+# Per-project uv lock files (the root uv.lock is tracked; sub-project
+# locks are generated locally and not committed -- they would diverge
+# per developer / per CI runner).
+projects/*/uv.lock
+
 # Jupyter Notebooks — .ipynb files are committed; only checkpoints are ignored
 .ipynb_checkpoints
 *.ipynb_checkpoints/

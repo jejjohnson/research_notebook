@@ -1,0 +1,34 @@
+[project]
+name = "assimilation"
+version = "0.1.0"
+description = "Lorenz-63 data-assimilation benchmark — seven AnalysisStep methods (BLUE/OI, 3DVar, strong/weak/incremental 4DVar, FourDVarNet, AmortizedPosterior) on the same toy problem."
+requires-python = ">=3.12"
+# Notebooks depend on `vardax` for the seven AnalysisStep classes and on
+# the standard JAX scientific stack. `vardax` is not on PyPI yet — install
+# via the pixi env (root `pixi.toml`) or `uv pip install
+# git+https://github.com/jejjohnson/vardax`.
+dependencies = [
+    "vardax",
+    "jax>=0.5",
+    "jaxlib>=0.5",
+    "equinox>=0.11",
+    "lineax>=0.1",
+    "diffrax>=0.5",
+    "optimistix>=0.1",
+    "optax>=0.2",
+    "numpy",
+    "pandas",
+]
+
+[project.optional-dependencies]
+notebooks = ["matplotlib>=3.9", "ipykernel>=6.29"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/assimilation"]
+
+[tool.uv.sources]
+vardax = { git = "https://github.com/jejjohnson/vardax" }

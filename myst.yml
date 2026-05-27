@@ -95,15 +95,21 @@ project:
         - title: Data assimilation
           children:
             - file: projects/assimilation/README.md
-            - file: projects/assimilation/notebooks/00_lorenz63_setup.md
-            - file: projects/assimilation/notebooks/01_optimal_interpolation.ipynb
-            - file: projects/assimilation/notebooks/02_threedvar.ipynb
-            - file: projects/assimilation/notebooks/03_strong_4dvar.ipynb
-            - file: projects/assimilation/notebooks/04_weak_4dvar.ipynb
-            - file: projects/assimilation/notebooks/05_incremental_4dvar.ipynb
-            - file: projects/assimilation/notebooks/06_fourdvarnet.ipynb
-            - file: projects/assimilation/notebooks/07_amortized_posterior.ipynb
-            - file: projects/assimilation/notebooks/08_benchmark_comparison.ipynb
+            - title: Lorenz-63
+              children:
+                - file: projects/assimilation/notebooks/00_lorenz63_setup.md
+                - file: projects/assimilation/notebooks/01_optimal_interpolation.ipynb
+                - file: projects/assimilation/notebooks/02_threedvar.ipynb
+                - file: projects/assimilation/notebooks/03_strong_4dvar.ipynb
+                - file: projects/assimilation/notebooks/04_weak_4dvar.ipynb
+                - file: projects/assimilation/notebooks/05_incremental_4dvar.ipynb
+                - file: projects/assimilation/notebooks/06_fourdvarnet.ipynb
+                - file: projects/assimilation/notebooks/07_amortized_posterior.ipynb
+                - file: projects/assimilation/notebooks/08_benchmark_comparison.ipynb
+            - title: Lorenz-96
+              children:
+                - file: projects/assimilation/notebooks/09_lorenz96_setup.ipynb
+                - file: projects/assimilation/notebooks/10_lorenz96_benchmark.ipynb
         - title: Methane PoD
           children:
             - file: projects/methane_pod/README.md

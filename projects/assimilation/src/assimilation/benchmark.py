@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import jax
+import jax.numpy as jnp
 from jaxtyping import Array, Float
 
 from assimilation.lorenz63 import LorenzProblem
@@ -89,21 +90,32 @@ def run_method(
 def compare(*results: MethodResult):
     """Stack a list of `MethodResult` into a comparison ``pandas.DataFrame``.
 
-    Returned columns: ``rmse_total``, ``rmse_x / y / z``, ``runtime_ms``,
-    ``train_time_s``. Index: ``name``. Caller-side ``.style`` /
-    ``.sort_values`` work as usual.
+    For 3-D problems (e.g. Lorenz-63) the per-component columns are
+    labelled ``rmse_x``, ``rmse_y``, ``rmse_z``. For higher-
+    dimensional problems (Lorenz-96 with ``K = 40``) the per-component
+    breakdown is collapsed to ``rmse_min / rmse_median / rmse_max``
+    over grid points, which is more informative than reporting the
+    first three components.
+
+    Returned columns always include ``rmse_total``, ``runtime_ms``,
+    ``train_time_s``. Index: ``name``.
     """
-    import pandas as pd  # imported lazily so the harness has no hard pandas dep
+    import pandas as pd  # lazy import — harness has no hard pandas dep
 
     rows = []
     for r in results:
-        row = {
-            "rmse_total": r.rmse_total,
-            "rmse_x": float(r.rmse_per_component[0]),
-            "rmse_y": float(r.rmse_per_component[1]),
-            "rmse_z": float(r.rmse_per_component[2]),
-            "runtime_ms": r.runtime_ms,
-            "train_time_s": r.train_time_s,
-        }
+        per_comp = r.rmse_per_component
+        n = per_comp.shape[0]
+        row = {"rmse_total": r.rmse_total}
+        if n == 3:
+            row["rmse_x"] = float(per_comp[0])
+            row["rmse_y"] = float(per_comp[1])
+            row["rmse_z"] = float(per_comp[2])
+        else:
+            row["rmse_min"] = float(per_comp.min())
+            row["rmse_median"] = float(jnp.median(per_comp))
+            row["rmse_max"] = float(per_comp.max())
+        row["runtime_ms"] = r.runtime_ms
+        row["train_time_s"] = r.train_time_s
         rows.append(row)
     return pd.DataFrame(rows, index=[r.name for r in results])

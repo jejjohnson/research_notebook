@@ -1,32 +1,58 @@
 ---
-title: Data assimilation — Lorenz-63 benchmark
+title: Data assimilation benchmarks
 ---
 
-# Data assimilation — Lorenz-63 benchmark
+# Data assimilation benchmarks
 
 A side-by-side comparison of the seven `pipekit_cycle.AnalysisStep`
-methods shipped in [vardax](https://github.com/jejjohnson/vardax) on a
-single shared Lorenz-63 partial-observation problem. Every notebook
-loads the *same* problem (truth, observations, mask, $B$, $R$) via
-`assimilation.generate_problem(key)` so the numbers stack into one
-comparison table.
+methods shipped in [vardax](https://github.com/jejjohnson/vardax) on
+two shared chaotic test problems — **Lorenz-63** (3-D, sparse-time
+partial obs) and **Lorenz-96** (single-level, 40-D, sparse spatial +
+temporal obs). Every notebook loads the *same* problem (truth,
+observations, mask, $B$, $R$) via the harness factories
+`assimilation.generate_problem(key)` (L63) and
+`assimilation.generate_l96_problem(key)` (L96), so the numbers stack
+into one comparison table per system.
 
-## Headline (one run, `PRNGKey(42)`)
+## Headline — Lorenz-63 (`PRNGKey(42)`)
 
 | Method | RMSE total | Inference | Training | Notes |
 |---|---:|---:|---:|---|
 | Optimal Interpolation | 16.87 | 0.4 ms | — | Floor — no time coupling, $y, z$ stay at prior |
 | 3DVar | 16.87 | 1.0 s | — | Matches OI — Decision D14 linear-Gaussian invariant |
 | Weak-4DVar | 7.15 | 2.1 s | — | Allows model error; perfect-model handicap |
-| Incremental-4DVar | 2.39 | 7.4 s | — | Operational fast path; tune `(n_outer, n_inner)` for accuracy |
+| Incremental-4DVar | 2.39 | 7.4 s | — | Operational fast path |
 | Strong-4DVar | 0.91 | 1.7 s | — | Dynamics constraint — the textbook 4DVar win |
 | FourDVarNet | 1.55 | 0.1 s | 2.5 s | Learned 4DVar solver; ~3 s training on 32 simulated trajectories |
 | **AmortizedPosterior** | **0.68** | **8 ms** | 1.9 s | Sub-ms MAP, but **predictive variance mis-calibrated** — see notebook 7 |
 
+## Headline — Lorenz-96 (`PRNGKey(0)`)
+
+K=40 grid points, observe every 4th cell at every 4th time step
+(60 obs constraining a 840-entry trajectory):
+
+| Method | RMSE total | Inference | Training |
+|---|---:|---:|---:|
+| OI = 3DVar | 3.83 | 0.4 s | — |
+| FourDVarNet | 3.63 | 0.2 s | ~75 s |
+| Weak-4DVar | 3.21 | 3.3 s | — |
+| AmortizedPosterior | 3.10 | 12 ms | ~4.5 s |
+| Incremental-4DVar | 2.96 | 12 s | — |
+| **Strong-4DVar** | **2.94** | 2.5 s | — |
+
+Same shape of story as L63 — dynamics-aware methods cut the
+prior-only RMSE — but compressed, because L96's typical state
+magnitude (~8) is closer to the zero prior than L63's typical
+magnitude (~10-25). FourDVarNet is under-trained in this notebook
+(K=40 needs more sims than the K=3 L63 case); train longer for
+better numbers.
+
 ## Notebooks
 
-- [`00_lorenz63_setup`](notebooks/00_lorenz63_setup.md) — problem
-  derivation, observation model, harness API.
+**Lorenz-63 (4-D state-space)**
+
+- [`00_lorenz63_setup`](notebooks/00_lorenz63_setup.md) — derivation,
+  observation model, harness API.
 - [`01_optimal_interpolation`](notebooks/01_optimal_interpolation.ipynb)
   — closed-form BLUE.
 - [`02_threedvar`](notebooks/02_threedvar.ipynb) — same cost as OI,
@@ -42,7 +68,16 @@ comparison table.
 - [`07_amortized_posterior`](notebooks/07_amortized_posterior.ipynb) —
   encoder + regression head, no inner solve.
 - [`08_benchmark_comparison`](notebooks/08_benchmark_comparison.ipynb)
-  — all seven side-by-side, table + plots.
+  — all seven L63 side-by-side, table + plots.
+
+**Lorenz-96 (single-level, $K=40$)**
+
+- [`09_lorenz96_setup`](notebooks/09_lorenz96_setup.ipynb) — model,
+  simulation, sparse spatial + temporal observation design, sanity
+  checks. **Start here for L96.**
+- [`10_lorenz96_benchmark`](notebooks/10_lorenz96_benchmark.ipynb) —
+  all seven methods on the L96 problem, Hovmöller-overlay plots and
+  the accuracy-latency scatter.
 
 ## Running
 

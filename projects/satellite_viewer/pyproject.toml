@@ -35,6 +35,13 @@ notebook = [
     "ipywidgets>=8",
     "ipykernel>=6.29",
 ]
+# Streamlit subapp.
+streamlit = [
+    "streamlit>=1.40",
+    "streamlit-folium>=0.22",
+    "folium>=0.17",
+    "altair>=5",
+]
 
 [build-system]
 requires = ["hatchling"]

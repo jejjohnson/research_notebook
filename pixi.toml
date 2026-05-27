@@ -301,11 +301,13 @@ jupyter = "*"
 jupytext = ">=1.16"
 
 [feature.satellite-viewer.pypi-dependencies]
-satellite_viewer = { path = "projects/satellite_viewer", editable = true, extras = ["panel", "notebook"] }
+satellite_viewer = { path = "projects/satellite_viewer", editable = true, extras = ["panel", "notebook", "streamlit"] }
 
 [feature.satellite-viewer.tasks]
 # Launch the Panel subapp (forward port 5006 in your editor).
 panel-app = "panel serve projects/satellite_viewer/apps/panel_app.py --port 5006 --allow-websocket-origin=* --show"
+# Launch the Streamlit subapp (forward port 8501 in your editor).
+streamlit-app = "streamlit run projects/satellite_viewer/apps/streamlit_app.py --server.port 8501 --server.headless true"
 # Launch JupyterLab so you can open notebooks/viewer.py via jupytext.
 lab = "jupyter lab --no-browser --port 8888"
 # Offline registry sanity checks.

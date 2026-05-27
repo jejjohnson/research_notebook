@@ -42,12 +42,13 @@ preview-before-download workflow doesn't add value there.
 
 ## Subapps
 
-Two presentation layers over the same `satellite_viewer.search`
+Three presentation layers over the same `satellite_viewer.search`
 backend, so the discovery logic stays in one place.
 
 ### Panel
 
-A standalone web app with linked map / timeline / thumbnail panes.
+A standalone web app with linked map / timeline / thumbnail panes
+(leafmap + holoviews + tabulator).
 
 ```bash
 pixi run -e satellite-viewer panel-app
@@ -57,6 +58,20 @@ pixi run -e satellite-viewer panel serve \
 ```
 
 Source: [`apps/panel_app.py`](apps/panel_app.py).
+
+### Streamlit
+
+A single-file rerun-on-change script — folium map with a Draw plugin,
+altair timeline, thumbnail grid.
+
+```bash
+pixi run -e satellite-viewer streamlit-app
+# or
+pixi run -e satellite-viewer streamlit run \
+    projects/satellite_viewer/apps/streamlit_app.py
+```
+
+Source: [`apps/streamlit_app.py`](apps/streamlit_app.py).
 
 ### Jupyter notebook
 
@@ -84,7 +99,8 @@ projects/satellite_viewer/
 ├── tests/
 │   └── test_sensors.py  # offline registry sanity checks
 ├── apps/
-│   └── panel_app.py     # Panel subapp
+│   ├── panel_app.py     # Panel subapp
+│   └── streamlit_app.py # Streamlit subapp
 └── notebooks/
     └── viewer.py        # jupytext py:percent notebook
 ```
@@ -120,7 +136,7 @@ pixi run -e satellite-viewer test-satellite-viewer
 ```
 
 For non-pixi users, the standalone `pyproject.toml` here pins the
-same deps; `uv pip install -e projects/satellite_viewer[panel,notebook]`
+same deps; `uv pip install -e projects/satellite_viewer[panel,streamlit,notebook]`
 into an activated venv works equivalently.
 
 ## Why not just plug `geocatalog` in directly?

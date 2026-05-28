@@ -23,7 +23,7 @@ Cross-listed items (RFF, deep kernels, last-layer-Bayes, BLR, Laplace, VI guides
 - 🌉 **bridge** — useful in either; cross-link
 - 🔁 **cross-listed** — also in GP or neural-fields master list
 
-**Refs column**: `gh#N` = open GitHub issue · `dd:path` = pyrox `design_docs/pyrox/<path>` · `mc#` = numbered model from `examples/nn/regression_masterclass_eqx.md` · `xref:GP#X.Y` = pointer into GP master list.
+**Refs column**: `gh:<repo>#N` = open GitHub issue (e.g., `gh:pyrox#71`) · `dd:path` = pyrox `design_docs/pyrox/<path>` · `mc#` = numbered model from `examples/nn/regression_masterclass_eqx.md` · `xref:GP#X.Y` = pointer into GP master list.
 
 ---
 
@@ -456,9 +456,9 @@ Core (deterministic) neural-fields content lives in [`../neural_fields/TUTORIAL_
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| G.1 | Bayesian INR — probabilistic SIREN with MFVI weights | — | 🔬 | **GAP** — pairs with NF B.4 |
+| G.1 | Bayesian INR — probabilistic SIREN with MFVI weights | — | 🔬 | **GAP** — pairs with `xref:NF#B.1` (SIREN) |
 | G.2 | Bayesian INR via last-layer Laplace on a SIREN | — | 🔬 | **GAP** |
-| G.3 | Bayesian NeRF — uncertainty in volumetric scenes | — | 🔬 | **GAP** — pairs with NF C.1 |
+| G.3 | Bayesian NeRF — uncertainty in volumetric scenes | — | 🔬 | **GAP** — pairs with `xref:NF#C.1` (vanilla NeRF) |
 | G.4 | Functional priors for INRs — match a target spatial GP | — | 🔬 | **GAP** |
 | G.5 | BNF layer family + `BNFEstimator` / MLE / VI runners | — | 🔬 | **GAP** — gh:pyrox#72 |
 | G.6 | Bayesian neural fields flagship demo (`bayesian_neural_fields.ipynb`) | — | 🔬 | **GAP** — gh:pyrox#73 |

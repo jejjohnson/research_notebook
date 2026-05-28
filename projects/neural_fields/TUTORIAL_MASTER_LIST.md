@@ -17,7 +17,7 @@ Cross-listed items (RFF-as-PE, Slepian, deep RFF, continuous-depth flows) are fl
 
 **Scope tag**: 🧱 fundamental · 🔬 research · 🌉 bridge · 🔁 cross-listed
 
-**Refs**: `gh#N` = open GitHub issue · `dd:path` = pyrox `design_docs/pyrox/<path>` · `xref:BNN#X.Y` / `xref:GP#X.Y` = pointer into companion list.
+**Refs**: `gh:<repo>#N` = open GitHub issue (e.g., `gh:pyrox#91`) · `dd:path` = pyrox `design_docs/pyrox/<path>` · `xref:BNN#X.Y` / `xref:GP#X.Y` = pointer into companion list.
 
 ---
 
@@ -79,7 +79,7 @@ Cross-listed items (RFF-as-PE, Slepian, deep RFF, continuous-depth flows) are fl
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
 | A.3 | Positional encoding (Tancik 2020 / NeRF Fourier features) | — | 🧱 | **GAP** |
-| A.4 | Gaussian-feature INRs (RFF as positional encoding) | — | 🧱 🔁 | **GAP** — connects xref:BNN#A.8 ↔ B.4 |
+| A.4 | Gaussian-feature INRs (RFF as positional encoding) | — | 🧱 🔁 | **GAP** — bridges `xref:BNN#A.8` (RFF) ↔ this list's B.1 (SIREN) |
 | A.5 | Frequency bandwidth & lengthscale tuning for PE | — | 🧱 | **GAP** |
 
 ### A.C — Initialization & training dynamics

@@ -575,13 +575,13 @@ Inter-domain features that are *fundamentally spectral* (VFF, VISH, Laplacian ei
 
 ### 6.F — Bayesian linear regression & non-standard outputs *(migrated)*
 
-BLR, Log-Gaussian Cox Process, and warped-regression tutorials have moved to the Bayesian-NN master list — they are finite-dim parametric models rather than GP-native. See:
+BLR, Log-Gaussian Cox Process, and warped-regression tutorials have moved to the [Bayesian-NN master list](../bayesian_nns/TUTORIAL_MASTER_LIST.md) — they are finite-dim parametric models rather than GP-native. See:
 
-- BLR updates → [`../bayesian_nns/TUTORIAL_MASTER_LIST.md` §A.3](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
-- BLR in precision form → [§A.2](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
-- Log-Gaussian Cox Process → [§A.23](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
-- Warped regression (Box–Cox) → [§A.24](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
-- Warped regression with NF bijection → [§A.25](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
+- BLR updates → `xref:BNN#A.3`
+- BLR in precision form → `xref:BNN#A.2`
+- Log-Gaussian Cox Process → `xref:BNN#A.23`
+- Warped regression (Box–Cox) → `xref:BNN#A.24`
+- Warped regression with NF bijection → `xref:BNN#A.25`
 
 ### 6.G — Aggregate Bayesian methods
 

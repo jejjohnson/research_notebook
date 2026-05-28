@@ -2,7 +2,7 @@
 
 A reconciled, exhaustive curriculum spanning what currently exists in **gaussx**, **pyrox**, and **research_notebook**, plus gaps surfaced from the gaussx + pyrox public APIs, open GitHub issues, and pyrox `design_docs/`. Goal: the most complete GP tutorial sequence we could ship.
 
-> Bayesian NN / NeRF / basis-function-regression tutorials live in [`../bayesian_nns/TUTORIAL_MASTER_LIST.md`](../bayesian_nns/TUTORIAL_MASTER_LIST.md). Cross-listed items (RFF, deep kernels, BLR, last-layer-Bayes) are flagged 🔁.
+> Bayesian linear models, parametric regression, and Bayesian neural networks live in [`../bayesian_nns/TUTORIAL_MASTER_LIST.md`](../bayesian_nns/TUTORIAL_MASTER_LIST.md). Neural fields / INRs / NeRF live in [`../neural_fields/TUTORIAL_MASTER_LIST.md`](../neural_fields/TUTORIAL_MASTER_LIST.md). Cross-listed items (RFF, deep kernels, BLR, last-layer-Bayes, Laplace, VI guides) are flagged 🔁.
 
 **Legend** — Source columns:
 - `G` = exists in gaussx (`docs/notebooks/<name>`)
@@ -60,7 +60,7 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
   - 6.C — Newton / Gauss-Newton family
   - 6.D — Variational inference
   - 6.E — Expectation Propagation
-  - 6.F — Bayesian linear regression & non-standard outputs
+  - 6.F — *(migrated to BNN list)* — BLR / LGCP / warped regression
   - 6.G — Aggregate Bayesian methods
 - **Part 7 — Spectral GPs**
   - 7.A — Spectral foundations
@@ -538,10 +538,10 @@ Inter-domain features that are *fundamentally spectral* (VFF, VISH, Laplacian ei
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 6.7 | Laplace approximation | P `advanced_gp_laplace` | 🧱 | |
-| 6.8 | Gauss–Newton inference | P `advanced_gp_gauss_newton` | 🧱 | |
-| 6.9 | Quasi-Newton inference (L-BFGS sites) | P `advanced_gp_qn` | 🧱 | |
-| 6.10 | Posterior Linearization (Bayes-Newton) | P `advanced_gp_pl` | 🧱 | |
+| 6.7 | Laplace approximation | P `advanced_gp_laplace` | 🧱 🔁 | xref:BNN#D.4 |
+| 6.8 | Gauss–Newton inference | P `advanced_gp_gauss_newton` | 🧱 🔁 | xref:BNN#D.5 |
+| 6.9 | Quasi-Newton inference (L-BFGS sites) | P `advanced_gp_qn` | 🧱 🔁 | xref:BNN#D.6 |
+| 6.10 | Posterior Linearization (Bayes-Newton) | P `advanced_gp_pl` | 🧱 🔁 | xref:BNN#D.7 |
 | 6.11 | Newton & damped natural updates | — | 🧱 | **GAP** — api: `newton_update`, `damped_natural_update` |
 | 6.12 | Gauss–Newton & GGN diagonal | — | 🧱 | **GAP** — api: `gauss_newton_precision`, `ggn_diagonal` |
 | 6.13 | Hutchinson Hessian diagonal & Riemannian PSD correction | — | 🧱 🔁 | **GAP** |
@@ -556,8 +556,8 @@ Inter-domain features that are *fundamentally spectral* (VFF, VISH, Laplacian ei
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 6.14 | Variational guides — full-rank, mean-field, low-rank, whitened, delta, flow | — | 🧱 | **GAP** — dd:examples/gp/vgp_numpyro.py + features/gp/variational_families.md |
-| 6.15 | Natural gradient VI | G `natural_gradient_vi` | 🌉 | |
+| 6.14 | Variational guides — full-rank, mean-field, low-rank, whitened, delta, flow | — | 🧱 🔁 | **GAP** — dd:examples/gp/vgp_numpyro.py + features/gp/variational_families.md; xref:BNN#D.14 |
+| 6.15 | Natural gradient VI | G `natural_gradient_vi` | 🌉 🔁 | xref:BNN#D.15 |
 | 6.16 | Conjugate VI for GPs (CVI sites) | — | 🧱 | **GAP** — api: `cvi_update_sites`, `site_natural_from_tilted` |
 | 6.23 | Full VGP (non-sparse) — $N$ variational parameters, $O(N^3)$, no inducing-point approximation | — | 🧱 | **GAP** — closes gap between sparse and exact tutorials |
 
@@ -573,20 +573,15 @@ Inter-domain features that are *fundamentally spectral* (VFF, VISH, Laplacian ei
 | 6.17 | Expectation Propagation | P `advanced_gp_ep`, G `expectation_propagation` | 🌉 | **DUP** |
 | 6.18 | EP cavity & tilted moments mechanics | — | 🧱 | **GAP** — api: `cavity_distribution`, `ep_tilted_moments`; gh:gaussx#24 |
 
-### 6.F — Bayesian linear regression & non-standard outputs
+### 6.F — Bayesian linear regression & non-standard outputs *(migrated)*
 
-**Key equations / models:**
-- BLR posterior: $\Sigma = (\Phi^\top R^{-1}\Phi + S_0^{-1})^{-1}$, $\mu = \Sigma\,\Phi^\top R^{-1}y$
-- Sequential update via Sherman–Morrison: rank-1 covariance update on each new observation
-- Log-Gaussian Cox Process: $\lambda(x) = \exp(f(x))$, observations from Poisson process
-- Warped GP (Snelson 2003): $g(y) = f(x)$ with monotone bijection $g$, transformed likelihood
+BLR, Log-Gaussian Cox Process, and warped-regression tutorials have moved to the Bayesian-NN master list — they are finite-dim parametric models rather than GP-native. See:
 
-| # | Tutorial | Source | Scope | Refs / Notes |
-|---|----------|--------|-------|--------------|
-| 6.19 | Bayesian linear regression updates | — | 🧱 🔁 | **GAP** — api: `blr_diag_update`, `blr_full_update` |
-| 6.20 | Log-Gaussian Cox Process (spatial point-process intensity) | — | 🔬 | **GAP** — dd:examples/gp/moments.md |
-| 6.21 | Warped GP (Box–Cox for skewed targets) | — | 🧱 | **GAP** — dd:examples/gp/moments.md |
-| 6.24 | Warped GP with normalizing flows — learnable bijection $g$ extends Box–Cox to NF-parameterized warpings | — | 🔬 | **GAP** |
+- BLR updates → [`../bayesian_nns/TUTORIAL_MASTER_LIST.md` §A.3](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
+- BLR in precision form → [§A.2](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
+- Log-Gaussian Cox Process → [§A.23](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
+- Warped regression (Box–Cox) → [§A.24](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
+- Warped regression with NF bijection → [§A.25](../bayesian_nns/TUTORIAL_MASTER_LIST.md)
 
 ### 6.G — Aggregate Bayesian methods
 
@@ -824,7 +819,7 @@ Spectral methods unify several threads from earlier parts: stationary kernels vi
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 9.1 | Pathwise GP posterior sampling (Wilson 2020) | P `gp_pathwise` | 🧱 | |
+| 9.1 | Pathwise GP posterior sampling (Wilson 2020) | P `gp_pathwise` | 🧱 🔁 | xref:BNN#C.8 (BNN analogue) |
 | 9.2 | Pathwise sampling with NumPyro | P `gp_pathwise_numpyro` | 🧱 | |
 | 9.3 | Decoupled sampling for SVGP | — | 🧱 | **GAP** |
 
@@ -851,7 +846,7 @@ Spectral methods unify several threads from earlier parts: stationary kernels vi
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 10.1 | Moment matching, unscented transform, linearization | — | 🧱 | **GAP** |
+| 10.1 | Moment matching, unscented transform, linearization | — | 🧱 🔁 | **GAP** — xref:BNN#D.13 |
 | 10.2 | Gauss–Hermite quadrature for ELL | — | 🧱 | **GAP** — used in R kronecker series |
 
 ### 10.B — Uncertain inputs

@@ -136,6 +136,57 @@ Output schema is identical across sensors so the UI code is one
 render path. `preview_url` is a signed Planetary Computer
 `rendered_preview` href — fetch it directly to get a small RGB PNG.
 
+## Credentials
+
+Anonymous read of the Planetary Computer STAC works without any
+credentials — the default `search()` call does not need them. The
+`satellite_viewer.credentials` module is here for downstream stages
+(NASA Earthdata via `earthaccess`, Google Earth Engine, MPC private
+collections) where authentication *is* required.
+
+Three layers, in increasing order of friction:
+
+1. **`.env` file at repo root.** Copy `.env.example` to `.env` (it's
+   gitignored) and fill in the variables for the services you actually
+   use. `satellite_viewer.credentials` loads it automatically via
+   `python-dotenv`.
+2. **Service-native files** as fallback — `~/.netrc` for Earthdata,
+   `~/.config/earthengine/credentials` for an interactive GEE login,
+   `~/.aws/credentials` for AWS. Each accessor falls back to these
+   when env vars aren't set, so contributors who already ran the
+   service's own auth command don't need to duplicate.
+3. **Pixi activation.** The `satellite-viewer` env sources
+   `.env` on activation (see `scripts/load_env.sh`), so shell-level
+   tools (`earthengine`, `aws`, `gcloud`) see the same vars without
+   needing Python in the loop.
+
+Use the module like:
+
+```python
+from satellite_viewer import credentials, CredentialsMissingError
+
+try:
+    creds = credentials.earthdata()
+except CredentialsMissingError as exc:
+    print(exc)   # error text contains sign-up + setup instructions
+    raise
+```
+
+Available accessors:
+
+| Function                              | Returns                  | When missing           |
+|---------------------------------------|--------------------------|------------------------|
+| `credentials.earthdata()`             | `EarthdataCreds`         | raises (with sign-up)  |
+| `credentials.gee_credentials_path()`  | `Path` to JSON or creds  | raises (with sign-up)  |
+| `credentials.planetary_computer_key()`| `str` or `None`          | returns `None`         |
+
+`CredentialsMissingError` always includes both the env-var name to
+set and the service's signup / docs URL, so the user knows what to
+do without leaving the traceback.
+
+For CI: set the same env vars as GitHub Actions secrets; the module
+reads them identically with or without `.env` present.
+
 ## Reproducing
 
 ```bash

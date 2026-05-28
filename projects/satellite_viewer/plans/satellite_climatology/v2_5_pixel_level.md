@@ -1,3 +1,8 @@
+---
+title: "v2.5 — Per-AOI pixel-level cloud climatology"
+short_title: "v2.5 AOI pixel-level"
+---
+
 # v2.5 — Per-AOI pixel-level cloud climatology
 
 > *Given an AOI (point with radius, polygon, or bbox up to ~50 km), use

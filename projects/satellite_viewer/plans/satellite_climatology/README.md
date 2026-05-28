@@ -1,22 +1,31 @@
+---
+title: "Satellite climatology — design docs"
+---
+
 # Satellite climatology — design docs
 
 A global product showing **temporal cadence and cloud-free observability**
 of satellite imagery per pixel of the Earth, sliced by sensor and time
-window. Built sequentially in four stages of increasing fidelity:
+window. Built sequentially in five stages of increasing fidelity:
 
-| Stage    | Scale            | What it answers                                              | Data source              | New repo introduced |
-|----------|------------------|--------------------------------------------------------------|--------------------------|---------------------|
-| **v1**   | global           | *Theoretical* overpass cadence per pixel per sensor          | TLEs / orbit propagation | (none — skyfield)   |
-| **v2**   | global           | *Observed* scene count + scene-level cloud cover per pixel   | STAC `eo:cloud_cover`    | `geocatalog`, `geopatcher`, `geotoolz` |
+| Stage    | Scale             | What it answers                                              | Data source              | New repo introduced |
+|----------|-------------------|--------------------------------------------------------------|--------------------------|---------------------|
+| **v0**   | one AOI on demand | *Which scenes touched my AOI?* (footprints + thumbnails)    | STAC item metadata       | `pystac-client` + `planetary-computer` |
+| **v1**   | global            | *Theoretical* overpass cadence per pixel per sensor          | TLEs / orbit propagation | (skyfield)          |
+| **v2**   | global            | *Observed* scene count + scene-level cloud cover per pixel   | STAC `eo:cloud_cover`    | `geocatalog`, `geopatcher`, `geotoolz` |
 | **v2.5** | one AOI on demand | *True per-pixel* clear-observation fraction inside an AOI    | STAC + windowed reads    | `georeader`         |
-| **v3**   | global           | v2.5 scaled to the whole globe — *true per-pixel*, batched  | STAC + windowed reads    | (same as v2.5; cluster) |
+| **v3**   | global            | v2.5 scaled to the whole globe — *true per-pixel*, batched  | STAC + windowed reads    | (same as v2.5; cluster) |
 
-Each stage writes into the **same global Zarr product** below (except
-v2.5, which writes a per-AOI time series rather than a global grid).
-The dashboard reads whichever bands exist.
+Each global stage writes into the **same Zarr product** below (except
+v0 and v2.5, which are per-AOI tools returning a DataFrame, not a
+global grid). The dashboard reads whichever bands exist.
 
 ## Why staged
 
+- **v0** is the satellite_viewer AOI preview tool — already shipped in
+  this PR. *"What scenes are available here?"* with footprints,
+  timestamps, scene-wide cloud cover, and preview thumbnails. The
+  upstream-of-download inspection step.
 - **v1** is a ~100-line orbit-mechanics script with **no catalog scan**.
   It gives the *theoretical ceiling* (how often *could* you image here?)
   and is the baseline the data-driven stages get compared against.
@@ -24,13 +33,14 @@ The dashboard reads whichever bands exist.
   cheaper than v3. Answers "how many actual scenes per pixel, and what
   was the *scene-wide* cloud cover?" Good enough for many users.
 - **v2.5** is the **single-AOI, on-demand** variant of the pixel-level
-  problem. Same flow as the `satellite_viewer` apps: pick an AOI (up to
-  some size cap, ~50 km), the system reads QA bands for the
-  intersecting scenes and returns the **truthful** clear-fraction time
-  series for that AOI. Validates QA decoders + `georeader` integration
-  at user-facing scale before committing to global compute.
-- **v3** is v2.5 scaled to the whole globe — same algorithm, batched
-  per tile, written into the global Zarr. Cluster-grade compute.
+  problem. Inherits v0's AOI flow: pick an AOI (up to a size cap,
+  ~50 km), the system reads QA bands for the intersecting scenes and
+  returns the **truthful** clear-fraction time series for that AOI.
+  Validates QA decoders + `georeader` integration at user-facing scale
+  before committing to global compute.
+- **v3** is v2.5 scaled to the whole globe — same per-scene operator
+  graph, batched per tile, written into the global Zarr. Cluster-grade
+  compute.
 
 ## Shared substrate
 
@@ -110,6 +120,7 @@ want long-term averages.
 
 | Stage  | geocatalog  | geopatcher                  | geotoolz                | georeader        |
 |--------|-------------|-----------------------------|-------------------------|------------------|
+| v0     | —           | —                           | —                       | —                |
 | v1     | —           | global grid iteration (opt) | —                       | —                |
 | v2     | catalog scan + bbox queries | grid iteration over cells | `Fanout` of per-cell reducers | — |
 | v2.5   | (reuses satellite_viewer.search) | — (single AOI) | per-scene `Operator` graph for QA mask | windowed SCL/QA reads |
@@ -117,22 +128,25 @@ want long-term averages.
 
 ## Milestones (suggested)
 
-1. **M0 — design**: this folder. Four docs reviewed before any code.
-2. **M1 — v1 prototype**: skyfield + numpy, single notebook, 0.5° grid,
+0. **M0 — v0 (shipped)**: the satellite_viewer AOI preview tool in this PR.
+   `satellite_viewer.search` + Panel / Streamlit / Jupyter subapps.
+1. **M1 — design**: this folder. Five docs reviewed before more code.
+2. **M2 — v1 prototype**: skyfield + numpy, single notebook, 0.5° grid,
    one sensor. Validates the Zarr schema and the UI hook.
-3. **M2 — v1 full**: full sensor list, 0.1° grid, monthly bins.
-4. **M3 — v2 scene-level**: catalog scan over 1 year, S2 only, 0.1°.
-5. **M4 — v2 full**: extend to all sensors and 3 years.
-6. **M5 — v2.5 AOI pixel-level**: per-AOI dashboard reusing
+3. **M3 — v1 full**: full sensor list, 0.1° grid, monthly bins.
+4. **M4 — v2 scene-level**: catalog scan over 1 year, S2 only, 0.1°.
+5. **M5 — v2 full**: extend to all sensors and 3 years.
+6. **M6 — v2.5 AOI pixel-level**: per-AOI dashboard reusing
    `satellite_viewer.search` for discovery, `georeader` for QA reads.
    Single sensor first (S2).
-7. **M6 — v3 global pixel-level**: same operators batched over the
+7. **M7 — v3 global pixel-level**: same operators batched over the
    global grid; sized for a cluster job.
-8. **M7 — UI**: notebook + Panel/Streamlit dashboard reading the Zarr,
-   with the v2.5 AOI panel as a separate tab.
+8. **M8 — UI**: notebook + Panel/Streamlit dashboard reading the Zarr,
+   with the v0 / v2.5 AOI panels as separate tabs.
 
 ## Files in this folder
 
+- [`v0_aoi_preview.md`](v0_aoi_preview.md) — AOI preview tool (shipped).
 - [`v1_analytical.md`](v1_analytical.md) — orbit-mechanics version.
 - [`v2_data_driven_scene_level.md`](v2_data_driven_scene_level.md) — catalog + scene-level cloud.
 - [`v2_5_pixel_level.md`](v2_5_pixel_level.md) — per-AOI pixel-level via georeader.

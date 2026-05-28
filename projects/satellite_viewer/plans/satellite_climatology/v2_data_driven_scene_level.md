@@ -1,3 +1,8 @@
+---
+title: "v2 — Data-driven, scene-level cloud climatology"
+short_title: "v2 scene-level"
+---
+
 # v2 — Data-driven, scene-level cloud climatology
 
 > *Of the scenes that were actually acquired and ingested into the

@@ -1,3 +1,8 @@
+---
+title: "v1 — Analytical revisit climatology"
+short_title: "v1 analytical"
+---
+
 # v1 — Analytical revisit climatology
 
 > *Where on Earth, and how often, could each sensor have imaged the

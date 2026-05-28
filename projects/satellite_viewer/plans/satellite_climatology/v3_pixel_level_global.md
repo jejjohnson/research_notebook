@@ -1,3 +1,8 @@
+---
+title: "v3 — Global pixel-level cloud climatology"
+short_title: "v3 global pixel-level"
+---
+
 # v3 — Global pixel-level cloud climatology
 
 > *v2.5's per-AOI clear-fraction algorithm, batched over the whole

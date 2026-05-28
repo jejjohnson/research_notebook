@@ -92,6 +92,17 @@ project:
                 - file: projects/geostack/notebooks/catalog/03_set_algebra.ipynb
                 - file: projects/geostack/notebooks/catalog/04_duckdb.ipynb
                 - file: projects/geostack/notebooks/catalog/05_patching_bridge.ipynb
+        - title: Satellite viewer & climatology
+          children:
+            - file: projects/satellite_viewer/README.md
+            - title: Climatology design docs
+              children:
+                - file: projects/satellite_viewer/plans/satellite_climatology/README.md
+                - file: projects/satellite_viewer/plans/satellite_climatology/v0_aoi_preview.md
+                - file: projects/satellite_viewer/plans/satellite_climatology/v1_analytical.md
+                - file: projects/satellite_viewer/plans/satellite_climatology/v2_data_driven_scene_level.md
+                - file: projects/satellite_viewer/plans/satellite_climatology/v2_5_pixel_level.md
+                - file: projects/satellite_viewer/plans/satellite_climatology/v3_pixel_level_global.md
         - title: Data assimilation
           children:
             - file: projects/assimilation/README.md

@@ -114,7 +114,12 @@ def test_gee_env_pointing_at_missing_file_raises(tmp_path: Path, monkeypatch):
     monkeypatch.setenv("GEE_SERVICE_ACCOUNT_JSON", str(tmp_path / "missing.json"))
     with pytest.raises(cred.CredentialsMissingError) as excinfo:
         cred.gee_credentials_path()
-    assert "missing.json" in str(excinfo.value)
+    msg = str(excinfo.value)
+    assert "missing.json" in msg
+    # README promises every CredentialsMissingError carries the same
+    # setup guidance — including this branch.
+    assert "earthengine authenticate" in msg
+    assert "service_account" in msg
 
 
 def test_gee_from_interactive_credentials_file(tmp_path: Path):

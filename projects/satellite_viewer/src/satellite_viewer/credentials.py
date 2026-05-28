@@ -98,6 +98,21 @@ def _earthdata_from_netrc(path: Path | None = None) -> EarthdataCreds | None:
 
 _GEE_INTERACTIVE_PATH = Path.home() / ".config" / "earthengine" / "credentials"
 
+# Shared setup-guidance suffix appended to every GEE-related
+# CredentialsMissingError so users always see the same next steps,
+# whether nothing is configured at all or an env var points at a
+# missing file.
+_GEE_SETUP_GUIDANCE = (
+    "Either:\n"
+    "  1. Set GEE_SERVICE_ACCOUNT_JSON (or GOOGLE_APPLICATION_CREDENTIALS)\n"
+    "     in .env to a service-account JSON path (recommended for\n"
+    "     headless / CI).\n"
+    "  2. Run `earthengine authenticate` once locally for interactive\n"
+    "     use — the module reads ~/.config/earthengine/credentials.\n"
+    "Service account guide:\n"
+    "  https://developers.google.com/earth-engine/guides/service_account"
+)
+
 
 def gee_credentials_path() -> Path:
     """Return the path to GEE credentials.
@@ -115,7 +130,8 @@ def gee_credentials_path() -> Path:
         path = Path(raw)
         if not path.is_file():
             raise CredentialsMissingError(
-                f"{var}={raw} but no file exists at that path."
+                f"{var}={raw} but no file exists at that path.\n\n"
+                + _GEE_SETUP_GUIDANCE
             )
         return path
 
@@ -123,13 +139,7 @@ def gee_credentials_path() -> Path:
         return _GEE_INTERACTIVE_PATH
 
     raise CredentialsMissingError(
-        "Google Earth Engine credentials not found. Either:\n"
-        "  1. Set GEE_SERVICE_ACCOUNT_JSON in .env to a service-account\n"
-        "     JSON path (recommended for headless / CI).\n"
-        "  2. Run `earthengine authenticate` once locally for interactive\n"
-        "     use — the module reads ~/.config/earthengine/credentials.\n"
-        "Service account guide:\n"
-        "  https://developers.google.com/earth-engine/guides/service_account"
+        "Google Earth Engine credentials not found. " + _GEE_SETUP_GUIDANCE
     )
 
 

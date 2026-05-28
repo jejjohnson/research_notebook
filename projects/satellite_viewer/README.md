@@ -151,14 +151,14 @@ Three layers, in increasing order of friction:
    use. `satellite_viewer.credentials` loads it automatically via
    `python-dotenv`.
 2. **Service-native files** as fallback — `~/.netrc` for Earthdata,
-   `~/.config/earthengine/credentials` for an interactive GEE login,
-   `~/.aws/credentials` for AWS. Each accessor falls back to these
-   when env vars aren't set, so contributors who already ran the
-   service's own auth command don't need to duplicate.
+   `~/.config/earthengine/credentials` for an interactive GEE login.
+   Each accessor falls back to these when env vars aren't set, so
+   contributors who already ran the service's own auth command don't
+   need to duplicate.
 3. **Pixi activation.** The `satellite-viewer` env sources
    `.env` on activation (see `scripts/load_env.sh`), so shell-level
-   tools (`earthengine`, `aws`, `gcloud`) see the same vars without
-   needing Python in the loop.
+   tools (`earthengine`, `gcloud`) see the same vars without needing
+   Python in the loop.
 
 Use the module like:
 

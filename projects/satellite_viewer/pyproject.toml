@@ -1,0 +1,66 @@
+[project]
+name = "satellite_viewer"
+version = "0.1.0"
+description = "Preview intersecting satellite imagery (Sentinel, Landsat, MODIS, EMIT) for an AOI before downloading. Shared core + three subapps (Panel + Streamlit + Jupyter)."
+requires-python = ">=3.12"
+
+dependencies = [
+    # STAC discovery + signed asset hrefs.
+    "pystac-client>=0.8",
+    "planetary-computer>=1.0",
+    # Vector + spatial.
+    "geopandas>=0.14",
+    "shapely>=2",
+    "pyproj>=3.6",
+    # Plotting / dataframes.
+    "pandas>=2.2",
+    "matplotlib>=3.10",
+    # Network.
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+# Panel subapp.
+panel = [
+    "panel>=1.5",
+    "leafmap>=0.40",
+    "ipyleaflet>=0.19",
+    "ipywidgets>=8",
+    "hvplot>=0.10",
+    "bokeh>=3.5",
+]
+# Notebook subapp.
+notebook = [
+    "leafmap>=0.40",
+    "ipyleaflet>=0.19",
+    "ipywidgets>=8",
+    "ipykernel>=6.29",
+]
+# Streamlit subapp.
+streamlit = [
+    "streamlit>=1.40",
+    "streamlit-folium>=0.22",
+    "folium>=0.17",
+    "altair>=5",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/satellite_viewer"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+markers = [
+    "slow: marks tests that hit live external APIs (STAC, S3); skip with -m 'not slow'",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]

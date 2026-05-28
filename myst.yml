@@ -328,6 +328,14 @@ project:
                     - file: projects/gaussian_processes/notebooks/13_applied/spatial_extremes/02_spain_multiplicative.ipynb
                     - file: projects/gaussian_processes/notebooks/13_applied/spatial_extremes/03_spain_nonstationary.ipynb
                     - file: projects/gaussian_processes/notebooks/13_applied/spatial_extremes/04_spain_copula.ipynb
+        - title: Bayesian models & neural networks
+          children:
+            - file: projects/bayesian_nns/README.md
+            - file: projects/bayesian_nns/TUTORIAL_MASTER_LIST.md
+        - title: Neural fields
+          children:
+            - file: projects/neural_fields/README.md
+            - file: projects/neural_fields/TUTORIAL_MASTER_LIST.md
     - title: API Reference
       children:
         - file: docs/api/reference.md

@@ -1,7 +1,7 @@
 [project]
 name = "satellite_viewer"
 version = "0.1.0"
-description = "Preview intersecting satellite imagery (Sentinel, Landsat, MODIS, EMIT) for an AOI before downloading. Shared core + two subapps (Panel + Jupyter)."
+description = "Preview intersecting satellite imagery (Sentinel, Landsat, MODIS, EMIT) for an AOI before downloading. Shared core + three subapps (Panel + Streamlit + Jupyter)."
 requires-python = ">=3.12"
 
 dependencies = [
@@ -25,6 +25,7 @@ panel = [
     "panel>=1.5",
     "leafmap>=0.40",
     "ipyleaflet>=0.19",
+    "ipywidgets>=8",
     "hvplot>=0.10",
     "bokeh>=3.5",
 ]

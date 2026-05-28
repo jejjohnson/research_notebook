@@ -22,7 +22,6 @@ Nothing is downloaded — every preview is a STAC `rendered_preview` URL.
 from __future__ import annotations
 
 import datetime as dt
-from io import StringIO
 
 import geopandas as gpd
 import pandas as pd
@@ -146,13 +145,13 @@ def _redraw_map(aoi, hits: gpd.GeoDataFrame) -> None:
     for layer in list(m.layers)[1:]:
         m.remove_layer(layer)
     m.add_geojson(
-        _geojson_str(gpd.GeoDataFrame(geometry=[aoi], crs="EPSG:4326")),
+        gpd.GeoDataFrame(geometry=[aoi], crs="EPSG:4326").__geo_interface__,
         layer_name="AOI",
         style={"color": "#1565c0", "weight": 3, "fillOpacity": 0.05},
     )
     if not hits.empty:
         m.add_geojson(
-            _geojson_str(hits[["geometry", "id", "sensor"]]),
+            hits[["geometry", "id", "sensor"]].__geo_interface__,
             layer_name="scenes",
             style={
                 "color": "#43a047",
@@ -160,12 +159,6 @@ def _redraw_map(aoi, hits: gpd.GeoDataFrame) -> None:
                 "fillOpacity": 0.08,
             },
         )
-
-
-def _geojson_str(gdf: gpd.GeoDataFrame) -> str:
-    buf = StringIO()
-    gdf.to_file(buf, driver="GeoJSON")
-    return buf.getvalue()
 
 
 def _do_search(_event=None) -> None:

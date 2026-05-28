@@ -290,9 +290,9 @@ test-geostack = "pytest projects/geostack/tests/ -v -m slow"
 
 # ---------------------------------------------------------------------------
 # Showcase env: satellite-viewer
-# Two presentation layers (Panel + Jupyter notebook) over one shared
-# STAC discovery core. Used to preview which scenes intersect an AOI
-# before deciding what to download.
+# Three presentation layers (Panel + Streamlit + Jupyter notebook) over
+# one shared STAC discovery core. Used to preview which scenes intersect
+# an AOI before deciding what to download.
 # ---------------------------------------------------------------------------
 [feature.satellite-viewer.dependencies]
 python = "3.12.*"
@@ -304,8 +304,12 @@ jupytext = ">=1.16"
 satellite_viewer = { path = "projects/satellite_viewer", editable = true, extras = ["panel", "notebook", "streamlit"] }
 
 [feature.satellite-viewer.tasks]
-# Launch the Panel subapp (forward port 5006 in your editor).
-panel-app = "panel serve projects/satellite_viewer/apps/panel_app.py --port 5006 --allow-websocket-origin=* --show"
+# Launch the Panel subapp (forward port 5006 in your editor). The
+# websocket-origin allowlist is restricted to localhost — when port-
+# forwarding from a remote container the browser still hits
+# localhost:5006, so this keeps cross-site WebSocket hijacking off
+# without breaking the typical local workflow.
+panel-app = "panel serve projects/satellite_viewer/apps/panel_app.py --port 5006 --allow-websocket-origin=localhost:5006 --show"
 # Launch the Streamlit subapp (forward port 8501 in your editor).
 streamlit-app = "streamlit run projects/satellite_viewer/apps/streamlit_app.py --server.port 8501 --server.headless true"
 # Launch JupyterLab so you can open notebooks/viewer.py via jupytext.

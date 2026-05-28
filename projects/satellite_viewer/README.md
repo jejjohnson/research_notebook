@@ -79,12 +79,20 @@ A lighter-weight in-notebook variant using ipywidgets + leafmap + matplotlib.
 
 ```bash
 pixi run -e satellite-viewer lab
-# then open projects/satellite_viewer/notebooks/viewer.ipynb
+# then open projects/satellite_viewer/notebooks/viewer.py — JupyterLab
+# with the jupytext extension renders the .py as a notebook.
 ```
 
 Source: [`notebooks/viewer.py`](notebooks/viewer.py) — paired as a
-jupytext py:percent script. Open it in JupyterLab with the jupytext
-extension and it appears as a normal notebook.
+jupytext py:percent script. The repo does not ship a checked-in
+`.ipynb`; opening the `.py` with the jupytext extension installed (it
+is, in this pixi env) gives the notebook experience directly. If you
+prefer a one-off `.ipynb` artifact:
+
+```bash
+pixi run -e satellite-viewer jupytext --to ipynb \
+    projects/satellite_viewer/notebooks/viewer.py
+```
 
 ## Layout
 

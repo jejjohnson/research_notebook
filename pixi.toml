@@ -303,6 +303,14 @@ jupytext = ">=1.16"
 [feature.satellite-viewer.pypi-dependencies]
 satellite_viewer = { path = "projects/satellite_viewer", editable = true, extras = ["panel", "notebook", "streamlit"] }
 
+# Source repo-root .env on env activation so shell-level tools
+# (earthengine, gcloud, aws, ...) and pixi tasks pick up the
+# geospatial-service credentials documented in .env.example. The
+# script is a no-op if .env is missing — the Python credentials module
+# still works via env vars set elsewhere or service-native files.
+[feature.satellite-viewer.activation]
+scripts = ["projects/satellite_viewer/scripts/load_env.sh"]
+
 [feature.satellite-viewer.tasks]
 # Launch the Panel subapp (forward port 5006 in your editor). The
 # websocket-origin allowlist is restricted to localhost — when port-

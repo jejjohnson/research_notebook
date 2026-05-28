@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.1.10](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.9...research_notebook-v0.1.10) (2026-05-28)
+
+
+### Features
+
+* **assimilation:** vardax benchmark — Lorenz-63, Lorenz-96 (1L + 2L) ([#73](https://github.com/jejjohnson/research_notebook/issues/73)) ([f88ff50](https://github.com/jejjohnson/research_notebook/commit/f88ff50d1fee367511432059556933238a6df06c))
+* **gaussianization:** fair learning with frozen Gaussianization flows ([#71](https://github.com/jejjohnson/research_notebook/issues/71)) ([7f545f4](https://github.com/jejjohnson/research_notebook/commit/7f545f42d373ebeaabcf5225d932f20f569f94d5))
+* **satellite_viewer:** add AOI preview tool with Panel / Streamlit / Jupyter subapps ([#79](https://github.com/jejjohnson/research_notebook/issues/79)) ([0998f36](https://github.com/jejjohnson/research_notebook/commit/0998f3679c6a600a2b415789ba4bd435c90e9eec))
+
+
+### Documentation
+
+* **assimilation:** add filterax tutorial master list ([#75](https://github.com/jejjohnson/research_notebook/issues/75)) ([af37c1d](https://github.com/jejjohnson/research_notebook/commit/af37c1d7f1c80aaa9595cc5efbb2ab3ec79d67e2))
+* **assimilation:** add vardax tutorial master list (variational sibling) ([#78](https://github.com/jejjohnson/research_notebook/issues/78)) ([0e090dd](https://github.com/jejjohnson/research_notebook/commit/0e090dd6d2b7cd3272730c8ba6a9faa20d8ef439))
+* **assimilation:** register filterax tutorial master list in myst.yml ([#76](https://github.com/jejjohnson/research_notebook/issues/76)) ([3eac8de](https://github.com/jejjohnson/research_notebook/commit/3eac8de702f1d8ff2b95f9fd1ed0a7e9509908a8))
+* **assimilation:** surface filterax master list in MyST TOC ([#77](https://github.com/jejjohnson/research_notebook/issues/77)) ([9ca484b](https://github.com/jejjohnson/research_notebook/commit/9ca484be35596651a55448c402e551f08e299a07))
+* **fair_gauss:** follow-up experiment design (approaches A–G) ([#72](https://github.com/jejjohnson/research_notebook/issues/72)) ([18bf002](https://github.com/jejjohnson/research_notebook/commit/18bf002c131f6519b0462d90d786176ea441f01a))
+* **gaussianization:** tutorial master list ([#74](https://github.com/jejjohnson/research_notebook/issues/74)) ([7b3bc2c](https://github.com/jejjohnson/research_notebook/commit/7b3bc2c738b88693bda8a32a606e45231f50da38))
+* **geostack:** new projects/geostack project — applied walkthrough + patching/catalog deep dives ([#70](https://github.com/jejjohnson/research_notebook/issues/70)) ([436816d](https://github.com/jejjohnson/research_notebook/commit/436816d8d2a93aaafc2737a0a676c61b60b4ecf2))
+* **geotoolz:** remove geotoolz tree (migrated to research_journal_v2) ([#67](https://github.com/jejjohnson/research_notebook/issues/67)) ([804c8d5](https://github.com/jejjohnson/research_notebook/commit/804c8d5e6eab81f56e7d8948f39aa9ff735f7191))
+
 ## [0.1.9](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.8...research_notebook-v0.1.9) (2026-05-13)
 
 

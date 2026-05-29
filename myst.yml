@@ -6,6 +6,24 @@ project:
   bibliography:
     - references.bib
     - methane.bib
+    - projects/gaussianization/references.bib
+  abbreviations:
+    CKA: Centered Kernel Alignment
+    HSIC: Hilbert--Schmidt Independence Criterion
+    MI: Mutual Information
+    TC: Total Correlation
+    DP: Demographic Parity
+    EO: Equalized Odds
+    IPW: Inverse Propensity Weighting
+    RBIG: Rotation-Based Iterative Gaussianization
+    MINE: Mutual Information Neural Estimation
+    NLL: Negative Log-Likelihood
+    MLE: Maximum Likelihood Estimation
+    VFAE: Variational Fair Autoencoder
+    G-XCOV: Gaussianized Cross-Covariance (linear-CKA in Gaussianised space)
+    G-MI: Gaussianized Mutual Information (closed-form Gaussian MI after Gaussianisation)
+    G-TC: Gaussianized Total Correlation (full MI via a frozen joint flow)
+    G-HSIC: Gaussianized HSIC
   numbering:
     enumerator: "(%s)"
     headings: false
@@ -206,13 +224,16 @@ project:
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb
             - file: projects/gaussianization/notebooks/03_iterative_gaussianization_init.ipynb
             - file: projects/gaussianization/notebooks/04_coupling_equivalence.ipynb
-            - title: Fair learning with Gaussianization flows
+            - file: projects/gaussianization/docs/fair_overview.md
               children:
                 - file: projects/gaussianization/docs/fair_gaussianization_experiment.md
+                - title: "05 · Pretrain & freeze"
+                  file: projects/gaussianization/notebooks/fair_gauss/05_fair_gauss_pretrain.ipynb
+                - title: "06 · Synthetic Pareto"
+                  file: projects/gaussianization/notebooks/fair_gauss/06_fair_gauss_synthetic.ipynb
+                - title: "07 · Adult Pareto"
+                  file: projects/gaussianization/notebooks/fair_gauss/07_fair_gauss_adult.ipynb
                 - file: projects/gaussianization/docs/fair_gaussianization_followups.md
-                - file: projects/gaussianization/notebooks/fair_gauss/05_fair_gauss_pretrain.ipynb
-                - file: projects/gaussianization/notebooks/fair_gauss/06_fair_gauss_synthetic.ipynb
-                - file: projects/gaussianization/notebooks/fair_gauss/07_fair_gauss_adult.ipynb
         - title: Interpolation (SSH reconstruction)
           children:
             - file: projects/interpolation/README.md

@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.0
+#       jupytext_version: 1.19.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -14,6 +14,18 @@
 # ---
 
 # %% [markdown]
+# ---
+# title: "Pretrain & freeze a Gaussianization flow"
+# short_title: "05 · Pretrain & freeze"
+# subtitle: "Stage 1 of the fair pipeline — train the probe, prove the freeze"
+# description: >
+#   Pretrain a (Householder, MixtureCDFGaussianization) flow on two-moons,
+#   freeze it, and run four diagnostics: NLL curve, marginal histograms /
+#   QQ-plots, skewness + excess-kurtosis table, frozen-weight assertion,
+#   and invertibility round-trip.
+# ---
+#
+# (sec-nb-05)=
 # # 05 — Pretrain & freeze a Gaussianization flow
 #
 # The whole fair-Gaussianization experiment hinges on one move: train a
@@ -85,6 +97,15 @@ print(
     f"excess kurtosis: {stats.kurtosis(X, axis=0).round(3)}"
 )
 
+# %% [markdown]
+# (fig-05-data)=
+# **Figure: Raw two-moons data after $z$-standardisation.** Left — the
+# 4 000-point scatter; both marginals are mean-zero / unit-variance.
+# Right — per-marginal histograms make the bimodality unmissable.
+# Standardising fixes the first two moments and leaves the shape
+# untouched, which is precisely what the flow has to absorb.
+
+# %%
 fig, axes = plt.subplots(1, 2, figsize=(9, 3.6))
 axes[0].scatter(X[:, 0], X[:, 1], color="tab:blue", **SCATTER_KW)
 axes[0].set_title("Raw data $X$ (standardised)")
@@ -137,6 +158,14 @@ print(f"is_fully_frozen(flow):   {is_fully_frozen(flow)}")
 print(f"final train NLL:         {history.history['loss'][-1]:.3f}")
 print(f"final val   NLL:         {history.history['val_loss'][-1]:.3f}")
 
+# %% [markdown]
+# (fig-05-nll)=
+# **Figure: Flow pretraining NLL.** Train (solid blue) and validation
+# (dashed orange) negative-log-likelihood per epoch. Both curves track
+# each other closely and plateau well inside the patience budget — the
+# flow has the capacity to fit the moons distribution without
+# overfitting any particular minibatch.
+
 # %%
 fig, ax = plt.subplots(figsize=(6.2, 3.5))
 ax.plot(history.history["loss"], label="train NLL", color="tab:blue", lw=2)
@@ -168,6 +197,14 @@ plt.show()
 # everything we are about to do with the Gaussianised version downstream
 # is, in principle, equivalent to working in data space with the right
 # kernel. The flow's job is to make that "right kernel" trivially easy.
+
+# %% [markdown]
+# (fig-05-before-after)=
+# **Figure: The flow doing its job.** Left — the raw two-moons
+# distribution. Right — its image $Z = T(X)$ under the frozen flow,
+# with $\mathcal{N}(0, I)$ reference rings at $1\sigma$ and $2\sigma$.
+# The moons have been unbent into a roughly isotropic Gaussian blob;
+# residual non-Gaussianity shows up as faint clumping near the origin.
 
 # %%
 Z = np.asarray(flow(X))
@@ -210,6 +247,14 @@ plt.show()
 # After Gaussianisation, each marginal $T(x)_i$ should look like a
 # draw from $\mathcal{N}(0, 1)$. Overlaying the target PDF makes any
 # remaining discrepancy obvious.
+
+# %% [markdown]
+# (fig-05-marginals)=
+# **Figure: Per-marginal Gaussianity check.** Top row — raw
+# marginals $x_1, x_2$ (bimodal). Bottom row — Gaussianised marginals
+# $T(x)_1, T(x)_2$ overlaid on the $\mathcal{N}(0, 1)$ PDF (dashed).
+# The flow has redistributed mass smoothly across both marginals
+# without leaving a "ghost" of the bimodal structure.
 
 # %%
 fig, axes = plt.subplots(2, 2, figsize=(9.5, 6.4))
@@ -255,6 +300,14 @@ plt.show()
 # Two more checks, this time numerical. The QQ-plot tells you about
 # the tails; the moment table tells you about overall shape. Both
 # should match a standard Normal.
+
+# %% [markdown]
+# (fig-05-qq)=
+# **Figure: QQ-plots of Gaussianised marginals.** Empirical quantiles of
+# $T(x)_1$ (left) and $T(x)_2$ (right) against the $\mathcal{N}(0, 1)$
+# theoretical quantiles. Near-perfect linearity through the bulk; a
+# small tail deviation is normal for a fixed-depth flow on a sharply
+# bimodal source.
 
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(9, 3.6))

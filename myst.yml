@@ -103,6 +103,17 @@ project:
                 - file: projects/satellite_viewer/plans/satellite_climatology/v2_data_driven_scene_level.md
                 - file: projects/satellite_viewer/plans/satellite_climatology/v2_5_pixel_level.md
                 - file: projects/satellite_viewer/plans/satellite_climatology/v3_pixel_level_global.md
+        - title: Spectral analysis apps
+          children:
+            - title: Pixel spectra
+              children:
+                - file: projects/pixel_spectra/plans/design.md
+            - title: Spectral indices
+              children:
+                - file: projects/spectral_indices/plans/design.md
+            - title: Band matchup
+              children:
+                - file: projects/band_matchup/plans/design.md
         - title: Data assimilation
           children:
             - file: projects/assimilation/README.md

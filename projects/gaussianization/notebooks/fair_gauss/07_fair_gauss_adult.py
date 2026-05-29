@@ -14,6 +14,17 @@
 # ---
 
 # %% [markdown]
+# ---
+# title: "UCI Adult Census — real-data fair classification"
+# short_title: "07 · Adult Pareto"
+# subtitle: "G-XCOV vs CKA on a 49k-row binary classification task"
+# description: >
+#   Same μ-sweep recipe as notebook 06, run on UCI Adult Census income
+#   with gender as the sensitive attribute. Pareto curves trace AUC
+#   against demographic-parity and equalized-odds differences.
+# ---
+#
+# (sec-nb-07)=
 # # 07 — UCI Adult Census: real-data fair classification
 #
 # Every fairness-constrained learning method eventually has to prove
@@ -144,6 +155,15 @@ print(f"train / test:  {X_train.shape[0]:,} / {X_test.shape[0]:,}")
 p_high_male = float(y_train[q_train == 1].mean())
 p_high_female = float(y_train[q_train == 0].mean())
 
+# %% [markdown]
+# (fig-07-disparity)=
+# **Figure: Group-conditional rate of high income in raw Adult data.**
+# $P(\mathrm{income} > 50\,\mathrm{K} \mid \mathrm{gender})$ for the
+# two gender groups in the training split, with the absolute rates
+# annotated. The ratio sits near $3{:}1$ — the disparity the fairness
+# penalties have to push back against without harming overall accuracy.
+
+# %%
 fig, ax = plt.subplots(figsize=(5, 3.6))
 bars = ax.bar(
     ["Male", "Female"],
@@ -439,6 +459,14 @@ for fam, rows in [
 # groups). Top-left of each plot is the ideal corner: high AUC, low
 # disparity.
 
+# %% [markdown]
+# (fig-07-pareto)=
+# **Figure: Adult Census Pareto curves for four fairness losses.** Left
+# — ROC-AUC vs. {abbr}`DP`-difference; right — ROC-AUC vs.
+# {abbr}`EO`-difference. Each marker is mean ± s.d. over three seeds at
+# one $\mu$. Top-left of each panel is the ideal corner. The headline
+# real-data figure of the project — referenced from [](#sec-fair-design).
+
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.6))
 
@@ -564,6 +592,15 @@ plt.show()
 # mean predicted $P(\text{income} > 50\mathrm{K})$ for each gender,
 # as a function of $\mu$.
 
+# %% [markdown]
+# (fig-07-group-means)=
+# **Figure: Group-mean predicted high-income rate vs. $\mu$.** For each
+# of the four fairness losses, the mean predicted
+# $P(\mathrm{income} > 50\,\mathrm{K})$ for the male (circle) and
+# female (square) subgroup of the test set, against $\mu$ on a symlog
+# axis. The dotted horizontal line is the population positive rate,
+# the natural parity target.
+
 # %%
 fig, ax = plt.subplots(figsize=(7, 4.2))
 mu_arr = np.array(mus)
@@ -658,6 +695,17 @@ yh_muH = next(
     if r["family"] == "g_xcov" and r["mu"] == 200.0 and r["seed"] == 0
 )
 
+# %% [markdown]
+# (fig-07-pred-dist)=
+# **Figure: Predicted-probability distributions per gender, baseline
+# vs. strong-fairness {abbr}`G-XCOV`.** Kernel-density estimates of
+# the test-set predicted $P(\mathrm{income} > 50\,\mathrm{K})$ split
+# by gender. Left — $\mu = 0$, the unfair baseline. Right — $\mu = 200$,
+# {abbr}`G-XCOV` at its strongest fairness setting. The two group
+# densities overlay almost perfectly on the right; the fairness gain
+# is paid for by a narrower, less-confident predictive distribution.
+
+# %%
 fig, axes = plt.subplots(1, 2, figsize=(10.5, 3.8), sharey=True)
 for ax, yh, title in [
     (axes[0], yh_mu0, "μ = 0 (unfair baseline)"),

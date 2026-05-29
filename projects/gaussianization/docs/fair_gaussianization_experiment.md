@@ -1,66 +1,82 @@
 ---
-title: "Fair learning with frozen Gaussianization flows"
-short_title: "Fair Gaussianization — engineering doc"
+title: "Fair learning with frozen Gaussianization flows — design doc"
+short_title: "Design doc"
+subtitle: "Three fairness penalties built from a frozen Gaussianization flow"
 description: >
   Replace the CKA fairness penalty in keras-fairkl with a fairness loss
   built from a frozen Gaussianization flow. Three penalties are proposed:
   G-XCOV (linear CKA in Gaussianised space), G-MI (closed-form Gaussian
   mutual-information after Gaussianisation), and G-TC (total correlation
   under a frozen joint flow).
+authors:
+  - name: J. E. Johnson
+    github: jejjohnson
+date: 2026-05-27
 status: design
 ---
 
+(sec-fair-design)=
 # Fair learning with frozen Gaussianization flows
 
-**Project:** `projects/gaussianization`
-**Author:** J. E. Johnson
-**Last updated:** 2026-05-27
+:::{seealso} Companion pages
+[](./fair_overview.md) · [](./fair_gaussianization_followups.md)
+:::
 
+(sec-tldr)=
 ## 1. TL;DR
 
-Replace the **CKA fairness penalty** in [`keras-fairkl`](https://github.com/jejjohnson/keras-fairkl)'s
-`FairModelWrapper` with a family of fairness losses built from a
-**frozen Gaussianization flow**.  The flow is trained once on an
+Replace the **{abbr}`CKA` fairness penalty** in [`keras-fairkl`](https://github.com/jejjohnson/keras-fairkl)'s
+`FairModelWrapper` — a Keras port of the fair-kernel-learning idea of
+{cite:t}`perezSuay2017fairkernel` — with a family of fairness losses
+built from a **frozen Gaussianization flow**.  The flow is trained once on an
 auxiliary dataset, its weights are frozen, and it is then used as a
 differentiable *Gaussian-space probe* inside the downstream task's
 optimisation loop.  Gaussianisation lets us replace bandwidth-tuned
-RBF kernels (CKA, HSIC) with closed-form, parametric, scale-invariant
-penalties — the flow absorbs the kernel choice.
+RBF kernels ({abbr}`CKA`, {abbr}`HSIC`) with closed-form, parametric,
+scale-invariant penalties — the flow absorbs the kernel choice.
 
 Three penalties, in order of strictness:
 
-| Loss   | Captures                                                        | Closed form? | Joint flow needed? | Class |
-|--------|-----------------------------------------------------------------|-------------|--------------------|---|
-| G-XCOV | 2nd-moment dependence in Gaussianised space (= linear CKA there) | yes         | no — two marginal flows | `GaussianizedXCovLoss` |
-| G-MI   | Mutual information assuming joint-Gaussian after Gaussianisation | yes         | no — two marginal flows | `GaussianizedMutualInfoLoss` |
-| G-TC   | Full mutual information / total correlation, no Gaussian-joint assumption | no — via flow NLL | **yes** — one joint flow over $(z, q)$ | `GaussianizedTotalCorrelationLoss` |
+:::{table} Output-side fairness losses; see [](#sec-formulation) for the math.
+:name: tbl-tldr-losses
+:align: left
+
+| Loss   | Captures                                                          | Closed form?     | Joint flow needed?      | Class                              |
+| ------ | ----------------------------------------------------------------- | ---------------- | ----------------------- | ---------------------------------- |
+| G-XCOV | 2nd-moment dependence in Gaussianised space (linear CKA there)    | yes              | no — two marginal flows | `GaussianizedXCovLoss`             |
+| G-MI   | MI assuming joint-Gaussian after Gaussianisation                  | yes              | no — two marginal flows | `GaussianizedMutualInfoLoss`       |
+| G-TC   | Full MI / total correlation, no joint-Gaussian assumption         | no — via flow NLL | **yes** — one joint flow over $(z, q)$ | `GaussianizedTotalCorrelationLoss` |
+:::
 
 All three are differentiable w.r.t. the downstream model parameters and
 plug into `FairModelWrapper` via its `fairness_loss=...` argument.
 
 ---
 
+(sec-mental-model)=
 ## 2. The mental model — three pictures
 
+(sec-stage1)=
 ### 2.1 Stage 1 (one-time): pretrain the probes
 
-```
-       D_pre  (auxiliary data, fixed sample)
-         │
-         ├─► T_z  ──► fit by MLE on N(0,I) base ──► freeze ─────────┐
-         │   (marginal flow on z)                                   │
-         │                                                          │
-         ├─► T_q  ──► fit by MLE on N(0,I) base ──► freeze ─────────┤  used by
-         │   (marginal flow on q)                                   │  G-XCOV, G-MI
-         │                                                          ▼
-         │                                                  ┌──────────────┐
-         │                                                  │  frozen      │
-         └─► T_zq ─► fit on (z, π(q))  ──► freeze ──────────┤  probes      │
-             (joint flow on shuffled       independent pairs│              │
-              product distribution)        only             │  used by G-TC│
-                                                            └──────────────┘
+```{mermaid}
+flowchart LR
+    D[("D<sub>pre</sub> · auxiliary data")]:::data
+
+    D --> Tz["T<sub>z</sub><br/><i>marginal flow on z</i>"]:::frozen
+    D --> Tq["T<sub>q</sub><br/><i>marginal flow on q</i>"]:::frozen
+    D --> Tzq["T<sub>zq</sub><br/><i>joint flow on shuffled (z, π(q))<br/>— independent pairs only</i>"]:::frozen
+
+    Tz -- "MLE fit → freeze" --> Pm[["frozen probes<br/><b>used by G-XCOV, G-MI</b>"]]:::output
+    Tq -- "MLE fit → freeze" --> Pm
+    Tzq -- "MLE fit → freeze" --> Pj[["frozen probe<br/><b>used by G-TC</b>"]]:::output
+
+    classDef data fill:#f1f5f9,stroke:#475569,stroke-width:1.5px,color:#0f172a;
+    classDef frozen fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,stroke-dasharray:5 3,color:#1e1b4b;
+    classDef output fill:#dcfce7,stroke:#15803d,stroke-width:1.5px,color:#052e16;
 ```
 
+(sec-stage2)=
 ### 2.2 Stage 2 (every step): the fair training loop
 
 The trick — and the load-bearing claim of this whole experiment — is
@@ -68,64 +84,74 @@ that the **flow's weights are frozen** but the **flow's input is the
 predictor's output**, so gradients still propagate from the loss back
 through $T_z$ to $\theta$.
 
-```
-       X ───► f_θ ───────────► z ──┐                                ┌──► ∂L/∂θ
-        ▲                          │                                │     ▲
-        │                          ├──► task_loss(z, y) ───┐        │     │ updates θ
-        │                          │                       │        │     │
-        │                          │   ┌── T_z(z) ─────┐   │        │     │
-        │                          ├──►│               ├──►│        │     │
-       (data)                      │   │  L_fair(·, ·) │   ├──► L ──┤     │
-                                   │   │               │   │ = task │     │
-       q ──────────────────────────┼──►│   T_q(q)  ────┘   │ + μ·L_fair    │
-                                   │   └───────────────┘   │        │     │
-                                   │   frozen, but grads   │        │     │
-                                   │   flow through  z     │        │     │
-                                   └───────────────────────┘        │     │
-                                                                    ▼     │
-                                                          backprop ──────►┘
-                                                          (no updates to T_z, T_q)
+```{mermaid}
+flowchart LR
+    X[("X")]:::data
+    q[("q")]:::data
+    y[("y")]:::data
+
+    X --> Ftheta["f<sub>θ</sub><br/><i>predictor (trainable)</i>"]:::trainable
+    Ftheta --> z(["z = f<sub>θ</sub>(X)"]):::output
+
+    z --> Ltask{{"L<sub>task</sub><br/>mse(z, y)"}}:::loss
+    y --> Ltask
+
+    z --> Tz["T<sub>z</sub>(z)<br/><i>frozen</i>"]:::frozen
+    q --> Tq["T<sub>q</sub>(q)<br/><i>frozen</i>"]:::frozen
+    Tz --> Lfair{{"μ · L<sub>fair</sub>"}}:::loss
+    Tq --> Lfair
+
+    Ltask --> L((("L = L<sub>task</sub> + μ·L<sub>fair</sub>"))):::loss
+    Lfair --> L
+
+    L -. "∂L/∂θ — gradient flows through frozen T<sub>z</sub> back to θ" .-> Ftheta
+
+    classDef data fill:#f1f5f9,stroke:#475569,stroke-width:1.5px,color:#0f172a;
+    classDef trainable fill:#fef3c7,stroke:#b45309,stroke-width:2px,color:#451a03;
+    classDef frozen fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,stroke-dasharray:5 3,color:#1e1b4b;
+    classDef loss fill:#fce7f3,stroke:#be185d,stroke-width:2px,color:#500724;
+    classDef output fill:#dcfce7,stroke:#15803d,stroke-width:1.5px,color:#052e16;
 ```
 
+(sec-where-penalise)=
 ### 2.3 Where each loss penalises
 
-```
-   predictor output z              sensitive attribute q
-         │                                  │
-         ▼                                  ▼
-      ┌──────┐                          ┌──────┐
-      │  T_z │  (frozen)                │  T_q │  (frozen)
-      └───┬──┘                          └───┬──┘
-          │                                 │
-          ▼                                 ▼
-   Z = T_z(z) ~ N(0, I_dz) marginally  Q = T_q(q) ~ N(0, I_dq) marginally
-          │                                 │
-          └──────────────┬──────────────────┘
-                         ▼
-              ┌─────────────────────┐
-              │ C = sample          │   ← the (d_z × d_q) cross-cov
-              │  cross-cov (Z, Q)   │     is the *only* dependence
-              └─────┬───────────────┘     signal that survives
-                    │                     Gaussianisation under
-                    │                     the joint-Gaussian
-       ┌────────────┼──────────────┐      assumption
-       ▼            ▼              ▼
-    ‖C‖²_F     -½ logdet      − log p_N(0,I)( T_zq(z, q) )
-    /‖Sz‖‖Sq‖  (I − C C^T)         ▲
-       │           │                │  ← uses a full joint flow
-       ▼           ▼                │     trained on shuffled
-   ┌──────┐    ┌──────┐         ┌─────────┐  (independent) pairs;
-   │G-XCOV│    │ G-MI │         │  G-TC   │  catches higher-order
-   └──────┘    └──────┘         └─────────┘  dependence
+```{mermaid}
+flowchart TB
+    z[("predictor output z")]:::data
+    q[("sensitive attribute q")]:::data
+
+    z --> Tz["T<sub>z</sub><br/><i>frozen</i>"]:::frozen
+    q --> Tq["T<sub>q</sub><br/><i>frozen</i>"]:::frozen
+
+    Tz --> Z(["Z = T<sub>z</sub>(z)<br/>~ N(0, I<sub>d_z</sub>) marginally"]):::compute
+    Tq --> Q(["Q = T<sub>q</sub>(q)<br/>~ N(0, I<sub>d_q</sub>) marginally"]):::compute
+
+    Z --> C[["C = sample cross-cov(Z, Q)<br/><i>only 2nd-order signal that<br/>survives Gaussianisation</i>"]]:::compute
+    Q --> C
+
+    z --> Tzq["T<sub>zq</sub><br/><i>joint flow, frozen</i>"]:::frozen
+    q --> Tzq
+
+    C --> GXCOV{{"G-XCOV<br/>‖C‖²<sub>F</sub> / (‖S<sub>z</sub>‖·‖S<sub>q</sub>‖)<br/><i>2nd moment only</i>"}}:::loss
+    C --> GMI{{"G-MI<br/>−½ log det(I − C Cᵀ)<br/><i>joint-Gaussian assumed</i>"}}:::loss
+    Tzq --> GTC{{"G-TC<br/>−log p<sub>N(0,I)</sub>(T<sub>zq</sub>(z, q))<br/><i>full copula, no Gaussian joint</i>"}}:::loss
+
+    classDef data fill:#f1f5f9,stroke:#475569,stroke-width:1.5px,color:#0f172a;
+    classDef frozen fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,stroke-dasharray:5 3,color:#1e1b4b;
+    classDef compute fill:#f5f3ff,stroke:#7c3aed,stroke-width:1.5px,color:#2e1065;
+    classDef loss fill:#fce7f3,stroke:#be185d,stroke-width:2px,color:#500724;
 ```
 
 ---
 
+(sec-why-gauss)=
 ## 3. Why Gaussianisation helps (the one-paragraph theory)
 
-A Gaussianization flow $T: \mathbb{R}^d \to \mathbb{R}^d$ is a smooth
-diffeomorphism with smooth inverse, so it preserves all statistical
-dependence: $T(Z) \perp T(Q) \iff Z \perp Q$.  What it changes is the
+A Gaussianization flow $T: \mathbb{R}^d \to \mathbb{R}^d$ — in the
+lineage of {cite:t}`chenGopinath2000gauss`, {cite:t}`laparra2011rbig`,
+and {cite:t}`meng2020gaussflow` — is a smooth diffeomorphism with smooth
+inverse, so it preserves all statistical dependence: $T(Z) \perp T(Q) \iff Z \perp Q$.  What it changes is the
 *shape* of the marginals.  After training, each marginal of $T(X)$ is
 approximately $\mathcal{N}(0, 1)$.  Three consequences:
 
@@ -157,6 +183,7 @@ dependence between near-Gaussian variables."
 
 ---
 
+(sec-formulation)=
 ## 4. Mathematical formulation
 
 Let $z = f_\theta(X) \in \mathbb{R}^{d_z}$ be the predictor output and
@@ -167,6 +194,7 @@ $S_z = \widehat{\mathrm{Cov}}(Z, Z)$,
 $S_q = \widehat{\mathrm{Cov}}(Q, Q)$ denote sample (cross-)covariances
 on a batch of size $n$.
 
+(sec-gxcov)=
 ### 4.1 G-XCOV — linear-CKA in Gaussianised space
 
 $$
@@ -175,52 +203,56 @@ $$
 \frac{\lVert C \rVert_F^2}
      {\lVert S_z \rVert_F \, \lVert S_q \rVert_F + \varepsilon}
 \quad\in\; [0, 1].
-$$
+$$ (eq-gxcov)
 
-This is exact **linear CKA** (Cortes et al. 2012; Kornblith et al. 2019)
-applied to the Gaussianised features.  In $d_z = d_q = 1$ it collapses
-to $\rho^2$ where $\rho$ is the Gaussianised cross-correlation.  The
-un-normalised numerator $\lVert C \rVert_F^2$ is identically **HSIC with
-linear kernels** on the Gaussianised features — so this single loss
-covers both "linear CKA in Gaussianised space" and "HSIC with linear
-kernels in Gaussianised space" depending on whether you toggle
-`normalize`.
+Equation {eq}`eq-gxcov` is exact **linear {abbr}`CKA`**
+{cite:p}`cortes2012cka,kornblith2019cka` applied to the Gaussianised
+features.  In $d_z = d_q = 1$ it collapses to $\rho^2$ where $\rho$ is
+the Gaussianised cross-correlation.  The un-normalised numerator
+$\lVert C \rVert_F^2$ is identically **{abbr}`HSIC` with linear
+kernels** {cite:p}`gretton2005hsic` on the Gaussianised features — so
+this single loss covers both "linear {abbr}`CKA` in Gaussianised space"
+and "{abbr}`HSIC` with linear kernels in Gaussianised space" depending
+on whether you toggle `normalize`.
 
 Bounded, smooth, second-moment only.  Gradient $\partial \rho^2 / \partial \rho = 2\rho$
 is bounded — the loss is gentle near perfect dependence.
 
+(sec-gmi)=
 ### 4.2 G-MI — closed-form Gaussian mutual information
 
 If $(Z, Q)$ were *jointly* Gaussian with standardised marginals,
-mutual information has the Gel'fand–Yaglom closed form:
+mutual information has the Gel'fand–Yaglom closed form
+{cite:p}`gelfandYaglom1957`:
 
 $$
 I(Z; Q) \;=\; -\tfrac{1}{2}\log\det\bigl(I_{d_z} - C\, S_q^{-1}\, C^\top\, S_z^{-1}\bigr).
-$$
+$$ (eq-gy-mi)
 
 After Gaussianisation $S_z \approx I_{d_z}$ and $S_q \approx I_{d_q}$,
-so
+so {eq}`eq-gy-mi` simplifies to
 
 $$
 \mathcal{L}_{\text{G-MI}}
 \;=\; -\tfrac{1}{2}\log\det(I_{d_z} - C\, C^\top)
 \quad\in\; [0, +\infty).
-$$
+$$ (eq-gmi)
 
-In $d_z = d_q = 1$ this is $-\tfrac{1}{2}\log(1 - \rho^2)$.  The gradient
-$\partial \mathcal{L} / \partial \rho = \rho / (1 - \rho^2)$ **diverges**
-as $\rho \to 1$, so G-MI is much sharper than G-XCOV at high dependence.
-We clip the eigenvalues of $I - CC^\top$ at a small $\varepsilon$ for
-numerical safety; this caps the loss at
-$-\tfrac{d}{2}\log\varepsilon$.
+In $d_z = d_q = 1$ {eq}`eq-gmi` is $-\tfrac{1}{2}\log(1 - \rho^2)$.  The
+gradient $\partial \mathcal{L} / \partial \rho = \rho / (1 - \rho^2)$
+**diverges** as $\rho \to 1$, so {abbr}`G-MI` is much sharper than
+{abbr}`G-XCOV` at high dependence.  We clip the eigenvalues of
+$I - CC^\top$ at a small $\varepsilon$ for numerical safety; this caps
+the loss at $-\tfrac{d}{2}\log\varepsilon$.
 
 The closed-form requires the joint to be *Gaussian after Gaussianisation*.
 Marginal Gaussianisation gets us most of the way there, but the
-**residual copula** is still arbitrary — so G-MI underestimates true MI
-whenever the dependence has structure beyond second-order correlation
-(quadratic-in-$Z$, XOR-style, multi-modal).  That gap is exactly what
-G-TC closes.
+**residual copula** is still arbitrary — so {abbr}`G-MI` underestimates
+true {abbr}`MI` whenever the dependence has structure beyond
+second-order correlation (quadratic-in-$Z$, XOR-style, multi-modal).
+That gap is exactly what {abbr}`G-TC` closes.
 
+(sec-gtc)=
 ### 4.3 G-TC — total correlation under a frozen joint flow
 
 Pretrain a **joint** flow $T_{zq}: \mathbb{R}^{d_z + d_q} \to \mathbb{R}^{d_z + d_q}$
@@ -237,19 +269,21 @@ $$
 \mathcal{L}_{\text{G-TC}}
 \;=\;
 -\frac{1}{n}\sum_{i=1}^{n} \log p_{\mathcal{N}(0, I)}\!\bigl(T_{zq}(z_i, q_i)\bigr).
-$$
+$$ (eq-gtc)
 
 When $(z, q)$ is independent like the baseline, $T_{zq}(z, q) \sim \mathcal{N}(0, I)$
-and the loss equals the entropy of $\mathcal{N}(0, I_{d_z + d_q})$
+and {eq}`eq-gtc` equals the entropy of $\mathcal{N}(0, I_{d_z + d_q})$
 (a constant in $\theta$).  When $(z, q)$ carries dependence, $T_{zq}$
-no longer Gaussianises the joint and the NLL is strictly larger.
+no longer Gaussianises the joint and the {abbr}`NLL` is strictly larger.
 
-By a change-of-variables argument, this NLL difference is exactly the
-KL divergence between $p(z, q)$ and $p(z)\,p(q)$ — i.e. the mutual
-information.  Unlike G-MI it does **not** assume the joint is Gaussian:
-the flow itself learns the copula during pretraining.  The price is
-needing a richer pretraining stage.
+By a change-of-variables argument, this {abbr}`NLL` difference is
+exactly the KL divergence between $p(z, q)$ and $p(z)\,p(q)$ — i.e. the
+mutual information; see {cite:t}`watanabe1960tc` for the
+total-correlation framing.  Unlike {abbr}`G-MI` it does **not** assume
+the joint is Gaussian: the flow itself learns the copula during
+pretraining.  The price is needing a richer pretraining stage.
 
+(sec-comparison)=
 ### 4.4 Comparison table
 
 | Property            | G-XCOV          | G-MI                 | G-TC                          |
@@ -262,18 +296,21 @@ needing a richer pretraining stage.
 | Compute / batch     | one matmul      | one matmul + eigh    | full joint-flow forward       |
 | Sensitive to copula structure beyond 2nd order | no | no | **yes** |
 
+(sec-deferred)=
 ### 4.5 Deferred (stretch)
 
-* **G-HSIC-RBF.**  HSIC with a unit-bandwidth RBF kernel in Gaussianised
-  space.  Identical to existing CKA code but with $T_z(x)$ in place of
-  $x$.  Useful as an ablation to separate "flow as preprocessor" from
-  "linear vs RBF after the flow".
-* **DR-MI.**  True mutual information via Monte-Carlo marginalisation
-  through the joint flow.  Expensive; G-TC already captures the same
-  signal at lower cost.
+* **{abbr}`G-HSIC`-RBF.**  {abbr}`HSIC` with a unit-bandwidth RBF kernel
+  in Gaussianised space.  Identical to existing {abbr}`CKA` code but
+  with $T_z(x)$ in place of $x$.  Useful as an ablation to separate
+  "flow as preprocessor" from "linear vs RBF after the flow".
+* **DR-{abbr}`MI`.**  True mutual information via Monte-Carlo
+  marginalisation through the joint flow.  Compare with the neural
+  estimator of {cite:t}`belghazi2018mine`.  Expensive; {abbr}`G-TC`
+  already captures the same signal at lower cost.
 
 ---
 
+(sec-hypotheses)=
 ## 5. Hypotheses we're testing
 
 Each loss family makes a falsifiable prediction about what kind of
@@ -335,8 +372,10 @@ matched fairness (vertical slice).
 
 ---
 
+(sec-exp-design)=
 ## 6. Experiment design
 
+(sec-two-stage)=
 ### 6.1 Two-stage pipeline (reprise of the ASCII diagrams)
 
 **Stage 1 — pretrain + freeze.**
@@ -357,35 +396,50 @@ matched fairness (vertical slice).
 * `compile(..., loss="...")` as usual.  The wrapper handles the dict
   packing `{"x": X, "q": q}`.
 
+(sec-grad-flow)=
 ### 6.2 What gets penalised, where the gradient goes
 
-A short walk through one optimiser step:
+A short walk through one optimiser step. Solid arrows are the forward
+pass; dashed arrows are the backward (autodiff) pass, each labelled with
+the chain-rule factor it carries.
 
+```{mermaid}
+flowchart LR
+    X[("X")]:::data
+    q[("q")]:::data
+    y[("y")]:::data
+
+    X --> Ftheta["f<sub>θ</sub><br/><i>trainable</i>"]:::trainable
+    Ftheta --> z(["z = f<sub>θ</sub>(X)"]):::output
+    z --> Ltask{{"L<sub>task</sub><br/>mse(z, y)"}}:::loss
+    y --> Ltask
+    z --> Tz["T<sub>z</sub>(z)<br/><i>frozen, differentiable</i>"]:::frozen
+    q --> Tq["T<sub>q</sub>(q)<br/><i>frozen</i>"]:::frozen
+    Tz --> Lfair{{"μ · L<sub>fair</sub><br/>− ½ log det(I − CCᵀ)"}}:::loss
+    Tq --> Lfair
+    Ltask --> L((("L = L<sub>task</sub> + μ·L<sub>fair</sub>"))):::loss
+    Lfair --> L
+
+    L -. "∂L/∂L<sub>fair</sub> · ∂L<sub>fair</sub>/∂T<sub>z</sub>(z)<br/>via eigh(I − CCᵀ)" .-> Tz
+    Tz -. "× ∂T<sub>z</sub>(z)/∂z<br/>mixture-CDF Jacobian (frozen weights, live input)" .-> z
+    z -. "× ∂z/∂θ → ∂L/∂θ<br/>θ ← θ − η · ∂L/∂θ" .-> Ftheta
+
+    classDef data fill:#f1f5f9,stroke:#475569,stroke-width:1.5px,color:#0f172a;
+    classDef trainable fill:#fef3c7,stroke:#b45309,stroke-width:2px,color:#451a03;
+    classDef frozen fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,stroke-dasharray:5 3,color:#1e1b4b;
+    classDef loss fill:#fce7f3,stroke:#be185d,stroke-width:2px,color:#500724;
+    classDef output fill:#dcfce7,stroke:#15803d,stroke-width:1.5px,color:#052e16;
 ```
-forward:
-    z = f_θ(X)               # (n, 1)
-    L_task = mse(z, y)        # standard Keras loss
-    L_fair = G-MI(T_z(z),     # passes through frozen T_z,
-                  T_q(q))     #   T_q -- their weights are not
-                              #   in trainable_variables
-    L = L_task + μ · L_fair
 
-backward (autodiff):
-    ∂L_task/∂z   →  ∂L_task/∂θ
-    ∂L_fair/∂z   = ∂L_fair / ∂T_z(z) · ∂T_z(z) / ∂z
-                   ↑                    ↑
-                   eigh of (I − CC^T)   smooth mixture-CDF jacobian
-                                        — frozen but still differentiable
-    ∂L_fair/∂z   →  ∂L_fair/∂θ
-    optimiser update:  θ ← θ − η ∂L/∂θ
-    (T_z, T_q, T_zq receive no gradient — they have zero trainable_weights)
-```
+The key chain-rule fact, read off the dashed path above: `stop_gradient`
+(or `trainable=False`) blocks gradients into the **parameters** of the
+flow, but does **not** block gradients into its **inputs** — the
+mixture-CDF Jacobian $\partial T_z(z)/\partial z$ is still smooth and
+non-zero, so the predictor still receives a fairness signal. Without
+this property the whole scheme collapses. $T_z$, $T_q$, and $T_{zq}$
+themselves receive no gradient: they have zero `trainable_weights`.
 
-The key chain-rule fact: `stop_gradient` (or `trainable=False`) blocks
-gradients into the **parameters** of the flow, but does **not** block
-gradients into its **inputs**.  Without this property the whole scheme
-collapses.
-
+(sec-file-layout)=
 ### 6.3 File layout
 
 ```
@@ -407,6 +461,7 @@ projects/gaussianization/
 
 ---
 
+(sec-datasets)=
 ## 7. Datasets
 
 | Dataset                                                                              | Sensitive $q$ | Task                 | Use                                                                                                |
@@ -418,6 +473,7 @@ projects/gaussianization/
 
 ---
 
+(sec-eval-plan)=
 ## 8. Evaluation plan
 
 For every (dataset, loss, $\mu$, seed) combination report:
@@ -453,6 +509,7 @@ both raw-μ and calibrated-μ Pareto fronts.
 
 ---
 
+(sec-risks)=
 ## 9. Risks & open questions
 
 ```{admonition} Risk — flow off-support drift
@@ -500,6 +557,7 @@ the product distribution is well-sampled.
 
 ---
 
+(sec-milestones)=
 ## 10. Milestones
 
 | # | Milestone | Acceptance |
@@ -516,21 +574,7 @@ the product distribution is well-sampled.
 
 ---
 
-## 11. References
-
-* Cortes, Mohri, Rostamizadeh (2012). *Algorithms for Learning Kernels Based on Centered Alignment.* JMLR 13.
-* Kornblith, Norouzi, Lee, Hinton (2019). *Similarity of Neural Network Representations Revisited.* ICML.
-* Gretton, Bousquet, Smola, Schölkopf (2005). *Measuring Statistical Dependence with Hilbert–Schmidt Norms.* ALT.
-* Gel'fand & Yaglom (1957). *Computation of the amount of information about a random function contained in another such function.* AMS Translations 12.
-* Chen, Gopinath (2000). *Gaussianization.* NeurIPS.
-* Laparra, Camps-Valls, Malo (2011). *Iterative Gaussianization: From ICA to Random Rotations* (RBIG).
-* Meng, Song, Song, Ermon (2020). *Gaussianization Flows.* AISTATS.
-* Watanabe (1960). *Information theoretical analysis of multivariate correlation.* (Total correlation.)
-* Pérez-Suay et al. (2017). *Fair Kernel Learning.* ECML PKDD.
-* Belghazi et al. (2018). *MINE: Mutual Information Neural Estimation.* ICML.
-
----
-
+(sec-fair-design-mwe)=
 ## Appendix A — Minimum working example
 
 ```python

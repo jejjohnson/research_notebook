@@ -14,6 +14,18 @@
 # ---
 
 # %% [markdown]
+# ---
+# title: "Fair MLP regression with a frozen Gaussianization flow"
+# short_title: "06 · Synthetic Pareto"
+# subtitle: "Sweep μ for G-XCOV, G-MI, G-TC, and CKA on a synthetic task"
+# description: >
+#   Synthetic regression with a binary sensitive attribute. Pretrain two
+#   marginal flows + one joint flow, plug each fairness loss into
+#   FairModelWrapper, sweep μ across three seeds, and trace a Pareto curve
+#   of (RMSE, |corr(ŷ, q)|).
+# ---
+#
+# (sec-nb-06)=
 # # 06 — Fair MLP regression with a frozen Gaussianization flow
 #
 # Notebook 05 left us with a frozen flow that turns its input into a
@@ -251,6 +263,15 @@ for mu in mus_grid:
 # decomposition for free: MSE alone is the task curve, total minus
 # MSE is the fairness curve.
 
+# %% [markdown]
+# (fig-06-loss-curves)=
+# **Figure: Training-loss decomposition across $\mu$.** For each $\mu$
+# in the sweep, the optimiser is minimising
+# $\mathcal{L}_{\text{task}} + \mu\,\mathcal{L}_{\text{fair}}$. Logging
+# the components separately exposes the trade-off: at $\mu = 0$ the
+# fairness term is identically zero and total = task; as $\mu$ grows,
+# the fairness term steals share early in training before MSE recovers.
+
 # %%
 fig, axes = plt.subplots(
     1, len(mus_grid), figsize=(3.6 * len(mus_grid), 3.2), sharex=True
@@ -289,6 +310,14 @@ plt.show()
 # roughly $+3$, the coefficient in the data-generating process. As
 # $\mu$ grows we expect it to rotate toward horizontal, meaning the
 # same $q$ produces the same distribution of predictions.
+
+# %% [markdown]
+# (fig-06-yh-vs-q)=
+# **Figure: Predictions vs. the sensitive attribute as $\mu$ grows.**
+# Held-out $\hat y$ scattered against $q$ for each $\mu$ in the sweep,
+# with the least-squares slope annotated. At $\mu = 0$ the slope sits
+# near the data-generating $+3$; by $\mu = 32$ it has been driven close
+# to zero — same $q$, same predicted distribution.
 
 # %%
 fig, axes = plt.subplots(
@@ -427,6 +456,16 @@ for fam, rows in [
             f"{r['gap_m']:7.3f}±{r['gap_s']:5.3f}"
         )
 
+# %% [markdown]
+# (fig-06-pareto)=
+# **Figure: Synthetic Pareto curves across four fairness losses.** Left
+# — RMSE vs. $|\mathrm{corr}(\hat y, q)|$; right — RMSE vs. the
+# group-mean prediction gap. Each marker is mean ± s.d. over three
+# seeds at a single $\mu$. {abbr}`G-XCOV`, {abbr}`G-MI`, and {abbr}`CKA`
+# trace honest trade-offs; {abbr}`G-TC` collapses the predictor to a
+# near-constant output at high $\mu$, the failure mode discussed in the
+# design doc.
+
 # %%
 fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.5))
 
@@ -547,6 +586,15 @@ plt.show()
 # One more way to look at the same data: how does the mean predicted
 # $\hat y$ for each group ($q = 0$ vs $q = 1$) move as $\mu$ grows?
 # Parity is the point where the two lines meet.
+
+# %% [markdown]
+# (fig-06-group-means)=
+# **Figure: Group-mean predictions converge under {abbr}`G-XCOV`.** The
+# two group conditional means $\mathbb{E}[\hat y \mid q = 0]$ (blue) and
+# $\mathbb{E}[\hat y \mid q = 1]$ (orange) plotted against $\mu$ on a
+# symlog axis. Parity is the point where the two curves meet; the
+# dotted line marks the average of the two endpoints as a visual
+# reference.
 
 # %%
 fig, ax = plt.subplots(figsize=(6.4, 4))

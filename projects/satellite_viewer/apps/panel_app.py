@@ -67,7 +67,11 @@ status = pn.pane.Markdown("")
 # any ipywidget — including leafmap maps — natively.
 # ---------------------------------------------------------------------------
 
+import holoviews as hv
 import leafmap
+
+
+hv.extension("bokeh", logo=False)
 
 
 m = leafmap.Map(
@@ -78,7 +82,34 @@ m = leafmap.Map(
     measure_control=False,
     fullscreen_control=False,
 )
-map_pane = pn.pane.IPyWidget(m, sizing_mode="stretch_both")
+map_pane = pn.pane.IPyWidget(m, height=500, sizing_mode="stretch_width")
+
+
+# Basemap switcher. All providers are key-free XYZ tile services. We swap the
+# base layer in place with substitute_layer() so it stays *under* the AOI /
+# footprint overlays (add_basemap would stack it on top and hide them).
+from ipyleaflet import basemap_to_tiles, basemaps as _ipybm
+
+
+_BASEMAPS = {
+    "Street (OSM)": _ipybm.OpenStreetMap.Mapnik,
+    "Satellite (Esri)": _ipybm.Esri.WorldImagery,
+    "Topographic (Esri)": _ipybm.Esri.WorldTopoMap,
+    "Natural (NatGeo)": _ipybm.Esri.NatGeoWorldMap,
+    "Terrain (OpenTopoMap)": _ipybm.OpenTopoMap,
+}
+basemap_widget = pn.widgets.Select(
+    name="Basemap", options=list(_BASEMAPS), value="Street (OSM)"
+)
+
+
+def _set_basemap(_event=None) -> None:
+    tiles = basemap_to_tiles(_BASEMAPS[basemap_widget.value])
+    tiles.base = True
+    m.substitute_layer(m.layers[0], tiles)
+
+
+basemap_widget.param.watch(_set_basemap, "value")
 
 
 def _current_aoi():
@@ -92,29 +123,36 @@ def _current_aoi():
 results_table = pn.widgets.Tabulator(
     pd.DataFrame(), pagination="local", page_size=10, height=320
 )
-timeline_pane = pn.pane.HoloViews(sizing_mode="stretch_width", height=260)
+timeline_pane = pn.pane.HoloViews(sizing_mode="stretch_width")
 thumbs_pane = pn.FlexBox(sizing_mode="stretch_width")
 
 
 def _render_timeline(hits: gpd.GeoDataFrame):
-    import holoviews as hv
-
-    hv.extension("bokeh", logo=False)
     if hits.empty:
-        return hv.Text(0.5, 0.5, "no hits").opts(width=600, height=200)
+        return hv.Text(0.5, 0.5, "no hits").opts(responsive=True, height=200)
     df = hits.copy()
     df["sensor"] = df["sensor"].astype(str)
-    df["y"] = df["sensor"]
-    return hv.Scatter(df, kdims=["datetime"], vdims=["y", "cloud_cover", "id"]).opts(
-        height=260,
-        responsive=True,
-        size=8,
-        color="sensor",
-        cmap="Category10",
-        tools=["hover"],
-        ylabel="sensor",
-        xlabel="acquisition time",
-        title="Timeline of intersecting scenes",
+    # Single "acquisition" lane on y; satellite identity carried by colour +
+    # legend (one Scatter per sensor, overlaid) and surfaced on hover.
+    df["lane"] = "acquisition"
+    by_sensor = {
+        name: hv.Scatter(g, kdims=["datetime"], vdims=["lane", "cloud_cover", "id"])
+        for name, g in df.groupby("sensor")
+    }
+    overlay = hv.NdOverlay(by_sensor, kdims="sensor")
+    return overlay.opts(
+        hv.opts.Scatter(size=11, alpha=0.85, tools=["hover"], muted_alpha=0.15),
+        hv.opts.NdOverlay(
+            # frame_height pins the glyph canvas so the dots can't collapse.
+            responsive=True,
+            frame_height=150,
+            show_legend=True,
+            legend_position="right",
+            xlabel="acquisition time",
+            ylabel="",
+            title="Acquisitions over time",
+            padding=(0.05, 0.6),
+        ),
     )
 
 
@@ -144,10 +182,14 @@ def _redraw_map(aoi, hits: gpd.GeoDataFrame) -> None:
     # Drop every previous overlay layer (keep the basemap).
     for layer in list(m.layers)[1:]:
         m.remove_layer(layer)
+    # info_mode=None: skip Leafmap's hover-info widget. It spawns a
+    # WidgetControl that remove_layer() doesn't clean up, so the boxes
+    # would otherwise stack on the map on every re-search.
     m.add_geojson(
         gpd.GeoDataFrame(geometry=[aoi], crs="EPSG:4326").__geo_interface__,
         layer_name="AOI",
         style={"color": "#1565c0", "weight": 3, "fillOpacity": 0.05},
+        info_mode=None,
     )
     if not hits.empty:
         m.add_geojson(
@@ -158,7 +200,19 @@ def _redraw_map(aoi, hits: gpd.GeoDataFrame) -> None:
                 "weight": 1,
                 "fillOpacity": 0.08,
             },
+            info_mode=None,
         )
+
+    # Re-fit the viewport to the data extent. Beyond the convenient
+    # auto-zoom, changing the view forces this live Leaflet map to reload
+    # its raster tiles: after a programmatic layer swap the basemap can
+    # otherwise stay blank (only the SVG footprints repaint) until the user
+    # manually pans/zooms.
+    bounds_src = (
+        hits if not hits.empty else gpd.GeoDataFrame(geometry=[aoi], crs="EPSG:4326")
+    )
+    minx_b, miny_b, maxx_b, maxy_b = bounds_src.total_bounds
+    m.fit_bounds([[float(miny_b), float(minx_b)], [float(maxy_b), float(maxx_b)]])
 
 
 def _do_search(_event=None) -> None:
@@ -215,6 +269,9 @@ sidebar = pn.Column(
     pn.Row(maxx, maxy),
     go_btn,
     status,
+    pn.layout.Divider(),
+    pn.pane.Markdown("**Map display**"),
+    basemap_widget,
     width=320,
 )
 

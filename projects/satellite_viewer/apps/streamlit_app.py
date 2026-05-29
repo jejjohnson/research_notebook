@@ -78,10 +78,59 @@ go = st.sidebar.button("Search", type="primary", width="stretch")
 # the user drew a polygon it overrides the bbox text inputs.
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Basemaps. Added to every map as selectable base layers; folium's
+# LayerControl renders a radio toggle (top-right corner) so the user can
+# switch street / satellite / topo / natural without a Streamlit rerun.
+# All are key-free XYZ tile services. The first entry is the default.
+# ---------------------------------------------------------------------------
+
+_ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services"
+_BASEMAPS = [
+    # (display name, tiles, attribution -- None lets folium fill it in)
+    ("Street (OSM)", "OpenStreetMap", None),
+    (
+        "Satellite (Esri)",
+        f"{_ESRI}/World_Imagery/MapServer/tile/{{z}}/{{y}}/{{x}}",
+        "Esri World Imagery",
+    ),
+    (
+        "Topographic (Esri)",
+        f"{_ESRI}/World_Topo_Map/MapServer/tile/{{z}}/{{y}}/{{x}}",
+        "Esri World Topo",
+    ),
+    (
+        "Natural (NatGeo)",
+        f"{_ESRI}/NatGeo_World_Map/MapServer/tile/{{z}}/{{y}}/{{x}}",
+        "Esri NatGeo",
+    ),
+    (
+        "Terrain (OpenTopoMap)",
+        "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+        "OpenTopoMap (CC-BY-SA)",
+    ),
+]
+
+
+def _add_basemaps(fmap: folium.Map) -> None:
+    """Add every basemap as a base layer; the first added is the default."""
+    for name, tiles, attr in _BASEMAPS:
+        folium.TileLayer(
+            tiles=tiles,
+            attr=attr,
+            name=name,
+            overlay=False,
+            control=True,
+        ).add_to(fmap)
+
+
 st.title("Satellite Time-Series Viewer")
 
 bbox_aoi = box(minx, miny, maxx, maxy)
-m = folium.Map(location=[(miny + maxy) / 2, (minx + maxx) / 2], zoom_start=9)
+m = folium.Map(
+    location=[(miny + maxy) / 2, (minx + maxx) / 2], zoom_start=9, tiles=None
+)
+_add_basemaps(m)
 Draw(
     export=False,
     draw_options={
@@ -103,6 +152,7 @@ folium.GeoJson(
     },
 ).add_to(m)
 
+folium.LayerControl(collapsed=True).add_to(m)
 map_state = st_folium(m, height=500, width=None, key="aoi_map")
 
 
@@ -174,7 +224,10 @@ if go and sensors:
     footprints = gpd.GeoSeries(
         [wkt.loads(w) for w in combined["geometry_wkt"]], crs="EPSG:4326"
     )
-    m2 = folium.Map(location=[(miny + maxy) / 2, (minx + maxx) / 2], zoom_start=8)
+    m2 = folium.Map(
+        location=[(miny + maxy) / 2, (minx + maxx) / 2], zoom_start=8, tiles=None
+    )
+    _add_basemaps(m2)
     folium.GeoJson(
         gpd.GeoSeries([aoi], crs="EPSG:4326").__geo_interface__,
         name="AOI",
@@ -195,20 +248,28 @@ if go and sensors:
             "fillOpacity": 0.08,
         },
     ).add_to(m2)
+    folium.LayerControl(collapsed=True).add_to(m2)
     st_folium(m2, height=420, width=None, returned_objects=[], key="result_map")
 
     # --- Timeline -----------------------------------------------------------
     st.subheader("Timeline")
+    # A single "acquisition" lane on y; the satellite is identified by colour
+    # + legend (and on hover), so the chart reads as "when was anything
+    # acquired, and by which sensor".
     timeline = (
-        alt.Chart(combined)
-        .mark_circle(size=80)
+        alt.Chart(combined.assign(lane="acquisition"))
+        .mark_circle(size=90, opacity=0.75)
         .encode(
             x=alt.X("datetime:T", title="acquisition time"),
-            y=alt.Y("sensor:N", title="sensor"),
-            color=alt.Color("sensor:N", legend=None),
+            y=alt.Y(
+                "lane:N",
+                title=None,
+                axis=alt.Axis(labels=False, ticks=False, domain=False),
+            ),
+            color=alt.Color("sensor:N", title="satellite"),
             tooltip=["id", "datetime", "cloud_cover", "sensor"],
         )
-        .properties(height=240)
+        .properties(height=160)
     )
     st.altair_chart(timeline, use_container_width=True)
 
@@ -222,10 +283,9 @@ if go and sensors:
         for i, (_, row) in enumerate(rows.iterrows()):
             with cols[i % 4]:
                 st.image(row["preview_url"], width="stretch")
-                caption = (
-                    f"**{row['sensor']}** — "
-                    f"{pd.Timestamp(row['datetime']).strftime('%Y-%m-%d %H:%M')}"
-                )
+                ts = pd.Timestamp(row["datetime"])
+                when = ts.strftime("%Y-%m-%d %H:%M") if pd.notna(ts) else "date n/a"
+                caption = f"**{row['sensor']}** — {when}"
                 if pd.notna(row.get("cloud_cover")):
                     caption += f" — cloud {row['cloud_cover']:.0f}%"
                 st.caption(caption)

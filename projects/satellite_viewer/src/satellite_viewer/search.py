@@ -82,8 +82,17 @@ def _stac_search(
         if cfg.cloud_field is not None:
             cloud = item.properties.get(cfg.cloud_field)
 
-        ts = pd.Timestamp(item.datetime)
-        ts = ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")
+        # Composite products (e.g. MODIS 8-day) carry `datetime: null` and
+        # instead expose a `start_datetime`/`end_datetime` range — fall back
+        # to those so the row gets a real timestamp instead of NaT.
+        raw_dt = item.datetime
+        if raw_dt is None:
+            raw_dt = item.properties.get("start_datetime") or item.properties.get(
+                "end_datetime"
+            )
+        ts = pd.Timestamp(raw_dt)
+        if pd.notna(ts):
+            ts = ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")
 
         rows.append(
             {

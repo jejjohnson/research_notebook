@@ -28,6 +28,11 @@ panel = [
     "leafmap>=0.40",
     "ipyleaflet>=0.19",
     "ipywidgets>=8",
+    # Panel's ipywidgets bridge (pn.extension("ipywidgets")) needs both
+    # ipykernel and ipywidgets_bokeh to host the leafmap map widget in a
+    # Bokeh server session.
+    "ipykernel>=6.29",
+    "ipywidgets-bokeh>=1.3",
     "hvplot>=0.10",
     "bokeh>=3.5",
 ]

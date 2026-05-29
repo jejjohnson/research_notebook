@@ -15,6 +15,7 @@ window. Built sequentially in five stages of increasing fidelity:
 | **v2**   | global            | *Observed* scene count + scene-level cloud cover per pixel   | STAC `eo:cloud_cover`    | `geocatalog`, `geopatcher`, `geotoolz` |
 | **v2.5** | one AOI on demand | *True per-pixel* clear-observation fraction inside an AOI    | STAC + windowed reads    | `georeader`         |
 | **v3**   | global            | v2.5 scaled to the whole globe — *true per-pixel*, batched  | STAC + windowed reads    | (same as v2.5; cluster) |
+| **v4**   | global + AOI      | Coverage ledger: *available* vs *acquired* vs *gap* (+ tasking hook) | v1–v3 bands + external holdings DB | external PostGIS holdings table (`.env` creds); reuses satellite_viewer.search |
 
 Each global stage writes into the **same Zarr product** below (except
 v0 and v2.5, which are per-AOI tools returning a DataFrame, not a
@@ -151,3 +152,5 @@ want long-term averages.
 - [`v2_data_driven_scene_level.md`](v2_data_driven_scene_level.md) — catalog + scene-level cloud.
 - [`v2_5_pixel_level.md`](v2_5_pixel_level.md) — per-AOI pixel-level via georeader.
 - [`v3_pixel_level_global.md`](v3_pixel_level_global.md) — v2.5 scaled to the whole globe.
+- [`v4_coverage_planner.md`](v4_coverage_planner.md) — available / acquired / gap coverage dashboard (global heatmap + AOI drill-down), tasking hook future-flagged.
+- [`v4_coverage_planner_api.md`](v4_coverage_planner_api.md) — v4 implementation spec: module API, type signatures, and demos (build pipeline + both apps) grounded in the real geocatalog API, with the Acquired layer as a generic PostGIS read (`.env` creds).

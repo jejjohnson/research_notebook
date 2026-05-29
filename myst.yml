@@ -121,6 +121,8 @@ project:
                 - file: projects/satellite_viewer/plans/satellite_climatology/v2_data_driven_scene_level.md
                 - file: projects/satellite_viewer/plans/satellite_climatology/v2_5_pixel_level.md
                 - file: projects/satellite_viewer/plans/satellite_climatology/v3_pixel_level_global.md
+                - file: projects/satellite_viewer/plans/satellite_climatology/v4_coverage_planner.md
+                - file: projects/satellite_viewer/plans/satellite_climatology/v4_coverage_planner_api.md
         - title: Spectral analysis apps
           children:
             - title: Pixel spectra

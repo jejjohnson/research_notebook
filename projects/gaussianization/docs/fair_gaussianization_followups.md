@@ -441,7 +441,7 @@ numeric features are mostly low-cardinality.)
 
 Generalise B from "drop features" to "project out the q-direction in
 Gaussianised space" — a Gaussianisation analogue of fair PCA
-{cite:p}`olfat2018fairpca`. Same flow, more powerful selection.
+{cite:p}`olfat2019fairpca`. Same flow, more powerful selection.
 
 ### 4.1 Math
 

@@ -102,8 +102,8 @@ penalties exploit this: {abbr}`G-XCOV`, {abbr}`G-MI`, and {abbr}`G-TC`.
 
 All three are differentiable in the predictor's parameters and plug
 into `FairModelWrapper` via its `fairness_loss=...` argument.  See
-[`§4 of the design doc`](./fair_gaussianization_experiment.md) for the
-math, and [Table 4.4](./fair_gaussianization_experiment.md) for the
+[§4 of the design doc](#sec-formulation) for the math, and
+[§4.4 — the comparison table](#sec-comparison) for the
 property comparison.
 
 (sec-fair-status)=

@@ -15,6 +15,10 @@ keywords: [coupled forward model, multi-instrument fusion, MARS, TROPOMI, EMIT, 
 
 **Forward model:** transport + RTM + multi-instrument fusion, from source parameters all the way to simulated radiances across multiple satellites simultaneously. This is the full operational pipeline.
 
+:::{note} Upstream status (2026-06-02)
+Tier IV is **no longer purely proposed** in the upstream [`plumax`](https://github.com/jejjohnson/plumax) reference: `plumax.coupled` now lands v1 multi-instrument fusion — the Tier I plume + averaging-kernel coupled forward kept per-instrument at native resolution (`CoupledForward`, `Instrument`), a closed-form joint posterior over `(Q, bias_inst)` across satellites (`fuse_observations`), and an additive RTM-based observation operator (`RadianceObservationOperator`, plume column → gas ΔVMR → band-integrated radiance). The module table below keeps the in-repo `plume_simulation` port markers (still ☐ — not yet ported); see the [end-to-end walkthrough](../end_to_end_retrieval_to_persistency.md#stage3-fusion) for how this stage slots into the pipeline.
+:::
+
 ```text
 Source params (Q_{1:K}(t), x₀_{1:K}, t₀_{1:K},  ū, θ_wind, c_bg, α_BC, …)
        ↓  [Tier I/II/III transport]

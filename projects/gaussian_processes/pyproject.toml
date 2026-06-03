@@ -23,7 +23,22 @@ dependencies = [
 # `seaborn` is required by gaussian_quantities.ipynb for the joint+marginal
 # KDE comparison of forward-vs-reverse KL fits.
 notebooks = ["matplotlib", "seaborn>=0.13", "ipython", "ipykernel>=6.29"]
+# The 13_applied/spatial_extremes notebooks build spatio-temporal GEV models on
+# xtremax (extreme-value distributions + primitives) and pyrox (latent GPs via
+# gp_sample), inferred with NumPyro SVI; cartopy renders the Iberian maps.
+spatial-extremes = [
+    "xtremax",
+    "pyrox",
+    "numpyro>=0.21",
+    "optax>=0.2",
+    "cartopy>=0.22",
+]
 dev = ["pytest>=8", "pytest-xdist>=3.5"]
+
+# xtremax and pyrox are not published to PyPI yet; resolve them from git.
+[tool.uv.sources]
+xtremax = { git = "https://github.com/jejjohnson/xtremax.git" }
+pyrox = { git = "https://github.com/jejjohnson/pyrox.git" }
 
 [build-system]
 requires = ["hatchling"]

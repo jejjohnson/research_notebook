@@ -123,13 +123,17 @@ jupyter = "*"
 nbconvert = "*"
 # cartopy pulls geos/proj/shapely via conda-forge — much cleaner than PyPI
 # wheels for the C-library-heavy geospatial stack. Used by
-# projects/gaussian_processes/notebooks/kronecker/01_spain_extremes.ipynb.
+# projects/gaussian_processes/notebooks/13_applied/spatial_extremes/.
 cartopy = ">=0.24"
 
 [feature.pyrox.pypi-dependencies]
-# Pinned to a specific commit (rather than branch = "main") so the lockfile
-# has a stable git ref. Bump this when you want a newer pyrox.
+# Pinned to specific commits (rather than branch = "main") so the lockfile
+# has stable git refs. Bump these when you want newer pyrox / xtremax.
 pyrox = { git = "https://github.com/jejjohnson/pyrox", rev = "c122a87544d244192db622731d24b4a648eba853", extras = ["colab", "optax"] }
+# xtremax provides the extreme-value distributions + primitives used by the
+# 13_applied/spatial_extremes notebooks; its jax<0.11 pin co-installs with
+# pyrox/gaussx on jax 0.10.
+xtremax = { git = "https://github.com/jejjohnson/xtremax", rev = "ba79b377dc8e0abb1e033b1825797cf20fc47e81" }
 # gaussx 0.0.14 (released 2026-05-05) requires jaxlib>=0.10; pyrox at the
 # pinned rev pulls gaussx transitively. numpyro 0.21 (with the xla_pmap_p
 # import fix) is now on PyPI, so the prior `<0.9` cap can be dropped.
@@ -139,7 +143,7 @@ numpyro = ">=0.21"
 
 [feature.pyrox.tasks]
 execute-pyrox = "jupyter nbconvert --to notebook --execute --inplace notebooks/pyrox/gp/*.ipynb notebooks/pyrox/masterclass/*.ipynb notebooks/pyrox/ensembles/*.ipynb --ExecutePreprocessor.timeout=600"
-execute-gaussian-processes = "jupyter nbconvert --to notebook --execute --inplace projects/gaussian_processes/notebooks/pyroxgp/*.ipynb projects/gaussian_processes/notebooks/kronecker/*.ipynb --ExecutePreprocessor.timeout=1200"
+execute-gaussian-processes = "jupyter nbconvert --to notebook --execute --inplace projects/gaussian_processes/notebooks/13_applied/spatial_extremes/*.ipynb --ExecutePreprocessor.timeout=1200"
 
 # ---------------------------------------------------------------------------
 # Showcase env: coordax
@@ -296,7 +300,10 @@ test-geostack = "pytest projects/geostack/tests/ -v -m slow"
 # ---------------------------------------------------------------------------
 [feature.satellite-viewer.dependencies]
 python = "3.12.*"
-ipykernel = ">=6.29"
+# Cap below 7: the satellite_viewer[panel] extra pulls ipywidgets-bokeh (for
+# bokeh>=3.5), which requires ipykernel<7. Without the cap the conda solve pins
+# ipykernel 7.x and the pypi resolve for this env becomes unsatisfiable.
+ipykernel = ">=6.29,<7"
 jupyter = "*"
 jupytext = ">=1.16"
 

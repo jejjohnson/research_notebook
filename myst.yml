@@ -221,6 +221,16 @@ project:
           children:
             - file: projects/gaussianization/README.md
             - file: projects/gaussianization/TUTORIAL_MASTER_LIST.md
+            - title: "Part 0 · Foundations"
+              children:
+                - file: projects/gaussianization/notebooks/00_foundations/README.md
+                - file: projects/gaussianization/notebooks/00_foundations/00_change_of_variables.ipynb
+                - file: projects/gaussianization/notebooks/00_foundations/01_composition_logdet.ipynb
+                - file: projects/gaussianization/notebooks/00_foundations/02_forward_vs_inverse.ipynb
+                - file: projects/gaussianization/notebooks/00_foundations/03_why_standard_gaussian.ipynb
+                - file: projects/gaussianization/notebooks/00_foundations/04_density_destructors.ipynb
+                - file: projects/gaussianization/notebooks/00_foundations/05_numerical_mechanics.ipynb
+                - file: projects/gaussianization/notebooks/00_foundations/06_gaussianity_diagnostics.ipynb
             - file: projects/gaussianization/survae_flows_proof.md
             - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb

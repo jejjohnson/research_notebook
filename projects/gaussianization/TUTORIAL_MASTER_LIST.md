@@ -175,9 +175,9 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.1 | Change of variables from scratch — 1D, 2D, $d$-D, both directions | — | 🧱 | **GAP** — pedagogical anchor for the whole curriculum |
-| 0.2 | Composition of bijectors & additive log-determinant | — | 🧱 | **GAP** |
-| 0.3 | Forward vs. inverse parameterisation — "density estimation" vs. "generation" trade-offs | — | 🧱 | **GAP** |
+| 0.1 | Change of variables from scratch — 1D, 2D, $d$-D, both directions | K `00_foundations/00_change_of_variables` | 🧱 | pedagogical anchor; verifies CoV against `gauss_flows` log-det |
+| 0.2 | Composition of bijectors & additive log-determinant | K `00_foundations/01_composition_logdet` | 🧱 | rotations are free; `flowjax.Chain` |
+| 0.3 | Forward vs. inverse parameterisation — "density estimation" vs. "generation" trade-offs | K `00_foundations/02_forward_vs_inverse` | 🧱 | `optimistix` root-find + implicit-adjoint gradients |
 
 ### 0.B — Why standard Gaussian as target
 
@@ -188,7 +188,7 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.4 | Why $\mathcal{N}(0,I)$? Max-entropy + separability + trivial primitives | — | 🧱 | **GAP** — sets up later use in 16.B (prox), 14.A (IT), 17 (Kalman) |
+| 0.4 | Why $\mathcal{N}(0,I)$? Max-entropy + separability + trivial primitives | K `00_foundations/03_why_standard_gaussian` | 🧱 | `rbig.negentropy`/`total_correlation`; sets up 16.B (prox), 14.A (IT), 17 (Kalman) |
 
 ### 0.C — Density destructors
 
@@ -199,8 +199,8 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.5 | Density destructors — Inouye & Ravikumar 2018 framing | — | 🧱 | **GAP** |
-| 0.6 | Gaussianization = iterated whitening + nonlinearity — intuition pictures | — | 🧱 | **GAP** |
+| 0.5 | Density destructors — Inouye & Ravikumar 2018 framing | K `00_foundations/04_density_destructors` | 🧱 | unifies flow / Gaussianization / destructor |
+| 0.6 | Gaussianization = iterated whitening + nonlinearity — intuition pictures | K `00_foundations/04_density_destructors` | 🧱 | `rbig.AnnealedRBIG`; two-moons → N(0,I) morph |
 
 ### 0.D — Numerical mechanics
 
@@ -212,9 +212,9 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.7 | Numerical stability for bijectors — jitter, mixed precision, tail expansions | — | 🧱 | **GAP** — pairs with `xref:GP#0.11` (jitter / safe Cholesky) |
-| 0.8 | Log-determinant accumulation across deep stacks | — | 🧱 | **GAP** |
-| 0.9 | Roundtrip invertibility tests in CI | — | 🧱 | **GAP** |
+| 0.7 | Numerical stability for bijectors — jitter, mixed precision, tail expansions | K `00_foundations/05_numerical_mechanics` | 🧱 | pairs with `xref:GP#0.11` (jitter / safe Cholesky) |
+| 0.8 | Log-determinant accumulation across deep stacks | K `00_foundations/05_numerical_mechanics` | 🧱 | float32 vs float64 drift |
+| 0.9 | Roundtrip invertibility tests in CI | K `00_foundations/05_numerical_mechanics` | 🧱 | caught `gh:gauss_flows#108` (MixtureGaussianCDF inverse) |
 
 ### 0.E — Diagnostics
 
@@ -226,9 +226,9 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.10 | QQ-plot & moment-based Gaussianity diagnostics | — | 🧱 | **GAP** |
-| 0.11 | Negentropy as a convergence signal for RBIG | — | 🧱 | **GAP** — feeds 3.B stopping criterion |
-| 0.12 | Multivariate Gaussianity tests (Henze–Zirkler, energy) | — | 🧱 | **GAP** |
+| 0.10 | QQ-plot & moment-based Gaussianity diagnostics | K `00_foundations/06_gaussianity_diagnostics` | 🧱 | QQ + skew/kurtosis before vs after |
+| 0.11 | Negentropy as a convergence signal for RBIG | K `00_foundations/06_gaussianity_diagnostics` | 🧱 | `rbig.negentropy`; feeds 3.B stopping criterion |
+| 0.12 | Multivariate Gaussianity tests (Henze–Zirkler, energy) | K `00_foundations/06_gaussianity_diagnostics` | 🧱 | energy distance to N(0,I); HZ noted |
 
 ---
 

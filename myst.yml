@@ -239,6 +239,13 @@ project:
                 - file: projects/gaussianization/notebooks/01_marginal_transforms/02_spline_cdf.ipynb
                 - file: projects/gaussianization/notebooks/01_marginal_transforms/03_learnable_mixture_cdf.ipynb
                 - file: projects/gaussianization/notebooks/01_marginal_transforms/04_inversion_strategies.ipynb
+            - title: "Part 2 · Rotations & mixers"
+              children:
+                - file: projects/gaussianization/notebooks/02_rotations/README.md
+                - file: projects/gaussianization/notebooks/02_rotations/00_rotation_zoo.ipynb
+                - file: projects/gaussianization/notebooks/02_rotations/01_householder_orthogonal.ipynb
+                - file: projects/gaussianization/notebooks/02_rotations/02_fixed_pca_warmstart.ipynb
+                - file: projects/gaussianization/notebooks/02_rotations/03_conv1x1_actnorm.ipynb
             - file: projects/gaussianization/survae_flows_proof.md
             - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb

@@ -418,8 +418,8 @@ The classical, non-parametric Gaussianization algorithm: alternate marginal CDFs
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 3.7 | Iterative Gaussianization warm-start | → Part 4 | 🧱 | api: `initialize_flow_from_ig`; deferred to parametric flows |
-| 3.8 | RBIG warm-start for FlowJax-style flows | → Part 4 | 🌉 | deferred to parametric flows |
+| 3.7 | Iterative Gaussianization warm-start (diagonal) | K `04_parametric_flows/01_rbig_warmstart` | 🧱 | `fit_rbig` seeds `gaussianization_flow`; equal-budget → better optimum |
+| 3.8 | RBIG warm-start for coupling flows | K `04_parametric_flows/03_coupling_warmstart` | 🌉 | `fit_rbig_coupling`; the zero-kernel contract |
 
 ### 3.E — Boundary issues & support extension
 
@@ -448,9 +448,9 @@ Stack the rotation + marginal blocks into a differentiable graph and train end-t
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 4.1 | Gaussianization flow on two-moons end-to-end | K `01_gaussianization_2d` | 🧱 | iterative vs. parametric on the same target |
-| 4.2 | Gaussianization flow 2D — FlowJax variant | F `01_gaussianization_flow_2d` | 🌉 | |
-| 4.3 | NLL loss anatomy — base + log-det decomposition | — | 🧱 | api: `base_nll_loss` |
+| 4.1 | Gaussianization flow on two-moons end-to-end | K `04_parametric_flows/00_nll_training` | 🧱 | `gf.gaussianization_flow` + optax; iterative vs parametric |
+| 4.2 | Gaussianization flow 2D — FlowJax variant | F `01_gaussianization_flow_2d` | 🌉 | (upstream gauss_flows demo) |
+| 4.3 | NLL loss anatomy — base + log-det decomposition | K `04_parametric_flows/00_nll_training` | 🧱 | $\log p = \log p_Z + \log\lvert\det J\rvert$ confirmed vs `log_prob` |
 
 ### 4.B — Diagonal vs. coupling marginal flow
 
@@ -460,18 +460,18 @@ Stack the rotation + marginal blocks into a differentiable graph and train end-t
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 4.4 | Diagonal vs. coupling — depth-vs-expressiveness study | — | 🧱 | **GAP** — feeds 5.E |
+| 4.4 | Diagonal vs. coupling — parameter-fair expressiveness study | K `04_parametric_flows/02_diagonal_vs_coupling` | 🧱 | matched by param count; coupling more param-efficient; feeds 5.E |
 
 ### 4.C — Factory walkthroughs
 
 **Key equations / models:**
-- `make_gaussianization_flow(...)` — stacked rotation + diagonal marginal
-- `make_coupling_flow(...)` — stacked rotation + mixture-CDF coupling
+- `gaussianization_flow(...)` — stacked rotation + diagonal mixture-CDF marginal
+- `coupling_gaussianization_flow(...)` — stacked rotation + spline coupling
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 4.5 | `make_gaussianization_flow` walkthrough | — | 🧱 | api: `make_gaussianization_flow` |
-| 4.6 | `make_coupling_flow` walkthrough | — | 🧱 | api: `make_coupling_flow` |
+| 4.5 | `gaussianization_flow` walkthrough | K `04_parametric_flows/00_nll_training` | 🧱 | `gf.gaussianization_flow` + `fit`-by-optax |
+| 4.6 | `coupling_gaussianization_flow` walkthrough | K `04_parametric_flows/02_diagonal_vs_coupling` | 🧱 | `gf.coupling_gaussianization_flow` (RQ-spline) |
 
 ### 4.D — Layer-wise inspection
 
@@ -481,7 +481,7 @@ Stack the rotation + marginal blocks into a differentiable graph and train end-t
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 4.7 | Layer-wise inspection of a Gaussianization flow | — | 🧱 | api: `GaussianizationFlow.forward_with_intermediates` |
+| 4.7 | Layer-wise inspection of a Gaussianization flow | K `04_parametric_flows/04_layerwise_inspection` | 🧱 | per-layer pushforward; rotation↔marginal push-pull; `unroll_scan` |
 
 ---
 

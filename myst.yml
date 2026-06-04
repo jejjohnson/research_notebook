@@ -253,6 +253,14 @@ project:
                 - file: projects/gaussianization/notebooks/03_iterative_rbig/01_convergence_stopping.ipynb
                 - file: projects/gaussianization/notebooks/03_iterative_rbig/02_rotation_choices.ipynb
                 - file: projects/gaussianization/notebooks/03_iterative_rbig/03_boundary_support.ipynb
+            - title: "Part 4 · Parametric flows"
+              children:
+                - file: projects/gaussianization/notebooks/04_parametric_flows/README.md
+                - file: projects/gaussianization/notebooks/04_parametric_flows/00_nll_training.ipynb
+                - file: projects/gaussianization/notebooks/04_parametric_flows/01_rbig_warmstart.ipynb
+                - file: projects/gaussianization/notebooks/04_parametric_flows/02_diagonal_vs_coupling.ipynb
+                - file: projects/gaussianization/notebooks/04_parametric_flows/03_coupling_warmstart.ipynb
+                - file: projects/gaussianization/notebooks/04_parametric_flows/04_layerwise_inspection.ipynb
             - file: projects/gaussianization/survae_flows_proof.md
             - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb

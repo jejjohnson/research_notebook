@@ -315,8 +315,8 @@ The "between-coordinate" half of Gaussianization: orthogonal mixers that redistr
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 2.1 | Rotation choices — PCA / ICA / random / Picard | B `08_rotation_choices` | 🧱 | rbig canonical |
-| 2.2 | Why rotation matters between marginal passes | — | 🧱 | **GAP** — pedagogical |
+| 2.1 | Rotation choices — PCA / ICA / random / Picard | K `02_rotations/00_rotation_zoo` | 🧱 | `rbig` PCA/ICA/Random/Picard rotations |
+| 2.2 | Why rotation matters between marginal passes | K `02_rotations/00_rotation_zoo` | 🧱 | marginal-only stalls; rotation drives TC→0 |
 
 ### 2.B — Householder products & trainable orthogonals
 
@@ -327,8 +327,8 @@ The "between-coordinate" half of Gaussianization: orthogonal mixers that redistr
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 2.3 | Householder products as trainable orthogonals | K `gauss_keras.Householder` | 🧱 | api: `Householder`, `_householder_decomp` |
-| 2.4 | Cayley & exponential parameterisations of $O(d)$ | — | 🧱 | **GAP** |
+| 2.3 | Householder products as trainable orthogonals | K `02_rotations/01_householder_orthogonal` | 🧱 | `gf.HouseholderRotation`; log-det 0 under training |
+| 2.4 | Cayley & exponential parameterisations of $O(d)$ | K `02_rotations/01_householder_orthogonal` | 🧱 | `gf.OrthogonalRotation` (Cayley) + `jsl.expm`; $SO(d)$ vs $O(d)$ parity wall |
 
 ### 2.C — Fixed orthogonal & PCA warm starts
 
@@ -338,8 +338,8 @@ The "between-coordinate" half of Gaussianization: orthogonal mixers that redistr
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 2.5 | FixedOrtho & `from_pca` factory | K `gauss_keras.FixedOrtho.from_pca` | 🧱 | api: `FixedOrtho.from_pca` |
-| 2.6 | Initialising a Householder stack from a target $Q$ | — | 🧱 | **GAP** — api: `_householder_decomp` |
+| 2.5 | Fixed orthogonal & `from_data` PCA factory | K `02_rotations/02_fixed_pca_warmstart` | 🧱 | `gf.FixedRotation.from_data`; `NonTrainable`; raw-matrix drift |
+| 2.6 | Initialising a Householder stack from a target $Q$ | K `02_rotations/02_fixed_pca_warmstart` | 🧱 | Householder/QR decomposition → `eqx.tree_at`; warm vs cold start |
 
 ### 2.D — Invertible 1×1 conv (LU parameterization)
 
@@ -350,7 +350,7 @@ The "between-coordinate" half of Gaussianization: orthogonal mixers that redistr
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 2.7 | Invertible 1×1 conv as a per-pixel orthogonal mixer | — | 🧱 | **GAP** — pairs with 12.B |
+| 2.7 | Invertible 1×1 conv as a per-pixel orthogonal mixer | K `02_rotations/03_conv1x1_actnorm` | 🧱 | `gf.Invertible1x1Conv` (LU); $\log|\det|=\sum\log|s|$; pairs with 12.B |
 
 ### 2.E — ActNorm & per-channel affine
 
@@ -361,7 +361,7 @@ The "between-coordinate" half of Gaussianization: orthogonal mixers that redistr
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 2.8 | ActNorm — data-dependent affine pre-conditioning | — | 🧱 | **GAP** |
+| 2.8 | ActNorm — data-dependent affine pre-conditioning | K `02_rotations/03_conv1x1_actnorm` | 🧱 | `gf.ActNorm`/`ActNorm1D`; data-dependent init; `gh:gauss_flows#112` (add `from_data`) |
 
 ---
 

@@ -231,6 +231,14 @@ project:
                 - file: projects/gaussianization/notebooks/00_foundations/04_density_destructors.ipynb
                 - file: projects/gaussianization/notebooks/00_foundations/05_numerical_mechanics.ipynb
                 - file: projects/gaussianization/notebooks/00_foundations/06_gaussianity_diagnostics.ipynb
+            - title: "Part 1 · Marginal transforms"
+              children:
+                - file: projects/gaussianization/notebooks/01_marginal_transforms/README.md
+                - file: projects/gaussianization/notebooks/01_marginal_transforms/00_ecdf_histograms.ipynb
+                - file: projects/gaussianization/notebooks/01_marginal_transforms/01_kde_mixture_cdf.ipynb
+                - file: projects/gaussianization/notebooks/01_marginal_transforms/02_spline_cdf.ipynb
+                - file: projects/gaussianization/notebooks/01_marginal_transforms/03_learnable_mixture_cdf.ipynb
+                - file: projects/gaussianization/notebooks/01_marginal_transforms/04_inversion_strategies.ipynb
             - file: projects/gaussianization/survae_flows_proof.md
             - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb

@@ -45,11 +45,11 @@ These notebooks use two of the author's libraries as the source of truth:
   `flowjax` successor: trainable Gaussianization flows, bijectors with
   `transform_and_log_det`, and `optimistix`-based inverses.
 
-:::{note} Found while writing these
+:::{note} Found (and fixed) while writing these
 Notebook 05's round-trip test surfaced a tail-inverse bug in
 `gauss_flows.MixtureGaussianCDF`, filed as
-[gauss_flows#108](https://github.com/jejjohnson/gauss_flows/issues/108). The
-*forward* / `log_prob` direction used throughout Part 0 is unaffected.
+[gauss_flows#108](https://github.com/jejjohnson/gauss_flows/issues/108) and fixed
+in `gauss_flows` 0.1.7 — the notebook now shows it passing.
 :::
 
 ## Running

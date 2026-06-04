@@ -45,9 +45,10 @@
 # - **Mixed precision**: float32 log-det accumulation drifts over deep stacks;
 #   float64 holds.
 # - The **round-trip invertibility test** $\lVert T^{-1}(T(x)) - x\rVert <
-#   \tau$ that belongs in every flow's test suite — and that here catches a real
+#   \tau$ that belongs in every flow's test suite — and that caught a real
 #   tail-inverse bug
-#   ([gauss_flows#108](https://github.com/jejjohnson/gauss_flows/issues/108)).
+#   ([gauss_flows#108](https://github.com/jejjohnson/gauss_flows/issues/108)),
+#   fixed in `gauss_flows` 0.1.7.
 
 # %%
 import warnings
@@ -221,7 +222,7 @@ fig.tight_layout()
 # broken inverse, a missing clamp, or a precision bug. Here is the parametrised
 # check applied across `gauss_flows` bijectors (the pattern that lives in
 # `tests/test_flow.py`), with `rbig`'s empirical-CDF marginal included as a
-# cautionary baseline — and, as it turns out, one real bug.
+# cautionary baseline.
 
 # %%
 key = jr.key(0)
@@ -258,24 +259,25 @@ ax.barh(names, vals, color=colors)
 ax.axvline(TAU, color="k", ls="--", lw=1, label=fr"tolerance $\tau={TAU:.0e}$")
 ax.set_xscale("log")
 ax.set(xlabel=r"round-trip error $\max|x - T^{-1}(T(x))|$",
-       title="Invertibility test catches two broken inverses (red)")
+       title="Invertibility test: smooth bijectors pass, ECDF fails in the tails")
 ax.legend()
 style_ax(ax)
 fig.tight_layout()
 
 # %% [markdown]
-# The logistic-mixture, spline, and rotation bijectors pass at $\tau = 10^{-5}$
-# with room to spare (errors near the float64 floor). The test also flags **two**
-# failures: `rbig`'s empirical-CDF marginal (its tail saturation from §1), and —
-# more interestingly — `MixtureGaussianCDF`, whose inverse uses a too-narrow
-# bisection bracket and so cannot walk back tail samples. That is not a contrived
-# baseline; it is a real bug this very test surfaced while writing the notebook,
-# now filed as
-# [gauss_flows#108](https://github.com/jejjohnson/gauss_flows/issues/108).
-# (Until it is fixed, prefer the logistic or spline marginal for sampling-heavy
-# work; the Gaussian-mixture *forward* / `log_prob` direction used in notebooks
-# 00–02 is unaffected.) A test like this, run in CI on random inputs, is exactly
-# what lets you stack a hundred layers and trust the composition.
+# All four `gauss_flows` bijectors pass at $\tau = 10^{-5}$ with room to spare
+# (errors near the float64 floor); only `rbig`'s empirical-CDF marginal fails, on
+# its tail samples from §1 — and that failure is *fundamental* (an ECDF genuinely
+# has no information beyond the data range), not a bug to fix.
+#
+# That `MixtureGaussianCDF` passes here is itself a small case study in why this
+# test matters. An earlier draft of this notebook caught it *failing* — a
+# too-narrow bisection bracket that could not walk back tail samples — which we
+# filed as
+# [gauss_flows#108](https://github.com/jejjohnson/gauss_flows/issues/108); it was
+# fixed in `gauss_flows` 0.1.7, and the green bar above is that fix landing. A
+# round-trip test run in CI on random inputs is exactly what surfaces such bugs
+# and lets you then stack a hundred layers and trust the composition.
 #
 # ## Recap
 #

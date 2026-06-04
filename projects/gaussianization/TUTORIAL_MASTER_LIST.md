@@ -214,7 +214,7 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
 |---|----------|--------|-------|--------------|
 | 0.7 | Numerical stability for bijectors — jitter, mixed precision, tail expansions | K `00_foundations/05_numerical_mechanics` | 🧱 | pairs with `xref:GP#0.11` (jitter / safe Cholesky) |
 | 0.8 | Log-determinant accumulation across deep stacks | K `00_foundations/05_numerical_mechanics` | 🧱 | float32 vs float64 drift |
-| 0.9 | Roundtrip invertibility tests in CI | K `00_foundations/05_numerical_mechanics` | 🧱 | caught `gh:gauss_flows#108` (MixtureGaussianCDF inverse) |
+| 0.9 | Roundtrip invertibility tests in CI | K `00_foundations/05_numerical_mechanics` | 🧱 | caught `gh:gauss_flows#108` (fixed in 0.1.7) |
 
 ### 0.E — Diagnostics
 
@@ -245,9 +245,9 @@ The atomic operation of Gaussianization: turn each coordinate's distribution int
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 1.1 | Marginal transforms — ECDF & histograms | B `01_marginal_transforms` | 🧱 | rbig canonical entry; rank → uniform → normal |
-| 1.2 | Boundary issues & support extension | B `07_boundary_issues` | 🧱 | tails, $\pm\infty$ handling, rbig's three remedies |
-| 1.3 | Glivenko–Cantelli & finite-sample bias | — | 🧱 | **GAP** — pedagogical |
+| 1.1 | Marginal transforms — ECDF & histograms | K `01_marginal_transforms/00_ecdf_histograms` | 🧱 | rank → uniform → normal; `rbig` + `gf.HistogramCDF` |
+| 1.2 | Boundary issues & support extension | K `01_marginal_transforms/00_ecdf_histograms` | 🧱 | `pdf_extension`; tail $\pm\infty$ handling |
+| 1.3 | Glivenko–Cantelli & finite-sample bias | K `01_marginal_transforms/00_ecdf_histograms` | 🧱 | DKW $n^{-1/2}$ rate; degenerate ECDF Jacobian |
 
 ### 1.B — KDE / Gaussian-mixture CDFs
 
@@ -258,9 +258,9 @@ The atomic operation of Gaussianization: turn each coordinate's distribution int
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 1.4 | KDE-based 1D CDF Gaussianization | — | 🧱 | **GAP** |
-| 1.5 | Gaussian-mixture CDF — analytic forward & inverse | — | 🧱 | api: `MixtureOfGaussians` (gauss_keras) |
-| 1.6 | Bandwidth / component-count selection | — | 🧱 | **GAP** |
+| 1.4 | KDE-based 1D CDF Gaussianization | K `01_marginal_transforms/01_kde_mixture_cdf` | 🧱 | `rbig.KDEGaussianizer` |
+| 1.5 | Gaussian-mixture CDF — analytic forward & inverse | K `01_marginal_transforms/01_kde_mixture_cdf` | 🧱 | `gf.MixtureGaussianCDF`; analytic log-det |
+| 1.6 | Bandwidth / component-count selection | K `01_marginal_transforms/01_kde_mixture_cdf` | 🧱 | Scott/Silverman; BIC |
 
 ### 1.C — Monotone-spline CDFs
 
@@ -271,8 +271,8 @@ The atomic operation of Gaussianization: turn each coordinate's distribution int
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 1.7 | Monotone cubic spline CDF Gaussianization | — | 🧱 | **GAP** |
-| 1.8 | Rational-quadratic spline as a 1D bijector | — | 🧱 | **GAP** — feeds 5.B (coupling bijector menu) |
+| 1.7 | Monotone cubic spline CDF Gaussianization | K `01_marginal_transforms/02_spline_cdf` | 🧱 | PCHIP (Fritsch–Carlson); `rbig.SplineGaussianizer` |
+| 1.8 | Rational-quadratic spline as a 1D bijector | K `01_marginal_transforms/02_spline_cdf` | 🧱 | `gf.RQSplineMarginal`; exact inverse + analytic log-det; feeds 5.B |
 
 ### 1.D — Mixture-CDF as a learnable bijector
 
@@ -283,8 +283,8 @@ The atomic operation of Gaussianization: turn each coordinate's distribution int
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 1.9 | Mixture-CDF Gaussianization layer end-to-end | K `gauss_keras.MixtureCDFGaussianization` | 🧱 | api: `MixtureCDFGaussianization` |
-| 1.10 | Differentiating through the mixture-CDF — implicit-function gradient | — | 🧱 | **GAP** — pairs with `xref:GP#0.10` |
+| 1.9 | Mixture-CDF Gaussianization layer end-to-end | K `01_marginal_transforms/03_learnable_mixture_cdf` | 🧱 | end-to-end MLE with `optax` |
+| 1.10 | Differentiating through the mixture-CDF — implicit-function gradient | K `01_marginal_transforms/04_inversion_strategies` | 🧱 | unroll / one-step / adjoint; `gh:gauss_flows#111`; pairs with `xref:GP#0.10` |
 
 ### 1.E — Inversion strategies
 
@@ -296,8 +296,8 @@ The atomic operation of Gaussianization: turn each coordinate's distribution int
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 1.11 | Bisection vs. Newton for monotone CDF inversion | — | 🧱 | **GAP** |
-| 1.12 | Vectorised batched root-find across leading axes | — | 🧱 | **GAP** |
+| 1.11 | Bisection vs. Newton for monotone CDF inversion | K `01_marginal_transforms/04_inversion_strategies` | 🧱 | safeguarded hybrid (Brent) |
+| 1.12 | Vectorised batched root-find across leading axes | K `01_marginal_transforms/04_inversion_strategies` | 🧱 | `jax.vmap` |
 
 ---
 

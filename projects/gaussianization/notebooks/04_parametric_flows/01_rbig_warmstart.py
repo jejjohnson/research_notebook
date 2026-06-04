@@ -215,7 +215,8 @@ fig.tight_layout()
 #   the whole way, and fine-tunes **past** both the cold flow and the greedy fit.
 # - Fine-tuning uses a **moderate** LR — a large one-cycle peak would undo the good init.
 #
-# **Next up.** So far the marginal transform is **diagonal** — each coordinate
-# Gaussianized independently between rotations. [02 — Diagonal vs coupling](02_diagonal_vs_coupling.ipynb)
-# adds **coupling**, where one block's transform is conditioned on the other
-# coordinates, and compares the expressiveness of the two designs.
+# **Next up.** We have trained and warm-started flows but read only the final
+# likelihood. [02 — Layer-wise inspection](02_layerwise_inspection.ipynb) opens a flow
+# up — pushing data through one layer at a time to watch Gaussianity improve and
+# diagnose *where* in the stack the work happens. (The **coupling** flow itself — and
+# its warm-start — is the subject of Part 5.)

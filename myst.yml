@@ -258,9 +258,18 @@ project:
                 - file: projects/gaussianization/notebooks/04_parametric_flows/README.md
                 - file: projects/gaussianization/notebooks/04_parametric_flows/00_nll_training.ipynb
                 - file: projects/gaussianization/notebooks/04_parametric_flows/01_rbig_warmstart.ipynb
-                - file: projects/gaussianization/notebooks/04_parametric_flows/02_diagonal_vs_coupling.ipynb
-                - file: projects/gaussianization/notebooks/04_parametric_flows/03_coupling_warmstart.ipynb
-                - file: projects/gaussianization/notebooks/04_parametric_flows/04_layerwise_inspection.ipynb
+                - file: projects/gaussianization/notebooks/04_parametric_flows/02_layerwise_inspection.ipynb
+            - title: "Part 5 · Coupling"
+              children:
+                - file: projects/gaussianization/notebooks/05_coupling/README.md
+                - file: projects/gaussianization/notebooks/05_coupling/00_coupling_pattern.ipynb
+                - file: projects/gaussianization/notebooks/05_coupling/01_bijector_menu.ipynb
+                - file: projects/gaussianization/notebooks/05_coupling/02_conditioner_architectures.ipynb
+                - file: projects/gaussianization/notebooks/05_coupling/03_mask_design.ipynb
+                - file: projects/gaussianization/notebooks/05_coupling/04_diagonal_vs_coupling.ipynb
+                - file: projects/gaussianization/notebooks/05_coupling/05_coupling_warmstart.ipynb
+                - file: projects/gaussianization/notebooks/05_coupling/06_coupling_equivalence.ipynb
+                - file: projects/gaussianization/notebooks/05_coupling/07_depth_residual_stability.ipynb
             - file: projects/gaussianization/survae_flows_proof.md
             - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb

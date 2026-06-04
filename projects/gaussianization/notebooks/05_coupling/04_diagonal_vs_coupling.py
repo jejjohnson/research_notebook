@@ -16,7 +16,7 @@
 # %% [markdown]
 # ---
 # title: "Diagonal vs coupling marginal flows"
-# short_title: "02 · Diagonal vs coupling"
+# short_title: "04 · Diagonal vs coupling"
 # subtitle: "Per-axis marginal transforms vs cross-coordinate coupling, compared fairly by parameter count"
 # description: >
 #   A diagonal Gaussianization flow transforms each coordinate independently between
@@ -26,18 +26,16 @@
 #   stays flat while a smaller-conditioner coupling already wins per parameter.
 # ---
 #
-# (sec-nb-para-02)=
-# # 02 — Diagonal vs coupling marginal flows
+# (sec-nb-cpl-04)=
+# # 04 — Diagonal vs coupling marginal flows
 #
-# Every flow so far has been **diagonal**: each RBIG-style layer rotates, then
-# Gaussianizes *each coordinate independently* (`gaussianization_flow`). All the
-# cross-coordinate modelling has to come from *stacking* rotations — the marginal
-# step itself is separable. A **coupling** flow
-# (`coupling_gaussianization_flow`) breaks that separability inside each layer:
-# split the coordinates into two halves, leave one half unchanged, and transform the
-# other half with a bijector whose parameters are predicted by a **neural network
-# from the first half**. Each layer can therefore model dependence directly (Part 5
-# is devoted to coupling).
+# Notebooks [00](00_coupling_pattern.ipynb)–[03](03_mask_design.ipynb) built the
+# coupling machinery; now we put it head-to-head with the **diagonal** flow of
+# [Part 4](../04_parametric_flows/00_nll_training.ipynb). A diagonal flow rotates,
+# then Gaussianizes *each coordinate independently* (`gaussianization_flow`) — all
+# cross-coordinate modelling comes from *stacking* rotations, because the marginal
+# step is separable. A **coupling** flow (`coupling_gaussianization_flow`) breaks
+# that separability inside each layer (the pattern of notebook 00).
 #
 # Is coupling genuinely more expressive, or does it just have more parameters? To
 # answer fairly we compare the two at matched **parameter count** on a distribution
@@ -216,6 +214,6 @@ fig.tight_layout()
 # dependence is mild, the cheaper diagonal flow (and its RBIG warm-start) is plenty.
 #
 # **Next up.** Coupling flows are expressive but harder to train from scratch.
-# [03 — RBIG warm-start for coupling flows](03_coupling_warmstart.ipynb) warm-starts
+# [05 — RBIG warm-start for coupling flows](05_coupling_warmstart.ipynb) warm-starts
 # one from a greedy RBIG fit via the *zero-kernel contract* — each coupling begins as
 # a diagonal RBIG marginal, then training switches the conditioner on.

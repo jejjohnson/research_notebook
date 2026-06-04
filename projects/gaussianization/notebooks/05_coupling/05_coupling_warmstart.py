@@ -16,7 +16,7 @@
 # %% [markdown]
 # ---
 # title: "RBIG warm-start for coupling flows"
-# short_title: "03 · Coupling warm-start"
+# short_title: "05 · Coupling warm-start"
 # subtitle: "fit_rbig_coupling warm-starts a coupling flow via the zero-kernel contract — each coupling begins as a diagonal RBIG marginal, then training switches on the conditioner"
 # description: >
 #   Coupling flows are expressive but hard to train from scratch — the conditioner
@@ -28,15 +28,15 @@
 #   contract, and watches training break the equivalence.
 # ---
 #
-# (sec-nb-para-03)=
-# # 03 — RBIG warm-start for coupling flows
+# (sec-nb-cpl-05)=
+# # 05 — RBIG warm-start for coupling flows
 #
-# [Notebook 01](01_rbig_warmstart.ipynb) warm-started a *diagonal* flow from a greedy
-# RBIG fit. Coupling flows ([notebook 02](02_diagonal_vs_coupling.ipynb)) are more
-# expressive, but that expressiveness makes them *harder* to train from a random
-# start: the conditioner MLP begins random, so each coupling transform is a random
-# function of the other coordinates — the optimiser first has to discover that the
-# conditioner should be doing anything sensible at all.
+# [Part 4, notebook 01](../04_parametric_flows/01_rbig_warmstart.ipynb) warm-started a
+# *diagonal* flow from a greedy RBIG fit. Coupling flows ([notebook 04](04_diagonal_vs_coupling.ipynb))
+# are more expressive, but that expressiveness makes them *harder* to train from a
+# random start: the conditioner MLP begins random, so each coupling transform is a
+# random function of the other coordinates — the optimiser first has to discover that
+# the conditioner should be doing anything sensible at all.
 #
 # `gauss_flows.fit_rbig_coupling` warm-starts a coupling flow too, and it does so
 # with a beautiful trick — the **zero-kernel contract** (the data-dependent /
@@ -264,10 +264,12 @@ fig.tight_layout()
 #   it trains.
 # - At an **equal training budget** the warm start is ahead the whole way and lands
 #   at a better optimum — buying both speed and quality, as it did for the diagonal
-#   flow in notebook 01. (Coupling is the more expensive architecture, so it wants a
-#   real training budget — a few thousand steps — to converge.)
+#   flow in [Part 4](../04_parametric_flows/01_rbig_warmstart.ipynb). (Coupling is the
+#   more expensive architecture, so it wants a real training budget — a few thousand
+#   steps — to converge.)
 #
-# **Next up.** We have trained and warm-started several flows but treated each as a
-# black box. [04 — Layer-wise inspection](04_layerwise_inspection.ipynb) opens one
-# up — pushing data through one layer at a time to watch Gaussianity improve and
-# diagnose *where* in the stack the work happens.
+# **Next up.** The zero-kernel contract showed *empirically* that a coupling can
+# behave exactly like a diagonal marginal. [06 — Coupling ↔ diagonal
+# equivalence](06_coupling_equivalence.ipynb) makes that a precise, numerically
+# verified statement: a zero-conditioner coupling and a diagonal flow are the *same
+# map* at init, and training is what breaks the equivalence.

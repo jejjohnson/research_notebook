@@ -246,6 +246,13 @@ project:
                 - file: projects/gaussianization/notebooks/02_rotations/01_householder_orthogonal.ipynb
                 - file: projects/gaussianization/notebooks/02_rotations/02_fixed_pca_warmstart.ipynb
                 - file: projects/gaussianization/notebooks/02_rotations/03_conv1x1_actnorm.ipynb
+            - title: "Part 3 · Iterative (RBIG)"
+              children:
+                - file: projects/gaussianization/notebooks/03_iterative_rbig/README.md
+                - file: projects/gaussianization/notebooks/03_iterative_rbig/00_rbig_loop.ipynb
+                - file: projects/gaussianization/notebooks/03_iterative_rbig/01_convergence_stopping.ipynb
+                - file: projects/gaussianization/notebooks/03_iterative_rbig/02_rotation_choices.ipynb
+                - file: projects/gaussianization/notebooks/03_iterative_rbig/03_boundary_support.ipynb
             - file: projects/gaussianization/survae_flows_proof.md
             - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb

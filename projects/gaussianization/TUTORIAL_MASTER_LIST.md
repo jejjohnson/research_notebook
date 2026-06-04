@@ -214,7 +214,7 @@ A bird's-eye view of the parts and their subparts. Skim this first to orient; th
 |---|----------|--------|-------|--------------|
 | 0.7 | Numerical stability for bijectors — jitter, mixed precision, tail expansions | K `00_foundations/05_numerical_mechanics` | 🧱 | pairs with `xref:GP#0.11` (jitter / safe Cholesky) |
 | 0.8 | Log-determinant accumulation across deep stacks | K `00_foundations/05_numerical_mechanics` | 🧱 | float32 vs float64 drift |
-| 0.9 | Roundtrip invertibility tests in CI | K `00_foundations/05_numerical_mechanics` | 🧱 | caught `gh:gauss_flows#108` (MixtureGaussianCDF inverse) |
+| 0.9 | Roundtrip invertibility tests in CI | K `00_foundations/05_numerical_mechanics` | 🧱 | caught `gh:gauss_flows#108` (fixed in 0.1.7) |
 
 ### 0.E — Diagnostics
 

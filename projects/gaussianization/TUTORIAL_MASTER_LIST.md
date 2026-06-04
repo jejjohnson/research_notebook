@@ -378,8 +378,8 @@ The classical, non-parametric Gaussianization algorithm: alternate marginal CDFs
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 3.1 | RBIG walkthrough — the iterated algorithm | B `03_rbig_walkthrough` | 🧱 | canonical |
-| 3.2 | RBIG demo on 2-D toy distributions | B `04_rbig_demo` | 🧱 | |
+| 3.1 | RBIG walkthrough — the iterated algorithm | K `03_iterative_rbig/00_rbig_loop` | 🧱 | marginal→rotate loop; `rbig` + smooth `gf.fit_rbig` |
+| 3.2 | RBIG demo on 2-D toy distributions | K `03_iterative_rbig/00_rbig_loop` | 🧱 | two-moons morph; forward density / inverse generation |
 
 ### 3.B — Convergence & stopping criteria
 
@@ -390,8 +390,8 @@ The classical, non-parametric Gaussianization algorithm: alternate marginal CDFs
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 3.3 | RBIG loss / negentropy as a stopping signal | B `05_rbig_loss` | 🧱 | |
-| 3.4 | Depth selection — fixed-K vs. early-stop | — | 🧱 | **GAP** |
+| 3.3 | RBIG loss / negentropy as a stopping signal | K `03_iterative_rbig/01_convergence_stopping` | 🧱 | `total_correlation` validated; `tc_per_layer_`; `score`/`entropy` |
+| 3.4 | Depth selection — fixed-K vs. early-stop | K `03_iterative_rbig/01_convergence_stopping` | 🧱 | `zero_tolerance`/`tol` early-stop vs fixed cap |
 
 ### 3.C — Rotation-choice studies
 
@@ -403,10 +403,14 @@ The classical, non-parametric Gaussianization algorithm: alternate marginal CDFs
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 3.5 | Rotation choices revisited — convergence comparison | B `08_rotation_choices` | 🧱 | rbig canonical (also 2.A) |
-| 3.6 | Picard rotation for fast RBIG | — | 🔬 | **GAP** |
+| 3.5 | Rotation choices revisited — convergence comparison | K `03_iterative_rbig/02_rotation_choices` | 🧱 | PCA/ICA/Picard 1 layer vs random ~14 (also 2.A) |
+| 3.6 | Picard rotation for fast RBIG | K `03_iterative_rbig/02_rotation_choices` | 🔬 | `rbig.PicardRotation`; fast scalable ICA |
 
-### 3.D — RBIG as warm-start for parametric flows
+### 3.D — RBIG as warm-start for parametric flows → **moved to Part 4**
+
+> Warm-starting is a *parametric-flow* concern: a greedy RBIG fit only matters once
+> there is a trainable flow to initialise. These two tutorials are therefore covered
+> in **Part 4 — Parametric Gaussianization Flows**, alongside NLL training.
 
 **Key equations / models:**
 - Greedy fit each block to data, then jointly fine-tune via NLL
@@ -414,8 +418,8 @@ The classical, non-parametric Gaussianization algorithm: alternate marginal CDFs
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 3.7 | Iterative Gaussianization warm-start | K `03_iterative_gaussianization_init` | 🧱 | api: `initialize_flow_from_ig` |
-| 3.8 | RBIG warm-start for FlowJax-style flows | F `03_rbig_warmstart` | 🌉 | |
+| 3.7 | Iterative Gaussianization warm-start | → Part 4 | 🧱 | api: `initialize_flow_from_ig`; deferred to parametric flows |
+| 3.8 | RBIG warm-start for FlowJax-style flows | → Part 4 | 🌉 | deferred to parametric flows |
 
 ### 3.E — Boundary issues & support extension
 
@@ -426,8 +430,8 @@ The classical, non-parametric Gaussianization algorithm: alternate marginal CDFs
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 3.9 | Boundary issues & tail handling in RBIG | B `07_boundary_issues` | 🧱 | (also 1.2) |
-| 3.10 | Dequantisation for discrete inputs | — | 🧱 | **GAP** — pairs with 8.B |
+| 3.9 | Boundary issues & tail handling in RBIG | K `03_iterative_rbig/03_boundary_support` | 🧱 | `bound_correct`/`pdf_extension`/KDE; tail round-trip (also 1.2) |
+| 3.10 | Dequantisation for discrete inputs | K `03_iterative_rbig/03_boundary_support` | 🧱 | +U[0,1) noise; pairs with 8.B |
 
 ---
 

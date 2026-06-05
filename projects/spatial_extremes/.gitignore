@@ -1,0 +1,9 @@
+# Data caches — tracked via DVC (see data/cds_insitu_land.dvc), never committed.
+# The CDS GeoParquet archive is large and reproducible via scripts/fetch_cds_insitu.py.
+.data_full/
+.data_full_snap/
+
+# Local backups, run logs, and build artefacts
+*.bak
+logs/
+_build/

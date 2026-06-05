@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.1.11](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.10...research_notebook-v0.1.11) (2026-06-05)
+
+
+### Features
+
+* **satellite_viewer:** add credentials module + .env / pixi activation ([#81](https://github.com/jejjohnson/research_notebook/issues/81)) ([884608d](https://github.com/jejjohnson/research_notebook/commit/884608dc6a1eefef4b4df3105230f7d2030f9a18))
+* **satellite-climatology:** v4 coverage-planner prototype + design docs ([714a263](https://github.com/jejjohnson/research_notebook/commit/714a263eaf5f2cc7d640446e7ea3201854fb878a))
+* **satellite-viewer:** basemap switching, event-strip timeline, and viewer fixes ([db141df](https://github.com/jejjohnson/research_notebook/commit/db141dfb9f7718f10e39759518b496d2768b8508))
+
+
+### Bug Fixes
+
+* **pixi:** unblock satellite-viewer solve + wire xtremax into the pyrox env ([#87](https://github.com/jejjohnson/research_notebook/issues/87)) ([16605bb](https://github.com/jejjohnson/research_notebook/commit/16605bb673be79d9e3968572f712ecea8b88a686))
+
+
+### Documentation
+
+* **bayesian_nns, neural_fields:** new master lists + project scaffold ([#80](https://github.com/jejjohnson/research_notebook/issues/80)) ([e68f42f](https://github.com/jejjohnson/research_notebook/commit/e68f42f4b42cb9ce15cf6b7f8c264d04d9aea3fe))
+* **gaussianization:** add Part 0 foundations tutorial notebooks (0.1–0.12) ([#88](https://github.com/jejjohnson/research_notebook/issues/88)) ([6863769](https://github.com/jejjohnson/research_notebook/commit/6863769c7356be7ecb961c29be1650df0747442e))
+* **gaussianization:** add Part 1 marginal-transform tutorials (1.1-1.12) ([#89](https://github.com/jejjohnson/research_notebook/issues/89)) ([b7b5fb4](https://github.com/jejjohnson/research_notebook/commit/b7b5fb41c2818442e3983e2c889f46f3b110a671))
+* **gaussianization:** add Part 2 rotation & orthogonal-mixer tutorials (2.1-2.8) ([#90](https://github.com/jejjohnson/research_notebook/issues/90)) ([78e4ca3](https://github.com/jejjohnson/research_notebook/commit/78e4ca317c677337918c253f7c86044450a3c930))
+* **gaussianization:** add Part 3 iterative-Gaussianization (RBIG) tutorials (3.1-3.10) ([b8bebf9](https://github.com/jejjohnson/research_notebook/commit/b8bebf982974447e4fe2317845746ba8c6c5d547))
+* **gaussianization:** add Part 3 iterative-Gaussianization (RBIG) tutorials (3.1-3.10) ([552e4c6](https://github.com/jejjohnson/research_notebook/commit/552e4c6971bc63cf898015e1bc13db97fd77fff4))
+* **gaussianization:** add Part 4 parametric Gaussianization-flow tutorials (4.1-4.7, 3.7-3.8) ([814e7f6](https://github.com/jejjohnson/research_notebook/commit/814e7f6e720ef194e6beca9d77459f86ca652b59))
+* **gaussianization:** add Part 4 parametric Gaussianization-flow tutorials (4.1-4.7, 3.7-3.8) ([3ded6a8](https://github.com/jejjohnson/research_notebook/commit/3ded6a892d24a9f53d8a60cc06cc8228d4867a1f))
+* **gaussianization:** add Part 5 coupling-based Gaussianization (5.1-5.22) + reorganise ([#93](https://github.com/jejjohnson/research_notebook/issues/93)) ([6504baa](https://github.com/jejjohnson/research_notebook/commit/6504baa4f4d033adc4051520d55973133344f75a))
+* **gaussianization:** myst-ify fair-learning subproject ([#84](https://github.com/jejjohnson/research_notebook/issues/84)) ([3bf9bb5](https://github.com/jejjohnson/research_notebook/commit/3bf9bb53e5b83ade1cfe182f8a36020a4b3d9401))
+* **spectral:** design docs for three spectral-analysis sibling apps ([#83](https://github.com/jejjohnson/research_notebook/issues/83)) ([e5d5211](https://github.com/jejjohnson/research_notebook/commit/e5d52111b61a43a7277d1fc2785e5c26af15ef10))
+
 ## [0.1.10](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.9...research_notebook-v0.1.10) (2026-05-28)
 
 

@@ -155,11 +155,15 @@ fig.tight_layout()
 
 # %%
 rng = np.random.default_rng(0)
-n = 3000
+n = 4500
 t = rng.uniform(0.5, 3.5, n)
 arm = (rng.integers(0, 2, n) * 2 - 1)[:, None]
 xy = arm * np.stack([t * np.cos(2.5 * t), t * np.sin(2.5 * t)], axis=1) + 0.08 * rng.standard_normal((n, 2))
-X = jnp.asarray((xy - xy.mean(0)) / xy.std(0))
+xy = (xy - xy.mean(0)) / xy.std(0)
+# Disjoint train / eval so the bar chart is genuine held-out likelihood.
+X_train = jnp.asarray(xy[:3000])
+X_eval = jnp.asarray(xy[3000:])
+X = X_train  # plotting alias
 
 
 def build_flow(name, key, n_blocks=2):
@@ -189,11 +193,11 @@ def train(flow, steps=1500, peak_lr=3e-3, batch=512, seed=1):
     key = jr.key(seed)
     for _ in range(steps):
         key, sk = jr.split(key)
-        params, state, _ = step(params, state, X[jr.randint(sk, (batch,), 0, X.shape[0])])
+        params, state, _ = step(params, state, X_train[jr.randint(sk, (batch,), 0, X_train.shape[0])])
     return eqx.combine(params, static)
 
 
-logp = lambda f: float(jax.vmap(f.log_prob)(X).mean())
+logp = lambda f: float(jax.vmap(f.log_prob)(X_eval).mean())
 fitted = {name: train(build_flow(name, jr.key(0))) for name in COUPLINGS}
 for name, f in fitted.items():
     print(f"{name:13s}: log p = {logp(f):.3f}")

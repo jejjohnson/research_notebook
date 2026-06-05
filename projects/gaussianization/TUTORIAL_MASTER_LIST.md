@@ -419,7 +419,7 @@ The classical, non-parametric Gaussianization algorithm: alternate marginal CDFs
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
 | 3.7 | Iterative Gaussianization warm-start (diagonal) | K `04_parametric_flows/01_rbig_warmstart` | 🧱 | `fit_rbig` seeds `gaussianization_flow`; equal-budget → better optimum |
-| 3.8 | RBIG warm-start for coupling flows | K `04_parametric_flows/03_coupling_warmstart` | 🌉 | `fit_rbig_coupling`; the zero-kernel contract |
+| 3.8 | RBIG warm-start for coupling flows | K `05_coupling/05_coupling_warmstart` | 🌉 | `fit_rbig_coupling`; the zero-kernel contract |
 
 ### 3.E — Boundary issues & support extension
 
@@ -460,7 +460,7 @@ Stack the rotation + marginal blocks into a differentiable graph and train end-t
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 4.4 | Diagonal vs. coupling — parameter-fair expressiveness study | K `04_parametric_flows/02_diagonal_vs_coupling` | 🧱 | matched by param count; coupling more param-efficient; feeds 5.E |
+| 4.4 | Diagonal vs. coupling — parameter-fair expressiveness study | K `05_coupling/04_diagonal_vs_coupling` | 🧱 | matched by param count; coupling more param-efficient; feeds 5.E |
 
 ### 4.C — Factory walkthroughs
 
@@ -471,7 +471,7 @@ Stack the rotation + marginal blocks into a differentiable graph and train end-t
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
 | 4.5 | `gaussianization_flow` walkthrough | K `04_parametric_flows/00_nll_training` | 🧱 | `gf.gaussianization_flow` + `fit`-by-optax |
-| 4.6 | `coupling_gaussianization_flow` walkthrough | K `04_parametric_flows/02_diagonal_vs_coupling` | 🧱 | `gf.coupling_gaussianization_flow` (RQ-spline) |
+| 4.6 | `coupling_gaussianization_flow` walkthrough | K `05_coupling/04_diagonal_vs_coupling` | 🧱 | `gf.coupling_gaussianization_flow` (RQ-spline) |
 
 ### 4.D — Layer-wise inspection
 
@@ -481,7 +481,7 @@ Stack the rotation + marginal blocks into a differentiable graph and train end-t
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 4.7 | Layer-wise inspection of a Gaussianization flow | K `04_parametric_flows/04_layerwise_inspection` | 🧱 | per-layer pushforward; rotation↔marginal push-pull; `unroll_scan` |
+| 4.7 | Layer-wise inspection of a Gaussianization flow | K `04_parametric_flows/02_layerwise_inspection` | 🧱 | per-layer pushforward; rotation↔marginal push-pull; `unroll_scan` |
 
 ---
 
@@ -499,9 +499,9 @@ Coupling is the expressive engine of modern Gaussianization: split coordinates w
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 5.1 | Coupling pattern from RealNVP to mixture-CDF coupling | K `02_coupling_flow_2d` | 🧱 | |
+| 5.1 | Coupling pattern from RealNVP to mixture-CDF coupling | K `05_coupling/00_coupling_pattern` | 🧱 | split/condition/transform; `gf.AffineCoupling` |
 | 5.2 | Coupling flow 2D — FlowJax variant | F `02_coupling_flow_2d` | 🌉 | |
-| 5.3 | Triangular Jacobian — why coupling log-det is free | — | 🧱 | **GAP** — pedagogical |
+| 5.3 | Triangular Jacobian — why coupling log-det is free | K `05_coupling/00_coupling_pattern` | 🧱 | log\|det\| = sum of active-half scales, verified |
 
 ### 5.B — Bijector menu for coupling
 
@@ -514,10 +514,10 @@ Coupling is the expressive engine of modern Gaussianization: split coordinates w
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 5.4 | Affine coupling — RealNVP foundation | — | 🧱 | **GAP** |
-| 5.5 | Mixture-CDF coupling | K `gauss_keras.MixtureCDFCoupling` | 🧱 | api: `MixtureCDFCoupling` |
-| 5.6 | Deep sigmoid coupling | — | 🧱 | **GAP** |
-| 5.7 | Rational-quadratic spline (NSF) coupling | — | 🧱 | **GAP** — feeds 1.8 |
+| 5.4 | Affine coupling — RealNVP foundation | K `05_coupling/01_bijector_menu` | 🧱 | `gf.AffineCoupling`; linear per-coordinate map |
+| 5.5 | Mixture-CDF coupling | K `05_coupling/01_bijector_menu` | 🧱 | `gf.MixtureGaussianCDFCoupling` |
+| 5.6 | Deep sigmoid coupling | K `05_coupling/01_bijector_menu` | 🧱 | `gf.DeepSigmoidCoupling`; expressive but harder to train |
+| 5.7 | Rational-quadratic spline (NSF) coupling | K `05_coupling/01_bijector_menu` | 🧱 | `gf.RQSplineCoupling`; modern default (also 1.8) |
 
 ### 5.C — Conditioner architectures *(headline)*
 
@@ -535,15 +535,15 @@ Coupling is the expressive engine of modern Gaussianization: split coordinates w
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 5.8 | MLP & shared-MLP conditioners | K `make_mlp_conditioner`, `make_shared_mlp_conditioner` | 🧱 | api builders |
-| 5.9 | Conditioner output parameterisation — log-scale clamping for stability | K `tanh_log_scale_clamp`, `sigmoid_log_scale_clamp` | 🧱 | api: clamps |
+| 5.8 | MLP & shared-MLP conditioners | K `05_coupling/02_conditioner_architectures` | 🧱 | the conditioner is the expressive engine (MLP) |
+| 5.9 | Conditioner output parameterisation — log-scale clamping for stability | K `05_coupling/02_conditioner_architectures` | 🧱 | `log_scale_bound` → stable training |
 | 5.10 | ResNet & deep MLP conditioners | — | 🧱 | **GAP** |
 | 5.11 | CNN conditioner for image coupling | — | 🧱 | **GAP** — referenced by 12.C |
 | 5.12 | RNN / Mamba / Transformer conditioners for sequence coupling | — | 🌉 | **GAP** — referenced by 11.B |
 | 5.13 | GNN conditioner for graph-structured coupling | — | 🔬 | **GAP** |
 | 5.14 | Equivariant conditioners | — | 🔬 | **GAP** — referenced by 12.D / 13.E |
 | 5.15 | Hypernetwork conditioners | — | 🔬 | **GAP** |
-| 5.16 | Parameter budget vs. expressiveness — when does adding conditioner depth help? | — | 🧱 | **GAP** — pedagogical |
+| 5.16 | Parameter budget vs. expressiveness — when does adding conditioner depth help? | K `05_coupling/02_conditioner_architectures` | 🧱 | conditioner width sweep; diminishing returns |
 | 5.17 | Three-pattern conditional flow construction | F `08_conditional_flow_three_ways` | 🌉 | also 7.C |
 
 ### 5.D — Mask design
@@ -556,8 +556,8 @@ Coupling is the expressive engine of modern Gaussianization: split coordinates w
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 5.18 | Mask design — checkerboard / channel-wise / learned | — | 🧱 | api: `default_half_mask` |
-| 5.19 | Mask stacking & receptive-field analysis | — | 🧱 | **GAP** |
+| 5.18 | Mask design — checkerboard / channel-wise / learned | K `05_coupling/03_mask_design` | 🧱 | channel-wise + `Flip`; checkerboard for images |
+| 5.19 | Mask stacking & alternation — every coordinate gets both roles | K `05_coupling/03_mask_design` | 🧱 | fixed mask leaves half untouched; alternate to fix |
 
 ### 5.E — Coupling ↔ diagonal equivalence
 
@@ -568,7 +568,7 @@ Coupling is the expressive engine of modern Gaussianization: split coordinates w
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 5.20 | Coupling ↔ diagonal equivalence — proof & empirical check | K `04_coupling_equivalence` | 🧱 | also F `04_coupling_equivalence` |
+| 5.20 | Coupling ↔ diagonal equivalence — proof & empirical check | K `05_coupling/06_coupling_equivalence` | 🧱 | zero-kernel coupling ≡ diagonal flow; training breaks it |
 
 ### 5.F — Depth, residual coupling, stability
 
@@ -579,8 +579,8 @@ Coupling is the expressive engine of modern Gaussianization: split coordinates w
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 5.21 | Depth-vs-expressiveness study for coupling Gaussianization | — | 🧱 | **GAP** |
-| 5.22 | Residual coupling & Lipschitz constraints | — | 🌉 | **GAP** — preview of 9.F |
+| 5.21 | Depth-vs-expressiveness study for coupling Gaussianization | K `05_coupling/07_depth_residual_stability` | 🧱 | depth → fit; gradient norm vs depth; stabilisers |
+| 5.22 | Residual coupling & Lipschitz constraints | K `05_coupling/07_depth_residual_stability` | 🌉 | $T=x+g$, Lip<1, Banach inverse; preview of 9.F |
 
 ---
 

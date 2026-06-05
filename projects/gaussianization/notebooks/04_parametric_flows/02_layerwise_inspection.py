@@ -16,7 +16,7 @@
 # %% [markdown]
 # ---
 # title: "Layer-wise inspection of a Gaussianization flow"
-# short_title: "04 · Layer-wise inspection"
+# short_title: "02 · Layer-wise inspection"
 # subtitle: "Push data through one layer at a time to watch Gaussianity improve, see the rotation↔marginal push-pull, and diagnose where the flow does its work"
 # description: >
 #   A trained flow is usually a black box. This notebook opens one up: it applies a
@@ -27,8 +27,8 @@
 #   layers. Includes the trick for unrolling a flowjax Scan.
 # ---
 #
-# (sec-nb-para-04)=
-# # 04 — Layer-wise inspection of a Gaussianization flow
+# (sec-nb-para-02)=
+# # 02 — Layer-wise inspection of a Gaussianization flow
 #
 # We have trained, warm-started, and compared several flows, always reading just the
 # *final* log-likelihood. But a Gaussianization flow is a **stack** of interpretable
@@ -206,9 +206,9 @@ print("=> the same per-layer diagnostics of §2 now apply to any trained flow")
 # The unrolled layers reproduce the full transform exactly, so everything in §1–§2 —
 # the pushforward morph, the correlation and kurtosis traces — transfers verbatim to
 # a trained `gaussianization_flow` or `coupling_gaussianization_flow`. (For the
-# coupling flow each layer also carries a conditioner whose final-kernel magnitude,
-# from [notebook 03](03_coupling_warmstart.ipynb), is itself a per-layer diagnostic
-# of how "switched on" the coupling is.)
+# coupling flow each layer also carries a conditioner whose final-kernel magnitude —
+# the *zero-kernel contract* of [Part 5](../05_coupling/05_coupling_warmstart.ipynb) —
+# is itself a per-layer diagnostic of how "switched on" the coupling is.)
 #
 # ## Recap
 #
@@ -225,9 +225,9 @@ print("=> the same per-layer diagnostics of §2 now apply to any trained flow")
 # residual" — actionable detail for choosing depth and trusting the latent.
 #
 # **Part 4 → Part 5.** That completes **parametric Gaussianization flows**: NLL
-# training (00), the RBIG warm-start for diagonal (01) and coupling (03) flows, the
-# diagonal-vs-coupling expressiveness study (02), and layer-wise inspection (04). The
-# recurring hero is **coupling** — a bijector whose parameters are predicted by a
-# conditioner network. **Part 5 — Coupling-based Gaussianization** makes the
-# conditioner the headline: the masks, architectures, and bijector menu that give
-# coupling flows their expressiveness.
+# training (00), the RBIG warm-start for the diagonal flow (01), and layer-wise
+# inspection (02). The recurring hero is **coupling** — a bijector whose parameters
+# are predicted by a conditioner network. **Part 5 — Coupling-based Gaussianization**
+# makes it the headline: the coupling pattern, bijector menu, conditioner
+# architectures and masks — then the diagonal-vs-coupling comparison and the coupling
+# RBIG warm-start (drafted here, but at home there).

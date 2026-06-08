@@ -18,6 +18,7 @@ project:
     - title: Pooling
       children:
         - file: notebooks/02_pooling/04_many_stations_independent.ipynb
+        - file: notebooks/02_pooling/04b_many_stations_laplace.ipynb
         - file: notebooks/02_pooling/05_hierarchical_pooling.ipynb
     - title: Spatial models
       children:

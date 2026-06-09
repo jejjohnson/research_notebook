@@ -22,6 +22,7 @@ project:
         - file: notebooks/02_pooling/05_hierarchical_pooling.ipynb
     - title: Spatial models
       children:
+        - file: notebooks/02_pooling/06_gp_primer.ipynb
         - file: notebooks/03_spatial_gev/07_spatial_gp_mu.ipynb
         - file: notebooks/03_spatial_gev/08_spatial_gp_mu_sigma.ipynb
         - file: notebooks/03_spatial_gev/09_spatial_gp_mu_sigma_xi.ipynb

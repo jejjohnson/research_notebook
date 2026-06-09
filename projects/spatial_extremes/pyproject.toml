@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-notebooks = ["seaborn>=0.13", "ipython", "ipykernel>=6.29", "nbconvert>=7", "nbformat>=5"]
+notebooks = ["seaborn>=0.13", "ipython", "ipykernel>=6.29", "nbconvert>=7", "nbformat>=5", "mystmd>=1.3"]
 
 # xtremax / pyrox / xrtoolz are not on PyPI yet — resolve from their public git
 # repos so `uv sync` works on any checkout (not just this monorepo layout).

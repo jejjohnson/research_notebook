@@ -68,7 +68,13 @@ def _opentopo_elevation(
             except Exception:
                 time.sleep(pause * (attempt + 1))
         else:
-            out.extend([None] * len(chunk))
+            # All retries failed: abort rather than record None (which would be
+            # cached as bogus 0 m elevation/slope). A real "no DEM data here"
+            # (e.g. open sea) comes back as None *inside* a successful response.
+            raise RuntimeError(
+                f"OpenTopoData unreachable for a chunk after {retries} retries; "
+                "aborting so a transient outage cannot poison the feature cache"
+            )
         time.sleep(pause)
     return out
 

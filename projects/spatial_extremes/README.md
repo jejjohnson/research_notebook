@@ -56,9 +56,9 @@ whole curriculum runs offline, no credentials required.
 Set up the project environment with `uv` (from `projects/spatial_extremes/`):
 
 ```bash
-uv sync --extra notebooks      # build .venv with the full stack + notebook tooling
+uv sync --extra notebooks      # build .venv with the full stack, notebook tooling + MyST
 .venv/bin/python -m ipykernel install --user --name spatial-extremes
-myst build --html              # execute the notebooks and render the static site
+.venv/bin/myst build --html    # execute the notebooks and render the static site
 ```
 
 To use real data, accept the CDS licence, add credentials (see `.env.example`),

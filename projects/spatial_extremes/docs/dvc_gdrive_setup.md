@@ -75,8 +75,8 @@ secrets enter git.
 
 ```bash
 # 1. download real data (uses ~/.cdsapirc; only fetches missing years)
-#    run from projects/spatial_extremes/ in the project venv
-.venv/bin/python scripts/fetch_cds_insitu.py
+#    all commands below are run from the repo root
+projects/spatial_extremes/.venv/bin/python projects/spatial_extremes/scripts/fetch_cds_insitu.py
 
 # 2. track the cache with DVC (creates data/cds_insitu_land.dvc, gitignores the data)
 dvc add projects/spatial_extremes/data/cds_insitu_land

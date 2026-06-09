@@ -101,10 +101,10 @@ def main() -> None:
     )
     args = p.parse_args()
 
-    # Pin the cache to the project's data/ dir by default, ignoring any
-    # CDS_INSITU_SCRATCH_ROOT in the environment (that is what previously sent a
-    # download off into a side folder the notebooks never read).
-    root = Path(args.root).expanduser() if args.root else data.project_root() / "data"
+    # Default to the same cache root the loaders read from, so the fetch and the
+    # notebooks always agree on where the cache lives (both honour
+    # CDS_INSITU_SCRATCH_ROOT / XR_TOOLZ_CDS_ROOT); pass --root to override.
+    root = Path(args.root).expanduser() if args.root else data.default_cache_root()
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_file = (
         Path(args.log_file)
@@ -171,7 +171,7 @@ def main() -> None:
     )
 
     t_all = time.time()
-    n_fetch = n_skip = n_empty = n_err = 0
+    n_fetch = n_skip = n_empty = n_err = n_real_err = 0
     total_rows = 0
     consec_invalid = 0
     seen_data = False  # gate the newest-first auto-stop to the *old* end only
@@ -194,6 +194,8 @@ def main() -> None:
             n_err += 1
             msg = str(exc)
             out_of_range = ("InvalidRequest" in msg) or ("400" in msg)
+            if not out_of_range:
+                n_real_err += 1  # bad creds / network / API error — a real failure
             logger.error(
                 "{} · {}: {}",
                 yr,
@@ -259,6 +261,15 @@ def main() -> None:
             )
     except Exception as exc:
         logger.warning("could not summarise final cache: {}", exc)
+
+    if n_real_err:
+        logger.error(
+            "{} year(s) failed with real errors (bad credentials / network / "
+            "API), not just out-of-range — the cache may be incomplete; exiting "
+            "non-zero so callers and CI notice instead of assuming success.",
+            n_real_err,
+        )
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

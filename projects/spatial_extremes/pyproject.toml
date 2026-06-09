@@ -26,12 +26,12 @@ dependencies = [
 [project.optional-dependencies]
 notebooks = ["seaborn>=0.13", "ipython", "ipykernel>=6.29", "nbconvert>=7", "nbformat>=5"]
 
-# xtremax / pyrox are not on PyPI yet; xrtoolz is local for now. Resolve from
-# git / path so `uv`-based installs work outside the pixi lockfile too.
+# xtremax / pyrox / xrtoolz are not on PyPI yet — resolve from their public git
+# repos so `uv sync` works on any checkout (not just this monorepo layout).
 [tool.uv.sources]
 xtremax = { git = "https://github.com/jejjohnson/xtremax.git" }
 pyrox = { git = "https://github.com/jejjohnson/pyrox.git" }
-xrtoolz = { path = "../../../pipekit_proj/xrtoolz", editable = true }
+xrtoolz = { git = "https://github.com/jejjohnson/xrtoolz.git" }
 
 [build-system]
 requires = ["hatchling"]

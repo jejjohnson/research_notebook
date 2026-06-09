@@ -276,8 +276,8 @@ def load_station_daily(
     prefer_real: bool = True,
     root: Path | None = None,
     n_stations: int = 40,
-    start: str = DEFAULT_START,
-    end: str = DEFAULT_END,
+    start: str | None = None,
+    end: str | None = None,
     seed: int = 2024,
 ) -> tuple[pd.DataFrame, bool]:
     """Load daily station temperatures, real if cached else synthetic.
@@ -286,14 +286,28 @@ def load_station_daily(
     in the module docstring and ``is_real`` flags whether the data came from
     the CDS cache. Set ``prefer_real=False`` to force the synthetic generator
     (handy for reproducible teaching figures).
+
+    ``start``/``end`` (``YYYY-MM-DD``) bound the returned record on **both**
+    paths, so a given call is reproducible regardless of how many years the
+    real cache happens to hold. The default ``None`` uses the *full* cached
+    record for real data, and the ``DEFAULT_START``..``DEFAULT_END`` window for
+    the synthetic fallback.
     """
     root = Path(root) if root is not None else default_cache_root()
     if prefer_real:
         real = _load_real_daily(root)
         if real is not None:
+            if start is not None or end is not None:
+                t = pd.to_datetime(real["time"])
+                lo = pd.Timestamp(start) if start is not None else t.min()
+                hi = pd.Timestamp(end) if end is not None else t.max()
+                real = real[(t >= lo) & (t <= hi)].reset_index(drop=True)
             return real, True
     syn = synthetic_station_daily(
-        n_stations=n_stations, start=start, end=end, seed=seed
+        n_stations=n_stations,
+        start=start or DEFAULT_START,
+        end=end or DEFAULT_END,
+        seed=seed,
     )
     return syn, False
 
@@ -335,8 +349,8 @@ def load_annual_maxima(
     prefer_real: bool = True,
     root: Path | None = None,
     n_stations: int = 40,
-    start: str = DEFAULT_START,
-    end: str = DEFAULT_END,
+    start: str | None = None,
+    end: str | None = None,
     seed: int = 2024,
     min_periods: int = 300,
     min_years: int | None = None,

@@ -1,0 +1,6 @@
+outs:
+- md5: b148a33dea24dbb79b92c31a5af17ae3.dir
+  size: 11021306
+  nfiles: 3
+  hash: md5
+  path: cds_insitu_land

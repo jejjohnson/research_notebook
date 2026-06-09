@@ -1,0 +1,32 @@
+version: 1
+# Standalone MyST config for previewing the spatial-extremes curriculum on its
+# own (`myst build --html` / `myst start` from this folder). The notebooks also
+# slot into the parent Research Notebook site via its top-level myst.yml.
+project:
+  id: spatial-extremes
+  title: Spatial Extremes
+  authors:
+    - name: Juan Emmanuel Johnson
+  toc:
+    - file: README.md
+    - title: Foundations
+      children:
+        - file: notebooks/00_data/00_cds_insitu_iberia.ipynb
+        - file: notebooks/01_evt_foundations/01_block_maxima.ipynb
+        - file: notebooks/01_evt_foundations/02_gev_one_station.ipynb
+        - file: notebooks/01_evt_foundations/03_extremal_types.ipynb
+        - file: notebooks/01_evt_foundations/03_return_levels.ipynb
+    - title: Pooling
+      children:
+        - file: notebooks/02_pooling/04_many_stations_independent.ipynb
+        - file: notebooks/02_pooling/04b_many_stations_laplace.ipynb
+        - file: notebooks/02_pooling/05_hierarchical_pooling.ipynb
+    - title: Spatial models
+      children:
+        - file: notebooks/02_pooling/06_gp_primer.ipynb
+        - file: notebooks/03_spatial_gev/07_spatial_gp_mu.ipynb
+        - file: notebooks/03_spatial_gev/08_spatial_gp_mu_sigma.ipynb
+        - file: notebooks/03_spatial_gev/09_spatial_gp_mu_sigma_xi.ipynb
+site:
+  template: book-theme
+  title: Spatial Extremes

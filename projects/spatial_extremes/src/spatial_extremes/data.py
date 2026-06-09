@@ -4,12 +4,12 @@ Two interchangeable sources, one schema:
 
 * **Real** — daily near-surface ``air_temperature`` from CDS in-situ land
   stations over the Iberian peninsula, pulled and cached with
-  :class:`xrtoolz.data.CDSInsituArchive`.
+  :class:`xrreader.CDSInsituArchive`.
 * **Synthetic** — a deterministic generator with the *same* tidy schema, so
   every notebook runs end-to-end with no network and no CDS credentials.
 
 Swapping one for the other is a single flag (``prefer_real``). The real path
-imports ``xrtoolz`` lazily, so this module imports cleanly in a minimal
+imports ``xrreader`` lazily, so this module imports cleanly in a minimal
 environment (``numpy`` + ``pandas`` + ``xarray``) that has none of the
 geospatial stack installed.
 
@@ -35,8 +35,8 @@ import numpy as np
 import pandas as pd
 
 
-# Iberia, matching the bbox used in xrtoolz's cds_insitu_land_demo.
-# Order follows xrtoolz.types.BBox: (lon_min, lon_max, lat_min, lat_max).
+# Iberia, matching the bbox used in xrreader's cds_insitu_land_demo.
+# Order follows xrreader.types.BBox: (lon_min, lon_max, lat_min, lat_max).
 # Spain incl. the Balearic Islands and Ceuta/Melilla (lat_min nudged to 35.0).
 # The Canary Islands (~28°N) sit outside this box — widen to lat 27 / lon -18.5
 # to include them, at the cost of a much larger, ocean-heavy download.
@@ -81,7 +81,7 @@ def _archive_data_path(root: Path) -> Path:
 
 
 # ---------------------------------------------------------------------------
-# Real source — xrtoolz CDS in-situ land archive (lazy import)
+# Real source — xrreader CDS in-situ land archive (lazy import)
 # ---------------------------------------------------------------------------
 def fetch_cds_insitu(
     start: str = DEFAULT_START,
@@ -94,7 +94,7 @@ def fetch_cds_insitu(
 ) -> Path:
     """Download + cache CDS in-situ land observations over ``bbox``.
 
-    Requires ``xrtoolz[cds-insitu]`` and CDS credentials (``CDSAPI_URL`` /
+    Requires ``xrreader[cds-insitu]`` and CDS credentials (``CDSAPI_URL`` /
     ``CDSAPI_KEY`` in the environment, a ``.env`` file, or ``~/.cdsapirc``).
     Returns the path to the cached GeoParquet archive. Re-running is cheap:
     the archive only fetches years not already present in its manifest.
@@ -103,8 +103,8 @@ def fetch_cds_insitu(
     temperature extremes); set ``temperature_only=False`` to pull the whole
     land preset.
     """
-    from xrtoolz.data import CDSInsituArchive, CDSSource
-    from xrtoolz.types import AIR_TEMPERATURE, BBox
+    from xrreader import CDSInsituArchive, CDSSource
+    from xrreader.types import AIR_TEMPERATURE, BBox
 
     variables = (AIR_TEMPERATURE,) if temperature_only else None
     root = Path(root) if root is not None else default_cache_root()
@@ -135,7 +135,7 @@ def _load_real_daily(root: Path) -> pd.DataFrame | None:
 
     The cache is a GeoParquet, but we only need the scalar columns — so we read
     it with plain ``pandas`` + ``pyarrow`` (selecting non-geometry columns),
-    which avoids a hard dependency on ``geopandas``/``xrtoolz`` just to *read*.
+    which avoids a hard dependency on ``geopandas``/``xrreader`` just to *read*.
     """
     data_path = _archive_data_path(root)
     if not data_path.exists():
@@ -144,10 +144,10 @@ def _load_real_daily(root: Path) -> pd.DataFrame | None:
     try:
         df = pd.read_parquet(data_path, columns=cols)  # pyarrow engine
     except Exception:
-        # Fall back to the full geopandas/xrtoolz read if the column-subset
+        # Fall back to the full geopandas/xrreader read if the column-subset
         # read is unavailable for some reason.
         try:
-            from xrtoolz.data import CDSInsituArchive
+            from xrreader import CDSInsituArchive
 
             archive = CDSInsituArchive(
                 root=root, preset=PRESET, time_aggregation="daily"

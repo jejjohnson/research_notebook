@@ -17,7 +17,7 @@ Three packages do the heavy lifting, one per layer:
 
 | Layer | Package | Role |
 |-------|---------|------|
-| Data | [`xrtoolz`](https://github.com/jejjohnson/xrtoolz) | pull + cache CDS in-situ land stations over Iberia |
+| Data | [`xrreader`](https://github.com/jejjohnson/xrreader) | pull + cache CDS in-situ land stations over Iberia |
 | Extremes | [`xtremax`](https://github.com/jejjohnson/xtremax) | block-maxima extraction, GEV distribution, return levels |
 | Gaussian processes | [`pyrox`](https://github.com/jejjohnson/pyrox) | kernels, latent GP fields, variational inference |
 
@@ -26,7 +26,7 @@ Three packages do the heavy lifting, one per layer:
 Each notebook is short and adds exactly one idea.
 
 **00 — Data.** Pull daily near-surface air temperature for Iberian land
-stations from CDS with `xrtoolz`, cache it, and look at it.
+stations from CDS with `xrreader`, cache it, and look at it.
 
 **01–03 — Extreme-value foundations (one station).**
 01 turns a daily series into annual maxima (`xtremax.extraction`); 02 fits a

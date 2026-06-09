@@ -2,7 +2,7 @@
 
 A step-by-step curriculum built on three packages:
 
-* ``xrtoolz`` — data layer (real CDS in-situ land stations over Iberia)
+* ``xrreader`` — data layer (real CDS in-situ land stations over Iberia)
 * ``xtremax`` — extreme-value layer (block maxima, GEV, return levels)
 * ``pyrox`` — Gaussian-process layer (kernels, latent fields, inference)
 

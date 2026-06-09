@@ -2,7 +2,7 @@
 """Download + cache CDS in-situ land-station data over Iberia.
 
 The one-shot real-data step for the spatial-extremes curriculum. It drives
-``xrtoolz.data.CDSInsituArchive`` one year at a time and caches a GeoParquet
+``xrreader.CDSInsituArchive`` one year at a time and caches a GeoParquet
 archive under ``projects/spatial_extremes/data/cds_insitu_land/``. Once the
 cache exists, every notebook's ``load_station_daily(prefer_real=True)`` picks it
 up automatically; without it the notebooks fall back to a synthetic series.
@@ -131,11 +131,11 @@ def main() -> None:
     )
 
     try:
-        from xrtoolz.data import CDSInsituArchive, CDSSource
-        from xrtoolz.data._src.cds.archive import _scope_fingerprint
-        from xrtoolz.types import AIR_TEMPERATURE, BBox
+        from xrreader import CDSInsituArchive, CDSSource
+        from xrreader._src.cds.archive import _scope_fingerprint
+        from xrreader.types import AIR_TEMPERATURE, BBox
     except Exception as exc:  # pragma: no cover - environment guard
-        logger.exception("xrtoolz[cds-insitu] is not importable: {}", exc)
+        logger.exception("xrreader[cds-insitu] is not importable: {}", exc)
         raise SystemExit(1) from exc
 
     root.mkdir(parents=True, exist_ok=True)
@@ -150,7 +150,7 @@ def main() -> None:
     )
 
     # Refuse to append into a cache built with a different bbox/variables — that
-    # would silently leave the archive partial (xrtoolz raises on this too; we
+    # would silently leave the archive partial (xrreader raises on this too; we
     # check first for a clean message).
     scope = _scope_fingerprint(bbox, (AIR_TEMPERATURE,))
     stored = (

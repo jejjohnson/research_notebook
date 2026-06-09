@@ -46,7 +46,7 @@ def main() -> None:
     else:
         logger.info("deriving features (OpenTopoData DEM + Natural Earth coast)")
 
-    df = feat.load_station_features(stations, refresh=args.refresh)
+    df = feat.build_station_features(stations, refresh=args.refresh)
     logger.info("features ready: {} rows -> {}", len(df), feat.features_path())
     desc = df[["elevation", "dist_coast_km", "slope_deg"]].describe().round(1)
     logger.info("summary:\n{}", desc.to_string())

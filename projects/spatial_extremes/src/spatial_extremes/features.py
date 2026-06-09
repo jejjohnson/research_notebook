@@ -165,17 +165,71 @@ def _key(lon: float, lat: float) -> tuple[float, float]:
     return (round(float(lon), 4), round(float(lat), 4))
 
 
+def synthetic_station_features(stations: np.ndarray) -> pd.DataFrame:
+    """Deterministic stand-in features (**no network**) for the offline fallback.
+
+    Mirrors the synthetic data generator's smooth, inland-peaking elevation
+    field and derives a crude distance-to-coast and slope from station geometry,
+    so the notebooks run fully offline when neither the real cache nor a network
+    connection exists. The values are fake but finite and plausibly shaped.
+    """
+    lonlat = np.asarray(stations, float)
+    lon, lat = lonlat[:, 0], lonlat[:, 1]
+    elev = 900.0 * np.exp(-(((lon + 4.0) / 4.0) ** 2 + ((lat - 41.0) / 3.0) ** 2))
+    elev = np.clip(elev, 0.0, None)
+    # distance to the nearest Iberia bbox edge, as a coast proxy (deg -> km)
+    lon0, lon1, lat0, lat1 = IBERIA_BBOX
+    edge_deg = np.minimum.reduce([lon - lon0, lon1 - lon, lat - lat0, lat1 - lat])
+    dist = np.clip(edge_deg, 0.0, None) * 111.0
+    # slope from the analytic gradient of the elevation field (degrees)
+    dlon = elev * (-2.0 * (lon + 4.0) / 16.0)
+    dlat = elev * (-2.0 * (lat - 41.0) / 9.0)
+    slope = np.degrees(np.arctan(np.hypot(dlon, dlat) / 111_320.0))
+    return pd.DataFrame(
+        {
+            "lon": lon,
+            "lat": lat,
+            "elevation": elev,
+            "dist_coast_km": dist,
+            "slope_deg": slope,
+        }
+    )
+
+
 def load_station_features(
+    stations: np.ndarray, *, root: Path | None = None
+) -> pd.DataFrame:
+    """Return spatial covariates for ``stations`` (``(S, 2)`` lon/lat), row-aligned.
+
+    **Offline-safe**: returns the cached *real* features when the cache covers
+    every requested station, otherwise a deterministic *synthetic* stand-in. It
+    never touches the network, so the notebooks run with no cache and no
+    connection (mirroring the data loader's synthetic fallback). Build the real
+    cache with ``scripts/build_features.py`` / :func:`build_station_features`.
+    """
+    path = features_path(root)
+    if path.exists():
+        cache = pd.read_parquet(path)
+        lookup = {_key(r.lon, r.lat): r for r in cache.itertuples()}
+        if all(_key(lon, lat) in lookup for lon, lat in stations):
+            rows = [lookup[_key(lon, lat)] for lon, lat in stations]
+            return pd.DataFrame(
+                {c: [getattr(r, c) for r in rows] for c in FEATURE_COLS}
+            )
+    return synthetic_station_features(stations)
+
+
+def build_station_features(
     stations: np.ndarray,
     *,
     root: Path | None = None,
     refresh: bool = False,
     dataset: str = _DEM,
 ) -> pd.DataFrame:
-    """Return derived covariates for ``stations`` (``(S, 2)`` lon/lat), row-aligned.
+    """Derive *real* features from public geodata and cache them. **Hits the net.**
 
-    Reads the cached table when present (offline). Builds/extends it — hitting
-    the network — only when a station is missing or ``refresh=True``.
+    Used by ``scripts/build_features.py``; the notebooks call the offline-safe
+    :func:`load_station_features` instead.
     """
     path = features_path(root)
     cache = None

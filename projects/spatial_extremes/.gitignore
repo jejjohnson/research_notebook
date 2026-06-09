@@ -7,3 +7,7 @@
 *.bak
 logs/
 _build/
+
+# Secrets — CDS credentials and DVC service-account keys, never commit these
+.env
+.secrets/

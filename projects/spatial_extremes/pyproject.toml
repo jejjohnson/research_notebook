@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-notebooks = ["seaborn>=0.13", "ipython", "ipykernel>=6.29"]
+notebooks = ["seaborn>=0.13", "ipython", "ipykernel>=6.29", "nbconvert>=7", "nbformat>=5"]
 
 # xtremax / pyrox are not on PyPI yet; xrtoolz is local for now. Resolve from
 # git / path so `uv`-based installs work outside the pixi lockfile too.

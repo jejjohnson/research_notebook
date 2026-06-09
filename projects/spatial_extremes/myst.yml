@@ -15,6 +15,7 @@ project:
         - file: notebooks/01_evt_foundations/01_block_maxima.ipynb
         - file: notebooks/01_evt_foundations/02_gev_one_station.ipynb
         - file: notebooks/01_evt_foundations/03_extremal_types.ipynb
+        - file: notebooks/01_evt_foundations/03_return_levels.ipynb
     - title: Pooling
       children:
         - file: notebooks/02_pooling/04_many_stations_independent.ipynb

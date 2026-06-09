@@ -31,21 +31,21 @@ stations from CDS with `xrtoolz`, cache it, and look at it.
 **01–03 — Extreme-value foundations (one station).**
 01 turns a daily series into annual maxima (`xtremax.extraction`); 02 fits a
 Generalized Extreme Value (GEV) distribution to one station and interprets
-location/scale/shape $(\mu, \sigma, \xi)$; 03 turns the fit into **return
-levels** and return periods with posterior uncertainty.
+location/scale/shape $(\mu, \sigma, \xi)$; 03 covers the extremal-types theorem
+and turns the fit into **return levels** with posterior uncertainty.
 
-**04–05 — Towards space.** 04 fits every station independently and maps the
-parameters — the noisy result motivates pooling. 05 is a gentle Gaussian-process
-primer with `pyrox`: regress a smooth field over `(lon, lat)`.
+**04–06 — Pooling and Gaussian processes.** 04 fits every station independently
+(`04` with NUTS, `04b` with a fast Laplace approximation) and maps the
+parameters — the noisy result motivates pooling. 05 pools them with a
+**hierarchical** Bayesian model. 06 is a Gaussian-process primer with `pyrox`:
+interpolate a field over `(lon, lat)`, then add physical features (elevation,
+distance-to-coast, slope) and use ARD to see which actually matter.
 
-**06 — First spatial extreme-value model.** Tie the two strands together: let
-the GEV location $\mu(s)$ be a spatial GP latent field while $\sigma, \xi$ stay
-global, inferred with NumPyro SVI.
-
-**07–10 — Capstones** (the advanced models, now on real data).
-07 additive space + time GP; 08 multiplicative warming field $\beta(s)$;
-09 fully non-stationary $\sigma(s), \xi(s)$; 10 a Gaussian copula for joint
-exceedances across nearby stations.
+**07–09 — Spatial GEV models.** Tie the strands together — the GEV parameters
+become latent GP fields, inferred with NumPyro. 07 makes the **location**
+$\mu(s)$ spatial; 08 adds a spatial **scale** $\sigma(s)$ driven by an elevation
+covariate; 09 frees the **shape** $\xi(s)$ too, and asks honestly whether the
+tail carries any recoverable geography.
 
 ## Running it
 
@@ -53,11 +53,20 @@ Notebooks use a shared loader, `spatial_extremes.data`, that serves **real CDS
 data when cached** and a deterministic **synthetic** series otherwise — so the
 whole curriculum runs offline, no credentials required.
 
-To use real data, add CDS credentials (see `.env.example`) and fetch once:
+Set up the project environment with `uv` (from `projects/spatial_extremes/`):
 
 ```bash
-pixi run -e spatial-extremes python projects/spatial_extremes/scripts/fetch_cds_insitu.py
-pixi run -e spatial-extremes execute-spatial-extremes   # run all notebooks
+uv sync --extra notebooks      # build .venv with the full stack + notebook tooling
+.venv/bin/python -m ipykernel install --user --name spatial-extremes
+myst build --html              # execute the notebooks and render the static site
+```
+
+To use real data, accept the CDS licence, add credentials (see `.env.example`),
+and fetch once into the cache the notebooks read:
+
+```bash
+.venv/bin/python scripts/fetch_cds_insitu.py   # download the real CDS record
+.venv/bin/python scripts/build_features.py     # derive nb 06 covariates (needs the cache)
 ```
 
 Without credentials, just open any notebook — it will report that it is running

@@ -17,8 +17,9 @@ commit to git, so it is tracked with **DVC** and stored in **Google Drive**.
    url: https://cds.climate.copernicus.eu/api
    key: <your-key>
    ```
-3. **`dvc-gdrive`** backend — already added to the pixi `dev` feature; run
-   `pixi install` if it is not yet present.
+3. **`dvc-gdrive`** backend — DVC's Google Drive plugin. Install it into the
+   environment you run `dvc` from, e.g. `pip install dvc-gdrive` (or
+   `uv pip install dvc-gdrive`).
 
 ## Remote configuration
 
@@ -74,7 +75,8 @@ secrets enter git.
 
 ```bash
 # 1. download real data (uses ~/.cdsapirc; only fetches missing years)
-pixi run -e spatial-extremes python projects/spatial_extremes/scripts/fetch_cds_insitu.py
+#    run from projects/spatial_extremes/ in the project venv
+.venv/bin/python scripts/fetch_cds_insitu.py
 
 # 2. track the cache with DVC (creates data/cds_insitu_land.dvc, gitignores the data)
 dvc add projects/spatial_extremes/data/cds_insitu_land

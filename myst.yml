@@ -78,6 +78,27 @@ project:
                 - file: notebooks/coordax/dynamics/10_pde_parameter_estimation.ipynb
     - title: Projects
       children:
+        - title: Spatial Extremes
+          children:
+            - file: projects/spatial_extremes/README.md
+            - title: Foundations
+              children:
+                - file: projects/spatial_extremes/notebooks/00_data/00_cds_insitu_iberia.ipynb
+                - file: projects/spatial_extremes/notebooks/01_evt_foundations/01_block_maxima.ipynb
+                - file: projects/spatial_extremes/notebooks/01_evt_foundations/02_gev_one_station.ipynb
+                - file: projects/spatial_extremes/notebooks/01_evt_foundations/03_extremal_types.ipynb
+                - file: projects/spatial_extremes/notebooks/01_evt_foundations/03_return_levels.ipynb
+            - title: Pooling
+              children:
+                - file: projects/spatial_extremes/notebooks/02_pooling/04_many_stations_independent.ipynb
+                - file: projects/spatial_extremes/notebooks/02_pooling/04b_many_stations_laplace.ipynb
+                - file: projects/spatial_extremes/notebooks/02_pooling/05_hierarchical_pooling.ipynb
+            - title: Spatial models
+              children:
+                - file: projects/spatial_extremes/notebooks/02_pooling/06_gp_primer.ipynb
+                - file: projects/spatial_extremes/notebooks/03_spatial_gev/07_spatial_gp_mu.ipynb
+                - file: projects/spatial_extremes/notebooks/03_spatial_gev/08_spatial_gp_mu_sigma.ipynb
+                - file: projects/spatial_extremes/notebooks/03_spatial_gev/09_spatial_gp_mu_sigma_xi.ipynb
         - title: Geostack
           children:
             - file: projects/geostack/README.md

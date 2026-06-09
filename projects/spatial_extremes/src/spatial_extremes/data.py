@@ -53,6 +53,12 @@ SPAIN_ID_PREFIX = "SP"
 DEFAULT_START = "1950-01-01"
 DEFAULT_END = "2024-12-31"
 
+# Longest continuous single-station record in the cache: GHCN/WMO id of the
+# Albacete station (lon -1.86, lat 38.95), 1901->2025 with ~115 usable annual
+# maxima. The "oldest *and* most modern" series — used by the non-stationary
+# (single-station) notebooks (10/11/12). See ``load_single_station``.
+LONGEST_STATION = "SP000008280"
+
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -405,3 +411,63 @@ def load_annual_maxima(
     )
     years = pd.to_datetime(bm["time"].to_numpy()).year.to_numpy()
     return maxima, stations, years, is_real
+
+
+def load_single_station(
+    station_id: str = LONGEST_STATION,
+    *,
+    prefer_real: bool = True,
+    root: Path | None = None,
+    min_periods: int = 300,
+    n_stations: int = 40,
+    seed: int = 2024,
+) -> tuple[np.ndarray, np.ndarray, dict]:
+    """Annual maxima for one long station — driver for the NS notebooks (10-12).
+
+    Returns ``(years, maxima, meta)``:
+
+    * ``years`` — ``int`` array ``(T,)`` of block years (gaps dropped)
+    * ``maxima`` — ``float`` array ``(T,)`` of annual maximum temperature (degC)
+    * ``meta`` — ``dict`` with ``station_id``, ``lon``, ``lat``, ``name`` (nearest
+      city), ``country`` and ``is_real``
+
+    The default ``station_id`` is :data:`LONGEST_STATION` (Albacete), the longest
+    continuous record in the cache (1901-2025). On the synthetic / no-cache path
+    the requested id is absent, so we fall back to the synthetic station with the
+    most valid annual maxima — every notebook still runs offline.
+    """
+    from xtremax.extraction import temporal_block_maxima
+
+    from . import places
+
+    df, is_real = load_station_daily(
+        prefer_real=prefer_real, root=root, n_stations=n_stations, seed=seed
+    )
+    sub = df[df["station_id"].astype(str) == str(station_id)]
+    da = to_station_time_dataarray(df if sub.empty else sub)
+    bm = temporal_block_maxima(
+        da, freq="YE", time_dim="time", min_periods=min_periods
+    ).dropna("time", how="all")
+
+    if sub.empty:
+        # synthetic / id-absent: pick the station with the most valid blocks
+        idx = int(np.argmax(bm.notnull().sum("time").to_numpy()))
+        bm = bm.isel(station=idx)
+    else:
+        bm = bm.isel(station=0)
+
+    valid = bm.notnull().to_numpy()
+    maxima = bm.to_numpy().astype(float)[valid]
+    years = pd.to_datetime(bm["time"].to_numpy()).year.to_numpy()[valid]
+    lon = float(bm["lon"].item())
+    lat = float(bm["lat"].item())
+    sid = str(bm["station"].item())
+    meta = {
+        "station_id": sid,
+        "lon": lon,
+        "lat": lat,
+        "name": places.nearest_city(lon, lat)[0],
+        "country": places.country_from_id(sid),
+        "is_real": bool(is_real),
+    }
+    return years, maxima, meta

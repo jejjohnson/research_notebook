@@ -20,6 +20,7 @@ Three packages do the heavy lifting, one per layer:
 | Data | [`xrreader`](https://github.com/jejjohnson/xrreader) | pull + cache CDS in-situ land stations over Iberia |
 | Extremes | [`xtremax`](https://github.com/jejjohnson/xtremax) | block-maxima extraction, GEV distribution, return levels |
 | Gaussian processes | [`pyrox`](https://github.com/jejjohnson/pyrox) | kernels, latent GP fields, variational inference |
+| Dynamics | [`diffrax`](https://github.com/patrick-kidger/diffrax) | ODE/SDE integration for the time-varying (NB10–12) trends |
 
 ## The build-up
 
@@ -46,6 +47,16 @@ become latent GP fields, inferred with NumPyro. 07 makes the **location**
 $\mu(s)$ spatial; 08 adds a spatial **scale** $\sigma(s)$ driven by an elevation
 covariate; 09 frees the **shape** $\xi(s)$ too, and asks honestly whether the
 tail carries any recoverable geography.
+
+**10–12 — Non-stationary in *time* (one long station).** Switch axes: take the
+single longest record (Albacete, 1901–2025) and let the GEV location drift as the
+climate warms, three escalating ways. 10 fits a **parametric** linear trend
+$\mu(t)=\mu_0+\mu_1 z(t)$ (Coles' model) and turns it into time-varying return
+levels. 11 replaces the line with a **mechanistic ODE** — a forced energy-balance
+relaxation integrated with `diffrax` inside NUTS. 12 goes nonparametric with a
+**state-space Gaussian process** (a local-linear-trend / integrated random walk,
+the stochastic sibling of the ODE), shows why a free stationary GP over-fits a
+short record, and puts all three trends on one set of axes.
 
 ## Running it
 

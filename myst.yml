@@ -99,6 +99,11 @@ project:
                 - file: projects/spatial_extremes/notebooks/03_spatial_gev/07_spatial_gp_mu.ipynb
                 - file: projects/spatial_extremes/notebooks/03_spatial_gev/08_spatial_gp_mu_sigma.ipynb
                 - file: projects/spatial_extremes/notebooks/03_spatial_gev/09_spatial_gp_mu_sigma_xi.ipynb
+            - title: Non-stationary (single station)
+              children:
+                - file: projects/spatial_extremes/notebooks/04_nonstationary/10_nonstationary_parametric.ipynb
+                - file: projects/spatial_extremes/notebooks/04_nonstationary/11_nonstationary_ode.ipynb
+                - file: projects/spatial_extremes/notebooks/04_nonstationary/12_nonstationary_gp.ipynb
         - title: Geostack
           children:
             - file: projects/geostack/README.md

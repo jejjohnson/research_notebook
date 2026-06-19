@@ -1,0 +1,3 @@
+# Downloaded + derived data — regenerate with scripts/download_*.py and the
+# verify_*.py runs. Kept out of git (large NetCDF; reproducible from CMEMS).
+data/

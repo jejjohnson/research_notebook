@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.12](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.11...research_notebook-v0.1.12) (2026-06-23)
+
+
+### Features
+
+* **interpolation:** add DINEOF reconstruction project and raw L3 SSH download ([#99](https://github.com/jejjohnson/research_notebook/issues/99)) ([b094a0f](https://github.com/jejjohnson/research_notebook/commit/b094a0f2cefde90d5bd51721cc87ae22be42c679))
+* **spatial-extremes:** add non-stationary single-station notebooks (10-12) ([#98](https://github.com/jejjohnson/research_notebook/issues/98)) ([0da9be4](https://github.com/jejjohnson/research_notebook/commit/0da9be4d03f8cdbab69d0c48283ddff59c7ac1a7))
+* **spatial-extremes:** add spatial extremes GEV curriculum ([#95](https://github.com/jejjohnson/research_notebook/issues/95)) ([bc56d0d](https://github.com/jejjohnson/research_notebook/commit/bc56d0db776af2df884c5b4e45ea7ca299eefb1c))
+
+
+### Documentation
+
+* **gaussianization:** add Part 6 continuous-time Gaussianization (6.1-6.4) ([#101](https://github.com/jejjohnson/research_notebook/issues/101)) ([9f1b292](https://github.com/jejjohnson/research_notebook/commit/9f1b2922a96a524411c040a50465d2e95025d8b9))
+* **gaussianization:** add Part 7 conditional Gaussianization (7.1-7.5) ([#102](https://github.com/jejjohnson/research_notebook/issues/102)) ([ebceee2](https://github.com/jejjohnson/research_notebook/commit/ebceee277db48a8a0716ae1a0b86a2295688cf0b))
+
 ## [0.1.11](https://github.com/jejjohnson/research_notebook/compare/research_notebook-v0.1.10...research_notebook-v0.1.11) (2026-06-05)
 
 

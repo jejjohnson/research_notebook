@@ -597,7 +597,7 @@ A continuous-time bijector is a flow ODE $\dot x = v_\theta(x, t)$ whose pushfor
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 6.1 | FFJORD 2D — continuous-time Gaussianization | F `05_ffjord_2d` | 🧱 | |
+| 6.1 | FFJORD 2D — continuous-time Gaussianization | K `06_continuous_time/00_ffjord_2d` | 🧱 | ports `gauss_flows` `05_ffjord_2d`; exact trace in 2D + Gaussianization check |
 
 ### 6.B — Hutchinson trace estimator
 
@@ -608,7 +608,7 @@ A continuous-time bijector is a flow ODE $\dot x = v_\theta(x, t)$ whose pushfor
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 6.2 | Hutchinson trace for FFJORD log-det | — | 🧱 | **GAP** — pairs with `xref:GP#1.19` (SLQ) |
+| 6.2 | Hutchinson trace for FFJORD log-det | K `06_continuous_time/01_hutchinson_trace` | 🧱 | known-matrix → FFJORD; Rademacher vs Gaussian variance; $O(d)$ vs $O(n)$; pairs with `xref:GP#1.19` (SLQ) |
 
 ### 6.C — Matrix-exponential / linear neural flows
 
@@ -619,7 +619,7 @@ A continuous-time bijector is a flow ODE $\dot x = v_\theta(x, t)$ whose pushfor
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 6.3 | Matrix-exponential neural flow | F `06_matrix_exponential_neural_flow` | 🌉 | |
+| 6.3 | Matrix-exponential neural flow | K `06_continuous_time/02_matrix_exponential_flow` | 🌉 | ports `gauss_flows` `06_matrix_exponential_neural_flow`; closed-form $t\,\mathrm{tr}(W)$; affine ceiling vs two moons |
 
 ### 6.D — Latent ODEs
 
@@ -629,7 +629,7 @@ A continuous-time bijector is a flow ODE $\dot x = v_\theta(x, t)$ whose pushfor
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 6.4 | Latent ODE on spirals | F `09_latent_ode_spirals` | 🌉 | also 11.E |
+| 6.4 | Latent ODE on spirals | K `06_continuous_time/03_latent_ode_spirals` | 🌉 | ports `gauss_flows` `09_latent_ode_spirals`; stochastic Gaussianizer; topological obstruction (circular phase); also 11.E |
 
 ---
 

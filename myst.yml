@@ -296,6 +296,13 @@ project:
                 - file: projects/gaussianization/notebooks/05_coupling/05_coupling_warmstart.ipynb
                 - file: projects/gaussianization/notebooks/05_coupling/06_coupling_equivalence.ipynb
                 - file: projects/gaussianization/notebooks/05_coupling/07_depth_residual_stability.ipynb
+            - title: "Part 6 · Continuous-time"
+              children:
+                - file: projects/gaussianization/notebooks/06_continuous_time/README.md
+                - file: projects/gaussianization/notebooks/06_continuous_time/00_ffjord_2d.ipynb
+                - file: projects/gaussianization/notebooks/06_continuous_time/01_hutchinson_trace.ipynb
+                - file: projects/gaussianization/notebooks/06_continuous_time/02_matrix_exponential_flow.ipynb
+                - file: projects/gaussianization/notebooks/06_continuous_time/03_latent_ode_spirals.ipynb
             - file: projects/gaussianization/survae_flows_proof.md
             - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb

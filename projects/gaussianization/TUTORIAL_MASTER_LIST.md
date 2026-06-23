@@ -646,8 +646,8 @@ Make every parameter of the flow depend on a context $y$ — gives a tractable c
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.1 | Building a conditional Gaussianization flow — three patterns | F `08_conditional_flow_three_ways` | 🧱 | (also 5.17) |
-| 7.2 | Conditional marginals — when to make the CDF $y$-dependent | — | 🧱 | **GAP** |
+| 7.1 | Building a conditional Gaussianization flow — three patterns | K `07_conditional/00_three_ways_to_condition` | 🧱 | none/base/coupling/both on class-conditional moons; mermaid diagrams; (also 5.17) |
+| 7.2 | Conditional marginals — when to make the CDF $y$-dependent | K `07_conditional/01_conditional_density` | 🧱 | margins/diagonal vs couplings on a $y$-bending family; couplings win on dependence |
 
 ### 7.B — Conditional density estimation
 
@@ -657,13 +657,13 @@ Make every parameter of the flow depend on a context $y$ — gives a tractable c
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.3 | Conditional density estimation benchmarks | — | 🧱 | **GAP** |
+| 7.3 | Conditional density estimation benchmarks | K `07_conditional/01_conditional_density` | 🧱 | continuous context; density swept across $y$; per-slice Gaussianization check |
 
 ### 7.C — Three-pattern conditional flow
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.4 | Three-pattern conditional flow tutorial | F `08_conditional_flow_three_ways` | 🧱 | |
+| 7.4 | Three-pattern conditional flow tutorial | K `07_conditional/00_three_ways_to_condition` | 🧱 | covered alongside 7.1 (base / coupling / both + FiLM `Conditioner` preview) |
 
 ### 7.D — Conditioning for inverse problems
 
@@ -673,7 +673,7 @@ Make every parameter of the flow depend on a context $y$ — gives a tractable c
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 7.5 | Conditional flow as an amortised posterior — toy inverse problem | — | 🌉 | **GAP** — feeds 16.E |
+| 7.5 | Conditional flow as an amortised posterior — toy inverse problem | K `07_conditional/02_amortised_posterior` | 🌉 | two-moons prior, $y=Ax+\eta$; bimodal posterior; observation consistency; feeds 16.E |
 
 ---
 

@@ -303,6 +303,12 @@ project:
                 - file: projects/gaussianization/notebooks/06_continuous_time/01_hutchinson_trace.ipynb
                 - file: projects/gaussianization/notebooks/06_continuous_time/02_matrix_exponential_flow.ipynb
                 - file: projects/gaussianization/notebooks/06_continuous_time/03_latent_ode_spirals.ipynb
+            - title: "Part 7 · Conditional"
+              children:
+                - file: projects/gaussianization/notebooks/07_conditional/README.md
+                - file: projects/gaussianization/notebooks/07_conditional/00_three_ways_to_condition.ipynb
+                - file: projects/gaussianization/notebooks/07_conditional/01_conditional_density.ipynb
+                - file: projects/gaussianization/notebooks/07_conditional/02_amortised_posterior.ipynb
             - file: projects/gaussianization/survae_flows_proof.md
             - file: projects/gaussianization/notebooks/01_gaussianization_2d.ipynb
             - file: projects/gaussianization/notebooks/02_coupling_flow_2d.ipynb

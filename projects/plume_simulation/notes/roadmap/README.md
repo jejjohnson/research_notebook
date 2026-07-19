@@ -22,32 +22,37 @@ This page is the **index** for the architecture roadmap. The detail for each tie
 (cycle-overview)=
 ## The Data-Driven Modeling Cycle
 
-Every tier in `plumax` follows the same loop:
+The architecture has **two axes**:
+
+- The **inference axis** (vertical) is a fixed *six-step loop* — the same recipe at every tier.
+- The **complexity axis** (horizontal) is the *forward-model fidelity* — Tier I analytic → Tier V population.
+
+Every column runs the **same** six steps; what changes left-to-right is how complex the model behind each step is. Step 6 — *improve* — is the move that walks you one column to the right.
 
 ```text
-┌─────────────────────────────────────────────────────────────────┐
-│   (1) Simple Model                                              │
-│       ↓                                                         │
-│   (2) Model-Based Inference                                     │
-│       ↓                                                         │
-│   (3) Model Emulator          ← skip if model is cheap          │
-│       ↓                                                         │
-│   (4) Emulator-Based Inference                                  │
-│       ↓                                                         │
-│   (5) Amortized Inference (Predictor)                           │
-│       ↓                                                         │
-│   (6) Improve  ───────────────────────────────────────────────┐ │
-│       ↑         upgrade model / data / emulator / posterior   │ │
-│       └───────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
+                    MODEL COMPLEXITY  ─────────────────────────────────────────────▶
+                    Tier I         Tier II        Tier III       Tier IV        Tier V
+                    Gaussian       Lagrangian     Eulerian FV    Coupled + RTM  Population
+                    (analytic)     (stoch. ODE)   (adv–diff PDE) (multi-inst)   (point proc.)
+  ┌──────────────────────────────────────────────────────────────────────────────────────────┐
+1 │ Simple model    plume / puff   particles      adv–diff PDE   transport+RTM  λ(t), f(Q), Pd  │
+2 │ Model inference MAP / MCMC     footprint inv  4D-Var         joint fusion   NUTS population │
+3 │ Emulator        skip (cheap)   footprint NN   FNO/neural-ODE coupled net    flow over post. │
+4 │ Emu. inference  —              EKI            PDE-free 4DVar EKI / gradient SVI             │
+5 │ Amortized       Q-predictor    traj-pred.     field-pred.    overpass → Q   basin → λ, tot  │
+6 │ Improve ────────┴──────────────┴──────────────┴──────────────┴──────────────┘  ▲ climb a tier
+  └───────────────────────────────────────────────────────────────── same six steps ──────────┘
+    ▲ INFERENCE AXIS
 ```
 
-- Step 1 gives you a **generative story** — a known mathematical structure you can simulate from.
-- Step 2 gives you **ground truth inference** — slow but exact, used to validate everything downstream.
-- Step 3 makes Step 2 **tractable at scale** — replace the expensive forward model with a fast surrogate.
-- Step 4 is Step 2 again, but now running in seconds instead of hours.
-- Step 5 collapses the inference loop entirely — the predictor learns the posterior map directly.
-- Step 6 closes the loop — every component is independently upgradable, with the previous step as ground truth.
+Read **down** a column for one tier's full cycle; read **across** a row to watch a single step grow in complexity tier-to-tier. The point the diagram makes: this is *not* a single linear "model → amortized predictor" pipeline. **Each of the six steps is itself swappable for a more complex model**, and "improve" (Step 6) is structured — it picks one component (a richer forward model, a higher tier, more data, a better posterior family) and re-enters the loop with the previous step (or tier) as ground truth.
+
+- **Step 1 — Simple Model** gives you a **generative story** — a known mathematical structure you can simulate from.
+- **Step 2 — Model-Based Inference** gives you **ground-truth inference** — slow but exact, used to validate everything downstream.
+- **Step 3 — Model Emulator** makes Step 2 **tractable at scale** — replace the expensive forward model with a fast surrogate (skip if the model is already cheap).
+- **Step 4 — Emulator-Based Inference** is Step 2 again, but now running in seconds instead of hours.
+- **Step 5 — Amortized Inference (Predictor)** collapses the inference loop entirely — the predictor learns the posterior map directly.
+- **Step 6 — Improve** closes the loop — every component is independently upgradable, and the complexity axis tells you *which* component to upgrade and *how* to validate it.
 
 ---
 
@@ -102,6 +107,8 @@ Every tier in `plumax` follows the same loop:
 
 The build order is roughly: **Prerequisites → Tier I → RTM stack (parallel) → Tier II → Tier III → Tier IV → Tier V.** RTM is independent of transport tier, so it can be developed in parallel by a different person without coordination cost. Tier V depends on at least Tier I being usable end-to-end (per-event posteriors are the input), but does not need Tiers II–IV — it can launch with Tier I posteriors and absorb richer ones later.
 
+For how the tiers compose into a single operational pipeline — from a satellite radiance all the way to a leak-recurrence forecast — see the [end-to-end retrieval → persistency walkthrough](../end_to_end_retrieval_to_persistency.md).
+
 ---
 
 (architectural-principles)=
@@ -124,21 +131,21 @@ WRF provides met forcing and benchmark concentration fields. `plumax` learns to 
 :::
 
 :::{important} 5. Improvement is structured
-Step 6 is not vague iteration. Each improvement targets a specific component — better physics, more training data, richer posterior family, tighter observation operator — and the cycle structure tells you which component to upgrade and how to validate it.
+Step 6 is not vague iteration. Each improvement targets a specific component — better physics, more training data, richer posterior family, tighter observation operator — and the cycle structure (which row) and the complexity axis (which column) together tell you which component to upgrade and how to validate it.
 :::
 
 ---
 
 (status-snapshot)=
-## Status snapshot (2026-04-29)
+## Status snapshot (2026-06-02)
 
-Module-level status is tracked per tier. Quick overview:
+Module-level status is tracked per tier. Two things move at different speeds: the **design maturity** (these roadmap pages, kept in sync with the upstream [`plumax`](https://github.com/jejjohnson/plumax) reference implementation) and the **in-repo `plume_simulation` port**, which currently mirrors Tier I + the RTM stack + the Tier III scaffolding. Quick overview:
 
-- **Tier I — Gaussian:** ✓ plume + puff forward models, ✓ MAP/MCMC inversion. Emulator + amortized predictor not yet started.
-- **Tier II — Lagrangian:** ☐ not started. No `gauss_flows`-style trajectory module yet.
-- **Tier III — Eulerian FV:** 🚧 [`les_fvm`](../../src/plume_simulation/les_fvm/) advection/diffusion/dynamics implemented; [`assimilation`](../../src/plume_simulation/assimilation/) cost/control/solve scaffolding present. 4D-Var loop not wired end-to-end.
-- **RTM stack:** 🚧 [`hapi_lut`](../../src/plume_simulation/hapi_lut/) LUT generator + Beer–Lambert in place; [`radtran`](../../src/plume_simulation/radtran/) instrument/SRF/forward modules present; [`matched_filter`](../../src/plume_simulation/matched_filter/) detection pipeline in place. Optimal-estimation retrieval not wired; neural RTM not started.
-- **Tier IV — Coupled:** ☐ not started. Awaiting Tier I + RTM completion before assembling the coupled forward.
-- **Tier V — Population & forecasting:** 🚧 standalone [`methane_pod`](../../../methane_pod/) library is feature-complete (intensity catalog, POD catalog, paradox simulator, NUTS fitter, synthetic-data validation). Missing: cross-tier adapter that turns Tier I–IV per-event posteriors into TMTPP mark likelihoods; real-data CSV ingestion; multi-satellite fusion. See [Tier V index](06_tier5_population.md).
+- **Tier I — Gaussian:** ✓ plume + puff forward models, ✓ MAP/MCMC inversion (port + upstream). Emulator + amortized predictor not yet started.
+- **Tier II — Lagrangian:** 🚧 upstream `plumax.lagrangian` now lands the forward model + model-based inference — Markov-1 Langevin particles, homogeneous + Hanna turbulence, forward residence-time concentration, backward footprint, and closed-form Gaussian / lognormal source inversion with a Matérn-3/2 prior. Not yet ported into this repo. Footprint emulator + predictor (Steps 3–5) not started.
+- **Tier III — Eulerian FV:** 🚧 [`les_fvm`](../../src/plume_simulation/les_fvm/) advection/diffusion/dynamics implemented in-repo; upstream now wires the strong-constraint **4D-Var loop end-to-end** (differentiable emission→column-obs forward, whitened temporal Matérn-3/2 control space, L-BFGS with the exact discrete adjoint via reverse-mode AD through the diffrax FV solver), plus a Gauss–Newton Laplace **posterior covariance** around the MAP (Hessian via `gaussx`). The in-repo [`assimilation`](../../src/plume_simulation/assimilation/) cost/control/solve scaffolding tracks the earlier snapshot.
+- **RTM stack:** 🚧 [`hapi_lut`](../../src/plume_simulation/hapi_lut/) LUT generator + Beer–Lambert, [`radtran`](../../src/plume_simulation/radtran/) instrument/SRF/forward modules, and [`matched_filter`](../../src/plume_simulation/matched_filter/) detection pipeline all in place. Optimal-estimation retrieval not wired; neural RTM not started.
+- **Tier IV — Coupled:** 🚧 upstream `plumax.coupled` lands v1 multi-instrument fusion — the Tier I plume + averaging-kernel coupled forward kept per-instrument at native resolution (`CoupledForward`, `Instrument`), a closed-form joint posterior over `(Q, bias_inst)` across satellites (`fuse_observations`, exploiting the plume's linearity in `Q`), and an additive RTM-based observation operator (`RadianceObservationOperator`) mapping plume column enhancement → gas ΔVMR → band-integrated normalised radiance. Full Tier II/III + RTM coupling, the `Q(t)` stochastic process, and trans-dimensional source count are future work. Not yet ported into this repo.
+- **Tier V — Population & forecasting:** 🚧 the standalone [`methane_pod`](../../../methane_pod/) library is feature-complete (intensity catalog, POD catalog, paradox simulator, NUTS fitter, synthetic-data validation). Upstream now also lands the in-tree `plumax.population` v1 core: the tier-agnostic cross-tier posterior catalog (`event_from_posterior` over Gaussian / lognormal / fusion posteriors), the V.A hierarchical lognormal size-distribution fit with per-event uncertainty propagation, and the V.B point-process core (closed-form Gamma–Poisson rate + log-linear inhomogeneous intensity). Still missing: the importance-corrected TMTPP mark likelihood, real-data CSV ingestion, multi-satellite POD fusion, and the LGCP intensity.
 
-See each tier page for module-level breakdown.
+See each tier page for the module-level breakdown, and the [end-to-end retrieval → persistency walkthrough](../end_to_end_retrieval_to_persistency.md) for how the tiers compose into one operational pipeline.

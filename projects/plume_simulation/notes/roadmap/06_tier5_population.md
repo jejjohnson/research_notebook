@@ -258,7 +258,8 @@ This isn't a coincidence — it's why `plumax`'s tier structure works: the same 
 
 - **Theory.** TMTPP foundations and the missing-mass paradox are written up in [`methane_pod/notebooks/01_mttpp_theory`](../../../methane_pod/notebooks/01_mttpp_theory.md) and [`03_missing_mass_paradox`](../../../methane_pod/notebooks/03_missing_mass_paradox.ipynb).
 - **`methane_pod` library:** ✓ — intensity, POD, paradox simulator, NUTS fitter all implemented.
-- **Cross-tier integration:** ☐ — per-event posteriors enter the population fit as point estimates (no importance correction). Tier V's main code deliverable.
+- **`plumax.population` subpackage (upstream):** 🚧 — the v1 cross-tier catalog adapter (`event_from_posterior` over Gaussian / lognormal / fusion posteriors), the V.A hierarchical lognormal size-distribution fit with per-event uncertainty propagation, and the V.B point-process core (closed-form Gamma–Poisson rate + log-linear inhomogeneous intensity) have landed. Not yet ported into this repo.
+- **Cross-tier integration:** 🚧 — per-event posteriors now enter the population fit as Gaussian summaries `(emission_rate, emission_std)` with uncertainty propagation; the importance-corrected full-sample path (carrying $\pi_\text{per-event}$) remains Tier V's main outstanding code deliverable.
 - **Synthetic validation.** [`06_stationary_numpyro_mcmc`](../../../methane_pod/notebooks/06_stationary_numpyro_mcmc.ipynb) recovers POD parameters on synthetic data without the soft-observation layer.
 - **Real-data fit.** [`07_pod_fitting_mcmc`](../../../methane_pod/notebooks/07_pod_fitting_mcmc.md) is a placeholder; needs IMEO + Tanager CSV ingestion.
 

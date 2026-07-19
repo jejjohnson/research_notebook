@@ -202,6 +202,7 @@ project:
               children:
                 - file: projects/plume_simulation/notes/satellites.md
                 - file: projects/plume_simulation/notes/roadmap.md
+                - file: projects/plume_simulation/notes/end_to_end_retrieval_to_persistency.md
                 - title: Roadmap detail
                   children:
                     - file: projects/plume_simulation/notes/roadmap/README.md

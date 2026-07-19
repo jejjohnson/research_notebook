@@ -40,11 +40,18 @@ The detailed roadmap now lives in [`roadmap/`](roadmap/README.md), one file per 
 (roadmap-cycle)=
 ## The cycle, in one diagram
 
-Every tier in `plumax` follows the same six-step loop:
+The architecture has **two axes**: an **inference axis** (the six-step loop, fixed at every tier) and a **complexity axis** (the forward-model fidelity, Tier I → V).
 
 ```text
-Simple model → model-based inference → emulator
-            → emulator-based inference → amortized predictor → improve
+                         MODEL COMPLEXITY  ─────────────────────────▶
+                  Tier I      Tier II     Tier III    Tier IV    Tier V
+  inference  ┌──  Gaussian    Lagrangian  Eulerian    Coupled    Population
+  axis       │    (analytic)  (stoch ODE) (PDE)       (+RTM)     (point proc.)
+    │        │
+    ▼   1 Simple model → 2 Model inference → 3 Emulator
+        → 4 Emulator inference → 5 Amortized predictor → 6 Improve ──┐
+        ▲                                                            │
+        └──────────────  climb one tier (complexity axis)  ◀─────────┘
 ```
 
-The cycle structure is the architecture. Each tier swaps in a richer forward model, but the inference loop, the validation tests, and the upgrade discipline are the same. See the [roadmap index](roadmap/README.md) for the full diagram and the rationale for each step.
+The cycle structure is the architecture. Each tier swaps in a richer forward model, but the inference loop, the validation tests, and the upgrade discipline are the same — and *each of the six steps* can itself become a more complex model as you move right along the complexity axis. Step 6 ("improve") is the move that climbs one tier. See the [roadmap index](roadmap/README.md) for the full two-axis diagram and the rationale for each step.

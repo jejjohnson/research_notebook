@@ -1,0 +1,14 @@
+version: 1
+# Standalone MyST config for previewing the benchmark archives docs on their
+# own (`myst build --html` / `myst start` from this folder). The pages also
+# slot into the parent Research Notebook site via its top-level myst.yml.
+project:
+  id: benchmark
+  title: Benchmark Archives
+  authors:
+    - name: Juan Emmanuel Johnson
+  toc:
+    - file: README.md
+site:
+  template: book-theme
+  title: Benchmark Archives

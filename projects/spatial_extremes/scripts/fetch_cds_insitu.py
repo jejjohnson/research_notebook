@@ -151,8 +151,9 @@ def main() -> None:
 
     # Refuse to append into a cache built with a different bbox/variables — that
     # would silently leave the archive partial (xrreader raises on this too; we
-    # check first for a clean message).
-    scope = _scope_fingerprint(bbox, (AIR_TEMPERATURE,))
+    # check first for a clean message). The land preset's fingerprint includes
+    # the time aggregation, so this must mirror the archive's own call.
+    scope = _scope_fingerprint(bbox, (AIR_TEMPERATURE,), "daily")
     stored = (
         json.loads(manifest_path.read_text()).get("scope")
         if manifest_path.exists()

@@ -2,9 +2,10 @@
 
 A step-by-step curriculum built on three packages:
 
-* ``xrreader`` — data layer (real CDS in-situ land stations over Iberia)
+* ``xrtoolz-reader`` — data layer (real CDS in-situ land stations over
+  Iberia; import name ``xrreader``)
 * ``xtremax`` — extreme-value layer (block maxima, GEV, return levels)
-* ``pyrox`` — Gaussian-process layer (kernels, latent fields, inference)
+* ``pyrox-gp`` — Gaussian-process layer (kernels, latent fields, inference)
 
 The :mod:`spatial_extremes.data` module is the shared bridge used by every
 notebook; it transparently serves real CDS data when cached and a

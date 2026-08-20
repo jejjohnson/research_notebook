@@ -4,15 +4,22 @@ version = "0.1.0"
 description = "A step-by-step curriculum on spatial extremes: GEV block-maxima modelling with Gaussian-process latent fields, driven by real CDS in-situ land-station data over Iberia."
 requires-python = ">=3.12"
 # Three-layer stack:
-#   xrreader  — data layer: CDS in-situ land stations over Iberia ([cds-insitu]
-#              pulls cdsapi + geopandas + pyarrow for the GeoParquet cache).
+#   xrtoolz-reader — data layer: the reader now lives in the xr_toolz monorepo
+#              as the `xrtoolz-reader` distribution; the import namespace is
+#              still `xrreader`, so `from xrreader import CDSInsituArchive` is
+#              unchanged. [cds-insitu] pulls cdsapi + geopandas + pyarrow for
+#              the GeoParquet cache.
 #   xtremax  — extreme-value layer: block-maxima extraction, GEV distribution,
-#              return levels (jax<0.11 pin co-installs with pyrox/gaussx).
-#   pyrox    — Gaussian-process layer: kernels, latent GP samplers, guides.
+#              return levels (jax<0.12 ceiling co-installs with pyrox-gp/gaussx).
+#   pyrox-gp — Gaussian-process layer (split out of the old single-package
+#              pyrox): kernels, GPPrior, gp_factor/gp_sample, guides. `pyrox`
+#              (the Equinox↔NumPyro core it builds on) is pinned explicitly
+#              because the PyPI name "pyrox" is an unrelated project.
 # NumPyro + optax drive SVI; cartopy renders the Iberian maps.
 dependencies = [
-    "xrreader[cds-insitu]",
+    "xrtoolz-reader[cds-insitu]",
     "xtremax",
+    "pyrox-gp",
     "pyrox",
     "numpyro>=0.21",
     "optax>=0.2",
@@ -34,12 +41,14 @@ notebooks = [
     "diffrax>=0.7.2",
 ]
 
-# xtremax / pyrox / xrreader are not on PyPI yet — resolve from their public git
-# repos so `uv sync` works on any checkout (not just this monorepo layout).
+# None of these are on PyPI — resolve from their public git repos so `uv sync`
+# works on any checkout. pyrox and pyrox-gp are subpackages of the pyrox uv
+# workspace; xrtoolz-reader is a subpackage of the xr_toolz monorepo.
 [tool.uv.sources]
 xtremax = { git = "https://github.com/jejjohnson/xtremax.git" }
-pyrox = { git = "https://github.com/jejjohnson/pyrox.git" }
-xrreader = { git = "https://github.com/jejjohnson/xrreader.git" }
+pyrox-gp = { git = "https://github.com/jejjohnson/pyrox.git", subdirectory = "packages/pyrox-gp" }
+pyrox = { git = "https://github.com/jejjohnson/pyrox.git", subdirectory = "packages/pyrox" }
+xrtoolz-reader = { git = "https://github.com/jejjohnson/xr_toolz.git", subdirectory = "packages/xrtoolz-reader" }
 
 [build-system]
 requires = ["hatchling"]

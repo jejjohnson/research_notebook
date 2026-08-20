@@ -100,7 +100,7 @@ def fetch_cds_insitu(
 ) -> Path:
     """Download + cache CDS in-situ land observations over ``bbox``.
 
-    Requires ``xrreader[cds-insitu]`` and CDS credentials (``CDSAPI_URL`` /
+    Requires ``xrtoolz-reader[cds-insitu]`` and CDS credentials (``CDSAPI_URL`` /
     ``CDSAPI_KEY`` in the environment, a ``.env`` file, or ``~/.cdsapirc``).
     Returns the path to the cached GeoParquet archive. Re-running is cheap:
     the archive only fetches years not already present in its manifest.

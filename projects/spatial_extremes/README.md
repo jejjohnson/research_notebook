@@ -17,9 +17,9 @@ Three packages do the heavy lifting, one per layer:
 
 | Layer | Package | Role |
 |-------|---------|------|
-| Data | [`xrreader`](https://github.com/jejjohnson/xrreader) | pull + cache CDS in-situ land stations over Iberia |
+| Data | [`xrtoolz-reader`](https://github.com/jejjohnson/xr_toolz/tree/main/packages/xrtoolz-reader) | pull + cache CDS in-situ land stations over Iberia (import name: `xrreader`) |
 | Extremes | [`xtremax`](https://github.com/jejjohnson/xtremax) | block-maxima extraction, GEV distribution, return levels |
-| Gaussian processes | [`pyrox`](https://github.com/jejjohnson/pyrox) | kernels, latent GP fields, variational inference |
+| Gaussian processes | [`pyrox-gp`](https://github.com/jejjohnson/pyrox/tree/main/packages/pyrox-gp) | kernels, latent GP fields, variational inference |
 | Dynamics | [`diffrax`](https://github.com/patrick-kidger/diffrax) | ODE/SDE integration for the time-varying (NB10–12) trends |
 
 ## The build-up
@@ -38,7 +38,7 @@ and turns the fit into **return levels** with posterior uncertainty.
 **04–06 — Pooling and Gaussian processes.** 04 fits every station independently
 (`04` with NUTS, `04b` with a fast Laplace approximation) and maps the
 parameters — the noisy result motivates pooling. 05 pools them with a
-**hierarchical** Bayesian model. 06 is a Gaussian-process primer with `pyrox`:
+**hierarchical** Bayesian model. 06 is a Gaussian-process primer with `pyrox-gp`:
 interpolate a field over `(lon, lat)`, then add physical features (elevation,
 distance-to-coast, slope) and use ARD to see which actually matter.
 

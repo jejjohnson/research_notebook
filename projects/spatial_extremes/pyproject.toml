@@ -24,7 +24,14 @@ dependencies = [
     "numpyro>=0.21",
     "optax>=0.2",
     "cartopy>=0.22",
-    "matplotlib",
+    # matplotlib is capped below 3.11: cartopy 0.25 declares `matplotlib>=3.6`
+    # with no ceiling, but its gridliner still uses the `Locator.locs` attribute
+    # that 3.11 deprecated. The visible symptom is not an error — a map drawn
+    # with gridline labels *and* a colorbar computes a collapsed tight bounding
+    # box, so `bbox_inches="tight"` (what the notebook inline backend uses)
+    # crops the figure down to the bare colorbar and the map silently vanishes.
+    # Lift this once cartopy ships a 3.11-compatible gridliner.
+    "matplotlib<3.11",
     "pandas",
     "xarray",
     "loguru>=0.7",

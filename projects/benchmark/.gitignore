@@ -1,0 +1,21 @@
+# Scrape archives — large, reproducible, and kept outside the repo entirely
+# (see AEMET_SCRATCH_ROOT in .env.example). Never committed.
+data/*
+!data/.gitkeep
+!data/*.dvc
+
+# Run logs from the long scrapes
+logs/
+
+# Build artefacts
+_build/
+*.bak
+
+# Resolved environment. No sibling project under projects/ commits its lock —
+# and the reader is pinned to a git branch, so a lock here would give only
+# partial reproducibility anyway. Flip this if you want the pin.
+uv.lock
+
+# Secrets — AEMET API key, never commit this
+.env
+.secrets/

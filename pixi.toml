@@ -332,6 +332,44 @@ lab = "jupyter lab --no-browser --port 8888"
 # Offline registry sanity checks.
 test-satellite-viewer = "pytest projects/satellite_viewer/tests/ -v"
 
+# ---------------------------------------------------------------------------
+# Data env: benchmark
+# Paced, resumable AEMET scrapes cached as GeoParquet. Long-running and
+# network-bound — see projects/benchmark/README.md for the resume workflow.
+# ---------------------------------------------------------------------------
+[feature.benchmark.dependencies]
+python = "3.12.*"
+ipykernel = ">=6.29"
+jupyter = "*"
+nbconvert = "*"
+jupytext = ">=1.16"
+
+[feature.benchmark.pypi-dependencies]
+benchmark = { path = "projects/benchmark", editable = true, extras = ["notebooks"] }
+# The reader is not on PyPI, and pixi does not read the project's
+# [tool.uv.sources], so the git source is restated here. Pinned to a commit
+# (not a branch) so the lockfile has a stable ref — bump when you want a
+# newer reader. httpx + geopandas + pyarrow + netcdf4 come through the
+# [aemet] extra.
+xrtoolz-reader = { git = "https://github.com/jejjohnson/xr_toolz.git", subdirectory = "packages/xrtoolz-reader", rev = "8bdb7653ff4ae95b15350a406a41758bac3d7bcd", extras = ["aemet"] }
+
+[feature.benchmark.tasks]
+# What the archive already holds, and the --start value to resume from.
+# Offline: reads the cached GeoParquet, no API key needed.
+aemet-coverage = "python projects/benchmark/scripts/observations/aemet/coverage.py"
+# ~15 min end-to-end sanity check against the live API (37 stations).
+aemet-smoke = "python projects/benchmark/scripts/observations/aemet/smoke.py"
+# Full-network scrapes. Hours to days — prefer the tmux wrapper below so
+# an interrupted session does not take the scrape down with it.
+aemet-monthly = "python projects/benchmark/scripts/observations/aemet/monthly.py"
+aemet-daily = "python projects/benchmark/scripts/observations/aemet/daily.py"
+# tmux wrapper + CPU keepalive for long unattended runs:
+#   pixi run -e benchmark aemet-resume monthly --start 2020
+aemet-resume = "projects/benchmark/scripts/observations/aemet/resume.sh"
+# Re-execute the archive overview notebook against the current cache. Reads
+# the GeoParquet only — no API key, no network.
+execute-benchmark = "jupyter nbconvert --to notebook --execute --inplace projects/benchmark/notebooks/*.ipynb --ExecutePreprocessor.timeout=900"
+
 [environments]
 default = { features = ["dev"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
@@ -343,6 +381,7 @@ methane-pod = { features = ["methane-pod", "dev"], solve-group = "methane-pod" }
 plume-simulation = { features = ["plume-simulation", "dev"], solve-group = "plume-simulation" }
 geostack = { features = ["geostack", "dev"], solve-group = "geostack" }
 satellite-viewer = { features = ["satellite-viewer", "dev"], solve-group = "satellite-viewer" }
+benchmark = { features = ["benchmark", "dev"], solve-group = "benchmark" }
 
 [tasks]
 test = "pytest -v"

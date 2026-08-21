@@ -41,6 +41,12 @@ AEMET OpenData's climatological endpoints for all ~947 stations, from
 | `daily.py` | Full-network daily scrape. Much heavier — see below. |
 | `resume.sh` | tmux wrapper with a CPU keepalive sidecar. **Use this** for long runs. |
 
+And one notebook:
+
+| Notebook | What it covers |
+|---|---|
+| [`notebooks/01_aemet_archive_overview`](notebooks/01_aemet_archive_overview.ipynb) | Tour of the archive — network, coverage, trends, spatial and spatio-temporal structure, and the pitfalls. |
+
 ### Setup
 
 The repo standard is Pixi, and the benchmark is registered as its own
@@ -58,6 +64,7 @@ pixi run -e benchmark aemet-smoke                            # ~15 min live chec
 | `pixi run -e benchmark aemet-monthly` | Full monthly scrape |
 | `pixi run -e benchmark aemet-daily` | Full daily scrape |
 | `pixi run -e benchmark aemet-resume monthly --start 2020` | tmux + keepalive wrapper |
+| `pixi run -e benchmark execute-benchmark` | Re-run the overview notebook against the cache |
 
 Where the archive lands is resolved by `scratch_root()`: exported
 `AEMET_SCRATCH_ROOT`, then `BENCHMARK_AEMET_ROOT`, then either name in
@@ -143,6 +150,10 @@ resume** — re-running a window refetches every station in it. Interrupting
 is always safe for the data, but partial windows are not credited, so
 restart at the first *incomplete* year. `coverage.py` computes it, and
 flags interior gaps left by an interrupted window.
+
+The overview notebook works through what this coverage pattern means in
+practice — in particular why averaging every station reporting in a given
+year understates the warming trend by about a third.
 
 Year bounds are validated rather than silently clipped: a request that
 selects no window at all — `--start 2026` against a schedule ending in

@@ -9,6 +9,7 @@ project:
     - name: Juan Emmanuel Johnson
   toc:
     - file: README.md
+    - file: notebooks/01_aemet_archive_overview.ipynb
 site:
   template: book-theme
   title: Benchmark Archives

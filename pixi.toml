@@ -366,6 +366,9 @@ aemet-daily = "python projects/benchmark/scripts/observations/aemet/daily.py"
 # tmux wrapper + CPU keepalive for long unattended runs:
 #   pixi run -e benchmark aemet-resume monthly --start 2020
 aemet-resume = "projects/benchmark/scripts/observations/aemet/resume.sh"
+# Re-execute the archive overview notebook against the current cache. Reads
+# the GeoParquet only — no API key, no network.
+execute-benchmark = "jupyter nbconvert --to notebook --execute --inplace projects/benchmark/notebooks/*.ipynb --ExecutePreprocessor.timeout=900"
 
 [environments]
 default = { features = ["dev"], solve-group = "default" }

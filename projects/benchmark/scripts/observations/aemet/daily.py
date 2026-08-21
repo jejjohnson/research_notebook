@@ -25,6 +25,7 @@ from benchmark.observations.aemet import (
     select_periods,
     setup_logging,
 )
+from benchmark.observations.aemet.inventory import merged_inventory
 from benchmark.observations.aemet.periods import FIRST_YEAR, LAST_YEAR
 from loguru import logger
 
@@ -47,11 +48,10 @@ def main() -> None:
     archive = build_archive("daily")
 
     logger.info("refreshing station inventory")
-    inventory = archive.sync_stations()
-    logger.info(f"inventory: {len(inventory)} stations")
+    inventory = merged_inventory(archive, "aemet_daily")
 
     todo = select_periods(PERIODS, args.start, args.end)
-    logger.info(f"{len(todo)} periods to scrape ({args.start}-{args.end})")
+    logger.info(f"{len(todo)} periods to scrape ({todo[0][1]}-{todo[-1][2]})")
 
     t0 = time.monotonic()
     for i, y1, y2 in todo:

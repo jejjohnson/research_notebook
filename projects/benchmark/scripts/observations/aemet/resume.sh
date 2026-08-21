@@ -33,13 +33,22 @@ script="scripts/observations/aemet/${flavor}.py"
 # scripts/observations/aemet/ -> project root is three levels up.
 project_root="$(cd "$(dirname "$0")/../../.." && pwd)"
 
-# Accept either env var (matches scratch_root() resolution in common.py).
+# Where the archive lands. An exported override wins; otherwise defer to
+# scratch_root() so this wrapper and the Python entry points can never
+# disagree about the destination — it also picks up a .env-only setting
+# and the portable <project>/data/aemet fallback, neither of which is
+# visible to the shell.
 scratch_root="${AEMET_SCRATCH_ROOT:-${BENCHMARK_AEMET_ROOT:-}}"
 if [[ -z "$scratch_root" ]]; then
-    echo "AEMET_SCRATCH_ROOT (or BENCHMARK_AEMET_ROOT) is not set." >&2
-    echo "Set it (recommended in ~/.bashrc) to keep data out of the repo:" >&2
-    echo "  export AEMET_SCRATCH_ROOT=\$HOME/scratch/aemet" >&2
-    exit 1
+    if ! scratch_root="$(cd "$project_root" && uv run python -c \
+        'from benchmark.observations.aemet.paths import scratch_root
+print(scratch_root())')"; then
+        echo "could not resolve the archive root via scratch_root()." >&2
+        echo "Set it explicitly to keep data off the repo disk:" >&2
+        echo "  export AEMET_SCRATCH_ROOT=\$HOME/scratch/aemet" >&2
+        exit 1
+    fi
+    echo "no AEMET_SCRATCH_ROOT exported; resolved archive root: $scratch_root"
 fi
 
 if tmux has-session -t "$session" 2>/dev/null; then

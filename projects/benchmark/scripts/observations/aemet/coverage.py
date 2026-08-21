@@ -51,6 +51,16 @@ def main() -> int:
         return 1
 
     df = pd.read_parquet(path, columns=["station_id", "time", REFERENCE_VARIABLE])
+
+    # An archive file can exist but hold nothing — e.g. a window that
+    # returned no observations still writes the parquet. Bail out with the
+    # same actionable message as a missing file rather than letting the
+    # year-span arithmetic below raise on an empty index.
+    if df.empty:
+        print(f"archive at {path} is empty (0 rows)")
+        print("nothing scraped yet — start from the beginning")
+        return 1
+
     df["year"] = pd.to_datetime(df["time"]).dt.year
 
     by_year = df.groupby("year").agg(

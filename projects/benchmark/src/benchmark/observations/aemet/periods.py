@@ -54,7 +54,32 @@ def select_periods(
     meaningful when resuming partway through.
 
     Returns ``(index, start_year, end_year)`` triples.
+
+    Raises ``ValueError`` rather than returning an empty list when the
+    request cannot select anything. A silent empty selection is the worst
+    outcome here: the scrape logs the range it was asked for, fetches
+    nothing, and then reports that every period completed — so a typo like
+    ``--start 2026`` against a schedule ending in 2025 looks like success.
+
+    >>> select_periods([(1920, 1921), (1922, 1923)], 1921, 1922)
+    [(1, 1921, 1921), (2, 1922, 1922)]
+    >>> select_periods([(1920, 1921)], 2026, 2026)
+    Traceback (most recent call last):
+        ...
+    ValueError: requested 2026-2026 but the schedule only covers 1920-1921
     """
+    if not periods:
+        raise ValueError("period schedule is empty")
+    if start > end:
+        raise ValueError(f"start ({start}) is after end ({end})")
+
+    first_year, last_year = periods[0][0], periods[-1][1]
+    if end < first_year or start > last_year:
+        raise ValueError(
+            f"requested {start}-{end} but the schedule only covers "
+            f"{first_year}-{last_year}"
+        )
+
     selected: list[tuple[int, int, int]] = []
     for i, (y1, y2) in enumerate(periods, 1):
         if y2 < start or y1 > end:

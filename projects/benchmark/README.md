@@ -43,35 +43,58 @@ AEMET OpenData's climatological endpoints for all ~947 stations, from
 
 ### Setup
 
+The repo standard is Pixi, and the benchmark is registered as its own
+environment + task set, so a clean checkout needs no second toolchain:
+
 ```bash
-cd projects/benchmark
-uv sync                                    # installs xrtoolz-reader[aemet]
-cp .env.example .env                       # add your AEMET_API_KEY
-export AEMET_SCRATCH_ROOT=$HOME/scratch/aemet   # keep data off the repo disk
-uv run python scripts/observations/aemet/smoke.py
+cp projects/benchmark/.env.example projects/benchmark/.env   # add AEMET_API_KEY
+pixi run -e benchmark aemet-smoke                            # ~15 min live check
 ```
+
+| Task | What it runs |
+|---|---|
+| `pixi run -e benchmark aemet-coverage` | Offline coverage + resume year |
+| `pixi run -e benchmark aemet-smoke` | ~15 min live validation |
+| `pixi run -e benchmark aemet-monthly` | Full monthly scrape |
+| `pixi run -e benchmark aemet-daily` | Full daily scrape |
+| `pixi run -e benchmark aemet-resume monthly --start 2020` | tmux + keepalive wrapper |
+
+Where the archive lands is resolved by `scratch_root()`: exported
+`AEMET_SCRATCH_ROOT`, then `BENCHMARK_AEMET_ROOT`, then either name in
+`projects/benchmark/.env`, then `<project>/data/aemet`. Point it off the
+repo disk so the data survives VM rebuilds:
+
+```bash
+export AEMET_SCRATCH_ROOT=$HOME/scratch/aemet   # or set it in .env
+```
+
+Working inside `projects/benchmark/` directly, `uv` also resolves the
+same project — `uv sync && uv run python scripts/observations/aemet/smoke.py`.
+Both paths install `xrtoolz-reader[aemet]` from the same pinned commit.
 
 ### Current state of the monthly scrape
 
-The archive holds **1920–1954 complete** for all 947 stations (397,740
-rows). The run stopped on 2026-05-05 partway through 1955–1959 and was
-never restarted.
+The archive holds **1920–2019 complete** — 1,116,120 rows. The 2026-08-20
+run carried it from 1954 to 2019 in 33 two-year windows (~23 h) and was
+interrupted partway through 2020–2021, so **three windows remain**
+(2020–2021, 2022–2023, 2024–2025).
 
-Note the inventory has since shrunk to **921 stations** (2026-08-19) — AEMET
-retires and renumbers stations, so the live network no longer matches the 947
-frozen into the archive. Rows for retired stations stay in the archive; new
-windows simply will not extend them.
+Coverage is thin early and dense late, which is the network, not the
+scrape: non-null temperature runs ~2% in 1920, ~7% by 1954, ~12% by 1980,
+and 86% by 2019.
 
-Worth knowing before you judge that progress: the years already held are
-the sparse ones. Non-null temperature runs ~2% in 1920 rising to ~7% by
-1954 — the network only densifies after 1960, so essentially all the
-usable data is still ahead.
+Station counts differ by era for a real reason. Rows before 1955 carry 947
+stations; rows from 1955 on carry the 921 the API advertised when that
+window ran. AEMET retires and renumbers stations, so the live inventory is
+a moving target — `merged_inventory()` now unions it with the stations
+already in the archive (currently 921 live + 28 retired = 949) so later
+windows extend the retired stations instead of dropping them.
 
 To resume, confirm the restart year and go:
 
 ```bash
-uv run python scripts/observations/aemet/coverage.py     # prints: resume with --start 1955
-scripts/observations/aemet/resume.sh monthly --start 1955
+pixi run -e benchmark aemet-coverage        # prints: resume with --start 2020
+pixi run -e benchmark aemet-resume monthly --start 2020
 ```
 
 ### Pacing — why it is slow
@@ -83,17 +106,31 @@ backed off the other kept the minute bucket hot. `AemetSource` now also
 pauses *all* workers globally on any 429, but single-worker at 1 req/s
 remains the setting that finishes.
 
-Budget roughly **50 minutes per two-year monthly window** (~36 windows
-left, so ~30 hours), and considerably more for daily — its endpoint caps
-each request at 180 days, so a station-decade costs ~20 chunks.
+Measured over the 33 windows of the 2026-08-20 run: **34 min** per
+two-year window early on, rising to **55 min** for the recent, denser
+years — the request count per window grows with the number of reporting
+stations. Budget ~1 h per remaining window, and considerably more for
+daily, whose endpoint caps each request at 180 days so a station-decade
+costs ~20 chunks.
 
 ### Two failure modes to recognise
 
-**Process vanishes, no traceback.** Azure ML's idle-stop agent kills
-compute it judges idle, and a rate-limited scrape sits at near-zero CPU.
-This is what ended the 2026-05-05 run. `resume.sh` exists to prevent it —
-it runs a ~0.5% duty-cycle CPU sidecar alongside the scrape. Launch long
-runs through it, not directly.
+**Process vanishes, no traceback.** Two different causes, worth telling
+apart before you reach for a fix.
+
+*Idle-stop.* Azure ML kills compute it judges idle, and a rate-limited
+scrape sits at near-zero CPU. `resume.sh` runs a ~0.5% duty-cycle CPU
+sidecar to keep the sampler seeing activity. Launch long runs through it,
+not directly.
+
+*Control-plane stop.* The 2026-08-19 run died six minutes in, and it was
+not idle-stop: `idleMinutesBeforeStop` was **120** and the CPU had been
+busy throughout, while the kernel logged `hv_utils: Shutdown request
+received — graceful shutdown initiated`. That is an external stop —
+scheduled shutdown policy, a portal stop, or platform maintenance — and no
+userspace keepalive prevents it. Check the instance's schedule before
+committing to a multi-hour run. (Which of the two ended the 2026-05-05 run
+was never established; the logs for it are gone.)
 
 **`AemetAuthError` after weeks of working.** AEMET API keys are JWTs and
 they expire. Re-request one before debugging anything else. (Not the cause
@@ -106,3 +143,8 @@ resume** — re-running a window refetches every station in it. Interrupting
 is always safe for the data, but partial windows are not credited, so
 restart at the first *incomplete* year. `coverage.py` computes it, and
 flags interior gaps left by an interrupted window.
+
+Year bounds are validated rather than silently clipped: a request that
+selects no window at all — `--start 2026` against a schedule ending in
+2025 — raises instead of logging the requested range, fetching nothing,
+and reporting that every period completed.

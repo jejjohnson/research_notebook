@@ -32,6 +32,9 @@ project:
         - file: notebooks/04_nonstationary/10_nonstationary_parametric.ipynb
         - file: notebooks/04_nonstationary/11_nonstationary_ode.ipynb
         - file: notebooks/04_nonstationary/12_nonstationary_gp.ipynb
+    - title: Improvements
+      children:
+        - file: notebooks/05_improvements/13_inference_benchmark.ipynb
 site:
   template: book-theme
   title: Spatial Extremes

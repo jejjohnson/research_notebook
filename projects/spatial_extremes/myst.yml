@@ -36,6 +36,7 @@ project:
       children:
         - file: notebooks/05_improvements/13_inference_benchmark.ipynb
         - file: notebooks/05_improvements/14_coregionalization.ipynb
+        - file: notebooks/05_improvements/15_pathwise_sampling.ipynb
 site:
   template: book-theme
   title: Spatial Extremes

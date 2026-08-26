@@ -17,9 +17,9 @@ Three packages do the heavy lifting, one per layer:
 
 | Layer | Package | Role |
 |-------|---------|------|
-| Data | [`xrreader`](https://github.com/jejjohnson/xrreader) | pull + cache CDS in-situ land stations over Iberia |
+| Data | [`xrtoolz-reader`](https://github.com/jejjohnson/xr_toolz/tree/main/packages/xrtoolz-reader) | pull + cache CDS in-situ land stations over Iberia (import name: `xrreader`) |
 | Extremes | [`xtremax`](https://github.com/jejjohnson/xtremax) | block-maxima extraction, GEV distribution, return levels |
-| Gaussian processes | [`pyrox`](https://github.com/jejjohnson/pyrox) | kernels, latent GP fields, variational inference |
+| Gaussian processes | [`pyrox-gp`](https://github.com/jejjohnson/pyrox/tree/main/packages/pyrox-gp) | kernels, latent GP fields, variational inference |
 | Dynamics | [`diffrax`](https://github.com/patrick-kidger/diffrax) | ODE/SDE integration for the time-varying (NB10–12) trends |
 
 ## The build-up
@@ -38,7 +38,7 @@ and turns the fit into **return levels** with posterior uncertainty.
 **04–06 — Pooling and Gaussian processes.** 04 fits every station independently
 (`04` with NUTS, `04b` with a fast Laplace approximation) and maps the
 parameters — the noisy result motivates pooling. 05 pools them with a
-**hierarchical** Bayesian model. 06 is a Gaussian-process primer with `pyrox`:
+**hierarchical** Bayesian model. 06 is a Gaussian-process primer with `pyrox-gp`:
 interpolate a field over `(lon, lat)`, then add physical features (elevation,
 distance-to-coast, slope) and use ARD to see which actually matter.
 
@@ -82,3 +82,31 @@ and fetch once into the cache the notebooks read:
 
 Without credentials, just open any notebook — it will report that it is running
 on the synthetic fallback and otherwise behave identically.
+
+## Warm starts across notebooks
+
+Several notebooks fit the same quantities more than once: the Laplace
+approximation of 04b re-derives what 04 samples, 12 compares against the ODE 11
+already fitted, and every spatial model estimates a location for *every*
+station — Albacete included, long before 10–12 study it alone.
+
+`spatial_extremes.results` lets a notebook publish a fit and a later one start
+from it, the Bayesian analogue of a pretrained checkpoint:
+
+| Artifact | Published by | Used by |
+|---|---|---|
+| `gp_primer_hypers` | 06 | 07, 08, 09 — the fitted Matérn lengthscale, replacing a hard-coded literal |
+| `laplace_no_pool` | 04b | 04 — seeds NUTS, which then needs a much shorter warmup |
+| `spatial_gp_mu` | 07 | 08, 09 (whitened field + scalars), 12 (Albacete's location, scale, shape) |
+| `ode_gev_albacete` | 11 | 12 — loads the posterior instead of refitting the ODE |
+
+Warm starts are **initialisation only**: they move where a sampler or optimiser
+begins, never what it targets, so the posterior is unchanged. (Feeding a fitted
+result back as a *prior* would be different — and wrong here, since it would
+count the same maxima twice.)
+
+The cache lives beside the data cache (`<cache_root>/results/`, gitignored) and
+is entirely optional. Every consumer falls back to a cold start when an artifact
+is missing, so a fresh clone runs each notebook standalone and offline; running
+the curriculum in order simply populates the cache and makes the later notebooks
+faster and better-anchored.

@@ -37,6 +37,8 @@ project:
         - file: notebooks/05_improvements/13_inference_benchmark.ipynb
         - file: notebooks/05_improvements/14_coregionalization.ipynb
         - file: notebooks/05_improvements/15_pathwise_sampling.ipynb
+        - file: notebooks/05_improvements/16_scale_field.ipynb
+        - file: notebooks/05_improvements/17_markov_gp_trend.ipynb
 site:
   template: book-theme
   title: Spatial Extremes

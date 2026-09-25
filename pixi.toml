@@ -174,90 +174,6 @@ equinox = ">=0.11"
 execute-coordax = "jupyter nbconvert --to notebook --execute --inplace notebooks/coordax/foundations/*.ipynb notebooks/coordax/derivatives/*.ipynb notebooks/coordax/dynamics/*.ipynb --ExecutePreprocessor.timeout=600"
 
 # ---------------------------------------------------------------------------
-# Project env: methane-pod
-# Self-contained subproject living under projects/methane_pod/. Bundles
-# numpyro + jax so MCMC fits and Monte Carlo simulations from the POD +
-# TMTPP notebooks can be re-executed end-to-end.
-# ---------------------------------------------------------------------------
-[feature.methane-pod.dependencies]
-python = "3.12.*"
-ipykernel = ">=6.29"
-jupyter = "*"
-nbconvert = "*"
-jupytext = ">=1.16"
-
-[feature.methane-pod.pypi-dependencies]
-methane_pod = { path = "projects/methane_pod", editable = true }
-# Clamp jax below the 0.9 line to match numpyro's xla_pmap_p import (same
-# reasoning as the pyrox feature above). Drop this pin when numpyro ≥0.21
-# lands on PyPI with the updated import.
-jax = ">=0.7,<0.9"
-jaxlib = ">=0.7,<0.9"
-numpyro = ">=0.16"
-equinox = ">=0.11"
-corner = ">=2.2"
-pandas = ">=2"
-
-[feature.methane-pod.tasks]
-execute-methane-pod = "jupyter nbconvert --to notebook --execute --inplace projects/methane_pod/notebooks/*.ipynb --ExecutePreprocessor.timeout=1200"
-test-methane-pod = "pytest projects/methane_pod/tests -v -m 'not slow'"
-test-methane-pod-all = "pytest projects/methane_pod/tests -v"
-
-# ---------------------------------------------------------------------------
-# Project env: plume-simulation
-# Self-contained sub-project under projects/plume_simulation/. Bundles
-# numpyro + jax for the Bayesian inference layer and xarray for the
-# forward-simulation helper.
-# ---------------------------------------------------------------------------
-[feature.plume-simulation.dependencies]
-python = "3.12.*"
-ipykernel = ">=6.29"
-jupyter = "*"
-nbconvert = "*"
-
-[feature.plume-simulation.pypi-dependencies]
-plume_simulation = { path = "projects/plume_simulation", editable = true }
-# Same numpyro-0.9-line compatibility clamp as the pyrox / methane-pod envs.
-jax = ">=0.7,<0.9"
-jaxlib = ">=0.7,<0.9"
-numpyro = ">=0.16"
-xarray = "*"
-matplotlib = ">=3.8"
-# diffrax is used by the gauss_puff sub-model for time-varying wind
-# cumulative-integral solves under the Gaussian puff forward model.
-diffrax = ">=0.6"
-equinox = ">=0.11"
-# gaussx supplies the structured-linear-algebra primitives (LowRankUpdate
-# operator + Woodbury-backed solve) used by the radtran matched-filter
-# retrieval. With a few-hundred-channel hyperspectral target and a rank-16
-# covariance, the operator-based path is ~30× faster than materialising
-# Σ⁻¹ via a dense inverse. Pulled by git commit for lockfile reproducibility.
-gaussx = { git = "https://github.com/jejjohnson/gaussx", rev = "fd9a2427" }
-# finitevolx supplies the Arakawa C-grid FVM operators used by the
-# les_fvm Eulerian dispersion sub-model (3D advection-diffusion of a
-# passive methane tracer under a prescribed wind field). Pulled from
-# git by tag so the lockfile is reproducible — bump when a new tag
-# is released.
-finitevolx = { git = "https://github.com/jejjohnson/finitevolX", tag = "v0.0.41" }
-# hitran-api (HAPI) powers the hapi_lut sub-package: line-by-line Voigt
-# absorption cross-section LUTs. Imported lazily inside the generator, so
-# the rest of plume_simulation does not require it at import time. The
-# hapi_lut notebooks need to download HITRAN line parameters on first run
-# (tens of MB per gas, cached under projects/plume_simulation/data/hitran_cache/).
-hitran-api = "*"
-
-[feature.plume-simulation.tasks]
-execute-plume-simulation = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/*.ipynb projects/plume_simulation/notebooks/gauss_puff/*.ipynb projects/plume_simulation/notebooks/les_fvm/*.ipynb --ExecutePreprocessor.timeout=1200"
-# The hapi_lut and radtran notebooks are kept out of the CI-targeted task
-# above because they depend on the HITRAN line parameters fetched by hapi_lut
-# (network) and the uncommitted .nc LUTs under projects/plume_simulation/data/.
-# Run locally via the tasks below.
-execute-plume-hapi-lut = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/hapi_lut/*.ipynb --ExecutePreprocessor.timeout=1800"
-execute-plume-radtran = "jupyter nbconvert --to notebook --execute --inplace projects/plume_simulation/notebooks/radtran/*.ipynb --ExecutePreprocessor.timeout=1800"
-test-plume-simulation = "pytest projects/plume_simulation/tests -v -m 'not slow'"
-test-plume-simulation-all = "pytest projects/plume_simulation/tests -v"
-
-# ---------------------------------------------------------------------------
 # Project env: geostack
 # Notebook-only walkthrough of the pipekit + geotoolz + geopatcher stack
 # (see projects/geostack/README.md for the chronological order). The
@@ -339,8 +255,6 @@ jupyterlab = { features = ["dev", "jupyterlab"], solve-group = "default" }
 marimo = { features = ["dev", "marimo"], solve-group = "default" }
 pyrox = { features = ["pyrox"], solve-group = "pyrox" }
 coordax = { features = ["coordax"], solve-group = "coordax" }
-methane-pod = { features = ["methane-pod", "dev"], solve-group = "methane-pod" }
-plume-simulation = { features = ["plume-simulation", "dev"], solve-group = "plume-simulation" }
 geostack = { features = ["geostack", "dev"], solve-group = "geostack" }
 satellite-viewer = { features = ["satellite-viewer", "dev"], solve-group = "satellite-viewer" }
 

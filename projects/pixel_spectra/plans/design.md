@@ -19,7 +19,7 @@ short_title: "pixel_spectra design"
 > "Does the pixel I clicked on (or the patch I drew) actually look
 > like the thing I think it is — and how close is it?"
 
-This is upstream of the `methane_pod` workflow: before fitting a
+This is upstream of the methane POD workflow (now `plumax.population`): before fitting a
 point-process to a list of plume detections, you'd open each
 candidate's AOI here, sanity-check that the spectrum matches a
 methane-enhanced reference (Mag1c-style absorption signature, or a

@@ -44,7 +44,7 @@ Patch decomposition (03) brings global *exact* GP down to 12 s/day on 8× A100.
 - [`gaussx`](https://github.com/jejjohnson/gaussx) — structured linear algebra primitives the 00/01 pipeline is built on
 - [`pyrox`](https://github.com/jejjohnson/pyrox) — pathwise sampler + RFF feature primitives
 - [`xrpatcher`](https://github.com/jejjohnson/xrpatcher) — patch-extraction layer used in 03
-- The plume-simulation project's [3D-Var note](../plume_simulation/notebooks/assimilation/00_3dvar_derivation.md) — companion derivation in the methane-retrieval setting; equations are identical
+- plumax's [3D-Var derivation](https://jejjohnson.github.io/plumax/variational-derivation/) — companion derivation in the methane-retrieval setting; equations are identical
 ```
 
 ## Map of methods
@@ -100,7 +100,7 @@ projects/interpolation/
     └── 01_physics_constraints.md                   # basis / data / loss axes for OOD prediction
 ```
 
-No `src/` package yet — these are derivations and pseudocode, not a runnable port. A future iteration of the project would add a `plume_simulation`-style `src/interpolation/` package implementing the patch-decomposition pipeline from 03 against real CMEMS data.
+No `src/` package yet — these are derivations and pseudocode, not a runnable port. A future iteration of the project would add a plumax-style `src/interpolation/` package implementing the patch-decomposition pipeline from 03 against real CMEMS data.
 
 ## Running
 

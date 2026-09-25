@@ -10,7 +10,7 @@ This is where data assimilation (DA) takes over. The DA literature has spent fif
 
 This note frames the math, situates each method in the same picture, and gives concrete pointers to the local code that implements them ([`jej_vc_snippets/quasigeostrophic_model/massh/`](file:///home/azureuser/localfiles/jej_vc_snippets/quasigeostrophic_model/massh/), [`jej_vc_snippets/4dvar/`](file:///home/azureuser/localfiles/jej_vc_snippets/4dvar/)) and to the existing 3D-Var derivation in the plume-simulation project[^pl3dvar]. The aim is *navigational* — you should be able to read this side by side with the SSH-mapping data-challenge papers and see exactly which equation each algorithm is solving.
 
-[^pl3dvar]: A complementary 3D-Var derivation aimed at hyperspectral methane retrieval lives at [`projects/plume_simulation/notebooks/assimilation/00_3dvar_derivation.md`](../../plume_simulation/notebooks/assimilation/00_3dvar_derivation.md) — same math, different application. We borrow its preconditioning and dual-form discussion when relevant.
+[^pl3dvar]: A complementary 3D-Var derivation aimed at hyperspectral methane retrieval lives in plumax at [3D-Var derivation](https://jejjohnson.github.io/plumax/variational-derivation/) — same math, different application. We borrow its preconditioning and dual-form discussion when relevant.
 
 ---
 
@@ -84,7 +84,7 @@ The control variable is the **initial state $x_0$**. The model $M$ propagates it
 - **The prior $B$ now propagates implicitly along $M$**: the effective prior at time $t_i$ is $M^i B (M^i)^\top$. So an isotropic Gaussian prior at $t_0$ becomes an anisotropic, eddy-stretched prior at $t_i$ — exactly what the static GP cannot represent.
 - **The cost gradient requires the adjoint $M^\top$**: backpropagating the obs misfit through the model. Hand-coded adjoints used to be a major engineering project (see ECMWF's IFS); JAX does it for you with `jax.grad` provided $M$ is differentiable.
 
-The minimisation is iterative — typically incremental 4D-Var: linearise $M$ and $\mathcal{H}$ around the current trajectory (the "outer loop"), solve the resulting quadratic problem (the "inner loop") with PCG-LBFGS, update the trajectory, repeat[^bc1999]. The control-variable transform from [`plume_simulation/.../00_3dvar_derivation.md` §2`](../../plume_simulation/notebooks/assimilation/00_3dvar_derivation.md) carries over directly: pre-conditioning by $U$ with $B = U U^\top$ collapses the prior to a sphere and makes LBFGS converge in ~10 iterations.
+The minimisation is iterative — typically incremental 4D-Var: linearise $M$ and $\mathcal{H}$ around the current trajectory (the "outer loop"), solve the resulting quadratic problem (the "inner loop") with PCG-LBFGS, update the trajectory, repeat[^bc1999]. The control-variable transform from [plumax's 3D-Var derivation §2](https://jejjohnson.github.io/plumax/variational-derivation/) carries over directly: pre-conditioning by $U$ with $B = U U^\top$ collapses the prior to a sphere and makes LBFGS converge in ~10 iterations.
 
 > **In code.** [`jej_vc_snippets/4dvar/src/fourdvarnet/costs.py`](file:///home/azureuser/localfiles/jej_vc_snippets/4dvar/src/fourdvarnet/costs.py) builds [eq-4dvar](#eq-4dvar) for the `(B, T, H, W)` 2-D layout; the gradient is taken via `jax.grad` so the adjoint is implicit. `solver.py` runs the inner-loop LBFGS.
 

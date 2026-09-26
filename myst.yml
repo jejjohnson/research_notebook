@@ -78,6 +78,9 @@ project:
                 - file: notebooks/coordax/dynamics/10_pde_parameter_estimation.ipynb
     - title: Projects
       children:
+        - title: Benchmark Archives
+          children:
+            - file: projects/benchmark/README.md
         - title: Spatial Extremes
           children:
             - file: projects/spatial_extremes/README.md

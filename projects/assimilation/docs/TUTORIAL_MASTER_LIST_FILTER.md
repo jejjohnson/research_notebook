@@ -151,7 +151,7 @@ A reconciled, exhaustive curriculum spanning what currently exists in **filterax
 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
-| 0.7 | 3D-Var vs Kalman — duality (Kalman = sequential 3D-Var with $B = P^f$) | — | 🧱 🌉 | pairs with R `projects/plume_simulation/notebooks/assimilation/00_3dvar_derivation.md`; minimisation = closed-form same answer |
+| 0.7 | 3D-Var vs Kalman — duality (Kalman = sequential 3D-Var with $B = P^f$) | — | 🧱 🌉 | pairs with R [plumax 3D-Var derivation](https://jejjohnson.github.io/plumax/variational-derivation/); minimisation = closed-form same answer |
 | 0.8 | 4D-Var with adjoints — and how differentiable EnKF (Part 8) compares | — | 🧱 🌉 | dd:features/differentiable_da.md §4; cost / memory / Jacobian comparison table |
 
 ### 0.E — Information vs covariance form
@@ -775,7 +775,7 @@ The bridge into broader filtering / sequential-VI work. Each tutorial sits next 
 | # | Tutorial | Source | Scope | Refs / Notes |
 |---|----------|--------|-------|--------------|
 | 12.3 | 1D heat-equation DA — pedagogical PDE state-space | — | 🧱 | ground-truth-from-PDE; visualised assimilation |
-| 12.4 | Plume dispersion DA — `plume_simulation/matched_filter` → EnKF | — | 🔬 | pairs with `projects/plume_simulation`; emission-rate estimation |
+| 12.4 | Plume dispersion DA — `plumax.matched_filter` → EnKF | — | 🔬 | pairs with [plumax](https://github.com/jejjohnson/plumax); emission-rate estimation |
 | 12.5 | Multi-instrument retrieval — TROPOMI/EMIT/GHGSat-style joint observation | — | 🔬 | extends 11.7; per-instrument $H$ stack |
 
 ### 12.C — Inverse problems

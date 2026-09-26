@@ -1,84 +1,16 @@
 ---
-title: Spatial Extremes
-short_title: Spatial Extremes
-authors:
-  - name: Juan Emmanuel Johnson
-date: 2026-06-05
+title: Spatial Extremes (moved)
 ---
 
-# Spatial Extremes
+# Spatial Extremes — moved to xtremax
 
-A step-by-step curriculum on modelling **climate extremes in space**: how often
-will a temperature this high recur, and how does that risk vary across a region?
-We build up from a single station to a full spatial model, one concept per
-notebook, on **real station data** from the Copernicus Climate Data Store (CDS).
+The spatial-extremes curriculum (Iberian station data → EVT foundations → pooling → spatial GEV → non-stationary) now lives in the [xtremax](https://github.com/jejjohnson/xtremax) docs as a tutorial series:
 
-Three packages do the heavy lifting, one per layer:
+- [Overview](https://jejjohnson.github.io/xtremax/spatial-extremes/)
+- Data: [CDS in-situ Iberia](https://jejjohnson.github.io/xtremax/cds-insitu-iberia/)
+- Foundations: [block maxima](https://jejjohnson.github.io/xtremax/block-maxima/), [GEV at one station](https://jejjohnson.github.io/xtremax/gev-one-station/), [extremal types](https://jejjohnson.github.io/xtremax/extremal-types/), [return levels](https://jejjohnson.github.io/xtremax/return-levels/)
+- Pooling: [independent](https://jejjohnson.github.io/xtremax/many-stations-independent/), [Laplace](https://jejjohnson.github.io/xtremax/many-stations-laplace/), [hierarchical](https://jejjohnson.github.io/xtremax/hierarchical-pooling/)
+- Spatial models: [GP primer](https://jejjohnson.github.io/xtremax/gp-primer/), [GP on μ](https://jejjohnson.github.io/xtremax/spatial-gp-mu/), [GP on μ, σ](https://jejjohnson.github.io/xtremax/spatial-gp-mu-sigma/), [GP on μ, σ, ξ](https://jejjohnson.github.io/xtremax/spatial-gp-mu-sigma-xi/)
+- Non-stationary: [parametric](https://jejjohnson.github.io/xtremax/nonstationary-parametric/), [neural ODE](https://jejjohnson.github.io/xtremax/nonstationary-ode/), [GP](https://jejjohnson.github.io/xtremax/nonstationary-gp/)
 
-| Layer | Package | Role |
-|-------|---------|------|
-| Data | [`xrreader`](https://github.com/jejjohnson/xrreader) | pull + cache CDS in-situ land stations over Iberia |
-| Extremes | [`xtremax`](https://github.com/jejjohnson/xtremax) | block-maxima extraction, GEV distribution, return levels |
-| Gaussian processes | [`pyrox`](https://github.com/jejjohnson/pyrox) | kernels, latent GP fields, variational inference |
-| Dynamics | [`diffrax`](https://github.com/patrick-kidger/diffrax) | ODE/SDE integration for the time-varying (NB10–12) trends |
-
-## The build-up
-
-Each notebook is short and adds exactly one idea.
-
-**00 — Data.** Pull daily near-surface air temperature for Iberian land
-stations from CDS with `xrreader`, cache it, and look at it.
-
-**01–03 — Extreme-value foundations (one station).**
-01 turns a daily series into annual maxima (`xtremax.extraction`); 02 fits a
-Generalized Extreme Value (GEV) distribution to one station and interprets
-location/scale/shape $(\mu, \sigma, \xi)$; 03 covers the extremal-types theorem
-and turns the fit into **return levels** with posterior uncertainty.
-
-**04–06 — Pooling and Gaussian processes.** 04 fits every station independently
-(`04` with NUTS, `04b` with a fast Laplace approximation) and maps the
-parameters — the noisy result motivates pooling. 05 pools them with a
-**hierarchical** Bayesian model. 06 is a Gaussian-process primer with `pyrox`:
-interpolate a field over `(lon, lat)`, then add physical features (elevation,
-distance-to-coast, slope) and use ARD to see which actually matter.
-
-**07–09 — Spatial GEV models.** Tie the strands together — the GEV parameters
-become latent GP fields, inferred with NumPyro. 07 makes the **location**
-$\mu(s)$ spatial; 08 adds a spatial **scale** $\sigma(s)$ driven by an elevation
-covariate; 09 frees the **shape** $\xi(s)$ too, and asks honestly whether the
-tail carries any recoverable geography.
-
-**10–12 — Non-stationary in *time* (one long station).** Switch axes: take the
-single longest record (Albacete, 1901–2025) and let the GEV location drift as the
-climate warms, three escalating ways. 10 fits a **parametric** linear trend
-$\mu(t)=\mu_0+\mu_1 z(t)$ (Coles' model) and turns it into time-varying return
-levels. 11 replaces the line with a **mechanistic ODE** — a forced energy-balance
-relaxation integrated with `diffrax` inside NUTS. 12 goes nonparametric with a
-**state-space Gaussian process** (a local-linear-trend / integrated random walk,
-the stochastic sibling of the ODE), shows why a free stationary GP over-fits a
-short record, and puts all three trends on one set of axes.
-
-## Running it
-
-Notebooks use a shared loader, `spatial_extremes.data`, that serves **real CDS
-data when cached** and a deterministic **synthetic** series otherwise — so the
-whole curriculum runs offline, no credentials required.
-
-Set up the project environment with `uv` (from `projects/spatial_extremes/`):
-
-```bash
-uv sync --extra notebooks      # build .venv with the full stack, notebook tooling + MyST
-.venv/bin/python -m ipykernel install --user --name spatial-extremes
-.venv/bin/myst build --html    # execute the notebooks and render the static site
-```
-
-To use real data, accept the CDS licence, add credentials (see `.env.example`),
-and fetch once into the cache the notebooks read:
-
-```bash
-.venv/bin/python scripts/fetch_cds_insitu.py   # download the real CDS record
-.venv/bin/python scripts/build_features.py     # derive nb 06 covariates (needs the cache)
-```
-
-Without credentials, just open any notebook — it will report that it is running
-on the synthetic fallback and otherwise behave identically.
+The helper code (`data`, `features`, `places`, `viz`) and the CDS fetch scripts sit next to the notebooks in `docs/tutorials/spatial_extremes/_helpers/`. The DVC-tracked station data was not moved; re-fetch it with the tutorial's fetch script. The separate Spain notebooks under `projects/gaussian_processes/notebooks/13_applied/spatial_extremes/` stay here.

@@ -12,6 +12,8 @@ The `plume_simulation` package, its roadmap, derivations and notebooks now live 
 | `notes/roadmap/` | [plumax design roadmap](https://jejjohnson.github.io/plumax/roadmap/) |
 | `notes/EQUATIONS.md`, `notes/satellites.md` | [Equations](https://jejjohnson.github.io/plumax/equations/), [Satellites](https://jejjohnson.github.io/plumax/satellites/) |
 
+Start with the [end-to-end retrieval → persistency walkthrough](https://jejjohnson.github.io/plumax/end-to-end-retrieval-to-persistency/), which threads the tiers into one pipeline.
+
 Derivations:
 
 - [Gaussian plume](https://jejjohnson.github.io/plumax/gaussian-plume-derivation/)

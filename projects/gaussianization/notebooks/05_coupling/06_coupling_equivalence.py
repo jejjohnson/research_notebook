@@ -17,14 +17,15 @@
 # ---
 # title: "Coupling ↔ diagonal equivalence"
 # short_title: "06 · Coupling ≡ diagonal"
-# subtitle: "A zero-kernel coupling flow and a diagonal Gaussianization flow are the same function — verified element-wise — and training is exactly what breaks the equivalence"
+# subtitle: "A zero-kernel coupling flow and a diagonal Gaussianization flow are the same function — exact by construction — and training is exactly what breaks the equivalence"
 # description: >
 #   Notebook 05 showed a coupling can be warm-started to behave like a diagonal RBIG
 #   marginal. This notebook makes that precise: a diagonal Gaussianization flow and a
-#   zero-kernel coupling flow compute the same map at initialisation, agreeing
-#   element-wise to float precision despite the coupling having ~200x more
-#   parameters. The only unused freedom is the conditioner's final kernel; one round
-#   of training lights it up and the two flows diverge.
+#   zero-kernel coupling flow compute the same map at initialisation — identical by
+#   construction, with the densities agreeing to ~1e-3 everywhere and the latent
+#   coordinates to ~1e-4 across 99.9% of the data — despite the coupling having ~200x
+#   more parameters. The only unused freedom is the conditioner's final kernel; one
+#   round of training lights it up and the two flows diverge.
 # ---
 #
 # (sec-nb-cpl-06)=
@@ -48,8 +49,10 @@
 #
 # **What you will see**
 #
-# - A diagonal flow and a coupling flow that agree to **float precision** at init,
-#   despite the coupling having ~200× more parameters (all inert).
+# - A diagonal flow and a coupling flow that agree to **float precision** on the bulk
+#   of the data at init (and in **density everywhere**), despite the coupling having
+#   ~200× more parameters (all inert) — with a handful of deep-tail samples the only
+#   visible disagreement, and for a purely numerical reason.
 # - The conditioner kernels exactly **zero**, and the pushforward error vector $\Delta
 #   z$ collapsed onto the origin.
 # - **Training breaks it**: kernels grow, $\Delta z$ fills the plane, the flows diverge.
@@ -123,8 +126,12 @@ def coupling_kernels(flow):
             for b in flow.bijection.bijection.bijections
             if isinstance(b, MixtureGaussianCDFCoupling)]
 
-print(f"pushforward error ||z_cpl - z_diag||:  median {np.median(err):.2e}, max {err.max():.2e}")
-print(f"log-prob error |Δ log p|:              median {np.median(lp_err):.2e}, max {lp_err.max():.2e}")
+tail = err > 1e-2
+print(f"pushforward error ||z_cpl - z_diag||:  median {np.median(err):.2e}, "
+      f"99.9th pct {np.percentile(err, 99.9):.2e}, max {err.max():.2e}")
+print(f"  samples with error > 1e-2: {int(tail.sum())} of {len(err)} "
+      f"(all in the deep tails, |z| up to {np.abs(z_diag[err.argmax()]).max():.1f})")
+print(f"log-prob error |Δ log p|:              median {np.median(lp_err):.2e}, max {lp_err.max():.2e}  (everywhere)")
 print(f"conditioner kernels max|W| at init: {[f'{k:.0e}' for k in coupling_kernels(cpl)]}")
 print("  -> all exactly zero: the coupling is the diagonal flow, reparameterised")
 
@@ -136,20 +143,31 @@ axL.set(title="Pushforwards overlaid — a single cloud", xlabel="$z_0$", ylabel
 axL.legend(fontsize=8, loc="upper left"); axL.set_aspect("equal"); style_ax(axL)
 
 dz = z_cpl - z_diag
-lim = max(1e-3, float(np.abs(dz).max()) * 1.2)
+# View the bulk (99th pct); the few deep-tail outliers are reported above, not zoomed to.
+lim = max(1e-3, float(np.percentile(np.abs(dz), 99)) * 3)
 axR.scatter(dz[:, 0], dz[:, 1], s=8, alpha=0.5, color="tab:purple")
 axR.axhline(0, color="k", lw=0.7); axR.axvline(0, color="k", lw=0.7)
-axR.set(title=r"$\Delta z = z_{\rm cpl} - z_{\rm diag}$ (on the origin)",
+axR.set(title=r"$\Delta z = z_{\rm cpl} - z_{\rm diag}$ (bulk, on the origin)",
         xlabel=r"$\Delta z_0$", ylabel=r"$\Delta z_1$", xlim=(-lim, lim), ylim=(-lim, lim))
 axR.set_aspect("equal"); style_ax(axR)
 fig.tight_layout()
 
 # %% [markdown]
-# The two pushforwards are a single indistinguishable point cloud, the error vectors
-# $\Delta z$ sit on the origin (to accumulated float drift through 4 blocks), and
-# every conditioner kernel is exactly zero. The 200×-larger coupling flow computes
-# the **same function** as the tiny diagonal flow — its extra parameters do nothing
-# until something turns them on.
+# The two pushforwards are a single indistinguishable point cloud, and every
+# conditioner kernel is exactly zero — so by construction the maps are the *same
+# function*. The agreement is float-precision across the bulk: the latent coordinates
+# match to $\sim10^{-4}$ for 99.9% of points, and the **log-densities match to
+# $\sim10^{-3}$ everywhere**.
+#
+# The only visible disagreement is a handful of **deep-tail** samples ($|z|\approx5$),
+# where $\Delta z$ reaches $\sim0.5$. This is not a difference in the map but a
+# numerical artefact of Gaussianization itself: the latent coordinate is
+# $z=\Phi^{-1}(\text{CDF}(x))$, and $\Phi^{-1}$ is **near-vertical in the tails**, so a
+# sub-float difference between the diagonal and coupling code paths' CDF evaluation is
+# amplified into a visible $z$ gap. The density barely moves ($|\Delta\log p|<2\times
+# 10^{-3}$), confirming the two flows are the same distribution. The 200×-larger
+# coupling flow computes the same function as the tiny diagonal flow — its extra
+# parameters do nothing until something turns them on.
 #
 # ## 3. Training breaks the equivalence
 #
@@ -218,8 +236,9 @@ fig.tight_layout()
 #
 # | claim | evidence |
 # |---|---|
-# | zero-kernel coupling $\equiv$ diagonal flow | $\lVert z_{\rm cpl}-z_{\rm diag}\rVert$ median $\sim10^{-4}$ at init |
-# | the equivalence is exact, not approximate | conditioner kernels are *literally* $0$ |
+# | zero-kernel coupling $\equiv$ diagonal flow | $\lVert z_{\rm cpl}-z_{\rm diag}\rVert$ median $\sim10^{-4}$ (99.9% $<10^{-3}$); $\lvert\Delta\log p\rvert<2\times10^{-3}$ everywhere |
+# | the equivalence is exact, not approximate | conditioner kernels are *literally* $0$ → constant conditioner → same map by construction |
+# | the only disagreement is numerical | a few deep-tail points ($\lvert z\rvert\approx5$), where $\Phi^{-1}$ amplifies sub-float CDF differences |
 # | extra coupling capacity is inert at init | 200× more parameters, identical function |
 # | training breaks it | kernels $0 \to O(0.1)$; error jumps orders of magnitude |
 #

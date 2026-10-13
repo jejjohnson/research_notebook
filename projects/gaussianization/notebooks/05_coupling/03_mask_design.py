@@ -87,58 +87,7 @@ def stack(key, n_blocks, *, alternate):
 
 to_latent = lambda flow: np.asarray(jax.vmap(flow.bijection.inverse)(X))   # data -> z
 
-# %% [markdown]
-# ## 1. A fixed mask leaves half the coordinates untouched
-#
-# `gf` couplings split into a fixed passive/active half. A single layer leaves coord
-# $0$ exactly as it came in; stacking more of the **same** layer changes nothing
-# about coord $0$. We build a 4-block fixed-mask stack and check the latent.
 
-# %%
-single = coupling(jr.key(0))
-delta = np.asarray(single.transform(jnp.array([0.5, 0.5])) - jnp.array([0.5, 0.5]))
-print(f"single coupling: change per coord = {np.round(delta, 4)}  -> coord 0 is passive")
-
-fixed = stack(jr.key(0), 4, alternate=False)
-z_fixed = to_latent(fixed)
-print(f"\n4-block FIXED-mask stack:")
-print(f"  latent coord 0 identical to input? {np.allclose(z_fixed[:, 0], np.asarray(X[:, 0]), atol=1e-6)}")
-print(f"  latent coord 0 std = {z_fixed[:, 0].std():.3f}  (input was standardised; not Gaussianized)")
-
-# %% [markdown]
-# The passive coordinate comes out **bit-for-bit unchanged** — four layers did
-# nothing to it, because every layer used the same mask. So its latent marginal is
-# still the (non-Gaussian) data marginal, not $\mathcal{N}(0,1)$. The flow has
-# *no way* to Gaussianize half its inputs.
-#
-# ## 2. Alternating the mask fixes it
-#
-# Insert a `Flip` between layers and the roles swap: coord $0$ is passive in one
-# layer, active in the next. Now every coordinate is both transformed and used as
-# context. We compare the latent marginals.
-
-# %%
-alt = stack(jr.key(0), 4, alternate=True)
-z_alt = to_latent(alt)
-
-zz = np.linspace(-3.5, 3.5, 200)
-fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
-for ax, zc, title in [(axes[0], z_fixed, "fixed mask"), (axes[1], z_alt, "alternating mask")]:
-    ax.hist(zc[:, 0], bins=60, density=True, alpha=0.7, color="tab:red" if title == "fixed mask" else "tab:green",
-            label="latent coord 0")
-    ax.plot(zz, standard_normal_pdf(zz), **GAUSS_KW, label=r"$\mathcal{N}(0,1)$")
-    ax.set(title=f"{title}: coord-0 latent  (std {zc[:, 0].std():.2f})", xlabel="$z_0$")
-    ax.legend(fontsize=8); style_ax(ax)
-axes[0].set_ylabel("density")
-fig.suptitle("Fixed mask never Gaussianizes coord 0; alternating does", y=1.02)
-fig.tight_layout()
-
-# %% [markdown]
-# With a fixed mask the coord-0 latent is the untouched (flat, non-Gaussian) data
-# marginal; alternating the mask pulls it toward $\mathcal{N}(0,1)$. The likelihood
-# follows — we fit both.
-
-# %%
 def train(flow, *, steps=1200, peak_lr=3e-3, batch=512, seed=1):
     params, static = eqx.partition(flow, eqx.is_inexact_array)
     schedule = optax.cosine_onecycle_schedule(steps, peak_lr)
@@ -160,8 +109,63 @@ def train(flow, *, steps=1200, peak_lr=3e-3, batch=512, seed=1):
 
 
 logp = lambda f: float(jax.vmap(f.log_prob)(X).mean())
-print(f"fit (two-moons):  fixed mask = {logp(train(fixed)):.3f}   "
-      f"alternating = {logp(train(alt)):.3f}")
+
+# %% [markdown]
+# ## 1. A fixed mask leaves half the coordinates untouched
+#
+# `gf` couplings split into a fixed passive/active half. A single layer leaves coord
+# $0$ exactly as it came in; stacking more of the **same** layer changes nothing
+# about coord $0$ — and **no amount of training can fix that**, because the passive
+# coordinate is copied through by construction. We build a 4-block fixed-mask stack,
+# *fit it*, and check the latent.
+
+# %%
+single = coupling(jr.key(0))
+delta = np.asarray(single.transform(jnp.array([0.5, 0.5])) - jnp.array([0.5, 0.5]))
+print(f"single coupling: change per coord = {np.round(delta, 4)}  -> coord 0 is passive")
+
+fixed = train(stack(jr.key(0), 4, alternate=False))   # fit it — the point survives training
+z_fixed = to_latent(fixed)
+print(f"\n4-block FIXED-mask stack (trained):")
+print(f"  latent coord 0 identical to input? {np.allclose(z_fixed[:, 0], np.asarray(X[:, 0]), atol=1e-6)}")
+print(f"  latent coord 0 std = {z_fixed[:, 0].std():.3f}  (input was standardised; not Gaussianized)")
+
+# %% [markdown]
+# Even after fitting, the passive coordinate comes out **bit-for-bit unchanged** —
+# training cannot help, because every layer used the same mask and copies coord $0$
+# through. So its latent marginal is still the (non-Gaussian) data marginal, not
+# $\mathcal{N}(0,1)$. The flow has *no way* to Gaussianize half its inputs.
+#
+# ## 2. Alternating the mask fixes it
+#
+# Insert a `Flip` between layers and the roles swap: coord $0$ is passive in one
+# layer, active in the next. Now every coordinate is both transformed and used as
+# context. We fit an alternating stack and compare the trained latent marginals.
+
+# %%
+alt = train(stack(jr.key(0), 4, alternate=True))
+z_alt = to_latent(alt)
+
+zz = np.linspace(-3.5, 3.5, 200)
+fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
+for ax, zc, title in [(axes[0], z_fixed, "fixed mask"), (axes[1], z_alt, "alternating mask")]:
+    ax.hist(zc[:, 0], bins=60, density=True, alpha=0.7, color="tab:red" if title == "fixed mask" else "tab:green",
+            label="latent coord 0")
+    ax.plot(zz, standard_normal_pdf(zz), **GAUSS_KW, label=r"$\mathcal{N}(0,1)$")
+    ax.set(title=f"{title}: coord-0 latent  (std {zc[:, 0].std():.2f})", xlabel="$z_0$")
+    ax.legend(fontsize=8); style_ax(ax)
+axes[0].set_ylabel("density")
+fig.suptitle("Fixed mask never Gaussianizes coord 0; alternating does", y=1.02)
+fig.tight_layout()
+
+# %% [markdown]
+# With a fixed mask the coord-0 latent is the untouched (flat, non-Gaussian) data
+# marginal; alternating the mask pulls it toward $\mathcal{N}(0,1)$. The likelihood
+# of the two trained stacks follows.
+
+# %%
+print(f"fit (two-moons):  fixed mask = {logp(fixed):.3f}   "
+      f"alternating = {logp(alt):.3f}")
 
 # %% [markdown]
 # The alternating stack fits clearly better — and would Gaussianize *both* axes,

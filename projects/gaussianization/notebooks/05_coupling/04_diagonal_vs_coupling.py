@@ -71,13 +71,19 @@ from _style import SCATTER_KW, style_ax
 jax.config.update("jax_enable_x64", True)
 rng = np.random.default_rng(0)
 
-# A two-arm spiral: strong nonlinear dependence between the coordinates.
-n = 4000
+# A two-arm spiral: strong nonlinear dependence between the coordinates. We hold out
+# a disjoint evaluation set so every reported log-likelihood is genuinely held out —
+# the comparison is about generalisation, not how well each flow memorises its batches.
+n = 6000
 t = rng.uniform(0.5, 3.5, n)
 arm = (rng.integers(0, 2, n) * 2 - 1)[:, None]
 xy = arm * np.stack([t * np.cos(2.5 * t), t * np.sin(2.5 * t)], axis=1)
 xy = xy + 0.08 * rng.standard_normal((n, 2))
-X = jnp.asarray((xy - xy.mean(0)) / xy.std(0))
+xy = (xy - xy.mean(0)) / xy.std(0)
+n_train = 4000
+X_train = jnp.asarray(xy[:n_train])
+X_eval = jnp.asarray(xy[n_train:])
+X = X_train  # plotting alias
 
 
 def train_flow(flow, *, steps=1500, peak_lr=3e-3, clip_norm=1.0, batch=512, seed=1):
@@ -97,12 +103,13 @@ def train_flow(flow, *, steps=1500, peak_lr=3e-3, clip_norm=1.0, batch=512, seed
     key = jr.key(seed)
     for i in range(steps):
         key, sk = jr.split(key)
-        idx = jr.randint(sk, (batch,), 0, X.shape[0])
-        params, state, _ = step(params, state, X[idx])
+        idx = jr.randint(sk, (batch,), 0, X_train.shape[0])
+        params, state, _ = step(params, state, X_train[idx])
     return eqx.combine(params, static)
 
 
-logp = lambda flow: float(jax.vmap(flow.log_prob)(X).mean())
+# Held out: trained on X_train, scored on the disjoint X_eval.
+logp = lambda flow: float(jax.vmap(flow.log_prob)(X_eval).mean())
 nparams = lambda flow: int(sum(x.size for x in jax.tree_util.tree_leaves(
     eqx.filter(flow, eqx.is_inexact_array))))
 
@@ -173,7 +180,7 @@ fig.tight_layout()
 # ## 3. The learned densities (comparable parameter counts)
 #
 # We plot a diagonal and a coupling flow at **similar** parameter counts — diagonal
-# $L=16$ vs coupling $L=2$ (both $\sim$900–1000 params) — the genuinely
+# $L=16$ vs coupling $L=2$ (both $\sim$800–1000 params) — the genuinely
 # apples-to-apples picture.
 
 # %%

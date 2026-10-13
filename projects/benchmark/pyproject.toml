@@ -1,0 +1,36 @@
+[project]
+name = "benchmark"
+version = "0.1.0"
+description = "Reference observational and reanalysis archives for benchmarking: paced, resumable scrapes cached as GeoParquet."
+requires-python = ">=3.12"
+# Data layer only. The reader now lives in the xrtoolz monorepo as the
+# `xrtoolz-reader` distribution — the import namespace is still `xrreader`,
+# so `from xrreader import AemetArchive` is unchanged from the standalone
+# package. The [aemet] extra pulls httpx + geopandas + pyarrow + loguru +
+# netcdf4, which is everything AemetArchive needs for the GeoParquet cache.
+dependencies = [
+    "xrtoolz-reader[aemet]",
+    "loguru>=0.7",
+    "pandas>=2.1",
+    "xarray>=2024.10",
+]
+
+[project.optional-dependencies]
+# Inspection helpers for the coverage report + any notebook write-ups.
+notebooks = [
+    "matplotlib",
+    "ipython",
+    "ipykernel>=6.29",
+    "mystmd>=1.3",
+]
+
+# xrtoolz is not on PyPI — resolve the reader from the monorepo subdirectory.
+[tool.uv.sources]
+xrtoolz-reader = { git = "https://github.com/jejjohnson/xr_toolz.git", subdirectory = "packages/xrtoolz-reader" }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/benchmark"]
